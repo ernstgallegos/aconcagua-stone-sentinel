@@ -94,10 +94,10 @@ This is a curated, public-facing repository, not a complete production archive.
 
 ## Repository Structure
 
-- `/docs` — Concept documents, design pillars, system overviews (English and Spanish)
-- `/art` — Curated concept art and visual references
-- `/devlog` — Design intent, scope decisions, and reflections
-- `/meta` — Public roadmap and visibility notes
+- [`/docs`](./docs) — Concept documents, design pillars, system overviews (English and Spanish)
+- [`/art`](./art) — Curated concept art and visual references
+- [`/devlog`](./devlog) — Design intent, scope decisions, and reflections
+- [`/meta`](./meta) — Public roadmap and visibility notes
 
 ---
 
@@ -106,7 +106,7 @@ This is a curated, public-facing repository, not a complete production archive.
 - English is the canonical language of the project.
 - Spanish documentation is provided as a parallel, contextual layer.
 
-See `README.es.md` for the Spanish version.
+See [`README.es.md`](./README.es.md) for the Spanish version.
 
 ---
 
