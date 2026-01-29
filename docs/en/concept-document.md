@@ -45,16 +45,30 @@ Uncertainty, partial information, and irreversible consequences are structural e
 
 ---
 
-## 6. Target Audience
+## 6. Target Audience and Market Context
+
+*Aconcagua: Stone Sentinel* is designed for a global segment of players drawn to contemplative, author-driven experiences—games that privilege atmosphere, meaning, and reflection over action intensity or mechanical mastery.
 
 ### Primary Audience
 - Players of narrative and simulation-oriented indie games  
-- People interested in author-driven, deep, and unconventional experiences  
+- People interested in deep, unconventional, author-led experiences  
+- Players who value slow pacing, ambiguity, restraint, and systemic coherence
 
 ### Secondary Audience
-- People interested in nature, mountaineering, and environmental education  
+- People interested in nature, mountaineering, and environmental learning  
+- Outdoor communities looking for respectful, informed representations  
+- Players who enjoy discovery through observation (journals, logs, field notes, collectibles with meaning)
 
-The project aims for a broad audience while maintaining verisimilitude and respect for the accumulated knowledge of those familiar with the mountain.
+### Market Characteristics (relevant to scope and production choices)
+The market for contemplative narrative indie games is niche in volume, but mature in visibility and longevity. These titles typically:
+- Maintain long commercial tails through digital discovery and word-of-mouth  
+- Circulate through festivals, showcases, curator programs, and cultural press  
+- Benefit more from identity and coherence than from feature accumulation  
+- Attract players who often come from broader cultural consumption (film, literature, documentary, slow media), not only from traditional “hardcore” gaming
+
+For this audience, realism is not expected as graphical spectacle, but as systemic credibility: decisions should feel grounded, constraints should be meaningful, and the world should respond consistently.
+
+The project aims for a broad international reach while maintaining verisimilitude and respect for the accumulated knowledge of those familiar with the mountain. In this context, Aconcagua is not a generic backdrop: it operates as a symbolic and experiential anchor—scale, silence, risk, time dilation, and the negotiation with limits.
 
 ---
 
@@ -65,6 +79,8 @@ The project aims for a broad audience while maintaining verisimilitude and respe
 - The interface is diegetic, limited, and functional  
 - Progression emerges from player experience rather than statistics  
 - Failure is a possible, legitimate, and narratively meaningful outcome  
+
+These choices respond directly to an audience that values coherence, restraint, and authorship, and that seeks experiences where reflection and interpretation are as important as progression or achievement.
 
 ---
 
@@ -142,11 +158,30 @@ The approach prioritizes presence and scale over epic spectacle.
 - Project prepared for presentation to funds, competitions, and indie publishers  
 - Scalable by layers, not by artificial complexity  
 
-Scope is deliberately defined to avoid inflating technical or narrative expectations.
+Scope is deliberately defined to avoid inflating technical or narrative expectations.  
+Scope decisions are informed not only by production constraints, but by the expectations of the contemplative indie market, where focus, coherence, and depth are valued over feature accumulation.
 
 ---
 
-## 14. Context and Meaning
+## 14. Audience Fit and Cultural Positioning (Optional but Recommended for Submissions)
+
+*Aconcagua: Stone Sentinel* does not compete for mass-market volume. It competes for resonance, identity, and long-term discovery.
+
+Its most natural channels of visibility are:
+- Indie festivals and showcases  
+- Curatorial selections (platform features, cultural programs)  
+- Press and critics interested in authored experiences  
+- Communities invested in nature, expedition culture, and environmental meaning  
+
+Positioned as a project from Argentina with a real-world anchor, the game can function as both:
+- A culturally exportable authored work  
+- A systemic experience grounded in a specific geography and knowledge tradition  
+
+This positioning supports the project’s funding readiness and reduces the need for blockbuster scale to achieve meaningful impact.
+
+---
+
+## 15. Context and Meaning
 
 In a cultural context shaped by performance logic, acceleration, and the epic of success, *Aconcagua: Stone Sentinel* proposes an experience in which recognizing limits and knowing when to stop is also a way of moving forward.
 
@@ -154,7 +189,7 @@ The mountain is not conquered: it is traversed, interpreted, and sometimes aband
 
 ---
 
-## 15. Final Statement
+## 16. Final Statement
 
 *Aconcagua: Stone Sentinel* proposes an experience where advancing does not necessarily mean progressing. The game is structured around reading the environment, recognizing limits—both external and internal—and accepting that returning safely can also be a valid resolution.
 
