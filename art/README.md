@@ -31,8 +31,8 @@ A strictly curated selection of concept images chosen to reinforce core design p
 Files:
 - [`concept-curated-1.png`](./concept-art/curated/concept-curated-1.png)
 - [`concept-curated-2.png`](./concept-art/curated/concept-curated-2.png)
+- [`concept-curated-3.webp`](./concept-art/curated/concept-curated-3.webp)
 - [`concept-curated-4.webp`](./concept-art/curated/concept-curated-4.webp)
-- [`concept-curated-5.webp`](./concept-art/curated/concept-curated-5.webp)
 
 These images emphasize:
 - The dominance of the mountain over the human figure  
