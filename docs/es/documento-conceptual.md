@@ -166,7 +166,6 @@ Las decisiones de alcance responden tanto a las condiciones de producción como 
 ---
 
 ## 14. Encaje con el público y posicionamiento cultural  
-*(Opcional pero recomendado para presentaciones)*
 
 *Aconcagua: Stone Sentinel* no compite por volumen de mercado masivo. Compite por resonancia, identidad y descubrimiento a largo plazo.
 
