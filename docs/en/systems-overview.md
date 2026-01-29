@@ -27,16 +27,41 @@ This document:
 Before detailing individual systems, the following principles apply globally:
 
 1. **Environmental Primacy**  
-   No system exists independently of the terrain.
+   No system exists independently of the terrain and atmospheric conditions.
 
 2. **Situated Information**  
-   Systems provide signals, not certainties.
+   Systems provide signals and trends, not certainties.
 
 3. **Persistent Consequence**  
-   Decisions leave lasting effects.
+   Decisions leave lasting effects that compound over time.
 
 4. **Limited Complexity**  
-   Few deeply connected systems are preferred over many shallow ones.
+   Few deeply interconnected systems are preferred over many shallow ones.
+
+---
+
+## Subsystems Overview
+
+For design purposes, the game is structured around a small number of tightly coupled subsystems.  
+Each one governs a different aspect of the ascent, but meaning only emerges through their interaction.
+
+- **Environment (Mountain + Weather)**  
+  Defines external conditions and constraints. Acts as an active agent rather than a backdrop.
+
+- **Body (Physiological State)**  
+  Represents the player’s capacity to function under altitude, exertion, and exposure.
+
+- **Resources and Equipment**  
+  Mediate preparation, trade-offs, and risk mitigation over time.
+
+- **Information**  
+  Channels partial, situated signals without eliminating uncertainty.
+
+- **Decision and Consequence**  
+  Translates player intent into persistent systemic effects.
+
+No subsystem operates in isolation.  
+All are designed to influence and constrain one another over time.
 
 ---
 
@@ -67,7 +92,7 @@ Sovereign system. Defines the baseline conditions under which all other systems 
 ### 2. Weather System
 
 **Role**  
-Dynamic, probabilistic system that modifies the state of the mountain.
+Dynamic, probabilistic system that modifies the state of the mountain. Weather can shift rapidly and unexpectedly.
 
 **Components**
 - Wind
@@ -78,12 +103,12 @@ Dynamic, probabilistic system that modifies the state of the mountain.
 **Produces**
 - Changes in environmental legibility
 - Variations in movement cost
-- Increasing or decreasing risk levels
+- Shifts in short- and mid-term risk
 
 **Key Characteristics**
 - Never fully predictable
 - Anticipated through signals
-- Operates in temporal windows
+- Operates in temporal windows rather than fixed cycles
 
 ---
 
@@ -100,8 +125,8 @@ Represents the body’s adaptation—or failure to adapt—to altitude and exert
 
 **Produces**
 - Reduced performance
-- Increased error likelihood
-- Need for rest or descent
+- Increased likelihood of errors
+- Need for rest, acclimatization, or descent
 
 **Key Principle**  
 There is no traditional “health bar.”  
@@ -122,7 +147,7 @@ Mediates the relationship between planning and contingency.
 
 **Produces**
 - Stabilization or deterioration of the physiological system
-- Decisions to advance, wait, or retreat
+- Strategic decisions to advance, wait, or retreat
 
 **Note**  
 Resources are not optimized to maximize progress, but to **preserve decision margin**.
@@ -137,20 +162,20 @@ Translates preparation into physical consequences.
 **Components**
 - Total carried weight
 - Insulation layers
-- Protection
-- Tools
+- Protection against wind and precipitation
+- Tools and specialized gear
 
 **Produces**
 - Modified movement cost
 - Altered exposure to weather
-- Trade-offs between safety and fatigue
+- Trade-offs between safety, fatigue, and flexibility
 
 ---
 
 ### 6. Information System (Interface)
 
 **Role**  
-Channels signals from other systems without eliminating uncertainty.
+Channels signals from other systems without resolving uncertainty.
 
 **Components**
 - Diegetic device (watch-like interface)
@@ -158,9 +183,9 @@ Channels signals from other systems without eliminating uncertainty.
 - Player records and logs
 
 **Produces**
-- Trends
+- Trends and tendencies
 - Implicit alerts
-- Informational ambiguity
+- Partial situational awareness
 
 **Does Not Produce**
 - Absolute certainty
@@ -171,7 +196,7 @@ Channels signals from other systems without eliminating uncertainty.
 ### 7. Decision and Consequence System
 
 **Role**  
-Connects player actions to persistent effects.
+Connects player actions to persistent effects across systems.
 
 **Components**
 - Player choices
@@ -193,10 +218,52 @@ They **inform and condition** future decisions.
 - **Weather** modifies the **mountain**.
 - The **mountain** loads the **body**.
 - The **body** constrains **decisions**.
-- **Decisions** affect resources and future states.
+- **Decisions** affect resources, exposure, and future states.
 - **Information** never reveals the full system state.
 
-No system operates in isolation. All feedback is cross-linked.
+No system operates independently.  
+All feedback is cross-linked and cumulative.
+
+---
+
+## Key Feedback Loops
+
+The behavior of the game emerges from a small number of feedback loops.  
+These loops explain how risk, adaptation, and failure arise without scripted events.
+
+### R1 — Cold Exposure Spiral (Reinforcing)
+
+Increased wind and low temperatures reduce perceived warmth.  
+As body temperature drops, physical and mental dexterity decline, increasing exposure time.  
+Longer exposure further amplifies heat loss, reinforcing the loop.
+
+---
+
+### B1 — Equipment Mitigation Loop (Balancing)
+
+Adequate insulation and protection reduce heat loss.  
+Stable body temperature preserves functional capacity, enabling clearer decisions and reduced exposure.
+
+---
+
+### R2 — Fatigue and Terrain Loop (Reinforcing)
+
+Steep or unstable terrain increases energy expenditure.  
+Accumulated fatigue slows movement, extending exposure time and further increasing exertion.
+
+---
+
+### B2 — Progressive Acclimatization (Balancing, Long-Term)
+
+Gradual ascent combined with rest improves physiological adaptation.  
+Improved adaptation reduces altitude-related penalties, stabilizing performance over time.
+
+---
+
+### R3 — Mental Load and Risk Perception (Reinforcing)
+
+Adverse conditions and fatigue increase cognitive load.  
+Elevated stress distorts risk perception, leading to poorer decisions and escalating danger.
 
 ---
 
@@ -209,6 +276,26 @@ No system operates in isolation. All feedback is cross-linked.
 5. Persistent consequence
 
 This loop repeats with no guarantee of linear improvement.
+
+---
+
+## Why This Matters for Gameplay
+
+These systemic interactions shape the player experience in concrete ways:
+
+- There is no single failure point.  
+  Outcomes emerge from accumulated conditions, not isolated mistakes.
+
+- Time is a critical variable.  
+  Staying longer in adverse conditions often matters more than any single action.
+
+- Preparation is meaningful, but never absolute.  
+  Equipment and resources mitigate risk; they do not eliminate it.
+
+- The mountain acts as an active system.  
+  The player does not overcome it, but negotiates with it.
+
+The game is not about mastering mechanics, but about learning to read a system under uncertainty.
 
 ---
 
@@ -235,6 +322,7 @@ This document should be used to:
 
 ## Final Note
 
-The systems of *Aconcagua: Stone Sentinel* are not designed to simulate the mountain in its entirety, but to **recreate the experience of deciding under its conditions**.
+The systems of *Aconcagua: Stone Sentinel* are not designed to simulate the mountain in its entirety,  
+but to **recreate the experience of deciding under its conditions**.
 
 The system is not meant to be mastered, but to be read.
