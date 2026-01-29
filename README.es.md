@@ -26,6 +26,10 @@ La incertidumbre, la información parcial y las consecuencias irreversibles son 
 
 ## Pilares de diseño
 
+Aconcagua: Stone Sentinel está concebido como una experiencia sistémica.
+
+El clima, el terreno, el equipo y el estado físico y mental del jugador interactúan mediante bucles de retroalimentación que modelan el riesgo, la adaptación y la toma de decisiones.
+
 ### 1. La montaña gobierna
 La altitud, el terreno y el clima son sistemas activos que condicionan cada acción. El diseño del juego se adapta a la geografía real, no a un diseño de niveles abstracto.
 
