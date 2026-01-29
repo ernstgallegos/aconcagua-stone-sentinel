@@ -1,6 +1,4 @@
-# Systemic Architecture Diagram (Mermaid)
-
-This file contains Mermaid diagrams that render cleanly on GitHub.
+# Systemic Architecture Diagram 
 
 ## 1) Full Systems and Interactions (Overview)
 
@@ -167,8 +165,3 @@ flowchart LR
     M5 -->|increases| M2;
   end
 ```
-
-### Notes for GitHub
-- Keep the code blocks exactly as shown: triple backticks + `mermaid`.
-- Avoid parentheses in labels if you hit renderer-specific parse errors.
-- Use simple subgraph identifiers (no bracketed titles) for maximum compatibility.
