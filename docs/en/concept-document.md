@@ -163,7 +163,7 @@ Scope decisions are informed not only by production constraints, but by the expe
 
 ---
 
-## 14. Audience Fit and Cultural Positioning (Optional but Recommended for Submissions)
+## 14. Audience Fit and Cultural Positioning
 
 *Aconcagua: Stone Sentinel* does not compete for mass-market volume. It competes for resonance, identity, and long-term discovery.
 
