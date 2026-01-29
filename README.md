@@ -26,6 +26,10 @@ Uncertainty, partial information, and irreversible consequences are core element
 
 ## Design Pillars
 
+Aconcagua: Stone Sentinel is designed as a systemic experience.
+
+Climate, terrain, equipment and the player’s physical and mental condition interact through feedback loops, shaping risk, adaptation and decision-making over time.
+
 ### 1. The Mountain Governs
 Altitude, terrain, and climate are active systems that condition every action. The game design adapts to real geography rather than abstract level design.
 
