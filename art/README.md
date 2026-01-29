@@ -17,7 +17,7 @@ Conceptual cover images used to establish the overall atmosphere and visual iden
 
 Files:
 - [`cover-concept-1.png`](./cover/cover-concept-1.png)
-- [`cover-concept-2.png`](./cover/cover-concept-1.png)
+- [`cover-concept-2.png`](./cover/cover-concept-2.png)
 
 These images function as **conceptual covers**, not as final key art or in-game representations.  
 They are included to convey mood, scale, and thematic positioning.
