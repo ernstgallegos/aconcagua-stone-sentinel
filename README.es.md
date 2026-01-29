@@ -26,7 +26,7 @@ La incertidumbre, la información parcial y las consecuencias irreversibles son 
 
 ## Pilares de diseño
 
-Aconcagua: Stone Sentinel está concebido como una experiencia sistémica.
+_Aconcagua: Stone Sentinel_ está concebido como una experiencia sistémica.
 
 El clima, el terreno, el equipo y el estado físico y mental del jugador interactúan mediante bucles de retroalimentación que modelan el riesgo, la adaptación y la toma de decisiones.
 
