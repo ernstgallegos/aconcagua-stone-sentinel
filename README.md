@@ -26,7 +26,7 @@ Uncertainty, partial information, and irreversible consequences are core element
 
 ## Design Pillars
 
-Aconcagua: Stone Sentinel is designed as a systemic experience.
+_Aconcagua: Stone Sentinel_ is designed as a systemic experience.
 
 Climate, terrain, equipment and the player’s physical and mental condition interact through feedback loops, shaping risk, adaptation and decision-making over time.
 
