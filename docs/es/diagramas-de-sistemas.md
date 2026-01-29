@@ -1,6 +1,4 @@
-# Diagrama de Arquitectura Sistémica (Mermaid)
-
-Este archivo contiene diagramas Mermaid que renderizan correctamente en GitHub.
+# Diagrama de Arquitectura Sistémica
 
 ## 1) Sistemas e Interacciones (Vista general)
 
@@ -167,8 +165,3 @@ flowchart LR
     R3e -->|aumenta| R3b;
   end
 ```
-
-### Notas para GitHub
-- Mantené los bloques exactamente así: triple backticks + `mermaid`.
-- Evitá paréntesis y caracteres raros en títulos/etiquetas si ves errores.
-- Usá identificadores simples en `subgraph` para máxima compatibilidad.
