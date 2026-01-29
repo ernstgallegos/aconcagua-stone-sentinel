@@ -16,8 +16,8 @@ This folder is intentionally minimal and selective.
 Conceptual cover images used to establish the overall atmosphere and visual identity of the project.
 
 Files:
-- `cover-concept-1.png`
-- `cover-concept-2.png`
+- [`cover-concept-1.png`](./cover/cover-concept-1.png)
+- [`cover-concept-2.png`](./cover/cover-concept-1.png)
 
 These images function as **conceptual covers**, not as final key art or in-game representations.  
 They are included to convey mood, scale, and thematic positioning.
@@ -29,10 +29,10 @@ They are included to convey mood, scale, and thematic positioning.
 A strictly curated selection of concept images chosen to reinforce core design principles.
 
 Files:
-- `concept-curated-1.png`
-- `concept-curated-2.png`
-- `concept-curated-4.webp`
-- `concept-curated-5.webp`
+- [`concept-curated-1.png`](./concept-art/curated/concept-curated-1.png)
+- [`concept-curated-2.png`](./concept-art/curated/concept-curated-2.png)
+- [`concept-curated-4.webp`](./concept-art/curated/concept-curated-4.webp)
+- [`concept-curated-5.webp`](./concept-art/curated/concept-curated-5.webp)
 
 These images emphasize:
 - The dominance of the mountain over the human figure  
