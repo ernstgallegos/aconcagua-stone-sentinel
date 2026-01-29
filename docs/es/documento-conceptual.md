@@ -156,6 +156,6 @@ La montaña no se conquista: se transita, se interpreta y, a veces, se abandona.
 
 ## 15. Declaración final
 
-*Aconcagua: Stone Sentinel* plantea una experiencia donde avanzar no equivale necesariamente a progresar. El juego se organiza alrededor de la lectura del entorno, el reconocimiento de límites —internos y externos— y la aceptación de que volver sano a casa también puede ser una resolución válida.
+*Aconcagua: Stone Sentinel* plantea una experiencia donde avanzar no equivale necesariamente a progresar. El juego se organiza alrededor de la lectura del entorno, el reconocimiento de límites —internos y externos— y la aceptación de que volver a casa a tiempo también puede ser una resolución válida.
 
 La verdadera cumbre no está en la cima sino en volver sanos y salvos a casa.
