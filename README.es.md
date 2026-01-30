@@ -94,10 +94,10 @@ Se trata de un repositorio curado y orientado al público, no de un archivo comp
 
 ## Estructura del repositorio
 
-- `/docs` — Documentos conceptuales, pilares de diseño y visión de sistemas (inglés y español)
-- `/art` — Concept art curado y referencias visuales
-- `/devlog` — Intención de diseño, decisiones de alcance y reflexiones
-- `/meta` — Roadmap público y notas de visibilidad
+- [`/docs`](./docs) — Documentos conceptuales, pilares de diseño y visión de sistemas (inglés y español)
+- [`/art`](./art) — Concept art curado y referencias visuales
+- [`/devlog`](./devlog) — Intención de diseño, decisiones de alcance y reflexiones
+- [`/meta`](./meta) — Roadmap público y notas de visibilidad
 
 ---
 
@@ -106,7 +106,7 @@ Se trata de un repositorio curado y orientado al público, no de un archivo comp
 - El inglés es el idioma canónico del proyecto.
 - La documentación en español se ofrece como capa paralela y contextual.
 
-Ver `README.md` para la versión en inglés.
+Ver [`README.md`](./README.md) para la versión en inglés.
 
 ---
 
