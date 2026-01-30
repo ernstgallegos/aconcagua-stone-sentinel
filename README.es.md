@@ -8,6 +8,13 @@ Alcanzar la cumbre es solo uno de varios desenlaces posibles.
 
 ---
 
+**Whitepaper del proyecto**  
+Este documento presenta la visión, el enfoque y las decisiones fundacionales de *Aconcagua: Stone Sentinel*.  
+Es el mejor punto de entrada para entender qué tipo de juego estamos construyendo y por qué.  
+→ [`/meta/project-whitepaper.md`](meta/project-whitepaper.md) (inglés)
+
+---
+
 ## Pitch en una frase
 
 Un videojuego narrativo y sistémico que recrea el ascenso al Aconcagua mediante mecánicas basadas en el realismo, donde el jugador gestiona cuerpo, clima y entorno para decidir hasta dónde continuar.
