@@ -97,7 +97,7 @@ Se trata de un repositorio curado y orientado al público, no de un archivo comp
 - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño y visión de sistemas (inglés y español)
 - [`/art`](./art) — Concept art curado y referencias visuales
 - [`/devlog`](./devlog) — Intención de diseño, decisiones de alcance y reflexiones
-- [`/meta`](./meta) — Roadmap público y notas de visibilidad
+- [`/meta`](./meta) — Roadmap público, whitepaper y notas de visibilidad
 
 ---
 
