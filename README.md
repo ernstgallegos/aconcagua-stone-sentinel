@@ -8,6 +8,12 @@ Reaching the summit is only one of several valid outcomes.
 
 ---
 
+**Project Whitepaper**  
+Start here to understand the vision and design rationale behind *Aconcagua: Stone Sentinel*:  
+→ [`/meta/project-whitepaper.md`](meta/project-whitepaper.md)
+
+---
+
 ## One-Sentence Pitch
 
 A narrative and systemic indie game that recreates the ascent of Aconcagua through realism-driven mechanics, where the player manages body, climate, and environment to decide how far to go.
