@@ -55,7 +55,7 @@ At the end of this stage, the project can be **reasoned about as a system**, not
 ---
 
 ## Stage 3 — Visual Intent and Curation  
-**Status: Completed**
+**Status: Current/Next**
 
 > Establishing tone and scale through restraint.
 
