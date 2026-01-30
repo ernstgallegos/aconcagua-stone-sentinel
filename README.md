@@ -97,7 +97,7 @@ This is a curated, public-facing repository, not a complete production archive.
 - [`/docs`](./docs) — Concept documents, design pillars, system overviews (English and Spanish)
 - [`/art`](./art) — Curated concept art and visual references
 - [`/devlog`](./devlog) — Design intent, scope decisions, and reflections
-- [`/meta`](./meta) — Public roadmap and visibility notes
+- [`/meta`](./meta) — Public roadmap, whitepaper and visibility notes
 
 ---
 
