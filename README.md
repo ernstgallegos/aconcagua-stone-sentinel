@@ -100,7 +100,7 @@ This is a curated, public-facing repository, not a complete production archive.
 
 ## Repository Structure
 
-- [`/docs`](./docs) — Concept documents, design pillars, system overviews (English and Spanish)
+- [`/docs`](./docs) — Concept documents, design pillars, system overviews, and a minimal reproducible artifact proposal
 - [`/art`](./art) — Curated concept art and visual references
 - [`/devlog`](./devlog) — Design intent, scope decisions, and reflections
 - [`/meta`](./meta) — Public roadmap, whitepaper and visibility notes
