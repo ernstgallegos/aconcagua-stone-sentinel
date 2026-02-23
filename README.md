@@ -88,11 +88,14 @@ Turning back, stopping, or failing are valid and meaningful outcomes.
 
 ## Project Status
 
-This repository documents the **conceptual and design foundations** of the project.
+This repository documents the **conceptual and design foundations** of the project, and includes a **functional low-fidelity prototype** for core hypothesis validation.
 
-- No gameplay code is public at this stage.
-- The focus is on design intent, system logic, and narrative scope.
-- Development is conceived as incremental and scalable.
+- A minimal reproducible artifact (MRA v0) is available in `/prototype/mra-v0/`.
+- The prototype implements the turn-based decision loop described in the MRA proposal.
+- Validation scenarios with reproducible seeds are included.
+- No production gameplay code is public at this stage.
+
+See [`/prototype/mra-v0/README.md`](./prototype/mra-v0/README.md) for run instructions.
 
 This is a curated, public-facing repository, not a complete production archive.
 
