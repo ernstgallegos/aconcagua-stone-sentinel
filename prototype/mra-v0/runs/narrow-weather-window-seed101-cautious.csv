@@ -1,0 +1,8 @@
+turn,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags
+1,advance,1,2,2,stable,high,76,35,25,7,7,-
+2,advance,2,3,1,stable,low,64,48,39,6,6,-
+3,wait,3,0,1,worsening,medium,61,44,49,5,5,-
+4,wait,3,0,3,worsening,medium,58,40,59,4,4,-
+5,wait,3,0,3,worsening,medium,55,36,69,3,3,-
+6,wait,3,2,3,worsening,medium,52,32,79,2,2,critical-exposure
+7,descend,3,0,3,worsening,high,50,34,81,1,1,retreat-initiated|critical-exposure

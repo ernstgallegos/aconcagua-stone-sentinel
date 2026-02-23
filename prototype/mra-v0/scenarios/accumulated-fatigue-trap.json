@@ -1,0 +1,23 @@
+{
+  "id": "accumulated-fatigue-trap",
+  "description": "Stable environment but progressive fatigue pressure punishes over-advancing.",
+  "seeds": [707, 808, 909],
+  "max_turns": 12,
+  "initial_state": {
+    "altitude_band": "mid",
+    "position": "camp_b",
+    "weather_severity": 1,
+    "visibility": 2,
+    "terrain_load": 1,
+    "functional_capacity": 90,
+    "fatigue": 18,
+    "exposure": 10,
+    "water": 10,
+    "food": 10
+  },
+  "bias": {
+    "weather_deterioration": 0,
+    "terrain_growth": 0,
+    "fatigue_growth": 1
+  }
+}

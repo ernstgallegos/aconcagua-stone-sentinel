@@ -1,0 +1,23 @@
+{
+  "id": "false-stability-terrain",
+  "description": "Mild weather masks increasing terrain load and hidden cumulative penalties.",
+  "seeds": [404, 505, 606],
+  "max_turns": 10,
+  "initial_state": {
+    "altitude_band": "mid",
+    "position": "camp_b",
+    "weather_severity": 1,
+    "visibility": 2,
+    "terrain_load": 1,
+    "functional_capacity": 88,
+    "fatigue": 20,
+    "exposure": 12,
+    "water": 8,
+    "food": 8
+  },
+  "bias": {
+    "weather_deterioration": 0,
+    "terrain_growth": 1,
+    "fatigue_growth": 0
+  }
+}
