@@ -12,9 +12,13 @@
 
 ## Run summary
 
-- Outcome class (`stabilized` / `retreated` / `deteriorated` / `aborted`):
+- Outcome class: [ ] stabilized  [ ] retreated  [ ] deteriorated  [ ] incapacitated  [ ] survived-marginal
 - Total turns:
+- Highest position reached:
+- Final body state: capacity=___ fatigue=___ exposure=___
+- Resources remaining: water=___ food=___
 - Key ending constraint:
+- First critical flag (if any):
 
 ## Decision rationale (turn-by-turn highlights)
 
@@ -55,4 +59,3 @@
 - [ ] Contradicts core MRA hypothesis
 
 ### Notes
-

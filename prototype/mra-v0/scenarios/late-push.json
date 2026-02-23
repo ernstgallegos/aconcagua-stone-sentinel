@@ -1,0 +1,23 @@
+{
+  "id": "late-push",
+  "description": "High camp reached but body already stressed. Resources are low.",
+  "seeds": [111, 222, 333],
+  "max_turns": 8,
+  "initial_state": {
+    "altitude_band": "high",
+    "position": "camp_c",
+    "weather_severity": 1,
+    "visibility": 2,
+    "terrain_load": 2,
+    "functional_capacity": 62,
+    "fatigue": 45,
+    "exposure": 35,
+    "water": 4,
+    "food": 3
+  },
+  "bias": {
+    "weather_deterioration": 0,
+    "terrain_growth": 0,
+    "fatigue_growth": 1
+  }
+}
