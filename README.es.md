@@ -101,10 +101,11 @@ Se trata de un repositorio curado y orientado al público, no de un archivo comp
 
 ## Estructura del repositorio
 
-- [`/docs`](./docs) — Documentos conceptuales, pilares de diseño y visión de sistemas (inglés y español)
+- [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas y propuesta de artefacto mínimo reproducible (solo en inglés)
 - [`/art`](./art) — Concept art curado y referencias visuales
 - [`/devlog`](./devlog) — Intención de diseño, decisiones de alcance y reflexiones
 - [`/meta`](./meta) — Roadmap público, whitepaper y notas de visibilidad
+- [`/prototype/mra-v0`](./prototype/mra-v0) — Runtime ejecutable de prototipo de baja fidelidad para el artefacto mínimo reproducible
 
 ---
 

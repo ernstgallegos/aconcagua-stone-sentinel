@@ -1,0 +1,30 @@
+{
+  "id": "false-stability-terrain",
+  "title": "False Stability Terrain",
+  "max_turns": 12,
+  "altitude_band": "mid",
+  "initial_state": {
+    "position_index": 1,
+    "weather_severity": 1,
+    "visibility": 2,
+    "terrain_load": 2,
+    "functional_capacity": 82,
+    "fatigue": 28,
+    "exposure": 20,
+    "water": 10,
+    "food": 10
+  },
+  "environment_profile": {
+    "weather_severity_weights": [[0, 2], [1, 4], [2, 2], [3, 1]],
+    "visibility_weights": [[0, 1], [1, 2], [2, 4], [3, 2]],
+    "terrain_load_weights": [[0, 1], [1, 2], [2, 4], [3, 3]]
+  },
+  "thresholds": {
+    "functional_low": 35,
+    "functional_critical": 15,
+    "fatigue_high": 75,
+    "fatigue_critical": 95,
+    "exposure_high": 70,
+    "exposure_critical": 92
+  }
+}
