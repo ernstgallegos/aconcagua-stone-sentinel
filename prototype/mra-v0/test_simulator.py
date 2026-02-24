@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from simulator import load_scenario, run_simulation
+from simulator import load_scenario, run_simulation, uncertainty_level
 
 
 class TestSimulator(unittest.TestCase):
@@ -25,6 +25,24 @@ class TestSimulator(unittest.TestCase):
     def test_outcome_taxonomy_has_no_aborted(self):
         scenario = load_scenario(Path("prototype/mra-v0/scenarios/false-stability-terrain.json"))
         _, result = run_simulation(scenario, seed=505, policy="cautious")
+        self.assertIn(result.outcome, {"stabilized", "retreated", "deteriorated", "incapacitated", "survived-marginal"})
+
+    def test_uncertainty_can_be_high_in_clear_weather_due_to_hypoxia(self):
+        state = {
+            "altitude_band": "high",
+            "weather_severity": 0,
+            "visibility": 3,
+            "fatigue": 80,
+            "exposure": 80,
+        }
+        import random
+
+        uncertainty = uncertainty_level(state, random.Random(123))
+        self.assertEqual(uncertainty, "high")
+
+    def test_weather_window_scenario_is_available_and_runnable(self):
+        scenario = load_scenario(Path("prototype/mra-v0/scenarios/weather-window.json"))
+        _, result = run_simulation(scenario, seed=151, policy="cautious")
         self.assertIn(result.outcome, {"stabilized", "retreated", "deteriorated", "incapacitated", "survived-marginal"})
 
 
