@@ -13,6 +13,7 @@ DEFAULT_POLICY_BY_SCENARIO = {
     "false-stability-terrain": "cautious",
     "accumulated-fatigue-trap": "waiter",
     "late-push": "cautious",
+    "weather-window": "cautious",
 }
 
 

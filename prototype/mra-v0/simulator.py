@@ -44,19 +44,30 @@ def load_scenario(path: Path) -> dict[str, Any]:
 
 
 def uncertainty_level(state: dict[str, Any], rng: random.Random) -> str:
-    base = state["weather_severity"] + (3 - state["visibility"])
+    base = state["weather_severity"] + (3 - state["visibility"]) + cognitive_noise(state)
     jitter = rng.choice([-1, 0, 0, 1])
-    score = clamp(base + jitter, 0, 6)
+    score = clamp(base + jitter, 0, 9)
     if score <= 2:
         return "low"
-    if score <= 4:
+    if score <= 5:
         return "medium"
     return "high"
 
 
+def cognitive_noise(state: dict[str, Any]) -> int:
+    altitude_factor = {"low": 0, "mid": 1, "high": 3}.get(state.get("altitude_band", "mid"), 1)
+    fatigue_factor = max(0, (state["fatigue"] - 50) // 15)
+    exposure_factor = max(0, (state["exposure"] - 40) // 20)
+    return altitude_factor + fatigue_factor + exposure_factor
+
+
 def observed_signals(state: dict[str, Any], rng: random.Random) -> dict[str, str]:
+    euphoria_bias = 0
+    if state.get("altitude_band") == "low" and state["fatigue"] < 40 and state["functional_capacity"] > 70:
+        euphoria_bias = rng.choice([0, 0, 0, -1])
+
     def noisy(value: int) -> int:
-        return clamp(value + rng.choice([-1, 0, 0, 1]), 0, 3)
+        return clamp(value + rng.choice([-1, 0, 0, 1]) + euphoria_bias, 0, 3)
 
     trend = "stable"
     combined = state["weather_severity"] + state["terrain_load"]
@@ -133,7 +144,13 @@ def update_position(state: dict[str, Any], decision: str) -> None:
     state["altitude_band"] = POSITION_TO_ALTITUDE.get(state["position"], state.get("altitude_band", "mid"))
 
 
-def apply_decision(state: dict[str, Any], decision: str, bias: dict[str, int], rng: random.Random) -> tuple[dict[str, int], list[str]]:
+def apply_decision(
+    state: dict[str, Any],
+    decision: str,
+    bias: dict[str, Any],
+    rng: random.Random,
+    turn: int,
+) -> tuple[dict[str, int], list[str]]:
     flags: list[str] = []
 
     weather_shift = rng.choices(
@@ -143,6 +160,14 @@ def apply_decision(state: dict[str, Any], decision: str, bias: dict[str, int], r
     )[0] + bias.get("weather_deterioration", 0)
 
     terrain_shift = rng.choice([0, 1]) + bias.get("terrain_growth", 0)
+
+    window_turns = set(bias.get("window_turns", []))
+    if turn in window_turns:
+        weather_shift -= 2
+        terrain_shift = min(terrain_shift, 0)
+    elif window_turns and turn > max(window_turns):
+        weather_shift += bias.get("post_window_deterioration", 0)
+
     if decision == "wait" and state["terrain_load"] > 0:
         terrain_recovery = rng.choice([0, 0, -1])
         terrain_shift = min(terrain_shift, terrain_recovery)
@@ -152,9 +177,13 @@ def apply_decision(state: dict[str, Any], decision: str, bias: dict[str, int], r
         exposure_delta = 8 + state["weather_severity"] * 3
         capacity_delta = -6 - state["weather_severity"] * 2 - state["terrain_load"]
     elif decision == "wait":
-        fatigue_delta = -4 + bias.get("fatigue_growth", 0)
+        altitude_rest_modifier = {"low": -4, "mid": -2, "high": 0}.get(state.get("altitude_band", "mid"), -2)
+        fatigue_delta = altitude_rest_modifier + bias.get("fatigue_growth", 0)
         exposure_delta = 4 + state["weather_severity"] * 2
-        capacity_delta = -2 + (1 if state["visibility"] >= 2 else 0)
+        if state.get("altitude_band") == "high":
+            capacity_delta = -2
+        else:
+            capacity_delta = -2 + (1 if state["visibility"] >= 2 else 0)
     else:  # descend
         fatigue_delta = 2 + state["terrain_load"]
         exposure_delta = 2 + state["weather_severity"]
@@ -224,7 +253,7 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
     for turn in range(1, scenario["max_turns"] + 1):
         signals = observed_signals(state, rng)
         decision, rationale = pick_decision(policy, state, turn, signals)
-        deltas, flags = apply_decision(state, decision, scenario.get("bias", {}), rng)
+        deltas, flags = apply_decision(state, decision, scenario.get("bias", {}), rng, turn)
         all_flags.extend(flags)
 
         if state["position"] in POSITIONS:
