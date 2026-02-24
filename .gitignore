@@ -1,0 +1,7 @@
+# Python cache artifacts
+__pycache__/
+*.py[cod]
+
+# Batch-generated simulator outputs
+prototype/mra-v0/runs/generated/
+
