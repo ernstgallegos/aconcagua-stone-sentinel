@@ -11,8 +11,17 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-POSITIONS = ["base_camp", "camp_a", "camp_b", "route", "camp_c"]
+POSITIONS = ["horcones", "base_camp", "camp_a", "camp_b", "route", "camp_c"]
+POSITION_LABELS = {
+    "horcones": "Horcones / Entrada Parque Provincial Aconcagua (2950 m)",
+    "base_camp": 'Campamento Base / "Plaza de Mulas" (4350 m)',
+    "camp_a": 'Campamento 1 "Canadá" (5050 m)',
+    "camp_b": 'Campamento 2 "Nido de Cóndores" (5560 m)',
+    "route": "Summit route sector (>5560 m)",
+    "camp_c": 'Campamento 3 "Cólera" (5970 m)',
+}
 POSITION_TO_ALTITUDE = {
+    "horcones": "low",
     "base_camp": "low",
     "camp_a": "mid",
     "camp_b": "mid",
@@ -128,9 +137,9 @@ def pick_decision(policy: str, state: dict[str, Any], turn: int, signals: dict[s
 
 
 def update_position(state: dict[str, Any], decision: str) -> None:
-    current = state.get("position", "camp_b")
+    current = state.get("position", "horcones")
     if current not in POSITIONS:
-        current = "camp_b"
+        current = "horcones"
     idx = POSITIONS.index(current)
 
     if decision == "advance":
@@ -248,7 +257,7 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
     logs: list[dict[str, Any]] = []
     all_flags: list[str] = []
     ended_by_choice = False
-    highest_position_idx = POSITIONS.index(state.get("position", "camp_b")) if state.get("position", "camp_b") in POSITIONS else 0
+    highest_position_idx = POSITIONS.index(state.get("position", "horcones")) if state.get("position", "horcones") in POSITIONS else 0
 
     for turn in range(1, scenario["max_turns"] + 1):
         signals = observed_signals(state, rng)
@@ -266,6 +275,7 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
             "observed": signals,
             "deltas": deltas,
             "state": dict(state),
+            "position_label": POSITION_LABELS.get(state.get("position", ""), "unknown"),
             "flags": flags,
         }
         logs.append(row)
@@ -293,13 +303,14 @@ def write_outputs(logs: list[dict[str, Any]], result: RunResult, output_prefix: 
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         writer.writerow([
-            "turn", "position", "altitude_band", "decision", "weather_hint", "visibility_hint", "terrain_hint", "trend", "uncertainty",
+            "turn", "position", "position_label", "altitude_band", "decision", "weather_hint", "visibility_hint", "terrain_hint", "trend", "uncertainty",
             "functional_capacity", "fatigue", "exposure", "water", "food", "flags", "rationale"
         ])
         for row in logs:
             writer.writerow([
                 row["turn"],
                 row["state"].get("position", "unknown"),
+                row.get("position_label", "unknown"),
                 row["state"].get("altitude_band", "unknown"),
                 row["decision"],
                 row["observed"]["weather_hint"],

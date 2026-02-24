@@ -4,11 +4,13 @@
 
 At 3,000–4,000 m (Confluencia and the approach to Plaza de Mulas), measurable psychomotor decline can appear within the first hours, sleep disruption begins, and both working memory and sustained attention weaken. A documented pattern in this range is initial euphoria followed by irritability: climbers can feel better than they actually are. Design implication: early low-altitude readings can be artificially optimistic, and players should learn this through repeated runs rather than explicit tutorialization.
 
-At 4,300 m (Plaza de Mulas base camp), blood oxygen saturation declines in a way that becomes noticeable, sleep remains fragmented even at rest, and baseline fatigue stays high because adaptation itself consumes energy. Hematocrit adjustment begins but requires days, not hours. Design implication: this is where the player’s baseline should be established, and each turn should carry visible cost from here onward.
+At 4,350 m (Base Camp / Plaza de Mulas), blood oxygen saturation declines in a way that becomes noticeable, sleep remains fragmented even at rest, and baseline fatigue stays high because adaptation itself consumes energy. Hematocrit adjustment begins but requires days, not hours. Design implication: this is where the player’s baseline should be established, and each turn should carry visible cost from here onward.
 
-At 5,500 m (Nido de Cóndores), documented research indicates significant spatial-memory degradation, plus clear impairment in short-term memory and new memory encoding. Physical output can drop by roughly 30–40% compared with sea level. Design implication: this is an inflection threshold where information quality should visibly degrade, because not only weather becomes noisy; the body becomes noisy as well.
+At 5,050 m (Camp 1 / Canadá), physiological stress is already substantial and compounds from the base-camp baseline. Design implication: this transition should feel clearly costly even under acceptable weather.
 
-At 6,000 m (Cólera), encoding and short-term memory are severely impacted, risk judgment degrades before total physical collapse, fatigue remains severe even at rest, sleep can become nearly impossible, and muscle catabolism may begin. Design implication: uncertainty about one’s own body state should be near maximum in this zone; high `functional_capacity` should not imply high confidence in self-reading.
+At 5,560 m (Camp 2 / Nido de Cóndores), documented research indicates significant spatial-memory degradation, plus clear impairment in short-term memory and new memory encoding. Physical output can drop by roughly 30–40% compared with sea level. Design implication: this is an inflection threshold where information quality should visibly degrade, because not only weather becomes noisy; the body becomes noisy as well.
+
+At 5,970 m (Camp 3 / Cólera), encoding and short-term memory are severely impacted, risk judgment degrades before total physical collapse, fatigue remains severe even at rest, sleep can become nearly impossible, and muscle catabolism may begin. Design implication: uncertainty about one’s own body state should be near maximum in this zone; high `functional_capacity` should not imply high confidence in self-reading.
 
 Above 6,700 m (La Canaleta and summit zone), atmospheric pressure is roughly 40% of sea-level pressure, thinking slows, verbal fluency may degrade, and the risk of HACE/HAPE is real. Climbers often rely on rest-step pacing: one step, transfer weight to the straight rear leg, breathe, then one more step. Design implication: decision granularity should compress toward single-step negotiation, not broad “advance a turn” abstraction.
 
@@ -26,7 +28,7 @@ Weather windows in season (November–March) often span 2–5 favorable days. Cl
 
 ## 3. Territory: real milestones on the Normal Route
 
-System criterion: each milestone should carry physical and decision-relevant properties, not only a name tag in a positional list.
+System criterion: each milestone should carry physical and decision-relevant properties, not only a name tag in a positional list. Expedition start must be modeled at Horcones (Aconcagua Provincial Park entrance), not at base camp.
 
 Horcones Lagoon (2,950 m): first scale revelation and park registration gate; revelation function, not major strategic function.
 
@@ -36,15 +38,17 @@ Playa Ancha (3,600–3,800 m): sustained exposure across loose alluvial terrain 
 
 Cuesta Brava (~4,000 m): short but energetically expensive steep segment; teaches abrupt terrain-cost profile shifts.
 
-Plaza de Mulas (4,300–4,365 m): primary logistics hub with medical support; lowest-noise external body assessment point.
+Base Camp / Plaza de Mulas (4,350 m): primary logistics hub with medical support; lowest-noise external body assessment point.
 
 El Semáforo (~4,550 m): visual commitment threshold beyond base-camp logistics comfort zone.
 
 Piedras Conway (~4,750 m): non-intrusive historical trace embedded in terrain.
 
-Nido de Cóndores (5,250–5,570 m): psychological scale threshold and beginning of significant cognitive hypoxia effects.
+Camp 1 / Canadá (5,050 m): first high-camp transition where baseline adaptation debt becomes operationally visible.
 
-Cólera (5,970–6,000 m): last camp, extreme cold, near-nonrestorative sleep; additional turns trend net-negative.
+Camp 2 / Nido de Cóndores (5,560 m): psychological scale threshold and beginning of significant cognitive hypoxia effects.
+
+Camp 3 / Cólera (5,970 m): last camp, extreme cold, near-nonrestorative sleep; additional turns trend net-negative.
 
 Refugio Independencia (6,380 m): decision checkpoint before final summit sector.
 

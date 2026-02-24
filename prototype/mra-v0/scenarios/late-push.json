@@ -1,11 +1,15 @@
 {
   "id": "late-push",
-  "description": "High camp reached but body already stressed. Resources are low.",
-  "seeds": [111, 222, 333],
+  "description": "Push-pressure profile from Horcones with pre-loaded physiological stress and low resources.",
+  "seeds": [
+    111,
+    222,
+    333
+  ],
   "max_turns": 8,
   "initial_state": {
-    "altitude_band": "high",
-    "position": "camp_c",
+    "altitude_band": "low",
+    "position": "horcones",
     "weather_severity": 1,
     "visibility": 2,
     "terrain_load": 2,
