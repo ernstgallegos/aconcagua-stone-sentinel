@@ -1,11 +1,15 @@
 {
   "id": "weather-window",
-  "description": "A brief window of favorable conditions opens, then closes. The climber must recognize it, act within it, and know when it has passed.",
-  "seeds": [151, 252, 353],
+  "description": "A brief weather window opens after departing Horcones; climber must recognize and exploit it before deterioration.",
+  "seeds": [
+    151,
+    252,
+    353
+  ],
   "max_turns": 12,
   "initial_state": {
-    "altitude_band": "high",
-    "position": "camp_c",
+    "altitude_band": "low",
+    "position": "horcones",
     "weather_severity": 2,
     "visibility": 1,
     "terrain_load": 1,
@@ -19,7 +23,11 @@
     "weather_deterioration": -1,
     "terrain_growth": 0,
     "fatigue_growth": 0,
-    "window_turns": [3, 4, 5],
+    "window_turns": [
+      3,
+      4,
+      5
+    ],
     "post_window_deterioration": 2
   }
 }

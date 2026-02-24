@@ -20,7 +20,7 @@ class TestSimulator(unittest.TestCase):
     def test_position_changes_with_decisions(self):
         scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
         logs, result = run_simulation(scenario, seed=101, policy="aggressive")
-        self.assertIn(result.highest_position_reached, {"camp_c", "route"})
+        self.assertIn(result.highest_position_reached, {"base_camp", "camp_a", "camp_b", "camp_c", "route"})
         visited_positions = {row["state"]["position"] for row in logs}
         self.assertGreater(len(visited_positions), 1)
 

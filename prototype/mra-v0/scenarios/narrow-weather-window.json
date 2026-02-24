@@ -1,11 +1,15 @@
 {
   "id": "narrow-weather-window",
   "description": "Favorable start with fast weather deterioration risk at higher altitude bands.",
-  "seeds": [101, 202, 303],
+  "seeds": [
+    101,
+    202,
+    303
+  ],
   "max_turns": 10,
   "initial_state": {
-    "altitude_band": "mid",
-    "position": "camp_b",
+    "altitude_band": "low",
+    "position": "horcones",
     "weather_severity": 1,
     "visibility": 2,
     "terrain_load": 1,

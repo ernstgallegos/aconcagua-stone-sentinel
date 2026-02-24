@@ -1,11 +1,15 @@
 {
   "id": "accumulated-fatigue-trap",
   "description": "Stable environment but progressive fatigue pressure punishes over-advancing.",
-  "seeds": [707, 808, 909],
+  "seeds": [
+    707,
+    808,
+    909
+  ],
   "max_turns": 12,
   "initial_state": {
-    "altitude_band": "mid",
-    "position": "camp_b",
+    "altitude_band": "low",
+    "position": "horcones",
     "weather_severity": 1,
     "visibility": 2,
     "terrain_load": 1,

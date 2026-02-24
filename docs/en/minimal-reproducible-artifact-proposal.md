@@ -161,7 +161,8 @@ state:
   exposure: 0..100
   water: int
   food: int
-  position: camp_a|camp_b|camp_c|route
+  position: horcones|base_camp|camp_a|camp_b|camp_c|route
+  position_label: Horcones / Entrada Parque Provincial Aconcagua (2950 m)|Campamento Base / "Plaza de Mulas" (4350 m)|Campamento 1 "Canadá" (5050 m)|Campamento 2 "Nido de Cóndores" (5560 m)|Campamento 3 "Cólera" (5970 m)|Summit route sector (>5560 m)
   accumulated_flags: [string]
 ```
 

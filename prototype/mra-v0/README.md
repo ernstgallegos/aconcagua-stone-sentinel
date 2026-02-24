@@ -40,6 +40,16 @@ This generates:
 - `waiter`: always waits (useful for baseline behavior checks).
 - `human`: interactive turn-by-turn decisions with optional rationale capture.
 
+## Position terminology
+
+The simulator keeps stable internal position IDs (`horcones`, `base_camp`, `camp_a`, `camp_b`, `route`, `camp_c`) and now exports human-readable labels aligned with the route terminology. All expeditions begin at Horcones (Parque Provincial Aconcagua entrance):
+
+- `horcones`: Horcones / Entrada Parque Provincial Aconcagua (2950 m)
+- `base_camp`: Campamento Base / "Plaza de Mulas" (4350 m)
+- `camp_a`: Campamento 1 "Canadá" (5050 m)
+- `camp_b`: Campamento 2 "Nido de Cóndores" (5560 m)
+- `camp_c`: Campamento 3 "Cólera" (5970 m)
+
 ## Output contract
 
 Each run includes:
