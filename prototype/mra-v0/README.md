@@ -76,6 +76,7 @@ The simulator now supports optional weather-window controls in scenario bias:
 ```bash
 python3 prototype/mra-v0/run_all.py
 python3 -m unittest prototype/mra-v0/test_simulator.py
+pytest -q prototype/mra-v0/test_simulator.py
 ```
 
 ## Notes
