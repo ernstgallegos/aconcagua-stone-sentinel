@@ -7,6 +7,7 @@ Technical prototype for the **Minimal Reproducible Artifact (MRA)** defined in t
 - `simulator.py`: deterministic turn-based simulator with partial information and persistent consequences.
 - `scenarios/`: 5 scenario definition files (including `late-push` and `weather-window` for degraded high-altitude starts and temporary weather openings), each with a fixed seed set.
 - `runs/`: exported run logs in both CSV and JSONL format.
+- `runs/generated/`: default output folder produced by `run_all.py` (ignored by Git).
 - `run_all.py`: batch script to execute all scenarios/seeds with documented policies.
 - `debrief-template.md`: session template for qualitative validation.
 - `test_simulator.py`: regression tests for key simulator invariants.
@@ -76,6 +77,7 @@ The simulator now supports optional weather-window controls in scenario bias:
 ```bash
 python3 prototype/mra-v0/run_all.py
 python3 -m unittest prototype/mra-v0/test_simulator.py
+pytest -q prototype/mra-v0/test_simulator.py
 ```
 
 ## Notes
