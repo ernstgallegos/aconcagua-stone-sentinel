@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aconcagua: Stone Sentinel — Web Vertical Slice</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Aconcagua: Stone Sentinel</h1>
+        <p class="subtitle">Web vertical slice for MRA v0 scenario playback</p>
+      </header>
+
+      <section class="panel controls">
+        <h2>Run selector</h2>
+        <div class="grid">
+          <label>
+            Scenario
+            <select id="scenario"></select>
+          </label>
+          <label>
+            Seed
+            <input id="seed" type="number" min="1" value="101" />
+          </label>
+          <label>
+            Policy
+            <select id="policy">
+              <option value="cautious">cautious</option>
+              <option value="aggressive">aggressive</option>
+              <option value="waiter">waiter</option>
+            </select>
+          </label>
+        </div>
+        <button id="load">Load run</button>
+        <p id="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="summary-panel" hidden>
+        <h2>Outcome</h2>
+        <div id="summary"></div>
+      </section>
+
+      <section class="panel" id="turns-panel" hidden>
+        <h2>Turn timeline</h2>
+        <div id="turns"></div>
+      </section>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
