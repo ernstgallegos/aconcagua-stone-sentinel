@@ -95,7 +95,35 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  
  ---
  
- ## Estructura del repositorio
+ 
+## Vertical Slice web (listo para Vercel)
+
+Este repositorio ahora incluye un vertical slice web liviano para reproducir corridas incluidas del MRA v0:
+
+- `index.html`, `styles.css`, `app.js` — interfaz cliente estática
+- `api/run.js` — API serverless que sirve corridas desde `prototype/mra-v0/runs/`
+- `vercel.json` — configuración de runtime y ruteo para Vercel
+
+### Vista local
+
+Desde la raíz del repositorio:
+
+```bash
+python3 -m http.server 4173
+```
+
+Luego abrir `http://localhost:4173`.
+
+En este modo estático local, la UI lee los JSONL incluidos directamente desde `prototype/mra-v0/runs/` (sin API serverless).
+
+### Publicación en Vercel
+
+- Importar este repositorio en Vercel.
+- Framework preset: **Other** (estático + funciones serverless).
+- Este vertical slice no requiere build command.
+- Publicar. La UI se sirve en `/` y consume `/api/run`.
+
+## Estructura del repositorio
  
  - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español)  y propuesta de artefacto mínimo reproducible (solo en inglés).
  - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas y propuesta de artefacto mínimo reproducible (solo en inglés)

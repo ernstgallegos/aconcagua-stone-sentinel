@@ -101,6 +101,34 @@ This is a curated, public-facing repository, not a complete production archive.
 
 ---
 
+
+## Web Vertical Slice (Vercel-ready)
+
+This repository now includes a lightweight web vertical slice that replays bundled MRA v0 runs:
+
+- `index.html`, `styles.css`, `app.js` — static client UI
+- `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
+- `vercel.json` — Vercel runtime and routing configuration
+
+### Local preview
+
+From repository root:
+
+```bash
+python3 -m http.server 4173
+```
+
+Then open `http://localhost:4173`.
+
+In this local static mode, the UI reads bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
+
+### Vercel deploy
+
+- Import this repository in Vercel.
+- Framework preset: **Other** (static + serverless functions).
+- No build command required for this vertical slice.
+- Deploy. The UI is served from `/` and consumes `/api/run`.
+
 ## Repository Structure
 
 - [`/docs`](./docs) — Concept documents, design pillars, system overviews, and a minimal reproducible artifact proposal
