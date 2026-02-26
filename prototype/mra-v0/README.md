@@ -15,7 +15,8 @@ Technical prototype for the **Minimal Reproducible Artifact (MRA)** defined in t
 ## Requirements
 
 - Python 3.10+
-- No external dependencies (standard library only)
+- No external runtime dependencies (standard library only)
+- Optional: `pytest` for the alternative test command shown below
 
 ## Run a scenario
 
@@ -87,6 +88,7 @@ The simulator now supports optional weather-window controls in scenario bias:
 ```bash
 python3 prototype/mra-v0/run_all.py
 python3 -m unittest prototype/mra-v0/test_simulator.py
+# Optional (requires pytest):
 pytest -q prototype/mra-v0/test_simulator.py
 ```
 
