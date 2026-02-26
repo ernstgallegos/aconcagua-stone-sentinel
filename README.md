@@ -120,6 +120,8 @@ python3 -m http.server 4173
 
 Then open `http://localhost:4173`.
 
+In this local static mode, the UI reads bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
+
 ### Vercel deploy
 
 - Import this repository in Vercel.

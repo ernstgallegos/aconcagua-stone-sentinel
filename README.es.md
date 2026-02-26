@@ -114,6 +114,8 @@ python3 -m http.server 4173
 
 Luego abrir `http://localhost:4173`.
 
+En este modo estático local, la UI lee los JSONL incluidos directamente desde `prototype/mra-v0/runs/` (sin API serverless).
+
 ### Publicación en Vercel
 
 - Importar este repositorio en Vercel.
