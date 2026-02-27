@@ -1,53 +1,2241 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aconcagua: Stone Sentinel — Vertical Slice v1</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <main class="app-shell">
-      <header class="hero">
-        <p class="kicker">Aconcagua: Stone Sentinel</p>
-        <h1>Web Vertical Slice v1</h1>
-        <p class="lead">
-          Interactive replay of bundled expedition runs from MRA v0. Compare outcomes,
-          inspect each turn, and review constraints that forced retreat, wait, or advance.
-        </p>
-      </header>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aconcagua: Stone Sentinel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ───── TOKENS ───── */
+:root {
+  --bg:        #0d0e10;
+  --surface:   #131417;
+  --surface2:  #1a1b1f;
+  --border:    #2a2b30;
+  --stone:     #8a8a80;
+  --ochre:     #b8924a;
+  --ochre-dim: #7a5f2e;
+  --ice:       #a8bfc4;
+  --ice-dim:   #5a7a82;
+  --white:     #d4cfc8;
+  --red:       #8c3a2e;
+  --red-dim:   #5a241a;
+  --text:      #c8c4bc;
+  --text-dim:  #5a5a54;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Lora', Georgia, serif;
+}
 
-      <section class="panel controls">
-        <h2>Run loader</h2>
-        <div class="form-grid">
-          <label>Scenario<select id="scenario"></select></label>
-          <label>Seed<input id="seed" type="number" min="1" value="101" /></label>
-          <label>
-            Policy
-            <select id="policy">
-              <option value="cautious">cautious</option>
-              <option value="aggressive">aggressive</option>
-              <option value="waiter">waiter</option>
-            </select>
-          </label>
+body[data-theme='light'] {
+  --bg:        #f4efe6;
+  --surface:   #fffaf2;
+  --surface2:  #f7f0e5;
+  --border:    #d9ccb8;
+  --stone:     #7a6e5d;
+  --ochre:     #9f6e1d;
+  --ochre-dim: #7f5615;
+  --ice:       #4b7989;
+  --ice-dim:   #5c7a84;
+  --white:     #2e271f;
+  --red:       #a0473d;
+  --red-dim:   #7e3027;
+  --text:      #332b21;
+  --text-dim:  #7b6f61;
+}
+
+body[data-theme='sunset'] {
+  --bg:        #251420;
+  --surface:   #331b2c;
+  --surface2:  #422139;
+  --border:    #684056;
+  --stone:     #d3a48d;
+  --ochre:     #ff9e5e;
+  --ochre-dim: #ca6f3f;
+  --ice:       #ffc89a;
+  --ice-dim:   #c78461;
+  --white:     #ffe3d1;
+  --red:       #d75e4f;
+  --red-dim:   #93372e;
+  --text:      #f3d4bf;
+  --text-dim:  #c58f79;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.theme-switcher {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.55rem;
+}
+
+.theme-select {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.35rem;
+}
+
+/* ───── SCREENS ───── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ───── TITLE ───── */
+#screen-title {
+  align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 2rem;
+  position: relative;
+}
+#screen-title::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(168,191,196,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.title-eyebrow {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.25em;
+  color: var(--stone); text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.title-main {
+  font-family: var(--mono); font-size: clamp(1.6rem, 5vw, 2.8rem);
+  font-weight: 300; color: var(--white); letter-spacing: 0.05em;
+  line-height: 1.2; margin-bottom: 0.5rem;
+}
+.title-sub { color: var(--stone); font-size: 1rem; font-weight: 300; letter-spacing: 0.02em; }
+.title-sentinel { color: var(--ice); }
+.title-divider {
+  width: 40px; height: 1px; background: var(--border);
+  margin: 2rem auto;
+}
+.title-tagline {
+  font-style: italic; color: var(--stone); font-size: 0.95rem;
+  max-width: 440px; line-height: 1.7; margin-bottom: 3rem;
+}
+.btn-primary {
+  font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.2em;
+  text-transform: uppercase; background: transparent;
+  border: 1px solid var(--ochre); color: var(--ochre);
+  padding: 0.8rem 2.5rem; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-primary:hover { background: var(--ochre); color: var(--bg); }
+.btn-ghost {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em;
+  text-transform: uppercase; background: transparent;
+  border: 1px solid var(--border); color: var(--stone);
+  padding: 0.6rem 1.5rem; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--stone); color: var(--white); }
+
+/* ───── CHARACTER SELECT ───── */
+#screen-character { padding: 2.5rem 1.5rem; align-items: center; }
+.screen-header { text-align: center; margin-bottom: 2rem; }
+.screen-header h2 {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--stone); margin-bottom: 0.5rem;
+}
+.screen-header p { font-style: italic; color: var(--text-dim); font-size: 0.9rem; }
+.char-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem; max-width: 820px; width: 100%; margin-bottom: 2rem;
+}
+.char-card {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1.5rem; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.char-card:hover { border-color: var(--stone); background: var(--surface2); }
+.char-card.selected { border-color: var(--ochre); background: var(--surface2); }
+.char-card.selected::before {
+  content: '◆'; position: absolute; top: 0.75rem; right: 0.75rem;
+  font-size: 0.6rem; color: var(--ochre);
+}
+.char-name {
+  font-family: var(--mono); font-size: 0.85rem; color: var(--white);
+  font-weight: 500; margin-bottom: 0.2rem;
+}
+.char-role {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--stone); margin-bottom: 1rem;
+}
+.char-bio { font-style: italic; color: var(--text); font-size: 0.85rem; line-height: 1.65; margin-bottom: 1rem; }
+.char-traits { list-style: none; }
+.char-traits li {
+  font-family: var(--mono); font-size: 0.72rem; color: var(--stone);
+  padding: 0.3rem 0; border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+.char-traits li::before { content: '— '; }
+
+/* ───── MODE SELECT ───── */
+#screen-mode { padding: 2.5rem 1.5rem; align-items: center; justify-content: center; }
+.mode-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1rem; max-width: 500px; width: 100%; margin-bottom: 2rem;
+}
+.mode-card {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 2rem 1.5rem; cursor: pointer; text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.mode-card:hover { border-color: var(--stone); background: var(--surface2); }
+.mode-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.mode-name {
+  font-family: var(--mono); font-size: 0.8rem; color: var(--white);
+  letter-spacing: 0.1em; margin-bottom: 0.5rem;
+}
+.mode-desc { font-size: 0.8rem; color: var(--stone); line-height: 1.5; }
+
+/* ───── SCENARIO SELECT ───── */
+#screen-scenario { padding: 2.5rem 1.5rem; align-items: center; }
+.scenario-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem; max-width: 860px; width: 100%; margin-bottom: 2rem;
+}
+.scenario-card {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1.25rem; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.scenario-card:hover { border-color: var(--stone); background: var(--surface2); }
+.scenario-card.selected { border-color: var(--ochre); }
+.scenario-num {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+  letter-spacing: 0.1em; margin-bottom: 0.3rem;
+}
+.scenario-name {
+  font-family: var(--mono); font-size: 0.8rem; color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.scenario-desc { font-size: 0.8rem; color: var(--stone); font-style: italic; line-height: 1.5; margin-bottom: 0.75rem; }
+.scenario-seeds { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
+.seed-btn {
+  font-family: var(--mono); font-size: 0.65rem; background: transparent;
+  border: 1px solid var(--border); color: var(--stone);
+  padding: 0.2rem 0.5rem; cursor: pointer; margin-left: 0.3rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+.seed-btn:hover, .seed-btn.active { border-color: var(--ochre); color: var(--ochre); }
+
+/* ───── ONBOARDING ───── */
+#screen-onboarding {
+  padding: 2.5rem 1.5rem; align-items: center; justify-content: center;
+}
+.onboard-box {
+  max-width: 560px; width: 100%; border: 1px solid var(--border);
+  background: var(--surface); padding: 2rem;
+}
+.onboard-intro {
+  font-style: italic; color: var(--text); font-size: 0.9rem;
+  line-height: 1.75; margin-bottom: 1.5rem; padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.onboard-char-line {
+  font-family: var(--mono); font-size: 0.7rem; color: var(--ochre);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.25rem;
+}
+.onboard-decisions { margin-bottom: 1.5rem; }
+.onboard-decision { padding: 0.6rem 0; border-top: 1px solid var(--border); }
+.onboard-decision:last-child { border-bottom: 1px solid var(--border); }
+.decision-key {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--white);
+  font-weight: 500;
+}
+.decision-cost { font-size: 0.8rem; color: var(--stone); margin-top: 0.2rem; line-height: 1.5; }
+.onboard-note {
+  font-family: var(--mono); font-size: 0.72rem; color: var(--stone);
+  line-height: 1.7; margin-bottom: 1rem; padding: 0.75rem;
+  border-left: 2px solid var(--border); background: var(--surface2);
+}
+.onboard-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+
+/* ───── GAME SCREEN ───── */
+#screen-game {
+  display: none; flex-direction: column;
+  min-height: 100vh; padding: 1rem;
+}
+#screen-game.active { display: flex; }
+.game-layout {
+  display: grid; grid-template-columns: 1fr 320px;
+  gap: 1rem; flex: 1; max-width: 980px;
+  margin: 0 auto; width: 100%;
+}
+
+/* ─ LEFT: schematic + log ─ */
+.left-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+.mountain-schematic {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1rem;
+}
+.schematic-label {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
+}
+.position-list { list-style: none; position: relative; }
+.position-list::before {
+  content: ''; position: absolute; left: 6px; top: 8px;
+  bottom: 8px; width: 1px; background: var(--border);
+}
+.pos-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.4rem 0; position: relative; cursor: default;
+}
+.pos-dot {
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg);
+  flex-shrink: 0; position: relative; z-index: 1;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pos-item.band-low .pos-dot { border-color: var(--stone); }
+.pos-item.band-mid .pos-dot { border-color: var(--ochre-dim); }
+.pos-item.band-high .pos-dot { border-color: var(--ice-dim); }
+.pos-item.current .pos-dot {
+  background: var(--white); border-color: var(--white);
+  box-shadow: 0 0 6px rgba(212,207,200,0.4);
+}
+.pos-item.reached .pos-dot { background: var(--stone); border-color: var(--stone); }
+.pos-item.above { opacity: 0.35; }
+.pos-label {
+  font-family: var(--mono); font-size: 0.68rem; line-height: 1.4;
+}
+.pos-item.band-low .pos-label { color: var(--stone); }
+.pos-item.band-mid .pos-label { color: var(--ochre); }
+.pos-item.band-high .pos-label { color: var(--ice); }
+.pos-item.current .pos-label { color: var(--white); }
+.pos-item.above .pos-label { color: var(--text-dim); }
+.pos-highest-mark {
+  font-size: 0.5rem; color: var(--ochre); margin-left: 0.2rem;
+}
+
+.action-log {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1rem; flex: 1;
+}
+.log-header {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+}
+.log-entries { display: flex; flex-direction: column; gap: 0.5rem; }
+.log-entry { padding: 0.6rem 0; border-top: 1px solid var(--border); }
+.log-entry:first-child { border-top: none; }
+.log-entry-meta {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--stone);
+  line-height: 1.5; margin-bottom: 0.2rem;
+}
+.log-entry-meta .decision-tag { color: var(--white); }
+.log-entry-narrative {
+  font-size: 0.8rem; font-style: italic; color: var(--text-dim);
+  line-height: 1.6;
+}
+.log-flag {
+  font-family: var(--mono); font-size: 0.6rem;
+  color: var(--red); margin-top: 0.2rem;
+}
+.log-flag.flag-warn { color: var(--ochre); }
+.log-empty { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
+
+/* ─ RIGHT: watch panel ─ */
+.right-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+.watch-panel {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1.25rem; font-family: var(--mono);
+}
+.watch-header {
+  display: flex; justify-content: space-between;
+  font-size: 0.68rem; color: var(--stone); margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+}
+.watch-turn { color: var(--white); }
+.watch-position { text-align: right; color: var(--ice); font-size: 0.62rem; max-width: 160px; line-height: 1.4; }
+
+.watch-section { margin-bottom: 1rem; }
+.watch-section-label {
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 0.5rem;
+}
+.watch-row {
+  display: grid; grid-template-columns: 80px 1fr auto;
+  align-items: center; gap: 0.5rem; padding: 0.25rem 0;
+  font-size: 0.68rem;
+}
+.watch-row-label { color: var(--stone); }
+.watch-dots { display: flex; gap: 3px; }
+.dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  border: 1px solid var(--border);
+}
+.dot.filled-low { background: var(--stone); border-color: var(--stone); }
+.dot.filled-mid { background: var(--ochre); border-color: var(--ochre); }
+.dot.filled-high { background: var(--red); border-color: var(--red); }
+.dot.filled-ok { background: var(--stone); border-color: var(--stone); }
+.watch-trend { font-size: 0.62rem; color: var(--stone); text-align: right; }
+.watch-trend.worsening { color: var(--red); }
+.watch-trend.clearing, .watch-trend.improving { color: var(--ice); }
+
+.watch-body-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 0.3rem 0; border-top: 1px solid var(--border); font-size: 0.72rem;
+}
+.body-label { color: var(--stone); }
+.body-value { text-align: right; }
+.body-value.stable { color: var(--white); }
+.body-value.degrading { color: var(--ochre); }
+.body-value.critical { color: var(--red); }
+
+.watch-resources {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  padding-top: 0.75rem; border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+}
+.resource-item { color: var(--stone); }
+.resource-item span { color: var(--white); }
+.resource-item.depleted span { color: var(--red); }
+
+.watch-uncertainty {
+  font-size: 0.65rem; margin-top: 0.75rem;
+  padding-top: 0.75rem; border-top: 1px solid var(--border);
+  color: var(--stone);
+}
+.uncertainty-val { text-transform: uppercase; letter-spacing: 0.1em; }
+.uncertainty-val.low { color: var(--ice); }
+.uncertainty-val.medium { color: var(--ochre); }
+.uncertainty-val.high { color: var(--red); }
+
+.thermal-reserve {
+  font-size: 0.68rem; padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border); margin-top: 0.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.thermal-label { color: var(--stone); }
+.thermal-status { color: var(--ice); }
+.thermal-status.used { color: var(--text-dim); text-decoration: line-through; }
+
+.narrative-box {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1rem;
+}
+.narrative-text {
+  font-style: italic; color: var(--text); font-size: 0.85rem;
+  line-height: 1.75; min-height: 3rem;
+}
+.narrative-passive {
+  font-family: var(--mono); font-size: 0.7rem; color: var(--ochre);
+  margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border);
+  line-height: 1.5;
+}
+
+.decision-panel {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 1rem;
+}
+.decision-label {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+}
+.decision-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.btn-decision {
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em;
+  padding: 0.65rem 0.5rem; background: transparent;
+  border: 1px solid var(--border); color: var(--stone);
+  cursor: pointer; text-transform: uppercase;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  line-height: 1.3; text-align: center;
+}
+.btn-decision:hover:not(:disabled) { border-color: var(--white); color: var(--white); }
+.btn-decision.btn-advance:hover:not(:disabled) { border-color: var(--ochre); color: var(--ochre); }
+.btn-decision.btn-descend:hover:not(:disabled) { border-color: var(--ice); color: var(--ice); }
+.btn-decision:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-thermal {
+  font-family: var(--mono); font-size: 0.65rem; width: 100%;
+  padding: 0.5rem; background: transparent;
+  border: 1px dashed var(--ice-dim); color: var(--ice-dim);
+  cursor: pointer; margin-top: 0.5rem; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-thermal:hover:not(:disabled) { border-color: var(--ice); color: var(--ice); }
+.btn-thermal:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+.btn-thermal.active-this-turn { border-color: var(--ice); color: var(--ice); background: rgba(168,191,196,0.06); }
+
+/* ───── DEBRIEF ───── */
+#screen-debrief { padding: 2rem 1.5rem; align-items: center; }
+.debrief-box { max-width: 700px; width: 100%; }
+.debrief-header { margin-bottom: 2rem; }
+.debrief-outcome-label {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--stone); margin-bottom: 0.5rem;
+}
+.debrief-outcome-value {
+  font-family: var(--mono); font-size: 1.3rem; color: var(--white);
+  margin-bottom: 0.25rem;
+}
+.debrief-outcome-value.outcome-retreat { color: var(--ice); }
+.debrief-outcome-value.outcome-collapse { color: var(--red); }
+.debrief-outcome-value.outcome-stabilized { color: var(--stone); }
+.debrief-outcome-value.outcome-success { color: var(--ochre); }
+.debrief-retreat-msg {
+  font-style: italic; color: var(--stone); font-size: 0.85rem; margin-top: 0.5rem;
+}
+.debrief-stats {
+  display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem;
+  padding: 0.75rem 0; border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: 0.7rem;
+}
+.debrief-stat-label { color: var(--text-dim); }
+.debrief-stat-val { color: var(--white); margin-top: 0.15rem; }
+
+.debrief-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.debrief-section-title {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+}
+.debrief-turning-point {
+  font-size: 0.85rem; color: var(--stone); font-style: italic; line-height: 1.7;
+}
+
+.debrief-log-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.65rem; }
+.debrief-log-table th {
+  text-align: left; color: var(--text-dim); padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border); letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.debrief-log-table td {
+  padding: 0.3rem 0.5rem; color: var(--stone);
+  border-bottom: 1px solid rgba(42,43,48,0.5);
+  vertical-align: top;
+}
+.debrief-log-table tr:last-child td { border-bottom: none; }
+.debrief-log-table td.td-decision { color: var(--white); }
+.debrief-log-table td.td-flag { color: var(--red); }
+
+.reflection-list { list-style: none; }
+.reflection-list li {
+  font-style: italic; color: var(--stone); font-size: 0.85rem;
+  padding: 0.5rem 0 0.5rem 1rem; border-left: 2px solid var(--border);
+  margin-bottom: 0.5rem; line-height: 1.65;
+}
+.reflection-list li.dynamic { border-left-color: var(--ochre-dim); }
+
+.debrief-actions {
+  display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem;
+}
+
+/* ───── JOURNAL ───── */
+#screen-journal { padding: 2rem 1.5rem; align-items: center; }
+.journal-box { max-width: 680px; width: 100%; }
+.journal-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 1.5rem;
+}
+.journal-title {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--stone);
+}
+.journal-entries { display: flex; flex-direction: column; gap: 0; }
+.journal-entry {
+  padding: 0.75rem 0; border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: 0.7rem;
+}
+.journal-entry:first-child { border-top: none; }
+.journal-entry-header { color: var(--white); margin-bottom: 0.2rem; }
+.journal-entry-detail { color: var(--stone); line-height: 1.6; }
+.journal-empty {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
+  font-style: italic; text-align: center; padding: 2rem 0;
+}
+
+/* ───── SHARED UTIL ───── */
+.nav-back {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim);
+  background: none; border: none; cursor: pointer; padding: 0.5rem 0;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.15s; margin-bottom: 1.5rem; align-self: flex-start;
+}
+.nav-back:hover { color: var(--stone); }
+.nav-back::before { content: '← '; }
+
+.run-number-badge {
+  font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim);
+  letter-spacing: 0.15em; margin-bottom: 1rem; text-align: center;
+}
+
+/* ──── RESOURCE-DEPLETED WARNING ────
+   FIX: added visual warning when resources hit zero during play */
+.resource-warning {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--red);
+  padding: 0.35rem 0.6rem; border: 1px solid var(--red-dim);
+  background: rgba(140,58,46,0.08); margin-top: 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+/* ───── RESPONSIVE ───── */
+@media (max-width: 680px) {
+  .game-layout { grid-template-columns: 1fr; }
+  .right-panel { order: -1; }
+  .mode-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="theme-switcher" aria-label="Visual mode switcher">
+  <label for="theme-select">Visual mode</label>
+  <select id="theme-select" class="theme-select" onchange="setVisualMode(this.value)">
+    <option value="dark">Dark</option>
+    <option value="light">Light</option>
+    <option value="sunset">Sunset</option>
+  </select>
+</div>
+
+<!-- ══════════════════════ TITLE ══════════════════════ -->
+<section id="screen-title" class="screen active" aria-label="Title screen">
+  <div style="text-align:center; padding: 3rem 2rem; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
+    <p class="title-eyebrow">Vertical Slice · MRA v0</p>
+    <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
+    <div class="title-divider"></div>
+    <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
+    <p class="title-sub" style="margin-bottom: 2.5rem; font-size:0.8rem;">A decision game about limits, environment, and knowing when to stop.</p>
+    <button class="btn-primary" onclick="showScreen('character')">BEGIN</button>
+  </div>
+</section>
+
+<!-- ══════════════════════ CHARACTER ══════════════════════ -->
+<section id="screen-character" class="screen" aria-label="Character selection">
+  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
+    <button class="nav-back" onclick="showScreen('title')" aria-label="Back to title">Title</button>
+    <div class="screen-header">
+      <h2>Choose Your Expedition</h2>
+      <p>Your character shapes what you read clearly — and what stays in the dark.</p>
+    </div>
+    <div class="char-grid" id="char-grid" role="radiogroup" aria-label="Character selection"></div>
+    <div style="text-align:center;">
+      <button class="btn-primary" id="btn-char-confirm" onclick="confirmCharacter()" disabled aria-disabled="true">This is my expedition.</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ MODE ══════════════════════ -->
+<section id="screen-mode" class="screen" aria-label="Mode selection">
+  <button class="nav-back" onclick="showScreen('character')" style="margin:1.5rem 1.5rem 0;" aria-label="Back to character selection">Character</button>
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem;">
+    <div class="screen-header">
+      <h2>Expedition Type</h2>
+      <p>Choose how the mountain presents itself.</p>
+    </div>
+    <div class="mode-grid" role="group" aria-label="Expedition type">
+      <div class="mode-card" onclick="selectMode('predefined')" role="button" tabindex="0" aria-label="Predefined Scenarios" onkeydown="if(event.key==='Enter'||event.key===' ')selectMode('predefined')">
+        <div class="mode-icon">◈</div>
+        <div class="mode-name">Predefined Scenarios</div>
+        <div class="mode-desc">Five documented expeditions. Each tests a different constraint. Seeds included.</div>
+      </div>
+      <div class="mode-card" onclick="selectMode('random')" role="button" tabindex="0" aria-label="Random Mode" onkeydown="if(event.key==='Enter'||event.key===' ')selectMode('random')">
+        <div class="mode-icon">◇</div>
+        <div class="mode-name">Random Mode</div>
+        <div class="mode-desc">Procedurally generated conditions. Expedition ID assigned at departure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ SCENARIO SELECT ══════════════════════ -->
+<section id="screen-scenario" class="screen" aria-label="Scenario selection">
+  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
+    <button class="nav-back" onclick="showScreen('mode')" aria-label="Back to mode selection">Mode</button>
+    <div class="screen-header">
+      <h2>Select Scenario</h2>
+      <p>Start with Scenario 1 if this is your first expedition.</p>
+    </div>
+    <div class="scenario-grid" id="scenario-grid" role="radiogroup" aria-label="Scenario selection"></div>
+    <div style="text-align:center;">
+      <button class="btn-primary" id="btn-scenario-confirm" onclick="confirmScenario()" disabled aria-disabled="true">Depart</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ONBOARDING ══════════════════════ -->
+<section id="screen-onboarding" class="screen" aria-label="Expedition briefing">
+  <div style="max-width:560px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
+    <button class="nav-back" id="onboard-back-btn" aria-label="Back">Back</button>
+    <div class="onboard-box">
+      <div class="onboard-intro" id="onboard-intro"></div>
+      <div class="onboard-char-line" id="onboard-char-line"></div>
+      <div class="onboard-decisions">
+        <div class="onboard-decision">
+          <div class="decision-key">ADVANCE</div>
+          <div class="decision-cost">Gain ground. High fatigue + exposure cost. Altitude amplifies all penalties.</div>
         </div>
-        <div class="controls-actions">
-          <button id="load">Load run</button>
-          <p id="status" aria-live="polite"></p>
+        <div class="onboard-decision">
+          <div class="decision-key">ADVANCE SLOWLY</div>
+          <div class="decision-cost">Gain ground with less cost. 70% chance of progress. Still consumes resources.</div>
         </div>
-      </section>
+        <div class="onboard-decision">
+          <div class="decision-key">WAIT</div>
+          <div class="decision-cost">Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.</div>
+        </div>
+        <div class="onboard-decision">
+          <div class="decision-key">DESCEND</div>
+          <div class="decision-cost">End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.</div>
+        </div>
+      </div>
+      <div class="onboard-note">Your watch gives readings, but they carry noise. At higher altitude and higher fatigue, your own readings become less reliable. Trust trends.</div>
+      <div class="onboard-note">Water and food are consumed every turn, whatever you do. You have one Thermal Reserve — a single-use margin. Use it when it matters most.</div>
+      <div class="onboard-actions">
+        <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <section id="summary-panel" class="panel" hidden>
-        <h2>Run outcome</h2>
-        <div id="summary" class="summary-grid"></div>
-      </section>
+<!-- ══════════════════════ GAME ══════════════════════ -->
+<section id="screen-game" class="screen" aria-label="Game">
+  <div class="game-layout">
+    <!-- LEFT -->
+    <div class="left-panel">
+      <div class="mountain-schematic">
+        <div class="schematic-label">Ascent Route</div>
+        <ul class="position-list" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
+      </div>
+      <div class="action-log">
+        <div class="log-header">Field Log</div>
+        <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
+          <div class="log-empty">No entries yet.</div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT -->
+    <div class="right-panel">
+      <div class="watch-panel" id="watch-panel" aria-label="Expedition status">
+        <div class="watch-header">
+          <span class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</span>
+          <span class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</span>
+          <span class="watch-position" id="watch-position" aria-live="polite">—</span>
+        </div>
+        <div class="watch-section">
+          <div class="watch-section-label">Environment</div>
+          <div class="watch-row">
+            <span class="watch-row-label">WEATHER</span>
+            <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
+            <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
+          </div>
+          <div class="watch-row">
+            <span class="watch-row-label">VISIBILITY</span>
+            <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
+            <span style="font-size:0.62rem;color:var(--stone)" id="watch-uncertainty-inline" aria-live="polite"></span>
+          </div>
+          <div class="watch-row">
+            <span class="watch-row-label">TERRAIN</span>
+            <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
+          </div>
+        </div>
+        <div class="watch-section">
+          <div class="watch-section-label">Body State</div>
+          <div class="watch-body-row">
+            <span class="body-label">Capacity</span>
+            <span class="body-value" id="body-capacity" aria-live="polite">—</span>
+          </div>
+          <div class="watch-body-row">
+            <span class="body-label">Fatigue</span>
+            <span class="body-value" id="body-fatigue" aria-live="polite">—</span>
+          </div>
+          <div class="watch-body-row">
+            <span class="body-label">Exposure</span>
+            <span class="body-value" id="body-exposure" aria-live="polite">—</span>
+          </div>
+        </div>
+        <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
+        <!-- FIX: resource-warning now shown inline when depleted -->
+        <div id="resource-warning-box"></div>
+        <div class="thermal-reserve" id="thermal-display">
+          <span class="thermal-label">THERMAL RESERVE</span>
+          <span class="thermal-status" id="thermal-status" aria-live="polite">available</span>
+        </div>
+      </div>
+      <div class="narrative-box">
+        <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
+        <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
+      </div>
+      <div class="decision-panel">
+        <div class="decision-label">Decision</div>
+        <div class="decision-buttons" role="group" aria-label="Choose your action">
+          <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">Advance</button>
+          <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">Advance<br>Slowly</button>
+          <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">Wait</button>
+          <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">Descend</button>
+          <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" style="display:none">Sleep</button>
+        </div>
+        <button class="btn-thermal" id="btn-thermal" onclick="toggleThermal()" aria-label="Activate Thermal Reserve">
+          ◎ Activate Thermal Reserve
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <section id="timeline-panel" class="panel" hidden>
-        <h2>Turn timeline</h2>
-        <div id="turns" class="turn-list"></div>
-      </section>
-    </main>
+<!-- ══════════════════════ DEBRIEF ══════════════════════ -->
+<section id="screen-debrief" class="screen" aria-label="Expedition debrief">
+  <div class="debrief-box" style="margin:0 auto; padding:2rem 1.5rem;">
+    <div class="debrief-header">
+      <div class="debrief-outcome-label">Expedition Outcome</div>
+      <div class="debrief-outcome-value" id="debrief-outcome-val" aria-live="polite">—</div>
+      <div class="debrief-retreat-msg" id="debrief-retreat-msg" style="display:none"></div>
+      <div class="debrief-stats" id="debrief-stats"></div>
+    </div>
+    <div class="debrief-section">
+      <div class="debrief-section-title">First Irreversible Point</div>
+      <div class="debrief-turning-point" id="debrief-turning-point">—</div>
+    </div>
+    <div class="debrief-section">
+      <div class="debrief-section-title">Turn Log</div>
+      <div style="overflow-x:auto;">
+        <table class="debrief-log-table" id="debrief-log-table" aria-label="Turn by turn log"></table>
+      </div>
+    </div>
+    <div class="debrief-section">
+      <div class="debrief-section-title">Field Reflection</div>
+      <ul class="reflection-list" id="reflection-list" aria-label="Reflection prompts"></ul>
+    </div>
+    <div class="debrief-actions" id="debrief-actions"></div>
+  </div>
+</section>
 
-    <script src="./app.js" type="module"></script>
-  </body>
+<!-- ══════════════════════ JOURNAL ══════════════════════ -->
+<section id="screen-journal" class="screen" aria-label="Expedition journal">
+  <div class="journal-box" style="margin:0 auto; padding:2rem 1.5rem;">
+    <!-- FIX: back button destination is now dynamic (set by showScreen) -->
+    <button class="nav-back" id="journal-back-btn" aria-label="Back to debrief">Debrief</button>
+    <div class="journal-header">
+      <div class="journal-title">Expedition Journal</div>
+      <button class="btn-ghost" onclick="clearJournal()" aria-label="Clear all journal entries">Clear log</button>
+    </div>
+    <div class="journal-entries" id="journal-entries"></div>
+  </div>
+</section>
+
+<script>
+// ════════════════════════════════════════════════
+// PRNG — mulberry32
+// ════════════════════════════════════════════════
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function rngChoice(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+function rngInt(rng, min, max) { return Math.floor(rng() * (max - min + 1)) + min; }
+function rngWeighted(rng, choices, weights) {
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = rng() * total, cum = 0;
+  for (let i = 0; i < choices.length; i++) { cum += weights[i]; if (r < cum) return choices[i]; }
+  return choices[choices.length - 1];
+}
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+// ════════════════════════════════════════════════
+// VISUAL MODES
+// ════════════════════════════════════════════════
+const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
+const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset']);
+
+function setVisualMode(mode) {
+  const safeMode = VALID_VISUAL_MODES.has(mode) ? mode : 'dark';
+  document.body.setAttribute('data-theme', safeMode);
+
+  const modeSelect = document.getElementById('theme-select');
+  if (modeSelect && modeSelect.value !== safeMode) modeSelect.value = safeMode;
+
+  try { localStorage.setItem(VISUAL_MODE_KEY, safeMode); } catch (e) {}
+}
+
+function initVisualMode() {
+  let storedMode = 'dark';
+  try {
+    const rawMode = localStorage.getItem(VISUAL_MODE_KEY);
+    if (rawMode && VALID_VISUAL_MODES.has(rawMode)) storedMode = rawMode;
+  } catch (e) {}
+  setVisualMode(storedMode);
+}
+
+// ════════════════════════════════════════════════
+// STATIC DATA
+// ════════════════════════════════════════════════
+const POSITIONS = [
+  'horcones','horcones_lagoon','confluencia','playa_ancha','cuesta_brava',
+  'base_camp','semaforo','piedras_conway','camp_a','camp_b','camp_c',
+  'independencia','portezuelo','canaleta','summit'
+];
+const POS_LABELS = {
+  horcones:         'Horcones — Park Entry',
+  horcones_lagoon:  'Horcones Lagoon',
+  confluencia:      'Confluencia',
+  playa_ancha:      'Playa Ancha',
+  cuesta_brava:     'Cuesta Brava',
+  base_camp:        'Base Camp — Plaza de Mulas',
+  semaforo:         'El Semáforo',
+  piedras_conway:   'Piedras Conway',
+  camp_a:           'Camp 1 — Canadá',
+  camp_b:           'Camp 2 — Nido de Cóndores',
+  camp_c:           'Camp 3 — Cólera',
+  independencia:    'Refugio Independencia',
+  portezuelo:       'Portezuelo de los Vientos',
+  canaleta:         'La Canaleta',
+  summit:           'Summit',
+};
+const POS_ALT = {
+  horcones:'2,950 m', horcones_lagoon:'2,950 m', confluencia:'3,390 m', playa_ancha:'3,600–3,800 m',
+  cuesta_brava:'~4,000 m', base_camp:'4,350 m', semaforo:'~4,550 m', piedras_conway:'~4,750 m',
+  camp_a:'5,050 m', camp_b:'5,560 m', camp_c:'5,970 m', independencia:'6,380 m',
+  portezuelo:'~6,500 m', canaleta:'6,700–6,962 m', summit:'6,962 m',
+};
+const POS_BAND = {
+  horcones:'approach', horcones_lagoon:'approach', confluencia:'approach', playa_ancha:'approach',
+  cuesta_brava:'approach', base_camp:'base', semaforo:'upper_base', piedras_conway:'upper_base',
+  camp_a:'high', camp_b:'high', camp_c:'extreme', independencia:'extreme', portezuelo:'extreme',
+  canaleta:'death_zone', summit:'death_zone',
+};
+const ROUTE_NODES = [
+  { id:'horcones', name:'Horcones', altitude_m:2950, isCamp:false, stage:'APPROACH' },
+  { id:'confluencia', name:'Confluencia', altitude_m:3390, isCamp:true, stage:'APPROACH' },
+  { id:'base_camp', name:'Plaza de Mulas', altitude_m:4350, isCamp:true, stage:'APPROACH' },
+  { id:'camp_a', name:'Canadá', altitude_m:5050, isCamp:true, stage:'HIGH_CAMP' },
+  { id:'camp_b', name:'Nido de Cóndores', altitude_m:5560, isCamp:true, stage:'HIGH_CAMP' },
+  { id:'camp_c', name:'Cólera', altitude_m:5970, isCamp:true, stage:'SUMMIT_DAY' },
+  { id:'summit', name:'Cumbre', altitude_m:6962, isCamp:false, stage:'SUMMIT_DAY' },
+];
+const CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
+const STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
+
+const TUNING = {
+  timeCostMinutes: {
+    advance: 120,
+    advance_slowly: 180,
+    wait: 60,
+    descend: 120,
+  },
+  dayStartMinutes: 360,
+  nightStartMinutes: 1320,
+  bivouacPenalty: { fatigue: 18, exposure: 22, capacity: -14, water: 2, food: 1 },
+  resourceBurnPerHour: {
+    APPROACH: { water: 0.33, food: 0.25 },
+    HIGH_CAMP: { water: 0.5, food: 0.33 },
+    SUMMIT_DAY: { water: 0.66, food: 0.5 },
+  },
+  sleepRecoveryByCamp: {
+    confluencia: { fatigue: -16, capacity: 6, exposure: -8, noise: -1 },
+    base_camp: { fatigue: -14, capacity: 5, exposure: -7, noise: -1 },
+    camp_a: { fatigue: -8, capacity: 2, exposure: -2, noise: 0 },
+    camp_b: { fatigue: -6, capacity: 1, exposure: -1, noise: 1 },
+    camp_c: { fatigue: -4, capacity: 0, exposure: 1, noise: 1 },
+  },
+  stage: {
+    APPROACH: { fatigueMult: 0.9, exposureMult: 0.85, capPenaltyBonus: -1, weatherWeights: [30,50,15,5], slowProgressBase: 0.82, advanceProgressBase: 0.74, confidencePenalty: 0 },
+    HIGH_CAMP: { fatigueMult: 1.1, exposureMult: 1.15, capPenaltyBonus: 1, weatherWeights: [12,45,25,18], slowProgressBase: 0.62, advanceProgressBase: 0.52, confidencePenalty: 1 },
+    SUMMIT_DAY: { fatigueMult: 1.25, exposureMult: 1.35, capPenaltyBonus: 2, weatherWeights: [8,35,27,30], slowProgressBase: 0.48, advanceProgressBase: 0.4, confidencePenalty: 2 },
+  },
+  irreversibleIndex: POSITIONS.indexOf('camp_a'),
+  retreatPenaltyAfterIrreversible: { timeMinutes: 60, fatigue: 4, exposure: 4, water: 1 },
+  confidence: { altitudeCoeff: 7, fatigueCoeff: 0.22, stageCoeff: 12, min: 15, max: 95, noiseRangeAtZeroConf: 18 },
+};
+
+function getStageForPosition(position) {
+  return STAGE_BY_POSITION[position] || 'APPROACH';
+}
+function isCampPosition(position) {
+  return CAMP_POSITIONS.has(position);
+}
+const ALT_MOD = {
+  approach:   { fatigue_mult:1.0, capacity_penalty:0, uncertainty_noise:0 },
+  base:       { fatigue_mult:1.15, capacity_penalty:1, uncertainty_noise:1 },
+  upper_base: { fatigue_mult:1.2, capacity_penalty:1, uncertainty_noise:1 },
+  high:       { fatigue_mult:1.35, capacity_penalty:2, uncertainty_noise:2 },
+  extreme:    { fatigue_mult:1.55, capacity_penalty:3, uncertainty_noise:3 },
+  death_zone: { fatigue_mult:1.8, capacity_penalty:4, uncertainty_noise:4 },
+};
+
+const CHARACTERS = [
+  {
+    id: 'valentina',
+    name: 'Valentina Quispe',
+    role: 'High-Mountain Guide',
+    bio: 'Born in Mendoza. Twelve seasons on the Horcones and Polish Traverse routes. Her knowledge of the terrain is not learned — it is accumulated. She moves slower than she could. She finishes more than most.',
+    traits: ['Reads terrain shifts before others do.','The altitude doesn\'t surprise her body. She\'s been here before.'],
+    mods: { fatigue_start:-8, terrain_noise_zero:true, alt_mult_high_bonus:-0.15, exposure_per_turn:1 },
+  },
+  {
+    id: 'marco',
+    name: 'Marco Ferretti',
+    role: 'Technical Mountaineer',
+    bio: 'Eight expeditions across four continents. Trained in the Alps, tested in the Karakoram. Efficient at altitude — his body adapts fast and spends little. He has never learned to be cold.',
+    traits: ['At altitude, his body does what others can\'t sustain.','Cold is the one condition he hasn\'t solved.'],
+    mods: { capacity_start:5, alt_mult_high:1.2, weather_noise_zero:true, exposure_high_per_turn:3, exposure_crit_threshold:65 },
+  },
+  {
+    id: 'diego',
+    name: 'Diego Salinas',
+    role: 'Elite Endurance Athlete',
+    bio: 'Three Ironman finishes. Two ultra-trail podiums. First expedition above 5,000 m. His body is a machine built for output — but the mountain does not reward output. It rewards patience he hasn\'t needed until now.',
+    traits: ['Peak physical condition. Every physiological baseline starts higher.','The mountain is a system he hasn\'t read before.'],
+    mods: { capacity_start:10, fatigue_start:-10, water_start:2, cog_noise_bonus:2, wide_euphoria:true },
+  },
+];
+
+const SCENARIOS = [
+  {
+    id:'assisted-route', num:'01', name:'Assisted Route',
+    desc:'Your first attempt. Support is available. The systems are forgiving — for now.',
+    intro:'First expedition. Conditions are favorable. Learn to read the signals before they stop being forgiving.',
+    max_turns:34, seeds:[10,20,30], difficulty:'Low',
+    initial:{ position:'horcones', altitude_band:'approach', weather_severity:0, visibility:3, terrain_load:0, functional_capacity:95, fatigue:10, exposure:5, water:36, food:36 },
+    bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:-1 },
+  },
+  {
+    id:'narrow-weather-window', num:'02', name:'Narrow Weather Window',
+    desc:'You left at dawn. The sky is readable, but the mountain has its own schedule.',
+    intro:'Conditions are moderate. There may be a window ahead. There may not. Read the trend.',
+    max_turns:32, seeds:[101,202,303], difficulty:'Medium',
+    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:86, fatigue:22, exposure:14, water:34, food:34 },
+    bias:{ weather_deterioration:1, terrain_growth:0, fatigue_growth:0 },
+  },
+  {
+    id:'false-stability-terrain', num:'03', name:'False Stability Terrain',
+    desc:'Clear skies. Good visibility. The terrain has other plans.',
+    intro:'The weather looks stable. What the terrain is doing is a different question.',
+    max_turns:32, seeds:[404,505,606], difficulty:'Medium',
+    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:88, fatigue:20, exposure:12, water:34, food:34 },
+    bias:{ weather_deterioration:0, terrain_growth:1, fatigue_growth:0 },
+  },
+  {
+    id:'accumulated-fatigue-trap', num:'04', name:'Accumulated Fatigue Trap',
+    desc:'Everything seems manageable. That is the problem.',
+    intro:'Conditions are benign. The trap is not in the weather.',
+    max_turns:34, seeds:[707,808,909], difficulty:'Medium',
+    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:90, fatigue:18, exposure:10, water:36, food:36 },
+    bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:1 },
+  },
+  {
+    id:'weather-window', num:'05', name:'Weather Window',
+    desc:'The weather is breaking. For how long — that is what you have to figure out.',
+    intro:'Bad weather is passing. A window will open. Whether you\'re ready when it does — and whether you recognize when it closes — that\'s the whole game.',
+    max_turns:30, seeds:[151,252,353], difficulty:'Hard',
+    initial:{ position:'horcones', altitude_band:'approach', weather_severity:2, visibility:1, terrain_load:1, functional_capacity:75, fatigue:35, exposure:25, water:30, food:28 },
+    bias:{ weather_deterioration:-1, terrain_growth:0, fatigue_growth:0, window_turns:[3,4,5], post_window_deterioration:2 },
+  },
+];
+
+// ════════════════════════════════════════════════
+// GAME STATE
+// ════════════════════════════════════════════════
+let G = {
+  character: null,
+  scenario:  null,
+  seed:      null,
+  rng:       null,
+  state:     null,
+  turn:      1,
+  turnLog:   [],
+  highestPosIdx: 0,
+  allFlags:  [],
+  thermalActiveThisTurn: false,
+  thermalUsed: false,
+  signals:   null,
+  consecutiveWater0: 0,
+  consecutiveCollapses: 0,
+  runNumber: 0,
+  whiteWindRisk: 0,
+  day: 1,
+  minutesOfDay: 360,
+  irreversibleTriggered: false,
+  irreversibleTurn: null,
+  // FIX: track journal back destination
+  journalReturnScreen: 'debrief',
+};
+
+// ════════════════════════════════════════════════
+// NAVIGATION — FIX: single consolidated showScreen
+// (was defined twice: once at line ~900 and once at line ~1820 as a patch)
+// Now handles all responsibilities in one place.
+// ════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-' + id);
+  if (!target) { console.error('Unknown screen: ' + id); return; }
+  target.classList.add('active');
+  window.scrollTo(0, 0);
+
+  // FIX: journal back button points to the screen we came from
+  if (id === 'journal') {
+    renderJournal();
+    const backBtn = document.getElementById('journal-back-btn');
+    if (backBtn) {
+      const origin = G.journalReturnScreen || 'debrief';
+      const labels = { debrief:'Debrief', title:'Title', game:'Game' };
+      backBtn.textContent = labels[origin] || origin;
+      backBtn.onclick = () => showScreen(origin);
+    }
+  }
+}
+
+// ════════════════════════════════════════════════
+// CHARACTER SELECT
+// ════════════════════════════════════════════════
+function buildCharacterGrid() {
+  const grid = document.getElementById('char-grid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.id = 'char-' + c.id;
+    // FIX: aria attributes for accessibility
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', 'false');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${c.name} — ${c.role}`);
+    card.onclick = () => selectCharacter(c.id);
+    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacter(c.id); } };
+    card.innerHTML = `
+      <div class="char-name">${c.name}</div>
+      <div class="char-role">${c.role}</div>
+      <div class="char-bio">${c.bio}</div>
+      <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
+    `;
+    grid.appendChild(card);
+  });
+}
+function selectCharacter(id) {
+  document.querySelectorAll('.char-card').forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  const card = document.getElementById('char-' + id);
+  card.classList.add('selected');
+  card.setAttribute('aria-checked', 'true');
+  G.character = CHARACTERS.find(c => c.id === id);
+  const btn = document.getElementById('btn-char-confirm');
+  btn.disabled = false;
+  btn.removeAttribute('aria-disabled');
+}
+function confirmCharacter() {
+  if (!G.character) return;
+  showScreen('mode');
+}
+
+// ════════════════════════════════════════════════
+// MODE SELECT
+// ════════════════════════════════════════════════
+function selectMode(mode) {
+  if (mode === 'random') {
+    G.scenario = buildRandomScenario();
+    G.seed = G.scenario._randomSeed;
+    showOnboarding(mode);
+  } else {
+    buildScenarioGrid();
+    showScreen('scenario');
+  }
+}
+
+// ════════════════════════════════════════════════
+// SCENARIO SELECT
+// ════════════════════════════════════════════════
+let selectedScenarioId = null;
+let selectedSeed = null;
+
+function buildScenarioGrid() {
+  const grid = document.getElementById('scenario-grid');
+  grid.innerHTML = '';
+  SCENARIOS.forEach((sc) => {
+    const card = document.createElement('div');
+    card.className = 'scenario-card';
+    card.id = 'sc-' + sc.id;
+    // FIX: aria role for scenario cards
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', 'false');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Scenario ${sc.num}: ${sc.name} — ${sc.difficulty}`);
+    const seedBtns = sc.seeds.map(s =>
+      `<button class="seed-btn" id="seed-btn-${sc.id}-${s}" onclick="selectSeed('${sc.id}',${s},event)" aria-label="Use seed ${s}">${s}</button>`
+    ).join('');
+    card.innerHTML = `
+      <div class="scenario-num">SCENARIO ${sc.num} · ${sc.difficulty}</div>
+      <div class="scenario-name">${sc.name}</div>
+      <div class="scenario-desc">${sc.desc}</div>
+      <div class="scenario-seeds">Seeds: ${seedBtns}</div>
+    `;
+    card.onclick = (e) => {
+      if (e.target.classList.contains('seed-btn')) return;
+      selectScenario(sc.id, sc.seeds[0]);
+    };
+    card.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(sc.id, sc.seeds[0]); }
+    };
+    grid.appendChild(card);
+  });
+}
+function selectScenario(id, seed) {
+  document.querySelectorAll('.scenario-card').forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  const card = document.getElementById('sc-' + id);
+  if (card) {
+    card.classList.add('selected');
+    card.setAttribute('aria-checked', 'true');
+  }
+  selectedScenarioId = id;
+  selectedSeed = seed;
+  document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
+  const firstBtn = document.getElementById(`seed-btn-${id}-${seed}`);
+  if (firstBtn) firstBtn.classList.add('active');
+  const btn = document.getElementById('btn-scenario-confirm');
+  btn.disabled = false;
+  btn.removeAttribute('aria-disabled');
+}
+function selectSeed(scenarioId, seed, e) {
+  e.stopPropagation();
+  selectScenario(scenarioId, seed);
+}
+function confirmScenario() {
+  if (!selectedScenarioId) return;
+  G.scenario = SCENARIOS.find(s => s.id === selectedScenarioId);
+  G.seed = selectedSeed;
+  showOnboarding('predefined');
+}
+
+// ════════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════════
+function showOnboarding(mode) {
+  document.getElementById('onboard-intro').textContent = G.scenario.intro || '';
+  document.getElementById('onboard-char-line').textContent =
+    `Expedition: ${G.character.name} · ${G.character.role}`;
+  const backBtn = document.getElementById('onboard-back-btn');
+  backBtn.onclick = () => showScreen(mode === 'random' ? 'mode' : 'scenario');
+  showScreen('onboarding');
+}
+
+// ════════════════════════════════════════════════
+// RANDOM SCENARIO BUILDER
+// ════════════════════════════════════════════════
+function buildRandomScenario() {
+  const rseed = Math.floor(Math.random() * 90000) + 10000;
+  const rng = mulberry32(rseed);
+
+  // adaptive fairness
+  let windowProb = 0.4;
+  if (G.consecutiveCollapses >= 5) windowProb = 0.6;
+
+  const weather = rngInt(rng, 0, 2);
+  const fatigue = rngInt(rng, 10, 45);
+  const exposure = rngInt(rng, 5, 30);
+  // no triple negative
+  const weatherSafe = (weather > 1 && fatigue > 40 && exposure > 30) ? 1 : weather;
+
+  const hasWindow = rng() < windowProb;
+  const wt1 = rngInt(rng, 2, 5), wt2 = rngInt(rng, 3, 6);
+
+  const volatility = weather + (hasWindow ? 1 : 0);
+  const volLabel = volatility <= 1 ? 'Low' : volatility <= 2 ? 'Medium' : 'High';
+
+  return {
+    id: 'random-' + rseed,
+    num: '06',
+    name: 'Random Mode',
+    desc: `Expedition ${rseed} · Volatility: ${volLabel}`,
+    intro: `Expedition ${rseed}. Volatility: ${volLabel}. Logistic support: Minimal. The conditions were generated at departure. You learn the mountain as you move.`,
+    max_turns: rngInt(rng, 30, 36),
+    seeds: [rseed],
+    difficulty: volLabel,
+    initial: {
+      position: 'horcones',
+      altitude_band: 'approach',
+      weather_severity: weatherSafe,
+      visibility: rngInt(rng, 1, 3),
+      terrain_load: rngInt(rng, 0, 2),
+      functional_capacity: rngInt(rng, 72, 95),
+      fatigue: fatigue,
+      exposure: exposure,
+      water: rngInt(rng, 30, 40),
+      food: rngInt(rng, 28, 38),
+    },
+    bias: {
+      weather_deterioration: rngInt(rng, -1, 1),
+      terrain_growth: rngInt(rng, 0, 1),
+      fatigue_growth: rngInt(rng, 0, 1),
+      window_turns: hasWindow ? [wt1, wt2] : [],
+      post_window_deterioration: hasWindow ? 2 : 0,
+    },
+    _randomSeed: rseed,
+  };
+}
+
+// ════════════════════════════════════════════════
+// GAME INIT
+// ════════════════════════════════════════════════
+function startGame() {
+  const sc = G.scenario;
+  const ch = G.character;
+  const mods = ch.mods;
+
+  G.rng = mulberry32(G.seed);
+  G.turn = 1;
+  G.turnLog = [];
+  G.allFlags = [];
+  G.highestPosIdx = POSITIONS.indexOf(sc.initial.position);
+  G.thermalUsed = false;
+  G.thermalActiveThisTurn = false;
+  G.consecutiveWater0 = 0;
+  G.whiteWindRisk = 0;
+  G.day = 1;
+  G.minutesOfDay = TUNING.dayStartMinutes;
+  G.irreversibleTriggered = false;
+  G.irreversibleTurn = null;
+  G.runNumber = (G.runNumber || 0) + 1;
+
+  // deep copy initial state + apply character mods
+  const s = JSON.parse(JSON.stringify(sc.initial));
+  if (mods.fatigue_start)    s.fatigue    = clamp(s.fatigue + mods.fatigue_start, 0, 100);
+  if (mods.capacity_start)   s.functional_capacity = clamp(s.functional_capacity + mods.capacity_start, 0, 100);
+  if (mods.water_start)      s.water      = s.water + mods.water_start;
+
+  s.thermalReserve = true;
+  G.state = s;
+
+  // clear resource warning
+  document.getElementById('resource-warning-box').innerHTML = '';
+
+  renderPositionList();
+  document.getElementById('log-entries').innerHTML = '<div class="log-empty">No entries yet.</div>';
+
+  G.signals = computeSignals();
+  renderWatch();
+  renderNarrative(null, G.signals);
+  setDecisionButtonsEnabled(true);
+
+  showScreen('game');
+}
+
+// ════════════════════════════════════════════════
+// SIGNALS / NOISE
+// ════════════════════════════════════════════════
+
+function formatMinutes(minutes) {
+  const m = ((minutes % 1440) + 1440) % 1440;
+  const hh = String(Math.floor(m / 60)).padStart(2, '0');
+  const mm = String(m % 60).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+function formatTrendArrow(delta) {
+  if (delta > 1) return '↑';
+  if (delta < -1) return '↓';
+  return '↔';
+}
+function confidenceTier(conf) {
+  if (conf >= 70) return 'high';
+  if (conf >= 45) return 'med';
+  return 'low';
+}
+function metricDisplay(value, confidence) {
+  const spread = Math.round((100 - confidence) / 100 * TUNING.confidence.noiseRangeAtZeroConf);
+  const lo = clamp(value - spread, 0, 100);
+  const hi = clamp(value + spread, 0, 100);
+  return `${Math.round(lo)}–${Math.round(hi)} · ${confidenceTier(confidence)} conf`;
+}
+function getCurrentStage() {
+  return getStageForPosition(G.state.position);
+}
+function spendResourcesForMinutes(minutes, stage, flags) {
+  const burn = TUNING.resourceBurnPerHour[stage] || TUNING.resourceBurnPerHour.APPROACH;
+  const hours = minutes / 60;
+  const waterBurn = Math.max(1, Math.round(burn.water * hours));
+  const foodBurn = Math.max(1, Math.round(burn.food * hours));
+  G.state.water = Math.max(0, G.state.water - waterBurn);
+  G.state.food = Math.max(0, G.state.food - foodBurn);
+  if (G.state.water === 0) {
+    G.consecutiveWater0++;
+    flags.push('water-depleted');
+    G.state.functional_capacity = clamp(G.state.functional_capacity - 8, 0, 100);
+    if (G.consecutiveWater0 >= 2) flags.push('dehydration-compounding');
+  } else {
+    G.consecutiveWater0 = 0;
+  }
+  if (G.state.food === 0) {
+    flags.push('food-depleted');
+    G.state.functional_capacity = clamp(G.state.functional_capacity - 5, 0, 100);
+  }
+}
+function applyTimeAndNight(decision, flags) {
+  if (decision === 'sleep') {
+    G.day += 1;
+    G.minutesOfDay = TUNING.dayStartMinutes;
+    return;
+  }
+  G.minutesOfDay += TUNING.timeCostMinutes[decision] || 60;
+  if (G.minutesOfDay >= TUNING.nightStartMinutes) {
+    if (!isCampPosition(G.state.position)) {
+      flags.push('forced-bivouac');
+      const p = TUNING.bivouacPenalty;
+      G.state.fatigue = clamp(G.state.fatigue + p.fatigue, 0, 100);
+      G.state.exposure = clamp(G.state.exposure + p.exposure, 0, 100);
+      G.state.functional_capacity = clamp(G.state.functional_capacity + p.capacity, 0, 100);
+      G.state.water = Math.max(0, G.state.water - p.water);
+      G.state.food = Math.max(0, G.state.food - p.food);
+    }
+    G.day += 1;
+    G.minutesOfDay = TUNING.dayStartMinutes;
+  }
+}
+
+function cognitiveNoise() {
+  const s = G.state;
+  const ch = G.character;
+  const stage = getCurrentStage();
+  const alt = ALT_MOD[s.altitude_band]?.uncertainty_noise || 0;
+  const fat = Math.max(0, Math.floor((s.fatigue - 60) / 15));
+  const exp = Math.max(0, Math.floor((s.exposure - 50) / 20));
+  const stagePenalty = TUNING.stage[stage]?.confidencePenalty || 0;
+  const charBonus = (ch.mods.cog_noise_bonus || 0);
+  return alt + fat + exp + stagePenalty + charBonus;
+}
+
+function computeSignals() {
+  const s = G.state;
+  const rng = G.rng;
+  const ch = G.character;
+  const mods = ch.mods;
+
+  // euphoria bias
+  let euphoriaShift = 0;
+  const wideEuphoria = mods.wide_euphoria && s.functional_capacity > 60;
+  const normalEuphoria = ['approach','base'].includes(s.altitude_band) && s.fatigue < 40 && s.functional_capacity > 70;
+  if ((wideEuphoria || normalEuphoria) && rngChoice(rng, [0,0,0,1]) === 1) euphoriaShift = -1;
+
+  function noisy(v, noZero) {
+    const jitter = noZero ? 0 : rngChoice(rng, [-1,0,0,1]);
+    return clamp(v + jitter + euphoriaShift, 0, 3);
+  }
+
+  const wHint = noisy(s.weather_severity, mods.weather_noise_zero);
+  const vHint = noisy(s.visibility, false);
+  const tHint = noisy(s.terrain_load, mods.terrain_noise_zero);
+
+  const combined = s.weather_severity + s.terrain_load;
+  let trend = 'stable';
+  if (combined >= 5) trend = 'worsening';
+  else if (combined <= 1 && s.visibility >= 2) trend = 'improving';
+  else if (s.weather_severity === 0 || (s.weather_severity === 1 && s.visibility >= 2)) trend = 'clearing';
+
+  const cogN = cognitiveNoise();
+  const envNoise = clamp(s.weather_severity + (3 - s.visibility) + Math.floor(G.whiteWindRisk / 2), 0, 6);
+  const cognitiveLoad = clamp(cogN + Math.floor((100 - s.functional_capacity) / 20), 0, 6);
+  const score = clamp(envNoise + cognitiveLoad + rngChoice(rng, [-1,0,0,1]), 0, 12);
+  const uncertainty = score <= 3 ? 'low' : score <= 7 ? 'medium' : 'high';
+  const stage = getCurrentStage();
+  const confBase = 95 - ((ALT_MOD[s.altitude_band]?.uncertainty_noise || 0) * TUNING.confidence.altitudeCoeff)
+    - (s.fatigue * TUNING.confidence.fatigueCoeff)
+    - ((TUNING.stage[stage]?.confidencePenalty || 0) * TUNING.confidence.stageCoeff);
+  const confidence = clamp(Math.round(confBase), TUNING.confidence.min, TUNING.confidence.max);
+
+  return { wHint, vHint, tHint, trend, uncertainty, confidence };
+}
+
+// ════════════════════════════════════════════════
+// RENDER WATCH PANEL
+// ════════════════════════════════════════════════
+function makeDots(val, max=3) {
+  const dotClass = val >= 3 ? 'filled-high' : val >= 2 ? 'filled-mid' : 'filled-low';
+  let html = '';
+  for (let i = 0; i < max+1; i++) {
+    html += `<div class="dot ${i < val ? dotClass : ''}"></div>`;
+  }
+  return html;
+}
+
+function bodyValueClass(label) {
+  if (['Critical','Exhausted','High'].includes(label)) return 'critical';
+  if (['Degraded','Heavy','Moderate'].includes(label)) return 'degrading';
+  return 'stable';
+}
+
+function capacityLabel(v) {
+  if (v >= 85) return 'Excellent';
+  if (v >= 65) return 'Good';
+  if (v >= 45) return 'Strained';
+  if (v >= 25) return 'Degraded';
+  return 'Critical';
+}
+function fatigueLabel(v) {
+  if (v <= 15) return 'Fresh';
+  if (v <= 35) return 'Tired';
+  if (v <= 55) return 'Heavy';
+  if (v <= 79) return 'Exhausted';
+  return 'Critical';
+}
+function exposureLabel(v) {
+  if (v <= 15) return 'Minimal';
+  if (v <= 35) return 'Low';
+  if (v <= 54) return 'Moderate';
+  if (v <= 74) return 'High';
+  return 'Critical';
+}
+
+function renderWatch() {
+  const s = G.state;
+  const sig = G.signals;
+  const sc = G.scenario;
+
+  document.getElementById('watch-turn').textContent =
+    `TURN ${G.turn} / ${sc.max_turns}`;
+  document.getElementById('watch-time').textContent = `Day ${G.day} · ${formatMinutes(G.minutesOfDay)}`;
+  document.getElementById('watch-position').textContent =
+    `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
+
+  document.getElementById('dots-weather').innerHTML = makeDots(sig.wHint);
+  document.getElementById('dots-visibility').innerHTML = makeDots(sig.vHint);
+  document.getElementById('dots-terrain').innerHTML = makeDots(sig.tHint);
+
+  const trendEl = document.getElementById('watch-trend');
+  trendEl.textContent = sig.trend;
+  trendEl.className = 'watch-trend ' + sig.trend;
+
+  document.getElementById('watch-uncertainty-inline').textContent =
+    `unc: ${sig.uncertainty} · conf ${sig.confidence}%`;
+
+  const capLbl = capacityLabel(s.functional_capacity);
+  const fatLbl = fatigueLabel(s.fatigue);
+  const expLbl = exposureLabel(s.exposure);
+
+  const last = G.turnLog.length ? G.turnLog[G.turnLog.length-1] : null;
+  const capArrow = last ? formatTrendArrow(s.functional_capacity - last.raw.capacity) : '↔';
+  const fatArrow = last ? formatTrendArrow(last.raw.fatigue - s.fatigue) : '↔';
+  const expArrow = last ? formatTrendArrow(last.raw.exposure - s.exposure) : '↔';
+
+  const capEl = document.getElementById('body-capacity');
+  const fatEl = document.getElementById('body-fatigue');
+  const expEl = document.getElementById('body-exposure');
+  capEl.textContent = `${capLbl} ${capArrow} · ${metricDisplay(s.functional_capacity, sig.confidence)}`;
+  fatEl.textContent = `${fatLbl} ${fatArrow} · ${metricDisplay(s.fatigue, sig.confidence)}`;
+  expEl.textContent = `${expLbl} ${expArrow} · ${metricDisplay(s.exposure, sig.confidence)}`;
+  capEl.className = 'body-value ' + bodyValueClass(capLbl);
+  fatEl.className = 'body-value ' + bodyValueClass(fatLbl);
+  expEl.className = 'body-value ' + bodyValueClass(expLbl);
+
+  const resEl = document.getElementById('watch-resources');
+  resEl.innerHTML = `
+    <span class="resource-item ${s.water===0?'depleted':''}">Water <span>${s.water}</span></span>
+    <span class="resource-item ${s.food===0?'depleted':''}">Food <span>${s.food}</span></span>
+  `;
+
+  const warnBox = document.getElementById('resource-warning-box');
+  const warns = [];
+  if (s.water === 0) warns.push('WATER DEPLETED');
+  if (s.food === 0) warns.push('FOOD DEPLETED');
+  if (warns.length) {
+    warnBox.innerHTML = warns.map(w => `<div class="resource-warning">⚠ ${w}</div>`).join('');
+  } else {
+    warnBox.innerHTML = '';
+  }
+
+  const thermalStatus = document.getElementById('thermal-status');
+  thermalStatus.textContent = G.thermalUsed ? 'used' : (G.thermalActiveThisTurn ? 'ACTIVE' : 'available');
+  thermalStatus.className = 'thermal-status' + (G.thermalUsed && !G.thermalActiveThisTurn ? ' used' : '');
+
+  const thermalBtn = document.getElementById('btn-thermal');
+  if (G.thermalUsed && !G.thermalActiveThisTurn) {
+    thermalBtn.disabled = true;
+    thermalBtn.setAttribute('aria-disabled', 'true');
+  } else if (G.thermalActiveThisTurn) {
+    thermalBtn.className = 'btn-thermal active-this-turn';
+    thermalBtn.textContent = '◎ Thermal Reserve: ACTIVE this turn';
+    thermalBtn.setAttribute('aria-pressed', 'true');
+  } else {
+    thermalBtn.disabled = false;
+    thermalBtn.removeAttribute('aria-disabled');
+    thermalBtn.className = 'btn-thermal';
+    thermalBtn.textContent = '◎ Activate Thermal Reserve';
+    thermalBtn.setAttribute('aria-pressed', 'false');
+  }
+
+  const sleepBtn = document.getElementById('btn-sleep');
+  if (isCampPosition(s.position)) {
+    sleepBtn.style.display = 'inline-block';
+    sleepBtn.disabled = false;
+    sleepBtn.title = 'Sleep through the night at this camp';
+  } else {
+    sleepBtn.style.display = 'none';
+    sleepBtn.title = 'Sleep is only possible at camps';
+  }
+
+  renderPositionList();
+}
+
+
+// ════════════════════════════════════════════════
+// POSITION LIST
+// ════════════════════════════════════════════════
+function renderPositionList() {
+  const s = G.state;
+  const curIdx = POSITIONS.indexOf(s.position);
+  const list = document.getElementById('position-list');
+  list.innerHTML = '';
+  // render reversed so summit sector is at top
+  [...POSITIONS].reverse().forEach(pos => {
+    const idx = POSITIONS.indexOf(pos);
+    const bandRaw = POS_BAND[pos];
+    const bandClass = ['approach','base','upper_base'].includes(bandRaw) ? 'low' : (bandRaw === 'high' ? 'mid' : 'high');
+    const isCurrent = pos === s.position;
+    const isReached = idx <= G.highestPosIdx && !isCurrent;
+    const isAbove = idx > curIdx;
+    const li = document.createElement('li');
+    li.className = `pos-item band-${bandClass}${isCurrent?' current':''}${isReached&&!isCurrent?' reached':''}${isAbove?' above':''}`;
+    // FIX: aria-current for screen readers
+    if (isCurrent) li.setAttribute('aria-current', 'location');
+    li.innerHTML = `
+      <div class="pos-dot"></div>
+      <span class="pos-label">${POS_LABELS[pos]} · ${POS_ALT[pos]}${idx===G.highestPosIdx&&!isCurrent?' <span class="pos-highest-mark">◆</span>':''}</span>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// ════════════════════════════════════════════════
+// NARRATIVE
+// ════════════════════════════════════════════════
+const NARRATIVES = {
+  advance_good:   ["The slope opens ahead. Steps are steady. Wind pulls at the jacket but not yet a threat.",
+                   "Ground gives way. The body cooperates. Each meter earned at the rate the mountain allows."],
+  advance_severe: ["Each step costs more than it should. The wind has direction and intention. You move anyway.",
+                   "Progress is not forward movement. Progress is not stopping."],
+  advance_slowly: ["Half-pace. The body cooperates at a cost it can manage.",
+                   "Measured steps. The margin you spend now is the margin you keep later."],
+  first_high:     ["Above six thousand meters. The rules change here. The body knows it even if the mind resists."],
+  wait_low:       ["The tent holds. Outside, the mountain doesn't stop. The body asks for more time than the window allows.",
+                   "Stillness has a cost. It is lower than the alternative."],
+  wait_high:      ["Rest at this altitude is a negotiation, not a recovery. The body spends energy just existing here.",
+                   "The body holds position. The mountain does not agree that this counts as rest."],
+  descend:        ["Down is not failure. Down is judgment. The summit will still be there — whether you will be is the question.",
+                   "The decision was made before it was spoken. The body had already turned."],
+  pre_collapse_fatigue: ["Your breathing rhythm is starting to break.", "Each step takes longer to decide than to take."],
+  pre_collapse_exposure: ["The cold is no longer peripheral. It is present.", "Cold has found the gaps in the insulation."],
+  crit_exposure:  ["The cold has moved past discomfort. It is now a calculation."],
+  crit_fatigue:   ["The body is communicating clearly. The question is whether you are listening."],
+  water_gone:     ["The last water. Everything from here sharpens."],
+  food_gone:      ["Nothing left to eat. The body will start borrowing from itself."],
+  thermal_used:   ["The reserve deployed. One turn of margin, bought in advance."],
+  slept:          ["Night at camp. Systems recover, but altitude never truly sleeps."],
+  bivouac:        ["Open bivouac at night. The mountain takes payment in capacity and exposure."],
+  irreversible:   ["First Irreversible Point crossed. Retreat is still valid, but never cheap again."],
+  window_open:    ["A brief clearing. The mountain is offering something. The question is whether to take it."],
+  window_close:   ["The window is closing. What was possible one turn ago may not be possible in the next."],
+  euphoria:       ["The signals look favorable. Legs respond well. Something feels like clarity — but it may just be the beginning."],
+  dehydration:    ["Dehydration is no longer just physical. Reading yourself becomes harder."],
+  terrain_block:  ["The body and the terrain are in agreement: not now."],
+  white_wind_sign: ["Lenticulars build and the wind changes tone. The mountain is signaling before it strikes."],
+  white_wind_hit:  ["White wind. Visibility drops and direction loses meaning in seconds."],
+};
+
+function pickNarrative(key) {
+  const arr = NARRATIVES[key];
+  if (!arr) return '';
+  const rng = G.rng || Math.random;
+  return arr[Math.floor(rng() * arr.length)];
+}
+
+// FIX: renderNarrative now RETURNS the text string so it can be captured
+// directly by addLogEntry, avoiding the fragile DOM-read pattern
+function renderNarrative(decision, signals, flags=[]) {
+  const s = G.state;
+  let text = '';
+
+  // flag-triggered lines (highest priority)
+  if (flags.includes('weather-window-open')) text = pickNarrative('window_open');
+  else if (flags.includes('weather-window-closed')) text = pickNarrative('window_close');
+  else if (flags.includes('critical-exposure')) text = pickNarrative('crit_exposure');
+  else if (flags.includes('critical-fatigue')) text = pickNarrative('crit_fatigue');
+  else if (flags.includes('water-depleted')) text = pickNarrative('water_gone');
+  else if (flags.includes('food-depleted')) text = pickNarrative('food_gone');
+  else if (flags.includes('thermal-reserve-used')) text = pickNarrative('thermal_used');
+  else if (flags.includes('forced-bivouac')) text = pickNarrative('bivouac');
+  else if (flags.includes('first-irreversible-point')) text = pickNarrative('irreversible');
+  else if (flags.includes('dehydration-compounding')) text = pickNarrative('dehydration');
+  else if (flags.includes('terrain-body-block')) text = pickNarrative('terrain_block');
+  else if (flags.includes('white-wind-hit')) text = pickNarrative('white_wind_hit');
+  else if (flags.includes('white-wind-precursor')) text = pickNarrative('white_wind_sign');
+  else if (flags.includes('high-altitude-entered')) text = pickNarrative('first_high');
+  else if (decision === 'advance' || decision === 'advance_slowly') {
+    if (decision === 'advance_slowly') text = pickNarrative('advance_slowly');
+    else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
+    else text = pickNarrative('advance_good');
+  } else if (decision === 'wait') {
+    text = ['high','extreme','death_zone'].includes(s.altitude_band) ? pickNarrative('wait_high') : pickNarrative('wait_low');
+  } else if (decision === 'descend') {
+    text = pickNarrative('descend');
+  } else if (decision === 'sleep') {
+    text = pickNarrative('slept');
+  } else {
+    // pre-turn state narrative
+    if (s.fatigue >= 65 && s.fatigue < 80) text = pickNarrative('pre_collapse_fatigue');
+    else if (s.exposure >= 60 && s.exposure < 75) text = pickNarrative('pre_collapse_exposure');
+    else text = pickNarrative('advance_good');
+  }
+
+  document.getElementById('narrative-text').textContent = text;
+
+  // passive character signals
+  const passiveEl = document.getElementById('narrative-passive');
+  let passive = '';
+  if (G.character.id === 'valentina' && decision === null) {
+    if (s.terrain_load >= 2) passive = 'The ground is changing character. This section will cost more.';
+  }
+  if (G.character.id === 'diego' && G.turnLog.length >= 2) {
+    const last2 = G.turnLog.slice(-2);
+    if (last2.every(l => (l.decision === 'advance' || l.decision === 'advance_slowly')) && signals.trend === 'worsening') {
+      passive = 'The body says yes. The mountain hasn\'t answered yet.';
+    }
+  }
+  if (passive) {
+    passiveEl.textContent = passive;
+    passiveEl.style.display = 'block';
+  } else {
+    passiveEl.style.display = 'none';
+  }
+
+  // FIX: return text so callers can use it without re-reading the DOM
+  return text;
+}
+
+// ════════════════════════════════════════════════
+// THERMAL RESERVE
+// ════════════════════════════════════════════════
+function toggleThermal() {
+  if (G.thermalUsed) return;
+  G.thermalActiveThisTurn = !G.thermalActiveThisTurn;
+  renderWatch();
+}
+
+// ════════════════════════════════════════════════
+// DECISION HANDLING
+// ════════════════════════════════════════════════
+function setDecisionButtonsEnabled(enabled) {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep'].forEach(id => {
+    const btn = document.getElementById(id);
+    btn.disabled = !enabled;
+    if (enabled) btn.removeAttribute('aria-disabled');
+    else btn.setAttribute('aria-disabled', 'true');
+  });
+}
+
+function makeDecision(decision) {
+  setDecisionButtonsEnabled(false);
+  const s = G.state;
+  const sc = G.scenario;
+  const ch = G.character;
+  const rng = G.rng;
+  const bias = sc.bias;
+  const turn = G.turn;
+
+  if (decision === 'sleep' && !isCampPosition(s.position)) {
+    setDecisionButtonsEnabled(true);
+    return;
+  }
+
+  const altBand = s.altitude_band;
+  const mod = ALT_MOD[altBand];
+  const stage = getCurrentStage();
+  const stageMod = TUNING.stage[stage];
+
+  let fatMult = mod.fatigue_mult * stageMod.fatigueMult;
+  if (['high','extreme','death_zone'].includes(altBand)) {
+    if (ch.id === 'marco') fatMult = 1.2 * stageMod.fatigueMult;
+    if (ch.id === 'valentina') fatMult = Math.max(1.2, fatMult - 0.15);
+  }
+  const capPenalty = mod.capacity_penalty + stageMod.capPenaltyBonus;
+
+  const flags = [];
+  let moved = false;
+  let blocked = false;
+  let posChanged = false;
+
+  let weatherShift = rngWeighted(rng, [-1,0,0,1], stageMod.weatherWeights) + (bias.weather_deterioration || 0);
+  const windowTurns = new Set(bias.window_turns || []);
+  if (windowTurns.has(turn)) {
+    weatherShift -= 2;
+    if (turn === Math.min(...(bias.window_turns||[turn]))) flags.push('weather-window-open');
+  }
+  const maxWindow = bias.window_turns && bias.window_turns.length ? Math.max(...bias.window_turns) : -1;
+  if (maxWindow > 0 && turn === maxWindow + 1) {
+    weatherShift += (bias.post_window_deterioration || 0);
+    flags.push('weather-window-closed');
+  }
+
+  const windySector = ['portezuelo','canaleta','summit','camp_c'].includes(s.position);
+  const precursor = (s.visibility >= 2 && (s.weather_severity <= 1 || windySector) && rng() < (stage === 'SUMMIT_DAY' ? 0.32 : 0.22));
+  if (precursor) {
+    G.whiteWindRisk = clamp(G.whiteWindRisk + 2, 0, 6);
+    flags.push('white-wind-precursor');
+  } else {
+    G.whiteWindRisk = clamp(G.whiteWindRisk - 1, 0, 6);
+  }
+  const whiteWindHit = G.whiteWindRisk >= 4 && rng() < (windySector ? 0.45 : 0.25);
+  if (whiteWindHit) {
+    weatherShift += 2;
+    flags.push('white-wind-hit');
+  }
+
+  let terrainShift = decision === 'wait' && s.terrain_load > 0
+    ? rngChoice(rng, [-1,-1,0,0,0,1]) + (bias.terrain_growth || 0)
+    : rngChoice(rng, [-1,0,0,1,1]) + (bias.terrain_growth || 0);
+
+  s.weather_severity = clamp(s.weather_severity + weatherShift, 0, 3);
+  s.terrain_load = clamp(s.terrain_load + terrainShift, 0, 3);
+  if (['playa_ancha','canaleta'].includes(s.position) && rng() < 0.35) {
+    s.terrain_load = clamp(s.terrain_load + 1, 0, 3);
+    flags.push('penitentes-field');
+  }
+  s.visibility = clamp(3 - s.weather_severity + rngChoice(rng, [-1,0,1]), 0, 3);
+  if (whiteWindHit) s.visibility = 0;
+
+  let fatigue_delta = 0, exposure_delta = 0, capacity_delta = 0;
+  const fg = bias.fatigue_growth || 0;
+
+  if (decision === 'advance') {
+    if (s.fatigue > 65 && s.terrain_load === 3) {
+      blocked = true;
+      flags.push('terrain-body-block');
+    }
+    fatigue_delta = (7 + s.terrain_load * 2 + fg) * fatMult;
+    exposure_delta = (6 + s.weather_severity * 2) * stageMod.exposureMult;
+    capacity_delta = -4 - s.weather_severity - s.terrain_load - capPenalty;
+    const baseChance = stageMod.advanceProgressBase - (s.weather_severity * 0.1) - (s.fatigue * 0.0025);
+    if (!blocked && s.terrain_load < 3 && rng() < clamp(baseChance, 0.15, 0.88)) {
+      moved = true; posChanged = true;
+    }
+  } else if (decision === 'advance_slowly') {
+    fatigue_delta = (4 + s.terrain_load + fg) * fatMult;
+    exposure_delta = (3 + s.weather_severity * 2) * stageMod.exposureMult;
+    capacity_delta = -3 - s.weather_severity - s.terrain_load - capPenalty;
+    const baseChance = stageMod.slowProgressBase - (s.weather_severity * 0.08) - (s.fatigue * 0.002);
+    if (s.terrain_load < 3 && rng() < clamp(baseChance, 0.12, 0.9)) {
+      moved = true; posChanged = true;
+    }
+  } else if (decision === 'wait') {
+    const restMap = { APPROACH:-7, HIGH_CAMP:-1, SUMMIT_DAY:1 };
+    fatigue_delta = restMap[stage] * fatMult + fg;
+    exposure_delta = (4 + s.weather_severity * 2) * stageMod.exposureMult;
+    capacity_delta = -2 + (stage === 'APPROACH' ? 1 : 0) - capPenalty;
+  } else if (decision === 'sleep') {
+    const campRec = TUNING.sleepRecoveryByCamp[s.position] || { fatigue:-3, capacity:0, exposure:2, noise:1 };
+    fatigue_delta = campRec.fatigue;
+    exposure_delta = campRec.exposure + (s.weather_severity >= 2 && stage !== 'APPROACH' ? 2 : 0);
+    capacity_delta = campRec.capacity;
+    flags.push('slept-at-camp');
+  } else {
+    fatigue_delta = (2 + s.terrain_load) * fatMult;
+    exposure_delta = (2 + s.weather_severity) * stageMod.exposureMult;
+    capacity_delta = -1 - capPenalty;
+    flags.push('retreat-initiated');
+  }
+
+  if (G.thermalActiveThisTurn && decision !== 'sleep') {
+    exposure_delta = Math.floor(exposure_delta / 2);
+    fatigue_delta = fatigue_delta - fatMult * 2;
+    flags.push('thermal-reserve-used');
+    G.thermalUsed = true;
+  }
+
+  const charExpMod = ch.mods.exposure_per_turn || 0;
+  const charExpHighMod = (['high','extreme','death_zone'].includes(altBand) && ch.mods.exposure_high_per_turn) ? ch.mods.exposure_high_per_turn : 0;
+
+  const fatigueBefore = s.fatigue;
+  s.fatigue = clamp(s.fatigue + Math.round(fatigue_delta), 0, 100);
+  s.exposure = clamp(s.exposure + Math.round(exposure_delta) + charExpMod + charExpHighMod, 0, 100);
+  s.functional_capacity = clamp(
+    s.functional_capacity + Math.round(capacity_delta) - Math.floor(fatigueBefore / 25),
+    0, 100
+  );
+
+  const curIdx = POSITIONS.indexOf(s.position);
+  if (posChanged && curIdx < POSITIONS.length - 1) {
+    s.position = POSITIONS[curIdx + 1];
+    s.altitude_band = POS_BAND[s.position];
+    const newIdx = curIdx + 1;
+    if (newIdx > G.highestPosIdx) G.highestPosIdx = newIdx;
+    if (['high','extreme','death_zone'].includes(s.altitude_band) && !G.allFlags.includes('high-altitude-entered')) {
+      flags.push('high-altitude-entered');
+    }
+  } else if (decision === 'descend') {
+    if (s.position === 'summit') {
+      s.position = 'camp_c';
+    } else if (curIdx > 0) {
+      s.position = POSITIONS[curIdx - 1];
+    }
+    s.altitude_band = POS_BAND[s.position];
+  }
+
+  if (!G.irreversibleTriggered && POSITIONS.indexOf(s.position) >= TUNING.irreversibleIndex) {
+    G.irreversibleTriggered = true;
+    G.irreversibleTurn = G.turn;
+    flags.push('first-irreversible-point');
+  }
+
+  if (decision === 'descend' && G.irreversibleTriggered) {
+    const rp = TUNING.retreatPenaltyAfterIrreversible;
+    s.fatigue = clamp(s.fatigue + rp.fatigue, 0, 100);
+    s.exposure = clamp(s.exposure + rp.exposure, 0, 100);
+    s.water = Math.max(0, s.water - rp.water);
+    G.minutesOfDay += rp.timeMinutes;
+    flags.push('retreat-after-irreversible');
+  }
+
+  const actionMinutes = decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60);
+  spendResourcesForMinutes(Math.max(actionMinutes, 60), stage, flags);
+  applyTimeAndNight(decision, flags);
+
+  const expCritThreshold = (ch.id === 'marco') ? (ch.mods.exposure_crit_threshold || 65) : 75;
+  if (s.exposure >= expCritThreshold && !G.allFlags.includes('critical-exposure')) flags.push('critical-exposure');
+  if (s.fatigue >= 80 && !G.allFlags.includes('critical-fatigue')) flags.push('critical-fatigue');
+
+  G.allFlags.push(...flags);
+  G.thermalActiveThisTurn = false;
+
+  G.signals = computeSignals();
+  renderWatch();
+  const narrativeText = renderNarrative(decision, G.signals, flags);
+
+  const logEntry = {
+    turn: G.turn,
+    day: G.day,
+    time: formatMinutes(G.minutesOfDay),
+    position: s.position,
+    decision,
+    trend: G.signals.trend,
+    uncertainty: G.signals.uncertainty,
+    body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
+    raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure },
+    flags: [...flags],
+    blocked,
+    moved,
+    narrativeText,
+  };
+  G.turnLog.push(logEntry);
+  addLogEntry(logEntry);
+
+  const resourceGone = s.water === 0 && G.consecutiveWater0 >= 3;
+  const returnedToHorcones = s.position === 'horcones' && (decision === 'descend' || G.highestPosIdx > 0);
+  const ended = returnedToHorcones ||
+                s.functional_capacity <= 15 ||
+                G.turn >= sc.max_turns ||
+                resourceGone;
+
+  if (ended) {
+    setTimeout(() => endRun(returnedToHorcones), 800);
+    return;
+  }
+
+  G.turn++;
+  setTimeout(() => {
+    renderWatch();
+    renderNarrative(null, G.signals);
+    setDecisionButtonsEnabled(true);
+  }, 400);
+}
+
+
+// ════════════════════════════════════════════════
+// LOG ENTRY
+// FIX: uses logEntry.narrativeText directly (no DOM read)
+// ════════════════════════════════════════════════
+function addLogEntry(entry) {
+  const container = document.getElementById('log-entries');
+  const empty = container.querySelector('.log-empty');
+  if (empty) empty.remove();
+
+  const div = document.createElement('div');
+  div.className = 'log-entry';
+
+  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
+  const flagHtml = entry.flags.length ?
+    entry.flags.map(f => `<div class="log-flag ${f.includes('critical')||f.includes('collapse')?'':'flag-warn'}">${f.toUpperCase()}</div>`).join('') : '';
+  const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
+
+  div.innerHTML = `
+    <div class="log-entry-meta">
+      T${entry.turn} · D${entry.day} ${entry.time} · ${POS_LABELS[entry.position]} · <span class="decision-tag">${decisionDisplay}</span>${blockedNote}
+      &nbsp;|&nbsp;${entry.trend} · ${entry.uncertainty}
+      &nbsp;|&nbsp;${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}
+    </div>
+    <div class="log-entry-narrative">${entry.narrativeText || '—'}</div>
+    ${flagHtml}
+  `;
+  container.prepend(div);
+
+  // keep only last 5
+  const entries = container.querySelectorAll('.log-entry');
+  if (entries.length > 5) entries[entries.length-1].remove();
+}
+
+// ════════════════════════════════════════════════
+// END RUN / CLASSIFY
+// ════════════════════════════════════════════════
+function classifyOutcome(returnedToHorcones) {
+  const s = G.state;
+  if (s.functional_capacity <= 15) return { label:'Incapacitated', cls:'outcome-collapse' };
+  const expCritThreshold = (G.character.id === 'marco') ? 65 : 75;
+  if (s.exposure >= expCritThreshold) return { label:'Systemic Collapse — Exposure', cls:'outcome-collapse' };
+  if (s.fatigue >= 80) return { label:'Systemic Collapse — Fatigue', cls:'outcome-collapse' };
+  if (s.water === 0 || s.food === 0) return { label:'Resource Exhaustion', cls:'outcome-collapse' };
+  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('summit')) return { label:'Summit and Safe Return', cls:'outcome-success' };
+  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('camp_c')) return { label:'High Point and Safe Return', cls:'outcome-retreat' };
+  if (returnedToHorcones) return { label:'Strategic Retreat to Horcones', cls:'outcome-retreat' };
+  if (s.functional_capacity >= 60) return { label:'Stabilized', cls:'outcome-stabilized' };
+  return { label:'Marginal Survival', cls:'outcome-stabilized' };
+}
+
+function findTurningPoint() {
+  const irreversible = G.turnLog.find(e => e.flags.includes('first-irreversible-point'));
+  if (irreversible) return `Turn ${irreversible.turn}: First Irreversible Point reached at ${POS_LABELS[irreversible.position]}. Retreat costs increased from this point.`;
+
+  const firstCritical = G.turnLog.find(e => e.flags.some(f => f.includes('critical')));
+  if (firstCritical) return `Turn ${firstCritical.turn}: first critical flag (${firstCritical.flags.find(f => f.includes('critical'))}).`;
+
+  const firstWindowClose = G.turnLog.find(e => e.flags.includes('weather-window-closed'));
+  if (firstWindowClose) return `Turn ${firstWindowClose.turn}: weather window closed; conditions degraded after.`;
+
+  const firstWater0 = G.turnLog.find(e => e.flags.includes('water-depleted'));
+  if (firstWater0) return `Turn ${firstWater0.turn}: water depleted; collapse risk accelerated.`;
+
+  return 'No single event dominated; the outcome emerged from cumulative micro-decisions.';
+}
+
+
+function buildReflectionPrompts() {
+  const log = G.turnLog;
+  const staticPrompts = [
+    { text:'Which signal influenced your choices most?', dynamic:false },
+    { text:'Did waiting feel like strategy or surrender?', dynamic:false },
+    { text:'Did the outcome feel earned, or imposed by the system?', dynamic:false },
+  ];
+  const dynamicPool = [];
+
+  if (!G.thermalUsed) dynamicPool.push('The reserve was available throughout. What threshold would have made you use it?');
+  const worseningAdvances = log.filter(e => (e.decision==='advance'||e.decision==='advance_slowly') && e.trend==='worsening').length;
+  if (worseningAdvances >= 3) dynamicPool.push('The trend said worsening on multiple turns you chose to advance. What were you reading instead?');
+  const waitCount = log.filter(e => e.decision==='wait').length;
+  if (waitCount >= 4) dynamicPool.push('You waited more than you moved. Was that reading the system — or avoiding it?');
+  const earlyResource = log.find(e => e.turn < 10 && (e.flags.includes('water-depleted')||e.flags.includes('food-depleted')));
+  if (earlyResource) dynamicPool.push('Resources ran out earlier than expected. When did the math stop being in your favor?');
+  const earlyDescent = log.find(e => e.decision==='descend' && e.turn < 14);
+  if (earlyDescent) dynamicPool.push('You called it early. What signal made that feel like the right moment?');
+  const incap = log.find(e => e.flags.includes('critical-fatigue')||e.flags.includes('critical-exposure'));
+  if (incap) dynamicPool.push('The body gave signals before it stopped. At what point did they become hard to ignore?');
+
+  // character-specific
+  const charPrompts = {
+    valentina: 'The terrain gave you signals. Did you recognize them when they arrived?',
+    marco: 'Your altitude readings were reliable. Were your exposure readings given the same attention?',
+    diego: 'Your body performed. Did your reading of it match what the mountain was showing?',
+  };
+  dynamicPool.push(charPrompts[G.character.id]);
+
+  // pick 2
+  const picked = dynamicPool.slice(0, 2).map(t => ({ text:t, dynamic:true }));
+  return [...staticPrompts, ...picked];
+}
+
+function endRun(returnedToHorcones) {
+  const outcome = classifyOutcome(returnedToHorcones);
+  const sc = G.scenario;
+  const s = G.state;
+
+  // random mode adaptive fairness
+  if (outcome.cls === 'outcome-collapse') G.consecutiveCollapses++;
+  else G.consecutiveCollapses = 0;
+
+  // save to journal
+  saveJournalEntry({
+    runNum: G.runNumber,
+    scenario: sc.name,
+    seed: G.seed,
+    character: G.character.name,
+    outcome: outcome.label,
+    highest: POS_LABELS[POSITIONS[G.highestPosIdx]],
+    turns: G.turnLog.length,
+    constraint: G.allFlags.length ? G.allFlags[G.allFlags.length-1] : 'timebox',
+  });
+
+  // build debrief
+  const outEl = document.getElementById('debrief-outcome-val');
+  outEl.textContent = outcome.label;
+  outEl.className = 'debrief-outcome-value ' + outcome.cls;
+
+  const retreatMsg = document.getElementById('debrief-retreat-msg');
+  if (returnedToHorcones) {
+    retreatMsg.textContent = 'The expedition ends at Horcones. The true summit is the safe return.';
+    retreatMsg.style.display = 'block';
+  } else { retreatMsg.style.display = 'none'; }
+
+  document.getElementById('debrief-stats').innerHTML = `
+    <div><div class="debrief-stat-label">Character</div><div class="debrief-stat-val">${G.character.name}</div></div>
+    <div><div class="debrief-stat-label">Highest position</div><div class="debrief-stat-val">${POS_LABELS[POSITIONS[G.highestPosIdx]]}</div></div>
+    <div><div class="debrief-stat-label">Turns</div><div class="debrief-stat-val">${G.turnLog.length}</div></div>
+    <div><div class="debrief-stat-label">Scenario</div><div class="debrief-stat-val">${sc.name} · ${G.seed}</div></div>
+  `;
+
+  document.getElementById('debrief-turning-point').textContent = findTurningPoint();
+
+  // log table
+  const table = document.getElementById('debrief-log-table');
+  table.innerHTML = `<tr><th>T</th><th>Day/Time</th><th>Position</th><th>Decision</th><th>Trend</th><th>Unc.</th><th>Capacity</th><th>Fatigue</th><th>Exposure</th><th>Flags</th></tr>`;
+  G.turnLog.forEach(e => {
+    const tr = document.createElement('tr');
+    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep' }[e.decision];
+    tr.innerHTML = `
+      <td>${e.turn}</td>
+      <td>D${e.day || 1} ${e.time || '06:00'}</td>
+      <td>${POS_LABELS[e.position]}</td>
+      <td class="td-decision">${decLabel}</td>
+      <td>${e.trend}</td>
+      <td>${e.uncertainty}</td>
+      <td>${e.body.capacity}</td>
+      <td>${e.body.fatigue}</td>
+      <td>${e.body.exposure}</td>
+      <td class="td-flag">${e.flags.join(', ')}</td>
+    `;
+    table.appendChild(tr);
+  });
+
+  // reflections
+  const reflections = buildReflectionPrompts();
+  const ul = document.getElementById('reflection-list');
+  ul.innerHTML = '';
+  reflections.forEach(r => {
+    const li = document.createElement('li');
+    li.className = r.dynamic ? 'dynamic' : '';
+    li.textContent = r.text;
+    ul.appendChild(li);
+  });
+
+  // debrief actions
+  // FIX: journal button records that we came from debrief
+  document.getElementById('debrief-actions').innerHTML = `
+    <button class="btn-primary" onclick="replaySameSeed()">Same scenario + seed</button>
+    <button class="btn-ghost" onclick="replayNewSeed()">Same scenario + new seed</button>
+    <button class="btn-ghost" onclick="goChooseScenario()">Choose scenario</button>
+    <button class="btn-ghost" onclick="openJournalFrom('debrief')">View Expedition Journal</button>
+  `;
+
+  showScreen('debrief');
+}
+
+// FIX: journal navigation helper — records the origin screen
+function openJournalFrom(origin) {
+  G.journalReturnScreen = origin;
+  showScreen('journal');
+}
+
+function replaySameSeed() {
+  G.turn = 1; G.turnLog = []; G.allFlags = [];
+  startGame();
+}
+function replayNewSeed() {
+  const sc = G.scenario;
+  G.seed = sc.seeds ? sc.seeds[Math.floor(Math.random()*sc.seeds.length)] : Math.floor(Math.random()*9000)+1000;
+  startGame();
+}
+function goChooseScenario() {
+  selectedScenarioId = null; selectedSeed = null;
+  buildScenarioGrid();
+  showScreen('scenario');
+}
+
+// ════════════════════════════════════════════════
+// JOURNAL
+// Uses localStorage; key renamed to avoid ambiguity.
+// FIX: key renamed from 'ass_journal_v1' to 'aconcagua_journal_v1'
+// ════════════════════════════════════════════════
+const JOURNAL_KEY = 'aconcagua_journal_v1';
+
+// FIX: migrate any existing data from old key
+(function migrateJournalKey() {
+  try {
+    const old = localStorage.getItem('ass_journal_v1');
+    if (old && !localStorage.getItem(JOURNAL_KEY)) {
+      localStorage.setItem(JOURNAL_KEY, old);
+      localStorage.removeItem('ass_journal_v1');
+    }
+  } catch(e) {}
+})();
+
+function loadJournal() {
+  try { return JSON.parse(localStorage.getItem(JOURNAL_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveJournalEntry(entry) {
+  try {
+    let entries = loadJournal();
+    entries.unshift(entry);
+    if (entries.length > 50) entries = entries.slice(0, 50);
+    localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries));
+  } catch(e) {}
+}
+function clearJournal() {
+  if (!confirm('Clear all expedition records?')) return;
+  localStorage.removeItem(JOURNAL_KEY);
+  renderJournal();
+}
+function renderJournal() {
+  const entries = loadJournal();
+  const container = document.getElementById('journal-entries');
+  if (!entries.length) {
+    container.innerHTML = '<div class="journal-empty">No expeditions recorded. The first run will appear here.</div>';
+    return;
+  }
+  container.innerHTML = '';
+  entries.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'journal-entry';
+    div.innerHTML = `
+      <div class="journal-entry-header">RUN #${e.runNum || (entries.length - i)} · ${e.scenario} · Seed ${e.seed} · ${e.character}</div>
+      <div class="journal-entry-detail">Outcome: ${e.outcome} · Highest: ${e.highest} · Turns: ${e.turns} · Constraint: ${e.constraint}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+buildCharacterGrid();
+initVisualMode();
+</script>
+</body>
 </html>
