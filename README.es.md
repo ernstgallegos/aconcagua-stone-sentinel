@@ -121,7 +121,7 @@ En este modo estático local, la UI lee los JSONL incluidos directamente desde `
 - Importar este repositorio en Vercel.
 - Framework preset: **Other** (estático + funciones serverless).
 - Este vertical slice no requiere build command.
-- Publicar. La UI más reciente se sirve en `/` (`index.html`) y consume `/api/run`.
+- Publicar. La UI más reciente se sirve en `/` (rewrite a `/prototype/web-v1/index.html`) y consume `/api/run`.
 
 ## Estructura del repositorio
  
