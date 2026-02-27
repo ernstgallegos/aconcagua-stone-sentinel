@@ -1,12 +1,14 @@
-const scenarioSelect = document.getElementById("scenario");
-const seedInput = document.getElementById("seed");
-const policySelect = document.getElementById("policy");
-const loadButton = document.getElementById("load");
-const statusEl = document.getElementById("status");
-const summaryPanel = document.getElementById("summary-panel");
-const turnsPanel = document.getElementById("turns-panel");
-const summaryEl = document.getElementById("summary");
-const turnsEl = document.getElementById("turns");
+const els = {
+  scenario: document.getElementById("scenario"),
+  seed: document.getElementById("seed"),
+  policy: document.getElementById("policy"),
+  load: document.getElementById("load"),
+  status: document.getElementById("status"),
+  summaryPanel: document.getElementById("summary-panel"),
+  timelinePanel: document.getElementById("timeline-panel"),
+  summary: document.getElementById("summary"),
+  turns: document.getElementById("turns"),
+};
 
 const bundledRuns = [
   { scenario: "narrow-weather-window", seed: 101, policy: "cautious" },
@@ -14,165 +16,155 @@ const bundledRuns = [
   { scenario: "accumulated-fatigue-trap", seed: 808, policy: "waiter" },
 ];
 
-function runFileName({ scenario, seed, policy }) {
-  return `${scenario}-seed${seed}-${policy}.jsonl`;
+function runFileName(entry) {
+  return `${entry.scenario}-seed${entry.seed}-${entry.policy}.jsonl`;
 }
 
-function parseJsonl(content) {
-  return content
+function parseJsonl(raw) {
+  return raw
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => JSON.parse(line));
 }
 
-function normalizePayload(lines, source) {
-  const summaryLine = lines.find((entry) => entry.summary);
-  const run = lines.filter((entry) => entry.turn);
+function normalize(lines, source) {
   return {
-    run,
-    summary: summaryLine ? summaryLine.summary : null,
+    run: lines.filter((line) => line.turn),
+    summary: lines.find((line) => line.summary)?.summary ?? null,
     source,
   };
 }
 
-function setScenarioOptions() {
-  const scenarios = [...new Set(bundledRuns.map((entry) => entry.scenario))];
-  scenarios.forEach((scenario) => {
-    const opt = document.createElement("option");
-    opt.value = scenario;
-    opt.textContent = scenario;
-    scenarioSelect.appendChild(opt);
+function getSelection() {
+  return {
+    scenario: els.scenario.value,
+    seed: Number(els.seed.value),
+    policy: els.policy.value,
+  };
+}
+
+function getAvailableForScenario(scenario) {
+  return bundledRuns.filter((item) => item.scenario === scenario);
+}
+
+function syncDefaults() {
+  const match = getAvailableForScenario(els.scenario.value)[0];
+  if (!match) return;
+  els.seed.value = String(match.seed);
+  els.policy.value = match.policy;
+}
+
+function seedScenarios() {
+  [...new Set(bundledRuns.map((item) => item.scenario))].forEach((name) => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    els.scenario.appendChild(option);
   });
+  syncDefaults();
 }
 
-function syncInputsForScenario() {
-  const scenario = scenarioSelect.value;
-  const firstMatch = bundledRuns.find((entry) => entry.scenario === scenario);
-  if (!firstMatch) {
-    return;
-  }
-
-  seedInput.value = String(firstMatch.seed);
-  policySelect.value = firstMatch.policy;
+function metric(label, value) {
+  return `<article class="metric"><p class="label">${label}</p><p class="value">${value}</p></article>`;
 }
 
-function formatAvailableRuns(scenario) {
-  const available = bundledRuns
-    .filter((entry) => entry.scenario === scenario)
-    .map((entry) => `seed=${entry.seed}, policy=${entry.policy}`)
-    .join(" | ");
-  return available || "none";
+function flagClass(flag) {
+  if (/risk/i.test(flag)) return "flag-high-risk";
+  if (/exposure/i.test(flag)) return "flag-exposure";
+  return "flag-default";
 }
 
-function renderRun(payload) {
-  const { run, summary } = payload;
-  summaryPanel.hidden = false;
-  turnsPanel.hidden = false;
+function render(data) {
+  const { run, summary, source } = data;
+  els.summaryPanel.hidden = false;
+  els.timelinePanel.hidden = false;
 
-  summaryEl.innerHTML = summary
-    ? `
-      <p><strong>Outcome:</strong> ${summary.outcome}</p>
-      <p><strong>Constraint:</strong> ${summary.key_constraint}</p>
-      <p><strong>Total turns:</strong> ${summary.total_turns}</p>
-    `
-    : "<p>No summary line was found in this run file.</p>";
+  const fatiguePeak = Math.max(...run.map((turn) => Number(turn.state?.fatigue ?? 0)), 0);
+  const exposurePeak = Math.max(...run.map((turn) => Number(turn.state?.exposure ?? 0)), 0);
 
-  turnsEl.innerHTML = "";
+  els.summary.innerHTML = [
+    metric("Outcome", summary?.outcome ?? "unknown"),
+    metric("Key constraint", summary?.key_constraint ?? "not reported"),
+    metric("Total turns", summary?.total_turns ?? run.length),
+    metric("Peak fatigue", fatiguePeak),
+    metric("Peak exposure", exposurePeak),
+    metric("Data source", source),
+  ].join("");
+
+  els.turns.innerHTML = "";
   run.forEach((turn) => {
-    const div = document.createElement("article");
-    div.className = "turn";
-    const flags = (turn.flags || []).map((f) => `<span class=\"flag\">${f}</span>`).join("");
-    div.innerHTML = `
+    const item = document.createElement("article");
+    item.className = "turn";
+    const flags = (turn.flags || [])
+      .map((flag) => `<span class="flag ${flagClass(flag)}">${flag}</span>`)
+      .join(" ");
+
+    item.innerHTML = `
       <h3>Turn ${turn.turn} · ${turn.decision}</h3>
       <p class="meta">Position: ${turn.state.position} · Altitude band: ${turn.state.altitude_band}</p>
       <p class="meta">Functional capacity: ${turn.state.functional_capacity} · Fatigue: ${turn.state.fatigue} · Exposure: ${turn.state.exposure}</p>
-      ${flags ? `<p>${flags}</p>` : ""}
+      ${flags ? `<div>${flags}</div>` : ""}
     `;
-    turnsEl.appendChild(div);
+    els.turns.appendChild(item);
   });
 }
 
-async function fetchFromApi(params) {
-  const res = await fetch(`/api/run?${params.toString()}`);
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.error || "Unknown API error");
-  }
-  return data;
-}
-
-async function fetchFromStaticJsonl(selection) {
-  const fileName = runFileName(selection);
-  const res = await fetch(`/prototype/mra-v0/runs/${fileName}`);
-  if (!res.ok) {
-    throw new Error(`static run not found: ${fileName}`);
-  }
-  const content = await res.text();
-  const parsed = parseJsonl(content);
-  return normalizePayload(parsed, `prototype/mra-v0/runs/${fileName}`);
-}
-
-const preferStaticLocal = ["127.0.0.1", "localhost"].includes(window.location.hostname) && window.location.port === "4173";
-
-async function loadRun() {
-  statusEl.textContent = "Loading run...";
-  summaryPanel.hidden = true;
-  turnsPanel.hidden = true;
-
-  const selection = {
-    scenario: scenarioSelect.value,
-    seed: Number(seedInput.value),
-    policy: policySelect.value,
-  };
-
-  const supported = bundledRuns.some(
-    (entry) =>
-      entry.scenario === selection.scenario &&
-      entry.seed === selection.seed &&
-      entry.policy === selection.policy,
-  );
-
-  if (!supported) {
-    statusEl.textContent = `Combination not bundled for ${selection.scenario}. Available: ${formatAvailableRuns(selection.scenario)}`;
-    return;
-  }
-
+async function fetchFromApi(selection) {
   const params = new URLSearchParams({
     scenario: selection.scenario,
     seed: String(selection.seed),
     policy: selection.policy,
   });
+  const response = await fetch(`/api/run?${params.toString()}`);
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error || "API error");
+  return body;
+}
 
-  if (preferStaticLocal) {
-    try {
-      const fallbackData = await fetchFromStaticJsonl(selection);
-      renderRun(fallbackData);
-      statusEl.textContent = `Loaded ${fallbackData.summary?.total_turns ?? fallbackData.run.length} turns via local static mode.`;
-      return;
-    } catch (fallbackError) {
-      statusEl.textContent = `Failed local static mode (${fallbackError.message}).`;
-      return;
-    }
+async function fetchStatic(selection) {
+  const file = runFileName(selection);
+  const response = await fetch(`/prototype/mra-v0/runs/${file}`);
+  if (!response.ok) throw new Error(`Run not found: ${file}`);
+  return normalize(parseJsonl(await response.text()), `prototype/mra-v0/runs/${file}`);
+}
+
+async function loadRun() {
+  els.summaryPanel.hidden = true;
+  els.timelinePanel.hidden = true;
+
+  const selection = getSelection();
+  const supported = bundledRuns.some((entry) =>
+    entry.scenario === selection.scenario &&
+    entry.seed === selection.seed &&
+    entry.policy === selection.policy
+  );
+
+  if (!supported) {
+    const options = getAvailableForScenario(selection.scenario)
+      .map((entry) => `seed=${entry.seed}, policy=${entry.policy}`)
+      .join(" | ");
+    els.status.textContent = `Combination not bundled. Available: ${options || "none"}.`;
+    return;
   }
 
+  els.status.textContent = "Loading run...";
   try {
-    const data = await fetchFromApi(params);
-    renderRun(data);
-    statusEl.textContent = `Loaded ${data.summary?.total_turns ?? data.run.length} turns from API.`;
-  } catch (apiError) {
+    const data = await fetchFromApi(selection);
+    render(data);
+    els.status.textContent = `Loaded ${data.summary?.total_turns ?? data.run.length} turns from API.`;
+  } catch (error) {
     try {
-      const fallbackData = await fetchFromStaticJsonl(selection);
-      renderRun(fallbackData);
-      statusEl.textContent = `Loaded ${fallbackData.summary?.total_turns ?? fallbackData.run.length} turns via static fallback (no serverless API).`;
+      const fallback = await fetchStatic(selection);
+      render(fallback);
+      els.status.textContent = `Loaded ${fallback.summary?.total_turns ?? fallback.run.length} turns from static fallback.`;
     } catch (fallbackError) {
-      statusEl.textContent = `Failed API (${apiError.message}) and static fallback (${fallbackError.message}).`;
+      els.status.textContent = `Load failed. API: ${error.message}. Static: ${fallbackError.message}.`;
     }
   }
 }
 
-setScenarioOptions();
-scenarioSelect.addEventListener("change", syncInputsForScenario);
-syncInputsForScenario();
-loadButton.addEventListener("click", loadRun);
+seedScenarios();
+els.scenario.addEventListener("change", syncDefaults);
+els.load.addEventListener("click", loadRun);
 loadRun();
