@@ -106,7 +106,8 @@ This is a curated, public-facing repository, not a complete production archive.
 
 This repository now includes a lightweight web vertical slice that replays bundled MRA v0 runs:
 
-- `prototype/web-v1/index.html`, `prototype/web-v1/styles.css`, `prototype/web-v1/app.js` — latest static client UI
+- `prototype/web-v1/index.html` — experimental self-contained UI (inline CSS/JS)
+- `index.html`, `styles.css`, `app.js` — latest root static client UI
 - `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
 - `vercel.json` — Vercel runtime and routing configuration
 

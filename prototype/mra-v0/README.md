@@ -51,6 +51,7 @@ The simulator keeps stable internal position IDs (`horcones`, `base_camp`, `camp
 - `camp_a`: Campamento 1 "Canadá" (5050 m)
 - `camp_b`: Campamento 2 "Nido de Cóndores" (5560 m)
 - `camp_c`: Campamento 3 "Cólera" (5970 m)
+- `route`: Summit route sector (>5970 m)
 
 ## Output contract
 
@@ -67,6 +68,14 @@ Each run includes:
 - summary line with outcome class (`stabilized`, `retreated`, `deteriorated`, `incapacitated`, `survived-marginal`)
 
 ## Reproducing bundled sample runs
+
+Bundled in-repository samples currently include:
+
+- `narrow-weather-window-seed101-cautious`
+- `false-stability-terrain-seed505-cautious`
+- `accumulated-fatigue-trap-seed808-waiter`
+
+Additional scenarios such as `late-push` and `weather-window` are reproducible with the commands below, but their outputs are generated locally (not pre-bundled in git unless exported manually).
 
 ```bash
 python3 prototype/mra-v0/simulator.py --scenario prototype/mra-v0/scenarios/narrow-weather-window.json --seed 101 --policy cautious --output-prefix prototype/mra-v0/runs/narrow-weather-window-seed101-cautious
