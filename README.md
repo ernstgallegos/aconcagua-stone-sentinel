@@ -126,9 +126,10 @@ In this local static mode, the UI reads bundled JSONL files directly from `proto
 ### Vercel deploy
 
 - Import this repository in Vercel.
+- **Project Settings → Root Directory:** keep it at the repository root (`.`), not `prototype/mra-v0`.
 - Framework preset: **Other** (static + serverless functions).
 - No build command required for this vertical slice.
-- Deploy. The latest UI is served from `/` (rewrite to `/prototype/web-v1/index.html`) and consumes `/api/run`.
+- Deploy. The latest UI is served from `/` (redirect to `/prototype/web-v1/index.html`) and consumes `/api/run`.
 
 ## Repository Structure
 
