@@ -100,7 +100,8 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
 
 Este repositorio ahora incluye un vertical slice web liviano para reproducir corridas incluidas del MRA v0:
 
-- `prototype/web-v1/index.html`, `prototype/web-v1/styles.css`, `prototype/web-v1/app.js` — interfaz cliente estática más reciente
+- `prototype/web-v1/index.html` — UI experimental autocontenida (CSS/JS inline)
+- `index.html`, `styles.css`, `app.js` — interfaz cliente estática principal en la raíz
 - `api/run.js` — API serverless que sirve corridas desde `prototype/mra-v0/runs/`
 - `vercel.json` — configuración de runtime y ruteo para Vercel
 

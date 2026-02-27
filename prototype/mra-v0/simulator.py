@@ -11,14 +11,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-POSITIONS = ["horcones", "base_camp", "camp_a", "camp_b", "route", "camp_c"]
+POSITIONS = ["horcones", "base_camp", "camp_a", "camp_b", "camp_c", "route"]
 POSITION_LABELS = {
     "horcones": "Horcones / Entrada Parque Provincial Aconcagua (2950 m)",
     "base_camp": 'Campamento Base / "Plaza de Mulas" (4350 m)',
     "camp_a": 'Campamento 1 "Canadá" (5050 m)',
     "camp_b": 'Campamento 2 "Nido de Cóndores" (5560 m)',
-    "route": "Summit route sector (>5560 m)",
     "camp_c": 'Campamento 3 "Cólera" (5970 m)',
+    "route": "Summit route sector (>5970 m)",
 }
 POSITION_TO_ALTITUDE = {
     "horcones": "low",
@@ -162,6 +162,10 @@ def apply_decision(
 ) -> tuple[dict[str, int], list[str]]:
     flags: list[str] = []
 
+    functional_capacity_before = state["functional_capacity"]
+    fatigue_before_snapshot = state["fatigue"]
+    exposure_before = state["exposure"]
+
     weather_shift = rng.choices(
         [-1, 0, 0, 1],
         weights=[max(0, state["weather_severity"]) * 15, 50, 25, 25],
@@ -229,9 +233,9 @@ def apply_decision(
         flags.append("critical-fatigue")
 
     return {
-        "functional_capacity_delta": capacity_delta,
-        "fatigue_delta": fatigue_delta,
-        "exposure_delta": exposure_delta,
+        "functional_capacity_delta": state["functional_capacity"] - functional_capacity_before,
+        "fatigue_delta": state["fatigue"] - fatigue_before_snapshot,
+        "exposure_delta": state["exposure"] - exposure_before,
     }, flags
 
 

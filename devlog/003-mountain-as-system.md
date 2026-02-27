@@ -1,4 +1,4 @@
-# Devlog 002 — Mountain as System
+# Devlog 003 — Mountain as System
 
 This entry records why the project incorporated Aconcagua’s physiological reality into the MRA simulator instead of keeping it as background narrative.
 
