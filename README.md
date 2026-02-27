@@ -102,11 +102,11 @@ This is a curated, public-facing repository, not a complete production archive.
 ---
 
 
-## Web Vertical Slice (Vercel-ready)
+## Web Vertical Slice v1 (Vercel-ready)
 
 This repository now includes a lightweight web vertical slice that replays bundled MRA v0 runs:
 
-- `index.html`, `styles.css`, `app.js` — static client UI
+- `prototype/web-v1/index.html`, `prototype/web-v1/styles.css`, `prototype/web-v1/app.js` — latest static client UI
 - `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
 - `vercel.json` — Vercel runtime and routing configuration
 
@@ -118,7 +118,7 @@ From repository root:
 python3 -m http.server 4173
 ```
 
-Then open `http://localhost:4173`.
+Then open `http://localhost:4173/prototype/web-v1/`.
 
 In this local static mode, the UI reads bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
 
@@ -127,7 +127,7 @@ In this local static mode, the UI reads bundled JSONL files directly from `proto
 - Import this repository in Vercel.
 - Framework preset: **Other** (static + serverless functions).
 - No build command required for this vertical slice.
-- Deploy. The UI is served from `/` and consumes `/api/run`.
+- Deploy. The latest UI is served from `/` (`index.html`) and consumes `/api/run`.
 
 ## Repository Structure
 

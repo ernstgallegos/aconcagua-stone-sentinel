@@ -85,22 +85,22 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  
  ## Estado del proyecto
  
- Este repositorio documenta los **fundamentos conceptuales y de diseño** del proyecto.
+ Este repositorio documenta los **fundamentos conceptuales y de diseño** del proyecto, e incluye un **prototipo funcional de baja fidelidad** para validar hipótesis centrales.
  
- - No hay código jugable público en esta etapa.
- - El foco está puesto en la intención de diseño, la lógica de sistemas y el alcance narrativo.
- - El desarrollo está pensado de forma incremental y escalable.
+ - El MRA v0 está disponible en `/prototype/mra-v0/`.
+ - El vertical slice web v1 está disponible en `/prototype/web-v1/` y consume corridas incluidas.
+ - El código de gameplay de producción no es público en esta etapa.
  
  Se trata de un repositorio curado y orientado al público, no de un archivo completo de producción.
  
  ---
  
  
-## Vertical Slice web (listo para Vercel)
+## Vertical Slice web v1 (listo para Vercel)
 
 Este repositorio ahora incluye un vertical slice web liviano para reproducir corridas incluidas del MRA v0:
 
-- `index.html`, `styles.css`, `app.js` — interfaz cliente estática
+- `prototype/web-v1/index.html`, `prototype/web-v1/styles.css`, `prototype/web-v1/app.js` — interfaz cliente estática más reciente
 - `api/run.js` — API serverless que sirve corridas desde `prototype/mra-v0/runs/`
 - `vercel.json` — configuración de runtime y ruteo para Vercel
 
@@ -112,7 +112,7 @@ Desde la raíz del repositorio:
 python3 -m http.server 4173
 ```
 
-Luego abrir `http://localhost:4173`.
+Luego abrir `http://localhost:4173/prototype/web-v1/`.
 
 En este modo estático local, la UI lee los JSONL incluidos directamente desde `prototype/mra-v0/runs/` (sin API serverless).
 
@@ -121,12 +121,11 @@ En este modo estático local, la UI lee los JSONL incluidos directamente desde `
 - Importar este repositorio en Vercel.
 - Framework preset: **Other** (estático + funciones serverless).
 - Este vertical slice no requiere build command.
-- Publicar. La UI se sirve en `/` y consume `/api/run`.
+- Publicar. La UI más reciente se sirve en `/` (`index.html`) y consume `/api/run`.
 
 ## Estructura del repositorio
  
- - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español)  y propuesta de artefacto mínimo reproducible (solo en inglés).
- - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas y propuesta de artefacto mínimo reproducible (solo en inglés)
+ - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español) y propuesta de artefacto mínimo reproducible (solo en inglés).
  - [`/art`](./art) — Concept art curado y referencias visuales
  - [`/devlog`](./devlog) — Intención de diseño, decisiones de alcance y reflexiones
  - [`/meta`](./meta) — Roadmap público, whitepaper y notas de visibilidad
