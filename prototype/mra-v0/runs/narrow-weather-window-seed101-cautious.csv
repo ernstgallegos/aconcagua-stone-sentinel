@@ -1,8 +1,7 @@
-turn,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags
-1,advance,1,2,2,stable,high,76,35,25,7,7,-
-2,advance,2,3,1,stable,low,64,48,39,6,6,-
-3,wait,3,0,1,worsening,medium,61,44,49,5,5,-
-4,wait,3,0,3,worsening,medium,58,40,59,4,4,-
-5,wait,3,0,3,worsening,medium,55,36,69,3,3,-
-6,wait,3,2,3,worsening,medium,52,32,79,2,2,critical-exposure
-7,descend,3,0,3,worsening,high,50,34,81,1,1,retreat-initiated|critical-exposure
+turn,position,position_label,altitude_band,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags,rationale
+1,base_camp,"Campamento Base / ""Plaza de Mulas"" (4350 m)",low,advance,1,3,0,clearing,low,77,35,25,7,7,-,-
+2,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,advance,2,2,1,stable,medium,64,51,39,6,6,-,-
+3,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,advance,2,1,3,stable,medium,50,70,53,5,5,-,-
+4,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,wait,3,0,3,worsening,high,45,68,63,4,4,-,-
+5,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,wait,3,1,3,worsening,high,41,66,73,3,3,-,-
+6,base_camp,"Campamento Base / ""Plaza de Mulas"" (4350 m)",low,descend,3,0,3,worsening,high,38,70,78,2,2,retreat-initiated|critical-exposure,-

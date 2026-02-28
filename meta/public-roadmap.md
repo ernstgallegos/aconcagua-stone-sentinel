@@ -55,7 +55,7 @@ At the end of this stage, the project can be **reasoned about as a system**, not
 ---
 
 ## Stage 3 — Visual Intent and Curation  
-**Status: Current/Next**
+**Status: Completed**
 
 > Establishing tone and scale through restraint.
 
@@ -72,7 +72,7 @@ The visual identity is **anchored**, not exploratory.
 ---
 
 ## Stage 4 — Prototyping the Core Experience  
-**Status: Next**
+**Status: Completed (MRA v0)**
 
 > Testing decisions before building systems.
 
@@ -84,12 +84,14 @@ This stage focuses on validating the design through **paper prototypes and low-f
 - Consequences that persist and inform future choices
 - Retreat and inaction as valid outcomes
 
+A functional low-fidelity prototype (MRA v0) is available in `/prototype/mra-v0/`. It implements the turn-based decision loop, five validated scenarios, deterministic reproducibility under fixed seeds, six outcome types (including `summit` and `stabilized`), and a web-based run viewer. The prototype confirmed the core hypotheses around partial information, physiological degradation, and the viability of multiple outcome types including successful summit, voluntary retreat, and physiological collapse.
+
 The goal is not polish, but **proof of coherence**.
 
 ---
 
 ## Stage 5 — Selective System Prototyping  
-**Status: Planned**
+**Status: Current / Next**
 
 > Moving from abstract systems to concrete interactions.
 

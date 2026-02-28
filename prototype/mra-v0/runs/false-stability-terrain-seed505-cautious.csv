@@ -1,9 +1,9 @@
-turn,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags
-1,advance,1,2,1,stable,low,78,33,23,7,7,-
-2,wait,1,1,3,stable,high,76,29,29,6,6,-
-3,wait,1,2,3,worsening,high,74,25,37,5,5,-
-4,wait,2,0,3,worsening,medium,72,21,45,4,4,-
-5,wait,1,3,3,worsening,medium,71,17,53,3,3,-
-6,wait,2,0,3,worsening,medium,69,13,61,2,2,-
-7,wait,3,0,3,worsening,medium,67,9,71,1,1,-
-8,descend,2,0,3,worsening,high,53,11,73,0,0,retreat-initiated|water-depleted|food-depleted
+turn,position,position_label,altitude_band,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags,rationale
+1,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,advance,1,2,1,clearing,low,79,33,23,7,7,-,-
+2,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,0,3,3,clearing,low,78,29,29,6,6,-,-
+3,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,advance,0,1,2,clearing,low,68,45,40,5,5,-,-
+4,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,1,1,3,clearing,low,66,41,46,4,4,-,-
+5,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,2,0,3,worsening,medium,63,37,54,3,3,-,-
+6,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,2,0,3,worsening,high,60,33,62,2,2,-,-
+7,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,3,1,1,worsening,high,58,29,72,1,1,-,-
+8,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,descend,2,1,1,stable,high,44,32,77,0,0,retreat-initiated|water-depleted|food-depleted|critical-exposure,-

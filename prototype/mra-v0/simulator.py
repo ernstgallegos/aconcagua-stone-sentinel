@@ -133,7 +133,12 @@ def pick_decision(policy: str, state: dict[str, Any], turn: int, signals: dict[s
             return "descend", None
         return "advance", None
 
-    return "wait", None
+    if policy == "waiter":
+        return "wait", None
+
+    raise ValueError(
+        f"Unknown policy: {policy!r}. Valid options: cautious, aggressive, waiter, human"
+    )
 
 
 def update_position(state: dict[str, Any], decision: str) -> None:
@@ -207,14 +212,16 @@ def apply_decision(
     fatigue_delta = int(fatigue_delta * mod["fatigue_mult"])
     capacity_delta -= mod["capacity_penalty"]
 
-    state["weather_severity"] = clamp(state["weather_severity"] + weather_shift, 0, 3)
-    state["terrain_load"] = clamp(state["terrain_load"] + terrain_shift, 0, 3)
+    max_weather = bias.get("clamp_weather_max", 3)
+    max_terrain = bias.get("clamp_terrain_max", 3)
+    state["weather_severity"] = clamp(state["weather_severity"] + weather_shift, 0, max_weather)
+    state["terrain_load"] = clamp(state["terrain_load"] + terrain_shift, 0, max_terrain)
     state["visibility"] = clamp(3 - state["weather_severity"] + rng.choice([-1, 0, 1]), 0, 3)
 
     fatigue_before = state["fatigue"]
     state["fatigue"] = clamp(state["fatigue"] + fatigue_delta, 0, 100)
     state["exposure"] = clamp(state["exposure"] + exposure_delta, 0, 100)
-    state["functional_capacity"] = clamp(state["functional_capacity"] + capacity_delta - fatigue_before // 25, 0, 100)
+    state["functional_capacity"] = clamp(state["functional_capacity"] + capacity_delta - fatigue_before // 35, 0, 100)
 
     state["water"] = max(0, state["water"] - 1)
     state["food"] = max(0, state["food"] - 1)
@@ -239,7 +246,14 @@ def apply_decision(
     }, flags
 
 
-def classify_outcome(state: dict[str, Any], all_flags: list[str], ended_by_choice: bool) -> tuple[str, str]:
+def classify_outcome(
+    state: dict[str, Any],
+    all_flags: list[str],
+    ended_by_choice: bool,
+    summit_reached: bool = False,
+) -> tuple[str, str]:
+    if summit_reached:
+        return "summit", "summit sector reached with functional capacity intact"
     if ended_by_choice:
         return "retreated", "voluntary descent"
     if state["functional_capacity"] <= 15:
@@ -261,6 +275,7 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
     logs: list[dict[str, Any]] = []
     all_flags: list[str] = []
     ended_by_choice = False
+    summit_reached = False
     highest_position_idx = POSITIONS.index(state.get("position", "horcones")) if state.get("position", "horcones") in POSITIONS else 0
 
     for turn in range(1, scenario["max_turns"] + 1):
@@ -284,13 +299,16 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
         }
         logs.append(row)
 
+        if state["position"] == "route" and decision == "advance":
+            summit_reached = True
+            break
         if decision == "descend":
             ended_by_choice = True
             break
         if state["functional_capacity"] <= 15:
             break
 
-    outcome, key_constraint = classify_outcome(state, all_flags, ended_by_choice)
+    outcome, key_constraint = classify_outcome(state, all_flags, ended_by_choice, summit_reached)
     return logs, RunResult(
         outcome=outcome,
         key_constraint=key_constraint,

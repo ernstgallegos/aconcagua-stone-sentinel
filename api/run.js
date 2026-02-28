@@ -30,7 +30,17 @@ module.exports = (req, res) => {
     });
   }
 
-  const lines = parseJsonl(fs.readFileSync(fullPath, "utf8"));
+  let lines;
+  try {
+    lines = parseJsonl(fs.readFileSync(fullPath, "utf8"));
+  } catch (err) {
+    return res.status(500).json({
+      error: "run file is malformed or unreadable",
+      file: runFile,
+      detail: err.message,
+    });
+  }
+
   const summaryLine = lines.find((entry) => entry.summary);
   const run = lines.filter((entry) => entry.turn);
 

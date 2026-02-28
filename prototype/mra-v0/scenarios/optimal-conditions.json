@@ -1,0 +1,25 @@
+{
+  "id": "optimal-conditions",
+  "description": "Ideal physiological and environmental baseline. Used exclusively to validate that 'summit' and 'stabilized' outcomes are mechanically reachable. Not intended as a playable scenario.",
+  "seeds": [1, 2, 3],
+  "max_turns": 15,
+  "initial_state": {
+    "altitude_band": "low",
+    "position": "horcones",
+    "weather_severity": 0,
+    "visibility": 3,
+    "terrain_load": 0,
+    "functional_capacity": 100,
+    "fatigue": 0,
+    "exposure": 0,
+    "water": 20,
+    "food": 20
+  },
+  "bias": {
+    "weather_deterioration": 0,
+    "terrain_growth": 0,
+    "fatigue_growth": 0,
+    "clamp_weather_max": 0,
+    "clamp_terrain_max": 0
+  }
+}
