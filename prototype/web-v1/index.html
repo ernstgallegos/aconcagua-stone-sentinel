@@ -294,6 +294,11 @@ body {
   border: 1px solid var(--border); background: var(--surface);
   padding: 1rem;
 }
+.position-svg{width:100%;height:auto;display:block;margin-bottom:0.75rem;}
+.route-dot{fill:var(--surface2);stroke:var(--border);stroke-width:1.5;}
+.route-dot.reached{fill:var(--stone);stroke:var(--stone);}
+.route-dot.current{fill:var(--white);stroke:var(--white);animation:pulse-dot 1.2s infinite;}
+@keyframes pulse-dot{0%{r:5;}50%{r:7;}100%{r:5;}}
 .schematic-label {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
@@ -399,6 +404,8 @@ body {
 .watch-trend { font-size: 0.62rem; color: var(--stone); text-align: right; }
 .watch-trend.worsening { color: var(--red); }
 .watch-trend.clearing, .watch-trend.improving { color: var(--ice); }
+.time-optimal { color: var(--ice); }
+.time-late { color: var(--ochre); }
 
 .watch-body-row {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -437,6 +444,12 @@ body {
 .thermal-label { color: var(--stone); }
 .thermal-status { color: var(--ice); }
 .thermal-status.used { color: var(--text-dim); text-decoration: line-through; }
+
+.ambient-signal {
+  border: 1px solid var(--border); background: var(--surface2);
+  font-family: var(--mono); font-size: 0.66rem; color: var(--stone);
+  padding: 0.55rem 0.7rem; letter-spacing: 0.03em; display:none;
+}
 
 .narrative-box {
   border: 1px solid var(--border); background: var(--surface);
@@ -518,6 +531,17 @@ body {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
 }
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.8rem;}
+.analytics-card{border:1px solid var(--border);padding:0.6rem;background:var(--surface2);font-family:var(--mono);font-size:0.66rem;color:var(--stone);}
+.analytics-title{color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem;}
+.sparkline{font-family:var(--mono);font-size:0.7rem;color:var(--ice);line-height:1.4;word-break:break-all;}
+.tutorial-toast{position:fixed;left:1rem;bottom:1rem;max-width:360px;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 94%,transparent);padding:0.7rem;z-index:2000;font-family:var(--mono);font-size:0.68rem;color:var(--white);opacity:0;transform:translateY(6px);transition:opacity .25s, transform .25s;pointer-events:none;}
+.tutorial-toast.visible{opacity:1;transform:translateY(0);}
+.pack-grid{display:grid;grid-template-columns:1fr;gap:0.55rem;margin:1rem 0;}
+.pack-card{border:1px solid var(--border);padding:0.6rem;cursor:pointer;background:var(--surface2);}
+.pack-card[aria-checked="true"]{border-color:var(--ochre);}
+.pack-name{font-family:var(--mono);font-size:0.7rem;color:var(--white);letter-spacing:0.08em;text-transform:uppercase;}
+.pack-desc{font-size:0.78rem;color:var(--stone);line-height:1.5;}
 .debrief-turning-point {
   font-size: 0.85rem; color: var(--stone); font-style: italic; line-height: 1.7;
 }
@@ -707,7 +731,8 @@ body {
         </div>
       </div>
       <div class="onboard-note">Your watch gives readings, but they carry noise. At higher altitude and higher fatigue, your own readings become less reliable. Trust trends.</div>
-      <div class="onboard-note">Water and food are consumed every turn, whatever you do. You have one Thermal Reserve — a single-use margin. Use it when it matters most.</div>
+      <div class="onboard-note">Water and food are consumed every turn, whatever you do. You have one Emergency Pack. Choose its composition before departure.</div>
+      <div id="pack-grid" class="pack-grid" role="radiogroup" aria-label="Emergency pack selection"></div>
       <div class="onboard-actions">
         <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
       </div>
@@ -722,6 +747,7 @@ body {
     <div class="left-panel">
       <div class="mountain-schematic">
         <div class="schematic-label">Ascent Route</div>
+        <div id="position-svg-wrap" aria-hidden="true"></div>
         <ul class="position-list" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
       </div>
       <div class="action-log">
@@ -770,6 +796,10 @@ body {
             <span class="body-label">Exposure</span>
             <span class="body-value" id="body-exposure" aria-live="polite">—</span>
           </div>
+          <div class="watch-body-row">
+            <span class="body-label">Acclimatization</span>
+            <span class="body-value" id="body-acclimatization" aria-live="polite">—</span>
+          </div>
         </div>
         <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
         <!-- FIX: resource-warning now shown inline when depleted -->
@@ -779,6 +809,7 @@ body {
           <span class="thermal-status" id="thermal-status" aria-live="polite">available</span>
         </div>
       </div>
+      <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
       <div class="narrative-box">
         <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
         <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
@@ -789,6 +820,7 @@ body {
           <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">Advance</button>
           <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">Advance<br>Slowly</button>
           <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">Wait</button>
+          <button class="btn-decision" id="btn-observe" onclick="makeDecision('observe')" aria-label="Observe conditions">Observe</button>
           <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">Descend</button>
           <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" style="display:none">Sleep</button>
         </div>
@@ -820,6 +852,10 @@ body {
       </div>
     </div>
     <div class="debrief-section">
+      <div class="debrief-section-title">Debrief Analytics</div>
+      <div id="debrief-analytics"></div>
+    </div>
+    <div class="debrief-section">
       <div class="debrief-section-title">Field Reflection</div>
       <ul class="reflection-list" id="reflection-list" aria-label="Reflection prompts"></ul>
     </div>
@@ -839,6 +875,7 @@ body {
     <div class="journal-entries" id="journal-entries"></div>
   </div>
 </section>
+<div id="tutorial-toast" class="tutorial-toast" role="status" aria-live="polite"></div>
 
 <script>
 // ════════════════════════════════════════════════
@@ -967,6 +1004,19 @@ const TUNING = {
   irreversibleIndex: POSITIONS.indexOf('camp_a'),
   retreatPenaltyAfterIrreversible: { timeMinutes: 60, fatigue: 4, exposure: 4, water: 1 },
   confidence: { altitudeCoeff: 7, fatigueCoeff: 0.22, stageCoeff: 12, min: 15, max: 95, noiseRangeAtZeroConf: 18 },
+  acclimatization: {
+    gainPerSleepAtCamp: { confluencia: 12, base_camp: 10, camp_a: 8, camp_b: 6, camp_c: 3 },
+    bonusPerDescentFromHigh: 5,
+    decayPerAdvanceWithoutRest: 1,
+    maxValue: 100,
+    thresholdForHighCamp: 30,
+    thresholdForSummitDay: 55,
+  },
+  timeWindows: {
+    summitOptimalStart: 300,
+    summitOptimalEnd: 660,
+    summitLateStart: 780,
+  },
 };
 
 function getStageForPosition(position) {
@@ -1078,7 +1128,11 @@ let G = {
   minutesOfDay: 360,
   irreversibleTriggered: false,
   irreversibleTurn: null,
-  // FIX: track journal back destination
+  acclimatization: 0,
+  selectedPack: null,
+  packUsed: false,
+  consecutiveAdvances: 0,
+  tutorialSeen: {},
   journalReturnScreen: 'debrief',
 };
 
@@ -1241,6 +1295,7 @@ function showOnboarding(mode) {
     `Expedition: ${G.character.name} · ${G.character.role}`;
   const backBtn = document.getElementById('onboard-back-btn');
   backBtn.onclick = () => showScreen(mode === 'random' ? 'mode' : 'scenario');
+  buildPackGrid();
   showScreen('onboarding');
 }
 
@@ -1250,52 +1305,36 @@ function showOnboarding(mode) {
 function buildRandomScenario() {
   const rseed = Math.floor(Math.random() * 90000) + 10000;
   const rng = mulberry32(rseed);
-
-  // adaptive fairness
-  let windowProb = 0.4;
-  if (G.consecutiveCollapses >= 5) windowProb = 0.6;
-
-  const weather = rngInt(rng, 0, 2);
-  const fatigue = rngInt(rng, 10, 45);
-  const exposure = rngInt(rng, 5, 30);
-  // no triple negative
-  const weatherSafe = (weather > 1 && fatigue > 40 && exposure > 30) ? 1 : weather;
-
-  const hasWindow = rng() < windowProb;
-  const wt1 = rngInt(rng, 2, 5), wt2 = rngInt(rng, 3, 6);
-
-  const volatility = weather + (hasWindow ? 1 : 0);
-  const volLabel = volatility <= 1 ? 'Low' : volatility <= 2 ? 'Medium' : 'High';
-
+  const archetypes = [
+    { name:'Late Winter', tweak:{weather:2, visibility:1, fatigue:28, exposure:22, water:34, food:32, difficulty:'Hard', bias:{weather_deterioration:1, terrain_growth:1, fatigue_growth:1}} },
+    { name:'Perfect Window', tweak:{weather:0, visibility:3, fatigue:18, exposure:10, water:36, food:34, difficulty:'Moderate', bias:{weather_deterioration:-1, terrain_growth:0, fatigue_growth:0, window_turns:[4,5,6], post_window_deterioration:1}} },
+    { name:'The Springboard', tweak:{weather:1, visibility:2, fatigue:14, exposure:12, water:30, food:30, difficulty:'Moderate', _acclimatizationBonus:20, bias:{weather_deterioration:0, terrain_growth:1, fatigue_growth:0}} },
+    { name:'Equinox Trap', tweak:{weather:1, visibility:2, fatigue:24, exposure:16, water:32, food:30, difficulty:'Hard', _equinoxTrapTurn:7, bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:1}} },
+    { name:'The Fog Route', tweak:{weather:1, visibility:0, fatigue:22, exposure:16, water:35, food:33, difficulty:'Hard', bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:0}} },
+    { name:'Resource Audit', tweak:{weather:1, visibility:2, fatigue:20, exposure:14, water:24, food:22, difficulty:'Hard', bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:1}} },
+    { name:'The Experienced Body', tweak:{weather:1, visibility:2, fatigue:16, exposure:12, water:31, food:29, difficulty:'Moderate', _acclimatizationBonus:32, bias:{weather_deterioration:0, terrain_growth:1, fatigue_growth:0}} },
+    { name:'Pressure System', tweak:{weather:2, visibility:1, fatigue:26, exposure:20, water:33, food:31, difficulty:'Hard', bias:{weather_deterioration:1, terrain_growth:1, fatigue_growth:1, window_turns:[3], post_window_deterioration:2}} },
+  ];
+  const arch = archetypes[rngInt(rng, 0, archetypes.length - 1)];
   return {
     id: 'random-' + rseed,
     num: '06',
-    name: 'Random Mode',
-    desc: `Expedition ${rseed} · Volatility: ${volLabel}`,
-    intro: `Expedition ${rseed}. Volatility: ${volLabel}. Logistic support: Minimal. The conditions were generated at departure. You learn the mountain as you move.`,
+    name: arch.name,
+    desc: `Expedition ${rseed} · ${arch.name}`,
+    intro: `Expedition ${rseed}. ${arch.name}. Conditions are never neutral; they only become legible through disciplined turns.`,
     max_turns: rngInt(rng, 30, 36),
     seeds: [rseed],
-    difficulty: volLabel,
+    difficulty: arch.tweak.difficulty,
     initial: {
-      position: 'horcones',
-      altitude_band: 'approach',
-      weather_severity: weatherSafe,
-      visibility: rngInt(rng, 1, 3),
-      terrain_load: rngInt(rng, 0, 2),
-      functional_capacity: rngInt(rng, 72, 95),
-      fatigue: fatigue,
-      exposure: exposure,
-      water: rngInt(rng, 30, 40),
-      food: rngInt(rng, 28, 38),
+      position: 'horcones', altitude_band: 'approach', weather_severity: arch.tweak.weather,
+      visibility: arch.tweak.visibility, terrain_load: rngInt(rng, 0, 2), functional_capacity: rngInt(rng, 74, 94),
+      fatigue: arch.tweak.fatigue, exposure: arch.tweak.exposure, water: arch.tweak.water, food: arch.tweak.food,
     },
-    bias: {
-      weather_deterioration: rngInt(rng, -1, 1),
-      terrain_growth: rngInt(rng, 0, 1),
-      fatigue_growth: rngInt(rng, 0, 1),
-      window_turns: hasWindow ? [wt1, wt2] : [],
-      post_window_deterioration: hasWindow ? 2 : 0,
-    },
+    bias: arch.tweak.bias,
     _randomSeed: rseed,
+    _archetype: arch.name,
+    _acclimatizationBonus: arch.tweak._acclimatizationBonus || 0,
+    _equinoxTrapTurn: arch.tweak._equinoxTrapTurn || null,
   };
 }
 
@@ -1321,6 +1360,11 @@ function startGame() {
   G.irreversibleTriggered = false;
   G.irreversibleTurn = null;
   G.runNumber = (G.runNumber || 0) + 1;
+  G.acclimatization = 0;
+  G.selectedPack = G.selectedPack || 'thermal';
+  G.packUsed = false;
+  G.consecutiveAdvances = 0;
+  G.tutorialSeen = {};
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -1329,6 +1373,7 @@ function startGame() {
   if (mods.water_start)      s.water      = s.water + mods.water_start;
 
   s.thermalReserve = true;
+  if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, TUNING.acclimatization.maxValue);
   G.state = s;
 
   // clear resource warning
@@ -1339,6 +1384,8 @@ function startGame() {
 
   G.signals = computeSignals();
   renderWatch();
+  updateAmbientSignal([], null);
+  maybeShowTutorial('first-turn');
   renderNarrative(null, G.signals);
   setDecisionButtonsEnabled(true);
 
@@ -1400,7 +1447,7 @@ function applyTimeAndNight(decision, flags) {
     G.minutesOfDay = TUNING.dayStartMinutes;
     return;
   }
-  G.minutesOfDay += TUNING.timeCostMinutes[decision] || 60;
+  G.minutesOfDay += decision === 'observe' ? 30 : (TUNING.timeCostMinutes[decision] || 60);
   if (G.minutesOfDay >= TUNING.nightStartMinutes) {
     if (!isCampPosition(G.state.position)) {
       flags.push('forced-bivouac');
@@ -1516,7 +1563,13 @@ function renderWatch() {
 
   document.getElementById('watch-turn').textContent =
     `TURN ${G.turn} / ${sc.max_turns}`;
-  document.getElementById('watch-time').textContent = `Day ${G.day} · ${formatMinutes(G.minutesOfDay)}`;
+  const tm = G.minutesOfDay;
+  const isOptimal = tm >= TUNING.timeWindows.summitOptimalStart && tm <= TUNING.timeWindows.summitOptimalEnd;
+  const isLate = tm >= TUNING.timeWindows.summitLateStart;
+  const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
+  const watchTime = document.getElementById('watch-time');
+  watchTime.textContent = `Day ${G.day} · ${formatMinutes(tm)}${suffix}`;
+  watchTime.className = 'watch-position ' + (isOptimal ? 'time-optimal' : (isLate ? 'time-late' : ''));
   document.getElementById('watch-position').textContent =
     `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
 
@@ -1543,17 +1596,26 @@ function renderWatch() {
   const capEl = document.getElementById('body-capacity');
   const fatEl = document.getElementById('body-fatigue');
   const expEl = document.getElementById('body-exposure');
+  const acclEl = document.getElementById('body-acclimatization');
   capEl.textContent = `${capLbl} ${capArrow} · ${metricDisplay(s.functional_capacity, sig.confidence)}`;
   fatEl.textContent = `${fatLbl} ${fatArrow} · ${metricDisplay(s.fatigue, sig.confidence)}`;
   expEl.textContent = `${expLbl} ${expArrow} · ${metricDisplay(s.exposure, sig.confidence)}`;
   capEl.className = 'body-value ' + bodyValueClass(capLbl);
   fatEl.className = 'body-value ' + bodyValueClass(fatLbl);
   expEl.className = 'body-value ' + bodyValueClass(expLbl);
+  const accl = Math.round(G.acclimatization);
+  const acclState = accl >= 55 ? 'stable' : (accl >= 30 ? 'degrading' : 'critical');
+  acclEl.textContent = `${accl}/100`;
+  acclEl.className = 'body-value ' + acclState;
 
+  const stageBurn = TUNING.resourceBurnPerHour[getCurrentStage()] || TUNING.resourceBurnPerHour.APPROACH;
+  const waterTurns = stageBurn.water > 0 ? Math.floor(s.water / Math.max(stageBurn.water * 2, 1)) : s.water;
+  const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
+  const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
   const resEl = document.getElementById('watch-resources');
   resEl.innerHTML = `
-    <span class="resource-item ${s.water===0?'depleted':''}">Water <span>${s.water}</span></span>
-    <span class="resource-item ${s.food===0?'depleted':''}">Food <span>${s.food}</span></span>
+    <span class="resource-item ${s.water===0?'depleted':resClass(waterTurns)}">Water <span>${s.water} · ${waterTurns}t</span></span>
+    <span class="resource-item ${s.food===0?'depleted':resClass(foodTurns)}">Food <span>${s.food} · ${foodTurns}t</span></span>
   `;
 
   const warnBox = document.getElementById('resource-warning-box');
@@ -1605,6 +1667,7 @@ function renderWatch() {
 // ════════════════════════════════════════════════
 function renderPositionList() {
   const s = G.state;
+  renderPositionSVG();
   const curIdx = POSITIONS.indexOf(s.position);
   const list = document.getElementById('position-list');
   list.innerHTML = '';
@@ -1632,36 +1695,60 @@ function renderPositionList() {
 // NARRATIVE
 // ════════════════════════════════════════════════
 const NARRATIVES = {
-  advance_good:   ["The slope opens ahead. Steps are steady. Wind pulls at the jacket but not yet a threat.",
-                   "Ground gives way. The body cooperates. Each meter earned at the rate the mountain allows."],
-  advance_severe: ["Each step costs more than it should. The wind has direction and intention. You move anyway.",
-                   "Progress is not forward movement. Progress is not stopping."],
-  advance_slowly: ["Half-pace. The body cooperates at a cost it can manage.",
-                   "Measured steps. The margin you spend now is the margin you keep later."],
-  first_high:     ["Above six thousand meters. The rules change here. The body knows it even if the mind resists."],
-  wait_low:       ["The tent holds. Outside, the mountain doesn't stop. The body asks for more time than the window allows.",
-                   "Stillness has a cost. It is lower than the alternative."],
-  wait_high:      ["Rest at this altitude is a negotiation, not a recovery. The body spends energy just existing here.",
-                   "The body holds position. The mountain does not agree that this counts as rest."],
-  descend:        ["Down is not failure. Down is judgment. The summit will still be there — whether you will be is the question.",
-                   "The decision was made before it was spoken. The body had already turned."],
-  pre_collapse_fatigue: ["Your breathing rhythm is starting to break.", "Each step takes longer to decide than to take."],
-  pre_collapse_exposure: ["The cold is no longer peripheral. It is present.", "Cold has found the gaps in the insulation."],
-  crit_exposure:  ["The cold has moved past discomfort. It is now a calculation."],
-  crit_fatigue:   ["The body is communicating clearly. The question is whether you are listening."],
-  water_gone:     ["The last water. Everything from here sharpens."],
-  food_gone:      ["Nothing left to eat. The body will start borrowing from itself."],
-  thermal_used:   ["The reserve deployed. One turn of margin, bought in advance."],
-  slept:          ["Night at camp. Systems recover, but altitude never truly sleeps."],
-  bivouac:        ["Open bivouac at night. The mountain takes payment in capacity and exposure."],
-  irreversible:   ["First Irreversible Point crossed. Retreat is still valid, but never cheap again."],
-  window_open:    ["A brief clearing. The mountain is offering something. The question is whether to take it."],
-  window_close:   ["The window is closing. What was possible one turn ago may not be possible in the next."],
-  euphoria:       ["The signals look favorable. Legs respond well. Something feels like clarity — but it may just be the beginning."],
-  dehydration:    ["Dehydration is no longer just physical. Reading yourself becomes harder."],
-  terrain_block:  ["The body and the terrain are in agreement: not now."],
-  white_wind_sign: ["Lenticulars build and the wind changes tone. The mountain is signaling before it strikes."],
-  white_wind_hit:  ["White wind. Visibility drops and direction loses meaning in seconds."],
+  advance_good: [
+    'The slope opens in a narrow margin. You move inside it, without pretending control.',
+    'Progress is measured in disciplined breaths, not in ambition.',
+    'The terrain allows passage for now. You accept the terms and keep moving.',
+    'Every step asks for balance first, speed second.',
+    'The route holds. The body answers. For this turn, that is enough.',
+    'Gain comes quietly: no triumph, only continuity.'
+  ],
+  advance_severe: [
+    'The wind has intent now. You lean into it and spend more than planned.',
+    'Forward remains possible, but expensive in ways the watch cannot fully count.',
+    'Progress continues under protest from terrain, weather, and breath alike.',
+    'Each meter feels borrowed from a later turn.',
+    'You move because stopping here costs differently, not less.',
+    'This is advancement without momentum.'
+  ],
+  advance_slowly: [
+    'Half pace preserves structure. The mountain notices haste before you do.',
+    'Slow movement is still movement; today, that distinction matters.',
+    'Cadence replaces force. You trade distance for tomorrow.',
+    'Deliberate steps hold the line between effort and error.',
+    'Measured rhythm protects more than pride ever could.',
+    'You advance by refusing to rush.'
+  ],
+  first_high: ['Above six thousand meters, the rules tighten without announcement.','The air thins; consequences do not.','From here, mistakes mature quickly.','High camp begins where excuses end.','Altitude removes noise and leaves only cost.','The route continues, but margins narrow sharply.'],
+  wait_low: ['Waiting here is strategy, not inertia.','Stillness buys clarity if you can tolerate the clock.','The mountain keeps moving while you do not.','You hold position and audit the system.','A paused body can still lose ground to weather.','Patience is useful only when paired with attention.'],
+  wait_high: ['At this altitude, waiting is not rest but managed decay.','The tent blocks wind, not consequence.','You spend less than moving, but never zero.','Holding ground here is already an action.','The body works continuously just to remain viable.','Silence in high camp is operational, not peaceful.'],
+  descend: ['Descent is not surrender; it is a complete sentence in mountain logic.','Downward movement preserves options that summits can erase.','You turn before the system turns you.','Retreat converts uncertainty into survival.','The route back is the only guaranteed route.','Judgment arrives as a direction, not a speech.'],
+  pre_collapse_fatigue: ['Reaction time stretches. Intent arrives late to the body.','Fatigue starts editing your decisions.','Simple actions now require negotiation.','Your pace decouples from your plan.','The watch reports numbers; your legs report delay.','This is fatigue with authority.'],
+  pre_collapse_exposure: ['Cold is no longer peripheral; it is architectural.','You feel heat leaving faster than you can replace it.','Dexterity narrows. Small tasks become loud.','Exposure now shapes judgment as much as weather does.','The shell holds, but only partially.','Cold has moved from sensation to system.'],
+  crit_exposure: ['Exposure is now an active threat to cognition and movement.','The mountain is charging compound interest on time.','Heat loss outruns correction.','Operational capacity is shrinking in real time.','This is beyond discomfort.','You are now in emergency thermodynamics.'],
+  crit_fatigue: ['The body issues a direct warning.','Effort and output have separated.','You can still act, but not reliably.','Fatigue is now a strategic actor.','Delay enters every movement chain.','The system is near functional break.'],
+  water_gone: ['Water has reached zero; all remaining turns become expensive.', 'Hydration debt starts collecting immediately.', 'Without water, every choice becomes shorter-term.', 'The body begins rationing performance.', 'This is a hard boundary, not a soft warning.', 'From here, degradation accelerates.'],
+  food_gone: ['Food is exhausted. The body shifts to deficit management.', 'Energy planning is now damage planning.', 'The margin between action and collapse narrows further.', 'No intake means no recovery reserve.', 'You can continue, but the bill is immediate.', 'Operational endurance contracts sharply.'],
+  thermal_used: ['Thermal reserve deployed: one margin spent on purpose.', 'You purchase a brief reduction in cold penalty.', 'Heat management gets one deliberate correction.', 'The reserve is gone after this intervention.', 'You traded inventory for time.', 'Thermal discipline has moved from option to memory.'],
+  slept: ['Night at camp recovers structure, never certainty.', 'Sleep reduces noise, not objective risk.', 'Morning starts with less debt, not with none.', 'The body stabilizes where altitude permits it.', 'Recovery is local and conditional.', 'A camp night is maintenance, not reset.'],
+  bivouac: ['Open bivouac exacts payment in exposure and capacity.', 'Unplanned night outside camp accelerates systemic decay.', 'The clock rolls over; the debt does not.', 'Forced bivouac turns one mistake into several.', 'Shelter without camp still costs heavily.', 'Night outside support is punitive by design.'],
+  irreversible: ['First irreversible point crossed. Retreat remains valid, never cheap.', 'Above this line, every reversal carries compound cost.', 'The route changed from expedition to commitment.', 'You can still descend, but not neutrally.', 'The mountain has marked this threshold.', 'From here, price and altitude move together.'],
+  window_open: ['A clean window appears. Timing and readiness must coincide.', 'Conditions loosen briefly; indecision has a cost.', 'The system is permissive for a short interval.', 'This is not safety, only opportunity.', 'The route offers less resistance now.', 'A window is useful only if recognized in time.'],
+  window_close: ['The window closes and penalties return with interest.', 'What was feasible one turn ago now degrades.', 'Late movement enters a different weather regime.', 'The route has tightened again.', 'Opportunity has elapsed, not paused.', 'The mountain resumes its baseline severity.'],
+  euphoria: ['Signals seem generous; overconfidence is now plausible.', 'Favorable readings can still hide delayed penalties.', 'Clarity may be real or simply temporary.', 'Good turns can distort risk memory.', 'Do not confuse momentum with permission.', 'The body feels strong; the system remains indifferent.'],
+  dehydration: ['Dehydration now affects both output and interpretation.', 'Signals become harder to read under hydration debt.', 'Decision quality starts slipping with fluid loss.', 'You are not only weaker; you are noisier.', 'Hydration deficit destabilizes discipline.', 'The body asks for water before it asks for ambition.'],
+  terrain_block: [
+    'The body and terrain agree: not this turn. Force the step and pay more than you can afford.',
+    'The slope refuses. So does the body. Wisdom is accepting both answers at once.',
+    'Three meters of gain — technically possible. Physiologically reckless. The difference matters here.'
+  ],
+  white_wind_sign: ['Lenticular signs accumulate; the air has changed intent.','Wind tone sharpens before visibility collapses.','Precursors are present if you are still reading them.','The mountain is announcing a harder phase.','Pressure and movement disagree.','This signal is warning, not narrative flavor.'],
+  white_wind_hit: ['White wind impact: orientation degrades in seconds.','Visibility collapses and route confidence drops sharply.','The system shifts from progress logic to damage control.','Direction remains, legibility does not.','Movement now carries amplified uncertainty.','This is the mountain reducing options in real time.'],
+  terrain_block_observe:['You read the slope instead of contesting it.','Observation confirms the block before it becomes a mistake.','No movement, but better information.','The terrain map in your head gets cleaner.','You spend minutes to avoid hours of loss.','Clarity can be a turn by itself.'],
+  observation_weather:['Cloud texture clarifies the next phase of weather.','Wind direction is legible from drifting crystals.','The sky gives a short forecast if you stand still.','Observation lowers uncertainty for one turn.','You confirm trend before committing movement.','A quiet read often beats a noisy push.'],
+  observation_body:['Breathing cadence reveals hidden fatigue drift.','Hands and pace report exposure earlier than numbers.','You audit the body before asking more from it.','A short stop sharpens internal telemetry.','Symptoms become actionable when observed on purpose.','You choose information over ground gain.'],
+  emergency_ration_used:['Emergency ration opened. Food reserve partially restored.','The ration is finite and now consumed.','You bought several turns at a fixed cost: one contingency spent.','Caloric floor restored to continue safely.','The emergency reserve did its single job.','From now on, baseline logistics return.'],
+  poor_acclimatization:['Altitude penalty rises; acclimatization is below threshold.','The body has not adapted enough for this stage.','You are climbing faster than adaptation allows.','High camp without adaptation multiplies fatigue.','Summit day punishes low acclimatization severely.','This is a mismatch between ambition and physiology.']
 };
 
 function pickNarrative(key) {
@@ -1696,6 +1783,11 @@ function renderNarrative(decision, signals, flags=[]) {
     if (decision === 'advance_slowly') text = pickNarrative('advance_slowly');
     else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
     else text = pickNarrative('advance_good');
+  } else if (decision === 'observe') {
+    fatigue_delta = 1 * fatMult;
+    exposure_delta = 1 * stageMod.exposureMult;
+    capacity_delta = 0;
+    flags.push('observation-turn');
   } else if (decision === 'wait') {
     text = ['high','extreme','death_zone'].includes(s.altitude_band) ? pickNarrative('wait_high') : pickNarrative('wait_low');
   } else if (decision === 'descend') {
@@ -1710,6 +1802,7 @@ function renderNarrative(decision, signals, flags=[]) {
   }
 
   document.getElementById('narrative-text').textContent = text;
+  updateAmbientSignal(flags || [], decision);
 
   // passive character signals
   const passiveEl = document.getElementById('narrative-passive');
@@ -1734,6 +1827,88 @@ function renderNarrative(decision, signals, flags=[]) {
   return text;
 }
 
+
+function buildPackGrid() {
+  const packs = [
+    { id:'thermal', name:'Thermal Reserve', desc:'Preserves current thermal reserve behavior: one turn of reduced exposure.' },
+    { id:'bivouac', name:'Bivouac Pack', desc:'If forced bivouac occurs, applies only 40% of standard bivouac penalty once.' },
+    { id:'ration', name:'Emergency Ration', desc:'When food hits zero, restore food to 6 once.' },
+  ];
+  const wrap = document.getElementById('pack-grid');
+  if (!wrap) return;
+  if (!G.selectedPack) G.selectedPack = 'thermal';
+  wrap.innerHTML = '';
+  packs.forEach((pack) => {
+    const card = document.createElement('div');
+    card.className = 'pack-card';
+    card.setAttribute('role', 'radio');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-checked', String(G.selectedPack === pack.id));
+    card.innerHTML = `<div class="pack-name">${pack.name}</div><div class="pack-desc">${pack.desc}</div>`;
+    const pick = () => {
+      G.selectedPack = pack.id;
+      [...wrap.children].forEach((c) => c.setAttribute('aria-checked', 'false'));
+      card.setAttribute('aria-checked', 'true');
+    };
+    card.onclick = pick;
+    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
+    wrap.appendChild(card);
+  });
+}
+
+function updateAmbientSignal(flags, decision) {
+  const box = document.getElementById('ambient-signal');
+  if (!box) return;
+  let line = '';
+  if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = 'Spindrift rises in narrow veils across the ridge line.';
+  else if (decision === 'observe') line = 'You remain still long enough for weak signals to become coherent.';
+  else if (G.signals && G.signals.trend === 'worsening') line = 'The mountain tone hardens: less margin, same distance.';
+  else if (G.signals && G.signals.trend === 'improving') line = 'The air eases slightly, without promise.';
+  if (!line) { box.style.display = 'none'; return; }
+  box.textContent = line;
+  box.style.display = 'block';
+}
+
+function maybeShowTutorial(trigger) {
+  if (G.tutorialSeen[trigger]) return;
+  const toast = document.getElementById('tutorial-toast');
+  if (!toast) return;
+  const map = {
+    'first-turn': 'Uncertainty is a reading quality, not a weather quality. Low confidence means wider interpretation ranges.',
+    'weather-deterioration': 'Weather deterioration compounds exposure and navigation burden before collapse flags appear.',
+    'fatigue-50': 'Fatigue above 50 reduces interpretation reliability and narrows safe decision space.',
+  };
+  if (!map[trigger]) return;
+  G.tutorialSeen[trigger] = true;
+  toast.textContent = map[trigger];
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 2800);
+}
+
+function renderPositionSVG() {
+  const wrap = document.getElementById('position-svg-wrap');
+  if (!wrap) return;
+  const cur = POSITIONS.indexOf(G.state.position);
+  const dots = [...POSITIONS].map((p, i) => {
+    const y = 230 - i * 13;
+    const cls = i === cur ? 'route-dot current' : (i <= G.highestPosIdx ? 'route-dot reached' : 'route-dot');
+    return `<circle class="${cls}" cx="110" cy="${y}" r="5"></circle>`;
+  }).join('');
+  wrap.innerHTML = `<svg class="position-svg" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg"><path d="M30 230 L80 120 L110 30 L140 120 L190 230" fill="none" stroke="var(--stone)" stroke-width="2"/><path d="M100 230 L110 30 L120 230" fill="none" stroke="var(--border)" stroke-dasharray="3 4"/><path d="M122 86 L142 118" stroke="var(--ochre)" stroke-width="3"/><text x="146" y="120" fill="var(--ochre)" font-size="8" font-family="var(--mono)">Canaleta</text>${dots}</svg>`;
+}
+
+function buildDebriefAnalytics() {
+  const el = document.getElementById('debrief-analytics');
+  const total = Math.max(1, G.turnLog.length);
+  const count = (d) => G.turnLog.filter((t) => t.decision === d).length;
+  const dist = ['advance','advance_slowly','wait','observe','sleep','descend'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
+  const sorted = [...G.turnLog].sort((a, b) => (b.raw.capacity - b.raw.fatigue - b.raw.exposure) - (a.raw.capacity - a.raw.fatigue - a.raw.exposure));
+  const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
+  const worst = sorted[sorted.length - 1] || best;
+  const spark = (G.turnLog.length ? G.turnLog : [{raw:{capacity:G.state.functional_capacity}}]).map((t) => '▁▂▃▄▅▆▇█'[Math.min(7, Math.max(0, Math.floor((t.raw.capacity || 0) / 13)))]).join('');
+  el.innerHTML = `<div class="analytics-grid"><div class="analytics-card"><div class="analytics-title">Decision distribution</div>${dist}</div><div class="analytics-card"><div class="analytics-title">Best state</div>T${best.turn} · ${POS_LABELS[best.position]} · C${best.raw.capacity}/F${best.raw.fatigue}/E${best.raw.exposure}</div><div class="analytics-card"><div class="analytics-title">Worst state</div>T${worst.turn} · ${POS_LABELS[worst.position]} · C${worst.raw.capacity}/F${worst.raw.fatigue}/E${worst.raw.exposure}</div><div class="analytics-card"><div class="analytics-title">Functional capacity sparkline</div><div class="sparkline">${spark}</div></div></div>`;
+}
+
 // ════════════════════════════════════════════════
 // THERMAL RESERVE
 // ════════════════════════════════════════════════
@@ -1747,7 +1922,7 @@ function toggleThermal() {
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep'].forEach(id => {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-observe','btn-descend','btn-sleep'].forEach(id => {
     const btn = document.getElementById(id);
     btn.disabled = !enabled;
     if (enabled) btn.removeAttribute('aria-disabled');
@@ -1787,6 +1962,7 @@ function makeDecision(decision) {
   let posChanged = false;
 
   let weatherShift = rngWeighted(rng, [-1,0,0,1], stageMod.weatherWeights) + (bias.weather_deterioration || 0);
+  if (sc._equinoxTrapTurn && turn === sc._equinoxTrapTurn) { weatherShift += 2; flags.push('equinox-trap'); }
   const windowTurns = new Set(bias.window_turns || []);
   if (windowTurns.has(turn)) {
     weatherShift -= 2;
@@ -1848,6 +2024,11 @@ function makeDecision(decision) {
     if (s.terrain_load < 3 && rng() < clamp(baseChance, 0.12, 0.9)) {
       moved = true; posChanged = true;
     }
+  } else if (decision === 'observe') {
+    fatigue_delta = 1 * fatMult;
+    exposure_delta = 1 * stageMod.exposureMult;
+    capacity_delta = 0;
+    flags.push('observation-turn');
   } else if (decision === 'wait') {
     const restMap = { APPROACH:-7, HIGH_CAMP:-1, SUMMIT_DAY:1 };
     fatigue_delta = restMap[stage] * fatMult + fg;
@@ -1917,9 +2098,62 @@ function makeDecision(decision) {
     flags.push('retreat-after-irreversible');
   }
 
-  const actionMinutes = decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60);
-  spendResourcesForMinutes(Math.max(actionMinutes, 60), stage, flags);
+  const actionMinutes = decision === 'observe' ? 30 : (decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60));
+  spendResourcesForMinutes(Math.max(actionMinutes, 30), stage, flags);
   applyTimeAndNight(decision, flags);
+
+  if (decision === 'observe') G.signals = { ...G.signals, uncertainty:'low' };
+  if (decision === 'advance' || decision === 'advance_slowly') G.consecutiveAdvances++;
+  else G.consecutiveAdvances = 0;
+
+  if (decision === 'sleep' && isCampPosition(s.position)) {
+    const gain = TUNING.acclimatization.gainPerSleepAtCamp[s.position] || 0;
+    G.acclimatization = clamp(G.acclimatization + gain, 0, TUNING.acclimatization.maxValue);
+    if (POSITIONS.indexOf(s.position) < G.highestPosIdx) {
+      G.acclimatization = clamp(G.acclimatization + TUNING.acclimatization.bonusPerDescentFromHigh, 0, TUNING.acclimatization.maxValue);
+    }
+  }
+  if (G.consecutiveAdvances >= 3) {
+    G.acclimatization = clamp(G.acclimatization - TUNING.acclimatization.decayPerAdvanceWithoutRest, 0, TUNING.acclimatization.maxValue);
+  }
+
+  if (stage === 'HIGH_CAMP' && G.acclimatization < TUNING.acclimatization.thresholdForHighCamp) {
+    s.fatigue = clamp(s.fatigue + 4, 0, 100);
+    flags.push('poor-acclimatization');
+  }
+  if (stage === 'SUMMIT_DAY') {
+    if (G.acclimatization < TUNING.acclimatization.thresholdForSummitDay) {
+      s.fatigue = clamp(s.fatigue + 6, 0, 100);
+      s.exposure = clamp(s.exposure + 4, 0, 100);
+      flags.push('poor-acclimatization');
+    }
+    if (G.minutesOfDay >= TUNING.timeWindows.summitOptimalStart && G.minutesOfDay <= TUNING.timeWindows.summitOptimalEnd) {
+      s.fatigue = clamp(Math.round(s.fatigue * 0.9), 0, 100);
+      flags.push('optimal-summit-window');
+    } else if (G.minutesOfDay >= TUNING.timeWindows.summitLateStart) {
+      s.weather_severity = clamp(s.weather_severity + 1, 0, 3);
+      s.exposure = clamp(s.exposure + 4, 0, 100);
+      flags.push('late-summit-push');
+    }
+  }
+
+  if (G.selectedPack === 'ration' && !G.packUsed && s.food === 0) {
+    s.food = 6;
+    G.packUsed = true;
+    flags.push('emergency-ration-used');
+  }
+
+  if (flags.includes('forced-bivouac') && G.selectedPack === 'bivouac' && !G.packUsed) {
+    const p = TUNING.bivouacPenalty;
+    s.fatigue = clamp(s.fatigue - Math.round(p.fatigue * 0.6), 0, 100);
+    s.exposure = clamp(s.exposure - Math.round(p.exposure * 0.6), 0, 100);
+    G.packUsed = true;
+    flags.push('bivouac-pack-used');
+  }
+
+  const previous = G.turnLog.length ? G.turnLog[G.turnLog.length - 1].raw : null;
+  if (previous && s.weather_severity > previous.weatherSeverity) maybeShowTutorial('weather-deterioration');
+  if (s.fatigue >= 50) maybeShowTutorial('fatigue-50');
 
   const expCritThreshold = (ch.id === 'marco') ? (ch.mods.exposure_crit_threshold || 65) : 75;
   if (s.exposure >= expCritThreshold && !G.allFlags.includes('critical-exposure')) flags.push('critical-exposure');
@@ -1941,7 +2175,7 @@ function makeDecision(decision) {
     trend: G.signals.trend,
     uncertainty: G.signals.uncertainty,
     body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
-    raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure },
+    raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure, weatherSeverity: s.weather_severity },
     flags: [...flags],
     blocked,
     moved,
@@ -1983,7 +2217,7 @@ function addLogEntry(entry) {
   const div = document.createElement('div');
   div.className = 'log-entry';
 
-  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
+  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', observe:'OBSERVED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
   const flagHtml = entry.flags.length ?
     entry.flags.map(f => `<div class="log-flag ${f.includes('critical')||f.includes('collapse')?'':'flag-warn'}">${f.toUpperCase()}</div>`).join('') : '';
   const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
@@ -2009,6 +2243,9 @@ function addLogEntry(entry) {
 // ════════════════════════════════════════════════
 function classifyOutcome(returnedToHorcones) {
   const s = G.state;
+  if (G.turn > G.scenario.max_turns) {
+    return { label: 'Expedition Window Closed — Turns Exhausted', cls: 'outcome-stabilized' };
+  }
   if (s.functional_capacity <= 15) return { label:'Incapacitated', cls:'outcome-collapse' };
   const expCritThreshold = (G.character.id === 'marco') ? 65 : 75;
   if (s.exposure >= expCritThreshold) return { label:'Systemic Collapse — Exposure', cls:'outcome-collapse' };
@@ -2102,6 +2339,9 @@ function endRun(returnedToHorcones) {
   if (returnedToHorcones) {
     retreatMsg.textContent = 'The expedition ends at Horcones. The true summit is the safe return.';
     retreatMsg.style.display = 'block';
+  } else if (outcome.label === 'Expedition Window Closed — Turns Exhausted') {
+    retreatMsg.textContent = 'The expedition window closed. Every mountain has a clock you cannot stop.';
+    retreatMsg.style.display = 'block';
   } else { retreatMsg.style.display = 'none'; }
 
   document.getElementById('debrief-stats').innerHTML = `
@@ -2118,7 +2358,7 @@ function endRun(returnedToHorcones) {
   table.innerHTML = `<tr><th>T</th><th>Day/Time</th><th>Position</th><th>Decision</th><th>Trend</th><th>Unc.</th><th>Capacity</th><th>Fatigue</th><th>Exposure</th><th>Flags</th></tr>`;
   G.turnLog.forEach(e => {
     const tr = document.createElement('tr');
-    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep' }[e.decision];
+    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', observe:'Observe', descend:'Descend', sleep:'Sleep' }[e.decision];
     tr.innerHTML = `
       <td>${e.turn}</td>
       <td>D${e.day || 1} ${e.time || '06:00'}</td>
@@ -2133,6 +2373,8 @@ function endRun(returnedToHorcones) {
     `;
     table.appendChild(tr);
   });
+
+  buildDebriefAnalytics();
 
   // reflections
   const reflections = buildReflectionPrompts();

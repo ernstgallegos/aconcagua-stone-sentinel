@@ -72,7 +72,7 @@ The visual identity is **anchored**, not exploratory.
 ---
 
 ## Stage 4 — Prototyping the Core Experience  
-**Status: Completed (MRA v0)**
+**Status: Actively underway — web-v1 rev2**
 
 > Testing decisions before building systems.
 
