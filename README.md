@@ -102,9 +102,13 @@ This is a curated, public-facing repository, not a complete production archive.
 ---
 
 
-## Web Vertical Slice v1 (Vercel-ready)
+## Web Run Viewer v1 (Vercel-ready)
 
-This repository now includes a lightweight web vertical slice that replays bundled MRA v0 runs:
+This repository includes a lightweight **run replay viewer** that visualizes pre-recorded MRA v0 simulation runs. It is not an interactive game: it renders the turn-by-turn output of bundled JSONL run files as a readable timeline.
+
+The viewer also contains a parallel interactive prototype (`prototype/web-v1/index.html`) with an extended mechanic set — including a diegetic clock, sleep actions, stages, and forced bivouac — that diverges intentionally from the Python MRA v0 simulator. That divergence is documented in [`/prototype/web-v1/DEV_NOTE.md`](./prototype/web-v1/DEV_NOTE.md).
+
+Included files:
 
 - `prototype/web-v1/index.html` — experimental self-contained UI (inline CSS/JS)
 - `index.html`, `styles.css`, `app.js` — latest root static client UI

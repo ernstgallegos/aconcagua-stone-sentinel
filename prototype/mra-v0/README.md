@@ -39,7 +39,7 @@ This generates:
 
 - `cautious`: advances while conditions are manageable, waits under high pressure, descends under critical body stress.
 - `aggressive`: prioritizes advancing until functional collapse risk becomes immediate.
-- `waiter`: always waits (useful for baseline behavior checks).
+- `waiter`: always waits (useful for baseline behavior and passive degradation checks). Implemented as an explicit named branch — not a fallthrough default.
 - `human`: interactive turn-by-turn decisions with optional rationale capture.
 
 ## Position terminology
@@ -65,7 +65,7 @@ Each run includes:
 - body-state deltas
 - resulting body/resource state
 - triggered flags
-- summary line with outcome class (`stabilized`, `retreated`, `deteriorated`, `incapacitated`, `survived-marginal`)
+- summary line with outcome class (`summit`, `stabilized`, `retreated`, `deteriorated`, `incapacitated`, `survived-marginal`)
 
 ## Reproducing bundled sample runs
 
