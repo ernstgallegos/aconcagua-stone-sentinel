@@ -128,6 +128,7 @@ Representa la adaptación —o la incapacidad de adaptación— del cuerpo a la 
 - Reducción del rendimiento
 - Mayor probabilidad de errores
 - Necesidad de descanso, aclimatación o descenso
+- Penalizaciones diferenciales cuando la aclimatación no alcanza umbrales operativos de altura
 
 **Principio clave**  
 No existe una “barra de vida” tradicional.  
@@ -152,6 +153,11 @@ Media la relación entre planificación y contingencia.
 
 **Nota**  
 Los recursos no están optimizados para maximizar el progreso, sino para **preservar el margen de decisión**.
+
+En el prototipo web-v1 rev2 este principio se expresa con mayor precisión:
+- Proyección de turnos restantes para agua y comida (lectura de viabilidad, no de recompensa).
+- Selección previa de un único paquete de contingencia (térmico, bivouac o ración), con uso limitado.
+- El agotamiento de recursos no dispara progresión; solo reduce opciones y aumenta costo sistémico.
 
 ---
 

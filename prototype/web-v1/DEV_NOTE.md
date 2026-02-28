@@ -79,3 +79,34 @@ En `TUNING` (dentro de `index.html`):
 6. Llegar a `Camp 1 — Canadá`; verificar log de `first-irreversible-point`.
 7. Ejecutar `Descend` luego del irreversible; verificar flag/costo extra de retiro.
 8. Intentar cumbre y retorno a `Cólera` con `Descend` desde `summit`.
+
+---
+
+## Stage 4 — Gameplay Densification (web-v1 rev2)
+
+This revision densifies gameplay without breaking the project pillars. No progression economies were introduced; pressure remains systemic, not reward-driven.
+
+### Integrated upgrades
+
+- Added explicit `advance_slowly` time-cost wiring in `TUNING.timeCostMinutes` to prevent fallback behavior.
+- Added explicit turn-exhaustion debrief outcome: **Expedition Window Closed — Turns Exhausted**.
+- Added deterministic terrain/body block signaling and dedicated narrative routing (`terrain-body-block` → `terrain_block`).
+- Added acclimatization subsystem (`G.acclimatization`) with gain/decay and stage thresholds for `HIGH_CAMP` and `SUMMIT_DAY`.
+- Added summit temporal windows with watch annotation (`◈ optimal`, `⚠ late`) and summit-stage penalties/bonuses.
+- Added emergency pack selector in onboarding with three profiles:
+  - Thermal Reserve
+  - Bivouac Pack
+  - Emergency Ration
+- Added micro-action **Observe** (30 minutes), forcing low uncertainty for the turn and routing to observation narratives.
+- Added ambient diegetic signal panel between watch and narrative.
+- Replaced route schematic with SVG-driven rendering and animated current node marker.
+- Added debrief analytics section (decision distribution, best/worst state, capacity sparkline).
+- Added contextual tutorial toast system with one-time triggers per run.
+- Replaced random scenario builder with explicit archetype catalog and special-case hooks (acclimatization bonus, equinox trap).
+- Added projected resource turns in watch resources line (no extra UI block).
+
+### Notes
+
+- `index.html` remains self-contained.
+- No new dependencies were added.
+- The update keeps the austere decision-centric tone and maintains the non-negotiable design pillars.
