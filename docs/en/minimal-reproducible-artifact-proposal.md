@@ -110,7 +110,7 @@ Each turn must execute in this order:
   - resulting state deltas
   - threshold events triggered
 - End-state summary:
-  - outcome class: **stabilized / retreated / deteriorated / aborted**
+  - outcome class: **summit / stabilized / retreated / deteriorated / incapacitated / survived-marginal**
   - total turns survived
   - key constraint that ended run
 
