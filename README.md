@@ -106,12 +106,14 @@ This is a curated, public-facing repository, not a complete production archive.
 
 This repository includes a lightweight **run replay viewer** that visualizes pre-recorded MRA v0 simulation runs. It is not an interactive game: it renders the turn-by-turn output of bundled JSONL run files as a readable timeline.
 
-The viewer also contains a parallel interactive prototype (`prototype/web-v1/index.html`) with an extended mechanic set — including a diegetic clock, sleep actions, stages, and forced bivouac — that diverges intentionally from the Python MRA v0 simulator. That divergence is documented in [`/prototype/web-v1/DEV_NOTE.md`](./prototype/web-v1/DEV_NOTE.md).
+The canonical frontend entrypoint for the viewer is the repository root route (`/` → `index.html`).
+
+The repository also contains a parallel interactive prototype (`prototype/web-v1/index.html`) with an extended mechanic set — including a diegetic clock, sleep actions, stages, and forced bivouac — that diverges intentionally from the Python MRA v0 simulator. That divergence is documented in [`/prototype/web-v1/DEV_NOTE.md`](./prototype/web-v1/DEV_NOTE.md).
 
 Included files:
 
-- `prototype/web-v1/index.html` — experimental self-contained UI (inline CSS/JS)
-- `index.html`, `styles.css`, `app.js` — latest root static client UI
+- `index.html`, `styles.css`, `app.js` — canonical root static run viewer
+- `prototype/web-v1/index.html` — legacy/experimental self-contained UI (inline CSS/JS)
 - `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
 - `vercel.json` — Vercel runtime and routing configuration
 
@@ -123,9 +125,11 @@ From repository root:
 python3 -m http.server 4173
 ```
 
-Then open `http://localhost:4173/prototype/web-v1/`.
+Then open `http://localhost:4173/` for the canonical viewer.
 
-In this local static mode, the UI reads bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
+Optional: `http://localhost:4173/prototype/web-v1/` opens the legacy experimental prototype.
+
+In this local static mode, both frontends read bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
 
 ### Vercel deploy
 
@@ -133,7 +137,8 @@ In this local static mode, the UI reads bundled JSONL files directly from `proto
 - **Project Settings → Root Directory:** keep it at the repository root (`.`), not `prototype/mra-v0`.
 - Framework preset: **Other** (static + serverless functions).
 - No build command required for this vertical slice.
-- Deploy. The latest UI is served from `/` (redirect to `/prototype/web-v1/index.html`) and consumes `/api/run`.
+- Deploy. The canonical viewer is served from `/` and consumes `/api/run`.
+- Legacy links to `/prototype/web-v1` are redirected to `/`.
 
 ## Repository Structure
 
