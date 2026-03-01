@@ -84,7 +84,7 @@ This stage focuses on validating the design through **paper prototypes and low-f
 - Consequences that persist and inform future choices
 - Retreat and inaction as valid outcomes
 
-A functional low-fidelity prototype (MRA v0) is available in `/prototype/mra-v0/`. It implements the turn-based decision loop, five validated scenarios, deterministic reproducibility under fixed seeds, six outcome types (including `summit` and `stabilized`), and a web-based run viewer. The prototype confirmed the core hypotheses around partial information, physiological degradation, and the viability of multiple outcome types including successful summit, voluntary retreat, and physiological collapse.
+A functional low-fidelity prototype (MRA v0) is available in `/prototype/mra-v0/`. It implements the turn-based decision loop, six validated scenarios (the count increased with the explicit `optimal-conditions` baseline scenario), deterministic reproducibility under fixed seeds, six outcome types (including `summit` and `stabilized`), and a web-based run viewer. The prototype confirmed the core hypotheses around partial information, physiological degradation, and the viability of multiple outcome types including successful summit, voluntary retreat, and physiological collapse.
 
 The goal is not polish, but **proof of coherence**.
 
