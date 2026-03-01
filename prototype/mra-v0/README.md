@@ -44,7 +44,7 @@ This generates:
 
 ## Position terminology
 
-The simulator keeps stable internal position IDs (`horcones`, `base_camp`, `camp_a`, `camp_b`, `route`, `camp_c`) and now exports human-readable labels aligned with the route terminology. All expeditions begin at Horcones (Parque Provincial Aconcagua entrance):
+The simulator keeps stable internal position IDs (`horcones`, `base_camp`, `camp_a`, `camp_b`, `camp_c`, `route`) and now exports human-readable labels aligned with the route terminology. All expeditions begin at Horcones (Parque Provincial Aconcagua entrance):
 
 - `horcones`: Horcones / Entrada Parque Provincial Aconcagua (2950 m)
 - `base_camp`: Campamento Base / "Plaza de Mulas" (4350 m)
