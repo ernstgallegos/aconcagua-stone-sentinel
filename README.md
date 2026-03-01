@@ -137,8 +137,8 @@ In this local static mode, both frontends read bundled JSONL files directly from
 - **Project Settings → Root Directory:** keep it at the repository root (`.`), not `prototype/mra-v0`.
 - Framework preset: **Other** (static + serverless functions).
 - No build command required for this vertical slice.
-- Deploy. The canonical viewer is served from `/` and consumes `/api/run`.
-- Legacy links to `/prototype/web-v1` are redirected to `/`.
+- Deploy. The current prototype (`/prototype/web-v1/index.html`) is the published experience and `/` redirects to it.
+- `/prototype/web-v1` is normalized to `/prototype/web-v1/index.html`.
 
 ## Repository Structure
 

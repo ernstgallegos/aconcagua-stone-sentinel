@@ -123,7 +123,8 @@ En este modo estático local, la UI lee los JSONL incluidos directamente desde `
 - **Project Settings → Root Directory:** dejarlo en la raíz del repo (`.`), no en `prototype/mra-v0`.
 - Framework preset: **Other** (estático + funciones serverless).
 - Este vertical slice no requiere build command.
-- Publicar. La UI más reciente se sirve en `/` (redirect a `/prototype/web-v1/index.html`) y consume `/api/run`.
+- Publicar. El prototipo actual (`/prototype/web-v1/index.html`) es la experiencia publicada y `/` redirige allí.
+- `/prototype/web-v1` se normaliza a `/prototype/web-v1/index.html`.
 
 ## Estructura del repositorio
  
