@@ -102,13 +102,16 @@ This is a curated, public-facing repository, not a complete production archive.
 ---
 
 
-## Web Run Viewer v1 (Vercel-ready)
+## Web frontends and canonical routes
 
-This repository includes a lightweight **run replay viewer** that visualizes pre-recorded MRA v0 simulation runs. It is not an interactive game: it renders the turn-by-turn output of bundled JSONL run files as a readable timeline.
+This repository includes two web surfaces:
 
-The canonical frontend entrypoint for the viewer is the repository root route (`/` → `index.html`).
+- **Root viewer (`index.html`)**: lightweight run replay viewer for bundled MRA v0 runs.
+- **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics.
 
-The repository also contains a parallel interactive prototype (`prototype/web-v1/index.html`) with an extended mechanic set — including a diegetic clock, sleep actions, stages, and forced bivouac — that diverges intentionally from the Python MRA v0 simulator. That divergence is documented in [`/prototype/web-v1/DEV_NOTE.md`](./prototype/web-v1/DEV_NOTE.md).
+In local static preview, root viewer is available at `/` and web-v1 at `/prototype/web-v1/`.
+
+In Vercel deploys, `vercel.json` redirects `/` to `/prototype/web-v1/index.html` (canonical published route).
 
 Included files:
 
@@ -125,9 +128,10 @@ From repository root:
 python3 -m http.server 4173
 ```
 
-Then open `http://localhost:4173/` for the canonical viewer.
+Then open:
 
-Optional: `http://localhost:4173/prototype/web-v1/` opens the legacy experimental prototype.
+- `http://localhost:4173/` for the root viewer.
+- `http://localhost:4173/prototype/web-v1/` for the interactive prototype.
 
 In this local static mode, both frontends read bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
 
@@ -137,8 +141,20 @@ In this local static mode, both frontends read bundled JSONL files directly from
 - **Project Settings → Root Directory:** keep it at the repository root (`.`), not `prototype/mra-v0`.
 - Framework preset: **Other** (static + serverless functions).
 - No build command required for this vertical slice.
-- Deploy. The current prototype (`/prototype/web-v1/index.html`) is the published experience and `/` redirects to it.
+- Deploy. The published default route is `/` and it redirects to `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` is normalized to `/prototype/web-v1/index.html`.
+
+### Bundled runs currently committed
+
+The root viewer currently ships these bundled JSONL runs:
+
+- `narrow-weather-window-seed101-cautious`
+- `false-stability-terrain-seed505-cautious`
+- `accumulated-fatigue-trap-seed808-waiter`
+- `late-push-seed222-cautious`
+- `weather-window-seed151-cautious`
+
+For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) immediately after each run.
 
 ## Repository Structure
 

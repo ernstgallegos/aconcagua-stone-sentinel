@@ -1,0 +1,5 @@
+turn,position,position_label,altitude_band,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags,rationale
+1,base_camp,"Campamento Base / ""Plaza de Mulas"" (4350 m)",low,advance,1,0,0,stable,medium,64,51,36,5,4,-,-
+2,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,advance,0,3,1,clearing,medium,55,67,44,4,3,-,-
+3,camp_b,"Campamento 2 ""Nido de Cóndores"" (5560 m)",mid,advance,0,2,2,clearing,low,45,86,52,3,2,critical-fatigue,-
+4,camp_a,"Campamento 1 ""Canadá"" (5050 m)",mid,descend,0,3,2,clearing,medium,41,90,54,2,1,retreat-initiated|critical-fatigue,-

@@ -14,6 +14,8 @@ const bundledRuns = [
   { scenario: "narrow-weather-window", seed: 101, policy: "cautious" },
   { scenario: "false-stability-terrain", seed: 505, policy: "cautious" },
   { scenario: "accumulated-fatigue-trap", seed: 808, policy: "waiter" },
+  { scenario: "late-push", seed: 222, policy: "cautious" },
+  { scenario: "weather-window", seed: 151, policy: "cautious" },
 ];
 
 function runFileName(entry) {
@@ -66,7 +68,16 @@ function seedScenarios() {
 }
 
 function metric(label, value) {
-  return `<article class="metric"><p class="label">${label}</p><p class="value">${value}</p></article>`;
+  const article = document.createElement("article");
+  article.className = "metric";
+  const labelEl = document.createElement("p");
+  labelEl.className = "label";
+  labelEl.textContent = label;
+  const valueEl = document.createElement("p");
+  valueEl.className = "value";
+  valueEl.textContent = String(value);
+  article.append(labelEl, valueEl);
+  return article;
 }
 
 function flagClass(flag) {
@@ -83,29 +94,40 @@ function render(data) {
   const fatiguePeak = Math.max(...run.map((turn) => Number(turn.state?.fatigue ?? 0)), 0);
   const exposurePeak = Math.max(...run.map((turn) => Number(turn.state?.exposure ?? 0)), 0);
 
-  els.summary.innerHTML = [
+  els.summary.replaceChildren(...[
     metric("Outcome", summary?.outcome ?? "unknown"),
     metric("Key constraint", summary?.key_constraint ?? "not reported"),
     metric("Total turns", summary?.total_turns ?? run.length),
     metric("Peak fatigue", fatiguePeak),
     metric("Peak exposure", exposurePeak),
     metric("Data source", source),
-  ].join("");
+  ]);
 
-  els.turns.innerHTML = "";
+  els.turns.replaceChildren();
   run.forEach((turn) => {
     const item = document.createElement("article");
     item.className = "turn";
-    const flags = (turn.flags || [])
-      .map((flag) => `<span class="flag ${flagClass(flag)}">${flag}</span>`)
-      .join(" ");
+    const title = document.createElement("h3");
+    title.textContent = `Turn ${turn.turn} · ${turn.decision}`;
+    const metaPosition = document.createElement("p");
+    metaPosition.className = "meta";
+    metaPosition.textContent = `Position: ${turn.state.position} · Altitude band: ${turn.state.altitude_band}`;
+    const metaBody = document.createElement("p");
+    metaBody.className = "meta";
+    metaBody.textContent = `Functional capacity: ${turn.state.functional_capacity} · Fatigue: ${turn.state.fatigue} · Exposure: ${turn.state.exposure}`;
+    item.append(title, metaPosition, metaBody);
 
-    item.innerHTML = `
-      <h3>Turn ${turn.turn} · ${turn.decision}</h3>
-      <p class="meta">Position: ${turn.state.position} · Altitude band: ${turn.state.altitude_band}</p>
-      <p class="meta">Functional capacity: ${turn.state.functional_capacity} · Fatigue: ${turn.state.fatigue} · Exposure: ${turn.state.exposure}</p>
-      ${flags ? `<div>${flags}</div>` : ""}
-    `;
+    const flags = turn.flags || [];
+    if (flags.length) {
+      const flagWrap = document.createElement("div");
+      flags.forEach((flag) => {
+        const chip = document.createElement("span");
+        chip.className = `flag ${flagClass(flag)}`;
+        chip.textContent = flag;
+        flagWrap.appendChild(chip);
+      });
+      item.appendChild(flagWrap);
+    }
     els.turns.appendChild(item);
   });
 }

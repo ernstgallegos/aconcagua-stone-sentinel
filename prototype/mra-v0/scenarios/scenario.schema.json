@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aconcagua-stone-sentinel/scenario.schema.json",
+  "title": "Aconcagua MRA v0 Scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "description", "seeds", "max_turns", "initial_state", "bias"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "description": { "type": "string", "minLength": 1 },
+    "seeds": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "integer", "minimum": 1 }
+    },
+    "max_turns": { "type": "integer", "minimum": 1 },
+    "initial_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "altitude_band", "position", "weather_severity", "visibility", "terrain_load",
+        "functional_capacity", "fatigue", "exposure", "water", "food"
+      ],
+      "properties": {
+        "altitude_band": { "type": "string", "enum": ["low", "mid", "high"] },
+        "position": { "type": "string", "enum": ["horcones", "base_camp", "camp_a", "camp_b", "camp_c", "route"] },
+        "weather_severity": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "visibility": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "terrain_load": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "functional_capacity": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "fatigue": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "exposure": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "water": { "type": "integer", "minimum": 0 },
+        "food": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "bias": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "weather_deterioration": { "type": "integer" },
+        "terrain_growth": { "type": "integer" },
+        "fatigue_growth": { "type": "integer" },
+        "window_turns": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+        "post_window_deterioration": { "type": "integer" },
+        "clamp_weather_max": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "clamp_terrain_max": { "type": "integer", "minimum": 0, "maximum": 3 }
+      }
+    }
+  }
+}

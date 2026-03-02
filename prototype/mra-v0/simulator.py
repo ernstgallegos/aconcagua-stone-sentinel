@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import random
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -49,7 +50,36 @@ def clamp(value: int, low: int, high: int) -> int:
 
 def load_scenario(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+        scenario = json.load(handle)
+    validate_scenario(scenario, source=path)
+    return scenario
+
+
+def validate_scenario(scenario: dict[str, Any], source: Path | None = None) -> None:
+    required = {"id", "description", "seeds", "max_turns", "initial_state", "bias"}
+    missing = sorted(required - set(scenario.keys()))
+    if missing:
+        origin = str(source) if source else "scenario"
+        raise ValueError(f"Invalid {origin}: missing required fields: {', '.join(missing)}")
+
+    scenario_id = scenario["id"]
+    if not isinstance(scenario_id, str) or not re.fullmatch(r"[a-z0-9-]+", scenario_id):
+        raise ValueError("Invalid scenario id: expected kebab-case string")
+
+    if not isinstance(scenario["max_turns"], int) or scenario["max_turns"] <= 0:
+        raise ValueError("Invalid scenario max_turns: expected positive integer")
+
+    seeds = scenario["seeds"]
+    if not isinstance(seeds, list) or not seeds or not all(isinstance(seed, int) and seed > 0 for seed in seeds):
+        raise ValueError("Invalid scenario seeds: expected non-empty list of positive integers")
+
+    initial = scenario["initial_state"]
+    required_initial = {
+        "altitude_band", "position", "weather_severity", "visibility", "terrain_load", "functional_capacity", "fatigue", "exposure", "water", "food",
+    }
+    missing_initial = sorted(required_initial - set(initial.keys())) if isinstance(initial, dict) else sorted(required_initial)
+    if missing_initial:
+        raise ValueError(f"Invalid initial_state: missing required fields: {', '.join(missing_initial)}")
 
 
 def uncertainty_level(state: dict[str, Any], rng: random.Random) -> str:
@@ -96,7 +126,15 @@ def observed_signals(state: dict[str, Any], rng: random.Random) -> dict[str, str
     }
 
 
-def pick_decision(policy: str, state: dict[str, Any], turn: int, signals: dict[str, str]) -> tuple[str, str | None]:
+def pick_decision(
+    policy: str,
+    state: dict[str, Any],
+    turn: int,
+    signals: dict[str, str],
+    *,
+    max_turns: int | None = None,
+    input_fn=input,
+) -> tuple[str, str | None]:
     if policy == "human":
         print(f"\n--- Turn {turn} ---")
         print(
@@ -115,9 +153,9 @@ def pick_decision(policy: str, state: dict[str, Any], turn: int, signals: dict[s
         print(f"  Position: {state['position']} | Altitude: {state['altitude_band']}")
 
         while True:
-            choice = input("  Decision [advance / wait / descend]: ").strip().lower()
+            choice = input_fn("  Decision [advance / wait / descend]: ").strip().lower()
             if choice in ("advance", "wait", "descend"):
-                rationale = input("  Why? (brief): ").strip()
+                rationale = input_fn("  Why? (brief): ").strip()
                 return choice, rationale
             print("  Invalid. Enter: advance, wait, or descend")
 
@@ -126,7 +164,8 @@ def pick_decision(policy: str, state: dict[str, Any], turn: int, signals: dict[s
             return "descend", None
         if state["weather_severity"] > 2 or state["terrain_load"] > 2:
             return "wait", None
-        return ("advance", None) if turn <= 6 else ("wait", None)
+        early_turn_threshold = max(1, (max_turns or 12) // 3)
+        return ("advance", None) if turn <= early_turn_threshold else ("wait", None)
 
     if policy == "aggressive":
         if state["functional_capacity"] < 30:
@@ -158,25 +197,12 @@ def update_position(state: dict[str, Any], decision: str) -> None:
     state["altitude_band"] = POSITION_TO_ALTITUDE.get(state["position"], state.get("altitude_band", "mid"))
 
 
-def apply_decision(
-    state: dict[str, Any],
-    decision: str,
-    bias: dict[str, Any],
-    rng: random.Random,
-    turn: int,
-) -> tuple[dict[str, int], list[str]]:
-    flags: list[str] = []
-
-    functional_capacity_before = state["functional_capacity"]
-    fatigue_before_snapshot = state["fatigue"]
-    exposure_before = state["exposure"]
-
+def _compute_environment(state: dict[str, Any], decision: str, bias: dict[str, Any], rng: random.Random, turn: int) -> None:
     weather_shift = rng.choices(
         [-1, 0, 0, 1],
         weights=[max(0, state["weather_severity"]) * 15, 50, 25, 25],
         k=1,
     )[0] + bias.get("weather_deterioration", 0)
-
     terrain_shift = rng.choice([0, 1]) + bias.get("terrain_growth", 0)
 
     window_turns = set(bias.get("window_turns", []))
@@ -190,6 +216,14 @@ def apply_decision(
         terrain_recovery = rng.choice([0, 0, -1])
         terrain_shift = min(terrain_shift, terrain_recovery)
 
+    max_weather = bias.get("clamp_weather_max", 3)
+    max_terrain = bias.get("clamp_terrain_max", 3)
+    state["weather_severity"] = clamp(state["weather_severity"] + weather_shift, 0, max_weather)
+    state["terrain_load"] = clamp(state["terrain_load"] + terrain_shift, 0, max_terrain)
+    state["visibility"] = clamp(3 - state["weather_severity"] + rng.choice([-1, 0, 1]), 0, 3)
+
+
+def _compute_body_deltas(state: dict[str, Any], decision: str, bias: dict[str, Any]) -> tuple[int, int, int]:
     if decision == "advance":
         fatigue_delta = 10 + state["terrain_load"] * 3 + bias.get("fatigue_growth", 0)
         exposure_delta = 8 + state["weather_severity"] * 3
@@ -202,42 +236,62 @@ def apply_decision(
             capacity_delta = -2
         else:
             capacity_delta = -2 + (1 if state["visibility"] >= 2 else 0)
-    else:  # descend
+    else:
         fatigue_delta = 2 + state["terrain_load"]
         exposure_delta = 2 + state["weather_severity"]
         capacity_delta = -1
-        flags.append("retreat-initiated")
 
     mod = ALTITUDE_MODIFIERS.get(state.get("altitude_band", "mid"), ALTITUDE_MODIFIERS["mid"])
     fatigue_delta = int(fatigue_delta * mod["fatigue_mult"])
     capacity_delta -= mod["capacity_penalty"]
+    return fatigue_delta, exposure_delta, capacity_delta
 
-    max_weather = bias.get("clamp_weather_max", 3)
-    max_terrain = bias.get("clamp_terrain_max", 3)
-    state["weather_severity"] = clamp(state["weather_severity"] + weather_shift, 0, max_weather)
-    state["terrain_load"] = clamp(state["terrain_load"] + terrain_shift, 0, max_terrain)
-    state["visibility"] = clamp(3 - state["weather_severity"] + rng.choice([-1, 0, 1]), 0, 3)
 
-    fatigue_before = state["fatigue"]
-    state["fatigue"] = clamp(state["fatigue"] + fatigue_delta, 0, 100)
-    state["exposure"] = clamp(state["exposure"] + exposure_delta, 0, 100)
-    state["functional_capacity"] = clamp(state["functional_capacity"] + capacity_delta - fatigue_before // 35, 0, 100)
-
+def _apply_resource_penalties(state: dict[str, Any], flags: list[str]) -> None:
     state["water"] = max(0, state["water"] - 1)
     state["food"] = max(0, state["food"] - 1)
-
-    update_position(state, decision)
-
     if state["water"] <= 0:
         flags.append("water-depleted")
         state["functional_capacity"] = clamp(state["functional_capacity"] - 8, 0, 100)
     if state["food"] <= 0:
         flags.append("food-depleted")
         state["functional_capacity"] = clamp(state["functional_capacity"] - 5, 0, 100)
+
+
+def _derive_state_flags(state: dict[str, Any], flags: list[str]) -> None:
     if state["exposure"] >= 75:
         flags.append("critical-exposure")
     if state["fatigue"] >= 80:
         flags.append("critical-fatigue")
+
+
+def apply_decision(
+    state: dict[str, Any],
+    decision: str,
+    bias: dict[str, Any],
+    rng: random.Random,
+    turn: int,
+) -> tuple[dict[str, int], list[str]]:
+    flags: list[str] = []
+
+    functional_capacity_before = state["functional_capacity"]
+    fatigue_before_snapshot = state["fatigue"]
+    exposure_before = state["exposure"]
+
+    if decision == "descend":
+        flags.append("retreat-initiated")
+
+    _compute_environment(state, decision, bias, rng, turn)
+    fatigue_delta, exposure_delta, capacity_delta = _compute_body_deltas(state, decision, bias)
+
+    fatigue_before = state["fatigue"]
+    state["fatigue"] = clamp(state["fatigue"] + fatigue_delta, 0, 100)
+    state["exposure"] = clamp(state["exposure"] + exposure_delta, 0, 100)
+    state["functional_capacity"] = clamp(state["functional_capacity"] + capacity_delta - fatigue_before // 35, 0, 100)
+
+    update_position(state, decision)
+    _apply_resource_penalties(state, flags)
+    _derive_state_flags(state, flags)
 
     return {
         "functional_capacity_delta": state["functional_capacity"] - functional_capacity_before,
@@ -280,7 +334,7 @@ def run_simulation(scenario: dict[str, Any], seed: int, policy: str) -> tuple[li
 
     for turn in range(1, scenario["max_turns"] + 1):
         signals = observed_signals(state, rng)
-        decision, rationale = pick_decision(policy, state, turn, signals)
+        decision, rationale = pick_decision(policy, state, turn, signals, max_turns=scenario["max_turns"])
         deltas, flags = apply_decision(state, decision, scenario.get("bias", {}), rng, turn)
         all_flags.extend(flags)
 

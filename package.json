@@ -1,0 +1,11 @@
+{
+  "name": "aconcagua-stone-sentinel",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test prototype/web-v1/tests/new-mechanics.test.js"
+  }
+}
