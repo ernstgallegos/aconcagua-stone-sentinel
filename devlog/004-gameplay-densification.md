@@ -8,10 +8,7 @@ The design objective remains unchanged: a mountain-system where decisions are co
 
 - Acclimatization was added as a first-class state variable with gain, decay, and stage thresholds.
 - Summit attempts now interact with temporal windows rather than a flat stage penalty.
-- An emergency-pack pre-departure choice was introduced to externalize contingency planning.
-- `Observe` was added as a low-cost non-movement action to privilege information gathering.
 - Ambient diegetic signaling was added between status and narrative layers.
-- The route schematic was rebuilt as a dynamic SVG to improve legibility while preserving austerity.
 - Debrief now includes compact analytics for retrospective reading of decisions.
 
 ## Why this matters
