@@ -85,7 +85,7 @@ The objectives of this phase are specific and non-ambiguous.
 This stage aims to:
 
 - Validate whether tension emerges without explicit action mechanics
-- Observe whether partial information leads to deliberation rather than confusion
+- Assess whether partial information leads to deliberation rather than confusion
 - Test whether gradual degradation produces meaning instead of irritation
 - Determine whether the decision to stop, wait, or retreat feels legitimate
 
