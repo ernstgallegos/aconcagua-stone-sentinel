@@ -294,11 +294,6 @@ body {
   border: 1px solid var(--border); background: var(--surface);
   padding: 1rem;
 }
-.position-svg{width:100%;height:auto;display:block;margin-bottom:0.75rem;}
-.route-dot{fill:var(--surface2);stroke:var(--border);stroke-width:1.5;}
-.route-dot.reached{fill:var(--stone);stroke:var(--stone);}
-.route-dot.current{fill:var(--white);stroke:var(--white);animation:pulse-dot 1.2s infinite;}
-@keyframes pulse-dot{0%{r:5;}50%{r:7;}100%{r:5;}}
 .schematic-label {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem;
@@ -436,15 +431,6 @@ body {
 .uncertainty-val.medium { color: var(--ochre); }
 .uncertainty-val.high { color: var(--red); }
 
-.thermal-reserve {
-  font-size: 0.68rem; padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border); margin-top: 0.5rem;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.thermal-label { color: var(--stone); }
-.thermal-status { color: var(--ice); }
-.thermal-status.used { color: var(--text-dim); text-decoration: line-through; }
-
 .ambient-signal {
   border: 1px solid var(--border); background: var(--surface2);
   font-family: var(--mono); font-size: 0.66rem; color: var(--stone);
@@ -487,18 +473,6 @@ body {
 .btn-decision.btn-descend:hover:not(:disabled) { border-color: var(--ice); color: var(--ice); }
 .btn-decision:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.btn-thermal {
-  font-family: var(--mono); font-size: 0.65rem; width: 100%;
-  padding: 0.5rem; background: transparent;
-  border: 1px dashed var(--ice-dim); color: var(--ice-dim);
-  cursor: pointer; margin-top: 0.5rem; letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: border-color 0.15s, color 0.15s;
-}
-.btn-thermal:hover:not(:disabled) { border-color: var(--ice); color: var(--ice); }
-.btn-thermal:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
-.btn-thermal.active-this-turn { border-color: var(--ice); color: var(--ice); background: rgba(168,191,196,0.06); }
-
 /* ───── DEBRIEF ───── */
 #screen-debrief { padding: 2rem 1.5rem; align-items: center; }
 .debrief-box { max-width: 700px; width: 100%; }
@@ -537,11 +511,6 @@ body {
 .sparkline{font-family:var(--mono);font-size:0.7rem;color:var(--ice);line-height:1.4;word-break:break-all;}
 .tutorial-toast{position:fixed;left:1rem;bottom:1rem;max-width:360px;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 94%,transparent);padding:0.7rem;z-index:2000;font-family:var(--mono);font-size:0.68rem;color:var(--white);opacity:0;transform:translateY(6px);transition:opacity .25s, transform .25s;pointer-events:none;}
 .tutorial-toast.visible{opacity:1;transform:translateY(0);}
-.pack-grid{display:grid;grid-template-columns:1fr;gap:0.55rem;margin:1rem 0;}
-.pack-card{border:1px solid var(--border);padding:0.6rem;cursor:pointer;background:var(--surface2);}
-.pack-card[aria-checked="true"]{border-color:var(--ochre);}
-.pack-name{font-family:var(--mono);font-size:0.7rem;color:var(--white);letter-spacing:0.08em;text-transform:uppercase;}
-.pack-desc{font-size:0.78rem;color:var(--stone);line-height:1.5;}
 .debrief-turning-point {
   font-size: 0.85rem; color: var(--stone); font-style: italic; line-height: 1.7;
 }
@@ -731,8 +700,6 @@ body {
         </div>
       </div>
       <div class="onboard-note">Your watch gives readings, but they carry noise. At higher altitude and higher fatigue, your own readings become less reliable. Trust trends.</div>
-      <div class="onboard-note">Water and food are consumed every turn, whatever you do. You have one Emergency Pack. Choose its composition before departure.</div>
-      <div id="pack-grid" class="pack-grid" role="radiogroup" aria-label="Emergency pack selection"></div>
       <div class="onboard-actions">
         <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
       </div>
@@ -746,8 +713,6 @@ body {
     <!-- LEFT -->
     <div class="left-panel">
       <div class="mountain-schematic">
-        <div class="schematic-label">Ascent Route</div>
-        <div id="position-svg-wrap" aria-hidden="true"></div>
         <ul class="position-list" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
       </div>
       <div class="action-log">
@@ -804,10 +769,6 @@ body {
         <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
         <!-- FIX: resource-warning now shown inline when depleted -->
         <div id="resource-warning-box"></div>
-        <div class="thermal-reserve" id="thermal-display">
-          <span class="thermal-label">THERMAL RESERVE</span>
-          <span class="thermal-status" id="thermal-status" aria-live="polite">available</span>
-        </div>
       </div>
       <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
       <div class="narrative-box">
@@ -820,13 +781,9 @@ body {
           <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">Advance</button>
           <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">Advance<br>Slowly</button>
           <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">Wait</button>
-          <button class="btn-decision" id="btn-observe" onclick="makeDecision('observe')" aria-label="Observe conditions">Observe</button>
           <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">Descend</button>
           <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" style="display:none">Sleep</button>
         </div>
-        <button class="btn-thermal" id="btn-thermal" onclick="toggleThermal()" aria-label="Activate Thermal Reserve">
-          ◎ Activate Thermal Reserve
-        </button>
       </div>
     </div>
   </div>
@@ -1133,8 +1090,6 @@ let G = {
   turnLog:   [],
   highestPosIdx: 0,
   allFlags:  [],
-  thermalActiveThisTurn: false,
-  thermalUsed: false,
   signals:   null,
   consecutiveWater0: 0,
   consecutiveCollapses: 0,
@@ -1145,8 +1100,6 @@ let G = {
   irreversibleTriggered: false,
   irreversibleTurn: null,
   acclimatization: 0,
-  selectedPack: null,
-  packUsed: false,
   consecutiveAdvances: 0,
   tutorialSeen: {},
   journalReturnScreen: 'debrief',
@@ -1311,7 +1264,6 @@ function showOnboarding(mode) {
     `Expedition: ${G.character.name} · ${G.character.role}`;
   const backBtn = document.getElementById('onboard-back-btn');
   backBtn.onclick = () => showScreen(mode === 'random' ? 'mode' : 'scenario');
-  buildPackGrid();
   showScreen('onboarding');
 }
 
@@ -1367,8 +1319,6 @@ function startGame() {
   G.turnLog = [];
   G.allFlags = [];
   G.highestPosIdx = POSITIONS.indexOf(sc.initial.position);
-  G.thermalUsed = false;
-  G.thermalActiveThisTurn = false;
   G.consecutiveWater0 = 0;
   G.whiteWindRisk = 0;
   G.day = 1;
@@ -1377,8 +1327,6 @@ function startGame() {
   G.irreversibleTurn = null;
   G.runNumber = (G.runNumber || 0) + 1;
   G.acclimatization = 0;
-  G.selectedPack = G.selectedPack || 'thermal';
-  G.packUsed = false;
   G.consecutiveAdvances = 0;
   G.tutorialSeen = {};
 
@@ -1388,7 +1336,6 @@ function startGame() {
   if (mods.capacity_start)   s.functional_capacity = clamp(s.functional_capacity + mods.capacity_start, 0, 100);
   if (mods.water_start)      s.water      = s.water + mods.water_start;
 
-  s.thermalReserve = true;
   if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, TUNING.acclimatization.maxValue);
   G.state = s;
 
@@ -1463,7 +1410,7 @@ function applyTimeAndNight(decision, flags) {
     G.minutesOfDay = TUNING.dayStartMinutes;
     return;
   }
-  G.minutesOfDay += decision === 'observe' ? 30 : (TUNING.timeCostMinutes[decision] || 60);
+  G.minutesOfDay += (TUNING.timeCostMinutes[decision] || 60);
   if (G.minutesOfDay >= TUNING.nightStartMinutes) {
     if (!isCampPosition(G.state.position)) {
       flags.push('forced-bivouac');
@@ -1644,25 +1591,7 @@ function renderWatch() {
     warnBox.innerHTML = '';
   }
 
-  const thermalStatus = document.getElementById('thermal-status');
-  thermalStatus.textContent = G.thermalUsed ? 'used' : (G.thermalActiveThisTurn ? 'ACTIVE' : 'available');
-  thermalStatus.className = 'thermal-status' + (G.thermalUsed && !G.thermalActiveThisTurn ? ' used' : '');
 
-  const thermalBtn = document.getElementById('btn-thermal');
-  if (G.thermalUsed && !G.thermalActiveThisTurn) {
-    thermalBtn.disabled = true;
-    thermalBtn.setAttribute('aria-disabled', 'true');
-  } else if (G.thermalActiveThisTurn) {
-    thermalBtn.className = 'btn-thermal active-this-turn';
-    thermalBtn.textContent = '◎ Thermal Reserve: ACTIVE this turn';
-    thermalBtn.setAttribute('aria-pressed', 'true');
-  } else {
-    thermalBtn.disabled = false;
-    thermalBtn.removeAttribute('aria-disabled');
-    thermalBtn.className = 'btn-thermal';
-    thermalBtn.textContent = '◎ Activate Thermal Reserve';
-    thermalBtn.setAttribute('aria-pressed', 'false');
-  }
 
   const sleepBtn = document.getElementById('btn-sleep');
   if (isCampPosition(s.position)) {
@@ -1683,7 +1612,6 @@ function renderWatch() {
 // ════════════════════════════════════════════════
 function renderPositionList() {
   const s = G.state;
-  renderPositionSVG();
   const curIdx = POSITIONS.indexOf(s.position);
   const list = document.getElementById('position-list');
   list.innerHTML = '';
@@ -1745,7 +1673,6 @@ const NARRATIVES = {
   crit_fatigue: ['The body issues a direct warning.','Effort and output have separated.','You can still act, but not reliably.','Fatigue is now a strategic actor.','Delay enters every movement chain.','The system is near functional break.'],
   water_gone: ['Water has reached zero; all remaining turns become expensive.', 'Hydration debt starts collecting immediately.', 'Without water, every choice becomes shorter-term.', 'The body begins rationing performance.', 'This is a hard boundary, not a soft warning.', 'From here, degradation accelerates.'],
   food_gone: ['Food is exhausted. The body shifts to deficit management.', 'Energy planning is now damage planning.', 'The margin between action and collapse narrows further.', 'No intake means no recovery reserve.', 'You can continue, but the bill is immediate.', 'Operational endurance contracts sharply.'],
-  thermal_used: ['Thermal reserve deployed: one margin spent on purpose.', 'You purchase a brief reduction in cold penalty.', 'Heat management gets one deliberate correction.', 'The reserve is gone after this intervention.', 'You traded inventory for time.', 'Thermal discipline has moved from option to memory.'],
   slept: ['Night at camp recovers structure, never certainty.', 'Sleep reduces noise, not objective risk.', 'Morning starts with less debt, not with none.', 'The body stabilizes where altitude permits it.', 'Recovery is local and conditional.', 'A camp night is maintenance, not reset.'],
   bivouac: ['Open bivouac exacts payment in exposure and capacity.', 'Unplanned night outside camp accelerates systemic decay.', 'The clock rolls over; the debt does not.', 'Forced bivouac turns one mistake into several.', 'Shelter without camp still costs heavily.', 'Night outside support is punitive by design.'],
   irreversible: ['First irreversible point crossed. Retreat remains valid, never cheap.', 'Above this line, every reversal carries compound cost.', 'The route changed from expedition to commitment.', 'You can still descend, but not neutrally.', 'The mountain has marked this threshold.', 'From here, price and altitude move together.'],
@@ -1760,10 +1687,7 @@ const NARRATIVES = {
   ],
   white_wind_sign: ['Lenticular signs accumulate; the air has changed intent.','Wind tone sharpens before visibility collapses.','Precursors are present if you are still reading them.','The mountain is announcing a harder phase.','Pressure and movement disagree.','This signal is warning, not narrative flavor.'],
   white_wind_hit: ['White wind impact: orientation degrades in seconds.','Visibility collapses and route confidence drops sharply.','The system shifts from progress logic to damage control.','Direction remains, legibility does not.','Movement now carries amplified uncertainty.','This is the mountain reducing options in real time.'],
-  terrain_block_observe:['You read the slope instead of contesting it.','Observation confirms the block before it becomes a mistake.','No movement, but better information.','The terrain map in your head gets cleaner.','You spend minutes to avoid hours of loss.','Clarity can be a turn by itself.'],
   observation_weather:['Cloud texture clarifies the next phase of weather.','Wind direction is legible from drifting crystals.','The sky gives a short forecast if you stand still.','Observation lowers uncertainty for one turn.','You confirm trend before committing movement.','A quiet read often beats a noisy push.'],
-  observation_body:['Breathing cadence reveals hidden fatigue drift.','Hands and pace report exposure earlier than numbers.','You audit the body before asking more from it.','A short stop sharpens internal telemetry.','Symptoms become actionable when observed on purpose.','You choose information over ground gain.'],
-  emergency_ration_used:['Emergency ration opened. Food reserve partially restored.','The ration is finite and now consumed.','You bought several turns at a fixed cost: one contingency spent.','Caloric floor restored to continue safely.','The emergency reserve did its single job.','From now on, baseline logistics return.'],
   poor_acclimatization:['Altitude penalty rises; acclimatization is below threshold.','The body has not adapted enough for this stage.','You are climbing faster than adaptation allows.','High camp without adaptation multiplies fatigue.','Summit day punishes low acclimatization severely.','This is a mismatch between ambition and physiology.']
 };
 
@@ -1787,7 +1711,6 @@ function renderNarrative(decision, signals, flags=[]) {
   else if (flags.includes('critical-fatigue')) text = pickNarrative('crit_fatigue');
   else if (flags.includes('water-depleted')) text = pickNarrative('water_gone');
   else if (flags.includes('food-depleted')) text = pickNarrative('food_gone');
-  else if (flags.includes('thermal-reserve-used')) text = pickNarrative('thermal_used');
   else if (flags.includes('forced-bivouac')) text = pickNarrative('bivouac');
   else if (flags.includes('first-irreversible-point')) text = pickNarrative('irreversible');
   else if (flags.includes('dehydration-compounding')) text = pickNarrative('dehydration');
@@ -1799,11 +1722,6 @@ function renderNarrative(decision, signals, flags=[]) {
     if (decision === 'advance_slowly') text = pickNarrative('advance_slowly');
     else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
     else text = pickNarrative('advance_good');
-  } else if (decision === 'observe') {
-    fatigue_delta = 1 * fatMult;
-    exposure_delta = 1 * stageMod.exposureMult;
-    capacity_delta = 0;
-    flags.push('observation-turn');
   } else if (decision === 'wait') {
     text = ['high','extreme','death_zone'].includes(s.altitude_band) ? pickNarrative('wait_high') : pickNarrative('wait_low');
   } else if (decision === 'descend') {
@@ -1844,40 +1762,12 @@ function renderNarrative(decision, signals, flags=[]) {
 }
 
 
-function buildPackGrid() {
-  const packs = [
-    { id:'thermal', name:'Thermal Reserve', desc:'Preserves current thermal reserve behavior: one turn of reduced exposure.' },
-    { id:'bivouac', name:'Bivouac Pack', desc:'If forced bivouac occurs, applies only 40% of standard bivouac penalty once.' },
-    { id:'ration', name:'Emergency Ration', desc:'When food hits zero, restore food to 6 once.' },
-  ];
-  const wrap = document.getElementById('pack-grid');
-  if (!wrap) return;
-  if (!G.selectedPack) G.selectedPack = 'thermal';
-  wrap.innerHTML = '';
-  packs.forEach((pack) => {
-    const card = document.createElement('div');
-    card.className = 'pack-card';
-    card.setAttribute('role', 'radio');
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-checked', String(G.selectedPack === pack.id));
-    card.innerHTML = `<div class="pack-name">${pack.name}</div><div class="pack-desc">${pack.desc}</div>`;
-    const pick = () => {
-      G.selectedPack = pack.id;
-      [...wrap.children].forEach((c) => c.setAttribute('aria-checked', 'false'));
-      card.setAttribute('aria-checked', 'true');
-    };
-    card.onclick = pick;
-    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
-    wrap.appendChild(card);
-  });
-}
 
 function updateAmbientSignal(flags, decision) {
   const box = document.getElementById('ambient-signal');
   if (!box) return;
   let line = '';
   if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = 'Spindrift rises in narrow veils across the ridge line.';
-  else if (decision === 'observe') line = 'You remain still long enough for weak signals to become coherent.';
   else if (G.signals && G.signals.trend === 'worsening') line = 'The mountain tone hardens: less margin, same distance.';
   else if (G.signals && G.signals.trend === 'improving') line = 'The air eases slightly, without promise.';
   if (!line) { box.style.display = 'none'; return; }
@@ -1901,23 +1791,12 @@ function maybeShowTutorial(trigger) {
   setTimeout(() => toast.classList.remove('visible'), 2800);
 }
 
-function renderPositionSVG() {
-  const wrap = document.getElementById('position-svg-wrap');
-  if (!wrap) return;
-  const cur = POSITIONS.indexOf(G.state.position);
-  const dots = [...POSITIONS].map((p, i) => {
-    const y = 230 - i * 13;
-    const cls = i === cur ? 'route-dot current' : (i <= G.highestPosIdx ? 'route-dot reached' : 'route-dot');
-    return `<circle class="${cls}" cx="110" cy="${y}" r="5"></circle>`;
-  }).join('');
-  wrap.innerHTML = `<svg class="position-svg" viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg"><path d="M30 230 L80 120 L110 30 L140 120 L190 230" fill="none" stroke="var(--stone)" stroke-width="2"/><path d="M100 230 L110 30 L120 230" fill="none" stroke="var(--border)" stroke-dasharray="3 4"/><path d="M122 86 L142 118" stroke="var(--ochre)" stroke-width="3"/><text x="146" y="120" fill="var(--ochre)" font-size="8" font-family="var(--mono)">Canaleta</text>${dots}</svg>`;
-}
 
 function buildDebriefAnalytics() {
   const el = document.getElementById('debrief-analytics');
   const total = Math.max(1, G.turnLog.length);
   const count = (d) => G.turnLog.filter((t) => t.decision === d).length;
-  const dist = ['advance','advance_slowly','wait','observe','sleep','descend'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
+  const dist = ['advance','advance_slowly','wait','sleep','descend'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
   const sorted = [...G.turnLog].sort((a, b) => (b.raw.capacity - b.raw.fatigue - b.raw.exposure) - (a.raw.capacity - a.raw.fatigue - a.raw.exposure));
   const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
   const worst = sorted[sorted.length - 1] || best;
@@ -1926,19 +1805,10 @@ function buildDebriefAnalytics() {
 }
 
 // ════════════════════════════════════════════════
-// THERMAL RESERVE
-// ════════════════════════════════════════════════
-function toggleThermal() {
-  if (G.thermalUsed) return;
-  G.thermalActiveThisTurn = !G.thermalActiveThisTurn;
-  renderWatch();
-}
-
-// ════════════════════════════════════════════════
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-observe','btn-descend','btn-sleep'].forEach(id => {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep'].forEach(id => {
     const btn = document.getElementById(id);
     btn.disabled = !enabled;
     if (enabled) btn.removeAttribute('aria-disabled');
@@ -2050,11 +1920,6 @@ function makeDecision(decision) {
     if (s.terrain_load < 3 && rng() < clamp(baseChance, 0.12, 0.93)) {
       moved = true; posChanged = true;
     }
-  } else if (decision === 'observe') {
-    fatigue_delta = 1 * fatMult;
-    exposure_delta = 1 * stageMod.exposureMult;
-    capacity_delta = 0;
-    flags.push('observation-turn');
   } else if (decision === 'wait') {
     const restMap = { APPROACH:-7, HIGH_CAMP:-1, SUMMIT_DAY:1 };
     fatigue_delta = restMap[stage] * fatMult + fg;
@@ -2071,13 +1936,6 @@ function makeDecision(decision) {
     exposure_delta = (2 + s.weather_severity) * stageMod.exposureMult;
     capacity_delta = -1 - capPenalty;
     flags.push('retreat-initiated');
-  }
-
-  if (G.thermalActiveThisTurn && decision !== 'sleep') {
-    exposure_delta = Math.floor(exposure_delta / 2);
-    fatigue_delta = fatigue_delta - fatMult * 2;
-    flags.push('thermal-reserve-used');
-    G.thermalUsed = true;
   }
 
   const charExpMod = ch.mods.exposure_per_turn || 0;
@@ -2124,11 +1982,10 @@ function makeDecision(decision) {
     flags.push('retreat-after-irreversible');
   }
 
-  const actionMinutes = decision === 'observe' ? 30 : (decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60));
+  const actionMinutes = decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60);
   spendResourcesForMinutes(Math.max(actionMinutes, 30), stage, flags);
   applyTimeAndNight(decision, flags);
 
-  if (decision === 'observe') G.signals = { ...G.signals, uncertainty:'low' };
   if (decision === 'advance' || decision === 'advance_slowly') G.consecutiveAdvances++;
   else G.consecutiveAdvances = 0;
 
@@ -2163,20 +2020,6 @@ function makeDecision(decision) {
     }
   }
 
-  if (G.selectedPack === 'ration' && !G.packUsed && s.food === 0) {
-    s.food = 6;
-    G.packUsed = true;
-    flags.push('emergency-ration-used');
-  }
-
-  if (flags.includes('forced-bivouac') && G.selectedPack === 'bivouac' && !G.packUsed) {
-    const p = TUNING.bivouacPenalty;
-    s.fatigue = clamp(s.fatigue - Math.round(p.fatigue * 0.6), 0, 100);
-    s.exposure = clamp(s.exposure - Math.round(p.exposure * 0.6), 0, 100);
-    G.packUsed = true;
-    flags.push('bivouac-pack-used');
-  }
-
   const previous = G.turnLog.length ? G.turnLog[G.turnLog.length - 1].raw : null;
   if (previous && s.weather_severity > previous.weatherSeverity) maybeShowTutorial('weather-deterioration');
   if (s.fatigue >= 50) maybeShowTutorial('fatigue-50');
@@ -2186,7 +2029,6 @@ function makeDecision(decision) {
   if (s.fatigue >= 80 && !G.allFlags.includes('critical-fatigue')) flags.push('critical-fatigue');
 
   G.allFlags.push(...flags);
-  G.thermalActiveThisTurn = false;
 
   G.signals = computeSignals();
   renderWatch();
@@ -2243,7 +2085,7 @@ function addLogEntry(entry) {
   const div = document.createElement('div');
   div.className = 'log-entry';
 
-  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', observe:'OBSERVED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
+  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
   const flagHtml = entry.flags.length ?
     entry.flags.map(f => `<div class="log-flag ${f.includes('critical')||f.includes('collapse')?'':'flag-warn'}">${f.toUpperCase()}</div>`).join('') : '';
   const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
@@ -2310,7 +2152,6 @@ function buildReflectionPrompts() {
   ];
   const dynamicPool = [];
 
-  if (!G.thermalUsed) dynamicPool.push('The reserve was available throughout. What threshold would have made you use it?');
   const worseningAdvances = log.filter(e => (e.decision==='advance'||e.decision==='advance_slowly') && e.trend==='worsening').length;
   if (worseningAdvances >= 3) dynamicPool.push('The trend said worsening on multiple turns you chose to advance. What were you reading instead?');
   const waitCount = log.filter(e => e.decision==='wait').length;
@@ -2384,7 +2225,7 @@ function endRun(returnedToHorcones) {
   table.innerHTML = `<tr><th>T</th><th>Day/Time</th><th>Position</th><th>Decision</th><th>Trend</th><th>Unc.</th><th>Capacity</th><th>Fatigue</th><th>Exposure</th><th>Flags</th></tr>`;
   G.turnLog.forEach(e => {
     const tr = document.createElement('tr');
-    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', observe:'Observe', descend:'Descend', sleep:'Sleep' }[e.decision];
+    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep' }[e.decision];
     tr.innerHTML = `
       <td>${e.turn}</td>
       <td>D${e.day || 1} ${e.time || '06:00'}</td>
