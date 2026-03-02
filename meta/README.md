@@ -33,6 +33,9 @@ It articulates the vision, design principles, conceptual framework, and foundati
 
 👉 **This is the recommended entry point to the project.**
 
+Precompiled PDF snapshot: [`exports/project-whitepaper.pdf`](./exports/project-whitepaper.pdf).
+This PDF is a point-in-time export and may trail markdown updates; regenerate it manually when `project-whitepaper.md` changes in a release cycle.
+
 ---
 
 ### 🧭 Public Roadmap

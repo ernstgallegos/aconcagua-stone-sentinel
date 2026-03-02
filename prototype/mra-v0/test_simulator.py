@@ -1,13 +1,27 @@
 import copy
+import csv
+import json
 import random
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from simulator import apply_decision, load_scenario, run_simulation, uncertainty_level
+from simulator import (
+    apply_decision,
+    classify_outcome,
+    load_scenario,
+    observed_signals,
+    pick_decision,
+    run_simulation,
+    write_outputs,
+    uncertainty_level,
+)
 
 SCENARIOS_DIR = ROOT / "scenarios"
 
@@ -87,6 +101,12 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual(deltas["functional_capacity_delta"], state["functional_capacity"] - previous["functional_capacity"])
         self.assertEqual(deltas["fatigue_delta"], state["fatigue"] - previous["fatigue"])
         self.assertEqual(deltas["exposure_delta"], state["exposure"] - previous["exposure"])
+
+    def test_refactor_regression_seeded_signature_is_stable(self):
+        scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
+        logs, result = run_simulation(scenario, seed=101, policy="cautious")
+        signature = (result.outcome, result.total_turns, logs[-1]["state"]["functional_capacity"], logs[-1]["state"]["position"])
+        self.assertEqual(signature, ("retreated", 4, 40, "base_camp"))
 
 
 class TestBalance(unittest.TestCase):
@@ -203,6 +223,140 @@ class TestPolicyValidation(unittest.TestCase):
         _, result = run_simulation(scenario, seed=1, policy="aggressive")
         if result.outcome == "summit":
             self.assertEqual(result.highest_position_reached, "route")
+
+
+class TestOutputContracts(unittest.TestCase):
+    def test_write_outputs_creates_expected_csv_and_jsonl_shapes(self):
+        scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
+        logs, result = run_simulation(scenario, seed=101, policy="cautious")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_prefix = Path(tmpdir) / "sample"
+            write_outputs(logs, result, out_prefix)
+
+            with out_prefix.with_suffix(".csv").open("r", encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                rows = list(reader)
+                self.assertEqual(
+                    reader.fieldnames,
+                    [
+                        "turn", "position", "position_label", "altitude_band", "decision", "weather_hint", "visibility_hint",
+                        "terrain_hint", "trend", "uncertainty", "functional_capacity", "fatigue", "exposure", "water", "food", "flags", "rationale",
+                    ],
+                )
+                self.assertGreater(len(rows), 0)
+
+            lines = out_prefix.with_suffix(".jsonl").read_text(encoding="utf-8").strip().splitlines()
+            summary = json.loads(lines[-1])["summary"]
+            self.assertIn("outcome", summary)
+            self.assertEqual(summary["total_turns"], len(logs))
+
+
+class TestOutcomeClassification(unittest.TestCase):
+    def test_classify_outcome_branches(self):
+        self.assertEqual(classify_outcome({"functional_capacity": 90, "exposure": 10, "fatigue": 10}, [], False, True)[0], "summit")
+        self.assertEqual(classify_outcome({"functional_capacity": 90, "exposure": 10, "fatigue": 10}, [], True, False)[0], "retreated")
+        self.assertEqual(classify_outcome({"functional_capacity": 15, "exposure": 10, "fatigue": 10}, [], False, False)[0], "incapacitated")
+        self.assertEqual(classify_outcome({"functional_capacity": 50, "exposure": 75, "fatigue": 10}, [], False, False)[0], "deteriorated")
+        self.assertEqual(classify_outcome({"functional_capacity": 50, "exposure": 10, "fatigue": 80}, [], False, False)[0], "deteriorated")
+        self.assertEqual(classify_outcome({"functional_capacity": 70, "exposure": 10, "fatigue": 10}, ["critical-fatigue"], False, False)[0], "stabilized")
+        self.assertEqual(classify_outcome({"functional_capacity": 40, "exposure": 10, "fatigue": 10}, [], False, False)[0], "survived-marginal")
+
+
+class TestObservedSignals(unittest.TestCase):
+    def test_observed_signals_noise_bias_and_trend(self):
+        low_state = {
+            "altitude_band": "low", "weather_severity": 1, "visibility": 3, "terrain_load": 0,
+            "functional_capacity": 85, "fatigue": 20, "exposure": 10,
+        }
+        high_state = {
+            "altitude_band": "high", "weather_severity": 3, "visibility": 0, "terrain_load": 3,
+            "functional_capacity": 40, "fatigue": 85, "exposure": 85,
+        }
+        low = observed_signals(low_state, random.Random(42))
+        high = observed_signals(high_state, random.Random(42))
+        self.assertIn(low["trend"], {"clearing", "improving", "stable", "worsening"})
+        self.assertIn(high["trend"], {"clearing", "improving", "stable", "worsening"})
+        self.assertLessEqual(int(low["weather_hint"]), 3)
+        self.assertGreaterEqual(int(high["weather_hint"]), 0)
+        self.assertIn(high["uncertainty"], {"medium", "high"})
+
+
+class TestPolicyBranches(unittest.TestCase):
+    def test_aggressive_policy_threshold(self):
+        signals = {"weather_hint": "1", "visibility_hint": "1", "terrain_hint": "1", "trend": "stable", "uncertainty": "medium"}
+        decision_high, _ = pick_decision("aggressive", {"functional_capacity": 31}, 1, signals)
+        decision_low, _ = pick_decision("aggressive", {"functional_capacity": 30}, 1, signals)
+        self.assertEqual(decision_high, "advance")
+        self.assertEqual(decision_low, "advance")
+        decision_desc, _ = pick_decision("aggressive", {"functional_capacity": 29}, 1, signals)
+        self.assertEqual(decision_desc, "descend")
+
+    def test_human_policy_uses_injected_input_function(self):
+        signals = {"weather_hint": "1", "visibility_hint": "1", "terrain_hint": "1", "trend": "stable", "uncertainty": "medium"}
+        state = {
+            "functional_capacity": 50,
+            "fatigue": 40,
+            "exposure": 30,
+            "water": 3,
+            "food": 3,
+            "position": "horcones",
+            "altitude_band": "low",
+        }
+        fake_inputs = iter(["advance", "testing rationale"])
+        decision, rationale = pick_decision("human", state, 1, signals, input_fn=lambda _: next(fake_inputs))
+        self.assertEqual(decision, "advance")
+        self.assertEqual(rationale, "testing rationale")
+
+
+class TestRunAllAndSchema(unittest.TestCase):
+    def test_run_all_smoke_generates_output(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir) / "generated"
+            cmd = [
+                "python3",
+                str(ROOT / "run_all.py"),
+                "--base",
+                str(ROOT),
+                "--output-dir",
+                str(output_dir),
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            self.assertTrue(any(output_dir.glob("*.jsonl")))
+
+    def test_run_all_continues_after_subprocess_error(self):
+        with mock.patch("run_all.subprocess.run") as run_mock:
+            import run_all
+
+            call_counter = {"n": 0}
+
+            def fake_run(*_args, **_kwargs):
+                call_counter["n"] += 1
+                if call_counter["n"] == 1:
+                    raise subprocess.CalledProcessError(returncode=1, cmd=["python3"], stderr="boom")
+                return mock.Mock(stdout=json.dumps({
+                    "scenario": "ok",
+                    "seed": 1,
+                    "policy": "cautious",
+                    "outcome": "stabilized",
+                    "key_constraint": "none",
+                }))
+
+            run_mock.side_effect = fake_run
+            with tempfile.TemporaryDirectory() as tmpdir:
+                with self.assertRaises(SystemExit) as ctx:
+                    with mock.patch.object(sys, "argv", ["run_all.py", "--base", str(ROOT), "--output-dir", tmpdir]):
+                        run_all.main()
+                self.assertEqual(ctx.exception.code, 1)
+
+    def test_invalid_scenario_json_raises_clear_error(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            bad = Path(tmpdir) / "bad.json"
+            bad.write_text(json.dumps({"id": "x", "seeds": [1]}), encoding="utf-8")
+            with self.assertRaises(ValueError) as ctx:
+                load_scenario(bad)
+            self.assertIn("missing required fields", str(ctx.exception))
 
 
 if __name__ == "__main__":

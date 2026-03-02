@@ -1,0 +1,5 @@
+turn,position,position_label,altitude_band,decision,weather_hint,visibility_hint,terrain_hint,trend,uncertainty,functional_capacity,fatigue,exposure,water,food,flags,rationale
+1,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,advance,0,2,2,clearing,low,52,65,43,3,2,-,-
+2,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,1,3,3,clearing,low,49,62,49,2,1,-,-
+3,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,wait,2,1,3,stable,medium,41,59,55,1,0,food-depleted,-
+4,horcones,Horcones / Entrada Parque Provincial Aconcagua (2950 m),low,descend,1,0,3,stable,medium,26,64,57,0,0,retreat-initiated|water-depleted|food-depleted,-

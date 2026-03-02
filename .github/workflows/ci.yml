@@ -11,15 +11,17 @@ jobs:
     name: Python simulator tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "requirements-dev.txt"
 
-      - name: Install pytest
-        run: pip install pytest
+      - name: Install Python dev dependencies
+        run: pip install -r requirements-dev.txt
 
       - name: Run simulator tests
         run: pytest prototype/mra-v0/test_simulator.py -v
@@ -28,12 +30,17 @@ jobs:
     name: Web-v1 contract tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.2.0
         with:
           node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "package.json"
+
+      - name: Install Node dependencies
+        run: npm install
 
       - name: Run web-v1 mechanic tests
-        run: node prototype/web-v1/tests/new-mechanics.test.js
+        run: npm test

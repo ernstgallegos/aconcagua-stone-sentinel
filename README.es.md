@@ -96,14 +96,18 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  ---
  
  
-## Vertical Slice web v1 (listo para Vercel)
+## Frontends web y rutas canónicas
 
-Este repositorio ahora incluye un vertical slice web liviano para reproducir corridas incluidas del MRA v0:
+Este repositorio incluye dos superficies web:
 
-- `prototype/web-v1/index.html` — UI experimental autocontenida (CSS/JS inline)
-- `index.html`, `styles.css`, `app.js` — interfaz cliente estática principal en la raíz
+- `index.html`, `styles.css`, `app.js` — **root viewer** para reproducir corridas MRA v0 incluidas
+- `prototype/web-v1/index.html` — **prototype web-v1** interactivo con mecánicas extendidas
 - `api/run.js` — API serverless que sirve corridas desde `prototype/mra-v0/runs/`
 - `vercel.json` — configuración de runtime y ruteo para Vercel
+
+En preview local estático: `/` abre el root viewer y `/prototype/web-v1/` abre el prototipo interactivo.
+
+En Vercel: `vercel.json` redirige `/` a `/prototype/web-v1/index.html` (ruta publicada por defecto).
 
 ### Vista local
 
@@ -113,7 +117,10 @@ Desde la raíz del repositorio:
 python3 -m http.server 4173
 ```
 
-Luego abrir `http://localhost:4173/prototype/web-v1/`.
+Luego abrir:
+
+- `http://localhost:4173/` para el root viewer.
+- `http://localhost:4173/prototype/web-v1/` para el prototipo interactivo.
 
 En este modo estático local, la UI lee los JSONL incluidos directamente desde `prototype/mra-v0/runs/` (sin API serverless).
 
@@ -123,8 +130,18 @@ En este modo estático local, la UI lee los JSONL incluidos directamente desde `
 - **Project Settings → Root Directory:** dejarlo en la raíz del repo (`.`), no en `prototype/mra-v0`.
 - Framework preset: **Other** (estático + funciones serverless).
 - Este vertical slice no requiere build command.
-- Publicar. El prototipo actual (`/prototype/web-v1/index.html`) es la experiencia publicada y `/` redirige allí.
+- Publicar. La ruta por defecto publicada es `/` y redirige a `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` se normaliza a `/prototype/web-v1/index.html`.
+
+### Corridas bundled incluidas
+
+- `narrow-weather-window-seed101-cautious`
+- `false-stability-terrain-seed505-cautious`
+- `accumulated-fatigue-trap-seed808-waiter`
+- `late-push-seed222-cautious`
+- `weather-window-seed151-cautious`
+
+Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) al cerrar cada corrida.
 
 ## Estructura del repositorio
  

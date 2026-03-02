@@ -29,15 +29,36 @@ This is a curated, author-driven repository. External contributions are welcome 
 
 ## Running the Tests
 
-**Python simulator (requires Python 3.10+):**
+**Python simulator (requires Python 3.11+):**
 ```bash
-pip install pytest
+pip install -r requirements-dev.txt
 pytest prototype/mra-v0/test_simulator.py -v
 ```
 
 **Web-v1 contract tests (requires Node.js 18+):**
 ```bash
-node prototype/web-v1/tests/new-mechanics.test.js
+npm test
+```
+
+## Scenario schema validation
+
+Scenario JSON files in `prototype/mra-v0/scenarios/` must follow `scenario.schema.json`.
+
+Quick validation snippet:
+
+```bash
+python3 - <<'PY'
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, 'prototype/mra-v0')
+from simulator import validate_scenario
+
+for p in Path('prototype/mra-v0/scenarios').glob('*.json'):
+    validate_scenario(json.loads(p.read_text(encoding='utf-8')), source=p)
+print('all scenarios valid')
+PY
 ```
 
 Both suites run automatically on every push via GitHub Actions (`.github/workflows/ci.yml`).

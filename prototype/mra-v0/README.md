@@ -14,7 +14,7 @@ Technical prototype for the **Minimal Reproducible Artifact (MRA)** defined in t
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.11+
 - No external runtime dependencies (standard library only)
 - Optional: `pytest` for the alternative test command shown below
 
@@ -37,7 +37,7 @@ This generates:
 
 ## Decision policies
 
-- `cautious`: advances while conditions are manageable, waits under high pressure, descends under critical body stress.
+- `cautious`: advances while conditions are manageable, waits under high pressure, descends under critical body stress. Early-advance behavior is proportional to scenario length (first third of `max_turns`, minimum 1 turn).
 - `aggressive`: prioritizes advancing until functional collapse risk becomes immediate.
 - `waiter`: always waits (useful for baseline behavior and passive degradation checks). Implemented as an explicit named branch — not a fallthrough default.
 - `human`: interactive turn-by-turn decisions with optional rationale capture.
@@ -74,8 +74,10 @@ Bundled in-repository samples currently include:
 - `narrow-weather-window-seed101-cautious`
 - `false-stability-terrain-seed505-cautious`
 - `accumulated-fatigue-trap-seed808-waiter`
+- `late-push-seed222-cautious`
+- `weather-window-seed151-cautious`
 
-Additional scenarios such as `late-push` and `weather-window` are reproducible with the commands below, but their outputs are generated locally (not pre-bundled in git unless exported manually).
+Additional seeds remain reproducible with the commands below.
 
 ```bash
 python3 prototype/mra-v0/simulator.py --scenario prototype/mra-v0/scenarios/narrow-weather-window.json --seed 101 --policy cautious --output-prefix prototype/mra-v0/runs/narrow-weather-window-seed101-cautious

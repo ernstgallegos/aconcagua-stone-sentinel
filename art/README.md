@@ -7,6 +7,8 @@ Their purpose is to communicate **tone, scale, environmental authority, and desi
 
 This folder is intentionally minimal and selective.
 
+> Note: file lists in this document are illustrative and may lag behind the current folder contents.
+
 ---
 
 ## Folder Structure

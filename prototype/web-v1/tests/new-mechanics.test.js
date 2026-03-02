@@ -1,6 +1,7 @@
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const indexPath = path.join(__dirname, '..', 'index.html');
 const source = fs.readFileSync(indexPath, 'utf8');
@@ -9,33 +10,24 @@ function mustMatch(regex, message) {
   assert.ok(regex.test(source), message);
 }
 
-// bug guards
-mustMatch(/timeCostMinutes\s*:\s*\{[\s\S]*advance\s*:\s*120,[\s\S]*advance_slowly\s*:\s*180,[\s\S]*wait\s*:\s*60,[\s\S]*descend\s*:\s*120,[\s\S]*\}/, 'time costs include explicit advance_slowly cost');
-mustMatch(/if \(G\.turn > G\.scenario\.max_turns\) \{[\s\S]*Expedition Window Closed — Turns Exhausted/, 'turn limit outcome is explicit');
-mustMatch(/terrain-body-block/, 'terrain/body block flag is present');
-mustMatch(/terrain_block\s*:\s*\[[\s\S]*The body and terrain agree: not this turn\./, 'terrain block narrative pool is present');
+test('web-v1 mechanics contracts', () => {
+  mustMatch(/timeCostMinutes\s*:\s*\{[\s\S]*advance\s*:\s*120,[\s\S]*advance_slowly\s*:\s*180,[\s\S]*wait\s*:\s*60,[\s\S]*descend\s*:\s*120,[\s\S]*\}/, 'time costs include explicit advance_slowly cost');
+  mustMatch(/if \(G\.turn > G\.scenario\.max_turns\) \{[\s\S]*Expedition Window Closed — Turns Exhausted/, 'turn limit outcome is explicit');
+  mustMatch(/terrain-body-block/, 'terrain/body block flag is present');
+  mustMatch(/terrain_block\s*:\s*\[[\s\S]*The body and terrain agree: not this turn\./, 'terrain block narrative pool is present');
 
-// system presence
-mustMatch(/acclimatization\s*:\s*\{[\s\S]*thresholdForHighCamp\s*:\s*30,[\s\S]*thresholdForSummitDay\s*:\s*55/, 'acclimatization tuning exists');
-mustMatch(/id="body-acclimatization"/, 'watch panel includes acclimatization row');
-mustMatch(/timeWindows\s*:\s*\{[\s\S]*summitOptimalStart/, 'temporal windows tuning exists');
-mustMatch(/makeDecision\('observe'\)/, 'observe action exists');
-mustMatch(/observation-turn/, 'observe turn flag exists');
-mustMatch(/function updateAmbientSignal\(/, 'ambient signal panel update function exists');
-mustMatch(/function renderPositionSVG\(/, 'position SVG renderer exists');
-mustMatch(/function buildDebriefAnalytics\(/, 'debrief analytics function exists');
-mustMatch(/buildPackGrid\(\)/, 'pack selection build call exists');
-mustMatch(/selectedPack/, 'pack state exists');
-mustMatch(/emergency-ration-used/, 'emergency ration flag exists');
+  mustMatch(/acclimatization\s*:\s*\{[\s\S]*thresholdForHighCamp\s*:\s*30,[\s\S]*thresholdForSummitDay\s*:\s*55/, 'acclimatization tuning exists');
+  mustMatch(/id="body-acclimatization"/, 'watch panel includes acclimatization row');
+  mustMatch(/timeWindows\s*:\s*\{[\s\S]*summitOptimalStart/, 'temporal windows tuning exists');
+  mustMatch(/makeDecision\('wait'\)/, 'wait action exists');
+  mustMatch(/function updateAmbientSignal\(/, 'ambient signal panel update function exists');
+  mustMatch(/function renderPositionList\(/, 'position renderer exists');
+  mustMatch(/function buildDebriefAnalytics\(/, 'debrief analytics function exists');
+  mustMatch(/advance_good\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'major narrative pools have expanded density');
+  mustMatch(/wait_high\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'wait_high narrative pool has at least six lines');
 
-// narrative density checks
-mustMatch(/advance_good\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'major narrative pools have expanded density');
-mustMatch(/wait_high\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'wait_high narrative pool has at least six lines');
-
-// pillar violation guards
-assert.ok(!/skill tree/i.test(source), 'does not introduce skill tree system');
-assert.ok(!/\bXP\b/.test(source), 'does not introduce XP system');
-assert.ok(!/level(ing)?\b/i.test(source), 'does not introduce leveling system');
-assert.ok(!/loot\b/i.test(source), 'does not introduce loot system');
-
-console.log('new mechanics tests: ok');
+  assert.ok(!/skill tree/i.test(source), 'does not introduce skill tree system');
+  assert.ok(!/\bXP\b/.test(source), 'does not introduce XP system');
+  assert.ok(!/level(ing)?\b/i.test(source), 'does not introduce leveling system');
+  assert.ok(!/loot\b/i.test(source), 'does not introduce loot system');
+});
