@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+SemVer versioning will be enforced starting with the first tagged release. Until then, changes are tracked under `[Unreleased]`.
+
 ## [Unreleased]
 
 ### Added
@@ -13,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scenario JSON schema at `prototype/mra-v0/scenarios/scenario.schema.json`.
 - New bundled run artifacts for `late-push` and `weather-window`.
 - Expanded Python unit coverage for output contracts, outcome branches, observed signals, schema errors, and smoke tests.
+- Portable scenario validation script: `python3 prototype/mra-v0/validate_all_scenarios.py`.
 
 ### Changed
 - Refactored simulator `apply_decision()` into smaller helper functions while preserving behavior.

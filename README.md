@@ -151,6 +151,19 @@ In this local static mode, both frontends read bundled JSONL files directly from
 - Deploy. The published default route is `/` and it redirects to `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` is normalized to `/prototype/web-v1/index.html`.
 
+#### API CORS allowlist in production
+
+The serverless API (`api/run.js`) reads `ALLOWED_ORIGINS` as a comma-separated list of exact origins.
+
+- Set it in **Vercel → Project Settings → Environment Variables** when your production domain differs from the repository defaults.
+- Example:
+
+```bash
+ALLOWED_ORIGINS=https://example.com,https://www.example.com
+```
+
+If `ALLOWED_ORIGINS` is not configured, the API falls back to a hardcoded development default allowlist.
+
 ### Bundled runs currently committed
 
 The root viewer currently ships these bundled JSONL runs:

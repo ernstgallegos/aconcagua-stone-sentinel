@@ -4,6 +4,7 @@ const path = require("path");
 const rateWindowMs = Number(process.env.API_RATE_LIMIT_WINDOW_MS || 60_000);
 const rateMaxRequests = Number(process.env.API_RATE_LIMIT_MAX || 30);
 const requestCounters = new Map();
+let cleanupTick = 0;
 
 function splitCsv(value) {
   return String(value || "")
@@ -31,6 +32,15 @@ function getClientIp(req) {
 
 function checkRateLimit(ip) {
   const now = Date.now();
+  cleanupTick += 1;
+  if (cleanupTick % 25 === 0 || requestCounters.size > 500) {
+    for (const [key, value] of requestCounters.entries()) {
+      if (value.start + rateWindowMs < now) {
+        requestCounters.delete(key);
+      }
+    }
+  }
+
   const current = requestCounters.get(ip);
   if (!current || now - current.start > rateWindowMs) {
     requestCounters.set(ip, { start: now, count: 1 });

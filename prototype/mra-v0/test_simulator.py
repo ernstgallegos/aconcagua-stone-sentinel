@@ -10,6 +10,7 @@ from pathlib import Path
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parent
+# Keep ROOT pointed at prototype/mra-v0: run_all imports and test mocks depend on this path.
 sys.path.insert(0, str(ROOT))
 
 from simulator import (
@@ -19,6 +20,7 @@ from simulator import (
     observed_signals,
     pick_decision,
     run_simulation,
+    validate_scenario,
     write_outputs,
     uncertainty_level,
 )
@@ -105,8 +107,45 @@ class TestSimulator(unittest.TestCase):
     def test_refactor_regression_seeded_signature_is_stable(self):
         scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
         logs, result = run_simulation(scenario, seed=101, policy="cautious")
+        # Stable regression signature: cautious advances early and then retreats as fatigue/exposure accumulate.
         signature = (result.outcome, result.total_turns, logs[-1]["state"]["functional_capacity"], logs[-1]["state"]["position"])
         self.assertEqual(signature, ("retreated", 4, 40, "base_camp"))
+
+    def test_validate_scenario_rejects_invalid_initial_state_types_and_ranges(self):
+        scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
+
+        bad_capacity = copy.deepcopy(scenario)
+        bad_capacity["initial_state"]["functional_capacity"] = "90"
+        with self.assertRaises(ValueError) as capacity_error:
+            validate_scenario(bad_capacity)
+        self.assertIn("initial_state.functional_capacity must be int 0-100", str(capacity_error.exception))
+
+        bad_altitude = copy.deepcopy(scenario)
+        bad_altitude["initial_state"]["altitude_band"] = "summit"
+        with self.assertRaises(ValueError) as altitude_error:
+            validate_scenario(bad_altitude)
+        self.assertIn("initial_state.altitude_band", str(altitude_error.exception))
+
+        bad_position = copy.deepcopy(scenario)
+        bad_position["initial_state"]["position"] = "camp_z"
+        with self.assertRaises(ValueError) as position_error:
+            validate_scenario(bad_position)
+        self.assertIn("initial_state.position", str(position_error.exception))
+
+    def test_validate_scenario_rejects_bias_typo_and_non_numeric_values(self):
+        scenario = load_scenario(SCENARIOS_DIR / "narrow-weather-window.json")
+
+        typo_bias = copy.deepcopy(scenario)
+        typo_bias["bias"]["fatigue_gorwth"] = 2
+        with self.assertRaises(ValueError) as typo_error:
+            validate_scenario(typo_bias)
+        self.assertIn("bias contains unknown keys: fatigue_gorwth", str(typo_error.exception))
+
+        wrong_type_bias = copy.deepcopy(scenario)
+        wrong_type_bias["bias"]["terrain_growth"] = "fast"
+        with self.assertRaises(ValueError) as type_error:
+            validate_scenario(wrong_type_bias)
+        self.assertIn("bias.terrain_growth must be a number", str(type_error.exception))
 
 
 class TestBalance(unittest.TestCase):
@@ -280,6 +319,20 @@ class TestObservedSignals(unittest.TestCase):
         self.assertLessEqual(int(low["weather_hint"]), 3)
         self.assertGreaterEqual(int(high["weather_hint"]), 0)
         self.assertIn(high["uncertainty"], {"medium", "high"})
+
+    def test_observed_signals_euphoria_bias_is_observable(self):
+        state = {
+            "altitude_band": "low", "weather_severity": 1, "visibility": 2, "terrain_load": 1,
+            "functional_capacity": 85, "fatigue": 20, "exposure": 10,
+        }
+
+        lowered_hints = 0
+        for seed in range(1, 120):
+            sampled = observed_signals(state, random.Random(seed))
+            if int(sampled["weather_hint"]) <= state["weather_severity"] - 1:
+                lowered_hints += 1
+
+        self.assertGreaterEqual(lowered_hints, 1)
 
 
 class TestPolicyBranches(unittest.TestCase):

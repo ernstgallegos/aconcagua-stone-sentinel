@@ -36,7 +36,7 @@
     },
     "bias": {
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "weather_deterioration": { "type": "integer" },
         "terrain_growth": { "type": "integer" },

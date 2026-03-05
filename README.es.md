@@ -140,6 +140,19 @@ En este modo estático local, la UI lee los JSONL incluidos directamente desde `
 - Publicar. La ruta por defecto publicada es `/` y redirige a `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` se normaliza a `/prototype/web-v1/index.html`.
 
+#### Allowlist CORS de la API en producción
+
+La API serverless (`api/run.js`) lee `ALLOWED_ORIGINS` como una lista de orígenes exactos separada por comas.
+
+- Configurarlo en **Vercel → Project Settings → Environment Variables** cuando el dominio productivo difiera de los defaults del repo.
+- Ejemplo:
+
+```bash
+ALLOWED_ORIGINS=https://example.com,https://www.example.com
+```
+
+Si `ALLOWED_ORIGINS` no está configurado, la API usa un allowlist hardcodeado como default de desarrollo.
+
 ### Corridas bundled incluidas
 
 - `narrow-weather-window-seed101-cautious`
