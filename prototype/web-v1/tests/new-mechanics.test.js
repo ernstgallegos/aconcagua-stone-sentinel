@@ -10,6 +10,25 @@ function mustMatch(regex, message) {
   assert.ok(regex.test(source), message);
 }
 
+function functionBody(name) {
+  const signature = `function ${name}(`;
+  const start = source.indexOf(signature);
+  assert.notEqual(start, -1, `function ${name} exists`);
+  const bodyStart = source.indexOf('{', start);
+  assert.notEqual(bodyStart, -1, `function ${name} has body start`);
+  let depth = 0;
+  for (let i = bodyStart; i < source.length; i++) {
+    if (source[i] === '{') depth++;
+    if (source[i] === '}') {
+      depth--;
+      if (depth === 0) {
+        return source.slice(bodyStart + 1, i);
+      }
+    }
+  }
+  assert.fail(`function ${name} has unbalanced braces`);
+}
+
 test('web-v1 mechanics contracts', () => {
   mustMatch(/timeCostMinutes\s*:\s*\{[\s\S]*advance\s*:\s*120,[\s\S]*advance_slowly\s*:\s*180,[\s\S]*wait\s*:\s*60,[\s\S]*descend\s*:\s*120,[\s\S]*\}/, 'time costs include explicit advance_slowly cost');
   mustMatch(/if \(G\.turn > G\.scenario\.max_turns\) \{[\s\S]*Expedition Window Closed — Turns Exhausted/, 'turn limit outcome is explicit');
@@ -25,6 +44,11 @@ test('web-v1 mechanics contracts', () => {
   mustMatch(/function buildDebriefAnalytics\(/, 'debrief analytics function exists');
   mustMatch(/advance_good\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'major narrative pools have expanded density');
   mustMatch(/wait_high\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'wait_high narrative pool has at least six lines');
+
+  ['renderWatch', 'addLogEntry', 'buildDebriefAnalytics', 'endRun', 'renderJournal'].forEach((fnName) => {
+    const body = functionBody(fnName);
+    assert.ok(!/\.innerHTML\s*=/.test(body), `${fnName} avoids innerHTML assignment`);
+  });
 
   assert.ok(!/skill tree/i.test(source), 'does not introduce skill tree system');
   assert.ok(!/\bXP\b/.test(source), 'does not introduce XP system');
