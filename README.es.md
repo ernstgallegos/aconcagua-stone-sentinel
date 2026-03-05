@@ -9,6 +9,13 @@ Este documento presenta la visión, el enfoque y las decisiones fundacionales de
 Es el mejor punto de entrada para entender qué tipo de juego estamos construyendo y por qué.  
 → [`/meta/project-whitepaper.md`](meta/project-whitepaper.md) (inglés)
 
+### Whitepaper PDF
+
+- Snapshot PDF: [`/meta/exports/project-whitepaper.pdf`](meta/exports/project-whitepaper.pdf)
+- Modo de regeneración: **manual** (no se genera automáticamente por CI).
+- Fuente canónica: [`/meta/project-whitepaper.md`](meta/project-whitepaper.md).
+- Criterio de actualización: cada cambio en el whitepaper markdown debe incluir la regeneración y commit del PDF en el mismo PR/commit para evitar drift.
+
 ---
 
 ## Pitch en una frase

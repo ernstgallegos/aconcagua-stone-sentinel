@@ -65,6 +65,16 @@ Both suites run automatically on every push via GitHub Actions (`.github/workflo
 
 ---
 
+## Whitepaper PDF Sync Policy
+
+- `meta/project-whitepaper.md` is the canonical whitepaper source.
+- `meta/exports/project-whitepaper.pdf` is a manually generated artifact (not CI-generated).
+- Any PR that modifies `meta/project-whitepaper.md` must also regenerate and commit `meta/exports/project-whitepaper.pdf` in the same PR to avoid markdown/PDF drift.
+- Recommended export command:
+  `pandoc meta/project-whitepaper.md --from gfm --pdf-engine=pdflatex -o meta/exports/project-whitepaper.pdf`
+
+---
+
 ## What Belongs in a PR
 
 **Accepted:**
