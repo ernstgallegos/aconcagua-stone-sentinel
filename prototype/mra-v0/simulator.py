@@ -81,6 +81,44 @@ def validate_scenario(scenario: dict[str, Any], source: Path | None = None) -> N
     if missing_initial:
         raise ValueError(f"Invalid initial_state: missing required fields: {', '.join(missing_initial)}")
 
+    if initial["altitude_band"] not in {"low", "mid", "high"}:
+        raise ValueError("initial_state.altitude_band must be one of: low, mid, high")
+    if initial["position"] not in POSITIONS:
+        raise ValueError(f"initial_state.position must be one of: {', '.join(POSITIONS)}")
+
+    for metric in ("functional_capacity", "fatigue", "exposure"):
+        value = initial[metric]
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0 or value > 100:
+            raise ValueError(f"initial_state.{metric} must be int 0-100")
+
+    bias = scenario["bias"]
+    if not isinstance(bias, dict):
+        raise ValueError("bias must be an object")
+
+    allowed_bias_keys = {
+        "weather_deterioration",
+        "terrain_growth",
+        "fatigue_growth",
+        "window_turns",
+        "post_window_deterioration",
+        "clamp_weather_max",
+        "clamp_terrain_max",
+    }
+    unexpected_bias = sorted(set(bias.keys()) - allowed_bias_keys)
+    if unexpected_bias:
+        raise ValueError(f"bias contains unknown keys: {', '.join(unexpected_bias)}")
+
+    for key in ("weather_deterioration", "terrain_growth", "fatigue_growth", "post_window_deterioration", "clamp_weather_max", "clamp_terrain_max"):
+        if key in bias and (not isinstance(bias[key], (int, float)) or isinstance(bias[key], bool)):
+            raise ValueError(f"bias.{key} must be a number")
+
+    if "window_turns" in bias:
+        window_turns = bias["window_turns"]
+        if not isinstance(window_turns, list) or not all(
+            isinstance(turn, int) and not isinstance(turn, bool) and turn >= 1 for turn in window_turns
+        ):
+            raise ValueError("bias.window_turns must be a list of positive integers")
+
 
 def uncertainty_level(state: dict[str, Any], rng: random.Random) -> str:
     base = state["weather_severity"] + (3 - state["visibility"]) + cognitive_noise(state)

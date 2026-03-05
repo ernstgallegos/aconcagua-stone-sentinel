@@ -44,22 +44,30 @@ npm test
 
 Scenario JSON files in `prototype/mra-v0/scenarios/` must follow `scenario.schema.json`.
 
-Quick validation snippet:
+Portable validation command:
 
 ```bash
-python3 - <<'PY'
-import json
-import sys
-from pathlib import Path
-
-sys.path.insert(0, 'prototype/mra-v0')
-from simulator import validate_scenario
-
-for p in Path('prototype/mra-v0/scenarios').glob('*.json'):
-    validate_scenario(json.loads(p.read_text(encoding='utf-8')), source=p)
-print('all scenarios valid')
-PY
+python3 prototype/mra-v0/validate_all_scenarios.py
 ```
+
+## Serverless API CORS configuration
+
+The API (`api/run.js`) supports `ALLOWED_ORIGINS` as a comma-separated list of exact origin matches.
+
+- Configure it in **Vercel → Project Settings → Environment Variables**.
+- Example:
+
+```bash
+ALLOWED_ORIGINS=https://example.com,https://www.example.com
+```
+
+If `ALLOWED_ORIGINS` is not set, the function uses the repository's hardcoded dev default allowlist.
+
+Manual rate-limit smoke checklist (when touching `api/run.js`):
+
+1. Request the same run repeatedly from one IP and confirm `X-RateLimit-Remaining` decreases.
+2. Confirm requests over the limit return `429` with `retry_after_ms`.
+3. Wait for one rate window and confirm requests are accepted again.
 
 Both suites run automatically on every push via GitHub Actions (`.github/workflows/ci.yml`).
 

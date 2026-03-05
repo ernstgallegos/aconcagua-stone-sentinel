@@ -176,12 +176,14 @@ async function loadRun() {
     render(data);
     els.status.textContent = `Loaded ${data.summary?.total_turns ?? data.run.length} turns from API.`;
   } catch (error) {
+    console.error("API run load failed", error);
     try {
       const fallback = await fetchStatic(selection);
       render(fallback);
       els.status.textContent = `Loaded ${fallback.summary?.total_turns ?? fallback.run.length} turns from static fallback.`;
     } catch (fallbackError) {
-      els.status.textContent = `Load failed. API: ${error.message}. Static: ${fallbackError.message}.`;
+      console.error("Static fallback run load failed", fallbackError);
+      els.status.textContent = "Run could not be loaded.";
     }
   }
 }
