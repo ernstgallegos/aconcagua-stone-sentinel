@@ -1340,10 +1340,15 @@ function startGame() {
   G.state = s;
 
   // clear resource warning
-  document.getElementById('resource-warning-box').innerHTML = '';
+  clearElement(document.getElementById('resource-warning-box'));
 
   renderPositionList();
-  document.getElementById('log-entries').innerHTML = '<div class="log-empty">No entries yet.</div>';
+  const logEntries = document.getElementById('log-entries');
+  clearElement(logEntries);
+  const emptyLog = document.createElement('div');
+  emptyLog.className = 'log-empty';
+  emptyLog.textContent = 'No entries yet.';
+  logEntries.appendChild(emptyLog);
 
   G.signals = computeSignals();
   renderWatch();
@@ -1484,11 +1489,17 @@ function computeSignals() {
 // ════════════════════════════════════════════════
 function makeDots(val, max=3) {
   const dotClass = val >= 3 ? 'filled-high' : val >= 2 ? 'filled-mid' : 'filled-low';
-  let html = '';
+  const frag = document.createDocumentFragment();
   for (let i = 0; i < max+1; i++) {
-    html += `<div class="dot ${i < val ? dotClass : ''}"></div>`;
+    const dot = document.createElement('div');
+    dot.className = i < val ? `dot ${dotClass}` : 'dot';
+    frag.appendChild(dot);
   }
-  return html;
+  return frag;
+}
+
+function clearElement(el) {
+  while (el.firstChild) el.removeChild(el.firstChild);
 }
 
 function bodyValueClass(label) {
@@ -1536,9 +1547,15 @@ function renderWatch() {
   document.getElementById('watch-position').textContent =
     `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
 
-  document.getElementById('dots-weather').innerHTML = makeDots(sig.wHint);
-  document.getElementById('dots-visibility').innerHTML = makeDots(sig.vHint);
-  document.getElementById('dots-terrain').innerHTML = makeDots(sig.tHint);
+  const weatherDots = document.getElementById('dots-weather');
+  const visibilityDots = document.getElementById('dots-visibility');
+  const terrainDots = document.getElementById('dots-terrain');
+  clearElement(weatherDots);
+  clearElement(visibilityDots);
+  clearElement(terrainDots);
+  weatherDots.appendChild(makeDots(sig.wHint));
+  visibilityDots.appendChild(makeDots(sig.vHint));
+  terrainDots.appendChild(makeDots(sig.tHint));
 
   const trendEl = document.getElementById('watch-trend');
   trendEl.textContent = sig.trend;
@@ -1576,19 +1593,32 @@ function renderWatch() {
   const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
   const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
   const resEl = document.getElementById('watch-resources');
-  resEl.innerHTML = `
-    <span class="resource-item ${s.water===0?'depleted':resClass(waterTurns)}">Water <span>${s.water} · ${waterTurns}t</span></span>
-    <span class="resource-item ${s.food===0?'depleted':resClass(foodTurns)}">Food <span>${s.food} · ${foodTurns}t</span></span>
-  `;
+  clearElement(resEl);
+  const buildResourceItem = (label, amount, turns) => {
+    const outer = document.createElement('span');
+    const cls = amount === 0 ? 'depleted' : resClass(turns);
+    outer.className = cls ? `resource-item ${cls}` : 'resource-item';
+    outer.append(document.createTextNode(`${label} `));
+    const value = document.createElement('span');
+    value.textContent = `${amount} · ${turns}t`;
+    outer.appendChild(value);
+    return outer;
+  };
+  resEl.appendChild(buildResourceItem('Water', s.water, waterTurns));
+  resEl.appendChild(buildResourceItem('Food', s.food, foodTurns));
 
   const warnBox = document.getElementById('resource-warning-box');
   const warns = [];
   if (s.water === 0) warns.push('WATER DEPLETED');
   if (s.food === 0) warns.push('FOOD DEPLETED');
+  clearElement(warnBox);
   if (warns.length) {
-    warnBox.innerHTML = warns.map(w => `<div class="resource-warning">⚠ ${w}</div>`).join('');
-  } else {
-    warnBox.innerHTML = '';
+    warns.forEach((w) => {
+      const warning = document.createElement('div');
+      warning.className = 'resource-warning';
+      warning.textContent = `⚠ ${w}`;
+      warnBox.appendChild(warning);
+    });
   }
 
 
@@ -1801,7 +1831,35 @@ function buildDebriefAnalytics() {
   const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
   const worst = sorted[sorted.length - 1] || best;
   const spark = (G.turnLog.length ? G.turnLog : [{raw:{capacity:G.state.functional_capacity}}]).map((t) => '▁▂▃▄▅▆▇█'[Math.min(7, Math.max(0, Math.floor((t.raw.capacity || 0) / 13)))]).join('');
-  el.innerHTML = `<div class="analytics-grid"><div class="analytics-card"><div class="analytics-title">Decision distribution</div>${dist}</div><div class="analytics-card"><div class="analytics-title">Best state</div>T${best.turn} · ${POS_LABELS[best.position]} · C${best.raw.capacity}/F${best.raw.fatigue}/E${best.raw.exposure}</div><div class="analytics-card"><div class="analytics-title">Worst state</div>T${worst.turn} · ${POS_LABELS[worst.position]} · C${worst.raw.capacity}/F${worst.raw.fatigue}/E${worst.raw.exposure}</div><div class="analytics-card"><div class="analytics-title">Functional capacity sparkline</div><div class="sparkline">${spark}</div></div></div>`;
+  clearElement(el);
+
+  const grid = document.createElement('div');
+  grid.className = 'analytics-grid';
+
+  const addCard = (title, content, extraClass = '') => {
+    const card = document.createElement('div');
+    card.className = 'analytics-card';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'analytics-title';
+    titleEl.textContent = title;
+    card.appendChild(titleEl);
+    if (extraClass) {
+      const contentEl = document.createElement('div');
+      contentEl.className = extraClass;
+      contentEl.textContent = content;
+      card.appendChild(contentEl);
+    } else {
+      card.append(document.createTextNode(content));
+    }
+    grid.appendChild(card);
+  };
+
+  addCard('Decision distribution', dist);
+  addCard('Best state', `T${best.turn} · ${POS_LABELS[best.position]} · C${best.raw.capacity}/F${best.raw.fatigue}/E${best.raw.exposure}`);
+  addCard('Worst state', `T${worst.turn} · ${POS_LABELS[worst.position]} · C${worst.raw.capacity}/F${worst.raw.fatigue}/E${worst.raw.exposure}`);
+  addCard('Functional capacity sparkline', spark, 'sparkline');
+
+  el.appendChild(grid);
 }
 
 // ════════════════════════════════════════════════
@@ -2086,19 +2144,30 @@ function addLogEntry(entry) {
   div.className = 'log-entry';
 
   const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
-  const flagHtml = entry.flags.length ?
-    entry.flags.map(f => `<div class="log-flag ${f.includes('critical')||f.includes('collapse')?'':'flag-warn'}">${f.toUpperCase()}</div>`).join('') : '';
   const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
 
-  div.innerHTML = `
-    <div class="log-entry-meta">
-      T${entry.turn} · D${entry.day} ${entry.time} · ${POS_LABELS[entry.position]} · <span class="decision-tag">${decisionDisplay}</span>${blockedNote}
-      &nbsp;|&nbsp;${entry.trend} · ${entry.uncertainty}
-      &nbsp;|&nbsp;${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}
-    </div>
-    <div class="log-entry-narrative">${entry.narrativeText || '—'}</div>
-    ${flagHtml}
-  `;
+  const meta = document.createElement('div');
+  meta.className = 'log-entry-meta';
+  meta.append(document.createTextNode(`T${entry.turn} · D${entry.day} ${entry.time} · ${POS_LABELS[entry.position]} · `));
+  const decisionTag = document.createElement('span');
+  decisionTag.className = 'decision-tag';
+  decisionTag.textContent = decisionDisplay;
+  meta.appendChild(decisionTag);
+  meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
+
+  const narrative = document.createElement('div');
+  narrative.className = 'log-entry-narrative';
+  narrative.textContent = entry.narrativeText || '—';
+
+  div.appendChild(meta);
+  div.appendChild(narrative);
+
+  entry.flags.forEach((f) => {
+    const flag = document.createElement('div');
+    flag.className = f.includes('critical') || f.includes('collapse') ? 'log-flag' : 'log-flag flag-warn';
+    flag.textContent = f.toUpperCase();
+    div.appendChild(flag);
+  });
   container.prepend(div);
 
   // keep only last 5
@@ -2211,33 +2280,60 @@ function endRun(returnedToHorcones) {
     retreatMsg.style.display = 'block';
   } else { retreatMsg.style.display = 'none'; }
 
-  document.getElementById('debrief-stats').innerHTML = `
-    <div><div class="debrief-stat-label">Character</div><div class="debrief-stat-val">${G.character.name}</div></div>
-    <div><div class="debrief-stat-label">Highest position</div><div class="debrief-stat-val">${POS_LABELS[POSITIONS[G.highestPosIdx]]}</div></div>
-    <div><div class="debrief-stat-label">Turns</div><div class="debrief-stat-val">${G.turnLog.length}</div></div>
-    <div><div class="debrief-stat-label">Scenario</div><div class="debrief-stat-val">${sc.name} · ${G.seed}</div></div>
-  `;
+  const debriefStats = document.getElementById('debrief-stats');
+  clearElement(debriefStats);
+  const statsRows = [
+    ['Character', G.character.name],
+    ['Highest position', POS_LABELS[POSITIONS[G.highestPosIdx]]],
+    ['Turns', String(G.turnLog.length)],
+    ['Scenario', `${sc.name} · ${G.seed}`],
+  ];
+  statsRows.forEach(([label, value]) => {
+    const item = document.createElement('div');
+    const labelEl = document.createElement('div');
+    labelEl.className = 'debrief-stat-label';
+    labelEl.textContent = label;
+    const valueEl = document.createElement('div');
+    valueEl.className = 'debrief-stat-val';
+    valueEl.textContent = value;
+    item.appendChild(labelEl);
+    item.appendChild(valueEl);
+    debriefStats.appendChild(item);
+  });
 
   document.getElementById('debrief-turning-point').textContent = findTurningPoint();
 
   // log table
   const table = document.getElementById('debrief-log-table');
-  table.innerHTML = `<tr><th>T</th><th>Day/Time</th><th>Position</th><th>Decision</th><th>Trend</th><th>Unc.</th><th>Capacity</th><th>Fatigue</th><th>Exposure</th><th>Flags</th></tr>`;
+  clearElement(table);
+  const headerRow = document.createElement('tr');
+  ['T','Day/Time','Position','Decision','Trend','Unc.','Capacity','Fatigue','Exposure','Flags'].forEach((label) => {
+    const th = document.createElement('th');
+    th.textContent = label;
+    headerRow.appendChild(th);
+  });
+  table.appendChild(headerRow);
   G.turnLog.forEach(e => {
     const tr = document.createElement('tr');
     const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep' }[e.decision];
-    tr.innerHTML = `
-      <td>${e.turn}</td>
-      <td>D${e.day || 1} ${e.time || '06:00'}</td>
-      <td>${POS_LABELS[e.position]}</td>
-      <td class="td-decision">${decLabel}</td>
-      <td>${e.trend}</td>
-      <td>${e.uncertainty}</td>
-      <td>${e.body.capacity}</td>
-      <td>${e.body.fatigue}</td>
-      <td>${e.body.exposure}</td>
-      <td class="td-flag">${e.flags.join(', ')}</td>
-    `;
+    const cells = [
+      { value: String(e.turn) },
+      { value: `D${e.day || 1} ${e.time || '06:00'}` },
+      { value: POS_LABELS[e.position] },
+      { value: decLabel, className: 'td-decision' },
+      { value: e.trend },
+      { value: e.uncertainty },
+      { value: e.body.capacity },
+      { value: e.body.fatigue },
+      { value: e.body.exposure },
+      { value: e.flags.join(', '), className: 'td-flag' },
+    ];
+    cells.forEach(({ value, className }) => {
+      const td = document.createElement('td');
+      if (className) td.className = className;
+      td.textContent = value;
+      tr.appendChild(td);
+    });
     table.appendChild(tr);
   });
 
@@ -2246,7 +2342,7 @@ function endRun(returnedToHorcones) {
   // reflections
   const reflections = buildReflectionPrompts();
   const ul = document.getElementById('reflection-list');
-  ul.innerHTML = '';
+  clearElement(ul);
   reflections.forEach(r => {
     const li = document.createElement('li');
     li.className = r.dynamic ? 'dynamic' : '';
@@ -2256,12 +2352,20 @@ function endRun(returnedToHorcones) {
 
   // debrief actions
   // FIX: journal button records that we came from debrief
-  document.getElementById('debrief-actions').innerHTML = `
-    <button class="btn-primary" onclick="replaySameSeed()">Same scenario + seed</button>
-    <button class="btn-ghost" onclick="replayNewSeed()">Same scenario + new seed</button>
-    <button class="btn-ghost" onclick="goChooseScenario()">Choose scenario</button>
-    <button class="btn-ghost" onclick="openJournalFrom('debrief')">View Expedition Journal</button>
-  `;
+  const debriefActions = document.getElementById('debrief-actions');
+  clearElement(debriefActions);
+  [
+    { label: 'Same scenario + seed', cls: 'btn-primary', onClick: replaySameSeed },
+    { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
+    { label: 'Choose scenario', cls: 'btn-ghost', onClick: goChooseScenario },
+    { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
+  ].forEach(({ label, cls, onClick }) => {
+    const btn = document.createElement('button');
+    btn.className = cls;
+    btn.textContent = label;
+    btn.onclick = onClick;
+    debriefActions.appendChild(btn);
+  });
 
   showScreen('debrief');
 }
@@ -2324,18 +2428,28 @@ function clearJournal() {
 function renderJournal() {
   const entries = loadJournal();
   const container = document.getElementById('journal-entries');
+  clearElement(container);
   if (!entries.length) {
-    container.innerHTML = '<div class="journal-empty">No expeditions recorded. The first run will appear here.</div>';
+    const empty = document.createElement('div');
+    empty.className = 'journal-empty';
+    empty.textContent = 'No expeditions recorded. The first run will appear here.';
+    container.appendChild(empty);
     return;
   }
-  container.innerHTML = '';
   entries.forEach((e, i) => {
     const div = document.createElement('div');
     div.className = 'journal-entry';
-    div.innerHTML = `
-      <div class="journal-entry-header">RUN #${e.runNum || (entries.length - i)} · ${e.scenario} · Seed ${e.seed} · ${e.character}</div>
-      <div class="journal-entry-detail">Outcome: ${e.outcome} · Highest: ${e.highest} · Turns: ${e.turns} · Constraint: ${e.constraint}</div>
-    `;
+
+    const header = document.createElement('div');
+    header.className = 'journal-entry-header';
+    header.textContent = `RUN #${e.runNum || (entries.length - i)} · ${e.scenario} · Seed ${e.seed} · ${e.character}`;
+
+    const detail = document.createElement('div');
+    detail.className = 'journal-entry-detail';
+    detail.textContent = `Outcome: ${e.outcome} · Highest: ${e.highest} · Turns: ${e.turns} · Constraint: ${e.constraint}`;
+
+    div.appendChild(header);
+    div.appendChild(detail);
     container.appendChild(div);
   });
 }
