@@ -29,6 +29,17 @@ function functionBody(name) {
   assert.fail(`function ${name} has unbalanced braces`);
 }
 
+function arrayLiteralForProperty(propertyName) {
+  const match = source.match(new RegExp(`${propertyName}\\s*:\\s*\\[([\\s\\S]*?)\\]`));
+  assert.ok(match, `${propertyName} narrative pool exists`);
+  return match[1];
+}
+
+function countStringEntries(arrayLiteralBody) {
+  const stringTokenPattern = /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g;
+  return (arrayLiteralBody.match(stringTokenPattern) || []).length;
+}
+
 test('web-v1 mechanics contracts', () => {
   mustMatch(/timeCostMinutes\s*:\s*\{[\s\S]*advance\s*:\s*120,[\s\S]*advance_slowly\s*:\s*180,[\s\S]*wait\s*:\s*60,[\s\S]*descend\s*:\s*120,[\s\S]*\}/, 'time costs include explicit advance_slowly cost');
   mustMatch(/if \(G\.turn > G\.scenario\.max_turns\) \{[\s\S]*Expedition Window Closed — Turns Exhausted/, 'turn limit outcome is explicit');
@@ -42,8 +53,8 @@ test('web-v1 mechanics contracts', () => {
   mustMatch(/function updateAmbientSignal\(/, 'ambient signal panel update function exists');
   mustMatch(/function renderPositionList\(/, 'position renderer exists');
   mustMatch(/function buildDebriefAnalytics\(/, 'debrief analytics function exists');
-  mustMatch(/advance_good\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'major narrative pools have expanded density');
-  mustMatch(/wait_high\s*:\s*\[[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\n[\s\S]*\]/, 'wait_high narrative pool has at least six lines');
+  assert.ok(countStringEntries(arrayLiteralForProperty('advance_good')) >= 6, 'major narrative pools have at least six entries');
+  assert.ok(countStringEntries(arrayLiteralForProperty('wait_high')) >= 6, 'wait_high narrative pool has at least six entries');
 
   ['renderWatch', 'addLogEntry', 'buildDebriefAnalytics', 'endRun', 'renderJournal'].forEach((fnName) => {
     const body = functionBody(fnName);
