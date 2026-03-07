@@ -1357,8 +1357,8 @@ function buildScenarioGrid() {
     const seedBtns = sc.seeds.map(s =>
       `<button class="seed-btn" id="seed-btn-${sc.id}-${s}" onclick="selectSeed('${sc.id}',${s},event)" aria-label="Use seed ${s}">${s}</button>`
     ).join('');
-    const difficultyLevel = /hard/i.test(sc.difficulty) ? 3 : ((/medium|moderate/i.test(sc.difficulty) ? 2 : 1));
-    const difficultyPips = [0,1,2].map(i => `<span class="diff-pip${i < difficultyLevel ? ' active' : ''}"></span>`).join('');
+    const difficultyTier = /hard/i.test(sc.difficulty) ? 3 : ((/medium|moderate/i.test(sc.difficulty) ? 2 : 1));
+    const difficultyPips = [0,1,2].map(i => `<span class="diff-pip${i < difficultyTier ? ' active' : ''}"></span>`).join('');
     card.innerHTML = `
       <div class="scenario-num">SCENARIO ${sc.num} · ${sc.difficulty}</div>
       <div class="scenario-name">${sc.name}</div>
