@@ -1,0 +1,20 @@
+{
+  "APPROACH": {
+    "fatigueMultiplier": 0.9,
+    "exposureMultiplier": 0.85,
+    "weatherSeverityBias": 0,
+    "confidencePenalty": 0
+  },
+  "HIGH_CAMP": {
+    "fatigueMultiplier": 1.2,
+    "exposureMultiplier": 1.25,
+    "weatherSeverityBias": 1,
+    "confidencePenalty": 10
+  },
+  "SUMMIT_DAY": {
+    "fatigueMultiplier": 1.35,
+    "exposureMultiplier": 1.45,
+    "weatherSeverityBias": 1,
+    "confidencePenalty": 16
+  }
+}

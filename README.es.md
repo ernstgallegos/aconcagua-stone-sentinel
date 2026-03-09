@@ -163,6 +163,23 @@ Si `ALLOWED_ORIGINS` no está configurado, la API usa un allowlist hardcodeado c
 
 Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) al cerrar cada corrida.
 
+
+## Prototype Web v1.1 — Environmental Pressure Engine
+
+El prototipo web ahora sigue un modelo sistémico dominado por el entorno:
+
+`ENTORNO → Presión Ambiental → Respuesta Corporal → Percepción del Jugador → Decisión del Jugador → Resultado`
+
+Cambios centrales:
+
+- Configuración de simulación externalizada en `/data` (`nodes.json`, `environmental_pressure_config.json`, `action_modifiers.json`, `stage_modifiers.json`).
+- Cálculo de **Environmental Pressure** y **Body Tolerance** con interpretación de **Pressure Delta**.
+- Modelo de nodos de ruta + modificadores por etapa, con penalización de vivac fuera de campamento después de las 22:00.
+- UI de percepción (Mountain Pressure, Trend, Confidence) sin exponer al jugador valores crudos de EP/BT.
+- Export de corrida por turnos como `run_log.json` desde debrief.
+
+Ver `/docs/simulation_engine.md` para el detalle técnico.
+
 ## Estructura del repositorio
  
  - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español) y propuesta de artefacto mínimo reproducible (solo en inglés).
