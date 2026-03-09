@@ -10,6 +10,8 @@ SemVer versioning will be enforced starting with the first tagged release. Until
 ## [Unreleased]
 
 ### Added
+- Prototype Web v1.1 Environmental Pressure Engine documentation at `docs/simulation_engine.md`.
+- Data-driven web-v1 simulation configs in `/data` (`nodes`, environmental pressure, action modifiers, and stage modifiers).
 - Root `package.json` with Node 18+ test script.
 - `requirements-dev.txt` for Python development dependencies.
 - Scenario JSON schema at `prototype/mra-v0/scenarios/scenario.schema.json`.
@@ -18,6 +20,8 @@ SemVer versioning will be enforced starting with the first tagged release. Until
 - Portable scenario validation script: `python3 prototype/mra-v0/validate_all_scenarios.py`.
 
 ### Changed
+- `prototype/web-v1/index.html` now computes Environmental Pressure / Body Tolerance and exports turn logs as `run_log.json` from debrief.
+- `prototype/web-v1/README.md` updated to reflect v1.1 systemic model and runtime data sources.
 - Refactored simulator `apply_decision()` into smaller helper functions while preserving behavior.
 - `cautious` policy early-advance threshold now scales with scenario `max_turns`.
 - `run_all.py` now continues on per-run failures and exits non-zero if any run failed.

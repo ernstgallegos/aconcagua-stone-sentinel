@@ -1,0 +1,52 @@
+{
+  "altitudePressureByBand": {
+    "0": 0,
+    "1": 15,
+    "2": 35,
+    "3": 60,
+    "4": 85
+  },
+  "terrainLoadScale": {
+    "1": 10,
+    "2": 20,
+    "3": 35,
+    "4": 50,
+    "5": 65
+  },
+  "weatherSeverityScale": {
+    "0": 0,
+    "1": 10,
+    "2": 25,
+    "3": 45,
+    "4": 70
+  },
+  "visibilityRiskScale": {
+    "0": 0,
+    "1": 5,
+    "2": 15,
+    "3": 30,
+    "4": 45
+  },
+  "timeOfDayRiskScale": {
+    "early": 0,
+    "optimal": 5,
+    "late": 20,
+    "dusk": 35,
+    "night": 55
+  },
+  "exposurePersistenceScale": {
+    "fresh": 0,
+    "sustained": 10,
+    "cumulative": 20,
+    "severe": 35,
+    "critical": 50
+  },
+  "weights": {
+    "altitudePressure": 0.3,
+    "terrainLoad": 0.15,
+    "weatherSeverity": 0.2,
+    "visibilityRisk": 0.1,
+    "timeOfDayRisk": 0.1,
+    "exposurePersistence": 0.15
+  }
+}

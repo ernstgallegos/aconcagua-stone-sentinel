@@ -796,7 +796,7 @@ body {
 <!-- ══════════════════════ TITLE ══════════════════════ -->
 <section id="screen-title" class="screen" aria-label="Title screen">
   <div class="title-shell">
-    <p class="title-eyebrow">Vertical Slice · MRA v0</p>
+    <p class="title-eyebrow">Prototype Web-v1.1</p>
     <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
     <div class="title-divider"></div>
     <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
@@ -918,17 +918,17 @@ body {
         <div class="watch-section">
           <div class="watch-section-label">Environment</div>
           <div class="watch-row">
-            <span class="watch-row-label">WEATHER</span>
+            <span class="watch-row-label">MOUNTAIN PRESSURE</span>
             <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
             <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
           </div>
           <div class="watch-row">
-            <span class="watch-row-label">VISIBILITY</span>
+            <span class="watch-row-label">TREND</span>
             <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
             <span style="font-size:0.62rem;color:var(--stone)" id="watch-uncertainty-inline" aria-live="polite"></span>
           </div>
           <div class="watch-row">
-            <span class="watch-row-label">TERRAIN</span>
+            <span class="watch-row-label">CONFIDENCE</span>
             <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
           </div>
         </div>
@@ -1058,6 +1058,46 @@ function rngWeighted(rng, choices, weights) {
 }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+const DEFAULT_CONFIG = {
+  nodes: [
+    { nodeName:'Horcones', altitudeBand:0, terrainLoad:1, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:false },
+    { nodeName:'Horcones Lagoon', altitudeBand:0, terrainLoad:1, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:false },
+    { nodeName:'Confluencia', altitudeBand:0, terrainLoad:2, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:true },
+    { nodeName:'Cuesta Brava', altitudeBand:1, terrainLoad:3, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:false },
+    { nodeName:'Plaza de Mulas', altitudeBand:1, terrainLoad:2, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:true },
+    { nodeName:'Piedras Conway', altitudeBand:2, terrainLoad:3, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:false },
+    { nodeName:'Camp 1 — Canadá', altitudeBand:2, terrainLoad:3, weatherBias:2, visibilityBias:1, timeSensitivity:2, isCamp:true },
+    { nodeName:'Camp 2 — Nido de Cóndores', altitudeBand:3, terrainLoad:4, weatherBias:2, visibilityBias:2, timeSensitivity:3, isCamp:true },
+    { nodeName:'Camp 3 — Cólera', altitudeBand:3, terrainLoad:4, weatherBias:3, visibilityBias:2, timeSensitivity:3, isCamp:true },
+    { nodeName:'Refugio Independencia', altitudeBand:4, terrainLoad:4, weatherBias:3, visibilityBias:3, timeSensitivity:4, isCamp:false },
+    { nodeName:'Portezuelo del Viento', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:3, timeSensitivity:4, isCamp:false },
+    { nodeName:'La Canaleta', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:4, timeSensitivity:4, isCamp:false },
+    { nodeName:'Summit', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:4, timeSensitivity:4, isCamp:false }
+  ],
+  environmentalPressure: {
+    altitudePressureByBand: { 0:0, 1:15, 2:35, 3:60, 4:85 },
+    terrainLoadScale: { 1:10, 2:20, 3:35, 4:50, 5:65 },
+    weatherSeverityScale: { 0:0, 1:10, 2:25, 3:45, 4:70 },
+    visibilityRiskScale: { 0:0, 1:5, 2:15, 3:30, 4:45 },
+    timeOfDayRiskScale: { early:0, optimal:5, late:20, dusk:35, night:55 },
+    exposurePersistenceScale: { fresh:0, sustained:10, cumulative:20, severe:35, critical:50 },
+    weights: { altitudePressure:0.30, terrainLoad:0.15, weatherSeverity:0.20, visibilityRisk:0.10, timeOfDayRisk:0.10, exposurePersistence:0.15 }
+  },
+  actionModifiers: {
+    advance: { progress:20, fatigueMultiplier:1.25, exposureMultiplier:1.10, timeCost:120 },
+    advance_slowly: { progress:10, fatigueMultiplier:0.90, exposureMultiplier:0.95, timeCost:180 },
+    wait: { progress:0, fatigueMultiplier:0.75, exposureMultiplier:1.00, acclimatizationGain:3, timeCost:60 },
+    descend: { progress:-20, fatigueMultiplier:0.85, exposureMultiplier:0.80, riskRelief:'strong', timeCost:120 },
+    sleep: { campOnly:true, persistenceReset:true, fatigueRecovery:18, exposureRecovery:10, acclimatizationGain:6, timeReset:'06:00' }
+  },
+  stageModifiers: {
+    APPROACH: { fatigueMultiplier:0.9, exposureMultiplier:0.85, weatherSeverityBias:0, confidencePenalty:0 },
+    HIGH_CAMP: { fatigueMultiplier:1.2, exposureMultiplier:1.25, weatherSeverityBias:1, confidencePenalty:10 },
+    SUMMIT_DAY: { fatigueMultiplier:1.35, exposureMultiplier:1.45, weatherSeverityBias:1, confidencePenalty:16 }
+  }
+};
+let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
 // ════════════════════════════════════════════════
 // VISUAL MODES
 // ════════════════════════════════════════════════
@@ -1103,61 +1143,71 @@ function initSplashScreen() {
   });
 }
 
+async function loadDataConfig() {
+  const files = [
+    ['nodes', '../../data/nodes.json'],
+    ['environmentalPressure', '../../data/environmental_pressure_config.json'],
+    ['actionModifiers', '../../data/action_modifiers.json'],
+    ['stageModifiers', '../../data/stage_modifiers.json'],
+  ];
+  for (const [key, path] of files) {
+    try {
+      const response = await fetch(path, { cache: 'no-store' });
+      if (!response.ok) continue;
+      DATA_CONFIG[key] = await response.json();
+    } catch (error) {
+      console.warn(`Using default config for ${key}`, error);
+    }
+  }
+  G.modelReady = true;
+}
+
 // ════════════════════════════════════════════════
 // STATIC DATA
 // ════════════════════════════════════════════════
 const POSITIONS = [
-  'horcones','horcones_lagoon','confluencia','playa_ancha','cuesta_brava',
-  'base_camp','semaforo','piedras_conway','camp_a','camp_b','camp_c',
-  'independencia','portezuelo','canaleta','summit'
+  'horcones','horcones_lagoon','confluencia','cuesta_brava','base_camp',
+  'piedras_conway','camp_a','camp_b','camp_c','independencia','portezuelo','canaleta','summit'
 ];
 const POS_LABELS = {
-  horcones:         'Horcones — Park Entry',
-  horcones_lagoon:  'Horcones Lagoon',
-  confluencia:      'Confluencia',
-  playa_ancha:      'Playa Ancha',
-  cuesta_brava:     'Cuesta Brava',
-  base_camp:        'Base Camp — Plaza de Mulas',
-  semaforo:         'El Semáforo',
-  piedras_conway:   'Piedras Conway',
-  camp_a:           'Camp 1 — Canadá',
-  camp_b:           'Camp 2 — Nido de Cóndores',
-  camp_c:           'Camp 3 — Cólera',
-  independencia:    'Refugio Independencia',
-  portezuelo:       'Portezuelo de los Vientos',
-  canaleta:         'La Canaleta',
-  summit:           'Summit',
+  horcones:'Horcones', horcones_lagoon:'Horcones Lagoon', confluencia:'Confluencia',
+  cuesta_brava:'Cuesta Brava', base_camp:'Plaza de Mulas', piedras_conway:'Piedras Conway',
+  camp_a:'Camp 1 — Canadá', camp_b:'Camp 2 — Nido de Cóndores', camp_c:'Camp 3 — Cólera',
+  independencia:'Refugio Independencia', portezuelo:'Portezuelo del Viento', canaleta:'La Canaleta', summit:'Summit'
 };
 const POS_ALT = {
-  horcones:'2,950 m', horcones_lagoon:'2,950 m', confluencia:'3,390 m', playa_ancha:'3,600–3,800 m',
-  cuesta_brava:'~4,000 m', base_camp:'4,350 m', semaforo:'~4,550 m', piedras_conway:'~4,750 m',
-  camp_a:'5,050 m', camp_b:'5,560 m', camp_c:'5,970 m', independencia:'6,380 m',
-  portezuelo:'~6,500 m', canaleta:'6,700–6,962 m', summit:'6,962 m',
+  horcones:'2,950 m', horcones_lagoon:'3,050 m', confluencia:'3,390 m', cuesta_brava:'~4,000 m',
+  base_camp:'4,350 m', piedras_conway:'~4,750 m', camp_a:'5,050 m', camp_b:'5,560 m',
+  camp_c:'5,970 m', independencia:'6,380 m', portezuelo:'~6,500 m', canaleta:'6,700 m', summit:'6,962 m'
 };
 const POS_BAND = {
-  horcones:'approach', horcones_lagoon:'approach', confluencia:'approach', playa_ancha:'approach',
-  cuesta_brava:'approach', base_camp:'base', semaforo:'upper_base', piedras_conway:'upper_base',
-  camp_a:'high', camp_b:'high', camp_c:'extreme', independencia:'extreme', portezuelo:'extreme',
-  canaleta:'death_zone', summit:'death_zone',
+  horcones:'approach', horcones_lagoon:'approach', confluencia:'approach', cuesta_brava:'approach',
+  base_camp:'base', piedras_conway:'upper_base', camp_a:'high', camp_b:'high',
+  camp_c:'extreme', independencia:'extreme', portezuelo:'death_zone', canaleta:'death_zone', summit:'death_zone',
 };
-const ROUTE_NODES = [
-  { id:'horcones', name:'Horcones', altitude_m:2950, isCamp:false, stage:'APPROACH' },
-  { id:'confluencia', name:'Confluencia', altitude_m:3390, isCamp:true, stage:'APPROACH' },
-  { id:'base_camp', name:'Plaza de Mulas', altitude_m:4350, isCamp:true, stage:'APPROACH' },
-  { id:'camp_a', name:'Canadá', altitude_m:5050, isCamp:true, stage:'HIGH_CAMP' },
-  { id:'camp_b', name:'Nido de Cóndores', altitude_m:5560, isCamp:true, stage:'HIGH_CAMP' },
-  { id:'camp_c', name:'Cólera', altitude_m:5970, isCamp:true, stage:'SUMMIT_DAY' },
-  { id:'summit', name:'Cumbre', altitude_m:6962, isCamp:false, stage:'SUMMIT_DAY' },
-];
+const ROUTE_NODES = POSITIONS.map((id, idx) => {
+  const src = DATA_CONFIG.nodes[idx] || DATA_CONFIG.nodes[DATA_CONFIG.nodes.length - 1];
+  return {
+    id,
+    name: POS_LABELS[id],
+    altitudeBand: src.altitudeBand,
+    terrainLoad: src.terrainLoad,
+    weatherBias: src.weatherBias,
+    visibilityBias: src.visibilityBias,
+    timeSensitivity: src.timeSensitivity,
+    isCamp: !!src.isCamp,
+    stage: idx <= 4 ? 'APPROACH' : idx <= 8 ? 'HIGH_CAMP' : 'SUMMIT_DAY',
+  };
+});
 const CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
 const STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
 
 const TUNING = {
   timeCostMinutes: {
-    advance: 120,
-    advance_slowly: 180,
-    wait: 60,
-    descend: 120,
+    advance: DATA_CONFIG.actionModifiers.advance.timeCost,
+    advance_slowly: DATA_CONFIG.actionModifiers.advance_slowly.timeCost,
+    wait: DATA_CONFIG.actionModifiers.wait.timeCost,
+    descend: DATA_CONFIG.actionModifiers.descend.timeCost,
   },
   dayStartMinutes: 360,
   nightStartMinutes: 1320,
@@ -1175,9 +1225,9 @@ const TUNING = {
     camp_c: { fatigue: -4, capacity: 0, exposure: 1, noise: 1 },
   },
   stage: {
-    APPROACH: { fatigueMult: 0.82, exposureMult: 0.72, capPenaltyBonus: -2, weatherWeights: [38,46,12,4], slowProgressBase: 0.86, advanceProgressBase: 0.79, confidencePenalty: 0 },
-    HIGH_CAMP: { fatigueMult: 1.14, exposureMult: 1.2, capPenaltyBonus: 1, weatherWeights: [10,40,28,22], slowProgressBase: 0.58, advanceProgressBase: 0.5, confidencePenalty: 1 },
-    SUMMIT_DAY: { fatigueMult: 1.35, exposureMult: 1.5, capPenaltyBonus: 3, weatherWeights: [6,30,28,36], slowProgressBase: 0.44, advanceProgressBase: 0.36, confidencePenalty: 2 },
+    APPROACH: { fatigueMult: DATA_CONFIG.stageModifiers.APPROACH.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.APPROACH.exposureMultiplier, capPenaltyBonus: -2, weatherWeights: [38,46,12,4], slowProgressBase: 0.86, advanceProgressBase: 0.79, confidencePenalty: DATA_CONFIG.stageModifiers.APPROACH.confidencePenalty / 10 },
+    HIGH_CAMP: { fatigueMult: DATA_CONFIG.stageModifiers.HIGH_CAMP.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.HIGH_CAMP.exposureMultiplier, capPenaltyBonus: 1, weatherWeights: [10,40,28,22], slowProgressBase: 0.58, advanceProgressBase: 0.5, confidencePenalty: DATA_CONFIG.stageModifiers.HIGH_CAMP.confidencePenalty / 10 },
+    SUMMIT_DAY: { fatigueMult: DATA_CONFIG.stageModifiers.SUMMIT_DAY.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.SUMMIT_DAY.exposureMultiplier, capPenaltyBonus: 3, weatherWeights: [6,30,28,36], slowProgressBase: 0.44, advanceProgressBase: 0.36, confidencePenalty: DATA_CONFIG.stageModifiers.SUMMIT_DAY.confidencePenalty / 10 },
   },
   irreversibleIndex: POSITIONS.indexOf('camp_a'),
   retreatPenaltyAfterIrreversible: { timeMinutes: 60, fatigue: 4, exposure: 4, water: 1 },
@@ -1324,6 +1374,10 @@ let G = {
   consecutiveAdvances: 0,
   tutorialSeen: {},
   journalReturnScreen: 'debrief',
+  persistenceTurns: 0,
+  pressureHistory: [],
+  runLogRecords: [],
+  modelReady: false,
 };
 
 // ════════════════════════════════════════════════
@@ -1555,6 +1609,9 @@ function startGame() {
   G.acclimatization = 0;
   G.consecutiveAdvances = 0;
   G.tutorialSeen = {};
+  G.persistenceTurns = 0;
+  G.pressureHistory = [];
+  G.runLogRecords = [];
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -1563,6 +1620,7 @@ function startGame() {
   if (mods.water_start)      s.water      = s.water + mods.water_start;
 
   if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, TUNING.acclimatization.maxValue);
+  s.persistenceTier = 'fresh';
   G.state = s;
 
   // clear resource warning
@@ -1615,6 +1673,71 @@ function metricDisplay(value, confidence) {
 function getCurrentStage() {
   return getStageForPosition(G.state.position);
 }
+
+function getTimeOfDayBucket(minutesOfDay) {
+  if (minutesOfDay < 360) return 'night';
+  if (minutesOfDay < 480) return 'early';
+  if (minutesOfDay < 900) return 'optimal';
+  if (minutesOfDay < 1080) return 'late';
+  if (minutesOfDay < 1320) return 'dusk';
+  return 'night';
+}
+
+function getPersistenceTier(turns) {
+  if (turns >= 8) return 'critical';
+  if (turns >= 6) return 'severe';
+  if (turns >= 4) return 'cumulative';
+  if (turns >= 2) return 'sustained';
+  return 'fresh';
+}
+
+function calculateEnvironmentalPressure(state) {
+  const epConf = DATA_CONFIG.environmentalPressure;
+  const node = ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
+  const altitudePressure = epConf.altitudePressureByBand[String(node.altitudeBand)] ?? 0;
+  const terrainLoad = epConf.terrainLoadScale[String(clamp((state.terrain_load || 0) + node.terrainLoad, 1, 5))] ?? 0;
+  const weatherSeverity = epConf.weatherSeverityScale[String(clamp((state.weather_severity || 0) + node.weatherBias, 0, 4))] ?? 0;
+  const visibilityRisk = epConf.visibilityRiskScale[String(clamp((4 - (state.visibility ?? 2)) + node.visibilityBias, 0, 4))] ?? 0;
+  const timeOfDayRisk = epConf.timeOfDayRiskScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
+  const exposurePersistence = epConf.exposurePersistenceScale[state.persistenceTier || 'fresh'] ?? 0;
+  const w = epConf.weights;
+  const pressureScore = (altitudePressure * w.altitudePressure) +
+    (terrainLoad * w.terrainLoad) +
+    (weatherSeverity * w.weatherSeverity) +
+    (visibilityRisk * w.visibilityRisk) +
+    (timeOfDayRisk * w.timeOfDayRisk) +
+    (exposurePersistence * w.exposurePersistence);
+  return { pressureScore, components: { altitudePressure, terrainLoad, weatherSeverity, visibilityRisk, timeOfDayRisk, exposurePersistence } };
+}
+
+function calculateBodyTolerance(state) {
+  const hydrationState = clamp((state.water / 36) * 100, 0, 100);
+  const nutritionState = clamp((state.food / 36) * 100, 0, 100);
+  const fatiguePenalty = state.fatigue;
+  const exposurePenalty = state.exposure;
+  const bt = (state.functional_capacity * 0.40) +
+    ((G.acclimatization || 0) * 0.35) +
+    (hydrationState * 0.10) +
+    (nutritionState * 0.05) -
+    (fatiguePenalty * 0.05) -
+    (exposurePenalty * 0.05);
+  return clamp(bt, 0, 100);
+}
+
+function pressureDeltaLabel(delta) {
+  if (delta <= -15) return 'Favorable conditions';
+  if (delta <= 10) return 'Demanding conditions';
+  if (delta <= 30) return 'Overexertion zone';
+  return 'Mountain refusal zone';
+}
+
+function pressureBandLabel(score) {
+  if (score <= 25) return 'Low';
+  if (score <= 45) return 'Manageable';
+  if (score <= 65) return 'Severe';
+  if (score <= 85) return 'Very Severe';
+  return 'Extreme';
+}
 function spendResourcesForMinutes(minutes, stage, flags) {
   const burn = TUNING.resourceBurnPerHour[stage] || TUNING.resourceBurnPerHour.APPROACH;
   const hours = minutes / 60;
@@ -1642,12 +1765,14 @@ function applyTimeAndNight(decision, flags) {
     return;
   }
   G.minutesOfDay += (TUNING.timeCostMinutes[decision] || 60);
-  if (G.minutesOfDay >= TUNING.nightStartMinutes) {
+  if (G.minutesOfDay >= 1320) {
     if (!isCampPosition(G.state.position)) {
       flags.push('forced-bivouac');
       const p = TUNING.bivouacPenalty;
-      G.state.fatigue = clamp(G.state.fatigue + p.fatigue, 0, 100);
-      G.state.exposure = clamp(G.state.exposure + p.exposure, 0, 100);
+      G.state.fatigue = clamp(G.state.fatigue + p.fatigue + 12, 0, 100);
+      G.state.exposure = clamp(G.state.exposure + p.exposure + 12, 0, 100);
+      G.persistenceTurns = Math.max(G.persistenceTurns, 8);
+      G.state.persistenceTier = 'critical';
       G.state.functional_capacity = clamp(G.state.functional_capacity + p.capacity, 0, 100);
       G.state.water = Math.max(0, G.state.water - p.water);
       G.state.food = Math.max(0, G.state.food - p.food);
@@ -1690,11 +1815,13 @@ function computeSignals() {
   const vHint = noisy(s.visibility, false);
   const tHint = noisy(s.terrain_load, mods.terrain_noise_zero);
 
-  const combined = s.weather_severity + s.terrain_load;
-  let trend = 'stable';
-  if (combined >= 5) trend = 'worsening';
-  else if (combined <= 1 && s.visibility >= 2) trend = 'improving';
-  else if (s.weather_severity === 0 || (s.weather_severity === 1 && s.visibility >= 2)) trend = 'clearing';
+  const env = calculateEnvironmentalPressure(s);
+  const prevPressure = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : env.pressureScore;
+  const trendDelta = env.pressureScore - prevPressure;
+  let trend = 'steady';
+  if (trendDelta < -4) trend = 'easing';
+  else if (trendDelta > 8) trend = 'worsening fast';
+  else if (trendDelta > 2) trend = 'worsening';
 
   const cogN = cognitiveNoise();
   const envNoise = clamp(s.weather_severity + (3 - s.visibility) + Math.floor(G.whiteWindRisk / 2), 0, 6);
@@ -1705,9 +1832,9 @@ function computeSignals() {
   const confBase = 95 - ((ALT_MOD[s.altitude_band]?.uncertainty_noise || 0) * TUNING.confidence.altitudeCoeff)
     - (s.fatigue * TUNING.confidence.fatigueCoeff)
     - ((TUNING.stage[stage]?.confidencePenalty || 0) * TUNING.confidence.stageCoeff);
-  const confidence = clamp(Math.round(confBase), TUNING.confidence.min, TUNING.confidence.max);
-
-  return { wHint, vHint, tHint, trend, uncertainty, confidence };
+  const altitudePenalty = (ROUTE_NODES.find((n) => n.id === s.position)?.altitudeBand || 0) * 4;
+  const confidence = clamp(Math.round(confBase - altitudePenalty), TUNING.confidence.min, TUNING.confidence.max);
+  return { wHint, vHint, tHint, trend, uncertainty, confidence, mountainPressure: pressureBandLabel(env.pressureScore) };
 }
 
 // ════════════════════════════════════════════════
@@ -1809,16 +1936,16 @@ function renderWatch() {
   clearElement(weatherDots);
   clearElement(visibilityDots);
   clearElement(terrainDots);
-  weatherDots.appendChild(makeDots(sig.wHint));
+  weatherDots.appendChild(makeDots(Math.ceil((sig.wHint + sig.tHint) / 2)));
   visibilityDots.appendChild(makeDots(sig.vHint));
-  terrainDots.appendChild(makeDots(sig.tHint));
+  terrainDots.appendChild(makeDots(Math.ceil(sig.confidence / 25)));
 
   const trendEl = document.getElementById('watch-trend');
-  trendEl.textContent = sig.trend;
-  trendEl.className = 'watch-trend ' + sig.trend;
+  trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
+  trendEl.className = 'watch-trend';
 
   document.getElementById('watch-uncertainty-inline').textContent =
-    `unc: ${sig.uncertainty} · conf ${sig.confidence}%`;
+    `trend ${sig.trend} · confidence ${sig.confidence}%`;
 
   const capLbl = capacityLabel(s.functional_capacity);
   const fatLbl = fatigueLabel(s.fatigue);
@@ -2151,6 +2278,7 @@ function makeDecision(decision) {
   const mod = ALT_MOD[altBand];
   const stage = getCurrentStage();
   const stageMod = TUNING.stage[stage];
+  const actionMod = DATA_CONFIG.actionModifiers[decision] || { fatigueMultiplier:1, exposureMultiplier:1, progress:0 };
 
   let fatMult = mod.fatigue_mult * stageMod.fatigueMult;
   if (['high','extreme','death_zone'].includes(altBand)) {
@@ -2197,7 +2325,7 @@ function makeDecision(decision) {
 
   s.weather_severity = clamp(s.weather_severity + weatherShift, 0, 3);
   s.terrain_load = clamp(s.terrain_load + terrainShift, 0, 3);
-  if (['playa_ancha','canaleta'].includes(s.position) && rng() < 0.35) {
+  if (['cuesta_brava','canaleta'].includes(s.position) && rng() < 0.35) {
     s.terrain_load = clamp(s.terrain_load + 1, 0, 3);
     flags.push('penitentes-field');
   }
@@ -2213,7 +2341,7 @@ function makeDecision(decision) {
       flags.push('terrain-body-block');
     }
     fatigue_delta = (7 + s.terrain_load * 2 + fg) * fatMult;
-    exposure_delta = (6 + s.weather_severity * 2) * stageMod.exposureMult;
+    exposure_delta = (6 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
     if (stage === 'APPROACH') {
       fatigue_delta *= 0.78;
       exposure_delta *= 0.75;
@@ -2226,7 +2354,7 @@ function makeDecision(decision) {
     }
   } else if (decision === 'advance_slowly') {
     fatigue_delta = (4 + s.terrain_load + fg) * fatMult;
-    exposure_delta = (3 + s.weather_severity * 2) * stageMod.exposureMult;
+    exposure_delta = (3 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
     if (stage === 'APPROACH') {
       fatigue_delta *= 0.74;
       exposure_delta *= 0.72;
@@ -2239,8 +2367,8 @@ function makeDecision(decision) {
     }
   } else if (decision === 'wait') {
     const restMap = { APPROACH:-7, HIGH_CAMP:-1, SUMMIT_DAY:1 };
-    fatigue_delta = restMap[stage] * fatMult + fg;
-    exposure_delta = (4 + s.weather_severity * 2) * stageMod.exposureMult;
+    fatigue_delta = restMap[stage] * fatMult * actionMod.fatigueMultiplier + fg;
+    exposure_delta = (4 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
     capacity_delta = -2 + (stage === 'APPROACH' ? 1 : 0) - capPenalty;
   } else if (decision === 'sleep') {
     const campRec = TUNING.sleepRecoveryByCamp[s.position] || { fatigue:-3, capacity:0, exposure:2, noise:1 };
@@ -2249,8 +2377,8 @@ function makeDecision(decision) {
     capacity_delta = campRec.capacity;
     flags.push('slept-at-camp');
   } else {
-    fatigue_delta = (2 + s.terrain_load) * fatMult;
-    exposure_delta = (2 + s.weather_severity) * stageMod.exposureMult;
+    fatigue_delta = (2 + s.terrain_load) * fatMult * actionMod.fatigueMultiplier;
+    exposure_delta = (2 + s.weather_severity) * stageMod.exposureMult * actionMod.exposureMultiplier;
     capacity_delta = -1 - capPenalty;
     flags.push('retreat-initiated');
   }
@@ -2317,6 +2445,14 @@ function makeDecision(decision) {
     G.acclimatization = clamp(G.acclimatization - TUNING.acclimatization.decayPerAdvanceWithoutRest, 0, TUNING.acclimatization.maxValue);
   }
 
+  const altitudeBandNow = ROUTE_NODES.find((n) => n.id === s.position)?.altitudeBand || 0;
+  if (decision === 'sleep' || (decision === 'descend' && altitudeBandNow <= 1)) {
+    G.persistenceTurns = 0;
+  } else if (altitudeBandNow >= 2) {
+    G.persistenceTurns += 1;
+  }
+  s.persistenceTier = getPersistenceTier(G.persistenceTurns);
+
   if (stage === 'HIGH_CAMP' && G.acclimatization < TUNING.acclimatization.thresholdForHighCamp) {
     s.fatigue = clamp(s.fatigue + 4, 0, 100);
     flags.push('poor-acclimatization');
@@ -2336,6 +2472,11 @@ function makeDecision(decision) {
       flags.push('late-summit-push');
     }
   }
+
+  const epResult = calculateEnvironmentalPressure(s);
+  const bt = calculateBodyTolerance(s);
+  const pressureDelta = epResult.pressureScore - bt;
+  G.pressureHistory.push(epResult.pressureScore);
 
   const previous = G.turnLog.length ? G.turnLog[G.turnLog.length - 1].raw : null;
   if (previous && s.weather_severity > previous.weatherSeverity) maybeShowTutorial('weather-deterioration');
@@ -2361,12 +2502,25 @@ function makeDecision(decision) {
     uncertainty: G.signals.uncertainty,
     body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
     raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure, weatherSeverity: s.weather_severity },
+    pressure: {
+      mountainPressure: pressureBandLabel(epResult.pressureScore),
+      deltaLabel: pressureDeltaLabel(pressureDelta),
+    },
     flags: [...flags],
     blocked,
     moved,
     narrativeText,
   };
   G.turnLog.push(logEntry);
+  G.runLogRecords.push({
+    turn: G.turn,
+    location: POS_LABELS[s.position],
+    EP: Number(epResult.pressureScore.toFixed(2)),
+    BT: Number(bt.toFixed(2)),
+    pressureDelta: Number(pressureDelta.toFixed(2)),
+    action: decision,
+    outcome: 'In Progress',
+  });
   addLogEntry(logEntry);
 
   const resourceGone = s.water === 0 && G.consecutiveWater0 >= 3;
@@ -2442,16 +2596,17 @@ function addLogEntry(entry) {
 function classifyOutcome(returnedToHorcones) {
   const s = G.state;
   if (G.turn > G.scenario.max_turns) {
-    return { label: 'Expedition Window Closed — Turns Exhausted', cls: 'outcome-stabilized' };
+    return { label: 'Expedition Window Closed', cls: 'outcome-stabilized' };
   }
   if (s.functional_capacity <= 15) return { label:'Incapacitated', cls:'outcome-collapse' };
   const expCritThreshold = (G.character.id === 'marco') ? 65 : 75;
-  if (s.exposure >= expCritThreshold) return { label:'Systemic Collapse — Exposure', cls:'outcome-collapse' };
-  if (s.fatigue >= 80) return { label:'Systemic Collapse — Fatigue', cls:'outcome-collapse' };
+  if (s.exposure >= 95) return { label:'Fatality', cls:'outcome-collapse' };
+  if (s.exposure >= expCritThreshold) return { label:'Collapse (Exposure)', cls:'outcome-collapse' };
+  if (s.fatigue >= 80) return { label:'Collapse (Fatigue)', cls:'outcome-collapse' };
   if (s.water === 0 || s.food === 0) return { label:'Resource Exhaustion', cls:'outcome-collapse' };
   if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('summit')) return { label:'Summit and Safe Return', cls:'outcome-success' };
-  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('camp_c')) return { label:'High Point and Safe Return', cls:'outcome-retreat' };
-  if (returnedToHorcones) return { label:'Strategic Retreat to Horcones', cls:'outcome-retreat' };
+  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('camp_c')) return { label:'High Point Return', cls:'outcome-retreat' };
+  if (returnedToHorcones) return { label:'Strategic Retreat', cls:'outcome-retreat' };
   if (s.functional_capacity >= 60) return { label:'Stabilized', cls:'outcome-stabilized' };
   return { label:'Marginal Survival', cls:'outcome-stabilized' };
 }
@@ -2516,6 +2671,8 @@ function endRun(returnedToHorcones) {
   else G.consecutiveCollapses = 0;
 
   // save to journal
+  G.runLogRecords = G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label }));
+  try { localStorage.setItem('run_log.json', JSON.stringify(G.runLogRecords, null, 2)); } catch (e) {}
   saveJournalEntry({
     runNum: G.runNumber,
     scenario: sc.name,
@@ -2536,7 +2693,7 @@ function endRun(returnedToHorcones) {
   if (returnedToHorcones) {
     retreatMsg.textContent = 'The expedition ends at Horcones. The true summit is the safe return.';
     retreatMsg.style.display = 'block';
-  } else if (outcome.label === 'Expedition Window Closed — Turns Exhausted') {
+  } else if (outcome.label === 'Expedition Window Closed') {
     retreatMsg.textContent = 'The expedition window closed. Every mountain has a clock you cannot stop.';
     retreatMsg.style.display = 'block';
   } else { retreatMsg.style.display = 'none'; }
@@ -2619,6 +2776,7 @@ function endRun(returnedToHorcones) {
     { label: 'Same scenario + seed', cls: 'btn-primary', onClick: replaySameSeed },
     { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
     { label: 'Choose scenario', cls: 'btn-ghost', onClick: goChooseScenario },
+    { label: 'Export run_log.json', cls: 'btn-ghost', onClick: exportRunLog },
     { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
   ].forEach(({ label, cls, onClick }) => {
     const btn = document.createElement('button');
@@ -2629,6 +2787,17 @@ function endRun(returnedToHorcones) {
   });
 
   showScreen('debrief');
+}
+
+function exportRunLog() {
+  const blob = new Blob([JSON.stringify(G.runLogRecords, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'run_log.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
 }
 
 // FIX: journal navigation helper — records the origin screen
@@ -2745,9 +2914,11 @@ document.addEventListener('keydown', (event) => {
 // ════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════
-buildCharacterGrid();
-initVisualMode();
-initSplashScreen();
+loadDataConfig().finally(() => {
+  buildCharacterGrid();
+  initVisualMode();
+  initSplashScreen();
+});
 </script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+[
+  {"nodeName":"Horcones","altitudeBand":0,"terrainLoad":1,"weatherBias":0,"visibilityBias":0,"timeSensitivity":1,"isCamp":false},
+  {"nodeName":"Horcones Lagoon","altitudeBand":0,"terrainLoad":1,"weatherBias":0,"visibilityBias":0,"timeSensitivity":1,"isCamp":false},
+  {"nodeName":"Confluencia","altitudeBand":0,"terrainLoad":2,"weatherBias":0,"visibilityBias":0,"timeSensitivity":1,"isCamp":true},
+  {"nodeName":"Cuesta Brava","altitudeBand":1,"terrainLoad":3,"weatherBias":1,"visibilityBias":1,"timeSensitivity":2,"isCamp":false},
+  {"nodeName":"Plaza de Mulas","altitudeBand":1,"terrainLoad":2,"weatherBias":1,"visibilityBias":1,"timeSensitivity":2,"isCamp":true},
+  {"nodeName":"Piedras Conway","altitudeBand":2,"terrainLoad":3,"weatherBias":1,"visibilityBias":1,"timeSensitivity":2,"isCamp":false},
+  {"nodeName":"Camp 1 — Canadá","altitudeBand":2,"terrainLoad":3,"weatherBias":2,"visibilityBias":1,"timeSensitivity":2,"isCamp":true},
+  {"nodeName":"Camp 2 — Nido de Cóndores","altitudeBand":3,"terrainLoad":4,"weatherBias":2,"visibilityBias":2,"timeSensitivity":3,"isCamp":true},
+  {"nodeName":"Camp 3 — Cólera","altitudeBand":3,"terrainLoad":4,"weatherBias":3,"visibilityBias":2,"timeSensitivity":3,"isCamp":true},
+  {"nodeName":"Refugio Independencia","altitudeBand":4,"terrainLoad":4,"weatherBias":3,"visibilityBias":3,"timeSensitivity":4,"isCamp":false},
+  {"nodeName":"Portezuelo del Viento","altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":3,"timeSensitivity":4,"isCamp":false},
+  {"nodeName":"La Canaleta","altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":4,"timeSensitivity":4,"isCamp":false},
+  {"nodeName":"Summit","altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":4,"timeSensitivity":4,"isCamp":false}
+]
