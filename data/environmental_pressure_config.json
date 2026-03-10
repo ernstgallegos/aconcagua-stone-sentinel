@@ -41,12 +41,35 @@
     "severe": 35,
     "critical": 50
   },
-  "weights": {
-    "altitudePressure": 0.3,
-    "terrainLoad": 0.15,
-    "weatherSeverity": 0.2,
-    "visibilityRisk": 0.1,
-    "timeOfDayRisk": 0.1,
-    "exposurePersistence": 0.15
+  "simulation": {
+    "dayStartMinutes": 360,
+    "noiseRangeAtZeroConf": 18,
+    "resourceBurnPerHour": {
+      "APPROACH": { "water": 0.33, "food": 0.25 },
+      "HIGH_CAMP": { "water": 0.5, "food": 0.33 },
+      "SUMMIT_DAY": { "water": 0.66, "food": 0.5 }
+    },
+    "baseCosts": { "fatigue": 8, "exposure": 6 },
+    "progressBands": {
+      "fullMax": -15,
+      "moderateMax": 10,
+      "limitedMax": 30,
+      "fullStep": 1,
+      "moderateStep": 1,
+      "limitedStep": 0,
+      "blockedRetreat": true
+    },
+    "bivouacPenalty": {
+      "ep": 24,
+      "fatigue": 24,
+      "exposure": 28,
+      "capacity": 14,
+      "persistenceTurns": 8
+    },
+    "timeWindows": {
+      "summitOptimalStart": 300,
+      "summitOptimalEnd": 660,
+      "summitLateStart": 780
+    }
   }
 }

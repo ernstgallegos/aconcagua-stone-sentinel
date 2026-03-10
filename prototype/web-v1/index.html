@@ -1059,42 +1059,10 @@ function rngWeighted(rng, choices, weights) {
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 const DEFAULT_CONFIG = {
-  nodes: [
-    { nodeName:'Horcones', altitudeBand:0, terrainLoad:1, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:false },
-    { nodeName:'Horcones Lagoon', altitudeBand:0, terrainLoad:1, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:false },
-    { nodeName:'Confluencia', altitudeBand:0, terrainLoad:2, weatherBias:0, visibilityBias:0, timeSensitivity:1, isCamp:true },
-    { nodeName:'Cuesta Brava', altitudeBand:1, terrainLoad:3, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:false },
-    { nodeName:'Plaza de Mulas', altitudeBand:1, terrainLoad:2, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:true },
-    { nodeName:'Piedras Conway', altitudeBand:2, terrainLoad:3, weatherBias:1, visibilityBias:1, timeSensitivity:2, isCamp:false },
-    { nodeName:'Camp 1 — Canadá', altitudeBand:2, terrainLoad:3, weatherBias:2, visibilityBias:1, timeSensitivity:2, isCamp:true },
-    { nodeName:'Camp 2 — Nido de Cóndores', altitudeBand:3, terrainLoad:4, weatherBias:2, visibilityBias:2, timeSensitivity:3, isCamp:true },
-    { nodeName:'Camp 3 — Cólera', altitudeBand:3, terrainLoad:4, weatherBias:3, visibilityBias:2, timeSensitivity:3, isCamp:true },
-    { nodeName:'Refugio Independencia', altitudeBand:4, terrainLoad:4, weatherBias:3, visibilityBias:3, timeSensitivity:4, isCamp:false },
-    { nodeName:'Portezuelo del Viento', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:3, timeSensitivity:4, isCamp:false },
-    { nodeName:'La Canaleta', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:4, timeSensitivity:4, isCamp:false },
-    { nodeName:'Summit', altitudeBand:4, terrainLoad:5, weatherBias:4, visibilityBias:4, timeSensitivity:4, isCamp:false }
-  ],
-  environmentalPressure: {
-    altitudePressureByBand: { 0:0, 1:15, 2:35, 3:60, 4:85 },
-    terrainLoadScale: { 1:10, 2:20, 3:35, 4:50, 5:65 },
-    weatherSeverityScale: { 0:0, 1:10, 2:25, 3:45, 4:70 },
-    visibilityRiskScale: { 0:0, 1:5, 2:15, 3:30, 4:45 },
-    timeOfDayRiskScale: { early:0, optimal:5, late:20, dusk:35, night:55 },
-    exposurePersistenceScale: { fresh:0, sustained:10, cumulative:20, severe:35, critical:50 },
-    weights: { altitudePressure:0.30, terrainLoad:0.15, weatherSeverity:0.20, visibilityRisk:0.10, timeOfDayRisk:0.10, exposurePersistence:0.15 }
-  },
-  actionModifiers: {
-    advance: { progress:20, fatigueMultiplier:1.25, exposureMultiplier:1.10, timeCost:120 },
-    advance_slowly: { progress:10, fatigueMultiplier:0.90, exposureMultiplier:0.95, timeCost:180 },
-    wait: { progress:0, fatigueMultiplier:0.75, exposureMultiplier:1.00, acclimatizationGain:3, timeCost:60 },
-    descend: { progress:-20, fatigueMultiplier:0.85, exposureMultiplier:0.80, riskRelief:'strong', timeCost:120 },
-    sleep: { campOnly:true, persistenceReset:true, fatigueRecovery:18, exposureRecovery:10, acclimatizationGain:6, timeReset:'06:00' }
-  },
-  stageModifiers: {
-    APPROACH: { fatigueMultiplier:0.9, exposureMultiplier:0.85, weatherSeverityBias:0, confidencePenalty:0 },
-    HIGH_CAMP: { fatigueMultiplier:1.2, exposureMultiplier:1.25, weatherSeverityBias:1, confidencePenalty:10 },
-    SUMMIT_DAY: { fatigueMultiplier:1.35, exposureMultiplier:1.45, weatherSeverityBias:1, confidencePenalty:16 }
-  }
+  nodes: [],
+  environmentalPressure: {},
+  actionModifiers: {},
+  stageModifiers: {}
 };
 let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
@@ -1203,48 +1171,7 @@ const CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id))
 const STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
 
 const TUNING = {
-  timeCostMinutes: {
-    advance: DATA_CONFIG.actionModifiers.advance.timeCost,
-    advance_slowly: DATA_CONFIG.actionModifiers.advance_slowly.timeCost,
-    wait: DATA_CONFIG.actionModifiers.wait.timeCost,
-    descend: DATA_CONFIG.actionModifiers.descend.timeCost,
-  },
   dayStartMinutes: 360,
-  nightStartMinutes: 1320,
-  bivouacPenalty: { fatigue: 18, exposure: 22, capacity: -14, water: 2, food: 1 },
-  resourceBurnPerHour: {
-    APPROACH: { water: 0.33, food: 0.25 },
-    HIGH_CAMP: { water: 0.5, food: 0.33 },
-    SUMMIT_DAY: { water: 0.66, food: 0.5 },
-  },
-  sleepRecoveryByCamp: {
-    confluencia: { fatigue: -16, capacity: 6, exposure: -8, noise: -1 },
-    base_camp: { fatigue: -14, capacity: 5, exposure: -7, noise: -1 },
-    camp_a: { fatigue: -8, capacity: 2, exposure: -2, noise: 0 },
-    camp_b: { fatigue: -6, capacity: 1, exposure: -1, noise: 1 },
-    camp_c: { fatigue: -4, capacity: 0, exposure: 1, noise: 1 },
-  },
-  stage: {
-    APPROACH: { fatigueMult: DATA_CONFIG.stageModifiers.APPROACH.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.APPROACH.exposureMultiplier, capPenaltyBonus: -2, weatherWeights: [38,46,12,4], slowProgressBase: 0.86, advanceProgressBase: 0.79, confidencePenalty: DATA_CONFIG.stageModifiers.APPROACH.confidencePenalty / 10 },
-    HIGH_CAMP: { fatigueMult: DATA_CONFIG.stageModifiers.HIGH_CAMP.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.HIGH_CAMP.exposureMultiplier, capPenaltyBonus: 1, weatherWeights: [10,40,28,22], slowProgressBase: 0.58, advanceProgressBase: 0.5, confidencePenalty: DATA_CONFIG.stageModifiers.HIGH_CAMP.confidencePenalty / 10 },
-    SUMMIT_DAY: { fatigueMult: DATA_CONFIG.stageModifiers.SUMMIT_DAY.fatigueMultiplier, exposureMult: DATA_CONFIG.stageModifiers.SUMMIT_DAY.exposureMultiplier, capPenaltyBonus: 3, weatherWeights: [6,30,28,36], slowProgressBase: 0.44, advanceProgressBase: 0.36, confidencePenalty: DATA_CONFIG.stageModifiers.SUMMIT_DAY.confidencePenalty / 10 },
-  },
-  irreversibleIndex: POSITIONS.indexOf('camp_a'),
-  retreatPenaltyAfterIrreversible: { timeMinutes: 60, fatigue: 4, exposure: 4, water: 1 },
-  confidence: { altitudeCoeff: 7, fatigueCoeff: 0.22, stageCoeff: 12, min: 15, max: 95, noiseRangeAtZeroConf: 18 },
-  acclimatization: {
-    gainPerSleepAtCamp: { confluencia: 12, base_camp: 10, camp_a: 8, camp_b: 6, camp_c: 3 },
-    bonusPerDescentFromHigh: 5,
-    decayPerAdvanceWithoutRest: 1,
-    maxValue: 100,
-    thresholdForHighCamp: 30,
-    thresholdForSummitDay: 55,
-  },
-  timeWindows: {
-    summitOptimalStart: 300,
-    summitOptimalEnd: 660,
-    summitLateStart: 780,
-  },
 };
 
 function getStageForPosition(position) {
@@ -1269,15 +1196,6 @@ function getApproachCorridorBonus(position, decision, weatherSeverity, terrainLo
   }
   return 0;
 }
-const ALT_MOD = {
-  approach:   { fatigue_mult:1.0, capacity_penalty:0, uncertainty_noise:0 },
-  base:       { fatigue_mult:1.15, capacity_penalty:1, uncertainty_noise:1 },
-  upper_base: { fatigue_mult:1.2, capacity_penalty:1, uncertainty_noise:1 },
-  high:       { fatigue_mult:1.35, capacity_penalty:2, uncertainty_noise:2 },
-  extreme:    { fatigue_mult:1.55, capacity_penalty:3, uncertainty_noise:3 },
-  death_zone: { fatigue_mult:1.8, capacity_penalty:4, uncertainty_noise:4 },
-};
-
 const CHARACTERS = [
   {
     id: 'valentina',
@@ -1602,7 +1520,7 @@ function startGame() {
   G.consecutiveWater0 = 0;
   G.whiteWindRisk = 0;
   G.day = 1;
-  G.minutesOfDay = TUNING.dayStartMinutes;
+  G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
   G.irreversibleTriggered = false;
   G.irreversibleTurn = null;
   G.runNumber = (G.runNumber || 0) + 1;
@@ -1619,7 +1537,7 @@ function startGame() {
   if (mods.capacity_start)   s.functional_capacity = clamp(s.functional_capacity + mods.capacity_start, 0, 100);
   if (mods.water_start)      s.water      = s.water + mods.water_start;
 
-  if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, TUNING.acclimatization.maxValue);
+  if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, 100);
   s.persistenceTier = 'fresh';
   G.state = s;
 
@@ -1665,7 +1583,7 @@ function confidenceTier(conf) {
   return 'low';
 }
 function metricDisplay(value, confidence) {
-  const spread = Math.round((100 - confidence) / 100 * TUNING.confidence.noiseRangeAtZeroConf);
+  const spread = Math.round((100 - confidence) / 100 * (getSimConfig().noiseRangeAtZeroConf || 18));
   const lo = clamp(value - spread, 0, 100);
   const hi = clamp(value + spread, 0, 100);
   return `${Math.round(lo)}–${Math.round(hi)} · ${confidenceTier(confidence)} conf`;
@@ -1691,36 +1609,47 @@ function getPersistenceTier(turns) {
   return 'fresh';
 }
 
+function getSimConfig() {
+  return DATA_CONFIG.environmentalPressure?.simulation || {};
+}
+
+function getCurrentNode(state = G.state) {
+  return ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
+}
+
+function getActionModifier(action) {
+  return DATA_CONFIG.actionModifiers[action] || { progress: 0, fatigueMultiplier: 1, exposureMultiplier: 1, timeCost: 60 };
+}
+
+function getStageModifier(position = G.state.position) {
+  const stage = getStageForPosition(position);
+  return DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
+}
+
 function calculateEnvironmentalPressure(state) {
   const epConf = DATA_CONFIG.environmentalPressure;
-  const node = ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
+  const node = getCurrentNode(state);
+  const stageMod = getStageModifier(state.position);
   const altitudePressure = epConf.altitudePressureByBand[String(node.altitudeBand)] ?? 0;
-  const terrainLoad = epConf.terrainLoadScale[String(clamp((state.terrain_load || 0) + node.terrainLoad, 1, 5))] ?? 0;
-  const weatherSeverity = epConf.weatherSeverityScale[String(clamp((state.weather_severity || 0) + node.weatherBias, 0, 4))] ?? 0;
-  const visibilityRisk = epConf.visibilityRiskScale[String(clamp((4 - (state.visibility ?? 2)) + node.visibilityBias, 0, 4))] ?? 0;
-  const timeOfDayRisk = epConf.timeOfDayRiskScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
+  const terrainLoad = epConf.terrainLoadScale[String(clamp(node.terrainLoad, 1, 5))] ?? 0;
+  const weatherSeverity = epConf.weatherSeverityScale[String(clamp(state.weather_severity || 0, 0, 4))] ?? 0;
+  const visibilityRisk = epConf.visibilityRiskScale[String(clamp(4 - (state.visibility ?? 2), 0, 4))] ?? 0;
+  const timeOfDayRiskRaw = epConf.timeOfDayRiskScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
+  const timeOfDayRisk = timeOfDayRiskRaw * (node.timeSensitivity || 1);
   const exposurePersistence = epConf.exposurePersistenceScale[state.persistenceTier || 'fresh'] ?? 0;
-  const w = epConf.weights;
-  const pressureScore = (altitudePressure * w.altitudePressure) +
-    (terrainLoad * w.terrainLoad) +
-    (weatherSeverity * w.weatherSeverity) +
-    (visibilityRisk * w.visibilityRisk) +
-    (timeOfDayRisk * w.timeOfDayRisk) +
-    (exposurePersistence * w.exposurePersistence);
+  const pressureScore = altitudePressure + terrainLoad + weatherSeverity + visibilityRisk + timeOfDayRisk + exposurePersistence + (node.weatherBias || 0) + (node.visibilityBias || 0) + (stageMod.weatherSeverityBias || 0);
   return { pressureScore, components: { altitudePressure, terrainLoad, weatherSeverity, visibilityRisk, timeOfDayRisk, exposurePersistence } };
 }
 
 function calculateBodyTolerance(state) {
   const hydrationState = clamp((state.water / 36) * 100, 0, 100);
   const nutritionState = clamp((state.food / 36) * 100, 0, 100);
-  const fatiguePenalty = state.fatigue;
-  const exposurePenalty = state.exposure;
   const bt = (state.functional_capacity * 0.40) +
     ((G.acclimatization || 0) * 0.35) +
     (hydrationState * 0.10) +
     (nutritionState * 0.05) -
-    (fatiguePenalty * 0.05) -
-    (exposurePenalty * 0.05);
+    (state.fatigue * 0.05) -
+    (state.exposure * 0.05);
   return clamp(bt, 0, 100);
 }
 
@@ -1738,18 +1667,19 @@ function pressureBandLabel(score) {
   if (score <= 85) return 'Very Severe';
   return 'Extreme';
 }
-function spendResourcesForMinutes(minutes, stage, flags) {
-  const burn = TUNING.resourceBurnPerHour[stage] || TUNING.resourceBurnPerHour.APPROACH;
+
+function spendResourcesForMinutes(minutes, flags) {
+  const stage = getCurrentStage();
+  const burn = getSimConfig().resourceBurnPerHour?.[stage] || { water: 0.4, food: 0.3 };
   const hours = minutes / 60;
-  const waterBurn = Math.max(1, Math.round(burn.water * hours));
-  const foodBurn = Math.max(1, Math.round(burn.food * hours));
+  const waterBurn = Math.max(1, Math.round((burn.water || 0.4) * hours));
+  const foodBurn = Math.max(1, Math.round((burn.food || 0.3) * hours));
   G.state.water = Math.max(0, G.state.water - waterBurn);
   G.state.food = Math.max(0, G.state.food - foodBurn);
   if (G.state.water === 0) {
     G.consecutiveWater0++;
     flags.push('water-depleted');
     G.state.functional_capacity = clamp(G.state.functional_capacity - 8, 0, 100);
-    if (G.consecutiveWater0 >= 2) flags.push('dehydration-compounding');
   } else {
     G.consecutiveWater0 = 0;
   }
@@ -1758,83 +1688,33 @@ function spendResourcesForMinutes(minutes, stage, flags) {
     G.state.functional_capacity = clamp(G.state.functional_capacity - 5, 0, 100);
   }
 }
-function applyTimeAndNight(decision, flags) {
-  if (decision === 'sleep') {
-    G.day += 1;
-    G.minutesOfDay = TUNING.dayStartMinutes;
-    return;
-  }
-  G.minutesOfDay += (TUNING.timeCostMinutes[decision] || 60);
-  if (G.minutesOfDay >= 1320) {
-    if (!isCampPosition(G.state.position)) {
-      flags.push('forced-bivouac');
-      const p = TUNING.bivouacPenalty;
-      G.state.fatigue = clamp(G.state.fatigue + p.fatigue + 12, 0, 100);
-      G.state.exposure = clamp(G.state.exposure + p.exposure + 12, 0, 100);
-      G.persistenceTurns = Math.max(G.persistenceTurns, 8);
-      G.state.persistenceTier = 'critical';
-      G.state.functional_capacity = clamp(G.state.functional_capacity + p.capacity, 0, 100);
-      G.state.water = Math.max(0, G.state.water - p.water);
-      G.state.food = Math.max(0, G.state.food - p.food);
-    }
-    G.day += 1;
-    G.minutesOfDay = TUNING.dayStartMinutes;
-  }
-}
 
-function cognitiveNoise() {
-  const s = G.state;
-  const ch = G.character;
-  const stage = getCurrentStage();
-  const alt = ALT_MOD[s.altitude_band]?.uncertainty_noise || 0;
-  const fat = Math.max(0, Math.floor((s.fatigue - 60) / 15));
-  const exp = Math.max(0, Math.floor((s.exposure - 50) / 20));
-  const stagePenalty = TUNING.stage[stage]?.confidencePenalty || 0;
-  const charBonus = (ch.mods.cog_noise_bonus || 0);
-  return alt + fat + exp + stagePenalty + charBonus;
+function calculatePerception(state) {
+  const node = getCurrentNode(state);
+  const stageMod = getStageModifier(state.position);
+  const confidenceLevel = clamp(
+    100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0),
+    5,
+    95
+  );
+  const currentEp = calculateEnvironmentalPressure(state).pressureScore;
+  const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
+  const trendEstimate = currentEp > prevEp + 3 ? 'Worsening' : (currentEp < prevEp - 3 ? 'Improving' : 'Holding');
+  const noiseLevel = clamp(Math.round((100 - confidenceLevel) / 12), 0, 8);
+  return { confidenceLevel, trendEstimate, noiseLevel };
 }
 
 function computeSignals() {
-  const s = G.state;
-  const rng = G.rng;
-  const ch = G.character;
-  const mods = ch.mods;
-
-  // euphoria bias
-  let euphoriaShift = 0;
-  const wideEuphoria = mods.wide_euphoria && s.functional_capacity > 60;
-  const normalEuphoria = ['approach','base'].includes(s.altitude_band) && s.fatigue < 40 && s.functional_capacity > 70;
-  if ((wideEuphoria || normalEuphoria) && rngChoice(rng, [0,0,0,1]) === 1) euphoriaShift = -1;
-
-  function noisy(v, noZero) {
-    const jitter = noZero ? 0 : rngChoice(rng, [-1,0,0,1]);
-    return clamp(v + jitter + euphoriaShift, 0, 3);
-  }
-
-  const wHint = noisy(s.weather_severity, mods.weather_noise_zero);
-  const vHint = noisy(s.visibility, false);
-  const tHint = noisy(s.terrain_load, mods.terrain_noise_zero);
-
-  const env = calculateEnvironmentalPressure(s);
-  const prevPressure = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : env.pressureScore;
-  const trendDelta = env.pressureScore - prevPressure;
-  let trend = 'steady';
-  if (trendDelta < -4) trend = 'easing';
-  else if (trendDelta > 8) trend = 'worsening fast';
-  else if (trendDelta > 2) trend = 'worsening';
-
-  const cogN = cognitiveNoise();
-  const envNoise = clamp(s.weather_severity + (3 - s.visibility) + Math.floor(G.whiteWindRisk / 2), 0, 6);
-  const cognitiveLoad = clamp(cogN + Math.floor((100 - s.functional_capacity) / 20), 0, 6);
-  const score = clamp(envNoise + cognitiveLoad + rngChoice(rng, [-1,0,0,1]), 0, 12);
-  const uncertainty = score <= 3 ? 'low' : score <= 7 ? 'medium' : 'high';
-  const stage = getCurrentStage();
-  const confBase = 95 - ((ALT_MOD[s.altitude_band]?.uncertainty_noise || 0) * TUNING.confidence.altitudeCoeff)
-    - (s.fatigue * TUNING.confidence.fatigueCoeff)
-    - ((TUNING.stage[stage]?.confidencePenalty || 0) * TUNING.confidence.stageCoeff);
-  const altitudePenalty = (ROUTE_NODES.find((n) => n.id === s.position)?.altitudeBand || 0) * 4;
-  const confidence = clamp(Math.round(confBase - altitudePenalty), TUNING.confidence.min, TUNING.confidence.max);
-  return { wHint, vHint, tHint, trend, uncertainty, confidence, mountainPressure: pressureBandLabel(env.pressureScore) };
+  const perception = calculatePerception(G.state);
+  return {
+    trend: perception.trendEstimate,
+    uncertainty: perception.noiseLevel,
+    confidence: Math.round(perception.confidenceLevel),
+    mountainPressure: pressureBandLabel(calculateEnvironmentalPressure(G.state).pressureScore),
+    wHint: clamp(G.state.weather_severity, 0, 3),
+    vHint: clamp(G.state.visibility, 0, 3),
+    tHint: clamp(G.state.terrain_load, 0, 3),
+  };
 }
 
 // ════════════════════════════════════════════════
@@ -1921,8 +1801,9 @@ function renderWatch() {
     `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
-  const isOptimal = tm >= TUNING.timeWindows.summitOptimalStart && tm <= TUNING.timeWindows.summitOptimalEnd;
-  const isLate = tm >= TUNING.timeWindows.summitLateStart;
+  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 660, summitLateStart: 780 };
+  const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
+  const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
   const watchTime = document.getElementById('watch-time');
   watchTime.textContent = `Day ${G.day} · ${formatMinutes(tm)}${suffix}`;
@@ -1971,7 +1852,7 @@ function renderWatch() {
   acclEl.textContent = `${accl}/100`;
   acclEl.className = 'body-value ' + acclState;
 
-  const stageBurn = TUNING.resourceBurnPerHour[getCurrentStage()] || TUNING.resourceBurnPerHour.APPROACH;
+  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
   const waterTurns = stageBurn.water > 0 ? Math.floor(s.water / Math.max(stageBurn.water * 2, 1)) : s.water;
   const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
   const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
@@ -2257,16 +2138,174 @@ function setDecisionButtonsEnabled(enabled) {
   });
 }
 
+function applyTimeCost(action) {
+  const actionMod = getActionModifier(action);
+  const sim = getSimConfig();
+  if (action === 'sleep') {
+    G.day += 1;
+    G.minutesOfDay = sim.dayStartMinutes || TUNING.dayStartMinutes;
+    return actionMod.timeCost || 480;
+  }
+  const minutes = actionMod.timeCost || 60;
+  G.minutesOfDay += minutes;
+  return minutes;
+}
+
+function applyBivouacPenalty(state, ep, flags) {
+  const sim = getSimConfig();
+  const biv = sim.bivouacPenalty || { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
+  if (G.minutesOfDay > 1320 && !isCampPosition(state.position)) {
+    flags.push('forced-bivouac');
+    state.fatigue = clamp(state.fatigue + biv.fatigue, 0, 100);
+    state.exposure = clamp(state.exposure + biv.exposure, 0, 100);
+    state.functional_capacity = clamp(state.functional_capacity - (biv.capacity || 12), 0, 100);
+    G.persistenceTurns = Math.max(G.persistenceTurns, biv.persistenceTurns || 8);
+    state.persistenceTier = 'critical';
+    if (G.minutesOfDay >= 1440) {
+      G.day += 1;
+      G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
+    }
+    return ep + (biv.ep || 20);
+  }
+  return ep;
+}
+
+function evaluateOutcome(pressureDelta, actionMod, state) {
+  const nodeIndex = POSITIONS.indexOf(state.position);
+  const progressBands = getSimConfig().progressBands || {
+    fullMax: -15,
+    moderateMax: 10,
+    limitedMax: 30,
+    fullStep: 1,
+    moderateStep: 1,
+    limitedStep: 0,
+    blockedRetreat: true,
+  };
+  let step = 0;
+  let blocked = false;
+  if (pressureDelta <= progressBands.fullMax) step = progressBands.fullStep;
+  else if (pressureDelta <= progressBands.moderateMax) step = progressBands.moderateStep;
+  else if (pressureDelta <= progressBands.limitedMax) step = progressBands.limitedStep;
+  else {
+    blocked = true;
+    if (progressBands.blockedRetreat && actionMod.progress > 0) step = -1;
+  }
+
+  if (actionMod.progress > 0) step = Math.max(0, Math.round(step * (actionMod.progress / 20 || 1)));
+  if (actionMod.progress < 0) step = -1;
+
+  const targetIndex = clamp(nodeIndex + step, 0, POSITIONS.length - 1);
+  const moved = targetIndex !== nodeIndex;
+
+  const pressureFactor = clamp(pressureDelta / 20, 0.5, 2.5);
+  const bases = getSimConfig().baseCosts || { fatigue: 8, exposure: 6 };
+  let fatigueIncrease = bases.fatigue * (actionMod.fatigueMultiplier || 1) * pressureFactor;
+  let exposureIncrease = bases.exposure * (actionMod.exposureMultiplier || 1) * pressureFactor;
+
+  const stageMod = getStageModifier(state.position);
+  fatigueIncrease *= stageMod.fatigueMultiplier || 1;
+  exposureIncrease *= stageMod.exposureMultiplier || 1;
+
+  if (actionMod.fatigueRecovery) fatigueIncrease *= -1;
+  if (actionMod.exposureRecovery) exposureIncrease *= -1;
+
+  let outcome = 'In Progress';
+  if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'Summit and Safe Return';
+
+  return {
+    targetPosition: POSITIONS[targetIndex],
+    progress: targetIndex - nodeIndex,
+    moved,
+    blocked,
+    fatigueIncrease,
+    exposureIncrease,
+    pressureFactor,
+    outcome,
+  };
+}
+
+function updateState(state, result, action) {
+  state.position = result.targetPosition;
+  state.altitude_band = POS_BAND[state.position];
+  G.highestPosIdx = Math.max(G.highestPosIdx, POSITIONS.indexOf(state.position));
+  state.fatigue = clamp(state.fatigue + result.fatigueIncrease, 0, 100);
+  state.exposure = clamp(state.exposure + result.exposureIncrease, 0, 100);
+  if (action === 'sleep') {
+    state.fatigue = clamp(state.fatigue - (getActionModifier('sleep').fatigueRecovery || 18), 0, 100);
+    state.exposure = clamp(state.exposure - (getActionModifier('sleep').exposureRecovery || 10), 0, 100);
+  }
+  state.functional_capacity = clamp(state.functional_capacity - (result.pressureFactor * 2), 0, 100);
+  if (action === 'wait') {
+    G.acclimatization = clamp(G.acclimatization + (getActionModifier('wait').acclimatizationGain || 0), 0, 100);
+  }
+  if (action === 'sleep') {
+    G.acclimatization = clamp(G.acclimatization + (getActionModifier('sleep').acclimatizationGain || 0), 0, 100);
+  }
+}
+
+function resolveTurn(state, action) {
+  const flags = [];
+  const actionMod = getActionModifier(action);
+
+  const actionMinutes = applyTimeCost(action);
+  spendResourcesForMinutes(Math.max(actionMinutes, 30), flags);
+
+  if (action !== 'sleep') {
+    state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
+    state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
+  }
+
+  if (action === 'sleep') {
+    G.persistenceTurns = 0;
+  } else if (getCurrentNode(state).altitudeBand >= 2) {
+    G.persistenceTurns += 1;
+  }
+  state.persistenceTier = getPersistenceTier(G.persistenceTurns);
+
+  let epResult = calculateEnvironmentalPressure(state);
+  epResult.pressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
+  const BT = calculateBodyTolerance(state);
+  const pressureDelta = epResult.pressureScore - BT;
+
+  const result = evaluateOutcome(pressureDelta, actionMod, state);
+  updateState(state, result, action);
+
+  const perception = calculatePerception(state);
+  const supportedOutcomes = [
+    'Summit and Safe Return','High Point Return','Strategic Retreat','Incapacitated','Collapse (Fatigue)','Collapse (Exposure)','Resource Exhaustion','Expedition Window Closed','Fatality'
+  ];
+  let outcome = result.outcome;
+  if (state.fatigue >= 95) outcome = 'Collapse (Fatigue)';
+  else if (state.exposure >= 95) outcome = 'Collapse (Exposure)';
+  else if (state.functional_capacity <= 10) outcome = 'Incapacitated';
+  else if (state.water === 0 && G.consecutiveWater0 >= 3) outcome = 'Resource Exhaustion';
+  else if (G.turn >= G.scenario.max_turns) outcome = 'Expedition Window Closed';
+  else if (!supportedOutcomes.includes(outcome)) outcome = 'Strategic Retreat';
+
+  G.pressureHistory.push(epResult.pressureScore);
+
+  G.runLogRecords.push({
+    turn: G.turn,
+    location: POS_LABELS[state.position],
+    EP: Number(epResult.pressureScore.toFixed(2)),
+    BT: Number(BT.toFixed(2)),
+    pressureDelta: Number(pressureDelta.toFixed(2)),
+    action,
+    progress: result.progress,
+    fatigue: Number(state.fatigue.toFixed(2)),
+    exposure: Number(state.exposure.toFixed(2)),
+    confidence: Math.round(perception.confidenceLevel),
+    outcome,
+  });
+
+  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception, outcome };
+}
+
 function makeDecision(decision) {
   setDecisionButtonsEnabled(false);
   const decisionPanel = document.querySelector('.decision-panel');
   if (decisionPanel) decisionPanel.classList.add('processing');
   const s = G.state;
-  const sc = G.scenario;
-  const ch = G.character;
-  const rng = G.rng;
-  const bias = sc.bias;
-  const turn = G.turn;
 
   if (decision === 'sleep' && !isCampPosition(s.position)) {
     if (decisionPanel) decisionPanel.classList.remove('processing');
@@ -2274,223 +2313,10 @@ function makeDecision(decision) {
     return;
   }
 
-  const altBand = s.altitude_band;
-  const mod = ALT_MOD[altBand];
-  const stage = getCurrentStage();
-  const stageMod = TUNING.stage[stage];
-  const actionMod = DATA_CONFIG.actionModifiers[decision] || { fatigueMultiplier:1, exposureMultiplier:1, progress:0 };
-
-  let fatMult = mod.fatigue_mult * stageMod.fatigueMult;
-  if (['high','extreme','death_zone'].includes(altBand)) {
-    if (ch.id === 'marco') fatMult = 1.2 * stageMod.fatigueMult;
-    if (ch.id === 'valentina') fatMult = Math.max(1.2, fatMult - 0.15);
-  }
-  const capPenalty = mod.capacity_penalty + stageMod.capPenaltyBonus;
-
-  const flags = [];
-  let moved = false;
-  let blocked = false;
-  let posChanged = false;
-
-  let weatherShift = rngWeighted(rng, [-1,0,0,1], stageMod.weatherWeights) + (bias.weather_deterioration || 0);
-  if (sc._equinoxTrapTurn && turn === sc._equinoxTrapTurn) { weatherShift += 2; flags.push('equinox-trap'); }
-  const windowTurns = new Set(bias.window_turns || []);
-  if (windowTurns.has(turn)) {
-    weatherShift -= 2;
-    if (turn === Math.min(...(bias.window_turns||[turn]))) flags.push('weather-window-open');
-  }
-  const maxWindow = bias.window_turns && bias.window_turns.length ? Math.max(...bias.window_turns) : -1;
-  if (maxWindow > 0 && turn === maxWindow + 1) {
-    weatherShift += (bias.post_window_deterioration || 0);
-    flags.push('weather-window-closed');
-  }
-
-  const windySector = ['portezuelo','canaleta','summit','camp_c'].includes(s.position);
-  const precursor = (s.visibility >= 2 && (s.weather_severity <= 1 || windySector) && rng() < (stage === 'SUMMIT_DAY' ? 0.32 : 0.22));
-  if (precursor) {
-    G.whiteWindRisk = clamp(G.whiteWindRisk + 2, 0, 6);
-    flags.push('white-wind-precursor');
-  } else {
-    G.whiteWindRisk = clamp(G.whiteWindRisk - 1, 0, 6);
-  }
-  const whiteWindHit = G.whiteWindRisk >= 4 && rng() < (windySector ? 0.45 : 0.25);
-  if (whiteWindHit) {
-    weatherShift += 2;
-    flags.push('white-wind-hit');
-  }
-
-  let terrainShift = decision === 'wait' && s.terrain_load > 0
-    ? rngChoice(rng, [-1,-1,0,0,0,1]) + (bias.terrain_growth || 0)
-    : rngChoice(rng, [-1,0,0,1,1]) + (bias.terrain_growth || 0);
-
-  s.weather_severity = clamp(s.weather_severity + weatherShift, 0, 3);
-  s.terrain_load = clamp(s.terrain_load + terrainShift, 0, 3);
-  if (['cuesta_brava','canaleta'].includes(s.position) && rng() < 0.35) {
-    s.terrain_load = clamp(s.terrain_load + 1, 0, 3);
-    flags.push('penitentes-field');
-  }
-  s.visibility = clamp(3 - s.weather_severity + rngChoice(rng, [-1,0,1]), 0, 3);
-  if (whiteWindHit) s.visibility = 0;
-
-  let fatigue_delta = 0, exposure_delta = 0, capacity_delta = 0;
-  const fg = bias.fatigue_growth || 0;
-
-  if (decision === 'advance') {
-    if (s.fatigue > 65 && s.terrain_load === 3) {
-      blocked = true;
-      flags.push('terrain-body-block');
-    }
-    fatigue_delta = (7 + s.terrain_load * 2 + fg) * fatMult;
-    exposure_delta = (6 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
-    if (stage === 'APPROACH') {
-      fatigue_delta *= 0.78;
-      exposure_delta *= 0.75;
-    }
-    capacity_delta = -4 - s.weather_severity - s.terrain_load - capPenalty;
-    const corridorBonus = getApproachCorridorBonus(s.position, decision, s.weather_severity, s.terrain_load);
-    const baseChance = stageMod.advanceProgressBase - (s.weather_severity * 0.1) - (s.fatigue * 0.0025) + corridorBonus;
-    if (!blocked && s.terrain_load < 3 && rng() < clamp(baseChance, 0.15, 0.92)) {
-      moved = true; posChanged = true;
-    }
-  } else if (decision === 'advance_slowly') {
-    fatigue_delta = (4 + s.terrain_load + fg) * fatMult;
-    exposure_delta = (3 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
-    if (stage === 'APPROACH') {
-      fatigue_delta *= 0.74;
-      exposure_delta *= 0.72;
-    }
-    capacity_delta = -3 - s.weather_severity - s.terrain_load - capPenalty;
-    const corridorBonus = getApproachCorridorBonus(s.position, decision, s.weather_severity, s.terrain_load);
-    const baseChance = stageMod.slowProgressBase - (s.weather_severity * 0.08) - (s.fatigue * 0.002) + corridorBonus;
-    if (s.terrain_load < 3 && rng() < clamp(baseChance, 0.12, 0.93)) {
-      moved = true; posChanged = true;
-    }
-  } else if (decision === 'wait') {
-    const restMap = { APPROACH:-7, HIGH_CAMP:-1, SUMMIT_DAY:1 };
-    fatigue_delta = restMap[stage] * fatMult * actionMod.fatigueMultiplier + fg;
-    exposure_delta = (4 + s.weather_severity * 2) * stageMod.exposureMult * actionMod.exposureMultiplier;
-    capacity_delta = -2 + (stage === 'APPROACH' ? 1 : 0) - capPenalty;
-  } else if (decision === 'sleep') {
-    const campRec = TUNING.sleepRecoveryByCamp[s.position] || { fatigue:-3, capacity:0, exposure:2, noise:1 };
-    fatigue_delta = campRec.fatigue;
-    exposure_delta = campRec.exposure + (s.weather_severity >= 2 && stage !== 'APPROACH' ? 2 : 0);
-    capacity_delta = campRec.capacity;
-    flags.push('slept-at-camp');
-  } else {
-    fatigue_delta = (2 + s.terrain_load) * fatMult * actionMod.fatigueMultiplier;
-    exposure_delta = (2 + s.weather_severity) * stageMod.exposureMult * actionMod.exposureMultiplier;
-    capacity_delta = -1 - capPenalty;
-    flags.push('retreat-initiated');
-  }
-
-  const charExpMod = ch.mods.exposure_per_turn || 0;
-  const charExpHighMod = (['high','extreme','death_zone'].includes(altBand) && ch.mods.exposure_high_per_turn) ? ch.mods.exposure_high_per_turn : 0;
-
-  const fatigueBefore = s.fatigue;
-  s.fatigue = clamp(s.fatigue + Math.round(fatigue_delta), 0, 100);
-  s.exposure = clamp(s.exposure + Math.round(exposure_delta) + charExpMod + charExpHighMod, 0, 100);
-  s.functional_capacity = clamp(
-    s.functional_capacity + Math.round(capacity_delta) - Math.floor(fatigueBefore / 25),
-    0, 100
-  );
-
-  const curIdx = POSITIONS.indexOf(s.position);
-  if (posChanged && curIdx < POSITIONS.length - 1) {
-    s.position = POSITIONS[curIdx + 1];
-    s.altitude_band = POS_BAND[s.position];
-    const newIdx = curIdx + 1;
-    if (newIdx > G.highestPosIdx) G.highestPosIdx = newIdx;
-    if (['high','extreme','death_zone'].includes(s.altitude_band) && !G.allFlags.includes('high-altitude-entered')) {
-      flags.push('high-altitude-entered');
-    }
-  } else if (decision === 'descend') {
-    if (s.position === 'summit') {
-      s.position = 'camp_c';
-    } else if (curIdx > 0) {
-      s.position = POSITIONS[curIdx - 1];
-    }
-    s.altitude_band = POS_BAND[s.position];
-  }
-
-  if (!G.irreversibleTriggered && POSITIONS.indexOf(s.position) >= TUNING.irreversibleIndex) {
-    G.irreversibleTriggered = true;
-    G.irreversibleTurn = G.turn;
-    flags.push('first-irreversible-point');
-  }
-
-  if (decision === 'descend' && G.irreversibleTriggered) {
-    const rp = TUNING.retreatPenaltyAfterIrreversible;
-    s.fatigue = clamp(s.fatigue + rp.fatigue, 0, 100);
-    s.exposure = clamp(s.exposure + rp.exposure, 0, 100);
-    s.water = Math.max(0, s.water - rp.water);
-    G.minutesOfDay += rp.timeMinutes;
-    flags.push('retreat-after-irreversible');
-  }
-
-  const actionMinutes = decision === 'sleep' ? (TUNING.nightStartMinutes - G.minutesOfDay) : (TUNING.timeCostMinutes[decision] || 60);
-  spendResourcesForMinutes(Math.max(actionMinutes, 30), stage, flags);
-  applyTimeAndNight(decision, flags);
-
-  if (decision === 'advance' || decision === 'advance_slowly') G.consecutiveAdvances++;
-  else G.consecutiveAdvances = 0;
-
-  if (decision === 'sleep' && isCampPosition(s.position)) {
-    const gain = TUNING.acclimatization.gainPerSleepAtCamp[s.position] || 0;
-    G.acclimatization = clamp(G.acclimatization + gain, 0, TUNING.acclimatization.maxValue);
-    if (POSITIONS.indexOf(s.position) < G.highestPosIdx) {
-      G.acclimatization = clamp(G.acclimatization + TUNING.acclimatization.bonusPerDescentFromHigh, 0, TUNING.acclimatization.maxValue);
-    }
-  }
-  if (G.consecutiveAdvances >= 3) {
-    G.acclimatization = clamp(G.acclimatization - TUNING.acclimatization.decayPerAdvanceWithoutRest, 0, TUNING.acclimatization.maxValue);
-  }
-
-  const altitudeBandNow = ROUTE_NODES.find((n) => n.id === s.position)?.altitudeBand || 0;
-  if (decision === 'sleep' || (decision === 'descend' && altitudeBandNow <= 1)) {
-    G.persistenceTurns = 0;
-  } else if (altitudeBandNow >= 2) {
-    G.persistenceTurns += 1;
-  }
-  s.persistenceTier = getPersistenceTier(G.persistenceTurns);
-
-  if (stage === 'HIGH_CAMP' && G.acclimatization < TUNING.acclimatization.thresholdForHighCamp) {
-    s.fatigue = clamp(s.fatigue + 4, 0, 100);
-    flags.push('poor-acclimatization');
-  }
-  if (stage === 'SUMMIT_DAY') {
-    if (G.acclimatization < TUNING.acclimatization.thresholdForSummitDay) {
-      s.fatigue = clamp(s.fatigue + 6, 0, 100);
-      s.exposure = clamp(s.exposure + 4, 0, 100);
-      flags.push('poor-acclimatization');
-    }
-    if (G.minutesOfDay >= TUNING.timeWindows.summitOptimalStart && G.minutesOfDay <= TUNING.timeWindows.summitOptimalEnd) {
-      s.fatigue = clamp(Math.round(s.fatigue * 0.9), 0, 100);
-      flags.push('optimal-summit-window');
-    } else if (G.minutesOfDay >= TUNING.timeWindows.summitLateStart) {
-      s.weather_severity = clamp(s.weather_severity + 1, 0, 3);
-      s.exposure = clamp(s.exposure + 4, 0, 100);
-      flags.push('late-summit-push');
-    }
-  }
-
-  const epResult = calculateEnvironmentalPressure(s);
-  const bt = calculateBodyTolerance(s);
-  const pressureDelta = epResult.pressureScore - bt;
-  G.pressureHistory.push(epResult.pressureScore);
-
-  const previous = G.turnLog.length ? G.turnLog[G.turnLog.length - 1].raw : null;
-  if (previous && s.weather_severity > previous.weatherSeverity) maybeShowTutorial('weather-deterioration');
-  if (s.fatigue >= 50) maybeShowTutorial('fatigue-50');
-
-  const expCritThreshold = (ch.id === 'marco') ? (ch.mods.exposure_crit_threshold || 65) : 75;
-  if (s.exposure >= expCritThreshold && !G.allFlags.includes('critical-exposure')) flags.push('critical-exposure');
-  if (s.fatigue >= 80 && !G.allFlags.includes('critical-fatigue')) flags.push('critical-fatigue');
-
-  G.allFlags.push(...flags);
-
+  const turnResult = resolveTurn(s, decision);
   G.signals = computeSignals();
   renderWatch();
-  const narrativeText = renderNarrative(decision, G.signals, flags);
+  const narrativeText = renderNarrative(decision, G.signals, turnResult.flags);
 
   const logEntry = {
     turn: G.turn,
@@ -2502,33 +2328,18 @@ function makeDecision(decision) {
     uncertainty: G.signals.uncertainty,
     body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
     raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure, weatherSeverity: s.weather_severity },
-    pressure: {
-      mountainPressure: pressureBandLabel(epResult.pressureScore),
-      deltaLabel: pressureDeltaLabel(pressureDelta),
-    },
-    flags: [...flags],
-    blocked,
-    moved,
+    pressure: { mountainPressure: pressureBandLabel(turnResult.EP), deltaLabel: pressureDeltaLabel(turnResult.pressureDelta) },
+    flags: [...turnResult.flags],
+    blocked: turnResult.result.blocked,
+    moved: turnResult.result.moved,
     narrativeText,
   };
   G.turnLog.push(logEntry);
-  G.runLogRecords.push({
-    turn: G.turn,
-    location: POS_LABELS[s.position],
-    EP: Number(epResult.pressureScore.toFixed(2)),
-    BT: Number(bt.toFixed(2)),
-    pressureDelta: Number(pressureDelta.toFixed(2)),
-    action: decision,
-    outcome: 'In Progress',
-  });
+  G.allFlags.push(...turnResult.flags);
   addLogEntry(logEntry);
 
-  const resourceGone = s.water === 0 && G.consecutiveWater0 >= 3;
   const returnedToHorcones = s.position === 'horcones' && (decision === 'descend' || G.highestPosIdx > 0);
-  const ended = returnedToHorcones ||
-                s.functional_capacity <= 15 ||
-                G.turn >= sc.max_turns ||
-                resourceGone;
+  const ended = returnedToHorcones || turnResult.outcome !== 'Strategic Retreat' && turnResult.outcome !== 'In Progress';
 
   if (ended) {
     if (decisionPanel) decisionPanel.classList.remove('processing');
@@ -2544,7 +2355,6 @@ function makeDecision(decision) {
     if (decisionPanel) decisionPanel.classList.remove('processing');
   }, 400);
 }
-
 
 // ════════════════════════════════════════════════
 // LOG ENTRY
@@ -2595,20 +2405,16 @@ function addLogEntry(entry) {
 // ════════════════════════════════════════════════
 function classifyOutcome(returnedToHorcones) {
   const s = G.state;
-  if (G.turn > G.scenario.max_turns) {
-    return { label: 'Expedition Window Closed', cls: 'outcome-stabilized' };
-  }
+  if (G.turn > G.scenario.max_turns) return { label: 'Expedition Window Closed', cls: 'outcome-stabilized' };
+  if (s.exposure >= 98 || s.functional_capacity <= 5) return { label: 'Fatality', cls: 'outcome-collapse' };
   if (s.functional_capacity <= 15) return { label:'Incapacitated', cls:'outcome-collapse' };
-  const expCritThreshold = (G.character.id === 'marco') ? 65 : 75;
-  if (s.exposure >= 95) return { label:'Fatality', cls:'outcome-collapse' };
-  if (s.exposure >= expCritThreshold) return { label:'Collapse (Exposure)', cls:'outcome-collapse' };
-  if (s.fatigue >= 80) return { label:'Collapse (Fatigue)', cls:'outcome-collapse' };
+  if (s.exposure >= 95) return { label:'Collapse (Exposure)', cls:'outcome-collapse' };
+  if (s.fatigue >= 95) return { label:'Collapse (Fatigue)', cls:'outcome-collapse' };
   if (s.water === 0 || s.food === 0) return { label:'Resource Exhaustion', cls:'outcome-collapse' };
   if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('summit')) return { label:'Summit and Safe Return', cls:'outcome-success' };
   if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('camp_c')) return { label:'High Point Return', cls:'outcome-retreat' };
   if (returnedToHorcones) return { label:'Strategic Retreat', cls:'outcome-retreat' };
-  if (s.functional_capacity >= 60) return { label:'Stabilized', cls:'outcome-stabilized' };
-  return { label:'Marginal Survival', cls:'outcome-stabilized' };
+  return { label:'Strategic Retreat', cls:'outcome-retreat' };
 }
 
 function findTurningPoint() {

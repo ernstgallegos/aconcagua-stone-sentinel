@@ -177,19 +177,20 @@ The root viewer currently ships these bundled JSONL runs:
 For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) immediately after each run.
 
 
-## Prototype Web v1.1 — Environmental Pressure Engine
+## Prototype Web v1.2 — Environmental Pressure Engine
 
-The web prototype now follows an environmental-dominance simulation model:
+The web prototype now follows a unified environmental-dominance resolution pipeline:
 
-`ENVIRONMENT → Environmental Pressure → Body Response → Player Perception → Player Decision → Outcome`
+`Environment → Environmental Pressure (EP) → Body Tolerance (BT) → Pressure Delta → Action Modifier → Outcome`
 
 Core changes:
 
 - Data-driven simulation files under `/data` (`nodes.json`, `environmental_pressure_config.json`, `action_modifiers.json`, `stage_modifiers.json`).
-- Environmental Pressure and Body Tolerance calculations with a Pressure Delta interpretation layer.
-- Node-based route model, stage modifiers, bivouac penalties after 22:00, and persistence escalation.
-- Perception-first UI output (Mountain Pressure, Trend, Confidence) with hidden raw EP/BT values.
-- Turn-by-turn run log export (`run_log.json`) from debrief.
+- Single authoritative `resolveTurn(state, action)` engine for all turn consequences.
+- Environmental Pressure and Body Tolerance calculations with pressure-band progress resolution.
+- Node-based route model, stage modifiers, and bivouac penalties integrated directly in the simulation engine.
+- Perception model (`calculatePerception`) exposing only Mountain Pressure, Trend, and Confidence to the player.
+- Turn-by-turn run log export (`run_log.json`) with EP/BT/delta, progress, physiology, confidence, and outcome fields.
 
 See `/docs/simulation_engine.md` for full mechanics.
 
