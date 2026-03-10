@@ -2720,10 +2720,11 @@ document.addEventListener('keydown', (event) => {
 // ════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════
+initVisualMode();
+initSplashScreen();
+
 loadDataConfig().finally(() => {
   buildCharacterGrid();
-  initVisualMode();
-  initSplashScreen();
 });
 </script>
 </body>
