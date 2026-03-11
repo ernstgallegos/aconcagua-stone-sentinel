@@ -9,6 +9,18 @@ SemVer versioning will be enforced starting with the first tagged release. Until
 
 ## [Unreleased]
 
+### Changed
+- Prototype Web upgraded to **v1.3** canonical engine contract with single-turn authority in `resolveTurn(state, action)`.
+- Route progression migrated to canonical 15-node sequence from `data/nodes.json` (including `Cambio de Pendiente (5300m)`, `El Balcón Amarillo (5800m)`, `La Travesía`).
+- Outcomes unified to canonical public set and `Rescue` implemented as real systemic outcome.
+- Character system moved to structured data (`data/characters.json`) with engine-level influence on BT/perception and resource/fatigue dynamics.
+- Run log schema expanded with stage, node, day/time, character, and trend estimate.
+
+### Added
+- `docs/architecture.md` with active vs frozen prototype boundaries and v1.3 flow.
+- `data/outcomes.json` and `data/characters.json` as new canonical sources.
+
+
 ### Added
 - Prototype Web v1.1 Environmental Pressure Engine documentation at `docs/simulation_engine.md`.
 - Data-driven web-v1 simulation configs in `/data` (`nodes`, environmental pressure, action modifiers, and stage modifiers).

@@ -1088,7 +1088,9 @@ const DEFAULT_CONFIG = {
   nodes: [],
   environmentalPressure: {},
   actionModifiers: {},
-  stageModifiers: {}
+  stageModifiers: {},
+  characters: [],
+  outcomes: []
 };
 let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
@@ -1150,6 +1152,8 @@ async function loadDataConfig() {
     ['environmentalPressure', '../../data/environmental_pressure_config.json'],
     ['actionModifiers', '../../data/action_modifiers.json'],
     ['stageModifiers', '../../data/stage_modifiers.json'],
+    ['characters', '../../data/characters.json'],
+    ['outcomes', '../../data/outcomes.json'],
   ];
   for (const [key, path] of files) {
     try {
@@ -1160,110 +1164,48 @@ async function loadDataConfig() {
       console.warn(`Using default config for ${key}`, error);
     }
   }
+  rebuildRouteData();
   G.modelReady = true;
 }
 
 // ════════════════════════════════════════════════
 // STATIC DATA
 // ════════════════════════════════════════════════
-const POSITIONS = [
-  'horcones','horcones_lagoon','confluencia','cuesta_brava','base_camp',
-  'piedras_conway','camp_a','camp_b','camp_c','independencia','portezuelo','canaleta','summit'
-];
-const POS_LABELS = {
-  horcones:'Horcones', horcones_lagoon:'Horcones Lagoon', confluencia:'Confluencia',
-  cuesta_brava:'Cuesta Brava', base_camp:'Plaza de Mulas', piedras_conway:'Piedras Conway',
-  camp_a:'Camp 1 — Canadá', camp_b:'Camp 2 — Nido de Cóndores', camp_c:'Camp 3 — Cólera',
-  independencia:'Refugio Independencia', portezuelo:'Portezuelo del Viento', canaleta:'La Canaleta', summit:'Summit'
-};
-const POS_ALT = {
-  horcones:'2,950 m', horcones_lagoon:'3,050 m', confluencia:'3,390 m', cuesta_brava:'~4,000 m',
-  base_camp:'4,350 m', piedras_conway:'~4,750 m', camp_a:'5,050 m', camp_b:'5,560 m',
-  camp_c:'5,970 m', independencia:'6,380 m', portezuelo:'~6,500 m', canaleta:'6,700 m', summit:'6,962 m'
-};
-const POS_BAND = {
-  horcones:'approach', horcones_lagoon:'approach', confluencia:'approach', cuesta_brava:'approach',
-  base_camp:'base', piedras_conway:'upper_base', camp_a:'high', camp_b:'high',
-  camp_c:'extreme', independencia:'extreme', portezuelo:'death_zone', canaleta:'death_zone', summit:'death_zone',
-};
-const ROUTE_NODES = POSITIONS.map((id, idx) => {
-  const src = DATA_CONFIG.nodes[idx] || DATA_CONFIG.nodes[DATA_CONFIG.nodes.length - 1];
-  const fallbackAltitudeBand = idx <= 4 ? 0 : idx <= 8 ? 1 : 2;
-  const safeNode = src || {
-    altitudeBand: fallbackAltitudeBand,
-    terrainLoad: idx <= 4 ? 1 : idx <= 8 ? 2 : 3,
-    weatherBias: idx <= 4 ? 0 : 1,
-    visibilityBias: idx <= 4 ? 0 : 1,
-    timeSensitivity: idx <= 4 ? 1 : 2,
-    isCamp: ['confluencia', 'base_camp', 'camp_a', 'camp_b', 'camp_c'].includes(id),
-  };
-  return {
-    id,
-    name: POS_LABELS[id],
-    altitudeBand: safeNode.altitudeBand,
-    terrainLoad: safeNode.terrainLoad,
-    weatherBias: safeNode.weatherBias,
-    visibilityBias: safeNode.visibilityBias,
-    timeSensitivity: safeNode.timeSensitivity,
-    isCamp: !!safeNode.isCamp,
-    stage: idx <= 4 ? 'APPROACH' : idx <= 8 ? 'HIGH_CAMP' : 'SUMMIT_DAY',
-  };
-});
-const CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
-const STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
+let ROUTE_NODES = [];
+let POSITIONS = [];
+let POS_LABELS = {};
+let POS_ALT = {};
+let POS_BAND = {};
+let CAMP_POSITIONS = new Set();
+let STAGE_BY_POSITION = {};
+let CANONICAL_OUTCOMES = new Set();
 
-const TUNING = {
-  dayStartMinutes: 360,
-};
-
-function getStageForPosition(position) {
-  return STAGE_BY_POSITION[position] || 'APPROACH';
-}
-function isCampPosition(position) {
-  return CAMP_POSITIONS.has(position);
+function rebuildRouteData() {
+  ROUTE_NODES = (DATA_CONFIG.nodes || []).map((node, idx) => ({
+    id: node.nodeId || `node_${idx}`,
+    name: node.nodeName,
+    altitudeMeters: node.altitudeMeters || null,
+    altitudeBand: node.altitudeBand,
+    terrainLoad: node.terrainLoad,
+    weatherBias: node.weatherBias,
+    visibilityBias: node.visibilityBias,
+    timeSensitivity: node.timeSensitivity,
+    isCamp: !!node.isCamp,
+    stage: node.stageHint || (idx <= 4 ? 'APPROACH' : idx <= 10 ? 'HIGH_CAMP' : 'SUMMIT_DAY'),
+    routeIndex: node.routeIndex ?? idx,
+  })).sort((a, b) => a.routeIndex - b.routeIndex);
+  POSITIONS = ROUTE_NODES.map((n) => n.id);
+  POS_LABELS = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = n.name; return acc; }, {});
+  POS_ALT = ROUTE_NODES.reduce((acc, n) => {
+    acc[n.id] = n.altitudeMeters ? `${n.altitudeMeters.toLocaleString('en-US')} m` : '—';
+    return acc;
+  }, {});
+  POS_BAND = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = `band_${n.altitudeBand}`; return acc; }, {});
+  CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
+  STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
+  CANONICAL_OUTCOMES = new Set(DATA_CONFIG.outcomes || []);
 }
 
-function getApproachCorridorBonus(position, decision, weatherSeverity, terrainLoad) {
-  if (decision !== 'advance' && decision !== 'advance_slowly') return 0;
-
-  // Route realism: Horcones -> Confluencia and Confluencia -> Plaza de Mulas
-  // should be broadly achievable for most users unless conditions are clearly bad.
-  if (position === 'horcones') {
-    if (weatherSeverity <= 1 && terrainLoad <= 1) return 0.22;
-    if (weatherSeverity <= 2 && terrainLoad <= 2) return 0.12;
-  }
-  if (position === 'confluencia') {
-    if (weatherSeverity <= 1 && terrainLoad <= 1) return 0.17;
-    if (weatherSeverity <= 2 && terrainLoad <= 2) return 0.08;
-  }
-  return 0;
-}
-const CHARACTERS = [
-  {
-    id: 'valentina',
-    name: 'Valentina Quispe',
-    role: 'High-Mountain Guide',
-    bio: 'Born in Mendoza. Twelve seasons on the Horcones and Polish Traverse routes. Her knowledge of the terrain is not learned — it is accumulated. She moves slower than she could. She finishes more than most.',
-    traits: ['Reads terrain shifts before others do.','The altitude doesn\'t surprise her body. She\'s been here before.'],
-    mods: { fatigue_start:-8, terrain_noise_zero:true, alt_mult_high_bonus:-0.15, exposure_per_turn:1 },
-  },
-  {
-    id: 'marco',
-    name: 'Marco Ferretti',
-    role: 'Technical Mountaineer',
-    bio: 'Eight expeditions across four continents. Trained in the Alps, tested in the Karakoram. Efficient at altitude — his body adapts fast and spends little. He has never learned to be cold.',
-    traits: ['At altitude, his body does what others can\'t sustain.','Cold is the one condition he hasn\'t solved.'],
-    mods: { capacity_start:5, alt_mult_high:1.2, weather_noise_zero:true, exposure_high_per_turn:3, exposure_crit_threshold:65 },
-  },
-  {
-    id: 'diego',
-    name: 'Diego Salinas',
-    role: 'Elite Endurance Athlete',
-    bio: 'Three Ironman finishes. Two ultra-trail podiums. First expedition above 5,000 m. His body is a machine built for output — but the mountain does not reward output. It rewards patience he hasn\'t needed until now.',
-    traits: ['Peak physical condition. Every physiological baseline starts higher.','The mountain is a system he hasn\'t read before.'],
-    mods: { capacity_start:10, fatigue_start:-10, water_start:2, cog_noise_bonus:2, wide_euphoria:true },
-  },
-];
 
 const SCENARIOS = [
   {
@@ -1338,6 +1280,8 @@ let G = {
   pressureHistory: [],
   runLogRecords: [],
   modelReady: false,
+  hasSummited: false,
+  finalOutcome: 'Strategic Retreat',
 };
 
 // ════════════════════════════════════════════════
@@ -1371,7 +1315,7 @@ function showScreen(id) {
 function buildCharacterGrid() {
   const grid = document.getElementById('char-grid');
   grid.innerHTML = '';
-  CHARACTERS.forEach(c => {
+  (DATA_CONFIG.characters || []).forEach(c => {
     const card = document.createElement('div');
     card.className = 'char-card';
     card.id = 'char-' + c.id;
@@ -1401,7 +1345,7 @@ function selectCharacter(id) {
   const card = document.getElementById('char-' + id);
   card.classList.add('selected');
   card.setAttribute('aria-checked', 'true');
-  G.character = CHARACTERS.find(c => c.id === id);
+  G.character = (DATA_CONFIG.characters || []).find(c => c.id === id);
   const btn = document.getElementById('btn-char-confirm');
   btn.disabled = false;
   btn.removeAttribute('aria-disabled');
@@ -1552,7 +1496,7 @@ function buildRandomScenario() {
 function startGame() {
   const sc = G.scenario;
   const ch = G.character;
-  const mods = ch.mods;
+  const mods = ch.engine || {};
 
   G.rng = mulberry32(G.seed);
   G.turn = 1;
@@ -1572,12 +1516,12 @@ function startGame() {
   G.persistenceTurns = 0;
   G.pressureHistory = [];
   G.runLogRecords = [];
+  G.hasSummited = false;
+  G.finalOutcome = 'Strategic Retreat';
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
-  if (mods.fatigue_start)    s.fatigue    = clamp(s.fatigue + mods.fatigue_start, 0, 100);
-  if (mods.capacity_start)   s.functional_capacity = clamp(s.functional_capacity + mods.capacity_start, 0, 100);
-  if (mods.water_start)      s.water      = s.water + mods.water_start;
+  if (mods.functionalCapacityBonus) s.functional_capacity = clamp(s.functional_capacity + mods.functionalCapacityBonus, 0, 100);
 
   if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, 100);
   s.persistenceTier = 'fresh';
@@ -1686,12 +1630,15 @@ function calculateEnvironmentalPressure(state) {
 function calculateBodyTolerance(state) {
   const hydrationState = clamp((state.water / 36) * 100, 0, 100);
   const nutritionState = clamp((state.food / 36) * 100, 0, 100);
-  const bt = (state.functional_capacity * 0.40) +
+  const stats = G.character?.engine || {};
+  const fatigueResistance = stats.fatigueResistance || 1;
+  const exposureResistance = stats.exposureResistance || 1;
+  const bt = (state.functional_capacity * 0.4) +
     ((G.acclimatization || 0) * 0.35) +
-    (hydrationState * 0.10) +
+    (hydrationState * 0.1) +
     (nutritionState * 0.05) -
-    (state.fatigue * 0.05) -
-    (state.exposure * 0.05);
+    ((state.fatigue * 0.05) / fatigueResistance) -
+    ((state.exposure * 0.05) / exposureResistance);
   return clamp(bt, 0, 100);
 }
 
@@ -1731,23 +1678,26 @@ function spendResourcesForMinutes(minutes, flags) {
   }
 }
 
-function calculatePerception(state) {
+function calculatePerception({ state, EP, BT, pressureDelta }) {
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
+  const stats = G.character?.engine || {};
+  const stability = stats.confidenceStability || 1;
+  const riskTol = stats.riskTolerance || 1;
   const confidenceLevel = clamp(
-    100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0),
+    (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0)) * stability,
     5,
     95
   );
-  const currentEp = calculateEnvironmentalPressure(state).pressureScore;
+  const currentEp = EP ?? calculateEnvironmentalPressure(state).pressureScore;
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
-  const trendEstimate = currentEp > prevEp + 3 ? 'Worsening' : (currentEp < prevEp - 3 ? 'Improving' : 'Holding');
-  const noiseLevel = clamp(Math.round((100 - confidenceLevel) / 12), 0, 8);
-  return { confidenceLevel, trendEstimate, noiseLevel };
+  const trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
+  const noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+  return { confidenceLevel, trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT };
 }
 
 function computeSignals() {
-  const perception = calculatePerception(G.state);
+  const perception = calculatePerception({ state: G.state });
   return {
     trend: perception.trendEstimate,
     uncertainty: perception.noiseLevel,
@@ -1868,7 +1818,7 @@ function renderWatch() {
   trendEl.className = 'watch-trend';
 
   document.getElementById('watch-uncertainty-inline').textContent =
-    `trend ${sig.trend} · confidence ${sig.confidence}%`;
+    `trend ${sig.trend} · confidence ${sig.confidence}% · stage ${getCurrentStage()} · ${G.character?.name || '—'}`;
 
   const capLbl = capacityLabel(s.functional_capacity);
   const fatLbl = fatigueLabel(s.fatigue);
@@ -2251,8 +2201,8 @@ function evaluateOutcome(pressureDelta, actionMod, state) {
   if (actionMod.fatigueRecovery) fatigueIncrease *= -1;
   if (actionMod.exposureRecovery) exposureIncrease *= -1;
 
-  let outcome = 'In Progress';
-  if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'Summit and Safe Return';
+  let outcome = 'Strategic Retreat';
+  if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'High Point Return';
 
   return {
     targetPosition: POSITIONS[targetIndex],
@@ -2270,6 +2220,7 @@ function updateState(state, result, action) {
   state.position = result.targetPosition;
   state.altitude_band = POS_BAND[state.position];
   G.highestPosIdx = Math.max(G.highestPosIdx, POSITIONS.indexOf(state.position));
+  if (state.position === 'summit') G.hasSummited = true;
   state.fatigue = clamp(state.fatigue + result.fatigueIncrease, 0, 100);
   state.exposure = clamp(state.exposure + result.exposureIncrease, 0, 100);
   if (action === 'sleep') {
@@ -2312,22 +2263,29 @@ function resolveTurn(state, action) {
   const result = evaluateOutcome(pressureDelta, actionMod, state);
   updateState(state, result, action);
 
-  const perception = calculatePerception(state);
-  const supportedOutcomes = [
-    'Summit and Safe Return','High Point Return','Strategic Retreat','Incapacitated','Collapse (Fatigue)','Collapse (Exposure)','Resource Exhaustion','Expedition Window Closed','Fatality'
-  ];
+  const perception = calculatePerception({ state, EP: epResult.pressureScore, BT, pressureDelta });
   let outcome = result.outcome;
-  if (state.fatigue >= 95) outcome = 'Collapse (Fatigue)';
-  else if (state.exposure >= 95) outcome = 'Collapse (Exposure)';
-  else if (state.functional_capacity <= 10) outcome = 'Incapacitated';
+  const outsideCamp = !isCampPosition(state.position);
+  if (state.functional_capacity <= 5 || state.exposure >= 99) outcome = 'Fatality';
+  else if (state.fatigue >= 95) outcome = outsideCamp ? 'Rescue' : 'Collapse (Fatigue)';
+  else if (state.exposure >= 95) outcome = outsideCamp ? 'Rescue' : 'Collapse (Exposure)';
   else if (state.water === 0 && G.consecutiveWater0 >= 3) outcome = 'Resource Exhaustion';
   else if (G.turn >= G.scenario.max_turns) outcome = 'Expedition Window Closed';
-  else if (!supportedOutcomes.includes(outcome)) outcome = 'Strategic Retreat';
+  else if (G.hasSummited && state.position === 'horcones') outcome = 'Summit and Safe Return';
+  else if (state.position === 'horcones' && G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) outcome = 'High Point Return';
+  else if (state.position === 'horcones' && G.highestPosIdx > 0) outcome = 'Strategic Retreat';
+  if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';
+  G.finalOutcome = outcome;
 
   G.pressureHistory.push(epResult.pressureScore);
 
   G.runLogRecords.push({
     turn: G.turn,
+    day: G.day,
+    time: formatMinutes(G.minutesOfDay),
+    stage: getCurrentStage(),
+    node: state.position,
+    character: G.character?.name || 'Unknown',
     location: POS_LABELS[state.position],
     EP: Number(epResult.pressureScore.toFixed(2)),
     BT: Number(BT.toFixed(2)),
@@ -2337,6 +2295,7 @@ function resolveTurn(state, action) {
     fatigue: Number(state.fatigue.toFixed(2)),
     exposure: Number(state.exposure.toFixed(2)),
     confidence: Math.round(perception.confidenceLevel),
+    trendEstimate: perception.trendEstimate,
     outcome,
   });
 
@@ -2380,8 +2339,8 @@ function makeDecision(decision) {
   G.allFlags.push(...turnResult.flags);
   addLogEntry(logEntry);
 
-  const returnedToHorcones = s.position === 'horcones' && (decision === 'descend' || G.highestPosIdx > 0);
-  const ended = returnedToHorcones || turnResult.outcome !== 'Strategic Retreat' && turnResult.outcome !== 'In Progress';
+  const returnedToHorcones = s.position === 'horcones' && G.highestPosIdx > 0;
+  const ended = returnedToHorcones || turnResult.outcome !== 'Strategic Retreat';
 
   if (ended) {
     if (decisionPanel) decisionPanel.classList.remove('processing');
@@ -2445,18 +2404,19 @@ function addLogEntry(entry) {
 // ════════════════════════════════════════════════
 // END RUN / CLASSIFY
 // ════════════════════════════════════════════════
-function classifyOutcome(returnedToHorcones) {
-  const s = G.state;
-  if (G.turn > G.scenario.max_turns) return { label: 'Expedition Window Closed', cls: 'outcome-stabilized' };
-  if (s.exposure >= 98 || s.functional_capacity <= 5) return { label: 'Fatality', cls: 'outcome-collapse' };
-  if (s.functional_capacity <= 15) return { label:'Incapacitated', cls:'outcome-collapse' };
-  if (s.exposure >= 95) return { label:'Collapse (Exposure)', cls:'outcome-collapse' };
-  if (s.fatigue >= 95) return { label:'Collapse (Fatigue)', cls:'outcome-collapse' };
-  if (s.water === 0 || s.food === 0) return { label:'Resource Exhaustion', cls:'outcome-collapse' };
-  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('summit')) return { label:'Summit and Safe Return', cls:'outcome-success' };
-  if (returnedToHorcones && G.highestPosIdx >= POSITIONS.indexOf('camp_c')) return { label:'High Point Return', cls:'outcome-retreat' };
-  if (returnedToHorcones) return { label:'Strategic Retreat', cls:'outcome-retreat' };
-  return { label:'Strategic Retreat', cls:'outcome-retreat' };
+function classifyOutcome() {
+  const map = {
+    'Summit and Safe Return': 'outcome-success',
+    'High Point Return': 'outcome-retreat',
+    'Strategic Retreat': 'outcome-retreat',
+    'Rescue': 'outcome-collapse',
+    'Collapse (Fatigue)': 'outcome-collapse',
+    'Collapse (Exposure)': 'outcome-collapse',
+    'Resource Exhaustion': 'outcome-collapse',
+    'Expedition Window Closed': 'outcome-stabilized',
+    'Fatality': 'outcome-collapse',
+  };
+  return { label: G.finalOutcome || 'Strategic Retreat', cls: map[G.finalOutcome] || 'outcome-retreat' };
 }
 
 function findTurningPoint() {
@@ -2510,7 +2470,7 @@ function buildReflectionPrompts() {
 }
 
 function endRun(returnedToHorcones) {
-  const outcome = classifyOutcome(returnedToHorcones);
+  const outcome = classifyOutcome();
   const sc = G.scenario;
   const s = G.state;
 

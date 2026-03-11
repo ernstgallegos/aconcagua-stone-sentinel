@@ -1,56 +1,48 @@
-# Aconcagua: Stone Sentinel (Web v1)
+# Prototype Web v1.3
 
-## Controls
+Canonical active web prototype for Aconcagua: Stone Sentinel.
 
-**Mouse**
-- Click decision buttons in the Decision panel.
+## Engine contract
 
-**Keyboard**
-- `1` Advance
-- `2` Advance Slowly
-- `3` Wait
-- `4` Descend
-- `5` Sleep
+All turn resolution flows through:
 
-Keyboard shortcuts only work while the game screen is active.
+`resolveTurn(state, action)`
 
-## Visual direction update (cover concept 1)
+Pipeline:
 
-- `art/cover/cover-concept-1.png` is now used directly in web-v1 as:
-  - Initial image-only loading screen background (first screen).
-  - Main title/cover screen background (second screen with title/tagline/BEGIN).
-- UI tones were adjusted to better match that image's cold-rock palette while preserving readability and the austere decision-first look.
-- The first loading screen renders the cover image in full (`object-fit: contain`) to avoid deformation or cropping across viewport sizes.
+`Environment → EP → BT → pressureDelta → perception → action modifier → outcome`
 
+## Canonical route
 
-## Prototype Web v1.1 simulation update
+The route is node-to-node and loaded from `data/nodes.json` with the v1.3 canonical sequence including:
 
-This prototype now uses the **Environmental Pressure Engine** model:
+- Cambio de Pendiente (5300m)
+- El Balcón Amarillo (5800m)
+- La Travesía
 
-`ENVIRONMENT → Environmental Pressure → Body Response → Player Perception → Player Decision → Outcome`
+## Data source of truth
 
-### Data-driven configuration
+Simulation inputs are loaded from `/data`:
 
-Runtime simulation constants are loaded from repository-level `/data`:
+- `nodes.json`
+- `environmental_pressure_config.json`
+- `action_modifiers.json`
+- `stage_modifiers.json`
+- `characters.json`
+- `outcomes.json`
 
-- `/data/nodes.json`
-- `/data/environmental_pressure_config.json`
-- `/data/action_modifiers.json`
-- `/data/stage_modifiers.json`
+## Player-facing watch
 
-### Player-facing watch panel
-
-The watch shows perception-level signals only:
+Public mountain reading is intentionally imperfect:
 
 - Mountain Pressure
 - Trend
 - Confidence
-- Body state and resources
 
-Raw EP/BT numeric internals are not exposed to the player UI.
+## Outcomes
 
-### Run logging
+Canonical outcome set includes `Rescue` as a real gameplay outcome.
 
-Each turn stores structured runtime records (`turn`, `location`, `EP`, `BT`, `pressureDelta`, `action`, `outcome`) and can be exported from debrief as `run_log.json`.
+## Logging
 
-For a full technical description, see `/docs/simulation_engine.md`.
+`run_log.json` is exported from the engine turn log with EP/BT/delta, progress, physiology, confidence, trend, stage, node, character, and outcome.

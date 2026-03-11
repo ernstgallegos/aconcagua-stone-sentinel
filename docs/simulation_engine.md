@@ -1,113 +1,90 @@
-# Simulation Engine — Prototype Web v1.2
+# Simulation Engine — Prototype Web v1.3
 
-Prototype Web v1.2 makes the **Environmental Pressure Engine** the single authoritative simulation system.
+## Core authority
 
-## Unified turn pipeline
-
-Every turn is resolved only by:
+The only authoritative turn resolver is:
 
 `resolveTurn(state, action)`
 
-Pipeline:
+All turn consequences (progress, physiology, risk, and final outcomes) emerge from this function.
 
-`Environment → Environmental Pressure (EP) → Body Tolerance (BT) → Pressure Delta → Action Modifier → Outcome`
+## Environmental Pressure
 
-## Environmental Pressure (EP)
+`calculateEnvironmentalPressure(state)` computes:
 
-`calculateEnvironmentalPressure(state)` now integrates route node and stage effects:
+`EP = baseAltitudePressure + terrainLoad + weatherSeverity + visibilityRisk + (timeOfDayRisk * node.timeSensitivity) + exposurePersistence + node.weatherBias + node.visibilityBias + stage.weatherSeverityBias + bivouacPenalty`
 
-`EP = baseAltitudePressure + terrainLoad + weatherSeverity + visibilityRisk + (timeOfDayRisk * node.timeSensitivity) + exposurePersistence + node.weatherBias + node.visibilityBias + stage.weatherSeverityBias`
+## Body Tolerance
 
-Node parameters come from `/data/nodes.json`:
+`calculateBodyTolerance(state)` integrates:
 
-- `altitudeBand`
-- `terrainLoad`
-- `weatherBias`
-- `visibilityBias`
-- `timeSensitivity`
-- `isCamp`
+- functional_capacity
+- acclimatization
+- hydration (water)
+- nutrition (food)
+- fatigue
+- exposure
+- character stats
 
-## Body Tolerance (BT)
-
-`calculateBodyTolerance(state)` represents physiological resistance:
-
-- `functional_capacity`: base physical ability
-- `fatigue`: accumulated effort exhaustion
-- `exposure`: physiological damage from environment
-- `acclimatization`: progressive adaptation to altitude
-
-## Pressure Delta interpretation
+## Pressure Delta
 
 `pressureDelta = EP - BT`
 
-- `<= -15`: full progress
-- `-14..10`: moderate progress
-- `11..30`: limited progress
-- `> 30`: blocked / retreat pressure
-
-Progress is also modified by `/data/action_modifiers.json` (`actionModifier.progress`).
-
-## Stage modifiers
-
-Loaded from `/data/stage_modifiers.json`:
-
-- `APPROACH`
-- `HIGH_CAMP`
-- `SUMMIT_DAY`
-
-Applied in engine:
-
-- `EP += stage.weatherSeverityBias`
-- `fatigue *= stage.fatigueMultiplier`
-- `exposure *= stage.exposureMultiplier`
-- `confidence -= stage.confidencePenalty`
-
-## Bivouac integration
-
-Inside `resolveTurn`, when `time > 22:00` outside camp (`node.isCamp === false`):
-
-- EP penalty
-- severe fatigue increase
-- severe exposure increase
-- critical persistence escalation
+Pressure delta governs node-to-node progress, physiological cost, and outcome risk.
 
 ## Perception model
 
-`calculatePerception(state)` returns:
+`calculatePerception({ state, EP, BT, pressureDelta })` produces:
 
 - `confidenceLevel`
 - `trendEstimate`
 - `noiseLevel`
 
-Inputs: altitude band, fatigue, exposure, visibility.
-
-Player-facing interface exposes only:
+UI displays only:
 
 - Mountain Pressure
 - Trend
 - Confidence
 
-## Logging (`run_log.json`)
+Raw `EP`, `BT`, and `pressureDelta` are not shown in player-facing watch signals.
 
-Each turn is logged from `resolveTurn` with:
+## Stage system
 
-- `turn`
-- `location`
-- `EP`
-- `BT`
-- `pressureDelta`
-- `action`
-- `progress`
-- `fatigue`
-- `exposure`
-- `confidence`
-- `outcome`
+Canonical stages:
 
-## Canonical data sources
+- `APPROACH`
+- `HIGH_CAMP`
+- `SUMMIT_DAY`
 
-Simulation constants are loaded from `/data`:
+Modifiers from `data/stage_modifiers.json` apply to EP, fatigue, exposure, and confidence.
 
-- `/data/environmental_pressure_config.json`
-- `/data/action_modifiers.json`
-- `/data/stage_modifiers.json`
-- `/data/nodes.json`
+## Bivouac rule
+
+If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in engine resolution.
+
+## Canonical outcomes
+
+- Summit and Safe Return
+- High Point Return
+- Strategic Retreat
+- Rescue
+- Collapse (Fatigue)
+- Collapse (Exposure)
+- Resource Exhaustion
+- Expedition Window Closed
+- Fatality
+
+`Rescue` is a real system outcome and is logged.
+
+## Run log contract
+
+`run_log.json` logs per turn from the engine with at least:
+
+- turn, day, time
+- stage, node, location
+- character
+- EP, BT, pressureDelta
+- action, progress
+- fatigue, exposure
+- confidence, trendEstimate
+- outcome

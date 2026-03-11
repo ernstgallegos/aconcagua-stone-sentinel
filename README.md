@@ -236,3 +236,15 @@ ernestogallegos@gmail.com
 ---
 
 *Aconcagua: Stone Sentinel explores the idea that advancing does not always mean progressing, and that recognizing limits—external and internal—can be a form of success.*
+
+
+
+## Prototype canonical status (v1.3)
+
+The canonical active prototype is **`prototype/web-v1` (v1.3)**.
+
+- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine.
+- `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
+- repository root viewer: replay/view layer for bundled runs.
+
+See `docs/architecture.md` and `docs/simulation_engine.md` for technical contracts.
