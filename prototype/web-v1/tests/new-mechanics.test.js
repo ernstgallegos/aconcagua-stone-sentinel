@@ -10,49 +10,55 @@ function json(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'data', file), 'utf8'));
 }
 
-test('central turn engine exists and owns logging', () => {
+test('central turn engine is authoritative', () => {
   assert.match(source, /function resolveTurn\(state, action\)/);
+  assert.match(source, /const BT = calculateBodyTolerance\(state\)/);
   assert.match(source, /const pressureDelta = epResult\.pressureScore - BT/);
-  assert.match(source, /function evaluateOutcome\(pressureDelta, actionMod, state\)/);
-  assert.match(source, /function updateState\(state, result, action\)/);
+  assert.match(source, /const result = evaluateOutcome\(pressureDelta, actionMod, state\)/);
+  assert.match(source, /updateState\(state, result, action\)/);
   assert.match(source, /G\.runLogRecords\.push\(\{/);
-  assert.match(source, /progress:/);
-  assert.match(source, /confidence:/);
-  assert.match(source, /run_log\.json/);
+  assert.match(source, /trendEstimate:/);
 });
 
-test('legacy progress drivers removed from gameplay', () => {
-  assert.doesNotMatch(source, /const ALT_MOD\s*=\s*\{/);
-  assert.doesNotMatch(source, /advanceProgressBase/);
-  assert.doesNotMatch(source, /slowProgressBase/);
-  assert.doesNotMatch(source, /weatherWeights/);
-  assert.doesNotMatch(source, /terrainProgressBase/);
+test('canonical outcomes include Rescue and remove legacy Incapacitated', () => {
+  const outcomes = json('outcomes.json');
+  assert.ok(outcomes.includes('Rescue'));
+  assert.ok(!outcomes.includes('Incapacitated'));
+  assert.doesNotMatch(source, /Incapacitated/);
+  assert.match(source, /outsideCamp \? 'Rescue' : 'Collapse \(Fatigue\)'/);
 });
 
-test('data files include v1.2 simulation keys', () => {
+test('canonical node route is v1.3 with 15 nodes', () => {
   const nodes = json('nodes.json');
-  const ep = json('environmental_pressure_config.json');
-  const actions = json('action_modifiers.json');
-  const stages = json('stage_modifiers.json');
-
-  assert.equal(nodes.length, 13);
+  assert.equal(nodes.length, 15);
+  assert.equal(nodes[7].nodeName, 'Cambio de Pendiente (5300m)');
+  assert.equal(nodes[9].nodeName, 'El Balcón Amarillo (5800m)');
+  assert.equal(nodes[12].nodeName, 'La Travesía');
   for (const node of nodes) {
-    ['nodeName','altitudeBand','terrainLoad','weatherBias','visibilityBias','timeSensitivity','isCamp'].forEach((k) => {
+    ['nodeName', 'altitudeBand', 'terrainLoad', 'weatherBias', 'visibilityBias', 'timeSensitivity', 'isCamp'].forEach((k) => {
       assert.ok(Object.hasOwn(node, k), `node has ${k}`);
     });
   }
-
-  assert.ok(ep.simulation, 'simulation block exists');
-  assert.ok(ep.simulation.progressBands, 'progress bands in config');
-  assert.ok(ep.simulation.bivouacPenalty, 'bivouac penalty in config');
-  assert.ok(ep.simulation.resourceBurnPerHour, 'resource burn in config');
-  assert.ok(actions.advance && actions.sleep);
-  assert.ok(stages.APPROACH && stages.HIGH_CAMP && stages.SUMMIT_DAY);
 });
 
-test('perception model contract exists', () => {
-  assert.match(source, /function calculatePerception\(state\)/);
-  assert.match(source, /confidenceLevel/);
-  assert.match(source, /trendEstimate/);
-  assert.match(source, /noiseLevel/);
+test('data files include source-of-truth simulation keys', () => {
+  const ep = json('environmental_pressure_config.json');
+  const actions = json('action_modifiers.json');
+  const stages = json('stage_modifiers.json');
+  const chars = json('characters.json');
+
+  assert.ok(ep.simulation.progressBands, 'progress bands in config');
+  assert.ok(ep.simulation.bivouacPenalty, 'bivouac penalty in config');
+  assert.ok(actions.advance && actions.wait && actions.sleep && actions.descend);
+  assert.ok(stages.APPROACH && stages.HIGH_CAMP && stages.SUMMIT_DAY);
+  assert.ok(chars.length >= 3, 'character roster loaded from data');
+  assert.ok(chars[0].engine.fatigueResistance);
+});
+
+test('perception and body tolerance pipeline is explicit', () => {
+  assert.match(source, /function calculateEnvironmentalPressure\(state\)/);
+  assert.match(source, /function calculateBodyTolerance\(state\)/);
+  assert.match(source, /function calculatePerception\(\{ state, EP, BT, pressureDelta \}\)/);
+  assert.match(source, /pressureFactor = clamp\(pressureDelta \/ 20, 0\.5, 2\.5\)/);
+  assert.match(source, /if \(G\.minutesOfDay > 1320 && !isCampPosition\(state\.position\)\)/);
 });
