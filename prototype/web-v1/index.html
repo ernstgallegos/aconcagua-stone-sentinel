@@ -1603,6 +1603,16 @@ function getCurrentNode(state = G.state) {
   return ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
 }
 
+function getStageForPosition(position = G.state.position) {
+  if (position && STAGE_BY_POSITION[position]) return STAGE_BY_POSITION[position];
+  const fallbackNode = ROUTE_NODES.find((n) => n.id === position) || ROUTE_NODES[0];
+  return fallbackNode?.stage || 'APPROACH';
+}
+
+function isCampPosition(position = G.state.position) {
+  return CAMP_POSITIONS.has(position);
+}
+
 function getActionModifier(action) {
   return DATA_CONFIG.actionModifiers[action] || { progress: 0, fatigueMultiplier: 1, exposureMultiplier: 1, timeCost: 60 };
 }
