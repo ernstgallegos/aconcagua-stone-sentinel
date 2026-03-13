@@ -1,42 +1,57 @@
-# AGENTS.md — instrucciones recurrentes del repositorio
+# AGENTS.md
 
-Este archivo define reglas operativas para cualquier persona o agente que contribuya al proyecto.
+Repository-wide operating instructions for human and AI contributors.
 
-## 1) Política de documentación de cambios (obligatoria)
+This file is aligned with the AGENTS.md interoperability convention from https://agents.md/: it uses clear scope, explicit priorities, and actionable checklists.
 
-Cada cambio funcional, técnico o de seguridad debe quedar documentado en el mismo PR/commit donde se implementa:
+## Scope
 
-1. **Actualizar `CHANGELOG.md`** usando formato Keep a Changelog.
-2. Registrar el cambio en la versión correcta:
-   - Si aún no se publica una versión: sección **`[Unreleased]`**.
-   - Si forma parte de una release en curso: mover/ordenar al bloque versionado correspondiente.
-3. Clasificar cada ítem en la categoría adecuada: **Added / Changed / Fixed / Security / Removed / Deprecated**.
-4. Describir el cambio con alcance concreto (archivo, módulo, comportamiento).
+- Applies to the entire repository tree rooted at this directory.
 
-## 2) Cuándo actualizar otros documentos
+## Instruction priority
 
-Además del changelog:
+When instructions conflict, use this precedence order:
 
-- **`README.md` / `README.es.md`**: cuando cambien flujo de uso, rutas, comandos, estado del prototipo o arquitectura visible.
-- **`CONTRIBUTING.md`**: cuando cambien políticas de contribución, pruebas, formato de commits o validaciones.
-- **`docs/`**: cuando cambien contratos mecánicos, modelos sistémicos, o decisiones de arquitectura.
+1. Direct user request.
+2. System/developer/runtime constraints.
+3. More specific `AGENTS.md` files in subdirectories.
+4. This root `AGENTS.md`.
 
-## 3) Checklist mínimo antes de merge
+## Mandatory change documentation policy
 
-- [ ] Changelog actualizado.
-- [ ] Documentación sincronizada (README/CONTRIBUTING/docs) según corresponda.
-- [ ] Tests relevantes ejecutados localmente (`npm test`, `pytest`, validación de escenarios si aplica).
-- [ ] Sin contradicciones entre documentación y comportamiento real del código.
+For every functional, technical, or security change included in a commit/PR:
 
-## 4) Convención para entradas de changelog
+1. **Update `CHANGELOG.md`** using Keep a Changelog format.
+2. Record the change in the correct section:
+   - **`[Unreleased]`** for unpublished work.
+   - The target version block when preparing an in-progress release.
+3. Classify each entry under the right type: **Added / Changed / Fixed / Security / Removed / Deprecated**.
+4. Describe impact concretely (affected file/module/behavior).
 
-- Escribir en inglés (idioma canónico del repositorio).
-- Usar frases breves en pasado descriptivo, orientadas a impacto.
-- Evitar entradas vagas como “misc fixes”.
-- Si un cambio afecta seguridad, **debe** figurar explícitamente en `### Security`.
+## When to update other docs
 
-## 5) Mantenimiento histórico
+In addition to the changelog:
 
-- No borrar historial previo del changelog.
-- Si se corrige una versión histórica, indicar ajuste retroactivo en el texto de esa versión.
-- Mantener orden descendente por versión (más nueva arriba).
+- **`README.md` / `README.es.md`**: when usage flow, commands, routes, prototype status, or visible architecture changes.
+- **`CONTRIBUTING.md`**: when contribution policy, test requirements, commit format, or validation flow changes.
+- **`docs/`**: when systemic models, mechanical contracts, or architecture decisions change.
+
+## Minimum pre-merge checklist
+
+- [ ] Changelog updated.
+- [ ] Related documentation synchronized (`README*`, `CONTRIBUTING`, `docs/`) as needed.
+- [ ] Relevant tests/checks run locally (`npm test`, `pytest`, scenario validation as applicable).
+- [ ] No contradictions between documented behavior and actual code behavior.
+
+## Changelog writing conventions
+
+- Write entries in English (canonical project language).
+- Use short, descriptive, past-tense impact statements.
+- Avoid vague items such as “misc fixes”.
+- Security-relevant changes **must** appear explicitly under `### Security`.
+
+## Historical maintenance
+
+- Do not remove prior changelog history.
+- If correcting a historical release entry, mark it as a retroactive adjustment.
+- Keep versions in descending order (newest first).
