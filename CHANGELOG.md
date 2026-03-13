@@ -5,74 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-SemVer versioning will be enforced starting with the first tagged release. Until then, changes are tracked under `[Unreleased]`.
+SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are documented retroactively from merged changes in the repository history.
 
 ## [Unreleased]
 
 ## [1.3.0] — 2026-03
 
 ### Added
-- `devlog/005-prototype-architecture.md`: formal decision record explaining the relationship
-  between the Python MRA v0 (frozen reference artifact) and web-v1 (active prototype).
-- `.env.example`: documents all runtime environment variables for `api/run.js`.
-- `docs/architecture.md`: canonical engine flow and data source map for v1.3.
-- `data/characters.json`: three characters with full engine-level differentiation
-  (`acclimatizationRate`, `resourceEfficiency`, `fatigueResistance`, `exposureResistance`,
-  `confidenceStability`, `riskTolerance`, `perceptionBias`, `functionalCapacityBonus`).
-- `data/outcomes.json`: canonical outcome taxonomy including `Rescue`.
-- `difficultyLabel` field per character rendered in character selection screen.
-- Acclimatization deficit penalty system in `resolveTurn()` for HIGH_CAMP and SUMMIT_DAY.
-- JSON validation job in CI for all `/data/*.json` and `/mra-v0/scenarios/*.json` files.
-- Python lint step (ruff, informative / non-blocking) in CI.
-- Named constants for cautious policy thresholds (`CAUTIOUS_MIN_CAPACITY`, `CAUTIOUS_MAX_FATIGUE`, etc.).
-- Docstrings for all four internal helpers in `apply_decision()`.
+- `devlog/005-prototype-architecture.md` as a formal decision record separating the frozen Python MRA (`prototype/mra-v0`) from the active web prototype (`prototype/web-v1`).
+- `.env.example` documenting runtime environment variables for `api/run.js`.
+- `docs/architecture.md` as the canonical architecture map for the active prototype.
+- `data/characters.json` with three fully differentiated characters (`acclimatizationRate`, `resourceEfficiency`, `fatigueResistance`, `exposureResistance`, `confidenceStability`, `riskTolerance`, `perceptionBias`, `functionalCapacityBonus`).
+- `data/outcomes.json` as canonical outcome taxonomy including `Rescue`.
+- Character `difficultyLabel` rendered in the selection UI.
+- Acclimatization-deficit penalties for HIGH_CAMP and SUMMIT_DAY in the web simulation engine.
+- CI JSON validation coverage for `/data/*.json` and `/prototype/mra-v0/scenarios/*.json`.
+- Informational Python linting step (ruff) in CI.
 
 ### Changed
-- `prototype/mra-v0/README.md`: FROZEN status banner inserted at the top.
-- `README.md`: Project Status section updated to distinguish active vs frozen prototypes;
-  web-v1 no longer described as "legacy/experimental".
-- `docs/simulation_engine.md`: version header updated from v1.1 to v1.3.
-- Route expanded from 13 to 15 named nodes (`Cambio de Pendiente`, `El Balcón Amarillo`,
-  `La Travesía` added to `data/nodes.json`).
-- `data/environmental_pressure_config.json`: EP values increased for 30% win rate target
-  (altitudePressureByBand[4] 85→100; weatherSeverityScale[3] 45→52; baseCosts.fatigue 8→10;
-  SUMMIT_DAY resource burn rates increased; bivouac penalties +25%; summit window tightened).
-- `data/stage_modifiers.json`: HIGH_CAMP and SUMMIT_DAY multipliers increased.
-- `data/action_modifiers.json`: advance costs increased; sleep recovery reduced.
-- Scenario starting resources (water/food) reduced across all archetypes and base scenarios.
-- `acclimatizationRate` and `resourceEfficiency` character mods now applied in `updateState()`
-  and `spendResourcesForMinutes()`.
-- `vercel.json`: redirects changed from 302 to 308 (permanent).
-- `styles.css` (root viewer): unified with web-v1 visual token system (IBM Plex Mono).
-- `api/run.js`: hardcoded ALLOWED_ORIGINS fallback now logs a warning.
-- `package.json`: version bumped to 1.3.0.
+- `README.md` and `prototype/mra-v0/README.md` to clearly separate canonical active prototype vs frozen reference artifact.
+- `docs/simulation_engine.md` aligned to v1.3 behavior.
+- Route model expanded to 15 named nodes in `data/nodes.json`.
+- Balance tuned for a harsher summit profile through `data/environmental_pressure_config.json`, `data/stage_modifiers.json`, and `data/action_modifiers.json`.
+- Scenario starting resources (water/food) reduced across base archetypes and scenarios.
+- Character modifiers (`acclimatizationRate`, `resourceEfficiency`) applied directly in turn-state updates and resource consumption.
+- `vercel.json` redirects changed to `308`.
+- Root viewer styles (`styles.css`) aligned with web-v1 visual tokens.
+- `package.json` version set to `1.3.0`.
 
 ### Fixed
-- `update_position()` in `simulator.py`: silent fallback on invalid position replaced with
-  explicit `ValueError`.
-- Cautious policy magic numbers replaced with named constants.
+- `prototype/mra-v0/simulator.py` now raises `ValueError` for invalid position updates (no silent fallback).
+- Cautious-policy magic numbers replaced with named constants.
+- API fallback allowlist path logs an explicit warning when `ALLOWED_ORIGINS` is not configured.
 
+## [1.2.0] — 2026-02 (retroactive)
 
 ### Added
-- Prototype Web v1.1 Environmental Pressure Engine documentation at `docs/simulation_engine.md`.
-- Data-driven web-v1 simulation configs in `/data` (`nodes`, environmental pressure, action modifiers, and stage modifiers).
-- Root `package.json` with Node 18+ test script.
-- `requirements-dev.txt` for Python development dependencies.
-- Scenario JSON schema at `prototype/mra-v0/scenarios/scenario.schema.json`.
-- New bundled run artifacts for `late-push` and `weather-window`.
-- Expanded Python unit coverage for output contracts, outcome branches, observed signals, schema errors, and smoke tests.
-- Portable scenario validation script: `python3 prototype/mra-v0/validate_all_scenarios.py`.
+- Environmental Pressure / Body Tolerance / Pressure Delta turn pipeline in `prototype/web-v1/index.html`.
+- `docs/simulation_engine.md` (initial engine spec publication for web prototype systemic rules).
+- Data-driven simulation configuration in `/data` (`nodes`, pressure config, action modifiers, stage modifiers).
+- Turn debrief export to `run_log.json` from the web prototype.
 
 ### Changed
-- `prototype/web-v1/index.html` now computes Environmental Pressure / Body Tolerance and exports turn logs as `run_log.json` from debrief.
-- `prototype/web-v1/README.md` updated to reflect v1.1 systemic model and runtime data sources.
-- Refactored simulator `apply_decision()` into smaller helper functions while preserving behavior.
-- `cautious` policy early-advance threshold now scales with scenario `max_turns`.
-- `run_all.py` now continues on per-run failures and exits non-zero if any run failed.
-- JS contract tests migrated to Node's built-in `node:test` runner.
-- README (EN/ES) clarified root viewer vs prototype web-v1 routes and Vercel redirect behavior.
-- CI workflow now uses dependency caches and pinned action versions.
+- `prototype/web-v1/README.md` updated to describe runtime data sources and mechanics.
+- Web-v1 contract tests expanded in `prototype/web-v1/tests/new-mechanics.test.js` for the new engine behavior.
+- UX onboarding and control flow refined in the web prototype (begin flow, splash behavior, and instrumentation).
+
+## [1.1.0] — 2026-01 (retroactive)
+
+### Added
+- Root `package.json` with Node 18+ test script (`npm test`).
+- `requirements-dev.txt` for Python development/testing dependencies.
+- Scenario JSON schema at `prototype/mra-v0/scenarios/scenario.schema.json`.
+- Portable scenario validation script: `python3 prototype/mra-v0/validate_all_scenarios.py`.
+- Additional bundled run artifacts (`late-push`, `weather-window`) and expanded Python test coverage.
+
+### Changed
+- `prototype/mra-v0/simulator.py` refactored (`apply_decision()` helper decomposition) without changing expected behavior.
+- `prototype/mra-v0/run_all.py` now continues after per-run failures and exits non-zero when any run fails.
+- JS tests migrated to Node built-in test runner.
+- README and contributing docs aligned with deploy/runtime reality.
+- CI pipeline improved with cache use and pinned actions.
 
 ### Security
-- Removed unsafe `innerHTML` rendering paths in root viewer `app.js`.
-- Hardened `api/run.js` with CORS allowlist, `nosniff`, CSP, request rate limiting, and query length validation.
+- Unsafe `innerHTML` rendering removed from `app.js`.
+- `api/run.js` hardened with strict CORS allowlist behavior, security headers, request size checks, and rate limiting.
