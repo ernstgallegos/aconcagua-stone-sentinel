@@ -1,35 +1,35 @@
 {
   "advance": {
     "progress": 20,
-    "fatigueMultiplier": 1.25,
-    "exposureMultiplier": 1.1,
+    "fatigueMultiplier": 1.30,
+    "exposureMultiplier": 1.15,
     "timeCost": 120
   },
   "advance_slowly": {
     "progress": 10,
-    "fatigueMultiplier": 0.9,
-    "exposureMultiplier": 0.95,
+    "fatigueMultiplier": 0.95,
+    "exposureMultiplier": 1.00,
     "timeCost": 180
   },
   "wait": {
     "progress": 0,
-    "fatigueMultiplier": 0.75,
-    "exposureMultiplier": 1.0,
+    "fatigueMultiplier": 0.70,
+    "exposureMultiplier": 1.00,
     "acclimatizationGain": 3,
     "timeCost": 60
   },
   "descend": {
     "progress": -20,
-    "fatigueMultiplier": 0.85,
-    "exposureMultiplier": 0.8,
+    "fatigueMultiplier": 0.80,
+    "exposureMultiplier": 0.75,
     "riskRelief": "strong",
     "timeCost": 120
   },
   "sleep": {
     "campOnly": true,
     "persistenceReset": true,
-    "fatigueRecovery": 18,
-    "exposureRecovery": 10,
+    "fatigueRecovery": 16,
+    "exposureRecovery": 8,
     "acclimatizationGain": 6,
     "timeReset": "06:00"
   }
