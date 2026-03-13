@@ -95,16 +95,31 @@ Turning back, stopping, or failing are valid and meaningful outcomes.
 
 ## Project Status
 
-This repository documents the **conceptual and design foundations** of the project, and includes a **functional low-fidelity prototype** for core hypothesis validation.
+This repository documents the **conceptual and design foundations** of the project and contains two prototypes at different stages of development.
 
-- A minimal reproducible artifact (MRA v0) is available in `/prototype/mra-v0/`.
-- The prototype implements the turn-based decision loop described in the MRA proposal.
-- Validation scenarios with reproducible seeds are included.
-- No production gameplay code is public at this stage.
+### Active prototype — `prototype/web-v1/`
 
-See [`/prototype/mra-v0/README.md`](./prototype/mra-v0/README.md) for run instructions.
+The interactive web prototype is the current development surface. It implements the full
+Environmental Pressure / Body Tolerance simulation engine, a diegetic clock, five player
+actions, fifteen named route nodes, an acclimatization subsystem, three differentiated
+characters, stage-based modifiers, and multiple run archetypes.
 
-This is a curated, public-facing repository, not a complete production archive.
+Playable at the canonical Vercel URL. Run locally with:
+
+```bash
+python3 -m http.server 4173
+# Open: http://localhost:4173/prototype/web-v1/
+```
+
+See [`prototype/web-v1/README.md`](./prototype/web-v1/README.md) for full instructions.
+See [`docs/architecture.md`](./docs/architecture.md) for the engine flow and data source map.
+
+### Reference artifact — `prototype/mra-v0/` (frozen)
+
+The Python simulator validated the core design hypothesis and is now frozen.
+It will not receive new mechanics. See [`devlog/005-prototype-architecture.md`](./devlog/005-prototype-architecture.md) for the architectural decision record.
+
+No production gameplay code is public at this stage.
 
 ---
 
@@ -123,7 +138,7 @@ In Vercel deploys, `vercel.json` redirects `/` to `/prototype/web-v1/index.html`
 Included files:
 
 - `index.html`, `styles.css`, `app.js` — canonical root static run viewer
-- `prototype/web-v1/index.html` — legacy/experimental self-contained UI (inline CSS/JS)
+- `prototype/web-v1/index.html` — canonical interactive prototype (active development)
 - `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
 - `vercel.json` — Vercel runtime and routing configuration
 
@@ -177,22 +192,22 @@ The root viewer currently ships these bundled JSONL runs:
 For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) immediately after each run.
 
 
-## Prototype Web v1.2 — Environmental Pressure Engine
+## Prototype Web v1.3 — Environmental Pressure Engine
 
-The web prototype now follows a unified environmental-dominance resolution pipeline:
+The web prototype follows a unified environmental-dominance resolution pipeline:
 
-`Environment → Environmental Pressure (EP) → Body Tolerance (BT) → Pressure Delta → Action Modifier → Outcome`
+`Environment → Environmental Pressure (EP) → Body Tolerance (BT) → Pressure Delta → Perception → Action Modifier → Outcome`
 
-Core changes:
+All simulation parameters are loaded from `/data`:
 
-- Data-driven simulation files under `/data` (`nodes.json`, `environmental_pressure_config.json`, `action_modifiers.json`, `stage_modifiers.json`).
-- Single authoritative `resolveTurn(state, action)` engine for all turn consequences.
-- Environmental Pressure and Body Tolerance calculations with pressure-band progress resolution.
-- Node-based route model, stage modifiers, and bivouac penalties integrated directly in the simulation engine.
-- Perception model (`calculatePerception`) exposing only Mountain Pressure, Trend, and Confidence to the player.
-- Turn-by-turn run log export (`run_log.json`) with EP/BT/delta, progress, physiology, confidence, and outcome fields.
+- `nodes.json` — 15 named route nodes with altitude band, terrain, weather, and camp flags
+- `environmental_pressure_config.json` — EP scale values, resource burn rates, bivouac penalties
+- `action_modifiers.json` — per-action fatigue/exposure/progress multipliers
+- `stage_modifiers.json` — APPROACH / HIGH_CAMP / SUMMIT_DAY multipliers
+- `characters.json` — three characters with engine-level differentiation
+- `outcomes.json` — canonical outcome taxonomy
 
-See `/docs/simulation_engine.md` for full mechanics.
+See `docs/simulation_engine.md` and `docs/architecture.md` for full mechanics.
 
 ## Repository Structure
 

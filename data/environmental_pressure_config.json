@@ -1,75 +1,75 @@
 {
   "altitudePressureByBand": {
     "0": 0,
-    "1": 15,
-    "2": 35,
-    "3": 60,
-    "4": 85
+    "1": 18,
+    "2": 42,
+    "3": 72,
+    "4": 100
   },
   "terrainLoadScale": {
-    "1": 10,
-    "2": 20,
-    "3": 35,
-    "4": 50,
-    "5": 65
+    "1": 12,
+    "2": 24,
+    "3": 42,
+    "4": 58,
+    "5": 75
   },
   "weatherSeverityScale": {
     "0": 0,
-    "1": 10,
-    "2": 25,
-    "3": 45,
-    "4": 70
+    "1": 12,
+    "2": 28,
+    "3": 52,
+    "4": 82
   },
   "visibilityRiskScale": {
     "0": 0,
-    "1": 5,
-    "2": 15,
-    "3": 30,
-    "4": 45
+    "1": 6,
+    "2": 18,
+    "3": 34,
+    "4": 52
   },
   "timeOfDayRiskScale": {
     "early": 0,
-    "optimal": 5,
-    "late": 20,
-    "dusk": 35,
-    "night": 55
+    "optimal": 6,
+    "late": 24,
+    "dusk": 44,
+    "night": 65
   },
   "exposurePersistenceScale": {
     "fresh": 0,
-    "sustained": 10,
-    "cumulative": 20,
-    "severe": 35,
-    "critical": 50
+    "sustained": 12,
+    "cumulative": 26,
+    "severe": 44,
+    "critical": 62
   },
   "simulation": {
     "dayStartMinutes": 360,
     "noiseRangeAtZeroConf": 18,
     "resourceBurnPerHour": {
-      "APPROACH": { "water": 0.33, "food": 0.25 },
-      "HIGH_CAMP": { "water": 0.5, "food": 0.33 },
-      "SUMMIT_DAY": { "water": 0.66, "food": 0.5 }
+      "APPROACH":   { "water": 0.38, "food": 0.28 },
+      "HIGH_CAMP":  { "water": 0.58, "food": 0.40 },
+      "SUMMIT_DAY": { "water": 0.80, "food": 0.58 }
     },
-    "baseCosts": { "fatigue": 8, "exposure": 6 },
+    "baseCosts": { "fatigue": 10, "exposure": 8 },
     "progressBands": {
-      "fullMax": -15,
-      "moderateMax": 10,
-      "limitedMax": 30,
+      "fullMax": -18,
+      "moderateMax": 8,
+      "limitedMax": 28,
       "fullStep": 1,
       "moderateStep": 1,
       "limitedStep": 0,
       "blockedRetreat": true
     },
     "bivouacPenalty": {
-      "ep": 24,
-      "fatigue": 24,
-      "exposure": 28,
-      "capacity": 14,
-      "persistenceTurns": 8
+      "ep": 30,
+      "fatigue": 30,
+      "exposure": 36,
+      "capacity": 18,
+      "persistenceTurns": 10
     },
     "timeWindows": {
       "summitOptimalStart": 300,
-      "summitOptimalEnd": 660,
-      "summitLateStart": 780
+      "summitOptimalEnd": 600,
+      "summitLateStart": 720
     }
   }
 }

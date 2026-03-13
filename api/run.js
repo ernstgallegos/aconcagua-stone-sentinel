@@ -13,10 +13,19 @@ function splitCsv(value) {
     .filter(Boolean);
 }
 
+const FALLBACK_ORIGINS = [
+  "https://aconcagua-stone-sentinel.vercel.app",
+  "https://www.aconcagua-stone-sentinel.vercel.app",
+];
+
 function getAllowedOrigins() {
   const configured = splitCsv(process.env.ALLOWED_ORIGINS);
   if (configured.length > 0) return configured;
-  return ["https://aconcagua-stone-sentinel.vercel.app", "https://www.aconcagua-stone-sentinel.vercel.app"];
+  console.warn(
+    "[api/run] ALLOWED_ORIGINS env var not set — using hardcoded fallback origins. " +
+    "Set ALLOWED_ORIGINS in Vercel Project Settings for production."
+  );
+  return FALLBACK_ORIGINS;
 }
 
 function resolveOrigin(req) {

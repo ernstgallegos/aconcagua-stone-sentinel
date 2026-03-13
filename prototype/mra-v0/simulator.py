@@ -35,6 +35,13 @@ ALTITUDE_MODIFIERS = {
     "high": {"fatigue_mult": 1.5, "capacity_penalty": 3},
 }
 
+# ── Cautious policy decision thresholds ──────────────────────────────────────
+CAUTIOUS_MIN_CAPACITY: int = 45   # descend if functional_capacity drops below this
+CAUTIOUS_MAX_FATIGUE: int = 72    # descend if fatigue exceeds this
+CAUTIOUS_MAX_EXPOSURE: int = 70   # descend if exposure exceeds this
+CAUTIOUS_MAX_WEATHER: int = 2     # wait if weather_severity exceeds this
+CAUTIOUS_MAX_TERRAIN: int = 2     # wait if terrain_load exceeds this
+
 
 @dataclass
 class RunResult:
@@ -198,9 +205,13 @@ def pick_decision(
             print("  Invalid. Enter: advance, wait, or descend")
 
     if policy == "cautious":
-        if state["functional_capacity"] < 45 or state["fatigue"] > 72 or state["exposure"] > 70:
+        if (
+            state["functional_capacity"] < CAUTIOUS_MIN_CAPACITY
+            or state["fatigue"] > CAUTIOUS_MAX_FATIGUE
+            or state["exposure"] > CAUTIOUS_MAX_EXPOSURE
+        ):
             return "descend", None
-        if state["weather_severity"] > 2 or state["terrain_load"] > 2:
+        if state["weather_severity"] > CAUTIOUS_MAX_WEATHER or state["terrain_load"] > CAUTIOUS_MAX_TERRAIN:
             return "wait", None
         early_turn_threshold = max(1, (max_turns or 12) // 3)
         return ("advance", None) if turn <= early_turn_threshold else ("wait", None)
@@ -221,7 +232,10 @@ def pick_decision(
 def update_position(state: dict[str, Any], decision: str) -> None:
     current = state.get("position", "horcones")
     if current not in POSITIONS:
-        current = "horcones"
+        raise ValueError(
+            f"update_position: invalid position {current!r}. "
+            f"Valid positions: {', '.join(POSITIONS)}"
+        )
     idx = POSITIONS.index(current)
 
     if decision == "advance":
@@ -236,6 +250,12 @@ def update_position(state: dict[str, Any], decision: str) -> None:
 
 
 def _compute_environment(state: dict[str, Any], decision: str, bias: dict[str, Any], rng: random.Random, turn: int) -> None:
+    """Mutate state in-place: update weather_severity, terrain_load, and visibility for one turn.
+
+    Applies bias offsets, weather-window bonuses from bias.window_turns (turns in the set
+    receive a -2 weather shift and clamped terrain), and post-window deterioration.
+    If decision is 'wait' and terrain is elevated, may reduce terrain_load via random recovery.
+    """
     weather_shift = rng.choices(
         [-1, 0, 0, 1],
         weights=[max(0, state["weather_severity"]) * 15, 50, 25, 25],
@@ -262,6 +282,12 @@ def _compute_environment(state: dict[str, Any], decision: str, bias: dict[str, A
 
 
 def _compute_body_deltas(state: dict[str, Any], decision: str, bias: dict[str, Any]) -> tuple[int, int, int]:
+    """Return (fatigue_delta, exposure_delta, capacity_delta) for the given decision.
+
+    Computes base deltas from decision type (advance/wait/descend), scales by weather and
+    terrain severity, applies altitude band multipliers from ALTITUDE_MODIFIERS, and adds
+    bias.fatigue_growth. Does NOT mutate state; caller applies the returned deltas.
+    """
     if decision == "advance":
         fatigue_delta = 10 + state["terrain_load"] * 3 + bias.get("fatigue_growth", 0)
         exposure_delta = 8 + state["weather_severity"] * 3
@@ -286,6 +312,12 @@ def _compute_body_deltas(state: dict[str, Any], decision: str, bias: dict[str, A
 
 
 def _apply_resource_penalties(state: dict[str, Any], flags: list[str]) -> None:
+    """Mutate state: decrement water and food by 1 each turn.
+
+    Appends 'water-depleted' to flags and subtracts 8 from functional_capacity
+    if water reaches zero. Appends 'food-depleted' and subtracts 5 if food
+    reaches zero. Both resources are clamped to a floor of 0.
+    """
     state["water"] = max(0, state["water"] - 1)
     state["food"] = max(0, state["food"] - 1)
     if state["water"] <= 0:
@@ -297,6 +329,12 @@ def _apply_resource_penalties(state: dict[str, Any], flags: list[str]) -> None:
 
 
 def _derive_state_flags(state: dict[str, Any], flags: list[str]) -> None:
+    """Append threshold warning flags to the flags list based on current state values.
+
+    Adds 'critical-exposure' if state.exposure >= 75.
+    Adds 'critical-fatigue' if state.fatigue >= 80.
+    Does NOT mutate any numeric field of state.
+    """
     if state["exposure"] >= 75:
         flags.append("critical-exposure")
     if state["fatigue"] >= 80:

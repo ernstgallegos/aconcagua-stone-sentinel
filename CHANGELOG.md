@@ -9,16 +9,48 @@ SemVer versioning will be enforced starting with the first tagged release. Until
 
 ## [Unreleased]
 
-### Changed
-- Prototype Web upgraded to **v1.3** canonical engine contract with single-turn authority in `resolveTurn(state, action)`.
-- Route progression migrated to canonical 15-node sequence from `data/nodes.json` (including `Cambio de Pendiente (5300m)`, `El Balcón Amarillo (5800m)`, `La Travesía`).
-- Outcomes unified to canonical public set and `Rescue` implemented as real systemic outcome.
-- Character system moved to structured data (`data/characters.json`) with engine-level influence on BT/perception and resource/fatigue dynamics.
-- Run log schema expanded with stage, node, day/time, character, and trend estimate.
+## [1.3.0] — 2026-03
 
 ### Added
-- `docs/architecture.md` with active vs frozen prototype boundaries and v1.3 flow.
-- `data/outcomes.json` and `data/characters.json` as new canonical sources.
+- `devlog/005-prototype-architecture.md`: formal decision record explaining the relationship
+  between the Python MRA v0 (frozen reference artifact) and web-v1 (active prototype).
+- `.env.example`: documents all runtime environment variables for `api/run.js`.
+- `docs/architecture.md`: canonical engine flow and data source map for v1.3.
+- `data/characters.json`: three characters with full engine-level differentiation
+  (`acclimatizationRate`, `resourceEfficiency`, `fatigueResistance`, `exposureResistance`,
+  `confidenceStability`, `riskTolerance`, `perceptionBias`, `functionalCapacityBonus`).
+- `data/outcomes.json`: canonical outcome taxonomy including `Rescue`.
+- `difficultyLabel` field per character rendered in character selection screen.
+- Acclimatization deficit penalty system in `resolveTurn()` for HIGH_CAMP and SUMMIT_DAY.
+- JSON validation job in CI for all `/data/*.json` and `/mra-v0/scenarios/*.json` files.
+- Python lint step (ruff, informative / non-blocking) in CI.
+- Named constants for cautious policy thresholds (`CAUTIOUS_MIN_CAPACITY`, `CAUTIOUS_MAX_FATIGUE`, etc.).
+- Docstrings for all four internal helpers in `apply_decision()`.
+
+### Changed
+- `prototype/mra-v0/README.md`: FROZEN status banner inserted at the top.
+- `README.md`: Project Status section updated to distinguish active vs frozen prototypes;
+  web-v1 no longer described as "legacy/experimental".
+- `docs/simulation_engine.md`: version header updated from v1.1 to v1.3.
+- Route expanded from 13 to 15 named nodes (`Cambio de Pendiente`, `El Balcón Amarillo`,
+  `La Travesía` added to `data/nodes.json`).
+- `data/environmental_pressure_config.json`: EP values increased for 30% win rate target
+  (altitudePressureByBand[4] 85→100; weatherSeverityScale[3] 45→52; baseCosts.fatigue 8→10;
+  SUMMIT_DAY resource burn rates increased; bivouac penalties +25%; summit window tightened).
+- `data/stage_modifiers.json`: HIGH_CAMP and SUMMIT_DAY multipliers increased.
+- `data/action_modifiers.json`: advance costs increased; sleep recovery reduced.
+- Scenario starting resources (water/food) reduced across all archetypes and base scenarios.
+- `acclimatizationRate` and `resourceEfficiency` character mods now applied in `updateState()`
+  and `spendResourcesForMinutes()`.
+- `vercel.json`: redirects changed from 302 to 308 (permanent).
+- `styles.css` (root viewer): unified with web-v1 visual token system (IBM Plex Mono).
+- `api/run.js`: hardcoded ALLOWED_ORIGINS fallback now logs a warning.
+- `package.json`: version bumped to 1.3.0.
+
+### Fixed
+- `update_position()` in `simulator.py`: silent fallback on invalid position replaced with
+  explicit `ValueError`.
+- Cautious policy magic numbers replaced with named constants.
 
 
 ### Added

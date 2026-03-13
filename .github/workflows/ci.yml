@@ -26,8 +26,33 @@ jobs:
       - name: Install Python dev dependencies
         run: pip install -r requirements-dev.txt
 
+      - name: Lint Python with ruff (informative)
+        run: |
+          pip install ruff --quiet
+          ruff check prototype/mra-v0/ --select=E,F,W --ignore=E501 || true
+
       - name: Run simulator tests
         run: pytest prototype/mra-v0/test_simulator.py -v
+
+  json-validation:
+    name: Validate /data JSON files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: "20"
+      - name: Validate data JSON files are well-formed
+        run: |
+          for f in data/nodes.json data/environmental_pressure_config.json data/action_modifiers.json data/stage_modifiers.json data/characters.json data/outcomes.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "OK: $f" || (echo "FAIL: $f" && exit 1)
+          done
+      - name: Validate scenario JSON files
+        run: |
+          for f in prototype/mra-v0/scenarios/*.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "OK: $f" || (echo "FAIL: $f" && exit 1)
+          done
 
   js-contract-tests:
     name: Web-v1 contract tests

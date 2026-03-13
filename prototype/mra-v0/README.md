@@ -1,3 +1,17 @@
+> **STATUS: FROZEN — Reference Artifact**
+>
+> This Python simulator validated the core design hypothesis of *Aconcagua: Stone Sentinel*.
+> It is no longer under active development and will not receive new mechanics.
+> The active interactive prototype is at [`prototype/web-v1/`](../web-v1/).
+>
+> See [`devlog/005-prototype-architecture.md`](../../devlog/005-prototype-architecture.md)
+> and [`docs/architecture.md`](../../docs/architecture.md) for the full decision record.
+>
+> The simulator, its scenarios, tests, and run logs are preserved here as a reference artifact.
+> CI tests continue to run to guard against regression of documented behavior.
+
+---
+
 # MRA v0 Prototype
 
 Technical prototype for the **Minimal Reproducible Artifact (MRA)** defined in the project documentation.

@@ -5,3 +5,7 @@ __pycache__/
 # Batch-generated simulator outputs
 prototype/mra-v0/runs/generated/
 
+
+# Local environment files
+.env
+.env.local

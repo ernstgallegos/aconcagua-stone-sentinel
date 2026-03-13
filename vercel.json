@@ -4,12 +4,12 @@
     {
       "source": "/",
       "destination": "/prototype/web-v1/index.html",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/prototype/web-v1",
       "destination": "/prototype/web-v1/index.html",
-      "permanent": false
+      "permanent": true
     }
   ]
 }
