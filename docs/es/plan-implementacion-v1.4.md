@@ -40,7 +40,7 @@ Alinear el prototipo jugable con la estructura sistémica y narrativa mínima de
 
 ---
 
-## Fase 2 — Sprint siguiente
+## Fase 2 — En progreso (continuidad del sprint actual)
 
 ### Objetivo
 Agregar diferenciación jugable por personaje y ampliar preparación narrativa de Parte 2.
@@ -59,6 +59,13 @@ Agregar diferenciación jugable por personaje y ampliar preparación narrativa d
 ### DoD
 - Diferenciación de personaje perceptible en al menos tres momentos de decisión.
 - Secuencia narrativa de Parte 2 navegable de punta a punta.
+
+### Estado real de avance
+- ✅ Mecánica fotográfica de Daniela implementada en `prototype/web-v1/index.html` + `data/action_modifiers.json` con cooldown/cupo e instrumentación en run-log.
+- ✅ Tiempos de decisión por personaje implementados con `engine.decisionWindow` en `data/characters.json` y penalizaciones graduales (sin fail instantáneo).
+- ✅ Activación perceptual tardía para Erik/Irina implementada con `engine.perceptionLatency` y hooks del resolvedor en web-v1.
+- ✅ Secuencia narrativa de transición Parte 2 implementada de punta a punta (`part2-character` a `part2-closure`) con back/continue y salidas seguras.
+- ✅ Mejoras de legibilidad desplegadas (stack contextual derecho, chips de riesgo, causa accionable en debrief y microcopy dirigido).
 
 ---
 
