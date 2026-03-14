@@ -38,6 +38,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated watch-panel UI in `prototype/web-v1/index.html` to render decision countdown/overage and partial-information microcopy aligned with existing diegetic uncertainty language.
 - Expanded run logging in `prototype/web-v1/index.html` to persist decision timing telemetry (`decisionMs`, `decisionWindowExceeded`, `decisionWindowEffect`) per turn for debrief and export workflows.
 - Updated `prototype/web-v1/README.md` to document the timed-degradation layer, character-stage timer config, and accessibility fallback behavior.
+- Added per-character perception guardrails in `data/characters.json` (`engine.perceptionGuardrails`) to enforce minimum useful signal readability and cap timing/perception penalty accumulation.
+- Added SUMMIT_DAY difficulty regression guardrails in `prototype/web-v1/index.html` to cap acclimatization/timing penalty spikes and flag guarded turns (`summit-difficulty-guard`) for telemetry.
+- Updated `prototype/web-v1/index.html` debrief cause messaging with systemic-vs-decision attribution so players can distinguish model pressure from execution errors.
+- Updated `prototype/web-v1/tests/new-mechanics.test.js` with regression checks for guardrail fields and SUMMIT_DAY difficulty caps.
+- Updated `docs/balance-calibration-notes.md` with explicit rollback criteria when any character drifts outside accepted outcome bands.
 
 
 ### Changed

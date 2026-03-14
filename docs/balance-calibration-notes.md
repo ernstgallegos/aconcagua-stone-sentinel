@@ -39,3 +39,21 @@ These bands prioritize survivable pacing while keeping meaningful risk and permi
 
 - Primary balance knobs: `data/action_modifiers.json`, `data/stage_modifiers.json`, `data/environmental_pressure_config.json`, `data/characters.json`.
 - Historical summary: `CHANGELOG.md` (Unreleased / Changed).
+
+
+## Rollback criterion for tuning passes
+
+Trigger rollback (full revert or targeted rollback of last tuning batch) when any character falls outside target bands in **two consecutive** calibration runs using the canonical battery:
+
+- Summit and Safe Return < 6% or > 24%
+- Rescue < 3% or > 18%
+- Strategic Retreat < 50% or > 82%
+- Collapse < 4% or > 18%
+- Permit Expired < 2% or > 14%
+
+Rollback procedure:
+
+1. Freeze release candidate and archive run logs for the failing pass.
+2. Revert the last tuning commit touching pressure/action/character balance knobs.
+3. Re-run the full canonical battery and confirm all characters return to acceptable bands.
+4. Resume tuning with isolated single-axis adjustments (global pressure first, then character perception/risk, then raw capacity as last resort).

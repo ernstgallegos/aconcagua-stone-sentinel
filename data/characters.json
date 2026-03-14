@@ -18,6 +18,14 @@
       "confidenceStability": 0.94,
       "riskTolerance": 1.1,
       "perceptionBias": 2,
+      "perceptionGuardrails": {
+        "minConfidence": 20,
+        "maxNoise": 31,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.12,
+        "maxTimingConfidencePenalty": 10,
+        "maxTimingNoiseIncrease": 6
+      },
       "perceptionLatency": {
         "baseDelay": 0,
         "pressureDeltaStart": 12,
@@ -61,6 +69,14 @@
       "confidenceStability": 1.18,
       "riskTolerance": 0.84,
       "perceptionBias": -3,
+      "perceptionGuardrails": {
+        "minConfidence": 28,
+        "maxNoise": 25,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.1,
+        "maxTimingConfidencePenalty": 9,
+        "maxTimingNoiseIncrease": 5
+      },
       "perceptionLatency": {
         "baseDelay": 0,
         "pressureDeltaStart": 10,
@@ -104,6 +120,14 @@
       "confidenceStability": 0.9,
       "riskTolerance": 1.34,
       "perceptionBias": 5,
+      "perceptionGuardrails": {
+        "minConfidence": 18,
+        "maxNoise": 33,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.12,
+        "maxTimingConfidencePenalty": 10,
+        "maxTimingNoiseIncrease": 6
+      },
       "perceptionLatency": {
         "baseDelay": 0.46,
         "pressureDeltaStart": 17,
@@ -147,6 +171,14 @@
       "confidenceStability": 1.12,
       "riskTolerance": 1.0,
       "perceptionBias": -6,
+      "perceptionGuardrails": {
+        "minConfidence": 26,
+        "maxNoise": 26,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.09,
+        "maxTimingConfidencePenalty": 8,
+        "maxTimingNoiseIncrease": 5
+      },
       "perceptionLatency": {
         "baseDelay": 0,
         "pressureDeltaStart": 10,
@@ -190,6 +222,14 @@
       "confidenceStability": 0.8,
       "riskTolerance": 1.28,
       "perceptionBias": 7,
+      "perceptionGuardrails": {
+        "minConfidence": 16,
+        "maxNoise": 34,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.13,
+        "maxTimingConfidencePenalty": 11,
+        "maxTimingNoiseIncrease": 7
+      },
       "perceptionLatency": {
         "baseDelay": 0,
         "pressureDeltaStart": 13,
@@ -233,6 +273,14 @@
       "confidenceStability": 0.82,
       "riskTolerance": 1.38,
       "perceptionBias": 8,
+      "perceptionGuardrails": {
+        "minConfidence": 17,
+        "maxNoise": 34,
+        "minHintLevel": 1,
+        "maxTimingActionPenalty": 0.13,
+        "maxTimingConfidencePenalty": 11,
+        "maxTimingNoiseIncrease": 7
+      },
       "perceptionLatency": {
         "baseDelay": 0.6,
         "pressureDeltaStart": 20,
