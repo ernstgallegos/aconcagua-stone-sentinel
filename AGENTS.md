@@ -98,3 +98,5 @@ In addition to the changelog:
 
 - Treat reviewer/user dissatisfaction as a signal to audit for integration mistakes (flow, ordering, and DOM placement), not only syntax/test pass.
 - When requested by the user, keep documenting meaningful lessons here as cumulative operational memory for subsequent sprints.
+- Daniela-specific contextual actions should be gated in both UI rendering and resolver-level execution checks; keyboard shortcuts and fallback resolution must enforce the same constraint path to prevent hidden-action exploits.
+- Perception-altering actions require anti-stacking controls (cooldown, per-run cap, and short-lived carry effects) plus explicit run-log instrumentation so post-run analysis can separate signal-quality boosts from baseline engine behavior.
