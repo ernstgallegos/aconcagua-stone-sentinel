@@ -15,6 +15,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added a consolidated v1.4 design/planning documentation package (ES/EN) with game-structure, character, simulation-pipeline, and phase rollout references.
 - Updated `README.md`, `README.es.md`, `docs/*`, and `meta/public-roadmap.md` to cross-reference the v1.4 documentation baseline and clarify planning-vs-implementation status.
 
+### Added
+- Added Daniela-only contextual action `shoot_photo` in `prototype/web-v1/index.html` and `data/action_modifiers.json`, including capped perception/confidence/trend benefits, finite resource/time cost, cooldown/session guards, and explicit run log instrumentation (`action: "shoot_photo"` with `photoEffectApplied`).
+
+### Changed
+- Updated turn resolution and game UI to render/resolve photo-based route-reading effects diegetically without exposing forbidden raw variables, while preserving canonical resolution order (Environment → EP → BT → pressureDelta → perception → action modifier → outcome).
+
 ## [1.4.0] — 2026-03
 
 ### Added

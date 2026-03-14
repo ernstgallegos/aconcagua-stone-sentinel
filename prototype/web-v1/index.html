@@ -1053,6 +1053,10 @@ body {
             <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"></span></span><span>E<span class="decision-pips"></span></span></span>
           </button>
+          <button class="btn-decision" id="btn-shoot-photo" onclick="makeDecision('shoot_photo')" aria-label="Shoot a photo for route reading" style="display:none">
+            <span class="btn-decision-main"><span>Shoot Photo</span><span class="decision-keyhint">[6]</span></span>
+            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
+          </button>
         </div>
       </div>
       </div>
@@ -1360,6 +1364,10 @@ let G = {
   finalOutcome: 'Strategic Retreat',
   permitDay: 1,
   permitMaxDays: 20,
+  photoShotsTaken: 0,
+  photoInsightTurns: 0,
+  lastPhotoTurn: -99,
+  photoLastEffectLabel: '',
 };
 
 // ════════════════════════════════════════════════
@@ -1677,6 +1685,10 @@ function startGame() {
   G.runLogRecords = [];
   G.hasSummited = false;
   G.finalOutcome = 'Strategic Retreat';
+  G.photoShotsTaken = 0;
+  G.photoInsightTurns = 0;
+  G.lastPhotoTurn = -99;
+  G.photoLastEffectLabel = '';
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -1776,6 +1788,17 @@ function getActionModifier(action) {
   return DATA_CONFIG.actionModifiers[action] || { progress: 0, fatigueMultiplier: 1, exposureMultiplier: 1, timeCost: 60 };
 }
 
+function canUseShootPhoto(state = G.state) {
+  if (G.character?.id !== 'daniela') return { allowed: false, reason: 'Only Daniela can use this action.' };
+  const mod = getActionModifier('shoot_photo');
+  const maxShots = mod.photoSessionCap || 4;
+  const cooldownTurns = mod.photoCooldownTurns || 2;
+  if (G.photoShotsTaken >= maxShots) return { allowed: false, reason: 'No film stock left for this ascent.' };
+  if (G.turn - G.lastPhotoTurn < cooldownTurns) return { allowed: false, reason: 'You need time to process the last frame.' };
+  if (state.water <= 0 || state.food <= 0) return { allowed: false, reason: 'You cannot spare focus while resources are depleted.' };
+  return { allowed: true, reason: 'Available' };
+}
+
 function getStageModifier(position = G.state.position) {
   const stage = getStageForPosition(position);
   return DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
@@ -1861,8 +1884,18 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
   );
   const currentEp = EP ?? calculateEnvironmentalPressure(state).pressureScore;
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
-  const trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
-  const noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+  let trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
+  let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+
+  if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) {
+    const photoMod = getActionModifier('shoot_photo');
+    const carryConfidence = Math.min(photoMod.photoCarryConfidenceGain || 3, 4);
+    const carryUncertaintyDrop = Math.min((photoMod.photoUncertaintyDrop || 4) - 2, 3);
+    trendEstimate = trendEstimate === 'worsening fast' ? 'worsening' : trendEstimate;
+    noiseLevel = clamp(noiseLevel - carryUncertaintyDrop, 0, 35);
+    return { confidenceLevel: clamp(confidenceLevel + carryConfidence, 5, 98), trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT };
+  }
+
   return { confidenceLevel, trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT };
 }
 
@@ -2073,6 +2106,16 @@ function renderWatch() {
     sleepBtn.title = 'Sleep is only possible at camps';
   }
 
+  const photoBtn = document.getElementById('btn-shoot-photo');
+  const photoAccess = canUseShootPhoto(s);
+  if (G.character?.id === 'daniela') {
+    photoBtn.style.display = 'inline-block';
+    photoBtn.disabled = !photoAccess.allowed;
+    photoBtn.title = photoAccess.reason;
+  } else {
+    photoBtn.style.display = 'none';
+  }
+
   renderPositionList();
   updatePermitWidget();
 }
@@ -2145,6 +2188,7 @@ const NARRATIVES = {
   water_gone: ['Water has reached zero; all remaining turns become expensive.', 'Hydration debt starts collecting immediately.', 'Without water, every choice becomes shorter-term.', 'The body begins rationing performance.', 'This is a hard boundary, not a soft warning.', 'From here, degradation accelerates.'],
   food_gone: ['Food is exhausted. The body shifts to deficit management.', 'Energy planning is now damage planning.', 'The margin between action and collapse narrows further.', 'No intake means no recovery reserve.', 'You can continue, but the bill is immediate.', 'Operational endurance contracts sharply.'],
   slept: ['Night at camp recovers structure, never certainty.', 'Sleep reduces noise, not objective risk.', 'Morning starts with less debt, not with none.', 'The body stabilizes where altitude permits it.', 'Recovery is local and conditional.', 'A camp night is maintenance, not reset.'],
+  shoot_photo: ['Daniela frames the ridge and catches a shift before it hardens into risk.', 'A quick shot locks in texture, wind trace, and line quality for the next push.', 'The lens turns scattered cues into a readable pattern.', 'She spends minutes now to avoid a blind move later.', 'The frame records what panic usually blurs.', 'A single photo buys a cleaner read of terrain mood.'],
   bivouac: ['Open bivouac exacts payment in exposure and capacity.', 'Unplanned night outside camp accelerates systemic decay.', 'The clock rolls over; the debt does not.', 'Forced bivouac turns one mistake into several.', 'Shelter without camp still costs heavily.', 'Night outside support is punitive by design.'],
   irreversible: ['First irreversible point crossed. Retreat remains valid, never cheap.', 'Above this line, every reversal carries compound cost.', 'The route changed from expedition to commitment.', 'You can still descend, but not neutrally.', 'The mountain has marked this threshold.', 'From here, price and altitude move together.'],
   window_open: ['A clean window appears. Timing and readiness must coincide.', 'Conditions loosen briefly; indecision has a cost.', 'The system is permissive for a short interval.', 'This is not safety, only opportunity.', 'The route offers less resistance now.', 'A window is useful only if recognized in time.'],
@@ -2199,6 +2243,8 @@ function renderNarrative(decision, signals, flags=[]) {
     text = pickNarrative('descend');
   } else if (decision === 'sleep') {
     text = pickNarrative('slept');
+  } else if (decision === 'shoot_photo') {
+    text = pickNarrative('shoot_photo');
   } else {
     // pre-turn state narrative
     if (s.fatigue >= 65 && s.fatigue < 80) text = pickNarrative('pre_collapse_fatigue');
@@ -2221,6 +2267,9 @@ function renderNarrative(decision, signals, flags=[]) {
       passive = 'The body says yes. The mountain hasn\'t answered yet.';
     }
   }
+  if (G.character?.id === 'daniela' && G.photoInsightTurns > 0 && decision === null) {
+    passive = 'Recent frames sharpen route reading for a short window.';
+  }
   if (passive) {
     passiveEl.textContent = passive;
     passiveEl.style.display = 'block';
@@ -2239,6 +2288,7 @@ function updateAmbientSignal(flags, decision) {
   if (!box) return;
   let line = '';
   if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = 'Spindrift rises in narrow veils across the ridge line.';
+  else if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) line = 'Daniela\'s last frame clarifies wind and terrain rhythm for a brief window.';
   else if (G.signals && G.signals.trend === 'worsening') line = 'The mountain tone hardens: less margin, same distance.';
   else if (G.signals && G.signals.trend === 'improving') line = 'The air eases slightly, without promise.';
   if (!line) { box.style.display = 'none'; return; }
@@ -2267,7 +2317,7 @@ function buildDebriefAnalytics() {
   const el = document.getElementById('debrief-analytics');
   const total = Math.max(1, G.turnLog.length);
   const count = (d) => G.turnLog.filter((t) => t.decision === d).length;
-  const dist = ['advance','advance_slowly','wait','sleep','descend'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
+  const dist = ['advance','advance_slowly','wait','sleep','descend','shoot_photo'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
   const sorted = [...G.turnLog].sort((a, b) => (b.raw.capacity - b.raw.fatigue - b.raw.exposure) - (a.raw.capacity - a.raw.fatigue - a.raw.exposure));
   const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
   const worst = sorted[sorted.length - 1] || best;
@@ -2307,7 +2357,7 @@ function buildDebriefAnalytics() {
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep'].forEach(id => {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo'].forEach(id => {
     const btn = document.getElementById(id);
     btn.disabled = !enabled;
     if (enabled) btn.removeAttribute('aria-disabled');
@@ -2427,17 +2477,27 @@ function updateState(state, result, action) {
 
 function resolveTurn(state, action) {
   const flags = [];
-  const actionMod = getActionModifier(action);
+  let resolvedAction = action;
 
-  const actionMinutes = applyTimeCost(action);
+  if (resolvedAction === 'shoot_photo') {
+    const access = canUseShootPhoto(state);
+    if (!access.allowed) {
+      flags.push('photo-action-blocked');
+      resolvedAction = 'wait';
+    }
+  }
+
+  let actionMod = getActionModifier(resolvedAction);
+
+  const actionMinutes = applyTimeCost(resolvedAction);
   spendResourcesForMinutes(Math.max(actionMinutes, 30), flags);
 
-  if (action !== 'sleep') {
+  if (resolvedAction !== 'sleep') {
     state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
     state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
   }
 
-  if (action === 'sleep') {
+  if (resolvedAction === 'sleep') {
     G.persistenceTurns = 0;
   } else if (getCurrentNode(state).altitudeBand >= 2) {
     G.persistenceTurns += 1;
@@ -2447,27 +2507,59 @@ function resolveTurn(state, action) {
   let epResult = calculateEnvironmentalPressure(state);
   epResult.pressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
-  // Acclimatization deficit penalty: entering HIGH_CAMP or SUMMIT_DAY under-adapted
-  // increases environmental pressure proportionally to the gap.
   const currentStageForAccl = getCurrentStage();
   const acclNow = G.acclimatization || 0;
   if (currentStageForAccl === 'HIGH_CAMP' && acclNow < 20) {
-    const acclPenalty = (20 - acclNow) * 0.6;   // up to +12 EP
+    const acclPenalty = (20 - acclNow) * 0.6;
     epResult.pressureScore += acclPenalty;
     if (acclNow < 10) flags.push('acclimatization-deficit');
   } else if (currentStageForAccl === 'SUMMIT_DAY' && acclNow < 40) {
-    const acclPenalty = (40 - acclNow) * 0.8;   // up to +32 EP
+    const acclPenalty = (40 - acclNow) * 0.8;
     epResult.pressureScore += acclPenalty;
     if (acclNow < 20) flags.push('acclimatization-deficit');
   }
 
   const BT = calculateBodyTolerance(state);
   const pressureDelta = epResult.pressureScore - BT;
+  const perception = calculatePerception({ state, EP: epResult.pressureScore, BT, pressureDelta });
+
+  let photoEffectApplied = null;
+  if (resolvedAction === 'shoot_photo') {
+    const confidenceGain = Math.min(actionMod.photoConfidenceGain || 6, 8);
+    const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop || 4, 6);
+    if (actionMod.photoTrendAssist) {
+      const trendMap = { 'worsening fast': 'worsening', worsening: 'worsening', easing: 'easing', steady: 'steady' };
+      perception.trendEstimate = trendMap[perception.trendEstimate] || perception.trendEstimate;
+    }
+    perception.confidenceLevel = clamp(perception.confidenceLevel + confidenceGain, 5, 98);
+    perception.noiseLevel = clamp(perception.noiseLevel - uncertaintyDrop, 0, 35);
+
+    G.photoShotsTaken += 1;
+    G.lastPhotoTurn = G.turn;
+    G.photoInsightTurns = Math.max(G.photoInsightTurns, actionMod.photoInsightTurns || 2);
+    G.photoLastEffectLabel = 'Frame review improved route reading confidence.';
+
+    photoEffectApplied = {
+      confidenceBoost: confidenceGain,
+      uncertaintyDrop,
+      trendAssist: !!actionMod.photoTrendAssist,
+      insightTurnsGranted: actionMod.photoInsightTurns || 2,
+      shotsUsed: G.photoShotsTaken,
+    };
+  } else if (G.photoInsightTurns > 0) {
+    G.photoInsightTurns = Math.max(0, G.photoInsightTurns - 1);
+  }
+
+  if (resolvedAction !== 'shoot_photo' && G.photoInsightTurns > 0) {
+    actionMod = {
+      ...actionMod,
+      fatigueMultiplier: Math.max(0.75, (actionMod.fatigueMultiplier || 1) - 0.05),
+    };
+  }
 
   const result = evaluateOutcome(pressureDelta, actionMod, state);
-  updateState(state, result, action);
+  updateState(state, result, resolvedAction);
 
-  const perception = calculatePerception({ state, EP: epResult.pressureScore, BT, pressureDelta });
   let outcome = result.outcome;
   const outsideCamp = !isCampPosition(state.position);
   if (state.functional_capacity <= 5 || state.exposure >= 99) outcome = 'Fatality';
@@ -2495,16 +2587,17 @@ function resolveTurn(state, action) {
     EP: Number(epResult.pressureScore.toFixed(2)),
     BT: Number(BT.toFixed(2)),
     pressureDelta: Number(pressureDelta.toFixed(2)),
-    action,
+    action: resolvedAction,
     progress: result.progress,
     fatigue: Number(state.fatigue.toFixed(2)),
     exposure: Number(state.exposure.toFixed(2)),
     confidence: Math.round(perception.confidenceLevel),
     trendEstimate: perception.trendEstimate,
+    photoEffectApplied,
     outcome,
   });
 
-  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception, outcome };
+  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception, outcome, action: resolvedAction };
 }
 
 function makeDecision(decision) {
@@ -2520,16 +2613,17 @@ function makeDecision(decision) {
   }
 
   const turnResult = resolveTurn(s, decision);
+  const resolvedDecision = turnResult.action || decision;
   G.signals = computeSignals();
   renderWatch();
-  const narrativeText = renderNarrative(decision, G.signals, turnResult.flags);
+  const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
 
   const logEntry = {
     turn: G.turn,
     day: G.day,
     time: formatMinutes(G.minutesOfDay),
     position: s.position,
-    decision,
+    decision: resolvedDecision,
     trend: G.signals.trend,
     uncertainty: G.signals.uncertainty,
     body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
@@ -2574,7 +2668,7 @@ function addLogEntry(entry) {
   const div = document.createElement('div');
   div.className = 'log-entry';
 
-  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT' }[entry.decision];
+  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT', shoot_photo:'PHOTO TAKEN' }[entry.decision];
   const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
 
   const meta = document.createElement('div');
@@ -2922,6 +3016,7 @@ document.addEventListener('keydown', (event) => {
     '3': 'btn-wait',
     '4': 'btn-descend',
     '5': 'btn-sleep',
+    '6': 'btn-shoot-photo',
   };
   const buttonId = map[event.key];
   if (!buttonId) return;
