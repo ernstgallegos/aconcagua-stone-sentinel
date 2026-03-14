@@ -3130,11 +3130,15 @@ function resolveTurn(state, action) {
     stage: getCurrentStage(),
     node: state.position,
     character: G.character?.name || 'Unknown',
+    characterId: G.character?.id || 'unknown',
     location: POS_LABELS[state.position],
     EP: Number(epResult.pressureScore.toFixed(2)),
     BT: Number(BT.toFixed(2)),
+    epScore: Number(epResult.pressureScore.toFixed(2)),
+    btScore: Number(BT.toFixed(2)),
     pressureDelta: Number(pressureDelta.toFixed(2)),
     action: resolvedAction,
+    specialActionUsed: resolvedAction === 'shoot_photo',
     progress: result.progress,
     fatigue: Number(state.fatigue.toFixed(2)),
     exposure: Number(state.exposure.toFixed(2)),
@@ -3142,6 +3146,7 @@ function resolveTurn(state, action) {
     trendEstimate: timedPerception.trendEstimate,
     photoEffectApplied,
     lateSignalActivation: lateSignalEvent,
+    lateSignalTriggered: !!lateSignalEvent,
     decisionMs: G.decisionTimeSpentMs,
     decisionWindowExceeded: G.decisionWindowExceeded,
     decisionWindowEffect: G.decisionWindowEffect,
@@ -3357,7 +3362,8 @@ function endRun(returnedToHorcones) {
 
   // save to journal
   G.runLogRecords = G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label }));
-  try { localStorage.setItem('run_log.json', JSON.stringify(G.runLogRecords, null, 2)); } catch (e) {}
+  const runLogExport = buildRunLogExport();
+  try { localStorage.setItem('run_log.json', JSON.stringify(runLogExport, null, 2)); } catch (e) {}
   saveJournalEntry({
     runNum: G.runNumber,
     scenario: sc.name,
@@ -3492,7 +3498,7 @@ function endRun(returnedToHorcones) {
 }
 
 function exportRunLog() {
-  const blob = new Blob([JSON.stringify(G.runLogRecords, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(buildRunLogExport(), null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'run_log.json';
@@ -3500,6 +3506,41 @@ function exportRunLog() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
+}
+
+function summarizeRunLog(records) {
+  const summary = {
+    totalTurns: records.length,
+    criticalEventCount: 0,
+    decisionWindowExceededCount: 0,
+    lateSignalTriggeredCount: 0,
+    specialActionUsedCount: 0,
+  };
+
+  records.forEach((entry) => {
+    const hasCriticalFlag = (entry.flags || []).some((flag) =>
+      ['critical-fatigue', 'critical-exposure', 'fatality-threshold'].includes(flag)
+    );
+    if (hasCriticalFlag) summary.criticalEventCount += 1;
+    if (entry.decisionWindowExceeded) summary.decisionWindowExceededCount += 1;
+    if (entry.lateSignalTriggered || entry.lateSignalActivation) summary.lateSignalTriggeredCount += 1;
+    if (entry.specialActionUsed) summary.specialActionUsedCount += 1;
+  });
+
+  return summary;
+}
+
+function buildRunLogExport() {
+  if (!G.runLogRecords.length) return [];
+
+  const summary = summarizeRunLog(G.runLogRecords);
+  return G.runLogRecords.map((entry, idx) => {
+    if (idx !== G.runLogRecords.length - 1) return entry;
+    return {
+      ...entry,
+      runSummary: summary,
+    };
+  });
 }
 
 // FIX: journal navigation helper — records the origin screen

@@ -16,6 +16,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added perception-latency profiles in `data/characters.json` (`engine.perceptionLatency`) to support delayed signal activation tuning per character, including specialized thresholds for `erik` and `irina`.
 
 ### Changed
+- Standardized `prototype/web-v1/index.html` `run_log.json` export payload with stable cross-run comparison aliases (`epScore`, `btScore`) while preserving legacy fields (`EP`, `BT`) for backwards compatibility.
+- Expanded `prototype/web-v1/index.html` run-log export rows with `characterId`, `stage`, `decisionWindowExceeded`, `lateSignalTriggered`, and `specialActionUsed` to improve QA and balance instrumentation.
+- Added per-run critical-event summary metadata (`runSummary`) to exported `run_log.json` in `prototype/web-v1/index.html` for faster QA/balance triage without removing existing per-turn records.
 - Rebalanced expedition pacing and risk envelope across `data/action_modifiers.json`, `data/stage_modifiers.json`, and `data/environmental_pressure_config.json` to reduce collapse-only trajectories and recover strategic-retreat / permit-pressure space in canonical scenario batteries.
 - Recalibrated character profiles in `data/characters.json` by prioritizing perception/risk/timing knobs (not opaque power buffs), reducing dominance risk (Laura/Irina) and improving viability for high-variance profiles (Erik/Daniela/Blake).
 - Added `docs/balance-calibration-notes.md` with per-character target metric bands and post-tuning dispersion results from canonical scenario stress runs for balance traceability.
