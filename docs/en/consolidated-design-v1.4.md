@@ -152,7 +152,45 @@ System configuration is defined under `/data` (nodes, environmental pressure, st
 
 ### 6.3 Target win-rate distribution
 
-Balance should preserve meaningful character differentiation without collapsing decision legibility.
+Calibrated from 1,200 stochastic runs per character (80 replications × 15 scenario-seed pairs).
+Full calibration notes in `docs/balance-calibration-notes.md`.
+
+| Character | Summit & Safe Return | Strategic Retreat | Rescue | Collapse | Permit Expired |
+|---|---:|---:|---:|---:|---:|
+| Laura Kim | 4.6% | 82.9% | 4.1% | 4.6% | 3.8% |
+| Francisco Aguirre | 3.5% | 79.5% | 5.9% | 5.0% | 6.1% |
+| Irina Orlova | 3.2% | 72.2% | 7.3% | 7.4% | 9.8% |
+| Erik Lundvall | 3.5% | 74.8% | 6.6% | 6.3% | 8.8% |
+| Daniela De Rossi | 3.9% | 82.8% | 5.2% | 4.6% | 3.4% |
+| Blake Harris | 3.1% | 59.9% | 14.8% | 13.9% | 8.3% |
+
+**Balance rationale:** these values prioritize Strategic Retreat as the most frequent outcome
+(55–83%) across all characters, consistent with Design Pillar 1 (The Mountain Governs) and
+Pillar 4 (Active Contemplation). Summit rates are intentionally low (~3–5%); the correct
+success loop is recognizing limits, not reaching the top.
+
+**Active configuration values** (post-calibration, as of v1.4):
+
+`data/stage_modifiers.json` — key multipliers:
+- `HIGH_CAMP.fatigueMultiplier`: 1.24 · `HIGH_CAMP.exposureMultiplier`: 1.28
+- `SUMMIT_DAY.fatigueMultiplier`: 1.42 · `SUMMIT_DAY.exposureMultiplier`: 1.50
+- `SUMMIT_DAY.weatherSeverityBias`: 2 · `SUMMIT_DAY.confidencePenalty`: 18
+
+`data/action_modifiers.json` — key values:
+- `advance.fatigueMultiplier`: 1.18 · `advance.timeCost`: 110 min
+- `advance_slowly.fatigueMultiplier`: 0.90 · `advance_slowly.timeCost`: 165 min
+- `wait.fatigueMultiplier`: 0.62 · `wait.acclimatizationGain`: 4
+- `sleep.fatigueRecovery`: 18 · `sleep.acclimatizationGain`: 7
+
+`data/environmental_pressure_config.json` — key values:
+- `baseCosts.fatigue`: 9 · `baseCosts.exposure`: 7
+- `altitudePressureByBand[4]`: 100
+- `summitOptimalEnd`: 630 min (10:30) · `summitLateStart`: 750 min (12:30)
+- `bivouacPenalty.fatigue`: 26 · `bivouacPenalty.exposure`: 32
+
+These values diverge from the pre-calibration spec in `one-shot-fase1-v1.4.md` by design.
+The spec used conservative estimates; post-run calibration reduced punishment to recover
+strategic retreat space and avoid collapse-dominant trajectories.
 
 ---
 

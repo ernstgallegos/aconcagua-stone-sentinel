@@ -316,25 +316,6 @@ body {
   border-top: 1px solid var(--border);
 }
 
-/* ───── MODE SELECT ───── */
-#screen-mode { padding: 2.5rem 1.5rem; align-items: center; justify-content: center; }
-.mode-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1rem; max-width: 500px; width: 100%; margin-bottom: 2rem;
-}
-.mode-card {
-  border: 1px solid var(--border); background: var(--surface);
-  padding: 2rem 1.5rem; cursor: pointer; text-align: center;
-  transition: border-color 0.2s, background 0.2s;
-}
-.mode-card:hover { border-color: var(--stone); background: var(--surface2); }
-.mode-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
-.mode-name {
-  font-family: var(--mono); font-size: 0.8rem; color: var(--white);
-  letter-spacing: 0.1em; margin-bottom: 0.5rem;
-}
-.mode-desc { font-size: 0.8rem; color: var(--stone); line-height: 1.5; }
-
 /* ───── SCENARIO SELECT ───── */
 #screen-scenario { padding: 2.5rem 1.5rem; align-items: center; }
 .scenario-grid {
@@ -1078,7 +1059,6 @@ body {
 @media (max-width: 680px) {
   .game-layout { grid-template-columns: 1fr; }
   .right-panel { order: -1; }
-  .mode-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1430,10 +1410,23 @@ body {
 <section id="screen-part2-guides" class="screen" aria-label="Part 2 narrative - guides">
   <div class="part2-step">
     <div class="part2-step-kicker">Part 2 · Expedition Guides</div>
-    <h3>Stone Sentinel guides set the operating frame</h3>
+    <h3>Stone Sentinel Expeditions — The guides</h3>
     <p>
-      Two EPGAMT-certified guides from Mendoza outline decision authority, turnaround criteria,
-      and the principle that no summit is worth compromising safe return.
+      The expedition is led by two EPGAMT-certified guides from Mendoza.
+    </p>
+    <p>
+      <strong>Agustina Villanueva</strong> — Lead guide. Twelve seasons on Aconcagua, eight as
+      lead. Certified UIAA mountaineering guide since 27. Direct, economical with words,
+      and precise about conditions. When she says it's time to descend, the discussion ends.
+    </p>
+    <p>
+      <strong>Alejandro Molina</strong> — Assistant guide. Second season. Strong climber,
+      fast learner, tends toward optimism when conditions are uncertain. The group notices
+      the mentor dynamic between them from day one.
+    </p>
+    <p>
+      Their operating principle, stated plainly at the hotel briefing: no summit is worth
+      compromising a safe return.
     </p>
     <div class="part2-step-actions">
       <button class="btn-ghost" onclick="showScreen('part2-intro')">Back</button>
