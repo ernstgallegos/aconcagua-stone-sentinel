@@ -10,11 +10,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
 - Added character-level decision-window profiles in `data/characters.json` (`engine.decisionWindow`) with stage modifiers for `APPROACH`, `HIGH_CAMP`, and `SUMMIT_DAY` to differentiate timing pressure behavior across roster archetypes.
 - Added a contextual one-use `Focus pause` fallback in `prototype/web-v1/index.html` to provide a limited accessible grace margin during high-pressure turns.
 - Added perception-latency profiles in `data/characters.json` (`engine.perceptionLatency`) to support delayed signal activation tuning per character, including specialized thresholds for `erik` and `irina`.
 
 ### Changed
+- Reworked right-panel hierarchy in `prototype/web-v1/index.html` by stacking watch, permit, and a new contextual status widget to improve at-a-glance risk scanning during turns.
+- Updated critical-action microcopy in `prototype/web-v1/index.html` to describe immediate cost/benefit tradeoffs directly in action buttons without extending onboarding flow.
+- Added staged risk indicators (`warning`/`critical`) in `prototype/web-v1/index.html` contextual chips using engine-aligned thresholds for body state, resources, permit days, and decision window pressure.
+- Reinforced debrief output in `prototype/web-v1/index.html` with a primary actionable cause line paired with the existing turning-point section.
+- Tuned readability in `prototype/web-v1/index.html` for `dark`, `light`, and `sunset` themes on secondary microcopy and contextual labels.
+- Updated `prototype/web-v1/README.md` and root `README*.md` references to document contextual risk reading and playtest observation support.
 - Extended `prototype/web-v1/index.html` Part 2 bridge into a navigable transition sequence (`part2-hotel` → `part2-intro` → `part2-guides` → `part2-transfer` → `part2-closure`) with connected back/forward controls and explicit safe exits to debrief/title.
 - Replaced `confirmPart2Character()` placeholder alert in `prototype/web-v1/index.html` with real progression to the Part 2 narrative flow, guarded so unlock remains exclusive to `G.finalOutcome === "Summit and Safe Return"`.
 - Updated Part 2 transition copy in `prototype/web-v1/index.html` to match v1.4 EN/ES design references (hotel, presentation, guides, transfer, closure).

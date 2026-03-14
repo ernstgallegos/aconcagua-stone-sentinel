@@ -61,6 +61,20 @@ body[data-theme='sunset'] {
   --text:      #f3d4bf;
   --text-dim:  #c58f79;
 }
+body[data-theme='light'] .decision-microcopy,
+body[data-theme='light'] .context-sub,
+body[data-theme='light'] .watch-section-label,
+body[data-theme='light'] .context-widget-label,
+body[data-theme='light'] .decision-keyhint {
+  color: #645648;
+}
+body[data-theme='sunset'] .decision-microcopy,
+body[data-theme='sunset'] .context-sub,
+body[data-theme='sunset'] .watch-section-label,
+body[data-theme='sunset'] .context-widget-label,
+body[data-theme='sunset'] .decision-keyhint {
+  color: #f1c7aa;
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 14px; }
 body {
@@ -499,6 +513,7 @@ body {
 
 /* ─ RIGHT: watch panel ─ */
 .right-panel { display: flex; flex-direction: column; gap: 1rem; }
+.status-stack { display: flex; flex-direction: column; gap: 0.7rem; }
 
 .watch-panel {
   border: 1px solid var(--border); background: linear-gradient(160deg, color-mix(in srgb, var(--surface) 88%, var(--ice-dim) 12%), var(--surface));
@@ -591,6 +606,54 @@ body {
 .resource-item { color: var(--stone); }
 .resource-item span { color: var(--white); }
 .resource-item.depleted span { color: var(--red); }
+.resource-item.warning span { color: var(--ochre); }
+
+.context-widget {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: 0.7rem 0.8rem;
+  font-family: var(--mono);
+}
+.context-widget-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.context-indicators {
+  margin-top: 0.45rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.risk-chip {
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  color: var(--stone);
+  padding: 0.14rem 0.32rem;
+}
+.risk-chip.warning {
+  border-color: color-mix(in srgb, var(--ochre) 70%, var(--border));
+  color: var(--ochre);
+}
+.risk-chip.critical {
+  border-color: color-mix(in srgb, var(--red) 78%, var(--border));
+  color: var(--red);
+}
+.context-main {
+  margin-top: 0.5rem;
+  font-size: 0.68rem;
+  color: var(--white);
+  line-height: 1.45;
+}
+.context-sub {
+  margin-top: 0.32rem;
+  font-size: 0.61rem;
+  color: var(--stone);
+  line-height: 1.4;
+}
 
 .watch-time-pressure {
   margin-top: 0.75rem;
@@ -700,6 +763,15 @@ body {
   font-size: 0.5rem;
   color: var(--text-dim);
 }
+.decision-microcopy {
+  margin-top: 0.28rem;
+  text-align: left;
+  font-size: 0.52rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--stone);
+}
 .decision-pips {
   display: inline-flex;
   gap: 2px;
@@ -770,6 +842,11 @@ body {
 .tutorial-toast.visible{opacity:1;transform:translateY(0);}
 .debrief-turning-point {
   font-size: 0.85rem; color: var(--stone); font-style: italic; line-height: 1.7;
+}
+.debrief-cause {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--stone);
 }
 
 .debrief-log-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.65rem; }
@@ -1055,6 +1132,7 @@ body {
     </div>
     <!-- RIGHT -->
     <div class="right-panel">
+      <div class="status-stack">
       <div class="watch-panel" id="watch-panel" aria-label="Expedition status">
         <div class="watch-header">
           <span class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</span>
@@ -1109,12 +1187,18 @@ body {
         <!-- FIX: resource-warning now shown inline when depleted -->
         <div id="resource-warning-box"></div>
       </div>
-
-<div class="permit-widget" id="permit-widget" aria-label="Park permit status">
-  <div class="permit-label">Park Permit</div>
-  <div class="permit-name" id="permit-name">—</div>
-  <div class="permit-days" id="permit-days">— days remaining</div>
-</div>
+      <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
+        <div class="permit-label">Park Permit</div>
+        <div class="permit-name" id="permit-name">—</div>
+        <div class="permit-days" id="permit-days">— days remaining</div>
+      </div>
+      <div class="context-widget" id="context-widget" aria-live="polite">
+        <div class="context-widget-label">Context status</div>
+        <div class="context-indicators" id="context-indicators"></div>
+        <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
+        <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
+      </div>
+      </div>
 <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
       <div class="narrative-box">
         <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
@@ -1130,28 +1214,34 @@ body {
           <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">
             <span class="btn-decision-main"><span>Advance</span><span class="decision-keyhint">[1]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span></span>
+            <span class="decision-microcopy">Fastest gain, highest fatigue/exposure spike.</span>
           </button>
           <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">
             <span class="btn-decision-main"><span>Advance Slowly</span><span class="decision-keyhint">[2]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
+            <span class="decision-microcopy">Moderate gain with lower body cost and pace risk.</span>
           </button>
           <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">
             <span class="btn-decision-main"><span>Wait</span><span class="decision-keyhint">[3]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
+            <span class="decision-microcopy">Stabilizes only at lower camps; above high camp it mainly buys time.</span>
           </button>
           <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">
             <span class="btn-decision-main"><span>Descend</span><span class="decision-keyhint">[4]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
+            <span class="decision-microcopy">Concede altitude to protect return margin and permit clock.</span>
           </button>
           <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" style="display:none">
             <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"></span></span><span>E<span class="decision-pips"></span></span></span>
+            <span class="decision-microcopy">Camp-only reset: lowers fatigue and exposure, spends daylight.</span>
           </button>
           <button class="btn-decision" id="btn-shoot-photo" onclick="makeDecision('shoot_photo')" aria-label="Shoot a photo for route reading" style="display:none">
             <span class="btn-decision-main"><span>Shoot Photo</span><span class="decision-keyhint">[6]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
+            <span class="decision-microcopy">Daniela only: spend a turn for clearer trend/confidence on next reads.</span>
           </button>
-        </div>
+        </div>        </div>
       </div>
       </div>
     </div>
@@ -1170,6 +1260,7 @@ body {
     <div class="debrief-section">
       <div class="debrief-section-title">First Irreversible Point</div>
       <div class="debrief-turning-point" id="debrief-turning-point">—</div>
+      <div class="debrief-cause" id="debrief-cause">Primary cause pending run completion.</div>
     </div>
     <div class="debrief-section">
       <div class="debrief-section-title">Turn Log</div>
@@ -2272,6 +2363,65 @@ function updatePermitWidget() {
   else if (remaining <= 7) daysEl.classList.add('permit-warn');
 }
 
+function getRiskProfile(state) {
+  const permitRemaining = G.permitMaxDays - G.permitDay + 1;
+  const tw = getSimConfig().timeWindows || { summitLateStart: 780 };
+  const isLate = G.minutesOfDay >= tw.summitLateStart;
+  const waterCritical = state.water === 0;
+  const foodCritical = state.food === 0;
+  const bodyCritical = state.functional_capacity <= 25 || state.fatigue >= 80 || state.exposure >= 75;
+  const bodyWarning = state.functional_capacity <= 40 || state.fatigue >= 60 || state.exposure >= 55;
+  const permitCritical = permitRemaining <= 3;
+  const permitWarning = permitRemaining <= 7;
+  const timeCritical = G.turn >= Math.max((G.scenario?.max_turns || 1) - 3, 1);
+  const timeWarning = G.turn >= Math.max((G.scenario?.max_turns || 1) - 6, 1);
+
+  const chips = [];
+  if (bodyCritical) chips.push({ label: 'body critical', level: 'critical' });
+  else if (bodyWarning) chips.push({ label: 'body warning', level: 'warning' });
+  if (waterCritical || foodCritical) chips.push({ label: 'resource critical', level: 'critical' });
+  else if (state.water <= 3 || state.food <= 3) chips.push({ label: 'resource warning', level: 'warning' });
+  if (permitCritical) chips.push({ label: 'permit critical', level: 'critical' });
+  else if (permitWarning) chips.push({ label: 'permit warning', level: 'warning' });
+  if (timeCritical || isLate) chips.push({ label: 'window critical', level: 'critical' });
+  else if (timeWarning) chips.push({ label: 'window warning', level: 'warning' });
+
+  let main = 'System stable: push only if trend and confidence align.';
+  let sub = 'No critical threshold is active this turn.';
+  if (chips.some(c => c.level === 'critical')) {
+    main = 'Critical threshold active: prioritize preserving return margin.';
+    sub = 'Descending or controlled pacing may prevent irreversible cost stacking.';
+  } else if (chips.length) {
+    main = 'Warning threshold active: gains are still possible with disciplined pacing.';
+    sub = 'Validate trend, confidence, and resource burn before committing to altitude gain.';
+  }
+  return { chips, main, sub };
+}
+
+function renderContextWidget(state) {
+  const profile = getRiskProfile(state);
+  const chipsEl = document.getElementById('context-indicators');
+  const mainEl = document.getElementById('context-main');
+  const subEl = document.getElementById('context-sub');
+  if (!chipsEl || !mainEl || !subEl) return;
+  clearElement(chipsEl);
+  if (!profile.chips.length) {
+    const chip = document.createElement('span');
+    chip.className = 'risk-chip';
+    chip.textContent = 'stable';
+    chipsEl.appendChild(chip);
+  } else {
+    profile.chips.forEach(({ label, level }) => {
+      const chip = document.createElement('span');
+      chip.className = `risk-chip ${level}`;
+      chip.textContent = label;
+      chipsEl.appendChild(chip);
+    });
+  }
+  mainEl.textContent = profile.main;
+  subEl.textContent = profile.sub;
+}
+
 function renderWatch() {
   const s = G.state;
   const sig = G.signals;
@@ -2378,6 +2528,8 @@ function renderWatch() {
   }
 
 
+
+  renderContextWidget(s);
 
   const sleepBtn = document.getElementById('btn-sleep');
   if (isCampPosition(s.position)) {
@@ -3140,6 +3292,22 @@ function findTurningPoint() {
   return 'No single event dominated; the outcome emerged from cumulative micro-decisions.';
 }
 
+function findPrimaryCause() {
+  const reasonByOutcome = {
+    'Rescue': 'Main cause: body thresholds crossed outside camp. Actionable next run: call descent one turn earlier once trend worsens with low confidence.',
+    'Collapse (Fatigue)': 'Main cause: fatigue debt compounded faster than recovery windows. Actionable next run: rotate advance/slow/wait before entering high-camp segment.',
+    'Collapse (Exposure)': 'Main cause: exposure accumulated during adverse pressure turns. Actionable next run: avoid chaining aggressive pushes while trend is worsening.',
+    'Resource Exhaustion': 'Main cause: water/food burn outpaced route progress. Actionable next run: protect resources early and treat warning chips as mandatory replanning moments.',
+    'Permit Expired': 'Main cause: permit clock overran before safe completion. Actionable next run: tighten tempo on low-risk windows and descend earlier when delays stack.',
+    'Expedition Window Closed': 'Main cause: summit window closed before execution aligned. Actionable next run: convert waiting turns into controlled movement during optimal time blocks.',
+    'Strategic Retreat': 'Main cause: chosen retreat to preserve return safety. Actionable next run: compare retreat trigger turn against body/resource warning onset to calibrate risk timing.',
+    'High Point Return': 'Main cause: progress peak reached but return margin remained the priority. Actionable next run: reserve more body capacity before the final push segment.',
+    'Summit and Safe Return': 'Main cause: pressure management stayed ahead of cumulative debt. Actionable next run: replicate pacing pattern around warning transitions.',
+    'Fatality': 'Main cause: critical limits were exceeded beyond recoverable range. Actionable next run: treat first critical flag as immediate descend trigger.',
+  };
+  return reasonByOutcome[G.finalOutcome] || 'Main cause: cumulative micro-decisions under uncertainty. Actionable next run: review first warning turn and adjust tempo one step earlier.';
+}
+
 
 function buildReflectionPrompts() {
   const log = G.turnLog;
@@ -3248,6 +3416,7 @@ function endRun(returnedToHorcones) {
   });
 
   document.getElementById('debrief-turning-point').textContent = findTurningPoint();
+  document.getElementById('debrief-cause').textContent = findPrimaryCause();
 
   // log table
   const table = document.getElementById('debrief-log-table');
