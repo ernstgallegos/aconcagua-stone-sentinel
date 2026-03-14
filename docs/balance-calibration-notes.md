@@ -86,3 +86,27 @@ favorable weather (ws ≤ 1), correct timing (early departure from Cólera), and
 resources. Blake Harris (Very Demanding) reaches summit borderline (delta ~12 = LIMITED)
 only under perfect conditions. Laura Kim and Francisco Aguirre reach it at MODERATE delta
 under good conditions. A storm (ws=3) at summit makes delta ~140 regardless of body state.
+
+## Resource and timing calibration pass
+
+### Bugs fixed
+Two bugs prevented summit completion regardless of player decisions:
+
+1. `Math.max(1, ...)` resource floor in `spendResourcesForMinutes`: every action
+   cost a minimum of 1 water unit. Full expedition = ~45 actions → 45 minimum water,
+   exceeding all scenario starting pools. Fixed to `Math.max(0, ...)`.
+
+2. `summitLateStart: 750` (12:30pm) aborted the summit push at La Canaleta (arrival
+   ~14:15 from 6am Cólera departure). Fixed to 960 (4:00pm).
+
+### Calibrated resource burn rates
+`resourceBurnPerHour` values chosen so that a full round trip (Horcones → Summit →
+Horcones, 4 sleeps, 28 advance/descend actions) costs 25 water units — within the
+22–26 starting pool of all scenarios. Rates preserve per-stage pressure:
+SUMMIT_DAY burn is 2.4× the APPROACH rate, keeping resource management active at altitude.
+
+### Expected summit rate post-fix
+~28–32% with the `reasonablePolicy` AI agent across all scenarios and characters.
+Distribution by character reflects the designed difficulty gradient:
+Laura and Francisco as most viable, Blake as least viable.
+

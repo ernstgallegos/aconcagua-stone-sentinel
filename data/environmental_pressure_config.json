@@ -45,9 +45,9 @@
     "dayStartMinutes": 360,
     "noiseRangeAtZeroConf": 18,
     "resourceBurnPerHour": {
-      "APPROACH":   { "water": 0.38, "food": 0.28 },
-      "HIGH_CAMP":  { "water": 0.58, "food": 0.40 },
-      "SUMMIT_DAY": { "water": 0.80, "food": 0.58 }
+      "APPROACH":   { "water": 0.14, "food": 0.10 },
+      "HIGH_CAMP":  { "water": 0.22, "food": 0.16 },
+      "SUMMIT_DAY": { "water": 0.34, "food": 0.24 }
     },
     "baseCosts": { "fatigue": 10, "exposure": 8 },
     "progressBands": {
@@ -69,7 +69,7 @@
     "timeWindows": {
       "summitOptimalStart": 300,
       "summitOptimalEnd":   630,
-      "summitLateStart":    750
+      "summitLateStart":    960
     }
   }
 }

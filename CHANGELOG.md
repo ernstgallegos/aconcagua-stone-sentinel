@@ -18,6 +18,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
   `timeOfDayRiskScale` and `exposurePersistenceScale` values, and adjusting `timeSensitivity`
   and `terrainLoad` for the four summit-day nodes in `data/nodes.json`.
 
+- Fixed `Math.max(1, ...)` floor in `spendResourcesForMinutes` (`prototype/web-v1/index.html`):
+  minimum water/food cost per action was clamped to 1 unit regardless of actual burn
+  calculation. With calibrated burn rates and 45+ actions per expedition, this made
+  the round trip consume 45+ water units against a 22–26 unit starting pool, making
+  summit completion impossible through resource exhaustion. Changed to `Math.max(0, ...)`.
+- Fixed `summitLateStart` in `data/environmental_pressure_config.json`: value of 750
+  (12:30pm) caused the engine to force descent at La Canaleta (arrival ~14:15) even
+  with one node remaining to summit. Updated to 960 (4pm), matching the actual 11-hour
+  summit-day window from a 6am departure.
+- Updated `resourceBurnPerHour` in `data/environmental_pressure_config.json` to
+  calibrated values that make a full expedition viable within scenario starting
+  resources (APPROACH: 0.14/0.10, HIGH_CAMP: 0.22/0.16, SUMMIT_DAY: 0.34/0.24).
+
 ### Added
 - Added a Phase 2 real-progress snapshot section in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to track implemented vs pending scope item-by-item.
 - Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
