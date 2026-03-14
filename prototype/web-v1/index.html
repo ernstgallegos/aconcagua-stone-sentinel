@@ -620,6 +620,23 @@ body {
   text-transform: uppercase;
   color: var(--text-dim);
 }
+.primary-alert {
+  margin-top: 0.5rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--border);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.primary-alert.warning {
+  border-color: color-mix(in srgb, var(--ochre) 70%, var(--border));
+  color: var(--ochre);
+}
+.primary-alert.critical {
+  border-color: color-mix(in srgb, var(--red) 78%, var(--border));
+  color: var(--red);
+}
 .context-indicators {
   margin-top: 0.45rem;
   display: flex;
@@ -653,6 +670,23 @@ body {
   font-size: 0.61rem;
   color: var(--stone);
   line-height: 1.4;
+}
+.coach-layer {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border);
+}
+.coach-title {
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.coach-body {
+  margin-top: 0.3rem;
+  font-size: 0.62rem;
+  color: var(--stone);
+  line-height: 1.45;
 }
 
 .watch-time-pressure {
@@ -833,6 +867,33 @@ body {
 .debrief-section-title {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+}
+.playtest-checklist {
+  margin-top: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--stone);
+  display: grid;
+  gap: 0.45rem;
+}
+.playtest-checklist label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.playtest-feedback {
+  margin-top: 0.75rem;
+}
+.playtest-feedback textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  padding: 0.55rem;
+  resize: vertical;
 }
 .analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.8rem;}
 .analytics-card{border:1px solid var(--border);padding:0.6rem;background:var(--surface2);font-family:var(--mono);font-size:0.66rem;color:var(--stone);}
@@ -1107,7 +1168,7 @@ body {
           <div class="decision-cost">End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.</div>
         </div>
       </div>
-      <div class="onboard-note">Your watch gives readings, but they carry noise. At higher altitude and higher fatigue, your own readings become less reliable. Trust trends.</div>
+      <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
       <div class="onboard-actions">
         <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
       </div>
@@ -1194,9 +1255,14 @@ body {
       </div>
       <div class="context-widget" id="context-widget" aria-live="polite">
         <div class="context-widget-label">Context status</div>
+        <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
         <div class="context-indicators" id="context-indicators"></div>
         <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
         <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
+        <div class="coach-layer" id="coach-layer" aria-live="polite">
+          <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
+          <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
+        </div>
       </div>
       </div>
 <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
@@ -1271,6 +1337,14 @@ body {
     <div class="debrief-section">
       <div class="debrief-section-title">Debrief Analytics</div>
       <div id="debrief-analytics"></div>
+      <div class="playtest-checklist" aria-label="New player comprehension checklist">
+        <label><input type="checkbox" id="playtest-understood-decision"> New player understood what to decide each turn.</label>
+        <label><input type="checkbox" id="playtest-understood-loss"> New player understood why the run was lost.</label>
+        <label><input type="checkbox" id="playtest-understood-improve"> New player identified how to improve next run.</label>
+      </div>
+      <div class="playtest-feedback">
+        <textarea id="playtest-confusions" placeholder="Observed confusion notes (for microcopy iteration): write what users misunderstood, not style preferences."></textarea>
+      </div>
     </div>
     <div class="debrief-section">
       <div class="debrief-section-title">Field Reflection</div>
@@ -1652,6 +1726,8 @@ let G = {
   decisionPauseTurnsLeft: 0,
   lateSignalDeterminantTurns: 0,
   lateSignalEvents: [],
+  onboardingLayer: 'essentials',
+  currentPrimaryAlert: { label: 'stable', level: 'stable', type: 'stable' },
 };
 
 // ════════════════════════════════════════════════
@@ -1990,6 +2066,8 @@ function startGame() {
   G.decisionPauseTurnsLeft = 0;
   G.lateSignalDeterminantTurns = 0;
   G.lateSignalEvents = [];
+  G.onboardingLayer = 'essentials';
+  G.currentPrimaryAlert = { label: 'stable', level: 'stable', type: 'stable' };
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -2363,39 +2441,60 @@ function updatePermitWidget() {
   else if (remaining <= 7) daysEl.classList.add('permit-warn');
 }
 
+function getOnboardingLayer(activeRisks = []) {
+  const hasCritical = activeRisks.some((r) => r.level === 'critical');
+  if (G.turn >= 5 || hasCritical) return 'contextual';
+  return 'essentials';
+}
+
 function getRiskProfile(state) {
   const permitRemaining = G.permitMaxDays - G.permitDay + 1;
   const tw = getSimConfig().timeWindows || { summitLateStart: 780 };
   const isLate = G.minutesOfDay >= tw.summitLateStart;
   const waterCritical = state.water === 0;
   const foodCritical = state.food === 0;
-  const bodyCritical = state.functional_capacity <= 25 || state.fatigue >= 80 || state.exposure >= 75;
-  const bodyWarning = state.functional_capacity <= 40 || state.fatigue >= 60 || state.exposure >= 55;
-  const permitCritical = permitRemaining <= 3;
-  const permitWarning = permitRemaining <= 7;
+  const risks = [];
+
+  const addRisk = (type, label, level, priority) => risks.push({ type, label, level, priority });
+
+  if (state.functional_capacity <= 25 || state.fatigue >= 80 || state.exposure >= 75) addRisk('body', 'body critical', 'critical', 100);
+  else if (state.functional_capacity <= 40 || state.fatigue >= 60 || state.exposure >= 55) addRisk('body', 'body warning', 'warning', 65);
+
+  if (waterCritical || foodCritical) addRisk('resource', 'resource critical', 'critical', 95);
+  else if (state.water <= 3 || state.food <= 3) addRisk('resource', 'resource warning', 'warning', 60);
+
+  if (permitRemaining <= 3) addRisk('permit', 'permit critical', 'critical', 85);
+  else if (permitRemaining <= 7) addRisk('permit', 'permit warning', 'warning', 55);
+
   const timeCritical = G.turn >= Math.max((G.scenario?.max_turns || 1) - 3, 1);
   const timeWarning = G.turn >= Math.max((G.scenario?.max_turns || 1) - 6, 1);
+  if (timeCritical || isLate) addRisk('window', 'window critical', 'critical', 90);
+  else if (timeWarning) addRisk('window', 'window warning', 'warning', 58);
 
-  const chips = [];
-  if (bodyCritical) chips.push({ label: 'body critical', level: 'critical' });
-  else if (bodyWarning) chips.push({ label: 'body warning', level: 'warning' });
-  if (waterCritical || foodCritical) chips.push({ label: 'resource critical', level: 'critical' });
-  else if (state.water <= 3 || state.food <= 3) chips.push({ label: 'resource warning', level: 'warning' });
-  if (permitCritical) chips.push({ label: 'permit critical', level: 'critical' });
-  else if (permitWarning) chips.push({ label: 'permit warning', level: 'warning' });
-  if (timeCritical || isLate) chips.push({ label: 'window critical', level: 'critical' });
-  else if (timeWarning) chips.push({ label: 'window warning', level: 'warning' });
+  const sorted = [...risks].sort((a, b) => b.priority - a.priority);
+  const primary = sorted[0] || { type: 'stable', label: 'stable', level: 'stable', priority: 0 };
+  const secondary = sorted.slice(1, 3); // anti-fatigue cap: max 2 secondary alerts
 
+  const layer = getOnboardingLayer(sorted);
   let main = 'System stable: push only if trend and confidence align.';
   let sub = 'No critical threshold is active this turn.';
-  if (chips.some(c => c.level === 'critical')) {
-    main = 'Critical threshold active: prioritize preserving return margin.';
-    sub = 'Descending or controlled pacing may prevent irreversible cost stacking.';
-  } else if (chips.length) {
-    main = 'Warning threshold active: gains are still possible with disciplined pacing.';
-    sub = 'Validate trend, confidence, and resource burn before committing to altitude gain.';
+  let coach = 'Focus now: choose pace each turn and preserve return margin.';
+
+  if (primary.level === 'critical') {
+    main = `Primary alert: ${primary.label}. Stabilize first, then reassess movement.`;
+    sub = 'Only one top alert is shown to reduce overload; secondary chips stay capped.';
+  } else if (primary.level === 'warning') {
+    main = `Primary alert: ${primary.label}. Advance only with disciplined pacing.`;
+    sub = 'Treat this as early signal, not guaranteed failure.';
   }
-  return { chips, main, sub };
+
+  if (layer === 'contextual') {
+    coach = 'Context unlocked: link trend + confidence + resource burn before each move.';
+    if (primary.type === 'window') coach = 'Context unlocked: timing pressure is now dominant. Late gains can erase return margin.';
+    if (primary.type === 'body') coach = 'Context unlocked: body drift is dominant. A slower action now may save two turns later.';
+  }
+
+  return { primary, chips: secondary, main, sub, layer, coach, allRisks: sorted };
 }
 
 function renderContextWidget(state) {
@@ -2403,12 +2502,16 @@ function renderContextWidget(state) {
   const chipsEl = document.getElementById('context-indicators');
   const mainEl = document.getElementById('context-main');
   const subEl = document.getElementById('context-sub');
-  if (!chipsEl || !mainEl || !subEl) return;
+  const primaryEl = document.getElementById('primary-alert');
+  const coachTitleEl = document.getElementById('coach-title');
+  const coachBodyEl = document.getElementById('coach-body');
+  if (!chipsEl || !mainEl || !subEl || !primaryEl || !coachTitleEl || !coachBodyEl) return;
+
   clearElement(chipsEl);
   if (!profile.chips.length) {
     const chip = document.createElement('span');
     chip.className = 'risk-chip';
-    chip.textContent = 'stable';
+    chip.textContent = 'no secondary alerts';
     chipsEl.appendChild(chip);
   } else {
     profile.chips.forEach(({ label, level }) => {
@@ -2418,8 +2521,16 @@ function renderContextWidget(state) {
       chipsEl.appendChild(chip);
     });
   }
+
+  primaryEl.className = `primary-alert${profile.primary.level !== 'stable' ? ' ' + profile.primary.level : ''}`;
+  primaryEl.textContent = `Primary alert: ${profile.primary.label}`;
   mainEl.textContent = profile.main;
   subEl.textContent = profile.sub;
+  coachTitleEl.textContent = `Onboarding layer · ${profile.layer}`;
+  coachBodyEl.textContent = profile.coach;
+
+  G.onboardingLayer = profile.layer;
+  G.currentPrimaryAlert = profile.primary;
 }
 
 function renderWatch() {
@@ -3150,6 +3261,8 @@ function resolveTurn(state, action) {
     decisionMs: G.decisionTimeSpentMs,
     decisionWindowExceeded: G.decisionWindowExceeded,
     decisionWindowEffect: G.decisionWindowEffect,
+    onboardingLayer: G.onboardingLayer,
+    primaryAlert: G.currentPrimaryAlert,
     outcome,
   });
 
@@ -3191,6 +3304,8 @@ function makeDecision(decision) {
     decisionMs: G.decisionTimeSpentMs,
     decisionWindowExceeded: G.decisionWindowExceeded,
     decisionWindowEffect: G.decisionWindowEffect,
+    onboardingLayer: G.onboardingLayer,
+    primaryAlert: G.currentPrimaryAlert,
     lateSignalActivation: turnResult.lateSignalEvent,
     narrativeText,
   };

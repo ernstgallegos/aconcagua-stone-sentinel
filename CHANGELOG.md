@@ -11,12 +11,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 - Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
+- Added an in-debrief new-player comprehension checklist and confusion-notes textarea in `prototype/web-v1/index.html` to capture what users understood (decision goal, loss cause, and improvement path) and to drive microcopy iteration from observed confusion.
 - Added character-level decision-window profiles in `data/characters.json` (`engine.decisionWindow`) with stage modifiers for `APPROACH`, `HIGH_CAMP`, and `SUMMIT_DAY` to differentiate timing pressure behavior across roster archetypes.
 - Added a contextual one-use `Focus pause` fallback in `prototype/web-v1/index.html` to provide a limited accessible grace margin during high-pressure turns.
 - Added perception-latency profiles in `data/characters.json` (`engine.perceptionLatency`) to support delayed signal activation tuning per character, including specialized thresholds for `erik` and `irina`.
 
 ### Changed
 - Standardized `prototype/web-v1/index.html` `run_log.json` export payload with stable cross-run comparison aliases (`epScore`, `btScore`) while preserving legacy fields (`EP`, `BT`) for backwards compatibility.
+- Updated `prototype/web-v1/index.html` with layered onboarding cues in the context widget (`essentials` early, `contextual` after early turns or critical risk), capped simultaneous secondary alerts, and enforced a single prioritized primary alert per turn to reduce alert fatigue.
 - Expanded `prototype/web-v1/index.html` run-log export rows with `characterId`, `stage`, `decisionWindowExceeded`, `lateSignalTriggered`, and `specialActionUsed` to improve QA and balance instrumentation.
 - Added per-run critical-event summary metadata (`runSummary`) to exported `run_log.json` in `prototype/web-v1/index.html` for faster QA/balance triage without removing existing per-turn records.
 - Rebalanced expedition pacing and risk envelope across `data/action_modifiers.json`, `data/stage_modifiers.json`, and `data/environmental_pressure_config.json` to reduce collapse-only trajectories and recover strategic-retreat / permit-pressure space in canonical scenario batteries.
