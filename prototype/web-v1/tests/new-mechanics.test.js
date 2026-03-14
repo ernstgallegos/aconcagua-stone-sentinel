@@ -14,8 +14,8 @@ test('central turn engine is authoritative', () => {
   assert.match(source, /function resolveTurn\(state, action\)/);
   assert.match(source, /const BT = calculateBodyTolerance\(state\)/);
   assert.match(source, /const pressureDelta = epResult\.pressureScore - BT/);
-  assert.match(source, /const result = evaluateOutcome\(pressureDelta, actionMod, state\)/);
-  assert.match(source, /updateState\(state, result, action\)/);
+  assert.match(source, /const result = evaluateOutcome\(finalPressureDelta, actionMod, state\)/);
+  assert.match(source, /updateState\(state, result, resolvedAction\)/);
   assert.match(source, /G\.runLogRecords\.push\(\{/);
   assert.match(source, /trendEstimate:/);
 });
@@ -61,4 +61,22 @@ test('perception and body tolerance pipeline is explicit', () => {
   assert.match(source, /function calculatePerception\(\{ state, EP, BT, pressureDelta \}\)/);
   assert.match(source, /pressureFactor = clamp\(pressureDelta \/ 20, 0\.5, 2\.5\)/);
   assert.match(source, /if \(G\.minutesOfDay > 1320 && !isCampPosition\(state\.position\)\)/);
+});
+
+
+test('per-character guardrails enforce minimum readability and capped timing penalties', () => {
+  const chars = json('characters.json');
+  for (const ch of chars) {
+    const g = ch.engine.perceptionGuardrails;
+    assert.ok(g, `${ch.id} exposes perception guardrails`);
+    assert.ok(g.minHintLevel >= 1, `${ch.id} keeps minimum useful hint level`);
+    assert.ok(g.maxTimingActionPenalty <= 0.13, `${ch.id} caps timing action penalties`);
+    assert.ok(g.maxTimingConfidencePenalty <= 11, `${ch.id} caps timing confidence penalties`);
+    assert.ok(g.maxTimingNoiseIncrease <= 7, `${ch.id} caps timing noise increase`);
+  }
+
+  assert.match(source, /function enforcePerceptionGuardrails\(confidenceLevel, noiseLevel\)/);
+  assert.match(source, /function applySummitDifficultyRegressionGuard\(\{/);
+  assert.match(source, /flags\.push\('summit-difficulty-guard'\)/);
+  assert.match(source, /function classifyDifficultyResponsibility\(\)/);
 });

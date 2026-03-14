@@ -2301,6 +2301,27 @@ function calculatePerceptionLatency({ pressureDelta }) {
   };
 }
 
+function getPerceptionGuardrails() {
+  return G.character?.engine?.perceptionGuardrails || {};
+}
+
+function enforcePerceptionGuardrails(confidenceLevel, noiseLevel) {
+  const guardrails = getPerceptionGuardrails();
+  const minConfidence = clamp(guardrails.minConfidence ?? 8, 5, 45);
+  const maxNoise = clamp(guardrails.maxNoise ?? 35, 18, 35);
+  return {
+    confidenceLevel: clamp(confidenceLevel, minConfidence, 98),
+    noiseLevel: clamp(noiseLevel, 0, maxNoise),
+    guardrails,
+  };
+}
+
+function clampSignalHintsForReadability(rawHint) {
+  const guardrails = getPerceptionGuardrails();
+  const minHintLevel = clamp(guardrails.minHintLevel ?? 1, 0, 2);
+  return Math.max(minHintLevel, clamp(rawHint, 0, 3));
+}
+
 function calculatePerception({ state, EP, BT, pressureDelta }) {
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
@@ -2331,10 +2352,20 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
     const carryUncertaintyDrop = Math.min((photoMod.photoUncertaintyDrop || 4) - 2, 3);
     trendEstimate = trendEstimate === 'worsening fast' ? 'worsening' : trendEstimate;
     noiseLevel = clamp(noiseLevel - carryUncertaintyDrop, 0, 35);
-    return { confidenceLevel: clamp(confidenceLevel + carryConfidence, 5, 98), trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT, latency };
+    confidenceLevel = clamp(confidenceLevel + carryConfidence, 5, 98);
   }
 
-  return { confidenceLevel, trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT, latency };
+  const guarded = enforcePerceptionGuardrails(confidenceLevel, noiseLevel);
+  return {
+    confidenceLevel: guarded.confidenceLevel,
+    trendEstimate,
+    noiseLevel: guarded.noiseLevel,
+    pressureDelta,
+    EP: currentEp,
+    BT,
+    latency,
+    guardrails: guarded.guardrails,
+  };
 }
 
 function computeSignals() {
@@ -2344,9 +2375,9 @@ function computeSignals() {
     uncertainty: perception.noiseLevel,
     confidence: Math.round(perception.confidenceLevel),
     mountainPressure: pressureBandLabel(calculateEnvironmentalPressure(G.state).pressureScore),
-    wHint: clamp(G.state.weather_severity, 0, 3),
-    vHint: clamp(G.state.visibility, 0, 3),
-    tHint: clamp(G.state.terrain_load, 0, 3),
+    wHint: clampSignalHintsForReadability(G.state.weather_severity),
+    vHint: clampSignalHintsForReadability(G.state.visibility),
+    tHint: clampSignalHintsForReadability(G.state.terrain_load),
     signalReadability: perception.latency?.readabilityLabel || 'clear reading',
     lateSignalActive: !!perception.latency?.active,
   };
@@ -2936,7 +2967,12 @@ function getDecisionPressureCopy(winState = computeDecisionWindowState()) {
 
 function applyDecisionWindowDegradation(actionMod, perception) {
   const winState = computeDecisionWindowState();
-  const effect = { elapsedMs: winState.effectiveElapsed, windowMs: winState.profile.totalWindowMs, exceeded: winState.overMs > 0, overMs: winState.overMs, overSteps: winState.stepsOver, stage: getCurrentStage(), actionPenalty: 0, confidencePenalty: 0, noiseIncrease: 0 };
+  const guardrails = perception?.guardrails || getPerceptionGuardrails();
+  const actionPenaltyCap = clamp(guardrails.maxTimingActionPenalty ?? 0.16, 0.06, 0.2);
+  const confidencePenaltyCap = clamp(guardrails.maxTimingConfidencePenalty ?? 12, 4, 16);
+  const noiseIncreaseCap = clamp(guardrails.maxTimingNoiseIncrease ?? 8, 2, 10);
+
+  const effect = { elapsedMs: winState.effectiveElapsed, windowMs: winState.profile.totalWindowMs, exceeded: winState.overMs > 0, overMs: winState.overMs, overSteps: winState.stepsOver, stage: getCurrentStage(), actionPenalty: 0, confidencePenalty: 0, noiseIncrease: 0, capped: false };
   if (winState.overMs <= 0) {
     G.decisionTimeSpentMs = winState.effectiveElapsed;
     G.decisionWindowExceeded = false;
@@ -2946,9 +2982,12 @@ function applyDecisionWindowDegradation(actionMod, perception) {
   }
 
   const stepCap = Math.min(4, winState.stepsOver + 1);
-  const actionPenalty = stepCap * 0.04;
-  const confidencePenalty = stepCap * 3;
-  const noiseIncrease = stepCap * 2;
+  const actionPenaltyRaw = stepCap * 0.04;
+  const confidencePenaltyRaw = stepCap * 3;
+  const noiseIncreaseRaw = stepCap * 2;
+  const actionPenalty = Math.min(actionPenaltyRaw, actionPenaltyCap);
+  const confidencePenalty = Math.min(confidencePenaltyRaw, confidencePenaltyCap);
+  const noiseIncrease = Math.min(noiseIncreaseRaw, noiseIncreaseCap);
 
   const adjustedActionMod = {
     ...actionMod,
@@ -2966,6 +3005,7 @@ function applyDecisionWindowDegradation(actionMod, perception) {
   effect.actionPenalty = Number(actionPenalty.toFixed(3));
   effect.confidencePenalty = confidencePenalty;
   effect.noiseIncrease = noiseIncrease;
+  effect.capped = actionPenalty !== actionPenaltyRaw || confidencePenalty !== confidencePenaltyRaw || noiseIncrease !== noiseIncreaseRaw;
   G.decisionTimeSpentMs = winState.effectiveElapsed;
   G.decisionWindowExceeded = true;
   G.decisionWindowEffect = effect;
@@ -3109,6 +3149,50 @@ function updateState(state, result, action) {
   }
 }
 
+function applySummitDifficultyRegressionGuard({ stage, acclPenalty, decisionEffect, pressureDelta }) {
+  const guard = {
+    stage,
+    acclPenaltyRaw: Number((acclPenalty || 0).toFixed(2)),
+    acclPenaltyApplied: Number((acclPenalty || 0).toFixed(2)),
+    acclPenaltyCapped: false,
+    pressureDeltaRaw: Number((pressureDelta || 0).toFixed(2)),
+    pressureDeltaApplied: Number((pressureDelta || 0).toFixed(2)),
+    pressureDeltaCapped: false,
+    triggered: false,
+  };
+  if (stage !== 'SUMMIT_DAY') return guard;
+
+  const acclPenaltyCap = 22;
+  if (guard.acclPenaltyApplied > acclPenaltyCap) {
+    guard.acclPenaltyApplied = acclPenaltyCap;
+    guard.acclPenaltyCapped = true;
+    guard.triggered = true;
+  }
+
+  const deltaCap = 52;
+  if (guard.pressureDeltaApplied > deltaCap) {
+    guard.pressureDeltaApplied = deltaCap;
+    guard.pressureDeltaCapped = true;
+    guard.triggered = true;
+  }
+
+  if (decisionEffect?.capped) guard.triggered = true;
+  return guard;
+}
+
+function classifyDifficultyResponsibility() {
+  const total = Math.max(1, G.turnLog.length);
+  const systemicFlags = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
+  const systemicTurns = G.turnLog.filter((t) => t.flags.some((f) => systemicFlags.includes(f))).length;
+  const highRiskAdvances = G.turnLog.filter((t) => (t.decision === 'advance' || t.decision === 'advance_slowly') && (t.trend === 'worsening' || t.trend === 'worsening fast')).length;
+  const decisionErrors = G.turnLog.filter((t) => t.flags.includes('critical-fatigue') || t.flags.includes('critical-exposure')).length + highRiskAdvances;
+  const systemicShare = systemicTurns / total;
+  const decisionShare = decisionErrors / total;
+  if (systemicShare >= 0.45 && systemicShare > decisionShare) return { label: 'Systemic pressure dominated', detail: `~${Math.round(systemicShare * 100)}% of turns carried systemic pressure flags.` };
+  if (decisionShare >= 0.3) return { label: 'Decision pattern dominated', detail: `~${Math.round(decisionShare * 100)}% of turns showed high-risk choice patterns.` };
+  return { label: 'Mixed responsibility', detail: 'Pressure and choices interacted without a single dominant source.' };
+}
+
 function resolveTurn(state, action) {
   const flags = [];
   let resolvedAction = action;
@@ -3143,13 +3227,14 @@ function resolveTurn(state, action) {
 
   const currentStageForAccl = getCurrentStage();
   const acclNow = G.acclimatization || 0;
+  let acclPenaltyApplied = 0;
   if (currentStageForAccl === 'HIGH_CAMP' && acclNow < 20) {
-    const acclPenalty = (20 - acclNow) * 0.6;
-    epResult.pressureScore += acclPenalty;
+    acclPenaltyApplied = (20 - acclNow) * 0.6;
+    epResult.pressureScore += acclPenaltyApplied;
     if (acclNow < 10) flags.push('acclimatization-deficit');
   } else if (currentStageForAccl === 'SUMMIT_DAY' && acclNow < 40) {
-    const acclPenalty = (40 - acclNow) * 0.8;
-    epResult.pressureScore += acclPenalty;
+    acclPenaltyApplied = (40 - acclNow) * 0.8;
+    epResult.pressureScore += acclPenaltyApplied;
     if (acclNow < 20) flags.push('acclimatization-deficit');
   }
 
@@ -3215,7 +3300,23 @@ function resolveTurn(state, action) {
   const timedPerception = decisionAdjusted.perception;
   if (decisionAdjusted.effect.exceeded) flags.push('decision-window-exceeded');
 
-  const result = evaluateOutcome(pressureDelta, actionMod, state);
+  const summitRegression = applySummitDifficultyRegressionGuard({
+    stage: currentStageForAccl,
+    acclPenalty: acclPenaltyApplied,
+    decisionEffect: decisionAdjusted.effect,
+    pressureDelta,
+  });
+  if (summitRegression.acclPenaltyCapped) {
+    epResult.pressureScore -= Math.max(0, acclPenaltyApplied - summitRegression.acclPenaltyApplied);
+    acclPenaltyApplied = summitRegression.acclPenaltyApplied;
+  }
+  let finalPressureDelta = pressureDelta;
+  if (summitRegression.pressureDeltaCapped) {
+    finalPressureDelta = summitRegression.pressureDeltaApplied;
+    flags.push('summit-difficulty-guard');
+  }
+
+  const result = evaluateOutcome(finalPressureDelta, actionMod, state);
   updateState(state, result, resolvedAction);
 
   let outcome = result.outcome;
@@ -3247,7 +3348,8 @@ function resolveTurn(state, action) {
     BT: Number(BT.toFixed(2)),
     epScore: Number(epResult.pressureScore.toFixed(2)),
     btScore: Number(BT.toFixed(2)),
-    pressureDelta: Number(pressureDelta.toFixed(2)),
+    pressureDelta: Number(finalPressureDelta.toFixed(2)),
+    summitRegression,
     action: resolvedAction,
     specialActionUsed: resolvedAction === 'shoot_photo',
     progress: result.progress,
@@ -3266,7 +3368,7 @@ function resolveTurn(state, action) {
     outcome,
   });
 
-  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception: timedPerception, outcome, action: resolvedAction, decisionWindowEffect: G.decisionWindowEffect, lateSignalEvent };
+  return { EP: epResult.pressureScore, BT, pressureDelta: finalPressureDelta, actionMod, result, flags, perception: timedPerception, outcome, action: resolvedAction, decisionWindowEffect: G.decisionWindowEffect, lateSignalEvent, summitRegression };
 }
 
 function makeDecision(decision) {
@@ -3537,7 +3639,8 @@ function endRun(returnedToHorcones) {
   });
 
   document.getElementById('debrief-turning-point').textContent = findTurningPoint();
-  document.getElementById('debrief-cause').textContent = findPrimaryCause();
+  const responsibility = classifyDifficultyResponsibility();
+  document.getElementById('debrief-cause').textContent = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
 
   // log table
   const table = document.getElementById('debrief-log-table');

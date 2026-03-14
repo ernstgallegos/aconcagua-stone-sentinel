@@ -97,6 +97,7 @@ In addition to the changelog:
 
 ### Collaboration protocol for future tasks
 
+- Difficulty-regression protection is most robust when SUMMIT_DAY uses explicit penalty caps (acclimatization + timing degradation) and emits a dedicated telemetry flag so balancing can separate true challenge from accidental spike behavior.
 - Balance passes are more stable when global pressure/cost multipliers are relaxed first, then character identity is corrected with perception/risk/timing controls before touching raw capacity stats.
 - Keep a persistent internal balance note (`docs/balance-calibration-notes.md`) with explicit target-rate bands and observed dispersion per character so future tuning can compare drift without re-deriving assumptions.
 - Treat reviewer/user dissatisfaction as a signal to audit for integration mistakes (flow, ordering, and DOM placement), not only syntax/test pass.
