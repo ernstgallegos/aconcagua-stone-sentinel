@@ -66,6 +66,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Fixed
 - Fixed documentation drift between published readmes and prototype behavior by explicitly documenting the current playable flow and Part 2 gating constraints (`Summit and Safe Return` only).
 
+### Fixed
+- Named the Part 2 guides in `prototype/web-v1/index.html` with role-specific narrative copy for Agustina Villanueva and Alejandro Molina.
+- Removed orphaned `screen-mode` CSS rules from `prototype/web-v1/index.html`, including the leftover mobile `.mode-grid` media-query declaration.
+- Expanded Section 6.3 in `docs/en/consolidated-design-v1.4.md` with calibrated win-rate distribution and active configuration values.
+- Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
+
 ## [1.4.0] — 2026-03
 
 ### Added

@@ -152,7 +152,45 @@ Las configuraciones sistémicas se definen en `/data` (nodos, presión ambiental
 
 ### 6.3 Distribución objetivo de win rate
 
-La calibración de balance debe garantizar diferencias significativas por personaje sin colapsar la legibilidad de decisiones.
+Calibrado a partir de 1.200 runs estocásticos por personaje (80 repeticiones × 15 pares escenario-semilla).
+Notas completas de calibración en `docs/balance-calibration-notes.md`.
+
+| Personaje | Cumbre y retorno seguro | Retirada estratégica | Rescate | Colapso | Permiso vencido |
+|---|---:|---:|---:|---:|---:|
+| Laura Kim | 4,6% | 82,9% | 4,1% | 4,6% | 3,8% |
+| Francisco Aguirre | 3,5% | 79,5% | 5,9% | 5,0% | 6,1% |
+| Irina Orlova | 3,2% | 72,2% | 7,3% | 7,4% | 9,8% |
+| Erik Lundvall | 3,5% | 74,8% | 6,6% | 6,3% | 8,8% |
+| Daniela De Rossi | 3,9% | 82,8% | 5,2% | 4,6% | 3,4% |
+| Blake Harris | 3,1% | 59,9% | 14,8% | 13,9% | 8,3% |
+
+**Fundamento de balance:** estos valores priorizan la Retirada Estratégica como outcome más
+frecuente (55–83%) en todos los personajes, coherente con el Pilar 1 (La montaña gobierna) y
+el Pilar 4 (Contemplación activa). Las tasas de cumbre son intencionalmente bajas (~3–5%);
+el loop de éxito correcto es reconocer los límites, no llegar a la cima.
+
+**Valores de configuración activos** (post-calibración, v1.4):
+
+`data/stage_modifiers.json` — multiplicadores clave:
+- `HIGH_CAMP.fatigueMultiplier`: 1,24 · `HIGH_CAMP.exposureMultiplier`: 1,28
+- `SUMMIT_DAY.fatigueMultiplier`: 1,42 · `SUMMIT_DAY.exposureMultiplier`: 1,50
+- `SUMMIT_DAY.weatherSeverityBias`: 2 · `SUMMIT_DAY.confidencePenalty`: 18
+
+`data/action_modifiers.json` — valores clave:
+- `advance.fatigueMultiplier`: 1,18 · `advance.timeCost`: 110 min
+- `advance_slowly.fatigueMultiplier`: 0,90 · `advance_slowly.timeCost`: 165 min
+- `wait.fatigueMultiplier`: 0,62 · `wait.acclimatizationGain`: 4
+- `sleep.fatigueRecovery`: 18 · `sleep.acclimatizationGain`: 7
+
+`data/environmental_pressure_config.json` — valores clave:
+- `baseCosts.fatigue`: 9 · `baseCosts.exposure`: 7
+- `altitudePressureByBand[4]`: 100
+- `summitOptimalEnd`: 630 min (10:30) · `summitLateStart`: 750 min (12:30)
+- `bivouacPenalty.fatigue`: 26 · `bivouacPenalty.exposure`: 32
+
+Estos valores difieren del spec pre-calibración (`one-shot-fase1-v1.4.md`) de forma deliberada.
+El spec usaba estimaciones conservadoras; la calibración post-run redujo la penalización para
+recuperar espacio de retirada estratégica y evitar trayectorias dominadas por colapso.
 
 ---
 
