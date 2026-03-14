@@ -93,6 +93,7 @@ In addition to the changelog:
   - `npm test`
   - JSON parse checks for all simulation data files.
 - For visible front-end changes, take screenshots through browser tooling to confirm real rendered behavior.
+- Keep `run_log.json` exports backward-compatible by layering new telemetry as additive fields/aliases and attaching run-level summaries without replacing the per-turn array contract.
 
 ### Collaboration protocol for future tasks
 
