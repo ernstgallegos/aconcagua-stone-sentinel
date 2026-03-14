@@ -10,8 +10,8 @@
   {"nodeId":"camp_nido_condores","nodeName":"Camp 2 — Nido de Cóndores","altitudeMeters":5560,"altitudeBand":3,"terrainLoad":4,"weatherBias":2,"visibilityBias":2,"timeSensitivity":3,"isCamp":true,"stageHint":"HIGH_CAMP","routeIndex":8},
   {"nodeId":"balcon_amarillo","nodeName":"El Balcón Amarillo (5800m)","altitudeMeters":5800,"altitudeBand":3,"terrainLoad":4,"weatherBias":3,"visibilityBias":2,"timeSensitivity":3,"isCamp":false,"stageHint":"HIGH_CAMP","routeIndex":9},
   {"nodeId":"camp_colera","nodeName":"Camp 3 — Cólera","altitudeMeters":5970,"altitudeBand":3,"terrainLoad":4,"weatherBias":3,"visibilityBias":2,"timeSensitivity":3,"isCamp":true,"stageHint":"SUMMIT_DAY","routeIndex":10},
-  {"nodeId":"portezuelo_viento","nodeName":"Portezuelo del Viento","altitudeMeters":6500,"altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":3,"timeSensitivity":4,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":11},
-  {"nodeId":"travesia","nodeName":"La Travesía","altitudeMeters":6630,"altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":4,"timeSensitivity":4,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":12},
-  {"nodeId":"canaleta","nodeName":"La Canaleta","altitudeMeters":6700,"altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":4,"timeSensitivity":4,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":13},
-  {"nodeId":"summit","nodeName":"Summit","altitudeMeters":6962,"altitudeBand":4,"terrainLoad":5,"weatherBias":4,"visibilityBias":4,"timeSensitivity":4,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":14}
+  {"nodeId":"portezuelo_viento","nodeName":"Portezuelo del Viento","altitudeMeters":6500,"altitudeBand":4,"terrainLoad":3,"weatherBias":4,"visibilityBias":3,"timeSensitivity":1,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":11},
+  {"nodeId":"travesia","nodeName":"La Travesía","altitudeMeters":6630,"altitudeBand":4,"terrainLoad":3,"weatherBias":4,"visibilityBias":4,"timeSensitivity":1,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":12},
+  {"nodeId":"canaleta","nodeName":"La Canaleta","altitudeMeters":6700,"altitudeBand":4,"terrainLoad":3,"weatherBias":4,"visibilityBias":4,"timeSensitivity":1,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":13},
+  {"nodeId":"summit","nodeName":"Summit","altitudeMeters":6962,"altitudeBand":4,"terrainLoad":3,"weatherBias":4,"visibilityBias":4,"timeSensitivity":1,"isCamp":false,"stageHint":"SUMMIT_DAY","routeIndex":14}
 ]

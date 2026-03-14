@@ -1,87 +1,75 @@
 {
   "altitudePressureByBand": {
     "0": 0,
-    "1": 18,
-    "2": 42,
-    "3": 72,
-    "4": 100
+    "1": 5,
+    "2": 10,
+    "3": 16,
+    "4": 22
   },
   "terrainLoadScale": {
-    "1": 12,
-    "2": 24,
-    "3": 42,
-    "4": 58,
-    "5": 75
+    "1": 4,
+    "2": 7,
+    "3": 12,
+    "4": 20,
+    "5": 26
   },
   "weatherSeverityScale": {
     "0": 0,
     "1": 12,
     "2": 28,
-    "3": 48,
-    "4": 74
+    "3": 52,
+    "4": 82
   },
   "visibilityRiskScale": {
     "0": 0,
     "1": 6,
     "2": 18,
-    "3": 30,
-    "4": 46
+    "3": 34,
+    "4": 52
   },
   "timeOfDayRiskScale": {
-    "early": 0,
-    "optimal": 6,
-    "late": 20,
-    "dusk": 38,
-    "night": 58
+    "early":   0,
+    "optimal": 4,
+    "late":    8,
+    "dusk":   18,
+    "night":  40
   },
   "exposurePersistenceScale": {
-    "fresh": 0,
-    "sustained": 12,
-    "cumulative": 26,
-    "severe": 40,
-    "critical": 56
+    "fresh":      0,
+    "sustained":  6,
+    "cumulative": 13,
+    "severe":     22,
+    "critical":   32
   },
   "simulation": {
     "dayStartMinutes": 360,
-    "noiseRangeAtZeroConf": 16,
+    "noiseRangeAtZeroConf": 18,
     "resourceBurnPerHour": {
-      "APPROACH": {
-        "water": 0.34,
-        "food": 0.24
-      },
-      "HIGH_CAMP": {
-        "water": 0.52,
-        "food": 0.36
-      },
-      "SUMMIT_DAY": {
-        "water": 0.72,
-        "food": 0.52
-      }
+      "APPROACH":   { "water": 0.38, "food": 0.28 },
+      "HIGH_CAMP":  { "water": 0.58, "food": 0.40 },
+      "SUMMIT_DAY": { "water": 0.80, "food": 0.58 }
     },
-    "baseCosts": {
-      "fatigue": 9,
-      "exposure": 7
-    },
+    "baseCosts": { "fatigue": 10, "exposure": 8 },
     "progressBands": {
-      "fullMax": -16,
-      "moderateMax": 10,
-      "limitedMax": 30,
-      "fullStep": 1,
-      "moderateStep": 1,
-      "limitedStep": 0,
+      "fullMax":       -16,
+      "moderateMax":    10,
+      "limitedMax":     30,
+      "fullStep":        1,
+      "moderateStep":    1,
+      "limitedStep":     0,
       "blockedRetreat": true
     },
     "bivouacPenalty": {
-      "ep": 26,
-      "fatigue": 26,
-      "exposure": 32,
-      "capacity": 16,
-      "persistenceTurns": 8
+      "ep":              30,
+      "fatigue":         30,
+      "exposure":        36,
+      "capacity":        18,
+      "persistenceTurns": 10
     },
     "timeWindows": {
       "summitOptimalStart": 300,
-      "summitOptimalEnd": 630,
-      "summitLateStart": 750
+      "summitOptimalEnd":   630,
+      "summitLateStart":    750
     }
   }
 }

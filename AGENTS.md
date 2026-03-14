@@ -95,6 +95,7 @@ In addition to the changelog:
   - JSON parse checks for all simulation data files.
 - For visible front-end changes, take screenshots through browser tooling to confirm real rendered behavior.
 - Keep `run_log.json` exports backward-compatible by layering new telemetry as additive fields/aliases and attaching run-level summaries without replacing the per-turn array contract.
+- After any balance pass that changes action/stage multipliers, re-check `data/environmental_pressure_config.json` EP root scales (`altitudePressureByBand`, `terrainLoadScale`) against BT ceilings to prevent mathematically blocked summit routes.
 
 ### Collaboration protocol for future tasks
 

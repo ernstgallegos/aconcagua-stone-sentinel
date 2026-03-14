@@ -9,6 +9,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+- Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in
+  `data/environmental_pressure_config.json` made the upper mountain (band 3+) mathematically
+  impassable. EP floor at band 3–4 nodes (159–215) permanently exceeded maximum achievable
+  BT (90), producing 0% summit rate in Monte Carlo simulation of 36,000 runs. Fixed by
+  reducing altitude and terrain pressure scales by ~50–70% at higher bands, reducing
+  `timeOfDayRiskScale` and `exposurePersistenceScale` values, and adjusting `timeSensitivity`
+  and `terrainLoad` for the four summit-day nodes in `data/nodes.json`.
+
 ### Added
 - Added a Phase 2 real-progress snapshot section in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to track implemented vs pending scope item-by-item.
 - Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
