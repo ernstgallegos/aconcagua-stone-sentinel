@@ -17,59 +17,71 @@
     "0": 0,
     "1": 12,
     "2": 28,
-    "3": 52,
-    "4": 82
+    "3": 48,
+    "4": 74
   },
   "visibilityRiskScale": {
     "0": 0,
     "1": 6,
     "2": 18,
-    "3": 34,
-    "4": 52
+    "3": 30,
+    "4": 46
   },
   "timeOfDayRiskScale": {
     "early": 0,
     "optimal": 6,
-    "late": 24,
-    "dusk": 44,
-    "night": 65
+    "late": 20,
+    "dusk": 38,
+    "night": 58
   },
   "exposurePersistenceScale": {
     "fresh": 0,
     "sustained": 12,
     "cumulative": 26,
-    "severe": 44,
-    "critical": 62
+    "severe": 40,
+    "critical": 56
   },
   "simulation": {
     "dayStartMinutes": 360,
-    "noiseRangeAtZeroConf": 18,
+    "noiseRangeAtZeroConf": 16,
     "resourceBurnPerHour": {
-      "APPROACH":   { "water": 0.38, "food": 0.28 },
-      "HIGH_CAMP":  { "water": 0.58, "food": 0.40 },
-      "SUMMIT_DAY": { "water": 0.80, "food": 0.58 }
+      "APPROACH": {
+        "water": 0.34,
+        "food": 0.24
+      },
+      "HIGH_CAMP": {
+        "water": 0.52,
+        "food": 0.36
+      },
+      "SUMMIT_DAY": {
+        "water": 0.72,
+        "food": 0.52
+      }
     },
-    "baseCosts": { "fatigue": 10, "exposure": 8 },
+    "baseCosts": {
+      "fatigue": 9,
+      "exposure": 7
+    },
     "progressBands": {
-      "fullMax": -18,
-      "moderateMax": 8,
-      "limitedMax": 28,
+      "fullMax": -16,
+      "moderateMax": 10,
+      "limitedMax": 30,
       "fullStep": 1,
       "moderateStep": 1,
       "limitedStep": 0,
       "blockedRetreat": true
     },
     "bivouacPenalty": {
-      "ep": 30,
-      "fatigue": 30,
-      "exposure": 36,
-      "capacity": 18,
-      "persistenceTurns": 10
+      "ep": 26,
+      "fatigue": 26,
+      "exposure": 32,
+      "capacity": 16,
+      "persistenceTurns": 8
     },
     "timeWindows": {
       "summitOptimalStart": 300,
-      "summitOptimalEnd": 600,
-      "summitLateStart": 720
+      "summitOptimalEnd": 630,
+      "summitLateStart": 750
     }
   }
 }
