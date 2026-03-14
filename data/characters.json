@@ -18,6 +18,17 @@
       "confidenceStability": 0.9,
       "riskTolerance": 1.15,
       "perceptionBias": 3,
+      "perceptionLatency": {
+        "baseDelay": 0,
+        "pressureDeltaStart": 12,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0,
+          "SUMMIT_DAY": 0
+        },
+        "timeActivationStart": 780,
+        "minEarlyHint": 0.45
+      },
       "decisionWindow": {
         "baseMs": 29000,
         "stageModifiersMs": {
@@ -50,6 +61,17 @@
       "confidenceStability": 1.22,
       "riskTolerance": 0.8,
       "perceptionBias": -4,
+      "perceptionLatency": {
+        "baseDelay": 0,
+        "pressureDeltaStart": 10,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0,
+          "SUMMIT_DAY": 0
+        },
+        "timeActivationStart": 720,
+        "minEarlyHint": 0.5
+      },
       "decisionWindow": {
         "baseMs": 24000,
         "stageModifiersMs": {
@@ -82,6 +104,17 @@
       "confidenceStability": 0.85,
       "riskTolerance": 1.42,
       "perceptionBias": 7,
+      "perceptionLatency": {
+        "baseDelay": 0.58,
+        "pressureDeltaStart": 20,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0.2,
+          "SUMMIT_DAY": 0.35
+        },
+        "timeActivationStart": 840,
+        "minEarlyHint": 0.38
+      },
       "decisionWindow": {
         "baseMs": 26000,
         "stageModifiersMs": {
@@ -114,6 +147,17 @@
       "confidenceStability": 1.12,
       "riskTolerance": 1.05,
       "perceptionBias": -5,
+      "perceptionLatency": {
+        "baseDelay": 0,
+        "pressureDeltaStart": 10,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0,
+          "SUMMIT_DAY": 0
+        },
+        "timeActivationStart": 720,
+        "minEarlyHint": 0.5
+      },
       "decisionWindow": {
         "baseMs": 32000,
         "stageModifiersMs": {
@@ -146,6 +190,17 @@
       "confidenceStability": 0.8,
       "riskTolerance": 1.35,
       "perceptionBias": 8,
+      "perceptionLatency": {
+        "baseDelay": 0,
+        "pressureDeltaStart": 14,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0,
+          "SUMMIT_DAY": 0.1
+        },
+        "timeActivationStart": 810,
+        "minEarlyHint": 0.42
+      },
       "decisionWindow": {
         "baseMs": 21000,
         "stageModifiersMs": {
@@ -178,6 +233,17 @@
       "confidenceStability": 0.82,
       "riskTolerance": 1.48,
       "perceptionBias": 9,
+      "perceptionLatency": {
+        "baseDelay": 0.66,
+        "pressureDeltaStart": 22,
+        "stageActivation": {
+          "APPROACH": 0,
+          "HIGH_CAMP": 0.15,
+          "SUMMIT_DAY": 0.3
+        },
+        "timeActivationStart": 810,
+        "minEarlyHint": 0.35
+      },
       "decisionWindow": {
         "baseMs": 23000,
         "stageModifiersMs": {
