@@ -10,7 +10,7 @@ All turn resolution flows through:
 
 Pipeline:
 
-`Environment → EP → BT → pressureDelta → perception → action modifier → outcome`
+`Environment → EP → BT → pressureDelta → perception → timed degradation → action modifier → outcome`
 
 ## Canonical route
 
@@ -46,3 +46,11 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 ## Logging
 
 `run_log.json` is exported from the engine turn log with EP/BT/delta, progress, physiology, confidence, trend, stage, node, character, and outcome.
+
+
+## Time pressure and accessibility
+
+- Decision windows are character-specific via `data/characters.json` (`engine.decisionWindow`) and stage-aware (`APPROACH`, `HIGH_CAMP`, `SUMMIT_DAY`).
+- Exceeding the window applies gradual soft penalties (confidence/noise and minor action-cost drift), never an instant fail state.
+- The watch panel shows countdown/overage and partial-information microcopy, and each run records timing, over-window status, and applied effect in `run_log.json`.
+- A one-use `Focus pause` grants a short contextual grace margin for playtesting accessibility without disabling pressure dynamics.

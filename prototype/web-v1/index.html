@@ -592,6 +592,28 @@ body {
 .resource-item span { color: var(--white); }
 .resource-item.depleted span { color: var(--red); }
 
+.watch-time-pressure {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.64rem;
+  color: var(--stone);
+}
+.time-pressure-header {
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.time-pressure-status {
+  margin-top: 0.35rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+.time-pressure-status.warn { color: var(--ochre); }
+.time-pressure-status.critical { color: var(--red); }
+
+
 .watch-uncertainty {
   font-size: 0.65rem; margin-top: 0.75rem;
   padding-top: 0.75rem; border-top: 1px solid var(--border);
@@ -629,6 +651,25 @@ body {
 .decision-label {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem;
+}
+.decision-a11y-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+.btn-mini {
+  font-size: 0.56rem;
+  padding: 0.3rem 0.45rem;
+  letter-spacing: 0.08em;
+}
+.decision-a11y-status {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--stone);
+  line-height: 1.35;
+  text-align: right;
 }
 .decision-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
 .btn-decision {
@@ -1016,6 +1057,13 @@ body {
           </div>
         </div>
         <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
+        <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
+          <div class="time-pressure-header">
+            <span>Decision window</span>
+            <span id="decision-window-countdown">—</span>
+          </div>
+          <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
+        </div>
         <!-- FIX: resource-warning now shown inline when depleted -->
         <div id="resource-warning-box"></div>
       </div>
@@ -1032,6 +1080,10 @@ body {
       </div>
       <div class="decision-panel">
         <div class="decision-label">Decision</div>
+        <div class="decision-a11y-row">
+          <button class="btn-ghost btn-mini" id="btn-focus-pause" onclick="requestDecisionPause()" aria-label="Request brief focus pause">Focus pause [0]</button>
+          <span id="focus-pause-status" class="decision-a11y-status" aria-live="polite">Short pause available for overload moments.</span>
+        </div>
         <div class="decision-buttons" role="group" aria-label="Choose your action">
           <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">
             <span class="btn-decision-main"><span>Advance</span><span class="decision-keyhint">[1]</span></span>
@@ -1259,6 +1311,7 @@ let POS_BAND = {};
 let CAMP_POSITIONS = new Set();
 let STAGE_BY_POSITION = {};
 let CANONICAL_OUTCOMES = new Set();
+let DECISION_TICKER = null;
 
 function rebuildRouteData() {
   ROUTE_NODES = (DATA_CONFIG.nodes || []).map((node, idx) => ({
@@ -1368,6 +1421,13 @@ let G = {
   photoInsightTurns: 0,
   lastPhotoTurn: -99,
   photoLastEffectLabel: '',
+  turnDecisionStartedAt: 0,
+  decisionTimeSpentMs: 0,
+  decisionWindowExceeded: false,
+  decisionWindowEffect: null,
+  decisionWindowProfile: null,
+  decisionPauseUsed: false,
+  decisionPauseTurnsLeft: 0,
 };
 
 // ════════════════════════════════════════════════
@@ -1689,6 +1749,13 @@ function startGame() {
   G.photoInsightTurns = 0;
   G.lastPhotoTurn = -99;
   G.photoLastEffectLabel = '';
+  G.turnDecisionStartedAt = Date.now();
+  G.decisionTimeSpentMs = 0;
+  G.decisionWindowExceeded = false;
+  G.decisionWindowEffect = null;
+  G.decisionWindowProfile = null;
+  G.decisionPauseUsed = false;
+  G.decisionPauseTurnsLeft = 0;
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -1717,6 +1784,12 @@ function startGame() {
   setDecisionButtonsEnabled(true);
 
   showScreen('game');
+  if (DECISION_TICKER) clearInterval(DECISION_TICKER);
+  DECISION_TICKER = setInterval(() => {
+    const gameScreen = document.getElementById('screen-game');
+    if (!gameScreen || !gameScreen.classList.contains('active')) return;
+    renderWatch();
+  }, 500);
 }
 
 // ════════════════════════════════════════════════
@@ -2037,6 +2110,17 @@ function renderWatch() {
   document.getElementById('watch-uncertainty-inline').textContent =
     `trend ${sig.trend} · confidence ${sig.confidence}% · stage ${getCurrentStage()} · ${G.character?.name || '—'}`;
 
+  const pressureCopy = getDecisionPressureCopy();
+  const countdownEl = document.getElementById('decision-window-countdown');
+  const statusEl = document.getElementById('decision-window-status');
+  if (countdownEl) countdownEl.textContent = pressureCopy.countdown;
+  if (statusEl) {
+    statusEl.textContent = pressureCopy.text;
+    statusEl.className = `time-pressure-status${pressureCopy.cls ? ' ' + pressureCopy.cls : ''}`;
+  }
+  const pauseStatus = document.getElementById('focus-pause-status');
+  if (pauseStatus && !G.decisionPauseUsed) pauseStatus.textContent = 'Short pause available for overload moments.';
+
   const capLbl = capacityLabel(s.functional_capacity);
   const fatLbl = fatigueLabel(s.fatigue);
   const expLbl = exposureLabel(s.exposure);
@@ -2353,11 +2437,99 @@ function buildDebriefAnalytics() {
   el.appendChild(grid);
 }
 
+function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
+  const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, gracePauseMs: 4500, degradeEveryMs: 5000 };
+  const p = character?.engine?.decisionWindow || {};
+  const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
+  const total = (p.baseMs ?? base.baseMs) + (stageMods[stage] ?? 0);
+  return {
+    baseMs: p.baseMs ?? base.baseMs,
+    stageModifiersMs: stageMods,
+    minFloorMs: p.minFloorMs ?? base.minFloorMs,
+    gracePauseMs: p.gracePauseMs ?? base.gracePauseMs,
+    degradeEveryMs: p.degradeEveryMs ?? base.degradeEveryMs,
+    totalWindowMs: Math.max(p.minFloorMs ?? base.minFloorMs, total),
+  };
+}
+
+function computeDecisionWindowState() {
+  const profile = getDecisionWindowProfile();
+  const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt || Date.now()));
+  const effectiveElapsed = Math.max(0, elapsed - (G.decisionPauseTurnsLeft || 0));
+  const overMs = Math.max(0, effectiveElapsed - profile.totalWindowMs);
+  const stepsOver = Math.floor(overMs / Math.max(profile.degradeEveryMs, 1000));
+  const overRatio = overMs > 0 ? clamp(overMs / Math.max(profile.totalWindowMs, 1), 0, 2) : 0;
+  return { profile, elapsed, effectiveElapsed, overMs, stepsOver, overRatio };
+}
+
+function getDecisionPressureCopy(winState = computeDecisionWindowState()) {
+  if (winState.overMs <= 0) {
+    const remaining = Math.max(0, Math.ceil((winState.profile.totalWindowMs - winState.effectiveElapsed) / 1000));
+    const tone = remaining <= 6 ? 'warn' : '';
+    return { countdown: `${remaining}s`, cls: tone, text: remaining <= 6 ? 'Signals are fading. Keep one clean anchor.' : 'Partial information: hold trend over impulse.' };
+  }
+  if (winState.overRatio < 0.5) return { countdown: `+${Math.ceil(winState.overMs/1000)}s`, cls: 'warn', text: 'Time debt rising: confidence softens, not certainty.' };
+  return { countdown: `+${Math.ceil(winState.overMs/1000)}s`, cls: 'critical', text: 'Late decision: noise increases; action remains possible.' };
+}
+
+function applyDecisionWindowDegradation(actionMod, perception) {
+  const winState = computeDecisionWindowState();
+  const effect = { elapsedMs: winState.effectiveElapsed, windowMs: winState.profile.totalWindowMs, exceeded: winState.overMs > 0, overMs: winState.overMs, overSteps: winState.stepsOver, stage: getCurrentStage(), actionPenalty: 0, confidencePenalty: 0, noiseIncrease: 0 };
+  if (winState.overMs <= 0) {
+    G.decisionTimeSpentMs = winState.effectiveElapsed;
+    G.decisionWindowExceeded = false;
+    G.decisionWindowEffect = effect;
+    G.decisionWindowProfile = winState.profile;
+    return { actionMod, perception, effect };
+  }
+
+  const stepCap = Math.min(4, winState.stepsOver + 1);
+  const actionPenalty = stepCap * 0.04;
+  const confidencePenalty = stepCap * 3;
+  const noiseIncrease = stepCap * 2;
+
+  const adjustedActionMod = {
+    ...actionMod,
+    fatigueMultiplier: (actionMod.fatigueMultiplier || 1) + actionPenalty,
+    exposureMultiplier: (actionMod.exposureMultiplier || 1) + Math.max(0.02, actionPenalty * 0.7),
+  };
+  const adjustedPerception = {
+    ...perception,
+    confidenceLevel: clamp(perception.confidenceLevel - confidencePenalty, 5, 98),
+    noiseLevel: clamp(perception.noiseLevel + noiseIncrease, 0, 40),
+  };
+
+  if (winState.overRatio >= 0.8 && adjustedPerception.trendEstimate === 'steady') adjustedPerception.trendEstimate = 'uncertain';
+
+  effect.actionPenalty = Number(actionPenalty.toFixed(3));
+  effect.confidencePenalty = confidencePenalty;
+  effect.noiseIncrease = noiseIncrease;
+  G.decisionTimeSpentMs = winState.effectiveElapsed;
+  G.decisionWindowExceeded = true;
+  G.decisionWindowEffect = effect;
+  G.decisionWindowProfile = winState.profile;
+  return { actionMod: adjustedActionMod, perception: adjustedPerception, effect };
+}
+
+function requestDecisionPause() {
+  const status = document.getElementById('focus-pause-status');
+  if (!status) return;
+  if (G.decisionPauseUsed) {
+    status.textContent = 'Focus pause already used in this run.';
+    return;
+  }
+  const profile = getDecisionWindowProfile();
+  G.decisionPauseTurnsLeft = Math.max(G.decisionPauseTurnsLeft || 0, profile.gracePauseMs);
+  G.decisionPauseUsed = true;
+  status.textContent = `Pause granted (+${Math.ceil(profile.gracePauseMs/1000)}s). Keep reading trend, not certainty.`;
+  renderWatch();
+}
+
 // ════════════════════════════════════════════════
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo'].forEach(id => {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo','btn-focus-pause'].forEach(id => {
     const btn = document.getElementById(id);
     btn.disabled = !enabled;
     if (enabled) btn.removeAttribute('aria-disabled');
@@ -2557,6 +2729,11 @@ function resolveTurn(state, action) {
     };
   }
 
+  const decisionAdjusted = applyDecisionWindowDegradation(actionMod, perception);
+  actionMod = decisionAdjusted.actionMod;
+  const timedPerception = decisionAdjusted.perception;
+  if (decisionAdjusted.effect.exceeded) flags.push('decision-window-exceeded');
+
   const result = evaluateOutcome(pressureDelta, actionMod, state);
   updateState(state, result, resolvedAction);
 
@@ -2591,13 +2768,16 @@ function resolveTurn(state, action) {
     progress: result.progress,
     fatigue: Number(state.fatigue.toFixed(2)),
     exposure: Number(state.exposure.toFixed(2)),
-    confidence: Math.round(perception.confidenceLevel),
-    trendEstimate: perception.trendEstimate,
+    confidence: Math.round(timedPerception.confidenceLevel),
+    trendEstimate: timedPerception.trendEstimate,
     photoEffectApplied,
+    decisionMs: G.decisionTimeSpentMs,
+    decisionWindowExceeded: G.decisionWindowExceeded,
+    decisionWindowEffect: G.decisionWindowEffect,
     outcome,
   });
 
-  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception, outcome, action: resolvedAction };
+  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception: timedPerception, outcome, action: resolvedAction, decisionWindowEffect: G.decisionWindowEffect };
 }
 
 function makeDecision(decision) {
@@ -2632,6 +2812,9 @@ function makeDecision(decision) {
     flags: [...turnResult.flags],
     blocked: turnResult.result.blocked,
     moved: turnResult.result.moved,
+    decisionMs: G.decisionTimeSpentMs,
+    decisionWindowExceeded: G.decisionWindowExceeded,
+    decisionWindowEffect: G.decisionWindowEffect,
     narrativeText,
   };
   G.turnLog.push(logEntry);
@@ -2648,6 +2831,8 @@ function makeDecision(decision) {
   }
 
   G.turn++;
+  G.turnDecisionStartedAt = Date.now();
+  G.decisionPauseTurnsLeft = 0;
   setTimeout(() => {
     renderWatch();
     renderNarrative(null, G.signals);
@@ -2678,7 +2863,8 @@ function addLogEntry(entry) {
   decisionTag.className = 'decision-tag';
   decisionTag.textContent = decisionDisplay;
   meta.appendChild(decisionTag);
-  meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
+  const pressureTime = entry.decisionWindowExceeded ? ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late` : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
+  meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty}${pressureTime} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
 
   const narrative = document.createElement('div');
   narrative.className = 'log-entry-narrative';
@@ -2772,6 +2958,7 @@ function buildReflectionPrompts() {
 }
 
 function endRun(returnedToHorcones) {
+  if (DECISION_TICKER) { clearInterval(DECISION_TICKER); DECISION_TICKER = null; }
   const outcome = classifyOutcome();
   const sc = G.scenario;
   const s = G.state;
@@ -3017,6 +3204,7 @@ document.addEventListener('keydown', (event) => {
     '4': 'btn-descend',
     '5': 'btn-sleep',
     '6': 'btn-shoot-photo',
+    '0': 'btn-focus-pause',
   };
   const buttonId = map[event.key];
   if (!buttonId) return;
