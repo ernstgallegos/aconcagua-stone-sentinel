@@ -9,6 +9,8 @@
 
 ---
 
+> **v1.4 planning note:** Consolidated details for game structure, characters, park permit, and implementation phases live in `docs/en/consolidated-design-v1.4.md` and `docs/en/implementation-plan-v1.4.md`.
+
 ## Purpose of This Document
 
 The systems overview answers a central question:

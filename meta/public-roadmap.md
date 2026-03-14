@@ -90,6 +90,22 @@ The goal is not polish, but **proof of coherence**.
 
 ---
 
+
+## Design Consolidation v1.4 — Documentation and Planning Lock  
+**Status: Completed (documentation baseline)**
+
+> Consolidating narrative/systemic targets before implementation rollout.
+
+### Outcomes
+- Published consolidated design baselines in Spanish and English (`docs/es/diseno-consolidado-v1.4.md`, `docs/en/consolidated-design-v1.4.md`).
+- Published phase-based implementation planning in Spanish and English (`docs/es/plan-implementacion-v1.4.md`, `docs/en/implementation-plan-v1.4.md`).
+- Explicitly documented Phase 1/2/3 goals including park permit, six-character target roster, and Part 2 unlock condition.
+- Clarified that v1.4 design lock is documented first and may be partially implemented in current public builds.
+
+This lock reduces ambiguity and allows implementation work to proceed with a single cross-language reference.
+
+---
+
 ## Stage 5 — Selective System Prototyping  
 **Status: Current / Next**
 

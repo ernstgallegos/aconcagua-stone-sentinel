@@ -10,6 +10,8 @@
 
 ---
 
+> **Nota v1.4 (planificación):** El detalle consolidado de estructura de juego, personajes, permiso del parque y fases de implementación se mantiene en `docs/es/diseno-consolidado-v1.4.md` y `docs/es/plan-implementacion-v1.4.md`.
+
 ## Propósito de este documento
 
 La visión de sistemas responde a una pregunta central:
