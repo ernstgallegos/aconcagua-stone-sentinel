@@ -1,43 +1,43 @@
 {
   "advance": {
     "progress": 20,
-    "fatigueMultiplier": 1.3,
-    "exposureMultiplier": 1.15,
-    "timeCost": 120
+    "fatigueMultiplier": 1.18,
+    "exposureMultiplier": 1.08,
+    "timeCost": 110
   },
   "advance_slowly": {
-    "progress": 10,
-    "fatigueMultiplier": 0.95,
-    "exposureMultiplier": 1.0,
-    "timeCost": 180
+    "progress": 11,
+    "fatigueMultiplier": 0.9,
+    "exposureMultiplier": 0.93,
+    "timeCost": 165
   },
   "wait": {
     "progress": 0,
-    "fatigueMultiplier": 0.7,
-    "exposureMultiplier": 1.0,
-    "acclimatizationGain": 3,
+    "fatigueMultiplier": 0.62,
+    "exposureMultiplier": 0.92,
+    "acclimatizationGain": 4,
     "timeCost": 60
   },
   "descend": {
     "progress": -20,
-    "fatigueMultiplier": 0.8,
-    "exposureMultiplier": 0.75,
+    "fatigueMultiplier": 0.72,
+    "exposureMultiplier": 0.68,
     "riskRelief": "strong",
-    "timeCost": 120
+    "timeCost": 110
   },
   "sleep": {
     "campOnly": true,
     "persistenceReset": true,
-    "fatigueRecovery": 16,
-    "exposureRecovery": 8,
-    "acclimatizationGain": 6,
+    "fatigueRecovery": 18,
+    "exposureRecovery": 10,
+    "acclimatizationGain": 7,
     "timeReset": "06:00"
   },
   "shoot_photo": {
     "progress": 0,
-    "fatigueMultiplier": 0.85,
-    "exposureMultiplier": 0.9,
-    "timeCost": 45,
+    "fatigueMultiplier": 0.8,
+    "exposureMultiplier": 0.85,
+    "timeCost": 40,
     "photoConfidenceGain": 6,
     "photoUncertaintyDrop": 4,
     "photoTrendAssist": true,

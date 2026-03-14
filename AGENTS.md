@@ -96,6 +96,8 @@ In addition to the changelog:
 
 ### Collaboration protocol for future tasks
 
+- Balance passes are more stable when global pressure/cost multipliers are relaxed first, then character identity is corrected with perception/risk/timing controls before touching raw capacity stats.
+- Keep a persistent internal balance note (`docs/balance-calibration-notes.md`) with explicit target-rate bands and observed dispersion per character so future tuning can compare drift without re-deriving assumptions.
 - Treat reviewer/user dissatisfaction as a signal to audit for integration mistakes (flow, ordering, and DOM placement), not only syntax/test pass.
 - When requested by the user, keep documenting meaningful lessons here as cumulative operational memory for subsequent sprints.
 - Daniela-specific contextual actions should be gated in both UI rendering and resolver-level execution checks; keyboard shortcuts and fallback resolution must enforce the same constraint path to prevent hidden-action exploits.
