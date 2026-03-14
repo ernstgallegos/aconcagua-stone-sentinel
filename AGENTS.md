@@ -96,6 +96,7 @@ In addition to the changelog:
 - For visible front-end changes, take screenshots through browser tooling to confirm real rendered behavior.
 - Keep `run_log.json` exports backward-compatible by layering new telemetry as additive fields/aliases and attaching run-level summaries without replacing the per-turn array contract.
 - After any balance pass that changes action/stage multipliers, re-check `data/environmental_pressure_config.json` EP root scales (`altitudePressureByBand`, `terrainLoadScale`) against BT ceilings to prevent mathematically blocked summit routes.
+- Resource-economy tuning must be validated against `spendResourcesForMinutes` rounding floors; a forced minimum per action can silently invalidate scenario starting pools even when hourly burn rates look viable on paper.
 
 ### Collaboration protocol for future tasks
 
