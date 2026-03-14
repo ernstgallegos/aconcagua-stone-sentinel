@@ -190,6 +190,7 @@ The root viewer currently ships these bundled JSONL runs:
 - `weather-window-seed151-cautious`
 
 For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) immediately after each run.
+Short observation companion: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
 ## Prototype Web v1.3 — Environmental Pressure Engine (current public implementation)

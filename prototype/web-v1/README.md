@@ -38,6 +38,8 @@ Public mountain reading is intentionally imperfect:
 - Mountain Pressure
 - Trend
 - Confidence
+- Context Status (risk chips: stable / warning / critical)
+- Permit and decision-window pressure stacked under the watch for faster scanning
 
 ## Outcomes
 
@@ -53,4 +55,6 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 - Decision windows are character-specific via `data/characters.json` (`engine.decisionWindow`) and stage-aware (`APPROACH`, `HIGH_CAMP`, `SUMMIT_DAY`).
 - Exceeding the window applies gradual soft penalties (confidence/noise and minor action-cost drift), never an instant fail state.
 - The watch panel shows countdown/overage and partial-information microcopy, and each run records timing, over-window status, and applied effect in `run_log.json`.
+- Critical actions include concise cost/benefit microcopy directly in the decision buttons to reduce onboarding dependency.
+- Debrief now surfaces both the turning point and a primary actionable cause aligned with the final outcome.
 - A one-use `Focus pause` grants a short contextual grace margin for playtesting accessibility without disabling pressure dynamics.

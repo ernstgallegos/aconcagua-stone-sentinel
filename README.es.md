@@ -176,6 +176,7 @@ Si `ALLOWED_ORIGINS` no está configurado, la API usa un allowlist hardcodeado c
 - `weather-window-seed151-cautious`
 
 Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) al cerrar cada corrida.
+Guía corta recomendada para observación: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
 ## Prototype Web v1.1 — Environmental Pressure Engine
