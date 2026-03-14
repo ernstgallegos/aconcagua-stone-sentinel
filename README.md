@@ -101,8 +101,9 @@ This repository documents the **conceptual and design foundations** of the proje
 
 The interactive web prototype is the current development surface. It implements the full
 Environmental Pressure / Body Tolerance simulation engine, a diegetic clock, five player
-actions, fifteen named route nodes, an acclimatization subsystem, three differentiated
-characters, stage-based modifiers, and multiple run archetypes.
+actions plus a character-specific contextual action, fifteen named route nodes, an
+acclimatization subsystem, six differentiated characters, stage-based modifiers, permit
+pressure, decision-window timing pressure, and multiple run archetypes.
 
 Playable at the canonical Vercel URL. Run locally with:
 
@@ -193,7 +194,7 @@ For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototy
 Short observation companion: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
-## Prototype Web v1.3 — Environmental Pressure Engine (current public implementation)
+## Prototype Web v1.4 — Environmental Pressure Engine (current public implementation)
 
 The web prototype follows a unified environmental-dominance resolution pipeline:
 
@@ -205,8 +206,18 @@ All simulation parameters are loaded from `/data`:
 - `environmental_pressure_config.json` — EP scale values, resource burn rates, bivouac penalties
 - `action_modifiers.json` — per-action fatigue/exposure/progress multipliers
 - `stage_modifiers.json` — APPROACH / HIGH_CAMP / SUMMIT_DAY multipliers
-- `characters.json` — three characters with engine-level differentiation
+- `characters.json` — six characters with engine-level differentiation (`difficultyLabel`, decision-window profiles, and perception-latency guardrails)
 - `outcomes.json` — canonical outcome taxonomy
+
+Current visible flow in web-v1 is:
+
+`splash → title → character → scenario → onboarding → game → (summit-success or debrief)`
+
+Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
+
+`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+
+Unlock is exclusive to `Summit and Safe Return`.
 
 See `docs/simulation_engine.md` and `docs/architecture.md` for full mechanics.
 
@@ -220,7 +231,7 @@ A v1.4 design/planning documentation package was added to align vision, game str
 - Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
 - Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
 
-> Note: this update is documentation/planning only. The current public playable state may not yet implement all v1.4 target elements.
+> Note: v1.4 documentation and planning are now partially implemented in the current public prototype. Check the changelog `[Unreleased]` and implementation plan files for latest phase progress.
 
 
 ## Repository Structure

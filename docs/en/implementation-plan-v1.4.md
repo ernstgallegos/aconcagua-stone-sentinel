@@ -40,7 +40,7 @@ Align the playable prototype with the minimum systemic and narrative v1.4 struct
 
 ---
 
-## Phase 2 — Next sprint
+## Phase 2 — In progress (current sprint follow-up)
 
 ### Goal
 Add character-specific playable differentiation and expand Part 2 narrative setup.
@@ -59,6 +59,13 @@ Add character-specific playable differentiation and expand Part 2 narrative setu
 ### DoD
 - Character differentiation is noticeable in at least three decision moments.
 - Part 2 narrative sequence is navigable end-to-end.
+
+### Real progress snapshot
+- ✅ Daniela photo mechanic implemented in `prototype/web-v1/index.html` + `data/action_modifiers.json` with cooldown/cap and run-log instrumentation.
+- ✅ Character-specific decision timers implemented through `engine.decisionWindow` in `data/characters.json` with gradual penalties (no instant fail).
+- ✅ Late-activation perception behavior for Erik/Irina implemented via `engine.perceptionLatency` and resolver hooks in web-v1.
+- ✅ Part 2 narrative transition sequence implemented end-to-end (`part2-character` to `part2-closure`) with back/continue and safe exits.
+- ✅ Legibility improvements shipped (contextual status stack, risk chips, debrief actionable cause, targeted microcopy).
 
 ---
 

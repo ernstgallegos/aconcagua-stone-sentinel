@@ -92,13 +92,17 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  
  ## Estado del proyecto
  
- Este repositorio documenta los **fundamentos conceptuales y de diseño** del proyecto, e incluye un **prototipo funcional de baja fidelidad** para validar hipótesis centrales.
+ Este repositorio documenta los **fundamentos conceptuales y de diseño** del proyecto y contiene dos prototipos en etapas distintas de desarrollo.
  
- - El MRA v0 está disponible en `/prototype/mra-v0/`.
- - El vertical slice web v1 está disponible en `/prototype/web-v1/` y consume corridas incluidas.
- - El código de gameplay de producción no es público en esta etapa.
- 
- Se trata de un repositorio curado y orientado al público, no de un archivo completo de producción.
+### Prototipo activo — `prototype/web-v1/`
+
+El prototipo web interactivo es la superficie activa de desarrollo. Implementa el engine completo de Environmental Pressure / Body Tolerance, seis personajes diferenciados, presión por permiso, ventana de decisión por tiempo, acción contextual por personaje y puente narrativo de Parte 2 con acceso condicionado por outcome.
+
+### Artefacto de referencia — `prototype/mra-v0/` (congelado)
+
+El simulador Python validó la hipótesis sistémica inicial y permanece congelado como referencia histórica.
+
+El código de gameplay de producción no es público en esta etapa.
  
  ---
  
@@ -113,7 +117,7 @@ Se incorporó un paquete documental de diseño/planificación v1.4 para alinear 
 - Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
 - Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
 
-> Nota: esta actualización es documental y de planificación. El estado jugable público actual puede no reflejar aún todos los elementos objetivo de v1.4.
+> Nota: la documentación/planificación v1.4 ya tiene implementación parcial en el prototipo público. Revisar `CHANGELOG.md` (`[Unreleased]`) y los planes de implementación para el progreso real por fase.
 
 ---
 
@@ -179,7 +183,7 @@ Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prot
 Guía corta recomendada para observación: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
-## Prototype Web v1.1 — Environmental Pressure Engine
+## Prototype Web v1.4 — Environmental Pressure Engine (estado público actual)
 
 El prototipo web ahora sigue un modelo sistémico dominado por el entorno:
 
@@ -194,6 +198,17 @@ Cambios centrales:
 - Export de corrida por turnos como `run_log.json` desde debrief.
 
 Ver `/docs/simulation_engine.md` para el detalle técnico.
+
+
+Flujo visible actual en web-v1:
+
+`splash → title → character → scenario → onboarding → game → (summit-success o debrief)`
+
+Estado de Parte 2 (v1.4):
+
+`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+
+Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
 
 ## Estructura del repositorio
  

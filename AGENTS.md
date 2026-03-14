@@ -108,3 +108,4 @@ In addition to the changelog:
 - Part 2 bridge flow remains safer when each narrative screen includes both bidirectional chaining (back/continue) and an explicit debrief escape hatch; this avoids dead routes while preserving replay continuity after early exits.
 - Right-panel readability improved when watch, permit, and context are grouped as one status stack; users scan top-to-bottom faster when risk chips mirror engine thresholds (`warning`/`critical`) instead of purely narrative wording.
 - Debrief clarity improves when turning-point text is paired with one outcome-specific actionable cause; this shifts post-run feedback from “system felt random” to concrete next-run adjustments.
+- Documentation drift risk increases when `README*` still describe older character counts/flow labels; after each Phase 2 UX/mechanics merge, mirror the observable state (current flow, Part 2 gating, active mechanics) in both EN/ES readmes and phase plans within the same commit.
