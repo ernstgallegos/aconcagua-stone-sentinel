@@ -57,3 +57,32 @@ Rollback procedure:
 2. Revert the last tuning commit touching pressure/action/character balance knobs.
 3. Re-run the full canonical battery and confirm all characters return to acceptable bands.
 4. Resume tuning with isolated single-axis adjustments (global pressure first, then character perception/risk, then raw capacity as last resort).
+
+## Recalibration pass — structural EP fix (post-simulation audit)
+
+### Problem identified
+Monte Carlo simulation of 36,000 runs (400 reps × 3 seeds × 5 scenarios × 6 characters)
+confirmed 0% summit rate across all combinations. Root cause: `altitudePressureByBand`
+and `terrainLoadScale` values were inherited from a pre-calibration spec without adjustment
+when action/stage multipliers were reduced. This left EP floor at band 3–4 nodes (159–215)
+permanently above the maximum achievable BT (90), making the upper mountain mathematically
+impassable regardless of player decisions.
+
+### Fix applied
+Reduced `altitudePressureByBand` and `terrainLoadScale` by approximately 50–70% at higher
+bands. Reduced `timeOfDayRiskScale` late/dusk/night values by ~50%. Halved
+`exposurePersistenceScale` values to reduce compounding effect. Reduced `timeSensitivity`
+and `terrainLoad` for the four summit-day nodes in `data/nodes.json` (Portezuelo, Travesía,
+Canaleta, Summit) from 4→1 and 5→3 respectively.
+
+### Expected EP at key nodes (post-fix, ideal conditions: ws=0, vis=3, early start)
+- Horcones: ~38 · Cuesta Brava: ~57 · Plaza Mulas: ~20 (slept)
+- Camp Canadá: ~32 (slept) · Nido Cóndores: ~47 (slept) · Cólera: ~48 (slept)
+- Portezuelo: ~49 · La Travesía: ~66 · La Canaleta: ~66 · Summit: ~54
+
+### Design intent preserved
+Summit remains gated by: correct acclimatization protocol (BT ≥ 48 at summit push),
+favorable weather (ws ≤ 1), correct timing (early departure from Cólera), and sufficient
+resources. Blake Harris (Very Demanding) reaches summit borderline (delta ~12 = LIMITED)
+only under perfect conditions. Laura Kim and Francisco Aguirre reach it at MODERATE delta
+under good conditions. A storm (ws=3) at summit makes delta ~140 regardless of body state.
