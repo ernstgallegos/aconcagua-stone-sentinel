@@ -623,6 +623,8 @@ body {
 .uncertainty-val.low { color: var(--ice); }
 .uncertainty-val.medium { color: var(--ochre); }
 .uncertainty-val.high { color: var(--red); }
+.signal-readability { font-size:0.62rem; color: var(--stone); }
+.signal-readability.latency-active { color: var(--ochre); }
 
 .ambient-signal {
   border: 1px solid var(--border); background: var(--surface2);
@@ -1428,6 +1430,8 @@ let G = {
   decisionWindowProfile: null,
   decisionPauseUsed: false,
   decisionPauseTurnsLeft: 0,
+  lateSignalDeterminantTurns: 0,
+  lateSignalEvents: [],
 };
 
 // ════════════════════════════════════════════════
@@ -1756,6 +1760,8 @@ function startGame() {
   G.decisionWindowProfile = null;
   G.decisionPauseUsed = false;
   G.decisionPauseTurnsLeft = 0;
+  G.lateSignalDeterminantTurns = 0;
+  G.lateSignalEvents = [];
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
@@ -1944,13 +1950,58 @@ function spendResourcesForMinutes(minutes, flags) {
   }
 }
 
+function getLatencyReadabilityLabel(activationRatio) {
+  if (activationRatio < 0.42) return 'uncertain reading';
+  if (activationRatio < 0.72) return 'partial reading';
+  return 'clear reading';
+}
+
+function calculatePerceptionLatency({ pressureDelta }) {
+  const latency = G.character?.engine?.perceptionLatency || {};
+  const baseDelay = clamp(latency.baseDelay || 0, 0, 0.85);
+  if (baseDelay <= 0) {
+    return {
+      active: false,
+      activationRatio: 1,
+      readabilityLabel: 'clear reading',
+      pressureGate: false,
+      stageGate: false,
+      timeGate: false,
+    };
+  }
+
+  const stage = getCurrentStage();
+  const pressureStart = latency.pressureDeltaStart || 18;
+  const stageWeight = latency.stageActivation?.[stage] ?? 0;
+  const timeStart = latency.timeActivationStart || 780;
+  const earlyHintFloor = clamp(latency.minEarlyHint || 0.38, 0.3, 0.75);
+
+  const pressureGate = pressureDelta >= pressureStart;
+  const stageGate = stageWeight > 0;
+  const timeGate = G.minutesOfDay >= timeStart;
+
+  const pressureProgress = clamp((pressureDelta - pressureStart) / 22, 0, 1);
+  const timeProgress = clamp((G.minutesOfDay - timeStart) / 240, 0, 1);
+  const activationProgress = clamp((pressureProgress * 0.48) + (timeProgress * 0.34) + stageWeight, 0, 1);
+  const activationRatio = clamp((1 - baseDelay) + (baseDelay * activationProgress), earlyHintFloor, 1);
+
+  return {
+    active: activationRatio < 0.99,
+    activationRatio,
+    readabilityLabel: getLatencyReadabilityLabel(activationRatio),
+    pressureGate,
+    stageGate,
+    timeGate,
+  };
+}
+
 function calculatePerception({ state, EP, BT, pressureDelta }) {
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
   const stats = G.character?.engine || {};
   const stability = stats.confidenceStability || 1;
   const riskTol = stats.riskTolerance || 1;
-  const confidenceLevel = clamp(
+  let confidenceLevel = clamp(
     (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0)) * stability,
     5,
     95
@@ -1959,6 +2010,14 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
   let trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
   let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+  const latency = calculatePerceptionLatency({ pressureDelta: pressureDelta ?? 0 });
+
+  if (latency.active) {
+    confidenceLevel = clamp(confidenceLevel * latency.activationRatio, 5, 98);
+    noiseLevel = clamp(noiseLevel + ((1 - latency.activationRatio) * 9), 0, 35);
+    if (latency.activationRatio < 0.55 && trendEstimate === 'worsening fast') trendEstimate = 'worsening';
+    else if (latency.activationRatio < 0.45 && trendEstimate === 'easing') trendEstimate = 'steady';
+  }
 
   if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) {
     const photoMod = getActionModifier('shoot_photo');
@@ -1966,10 +2025,10 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
     const carryUncertaintyDrop = Math.min((photoMod.photoUncertaintyDrop || 4) - 2, 3);
     trendEstimate = trendEstimate === 'worsening fast' ? 'worsening' : trendEstimate;
     noiseLevel = clamp(noiseLevel - carryUncertaintyDrop, 0, 35);
-    return { confidenceLevel: clamp(confidenceLevel + carryConfidence, 5, 98), trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT };
+    return { confidenceLevel: clamp(confidenceLevel + carryConfidence, 5, 98), trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT, latency };
   }
 
-  return { confidenceLevel, trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT };
+  return { confidenceLevel, trendEstimate, noiseLevel, pressureDelta, EP: currentEp, BT, latency };
 }
 
 function computeSignals() {
@@ -1982,6 +2041,8 @@ function computeSignals() {
     wHint: clamp(G.state.weather_severity, 0, 3),
     vHint: clamp(G.state.visibility, 0, 3),
     tHint: clamp(G.state.terrain_load, 0, 3),
+    signalReadability: perception.latency?.readabilityLabel || 'clear reading',
+    lateSignalActive: !!perception.latency?.active,
   };
 }
 
@@ -2107,8 +2168,9 @@ function renderWatch() {
   trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
   trendEl.className = 'watch-trend';
 
-  document.getElementById('watch-uncertainty-inline').textContent =
-    `trend ${sig.trend} · confidence ${sig.confidence}% · stage ${getCurrentStage()} · ${G.character?.name || '—'}`;
+  const uncertaintyInline = document.getElementById('watch-uncertainty-inline');
+  uncertaintyInline.textContent = `${sig.signalReadability} · trend ${sig.trend} · stage ${getCurrentStage()}${sig.lateSignalActive ? ' · delayed lock-in' : ''}`;
+  uncertaintyInline.className = `signal-readability ${sig.lateSignalActive ? 'latency-active' : ''}`;
 
   const pressureCopy = getDecisionPressureCopy();
   const countdownEl = document.getElementById('decision-window-countdown');
@@ -2695,6 +2757,25 @@ function resolveTurn(state, action) {
   const pressureDelta = epResult.pressureScore - BT;
   const perception = calculatePerception({ state, EP: epResult.pressureScore, BT, pressureDelta });
 
+  let lateSignalEvent = null;
+  if (perception.latency?.active && perception.latency.activationRatio >= 0.75 && pressureDelta >= 18) {
+    lateSignalEvent = {
+      turn: G.turn,
+      stage: getCurrentStage(),
+      activationRatio: Number(perception.latency.activationRatio.toFixed(2)),
+      pressureDelta: Number(pressureDelta.toFixed(2)),
+      readability: perception.latency.readabilityLabel,
+      gates: {
+        pressureGate: perception.latency.pressureGate,
+        stageGate: perception.latency.stageGate,
+        timeGate: perception.latency.timeGate,
+      },
+    };
+    G.lateSignalDeterminantTurns += 1;
+    G.lateSignalEvents.push(lateSignalEvent);
+    flags.push('late-signal-lock-in');
+  }
+
   let photoEffectApplied = null;
   if (resolvedAction === 'shoot_photo') {
     const confidenceGain = Math.min(actionMod.photoConfidenceGain || 6, 8);
@@ -2771,13 +2852,14 @@ function resolveTurn(state, action) {
     confidence: Math.round(timedPerception.confidenceLevel),
     trendEstimate: timedPerception.trendEstimate,
     photoEffectApplied,
+    lateSignalActivation: lateSignalEvent,
     decisionMs: G.decisionTimeSpentMs,
     decisionWindowExceeded: G.decisionWindowExceeded,
     decisionWindowEffect: G.decisionWindowEffect,
     outcome,
   });
 
-  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception: timedPerception, outcome, action: resolvedAction, decisionWindowEffect: G.decisionWindowEffect };
+  return { EP: epResult.pressureScore, BT, pressureDelta, actionMod, result, flags, perception: timedPerception, outcome, action: resolvedAction, decisionWindowEffect: G.decisionWindowEffect, lateSignalEvent };
 }
 
 function makeDecision(decision) {
@@ -2815,6 +2897,7 @@ function makeDecision(decision) {
     decisionMs: G.decisionTimeSpentMs,
     decisionWindowExceeded: G.decisionWindowExceeded,
     decisionWindowEffect: G.decisionWindowEffect,
+    lateSignalActivation: turnResult.lateSignalEvent,
     narrativeText,
   };
   G.turnLog.push(logEntry);
@@ -2986,6 +3069,7 @@ function endRun(returnedToHorcones) {
   outEl.textContent = outcome.label;
   outEl.className = 'debrief-outcome-value ' + outcome.cls;
 
+  document.querySelectorAll('.debrief-late-msg').forEach((el) => el.remove());
   const retreatMsg = document.getElementById('debrief-retreat-msg');
   if (returnedToHorcones) {
     retreatMsg.textContent = 'The expedition ends at Horcones. The true summit is the safe return.';
@@ -2994,6 +3078,16 @@ function endRun(returnedToHorcones) {
     retreatMsg.textContent = 'The expedition window closed. Every mountain has a clock you cannot stop.';
     retreatMsg.style.display = 'block';
   } else { retreatMsg.style.display = 'none'; }
+
+  if (G.lateSignalDeterminantTurns > 0) {
+    const lateMsg = document.createElement('div');
+    lateMsg.className = 'debrief-retreat-msg debrief-late-msg';
+    lateMsg.style.display = 'block';
+    lateMsg.textContent = G.lateSignalDeterminantTurns === 1
+      ? 'Late signal activation shaped a key turn. The decisive warning became clear only near the edge.'
+      : `Late signal activation shaped ${G.lateSignalDeterminantTurns} turns. Clarity arrived progressively under pressure.`;
+    retreatMsg.parentNode.insertBefore(lateMsg, retreatMsg.nextSibling);
+  }
 
   const debriefStats = document.getElementById('debrief-stats');
   clearElement(debriefStats);
