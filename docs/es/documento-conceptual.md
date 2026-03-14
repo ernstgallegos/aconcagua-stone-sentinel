@@ -1,4 +1,14 @@
 # Aconcagua: Stone Sentinel  
+
+## Actualización de referencia (v1.4)
+
+Este documento mantiene la visión fundacional. La consolidación detallada de diseño y planificación de marzo 2026 se documenta en:
+
+- [`docs/es/diseno-consolidado-v1.4.md`](./diseno-consolidado-v1.4.md)
+- [`docs/es/plan-implementacion-v1.4.md`](./plan-implementacion-v1.4.md)
+- Equivalentes en inglés en `docs/en/`
+
+
 ## Documento Conceptual
 
 ---

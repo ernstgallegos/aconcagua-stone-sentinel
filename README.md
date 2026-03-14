@@ -192,7 +192,7 @@ The root viewer currently ships these bundled JSONL runs:
 For qualitative sessions, use [`prototype/mra-v0/debrief-template.md`](./prototype/mra-v0/debrief-template.md) immediately after each run.
 
 
-## Prototype Web v1.3 — Environmental Pressure Engine
+## Prototype Web v1.3 — Environmental Pressure Engine (current public implementation)
 
 The web prototype follows a unified environmental-dominance resolution pipeline:
 
@@ -208,6 +208,19 @@ All simulation parameters are loaded from `/data`:
 - `outcomes.json` — canonical outcome taxonomy
 
 See `docs/simulation_engine.md` and `docs/architecture.md` for full mechanics.
+
+
+## Consolidated design v1.4 (planning)
+
+A v1.4 design/planning documentation package was added to align vision, game structure, characters, systemic pipeline, and implementation phases.
+
+- ES: [`/docs/es/diseno-consolidado-v1.4.md`](docs/es/diseno-consolidado-v1.4.md)
+- EN: [`/docs/en/consolidated-design-v1.4.md`](docs/en/consolidated-design-v1.4.md)
+- Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
+- Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
+
+> Note: this update is documentation/planning only. The current public playable state may not yet implement all v1.4 target elements.
+
 
 ## Repository Structure
 

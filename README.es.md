@@ -103,6 +103,20 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  ---
  
  
+
+## Diseño consolidado v1.4 (planificación)
+
+Se incorporó un paquete documental de diseño/planificación v1.4 para alinear visión, estructura de juego, personajes, pipeline sistémico y fases de implementación.
+
+- ES: [`/docs/es/diseno-consolidado-v1.4.md`](docs/es/diseno-consolidado-v1.4.md)
+- EN: [`/docs/en/consolidated-design-v1.4.md`](docs/en/consolidated-design-v1.4.md)
+- Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
+- Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
+
+> Nota: esta actualización es documental y de planificación. El estado jugable público actual puede no reflejar aún todos los elementos objetivo de v1.4.
+
+---
+
 ## Frontends web y rutas canónicas
 
 Este repositorio incluye dos superficies web:

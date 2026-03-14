@@ -88,3 +88,12 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 - fatigue, exposure
 - confidence, trendEstimate
 - outcome
+
+
+## v1.4 planning notes
+
+- A park permit countdown (`permitDay` / `permitMaxDays = 20`) is defined as planned state for expedition-time pressure.
+- `Permit Expired` is documented as an explicit non-success outcome in the consolidated v1.4 design package.
+- `Summit and Safe Return` is documented as the only Part 2 unlock outcome in planning docs.
+
+See `docs/en/consolidated-design-v1.4.md` and `docs/es/diseno-consolidado-v1.4.md` for scope and rollout phases.
