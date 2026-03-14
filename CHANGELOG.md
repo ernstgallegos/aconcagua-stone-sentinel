@@ -10,9 +10,36 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Changed
+- Expanded `AGENTS.md` into a living learning log with mandatory session-start read behavior and consolidated project/workflow learnings from v1.4 Phase 1 implementation.
 - Root `AGENTS.md` was restructured in a convention-aligned format (scope, priority, and actionable repository instructions) while preserving existing documentation and changelog policies.
 - Added a consolidated v1.4 design/planning documentation package (ES/EN) with game-structure, character, simulation-pipeline, and phase rollout references.
 - Updated `README.md`, `README.es.md`, `docs/*`, and `meta/public-roadmap.md` to cross-reference the v1.4 documentation baseline and clarify planning-vs-implementation status.
+
+## [1.4.0] — 2026-03
+
+### Added
+- Six fully differentiated characters replacing the previous three: Francisco Aguirre,
+  Laura Kim, Erik Lundvall, Daniela De Rossi, Blake Harris, and Irina Orlova.
+  Each has a complete biographical and mechanical profile in `data/characters.json`.
+- `"Permit Expired"` outcome: 20-day park permit tracked via `G.permitDay` and
+  `G.permitMaxDays`. Visualized as a persistent widget in the game panel.
+- `screen-summit-success`: special screen shown exclusively on "Summit and Safe Return"
+  outcome, explaining the simulation's scope and announcing Part 2.
+- `screen-part2-character`: Part 2 character selection with 5 locked characters and
+  Francisco Aguirre as the only active option.
+- `difficultyLabel` rendered in character selection cards for all six characters.
+
+### Changed
+- Screen flow simplified: `screen-mode` removed. Flow is now
+  splash → title → character → scenario → onboarding → game.
+- `confirmCharacter()` now calls `buildScenarioGrid()` and navigates directly to scenario.
+- Back button on scenario screen now returns to character selection.
+- `endRun()` now branches to `screen-summit-success` on summit outcome instead of
+  always showing the standard debrief.
+- Debrief action buttons updated: "Change character" and "Same character, new scenario"
+  replace the single "Choose scenario" button.
+- Title screen eyebrow updated from "Prototype Web-v1.1" to "Prototype · v1.3".
+- `package.json` version bumped to 1.4.0.
 
 ## [1.3.0] — 2026-03
 

@@ -804,6 +804,55 @@ body {
   letter-spacing: 0.08em;
 }
 
+
+.char-card.char-locked {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+}
+.char-bio--locked {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+.char-lock-icon {
+  font-size: 1.2rem;
+  color: var(--border);
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* ── PERMIT WIDGET ── */
+.permit-widget {
+  margin-top: 0.75rem;
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.permit-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.permit-name {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--white);
+  font-weight: 500;
+}
+.permit-days {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--stone);
+}
+.permit-days.permit-warn { color: var(--ochre); }
+.permit-days.permit-critical { color: var(--red, #8f4e44); font-weight: 500; }
+
 /* ───── RESPONSIVE ───── */
 @media (max-width: 680px) {
   .game-layout { grid-template-columns: 1fr; }
@@ -832,7 +881,7 @@ body {
 <!-- ══════════════════════ TITLE ══════════════════════ -->
 <section id="screen-title" class="screen" aria-label="Title screen">
   <div class="title-shell">
-    <p class="title-eyebrow">Prototype Web-v1.1</p>
+    <p class="title-eyebrow">Prototype · v1.3</p>
     <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
     <div class="title-divider"></div>
     <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
@@ -856,33 +905,12 @@ body {
   </div>
 </section>
 
-<!-- ══════════════════════ MODE ══════════════════════ -->
-<section id="screen-mode" class="screen" aria-label="Mode selection">
-  <button class="nav-back" onclick="showScreen('character')" style="margin:1.5rem 1.5rem 0;" aria-label="Back to character selection">Character</button>
-  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem;">
-    <div class="screen-header">
-      <h2>Expedition Type</h2>
-      <p>Choose how the mountain presents itself.</p>
-    </div>
-    <div class="mode-grid" role="group" aria-label="Expedition type">
-      <div class="mode-card" onclick="selectMode('predefined')" role="button" tabindex="0" aria-label="Predefined Scenarios" onkeydown="if(event.key==='Enter'||event.key===' ')selectMode('predefined')">
-        <div class="mode-icon">◈</div>
-        <div class="mode-name">Predefined Scenarios</div>
-        <div class="mode-desc">Five documented expeditions. Each tests a different constraint. Seeds included.</div>
-      </div>
-      <div class="mode-card" onclick="selectMode('random')" role="button" tabindex="0" aria-label="Random Mode" onkeydown="if(event.key==='Enter'||event.key===' ')selectMode('random')">
-        <div class="mode-icon">◇</div>
-        <div class="mode-name">Random Mode</div>
-        <div class="mode-desc">Procedurally generated conditions. Expedition ID assigned at departure.</div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ══════════════════════ SCENARIO SELECT ══════════════════════ -->
 <section id="screen-scenario" class="screen" aria-label="Scenario selection">
   <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
-    <button class="nav-back" onclick="showScreen('mode')" aria-label="Back to mode selection">Mode</button>
+    <button class="nav-back" onclick="showScreen('character')" aria-label="Back to character selection">Character</button>
     <div class="screen-header">
       <h2>Select Scenario</h2>
       <p>Start with Scenario 1 if this is your first expedition.</p>
@@ -991,7 +1019,13 @@ body {
         <!-- FIX: resource-warning now shown inline when depleted -->
         <div id="resource-warning-box"></div>
       </div>
-      <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
+
+<div class="permit-widget" id="permit-widget" aria-label="Park permit status">
+  <div class="permit-label">Park Permit</div>
+  <div class="permit-name" id="permit-name">—</div>
+  <div class="permit-days" id="permit-days">— days remaining</div>
+</div>
+<div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
       <div class="narrative-box">
         <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
         <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
@@ -1054,6 +1088,38 @@ body {
       <ul class="reflection-list" id="reflection-list" aria-label="Reflection prompts"></ul>
     </div>
     <div class="debrief-actions" id="debrief-actions"></div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════ SUMMIT SUCCESS ══════════════════════ -->
+<section id="screen-summit-success" class="screen" aria-label="Summit achieved">
+  <div style="max-width:600px; width:100%; margin:0 auto; padding:3rem 1.5rem; display:flex; flex-direction:column; align-items:center; text-align:center; flex:1; justify-content:center;">
+    <div style="font-family:var(--mono); font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--ochre); margin-bottom:1.5rem;">SUMMIT AND SAFE RETURN</div>
+    <h2 style="font-family:var(--mono); font-size:clamp(1.4rem,4vw,2rem); font-weight:300; color:var(--white); margin:0 0 1.5rem;">The summit was reached.<br>The mountain was respected.</h2>
+    <div style="width:40px; height:1px; background:var(--border); margin:0 auto 2rem;"></div>
+    <p style="font-style:italic; color:var(--stone); font-size:0.9rem; line-height:1.75; max-width:480px; margin-bottom:2.5rem;" id="summit-success-note">
+      This result was possible within a simplified simulation — one built on a limited set of parameters, designed to test whether the core systems hold. They do.
+    </p>
+    <p style="color:var(--text); font-size:0.88rem; line-height:1.7; max-width:480px; margin-bottom:3rem;">
+      What comes next puts everything you learned here to a different test. Not a simulation. The real expedition — with the full group, the real terrain, and no guaranteed outcomes. The mountain will decide.
+    </p>
+    <button class="btn-primary" onclick="showScreen('part2-character')" style="margin-bottom:1.5rem;">Begin the real expedition</button>
+    <button class="btn-ghost" onclick="showScreen('debrief')">Review this run first</button>
+  </div>
+</section>
+
+<!-- ══════════════════════ PART 2 CHARACTER ══════════════════════ -->
+<section id="screen-part2-character" class="screen" aria-label="Part 2 character selection">
+  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
+    <div class="screen-header" style="text-align:center; margin-bottom:2rem;">
+      <h2 style="font-family:var(--mono); font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--stone); margin-bottom:0.5rem;">The Real Expedition</h2>
+      <p style="font-style:italic; color:var(--text-dim); font-size:0.9rem;">One path forward. One character available.</p>
+    </div>
+    <div class="char-grid" id="part2-char-grid" role="radiogroup" aria-label="Part 2 character selection"></div>
+    <div style="text-align:center; margin-top:1.5rem;">
+      <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" onclick="confirmPart2Character()">Francisco. Let's go.</button>
+    </div>
   </div>
 </section>
 
@@ -1292,6 +1358,8 @@ let G = {
   modelReady: false,
   hasSummited: false,
   finalOutcome: 'Strategic Retreat',
+  permitDay: 1,
+  permitMaxDays: 20,
 };
 
 // ════════════════════════════════════════════════
@@ -1307,6 +1375,8 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 
   // FIX: journal back button points to the screen we came from
+  if (id === 'part2-character') buildPart2CharacterGrid();
+
   if (id === 'journal') {
     renderJournal();
     const backBtn = document.getElementById('journal-back-btn');
@@ -1345,8 +1415,10 @@ function buildCharacterGrid() {
       <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
       ${c.difficultyLabel ? `<p class="char-difficulty">Conditions: ${c.difficultyLabel}</p>` : ''}
     `;
+
     grid.appendChild(card);
   });
+
 }
 function selectCharacter(id) {
   document.querySelectorAll('.char-card').forEach(c => {
@@ -1363,7 +1435,65 @@ function selectCharacter(id) {
 }
 function confirmCharacter() {
   if (!G.character) return;
-  showScreen('mode');
+  buildScenarioGrid();
+  showScreen('scenario');
+}
+
+
+function buildPart2CharacterGrid() {
+  const grid = document.getElementById('part2-char-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const chars = DATA_CONFIG.characters || [];
+  chars.forEach(c => {
+    const card = document.createElement('div');
+    const isActive = c.id === 'francisco';
+    card.className = 'char-card' + (isActive ? '' : ' char-locked');
+    card.id = 'part2-char-' + c.id;
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', 'false');
+    card.setAttribute('tabindex', isActive ? '0' : '-1');
+    card.setAttribute('aria-label', isActive ? `${c.name} — ${c.role}` : `${c.name} — locked`);
+    card.setAttribute('aria-disabled', isActive ? 'false' : 'true');
+
+    if (isActive) {
+      card.onclick = () => selectPart2Character(c.id);
+      card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Character(c.id); }};
+    }
+
+    const roleGlyph = (c.role || '').split(/\s+/).map(p => p[0] || '').join('').slice(0,2).toUpperCase();
+    card.innerHTML = `
+      <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-role">${c.role}</div>
+      ${isActive
+        ? `<div class="char-bio">${c.bio}</div><ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>${c.difficultyLabel ? `<p class="char-difficulty">Conditions: ${c.difficultyLabel}</p>` : ''}`
+        : `<div class="char-bio char-bio--locked">Available in future expeditions.</div><div class="char-lock-icon" aria-hidden="true">◈</div>`
+      }
+    `;
+
+    grid.appendChild(card);
+  });
+
+}
+
+function selectPart2Character(id) {
+  document.querySelectorAll('#part2-char-grid .char-card').forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  const card = document.getElementById('part2-char-' + id);
+  if (card && id === 'francisco') {
+    card.classList.add('selected');
+    card.setAttribute('aria-checked', 'true');
+    const btn = document.getElementById('btn-part2-confirm');
+    if (btn) { btn.disabled = false; btn.removeAttribute('aria-disabled'); }
+  }
+}
+
+function confirmPart2Character() {
+  // Part 2 is not yet implemented — show placeholder
+  alert('Part 2 is coming. The full expedition begins in the next version.');
 }
 
 // ════════════════════════════════════════════════
@@ -1417,8 +1547,24 @@ function buildScenarioGrid() {
     card.onkeydown = (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(sc.id, sc.seeds[0]); }
     };
+
     grid.appendChild(card);
   });
+
+  // Random mode card
+  const randomCard = document.createElement('div');
+  randomCard.className = 'scenario-card';
+  randomCard.setAttribute('role', 'button');
+  randomCard.setAttribute('tabindex', '0');
+  randomCard.setAttribute('aria-label', 'Random Scenario');
+  randomCard.innerHTML = `
+    <div class="scenario-num">SCENARIO · RANDOM</div>
+    <div class="scenario-name">Random Conditions</div>
+    <div class="scenario-desc">Procedurally generated conditions. Expedition ID assigned at departure.</div>
+  `;
+  randomCard.onclick = () => selectMode('random');
+  randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMode('random'); }};
+  grid.appendChild(randomCard);
 }
 function selectScenario(id, seed) {
   document.querySelectorAll('.scenario-card').forEach(c => {
@@ -1458,7 +1604,7 @@ function showOnboarding(mode) {
   document.getElementById('onboard-char-line').textContent =
     `Expedition: ${G.character.name} · ${G.character.role}`;
   const backBtn = document.getElementById('onboard-back-btn');
-  backBtn.onclick = () => showScreen(mode === 'random' ? 'mode' : 'scenario');
+  backBtn.onclick = () => showScreen('scenario');
   showScreen('onboarding');
 }
 
@@ -1517,6 +1663,8 @@ function startGame() {
   G.consecutiveWater0 = 0;
   G.whiteWindRisk = 0;
   G.day = 1;
+  G.permitDay = 1;
+  G.permitMaxDays = 20;
   G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
   G.irreversibleTriggered = false;
   G.irreversibleTurn = null;
@@ -1806,6 +1954,20 @@ function setMetricValue(el, text, normalizedValue) {
   el.appendChild(bar);
 }
 
+
+function updatePermitWidget() {
+  const nameEl = document.getElementById('permit-name');
+  const daysEl = document.getElementById('permit-days');
+  if (!nameEl || !daysEl) return;
+  const name = G.character?.name || '—';
+  const remaining = G.permitMaxDays - G.permitDay + 1;
+  nameEl.textContent = name;
+  daysEl.textContent = remaining > 0 ? `${remaining} day${remaining !== 1 ? 's' : ''} remaining` : 'PERMIT EXPIRED';
+  daysEl.className = 'permit-days';
+  if (remaining <= 3) daysEl.classList.add('permit-critical');
+  else if (remaining <= 7) daysEl.classList.add('permit-warn');
+}
+
 function renderWatch() {
   const s = G.state;
   const sig = G.signals;
@@ -1912,6 +2074,7 @@ function renderWatch() {
   }
 
   renderPositionList();
+  updatePermitWidget();
 }
 
 
@@ -2157,6 +2320,7 @@ function applyTimeCost(action) {
   const sim = getSimConfig();
   if (action === 'sleep') {
     G.day += 1;
+    G.permitDay = G.day;
     G.minutesOfDay = sim.dayStartMinutes || TUNING.dayStartMinutes;
     return actionMod.timeCost || 480;
   }
@@ -2177,6 +2341,7 @@ function applyBivouacPenalty(state, ep, flags) {
     state.persistenceTier = 'critical';
     if (G.minutesOfDay >= 1440) {
       G.day += 1;
+      G.permitDay = G.day;
       G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
     }
     return ep + (biv.ep || 20);
@@ -2309,6 +2474,7 @@ function resolveTurn(state, action) {
   else if (state.fatigue >= 95) outcome = outsideCamp ? 'Rescue' : 'Collapse (Fatigue)';
   else if (state.exposure >= 95) outcome = outsideCamp ? 'Rescue' : 'Collapse (Exposure)';
   else if (state.water === 0 && G.consecutiveWater0 >= 3) outcome = 'Resource Exhaustion';
+  else if (G.permitDay > G.permitMaxDays) outcome = 'Permit Expired';
   else if (G.turn >= G.scenario.max_turns) outcome = 'Expedition Window Closed';
   else if (G.hasSummited && state.position === 'horcones') outcome = 'Summit and Safe Return';
   else if (state.position === 'horcones' && G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) outcome = 'High Point Return';
@@ -2497,11 +2663,14 @@ function buildReflectionPrompts() {
 
   // character-specific
   const charPrompts = {
-    valentina: 'The terrain gave you signals. Did you recognize them when they arrived?',
-    marco: 'Your altitude readings were reliable. Were your exposure readings given the same attention?',
-    diego: 'Your body performed. Did your reading of it match what the mountain was showing?',
+    francisco: 'Endurance kept you moving. Which signals almost got buried under that stamina?',
+    laura: 'Your readings were precise. Did caution help timing, or close a useful window?',
+    erik: 'Experience sharpened execution. When did confidence start filtering risk signals out?',
+    daniela: 'You read the environment early. How often did your body force a different decision?',
+    blake: 'Determination was real. Which turns revealed the gap between intent and preparation?',
+    irina: 'Your baseline was strong. Where did old pattern recognition conflict with present conditions?',
   };
-  dynamicPool.push(charPrompts[G.character.id]);
+  dynamicPool.push(charPrompts[G.character.id] || 'What did the mountain show that your assumptions almost ignored?');
 
   // pick 2
   const picked = dynamicPool.slice(0, 2).map(t => ({ text:t, dynamic:true }));
@@ -2622,7 +2791,8 @@ function endRun(returnedToHorcones) {
   [
     { label: 'Same scenario + seed', cls: 'btn-primary', onClick: replaySameSeed },
     { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
-    { label: 'Choose scenario', cls: 'btn-ghost', onClick: goChooseScenario },
+    { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('character') },
+    { label: 'Same character, new scenario', cls: 'btn-ghost', onClick: goChooseScenario },
     { label: 'Export run_log.json', cls: 'btn-ghost', onClick: exportRunLog },
     { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
   ].forEach(({ label, cls, onClick }) => {
@@ -2633,7 +2803,11 @@ function endRun(returnedToHorcones) {
     debriefActions.appendChild(btn);
   });
 
-  showScreen('debrief');
+  if (G.finalOutcome === 'Summit and Safe Return') {
+    showScreen('summit-success');
+  } else {
+    showScreen('debrief');
+  }
 }
 
 function exportRunLog() {

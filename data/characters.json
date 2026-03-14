@@ -1,56 +1,128 @@
 [
   {
-    "id": "valentina",
-    "name": "Valentina Quispe",
-    "role": "High-Mountain Guide",
-    "bio": "Born in Mendoza. Twelve seasons on Aconcagua's normal route.",
-    "traits": ["Reads terrain shifts early.", "High resilience to exposure."],
-    "difficultyLabel": "Favorable",
-    "engine": {
-      "functionalCapacityBonus": 2,
-      "acclimatizationRate": 1.15,
-      "resourceEfficiency": 1.1,
-      "fatigueResistance": 1.12,
-      "exposureResistance": 1.2,
-      "confidenceStability": 1.18,
-      "riskTolerance": 0.95,
-      "perceptionBias": -2
-    }
-  },
-  {
-    "id": "marco",
-    "name": "Marco Ferretti",
-    "role": "Technical Mountaineer",
-    "bio": "Technical climber with strong adaptation pace at altitude.",
-    "traits": ["Fast acclimatization.", "Good metabolic efficiency."],
+    "id": "francisco",
+    "name": "Francisco Aguirre",
+    "role": "Teacher & Amateur Runner",
+    "bio": "Physical education teacher from Mendoza. Exceptional endurance from years of trail running. No technical high-altitude experience. Carrying a photo of his friend Mateo in his left pocket.",
+    "traits": [
+      "Unusual physical and mental endurance — sustains pace long after others slow down.",
+      "Physical warning signals appear with low prominence. You must learn to read them actively."
+    ],
     "difficultyLabel": "Standard",
     "engine": {
-      "functionalCapacityBonus": 5,
-      "acclimatizationRate": 1.3,
-      "resourceEfficiency": 1.18,
-      "fatigueResistance": 1.05,
+      "functionalCapacityBonus": 2,
+      "acclimatizationRate": 0.90,
+      "resourceEfficiency": 1.05,
+      "fatigueResistance": 1.25,
       "exposureResistance": 0.95,
-      "confidenceStability": 1.0,
-      "riskTolerance": 1.05,
-      "perceptionBias": 0
+      "confidenceStability": 0.90,
+      "riskTolerance": 1.15,
+      "perceptionBias": 3
     }
   },
   {
-    "id": "diego",
-    "name": "Diego Salinas",
-    "role": "Elite Endurance Athlete",
-    "bio": "Extreme endurance athlete with stronger output but noisier decisions.",
-    "traits": ["High baseline capacity.", "Prone to overconfidence under stress."],
+    "id": "laura",
+    "name": "Laura Kim",
+    "role": "Emergency Physician",
+    "bio": "South Korean ER doctor on burnout leave. Three years in intensive care during the pandemic. Reads physiological signals with clinical precision. Came to the mountain to recover control over her own life.",
+    "traits": [
+      "Most precise signal reader in the group — lowest noise, highest confidence.",
+      "When a decision affects only herself, the window closes faster. Her default is caution."
+    ],
+    "difficultyLabel": "Favorable",
+    "engine": {
+      "functionalCapacityBonus": 0,
+      "acclimatizationRate": 1.12,
+      "resourceEfficiency": 1.22,
+      "fatigueResistance": 1.05,
+      "exposureResistance": 1.10,
+      "confidenceStability": 1.22,
+      "riskTolerance": 0.80,
+      "perceptionBias": -4
+    }
+  },
+  {
+    "id": "erik",
+    "name": "Erik Lundvall",
+    "role": "Offshore Engineer",
+    "bio": "Norwegian mountaineer with Kilimanjaro, Elbrus, Mont Blanc and Denali behind him. Aconcagua is the last of the Seven Summits. Fifteen years of success have made retreat feel like failure.",
+    "traits": [
+      "Strong technical execution — reads routes and manages gear with real expertise.",
+      "Risk signals have a higher activation threshold. His ego filters what the mountain is saying."
+    ],
     "difficultyLabel": "Demanding",
     "engine": {
-      "functionalCapacityBonus": 9,
-      "acclimatizationRate": 0.95,
-      "resourceEfficiency": 0.95,
-      "fatigueResistance": 1.08,
-      "exposureResistance": 0.9,
+      "functionalCapacityBonus": 8,
+      "acclimatizationRate": 1.28,
+      "resourceEfficiency": 1.12,
+      "fatigueResistance": 1.10,
+      "exposureResistance": 1.05,
+      "confidenceStability": 0.85,
+      "riskTolerance": 1.42,
+      "perceptionBias": 7
+    }
+  },
+  {
+    "id": "daniela",
+    "name": "Daniela De Rossi",
+    "role": "Photographer & Journalist",
+    "bio": "Italian freelance photojournalist, 26. Lost her editorial assignment a week before departure and came anyway. Extraordinary observer of environment and people. Her body is the most vulnerable to altitude in the group.",
+    "traits": [
+      "Most accurate environmental reader — detects light, weather and group shifts before anyone else.",
+      "Lowest acclimatization rate in the group. The gap between what she sees and what her body can do is the whole game."
+    ],
+    "difficultyLabel": "Demanding",
+    "engine": {
+      "functionalCapacityBonus": -3,
+      "acclimatizationRate": 0.72,
+      "resourceEfficiency": 0.92,
+      "fatigueResistance": 0.95,
+      "exposureResistance": 0.85,
+      "confidenceStability": 1.12,
+      "riskTolerance": 1.05,
+      "perceptionBias": -5
+    }
+  },
+  {
+    "id": "blake",
+    "name": "Blake Harris",
+    "role": "Strategy Executive",
+    "bio": "American executive, 58. Bought the best gear three weeks ago. Thirty years building an identity out of closing deals — the mountain is another deal to close. Nine months from a forced partial retirement he didn't ask for.",
+    "traits": [
+      "Genuine psychological determination. Has survived extreme pressure in boardrooms.",
+      "The gap between his confidence and his actual physical preparation is the widest in the group."
+    ],
+    "difficultyLabel": "Very Demanding",
+    "engine": {
+      "functionalCapacityBonus": -6,
+      "acclimatizationRate": 0.75,
+      "resourceEfficiency": 0.80,
+      "fatigueResistance": 0.85,
+      "exposureResistance": 0.90,
+      "confidenceStability": 0.80,
+      "riskTolerance": 1.35,
+      "perceptionBias": 8
+    }
+  },
+  {
+    "id": "irina",
+    "name": "Irina Orlova",
+    "role": "Former Pro Climber",
+    "bio": "Russian ex-professional climber, now an alpinism instructor in St. Petersburg. Elbrus, Pik Lenin, Khan Tengri, two attempts on Broad Peak. Left professional climbing at 35 for her daughter. This is her first high-altitude expedition outside a professional context in six years.",
+    "traits": [
+      "Best physical baseline in the group — strongest acclimatization, best resource efficiency.",
+      "Highest perceptual noise in the group. Experience built on past patterns can blind her to what this mountain is actually saying."
+    ],
+    "difficultyLabel": "Demanding",
+    "engine": {
+      "functionalCapacityBonus": 10,
+      "acclimatizationRate": 1.42,
+      "resourceEfficiency": 1.28,
+      "fatigueResistance": 1.15,
+      "exposureResistance": 1.05,
       "confidenceStability": 0.82,
-      "riskTolerance": 1.2,
-      "perceptionBias": 5
+      "riskTolerance": 1.48,
+      "perceptionBias": 9
     }
   }
 ]
