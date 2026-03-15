@@ -22,6 +22,9 @@
     "progress": -20,
     "fatigueMultiplier": 0.72,
     "exposureMultiplier": 0.68,
+    "fatigueRecovery": 1,
+    "exposureRecovery": 1,
+    "pressureDeltaCap": 30,
     "riskRelief": "strong",
     "timeCost": 110
   },
