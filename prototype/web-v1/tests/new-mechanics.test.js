@@ -59,7 +59,8 @@ test('perception and body tolerance pipeline is explicit', () => {
   assert.match(source, /function calculateEnvironmentalPressure\(state\)/);
   assert.match(source, /function calculateBodyTolerance\(state\)/);
   assert.match(source, /function calculatePerception\(\{ state, EP, BT, pressureDelta \}\)/);
-  assert.match(source, /pressureFactor = clamp\(pressureDelta \/ 20, 0\.5, 2\.5\)/);
+  assert.match(source, /const effectiveDelta = actionMod\.pressureDeltaCap/);
+  assert.match(source, /pressureFactor = clamp\(effectiveDelta \/ 20, 0\.5, 2\.5\)/);
   assert.match(source, /if \(G\.minutesOfDay > 1320 && !isCampPosition\(state\.position\)\)/);
 });
 

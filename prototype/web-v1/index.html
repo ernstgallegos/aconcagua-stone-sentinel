@@ -1634,7 +1634,7 @@ const SCENARIOS = [
     id:'assisted-route', num:'01', name:'Assisted Route',
     desc:'Your first attempt. Support is available. The systems are forgiving — for now.',
     intro:'First expedition. Conditions are favorable. Learn to read the signals before they stop being forgiving.',
-    max_turns:34, seeds:[10,20,30], difficulty:'Low',
+    max_turns:50, seeds:[10,20,30], difficulty:'Low',
     initial:{ position:'horcones', altitude_band:'approach', weather_severity:0, visibility:3, terrain_load:0, functional_capacity:95, fatigue:10, exposure:5, water:26, food:24 },
     bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:-1 },
   },
@@ -1642,7 +1642,7 @@ const SCENARIOS = [
     id:'narrow-weather-window', num:'02', name:'Narrow Weather Window',
     desc:'You left at dawn. The sky is readable, but the mountain has its own schedule.',
     intro:'Conditions are moderate. There may be a window ahead. There may not. Read the trend.',
-    max_turns:32, seeds:[101,202,303], difficulty:'Medium',
+    max_turns:48, seeds:[101,202,303], difficulty:'Medium',
     initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:86, fatigue:22, exposure:14, water:22, food:20 },
     bias:{ weather_deterioration:1, terrain_growth:0, fatigue_growth:0 },
   },
@@ -1650,7 +1650,7 @@ const SCENARIOS = [
     id:'false-stability-terrain', num:'03', name:'False Stability Terrain',
     desc:'Clear skies. Good visibility. The terrain has other plans.',
     intro:'The weather looks stable. What the terrain is doing is a different question.',
-    max_turns:32, seeds:[404,505,606], difficulty:'Medium',
+    max_turns:48, seeds:[404,505,606], difficulty:'Medium',
     initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:88, fatigue:20, exposure:12, water:20, food:18 },
     bias:{ weather_deterioration:0, terrain_growth:1, fatigue_growth:0 },
   },
@@ -1658,7 +1658,7 @@ const SCENARIOS = [
     id:'accumulated-fatigue-trap', num:'04', name:'Accumulated Fatigue Trap',
     desc:'Everything seems manageable. That is the problem.',
     intro:'Conditions are benign. The trap is not in the weather.',
-    max_turns:34, seeds:[707,808,909], difficulty:'Medium',
+    max_turns:50, seeds:[707,808,909], difficulty:'Medium',
     initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:90, fatigue:18, exposure:10, water:22, food:20 },
     bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:1 },
   },
@@ -1666,7 +1666,7 @@ const SCENARIOS = [
     id:'weather-window', num:'05', name:'Weather Window',
     desc:'The weather is breaking. For how long — that is what you have to figure out.',
     intro:'Bad weather is passing. A window will open. Whether you\'re ready when it does — and whether you recognize when it closes — that\'s the whole game.',
-    max_turns:30, seeds:[151,252,353], difficulty:'Hard',
+    max_turns:46, seeds:[151,252,353], difficulty:'Hard',
     initial:{ position:'horcones', altitude_band:'approach', weather_severity:2, visibility:1, terrain_load:1, functional_capacity:75, fatigue:35, exposure:25, water:22, food:20 },
     bias:{ weather_deterioration:-1, terrain_growth:0, fatigue_growth:0, window_turns:[3,4,5], post_window_deterioration:2 },
   },
@@ -2000,7 +2000,7 @@ function buildRandomScenario() {
     name: arch.name,
     desc: `Expedition ${rseed} · ${arch.name}`,
     intro: `Expedition ${rseed}. ${arch.name}. Conditions are never neutral; they only become legible through disciplined turns.`,
-    max_turns: rngInt(rng, 30, 36),
+    max_turns: rngInt(rng, 46, 54),
     seeds: [rseed],
     difficulty: arch.tweak.difficulty,
     initial: {
@@ -3093,7 +3093,10 @@ function evaluateOutcome(pressureDelta, actionMod, state) {
   const targetIndex = clamp(nodeIndex + step, 0, POSITIONS.length - 1);
   const moved = targetIndex !== nodeIndex;
 
-  const pressureFactor = clamp(pressureDelta / 20, 0.5, 2.5);
+  const effectiveDelta = actionMod.pressureDeltaCap
+    ? Math.min(pressureDelta, actionMod.pressureDeltaCap)
+    : pressureDelta;
+  const pressureFactor = clamp(effectiveDelta / 20, 0.5, 2.5);
   const bases = getSimConfig().baseCosts || { fatigue: 8, exposure: 6 };
   let fatigueIncrease = bases.fatigue * (actionMod.fatigueMultiplier || 1) * pressureFactor;
   let exposureIncrease = bases.exposure * (actionMod.exposureMultiplier || 1) * pressureFactor;
@@ -3319,8 +3322,8 @@ function resolveTurn(state, action) {
   else if (state.exposure >= 95) outcome = outsideCamp ? 'Rescue' : 'Collapse (Exposure)';
   else if (state.water === 0 && G.consecutiveWater0 >= 3) outcome = 'Resource Exhaustion';
   else if (G.permitDay > G.permitMaxDays) outcome = 'Permit Expired';
-  else if (G.turn >= G.scenario.max_turns) outcome = 'Expedition Window Closed';
   else if (G.hasSummited && state.position === 'horcones') outcome = 'Summit and Safe Return';
+  else if (G.turn >= G.scenario.max_turns) outcome = 'Expedition Window Closed';
   else if (state.position === 'horcones' && G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) outcome = 'High Point Return';
   else if (state.position === 'horcones' && G.highestPosIdx > 0) outcome = 'Strategic Retreat';
   if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';

@@ -31,6 +31,22 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
   calibrated values that make a full expedition viable within scenario starting
   resources (APPROACH: 0.14/0.10, HIGH_CAMP: 0.22/0.16, SUMMIT_DAY: 0.34/0.24).
 
+- Fixed outcome classification order in `prototype/web-v1/index.html`: `Summit and
+  Safe Return` was evaluated after `Expedition Window Closed`, causing players who
+  returned to Horcones on the final turn to receive the wrong outcome. Swapped the
+  two `else if` branches so summit completion takes priority.
+- Fixed descent body-state accumulation in `data/action_modifiers.json`: `descend`
+  now carries `fatigueRecovery: 1` and `exposureRecovery: 1`, activating the
+  existing sign-flip logic in `evaluateOutcome()`. Descending now recovers fatigue
+  and exposure instead of compounding them through stage multipliers. Added
+  `pressureDeltaCap: 30` to prevent night-descent `pressureFactor` from reaching
+  maximum (2.5), which was draining `functional_capacity` to fatal levels over 14
+  descent turns. Implemented cap in `evaluateOutcome()` via a one-line guard.
+- Fixed `max_turns` across all five predefined scenarios and the random scenario
+  generator in `prototype/web-v1/index.html`. Previous values (30–34) were below
+  the minimum of 35 turns required for ascent + descent with one recovery sleep.
+  Updated to 46–50 for predefined scenarios and 46–54 for random mode.
+
 ### Added
 - Added a Phase 2 real-progress snapshot section in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to track implemented vs pending scope item-by-item.
 - Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
@@ -65,6 +81,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added SUMMIT_DAY difficulty regression guardrails in `prototype/web-v1/index.html` to cap acclimatization/timing penalty spikes and flag guarded turns (`summit-difficulty-guard`) for telemetry.
 - Updated `prototype/web-v1/index.html` debrief cause messaging with systemic-vs-decision attribution so players can distinguish model pressure from execution errors.
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` with regression checks for guardrail fields and SUMMIT_DAY difficulty caps.
+- Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the new `effectiveDelta`/`pressureDeltaCap` path in `evaluateOutcome()` while preserving pressure-factor pipeline coverage.
 - Updated `docs/balance-calibration-notes.md` with explicit rollback criteria when any character drifts outside accepted outcome bands.
 
 
