@@ -43,7 +43,7 @@ jobs:
           node-version: "20"
       - name: Validate data JSON files are well-formed
         run: |
-          for f in data/nodes.json data/environmental_pressure_config.json data/action_modifiers.json data/stage_modifiers.json data/characters.json data/outcomes.json; do
+          for f in data/nodes.json data/environmental_pressure_config.json data/action_modifiers.json data/stage_modifiers.json data/characters.json data/outcomes.json data/scenarios.web-v1.json; do
             node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "OK: $f" || (echo "FAIL: $f" && exit 1)
           done
       - name: Validate scenario JSON files

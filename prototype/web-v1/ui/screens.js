@@ -2,6 +2,10 @@ import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } f
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
 
+const TUNING = {
+  dayStartMinutes: 360,
+};
+
 const DEFAULT_CONFIG = {
   nodes: [],
   environmentalPressure: {},
@@ -969,7 +973,7 @@ function computeSignals() {
 function makeDots(val, max=3) {
   const dotClass = val >= 3 ? 'filled-high' : val >= 2 ? 'filled-mid' : 'filled-low';
   const frag = document.createDocumentFragment();
-  for (let i = 0; i < max+1; i++) {
+  for (let i = 0; i < max; i++) {
     const dot = document.createElement('div');
     dot.className = i < val ? `dot ${dotClass}` : 'dot';
     frag.appendChild(dot);
@@ -1395,7 +1399,8 @@ function renderNarrative(decision, signals, flags=[]) {
     else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
     else text = pickNarrative('advance_good');
   } else if (decision === 'wait') {
-    text = ['high','extreme','death_zone'].includes(s.altitude_band) ? pickNarrative('wait_high') : pickNarrative('wait_low');
+    const waitNode = getCurrentNode(s);
+    text = (waitNode.altitudeBand >= 2) ? pickNarrative('wait_high') : pickNarrative('wait_low');
   } else if (decision === 'descend') {
     text = pickNarrative('descend');
   } else if (decision === 'sleep') {
@@ -1415,15 +1420,6 @@ function renderNarrative(decision, signals, flags=[]) {
   // passive character signals
   const passiveEl = document.getElementById('narrative-passive');
   let passive = '';
-  if (G.character.id === 'valentina' && decision === null) {
-    if (s.terrain_load >= 2) passive = 'The ground is changing character. This section will cost more.';
-  }
-  if (G.character.id === 'diego' && G.turnLog.length >= 2) {
-    const last2 = G.turnLog.slice(-2);
-    if (last2.every(l => (l.decision === 'advance' || l.decision === 'advance_slowly')) && signals.trend === 'worsening') {
-      passive = 'The body says yes. The mountain hasn\'t answered yet.';
-    }
-  }
   if (G.character?.id === 'daniela' && G.photoInsightTurns > 0 && decision === null) {
     passive = 'Recent frames sharpen route reading for a short window.';
   }
@@ -1447,7 +1443,7 @@ function updateAmbientSignal(flags, decision) {
   if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = 'Spindrift rises in narrow veils across the ridge line.';
   else if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) line = 'Daniela\'s last frame clarifies wind and terrain rhythm for a brief window.';
   else if (G.signals && G.signals.trend === 'worsening') line = 'The mountain tone hardens: less margin, same distance.';
-  else if (G.signals && G.signals.trend === 'improving') line = 'The air eases slightly, without promise.';
+  else if (G.signals && G.signals.trend === 'easing') line = 'The air eases slightly, without promise.';
   if (!line) { box.style.display = 'none'; return; }
   box.textContent = line;
   box.style.display = 'block';
@@ -1607,6 +1603,17 @@ function applyTimeCost(action) {
   return minutes;
 }
 
+function applyAcclimatizationGain(action) {
+  const mod = getActionModifier(action);
+  const gain = mod.acclimatizationGain || 0;
+  if (gain <= 0) return;
+  const rate = G.character?.engine?.acclimatizationRate ?? 1.0;
+  const current = G.acclimatization || 0;
+  updateRunState(G, {
+    acclimatization: clamp(current + gain * rate, 0, 100)
+  });
+}
+
 function applyBivouacPenalty(state, ep, flags) {
   const sim = getSimConfig();
   const biv = sim.bivouacPenalty || { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
@@ -1717,6 +1724,7 @@ function makeDecision(decision) {
   assertStateShape(G, 'before resolveTurn', { throwOnError: true });
   const turnResult = resolveTurn(s, decision);
   const resolvedDecision = turnResult.resolvedAction || decision;
+  applyAcclimatizationGain(resolvedDecision);
   updateRunState(G, { signals: computeSignals() });
   renderWatch();
   const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
@@ -1756,10 +1764,18 @@ function makeDecision(decision) {
   const ended = returnedToHorcones || turnResult.outcome !== 'Strategic Retreat';
 
   if (ended) {
+    updateRunState(G, { finalOutcome: turnResult.outcome });
+    if (turnResult.outcome === 'Summit and Safe Return') {
+      updateRunState(G, { hasSummited: true });
+    }
     if (decisionPanel) decisionPanel.classList.remove('processing');
     setTimeout(() => endRun(returnedToHorcones), 800);
     return;
   }
+
+  const currentEP = calculateEnvironmentalPressure(G.state).pressureScore;
+  const updatedHistory = [...(G.pressureHistory || []), currentEP].slice(-5);
+  updateRunState(G, { pressureHistory: updatedHistory });
 
   updateRunState(G, { turn: G.turn + 1 });
   recordTelemetry(G, { turnDecisionStartedAt: Date.now(), decisionPauseTurnsLeft: 0 });
@@ -1991,7 +2007,7 @@ function endRun(returnedToHorcones) {
   table.appendChild(headerRow);
   G.turnLog.forEach(e => {
     const tr = document.createElement('tr');
-    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep' }[e.decision];
+    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep', shoot_photo:'Shoot Photo' }[e.decision] || e.decision;
     const cells = [
       { value: String(e.turn) },
       { value: `D${e.day || 1} ${e.time || '06:00'}` },
