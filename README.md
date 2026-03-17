@@ -101,7 +101,7 @@ This repository documents the **conceptual and design foundations** of the proje
 
 The interactive web prototype is the current development surface. It implements the full
 Environmental Pressure / Body Tolerance simulation engine, a diegetic clock, five player
-actions plus a character-specific contextual action, fifteen named route nodes, multilingual UI switching (English, Spanish, Portuguese-BR), an
+actions plus a character-specific contextual action, fifteen named route nodes, multilingual UI switching (English and Spanish), an
 acclimatization subsystem, six differentiated characters, stage-based modifiers, permit
 pressure, decision-window timing pressure, and multiple run archetypes.
 
