@@ -7,6 +7,11 @@ It is a **map of stages**, intended to make visible what has already been accomp
 
 Progress in this project is not measured by speed, but by **clarity, coherence, and alignment**.
 
+
+Public repository scope is explicit:
+- Public prototype code is available in this repository (`prototype/web-v1` active implementation and `prototype/mra-v0` frozen reference artifact).
+- Production/commercial branch scope remains private.
+
 ---
 
 ## How to Read This Roadmap

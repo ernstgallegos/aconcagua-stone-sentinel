@@ -24,6 +24,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Changed
 - Revised `meta/public-roadmap.md` to align current-stage messaging with the already integrated `prototype/web-v1` behavior, map each stage to objective repository evidence (modules/features/tests), and explicitly separate design-lock completion from implementation completion with a compact v1.4 status matrix linked to the implementation-plan real-progress snapshot.
 - Updated canonical-status documentation across `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`, and `README.md` to reflect the v1.4 public in-progress state with explicit links to `CHANGELOG.md` `[Unreleased]` and implementation-plan snapshots.
+- Clarified public/private code visibility scope across `README.md`, `README.es.md`, `prototype/web-v1/README.md`, and `meta/public-roadmap.md`: public prototype code is available in-repo, while production/commercial branch scope remains private.
 - Added a documentation consistency checklist to `CONTRIBUTING.md` to prevent version-title drift between core docs and implementation reality.
 - Updated `.github/workflows/ci.yml` to run the new Playwright smoke test on pull requests, including browser provisioning before executing `pytest prototype/web-v1/tests/test_smoke_flow.py -v`.
 - Updated `requirements-dev.txt` and `CONTRIBUTING.md` to pin Playwright (`playwright==1.53.0`) and document the local smoke-test command path used by CI.
