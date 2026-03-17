@@ -230,7 +230,9 @@ function rebuildRouteData() {
     stage: node.stageHint || (idx <= 4 ? 'APPROACH' : idx <= 10 ? 'HIGH_CAMP' : 'SUMMIT_DAY'),
     routeIndex: node.routeIndex ?? idx,
   })).sort((a, b) => a.routeIndex - b.routeIndex);
-  POSITIONS = ROUTE_NODES.map((n) => n.id);
+  // FIX: mutar el array en lugar de reasignar — createTurnEngine ya capturó esta referencia
+  POSITIONS.length = 0;
+  POSITIONS.push(...ROUTE_NODES.map((n) => n.id));
   POS_LABELS = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = n.name; return acc; }, {});
   POS_ALT = ROUTE_NODES.reduce((acc, n) => {
     acc[n.id] = n.altitudeMeters ? `${n.altitudeMeters.toLocaleString('en-US')} m` : '—';
@@ -239,7 +241,9 @@ function rebuildRouteData() {
   POS_BAND = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = `band_${n.altitudeBand}`; return acc; }, {});
   CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
   STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
-  CANONICAL_OUTCOMES = new Set(DATA_CONFIG.outcomes || []);
+  // FIX: mutar el Set en lugar de reasignar — ídem
+  CANONICAL_OUTCOMES.clear();
+  (DATA_CONFIG.outcomes || []).forEach(o => CANONICAL_OUTCOMES.add(o));
 }
 
 
