@@ -6,6 +6,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test prototype/web-v1/tests/new-mechanics.test.js"
+    "test": "node --test prototype/web-v1/tests/*.test.js"
   }
 }
