@@ -1,4 +1,10 @@
-# Prototype Web v1.3
+# Prototype Web v1.4 (public state)
+
+> **Canonical status (source-anchored):**
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../../CHANGELOG.md#unreleased).
+> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
+> - Current public build is **v1.4 in-progress (phased rollout)** with shipped phase slices and pending items.
+
 
 Canonical active web prototype for Aconcagua: Stone Sentinel.
 
@@ -14,7 +20,7 @@ Pipeline:
 
 ## Canonical route
 
-The route is node-to-node and loaded from `data/nodes.json` with the v1.3 canonical sequence including:
+The route is node-to-node and loaded from `data/nodes.json` with the current canonical sequence (carried forward from the v1.3 route baseline) including:
 
 - Cambio de Pendiente (5300m)
 - El Balcón Amarillo (5800m)
