@@ -17,12 +17,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
 
 ### Changed
+- Pinned Python lint tooling in `requirements-dev.txt` by adding `ruff==0.4.10` so local and CI lint runs use the same versioned dependency.
+- Updated `.github/workflows/ci.yml` to remove ad hoc lint installation and run `ruff` as a blocking gate (`E/F/W`, `E501` ignored) in the Python job for `main` and pull requests targeting `main`.
+- Updated `CONTRIBUTING.md` with the CI lint gate policy and local lint command to match enforced CI behavior.
 - Migrated `prototype/web-v1/index.html` to a lightweight ES-module shell that now loads `prototype/web-v1/ui/screens.js` and keeps temporary global facades (`window.makeDecision`, `window.showScreen`, and run controls) for backward-compatible button/test integration during refactor.
 - Split gameplay code into modules: turn engine logic (`resolveTurn`, `evaluateOutcome`, `updateState`, RNG/clamp helpers) now lives in `prototype/web-v1/engine/turn-resolution.js`, and canonical game-state initialization now lives in `prototype/web-v1/state/game-state.js`.
 - Refactored web-v1 runtime state into explicit slices (`runState`, `uiState`, `telemetryState`) in `prototype/web-v1/state/game-state.js`, added guarded helper APIs (`updateRunState`, `updateUIState`, `recordTelemetry`), and wired hot mutation paths (`showScreen`, `startGame`, `resolveTurn`, `endRun`) through these helpers with boundary assertions (`before resolveTurn`, `after updateState`) to catch state-shape drift early.
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to validate module-based loading and relocated engine/state contracts.
 
 ### Fixed
+- Annotated `prototype/mra-v0/test_simulator.py` import bootstrap with `# noqa: E402` so the new blocking `ruff` gate accepts the intentional `sys.path` setup used by simulator tests.
 - Hardened `loadDataConfig()` in `prototype/web-v1/ui/screens.js` by treating `nodes`, `actionModifiers`, `stageModifiers`, `characters`, and `outcomes` as required assets with runtime schema checks. Any load/parse/schema failure now raises a blocking fatal screen in `prototype/web-v1/index.html`, includes filename + key-path diagnostics, and keeps `G.modelReady = false` to prevent game start with empty defaults.
 
 - Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in

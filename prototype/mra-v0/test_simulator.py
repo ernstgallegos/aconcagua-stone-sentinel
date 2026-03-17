@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent
 # Keep ROOT pointed at prototype/mra-v0: run_all imports and test mocks depend on this path.
 sys.path.insert(0, str(ROOT))
 
-from simulator import (
+from simulator import (  # noqa: E402
     apply_decision,
     classify_outcome,
     load_scenario,

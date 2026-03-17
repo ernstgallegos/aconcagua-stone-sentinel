@@ -26,10 +26,8 @@ jobs:
       - name: Install Python dev dependencies
         run: pip install -r requirements-dev.txt
 
-      - name: Lint Python with ruff (informative)
-        run: |
-          pip install ruff --quiet
-          ruff check prototype/mra-v0/ --select=E,F,W --ignore=E501 || true
+      - name: Lint Python (blocking: ruff E/F/W)
+        run: ruff check prototype/mra-v0/ --select=E,F,W --ignore=E501
 
       - name: Run simulator tests
         run: pytest prototype/mra-v0/test_simulator.py -v

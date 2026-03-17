@@ -86,6 +86,7 @@ In addition to the changelog:
 
 ### Workflow learnings (implementation + validation)
 
+- Keep lint tooling version-pinned in `requirements-dev.txt` and call it directly in CI jobs; avoid ad hoc `pip install` inside workflow steps so local and CI lint behavior cannot drift.
 - Post-audit cleanup tasks should remove orphan CSS selectors immediately after flow removals; run targeted grep checks for selector leftovers (base styles + responsive media queries) before final test runs.
 - For large one-shot prompts, execute in strict section order and verify each section with targeted grep/search checks before running full tests.
 - Prefer minimal, precise edits to `index.html` because it contains UI, flow, and engine logic in one file; regressions are easy when moving blocks.
