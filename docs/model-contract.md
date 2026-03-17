@@ -8,11 +8,25 @@ This document defines the canonical concepts that are shared across both simulat
 | --- | --- | --- |
 | Active, player-facing outcomes | `data/outcomes.json` | Canonical for active prototype (`web-v1`). |
 | Active turn resolution semantics | `prototype/web-v1/engine/turn-resolution.js` | Canonical for gameplay behavior currently in use. |
+| Web-v1 scenario catalog (predefined + random-archetype source) | `data/scenarios.web-v1.json` | Canonical scenario authority; UI/runtime must consume this data instead of embedding scenario constants. |
+| Web-v1 scenario loading and runtime schema enforcement | `prototype/web-v1/ui/screens.js` (`loadDataConfig()`) | Enforces blocking validation for required config files and scenario-contract shape before enabling `modelReady`. |
 | Historical baseline behavior | `prototype/mra-v0/simulator.py` | Frozen reference artifact only; not the active product authority. |
 | Historical required scenario state shape | `prototype/mra-v0/scenarios/scenario.schema.json` | Used to preserve MRA reproducibility and regression checks. |
 | Cross-surface overlap expectations | `data/contracts/model-contract.json` | Machine-readable contract consumed by CI checks. |
 
 ## Canonical overlap (must remain aligned)
+
+## Web-v1 scenario authority boundaries
+
+- `data/scenarios.web-v1.json` is the **single source of truth** for:
+  - predefined scenario cards (`predefinedScenarios`),
+  - random scenario generation knobs (`randomScenario.seedRange`, `maxTurnsRange`, `initialBase`, `initialRanges`),
+  - random-archetype definitions (`randomScenario.archetypes`).
+- `prototype/web-v1/ui/screens.js` is **runtime logic only**:
+  - loads scenario data via `loadDataConfig()`,
+  - validates schema + non-empty constraints,
+  - materializes runtime state for card rendering and random scenario instantiation.
+- Authority rule: gameplay balancing/content changes for scenarios should modify `data/scenarios.web-v1.json`; UI code should change only for rendering or contract-evolution mechanics.
 
 ## 1) Outcome concept
 
