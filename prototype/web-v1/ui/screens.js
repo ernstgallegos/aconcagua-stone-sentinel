@@ -120,7 +120,7 @@ function setModelLoadError(errorMessage) {
 const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
 const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset']);
 const LANGUAGE_KEY = 'aconcagua_language_v1';
-const VALID_LANGUAGES = new Set(['en', 'es', 'pt-BR']);
+const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
 
 const I18N = {
@@ -155,6 +155,18 @@ const I18N = {
       shootPhoto: 'Shoot Photo',
       expeditionJournal: 'Expedition Journal',
       clearLog: 'Clear log',
+      splashTap: 'Tap / Click to continue',
+      titleTagline: '"The mountain doesn't ask if you're ready. The mountain rules."',
+      titleSub: 'A decision game about limits, environment, and knowing when to stop.',
+      navTitle: 'Title',
+      navCharacter: 'Character',
+      charSubtitle: 'Your character shapes what you read clearly — and what stays in the dark.',
+      scenarioSubtitle: 'Start with Scenario 1 if this is your first expedition.',
+      onboardingAdvanceDesc: 'Gain ground. High fatigue + exposure cost. Altitude amplifies all penalties.',
+      onboardingAdvanceSlowDesc: 'Gain ground with less cost. 70% chance of progress. Still consumes resources.',
+      onboardingWaitDesc: 'Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.',
+      onboardingDescendDesc: 'End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.',
+      onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.'
 
     },
   },
@@ -189,44 +201,21 @@ const I18N = {
       shootPhoto: 'Tomar foto',
       expeditionJournal: 'Diario de expedición',
       clearLog: 'Limpiar registro',
+      splashTap: 'Toca / haz clic para continuar',
+      titleTagline: '"La montaña no pregunta si estás listo. La montaña manda."',
+      titleSub: 'Un juego de decisiones sobre límites, entorno y saber cuándo detenerse.',
+      navTitle: 'Título',
+      navCharacter: 'Personaje',
+      charSubtitle: 'Tu personaje define lo que puedes leer con claridad — y lo que permanece en sombra.',
+      scenarioSubtitle: 'Empieza con el Escenario 1 si esta es tu primera expedición.',
+      onboardingAdvanceDesc: 'Ganar terreno. Alto costo de fatiga + exposición. La altitud amplifica todas las penalizaciones.',
+      onboardingAdvanceSlowDesc: 'Ganar terreno con menor costo. 70% de probabilidad de progreso. Sigue consumiendo recursos.',
+      onboardingWaitDesc: 'Mantener posición. Recuperar es significativo solo en aproximación y base. Sobre campamento alto, esperar es sobre todo control de daños.',
+      onboardingDescendDesc: 'Finalizar el intento voluntariamente. Menor costo. Siempre es una decisión válida e inteligente.',
+      onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.'
 
     },
-  },
-  'pt-BR': {
-    langName: 'Português (Brasil)',
-    ui: {
-      visualMode: 'Modo visual',
-      language: 'Idioma',
-      noEntriesYet: 'Ainda não há registros.',
-      randomCharacter: 'Personagem aleatório',
-      randomCharacterRole: 'Perfil imprevisível',
-      randomCharacterBio: 'Deixe a montanha escolher um dos seis perfis para esta execução.',
-      randomCharacterTraitA: 'Início rápido para replays.',
-      randomCharacterTraitB: 'Mantém regras e balanceamento completos.',
-      randomScenario: 'Condições aleatórias',
-      randomScenarioDesc: 'Condições geradas proceduralmente. O ID da expedição é definido na saída.',
-      randomScenarioTag: 'CENÁRIO · ALEATÓRIO',
-      clearJournalConfirm: 'Limpar todos os registros de expedição?',
-      journalEmpty: 'Nenhuma expedição registrada. A primeira execução aparecerá aqui.',
-      begin: 'INICIAR',
-      titleChooseExpedition: 'Escolha sua expedição',
-      titleSelectScenario: 'Selecionar cenário',
-      depart: 'Partir',
-      back: 'Voltar',
-      understoodBegin: 'Entendido. Iniciar.',
-      decision: 'Decisão',
-      advance: 'Avançar',
-      advanceSlow: 'Avançar devagar',
-      wait: 'Esperar',
-      descend: 'Descer',
-      sleep: 'Dormir',
-      shootPhoto: 'Tirar foto',
-      expeditionJournal: 'Diário de expedição',
-      clearLog: 'Limpar registro',
-
-    },
-  },
-};
+  },};
 
 
 const CHARACTER_I18N = {
@@ -234,20 +223,12 @@ const CHARACTER_I18N = {
     francisco: { role: 'Profesor y corredor amateur' },
     daniela: { role: 'Fotógrafa de montaña' },
   },
-  'pt-BR': {
-    francisco: { role: 'Professor e corredor amador' },
-    daniela: { role: 'Fotógrafa de montanha' },
-  },
 };
 
 const SCENARIO_I18N = {
   es: {
     'assisted-route': { name: 'Ruta asistida' },
     'weather-window': { name: 'Ventana climática' },
-  },
-  'pt-BR': {
-    'assisted-route': { name: 'Rota assistida' },
-    'weather-window': { name: 'Janela de clima' },
   },
 };
 
@@ -265,6 +246,11 @@ function t(path) {
   const value = path.split('.').reduce((acc, key) => acc?.[key], I18N[CURRENT_LANGUAGE]);
   if (value !== undefined) return value;
   return path.split('.').reduce((acc, key) => acc?.[key], I18N.en) || path;
+}
+
+
+function uiText(en, es) {
+  return CURRENT_LANGUAGE === 'es' ? es : en;
 }
 
 function setLanguage(lang) {
@@ -448,6 +434,18 @@ function applyStaticTranslations() {
     ['#btn-shoot-photo .btn-decision-main span:first-child', 'ui.shootPhoto'],
     ['#screen-journal .journal-title', 'ui.expeditionJournal'],
     ['#screen-journal .journal-header .btn-ghost', 'ui.clearLog'],
+    ['#screen-splash .splash-cta', 'ui.splashTap'],
+    ['#screen-title .title-tagline', 'ui.titleTagline'],
+    ['#screen-title .title-sub', 'ui.titleSub'],
+    ['#screen-character .nav-back', 'ui.navTitle'],
+    ['#screen-character .screen-header p', 'ui.charSubtitle'],
+    ['#screen-scenario .nav-back', 'ui.navCharacter'],
+    ['#screen-scenario .screen-header p', 'ui.scenarioSubtitle'],
+    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(1) .decision-cost', 'ui.onboardingAdvanceDesc'],
+    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(2) .decision-cost', 'ui.onboardingAdvanceSlowDesc'],
+    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(3) .decision-cost', 'ui.onboardingWaitDesc'],
+    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(4) .decision-cost', 'ui.onboardingDescendDesc'],
+    ['#screen-onboarding .onboard-note', 'ui.onboardingNote'],
   ];
   map.forEach(([selector, key]) => {
     const el = document.querySelector(selector);
@@ -1473,10 +1471,10 @@ function renderWatch() {
   if (isCampPosition(s.position)) {
     sleepBtn.style.display = 'inline-block';
     sleepBtn.disabled = false;
-    sleepBtn.title = 'Sleep through the night at this camp';
+    sleepBtn.title = uiText('Sleep through the night at this camp', 'Dormir durante la noche en este campamento');
   } else {
     sleepBtn.style.display = 'none';
-    sleepBtn.title = 'Sleep is only possible at camps';
+    sleepBtn.title = uiText('Sleep is only possible at camps', 'Solo se puede dormir en campamentos');
   }
 
   const photoBtn = document.getElementById('btn-shoot-photo');
@@ -1579,8 +1577,42 @@ const NARRATIVES = {
   poor_acclimatization:['Altitude penalty rises; acclimatization is below threshold.','The body has not adapted enough for this stage.','You are climbing faster than adaptation allows.','High camp without adaptation multiplies fatigue.','Summit day punishes low acclimatization severely.','This is a mismatch between ambition and physiology.']
 };
 
+
+const NARRATIVES_ES = {
+  advance_good: [
+    'La ladera abre un margen estrecho. Te mueves dentro de él, sin fingir control.',
+    'El progreso se mide en respiraciones disciplinadas, no en ambición.',
+    'El terreno permite el paso por ahora. Aceptas sus términos y sigues.',
+    'Cada paso pide primero equilibrio y después velocidad.',
+    'La ruta se sostiene. El cuerpo responde. En este turno, eso alcanza.',
+    'La ganancia llega en silencio: sin triunfo, solo continuidad.'
+  ],
+  advance_severe: [
+    'El viento ya tiene intención. Te inclinas y gastas más de lo planeado.',
+    'Seguir es posible, pero caro en formas que el reloj no cuenta del todo.',
+    'El avance continúa bajo protesta de terreno, clima y respiración.',
+    'Cada metro parece prestado de un turno futuro.',
+    'Te mueves porque detenerte aquí cuesta distinto, no menos.',
+    'Esto es avance sin inercia.'
+  ],
+  advance_slowly: [
+    'Medio ritmo preserva estructura. La montaña detecta la prisa antes que tú.',
+    'Moverse lento sigue siendo moverse; hoy esa diferencia importa.',
+    'La cadencia reemplaza la fuerza. Cambias distancia por mañana.',
+    'Pasos deliberados sostienen la línea entre esfuerzo y error.',
+    'El ritmo medido protege más de lo que protegería el orgullo.',
+    'Avanzas negándote a apurar.'
+  ],
+  wait_low: ['Esperar aquí es estrategia, no inercia.','La quietud compra claridad si toleras el reloj.','La montaña sigue moviéndose aunque tú no.','Sostienes posición y auditas el sistema.','Un cuerpo quieto igual puede perder terreno por clima.','La paciencia sirve solo si viene con atención.'],
+  wait_high: ['A esta altitud, esperar no es descanso sino desgaste gestionado.','La carpa frena viento, no consecuencias.','Gastas menos que moviéndote, pero nunca cero.','Mantener terreno aquí ya es una acción.','El cuerpo trabaja de forma continua solo para seguir viable.','El silencio en altura es operativo, no pacífico.'],
+  descend: ['Descender no es rendirse; es una oración completa en lógica de montaña.','Bajar preserva opciones que una cumbre puede borrar.','Giras antes de que el sistema te haga girar.','Retirarte convierte incertidumbre en supervivencia.','La ruta de regreso es la única garantizada.','El juicio llega como dirección, no como discurso.'],
+  slept: ['La noche en campamento recupera estructura, nunca certeza.', 'Dormir reduce ruido, no riesgo objetivo.', 'La mañana empieza con menos deuda, no sin deuda.', 'El cuerpo se estabiliza donde la altitud lo permite.', 'La recuperación es local y condicional.', 'Una noche de campamento es mantenimiento, no reinicio.'],
+  shoot_photo: ['Daniela encuadra la cresta y detecta un cambio antes de que se vuelva riesgo.', 'Una toma rápida fija textura, traza de viento y línea para el próximo empuje.', 'La lente convierte señales dispersas en un patrón legible.', 'Invierte minutos ahora para evitar un movimiento ciego después.', 'El encuadre registra lo que el pánico suele borrar.', 'Una sola foto compra una lectura más limpia del ánimo del terreno.'],
+  first_high: ['Por encima de seis mil metros, las reglas se cierran sin aviso.','El aire se afina; las consecuencias no.','Desde aquí, los errores maduran rápido.','El campamento alto empieza donde terminan las excusas.','La altitud quita ruido y deja solo costo.','La ruta sigue, pero los márgenes se estrechan.']
+};
+
 function pickNarrative(key) {
-  const arr = NARRATIVES[key];
+  const arr = (CURRENT_LANGUAGE === 'es' ? (NARRATIVES_ES[key] || NARRATIVES[key]) : NARRATIVES[key]);
   if (!arr) return '';
   const rng = G.rng || Math.random;
   return arr[Math.floor(rng() * arr.length)];
@@ -1652,10 +1684,10 @@ function updateAmbientSignal(flags, decision) {
   const box = document.getElementById('ambient-signal');
   if (!box) return;
   let line = '';
-  if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = 'Spindrift rises in narrow veils across the ridge line.';
-  else if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) line = 'Daniela\'s last frame clarifies wind and terrain rhythm for a brief window.';
-  else if (G.signals && G.signals.trend === 'worsening') line = 'The mountain tone hardens: less margin, same distance.';
-  else if (G.signals && G.signals.trend === 'easing') line = 'The air eases slightly, without promise.';
+  if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = uiText('Spindrift rises in narrow veils across the ridge line.', 'El viento levanta velos de nieve sobre la línea de cresta.');
+  else if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) line = uiText('Daniela\'s last frame clarifies wind and terrain rhythm for a brief window.', 'La última toma de Daniela aclara por un breve lapso el ritmo del viento y del terreno.');
+  else if (G.signals && G.signals.trend === 'worsening') line = uiText('The mountain tone hardens: less margin, same distance.', 'La montaña endurece el tono: menos margen, misma distancia.');
+  else if (G.signals && G.signals.trend === 'easing') line = uiText('The air eases slightly, without promise.', 'El aire afloja un poco, sin promesas.');
   if (!line) { box.style.display = 'none'; return; }
   box.textContent = line;
   box.style.display = 'block';
@@ -1666,9 +1698,9 @@ function maybeShowTutorial(trigger) {
   const toast = document.getElementById('tutorial-toast');
   if (!toast) return;
   const map = {
-    'first-turn': 'Uncertainty is a reading quality, not a weather quality. Low confidence means wider interpretation ranges.',
-    'weather-deterioration': 'Weather deterioration compounds exposure and navigation burden before collapse flags appear.',
-    'fatigue-50': 'Fatigue above 50 reduces interpretation reliability and narrows safe decision space.',
+    'first-turn': uiText('Uncertainty is a reading quality, not a weather quality. Low confidence means wider interpretation ranges.', 'La incertidumbre es una cualidad de lectura, no del clima. Baja confianza implica rangos de interpretación más amplios.'),
+    'weather-deterioration': uiText('Weather deterioration compounds exposure and navigation burden before collapse flags appear.', 'El deterioro climático compone exposición y carga de navegación antes de que aparezcan banderas de colapso.'),
+    'fatigue-50': uiText('Fatigue above 50 reduces interpretation reliability and narrows safe decision space.', 'Fatiga por encima de 50 reduce la fiabilidad de lectura y estrecha el espacio de decisión seguro.'),
   };
   if (!map[trigger]) return;
   G.tutorialSeen[trigger] = true;
@@ -2064,43 +2096,43 @@ function classifyOutcome() {
 
 function findTurningPoint() {
   const irreversible = G.turnLog.find(e => e.flags.includes('first-irreversible-point'));
-  if (irreversible) return `Turn ${irreversible.turn}: First Irreversible Point reached at ${POS_LABELS[irreversible.position]}. Retreat costs increased from this point.`;
+  if (irreversible) return CURRENT_LANGUAGE === 'es' ? `Turno ${irreversible.turn}: se alcanzó el Primer Punto Irreversible en ${POS_LABELS[irreversible.position]}. Los costos de retirada aumentaron desde ese punto.` : `Turn ${irreversible.turn}: First Irreversible Point reached at ${POS_LABELS[irreversible.position]}. Retreat costs increased from this point.`;
 
   const firstCritical = G.turnLog.find(e => e.flags.some(f => f.includes('critical')));
-  if (firstCritical) return `Turn ${firstCritical.turn}: first critical flag (${firstCritical.flags.find(f => f.includes('critical'))}).`;
+  if (firstCritical) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstCritical.turn}: primera bandera crítica (${firstCritical.flags.find(f => f.includes('critical'))}).` : `Turn ${firstCritical.turn}: first critical flag (${firstCritical.flags.find(f => f.includes('critical'))}).`;
 
   const firstWindowClose = G.turnLog.find(e => e.flags.includes('weather-window-closed'));
-  if (firstWindowClose) return `Turn ${firstWindowClose.turn}: weather window closed; conditions degraded after.`;
+  if (firstWindowClose) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstWindowClose.turn}: se cerró la ventana climática; las condiciones se degradaron después.` : `Turn ${firstWindowClose.turn}: weather window closed; conditions degraded after.`;
 
   const firstWater0 = G.turnLog.find(e => e.flags.includes('water-depleted'));
-  if (firstWater0) return `Turn ${firstWater0.turn}: water depleted; collapse risk accelerated.`;
+  if (firstWater0) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstWater0.turn}: agua agotada; el riesgo de colapso se aceleró.` : `Turn ${firstWater0.turn}: water depleted; collapse risk accelerated.`;
 
-  return 'No single event dominated; the outcome emerged from cumulative micro-decisions.';
+  return uiText('No single event dominated; the outcome emerged from cumulative micro-decisions.', 'Ningún evento único dominó; el resultado emergió de microdecisiones acumuladas.');
 }
 
 function findPrimaryCause() {
   const reasonByOutcome = {
-    'Rescue': 'Main cause: body thresholds crossed outside camp. Actionable next run: call descent one turn earlier once trend worsens with low confidence.',
-    'Collapse (Fatigue)': 'Main cause: fatigue debt compounded faster than recovery windows. Actionable next run: rotate advance/slow/wait before entering high-camp segment.',
-    'Collapse (Exposure)': 'Main cause: exposure accumulated during adverse pressure turns. Actionable next run: avoid chaining aggressive pushes while trend is worsening.',
-    'Resource Exhaustion': 'Main cause: water/food burn outpaced route progress. Actionable next run: protect resources early and treat warning chips as mandatory replanning moments.',
-    'Permit Expired': 'Main cause: permit clock overran before safe completion. Actionable next run: tighten tempo on low-risk windows and descend earlier when delays stack.',
-    'Expedition Window Closed': 'Main cause: summit window closed before execution aligned. Actionable next run: convert waiting turns into controlled movement during optimal time blocks.',
-    'Strategic Retreat': 'Main cause: chosen retreat to preserve return safety. Actionable next run: compare retreat trigger turn against body/resource warning onset to calibrate risk timing.',
-    'High Point Return': 'Main cause: progress peak reached but return margin remained the priority. Actionable next run: reserve more body capacity before the final push segment.',
-    'Summit and Safe Return': 'Main cause: pressure management stayed ahead of cumulative debt. Actionable next run: replicate pacing pattern around warning transitions.',
-    'Fatality': 'Main cause: critical limits were exceeded beyond recoverable range. Actionable next run: treat first critical flag as immediate descend trigger.',
+    'Rescue': uiText('Main cause: body thresholds crossed outside camp. Actionable next run: call descent one turn earlier once trend worsens with low confidence.', 'Causa principal: se cruzaron umbrales corporales fuera de campamento. Acción para la próxima partida: ordenar descenso un turno antes cuando la tendencia empeore con baja confianza.'),
+    'Collapse (Fatigue)': uiText('Main cause: fatigue debt compounded faster than recovery windows. Actionable next run: rotate advance/slow/wait before entering high-camp segment.', 'Causa principal: la deuda de fatiga se acumuló más rápido que las ventanas de recuperación. Acción para la próxima partida: alternar avanzar/lento/esperar antes de entrar al tramo de campamentos altos.'),
+    'Collapse (Exposure)': uiText('Main cause: exposure accumulated during adverse pressure turns. Actionable next run: avoid chaining aggressive pushes while trend is worsening.', 'Causa principal: la exposición se acumuló durante turnos de presión adversa. Acción para la próxima partida: evitar encadenar empujes agresivos cuando la tendencia empeora.'),
+    'Resource Exhaustion': uiText('Main cause: water/food burn outpaced route progress. Actionable next run: protect resources early and treat warning chips as mandatory replanning moments.', 'Causa principal: el consumo de agua/comida superó el progreso en ruta. Acción para la próxima partida: proteger recursos temprano y tratar los avisos como momentos obligatorios de replanteo.'),
+    'Permit Expired': uiText('Main cause: permit clock overran before safe completion. Actionable next run: tighten tempo on low-risk windows and descend earlier when delays stack.', 'Causa principal: el reloj del permiso venció antes de completar de forma segura. Acción para la próxima partida: acelerar en ventanas de bajo riesgo y descender antes cuando se acumulen demoras.'),
+    'Expedition Window Closed': uiText('Main cause: summit window closed before execution aligned. Actionable next run: convert waiting turns into controlled movement during optimal time blocks.', 'Causa principal: la ventana de cumbre se cerró antes de alinear la ejecución. Acción para la próxima partida: convertir turnos de espera en movimiento controlado durante bloques horarios óptimos.'),
+    'Strategic Retreat': uiText('Main cause: chosen retreat to preserve return safety. Actionable next run: compare retreat trigger turn against body/resource warning onset to calibrate risk timing.', 'Causa principal: retirada elegida para preservar seguridad de retorno. Acción para la próxima partida: comparar el turno de retirada con el inicio de alertas corporales/de recursos para calibrar el timing del riesgo.'),
+    'High Point Return': uiText('Main cause: progress peak reached but return margin remained the priority. Actionable next run: reserve more body capacity before the final push segment.', 'Causa principal: se alcanzó el punto más alto pero el margen de retorno siguió siendo prioridad. Acción para la próxima partida: reservar más capacidad corporal antes del tramo final.'),
+    'Summit and Safe Return': uiText('Main cause: pressure management stayed ahead of cumulative debt. Actionable next run: replicate pacing pattern around warning transitions.', 'Causa principal: la gestión de presión se mantuvo por delante de la deuda acumulada. Acción para la próxima partida: replicar el patrón de ritmo en las transiciones de alerta.'),
+    'Fatality': uiText('Main cause: critical limits were exceeded beyond recoverable range. Actionable next run: treat first critical flag as immediate descend trigger.', 'Causa principal: se superaron límites críticos fuera de rango recuperable. Acción para la próxima partida: tratar la primera bandera crítica como disparador inmediato de descenso.'),
   };
-  return reasonByOutcome[G.finalOutcome] || 'Main cause: cumulative micro-decisions under uncertainty. Actionable next run: review first warning turn and adjust tempo one step earlier.';
+  return reasonByOutcome[G.finalOutcome] || uiText('Main cause: cumulative micro-decisions under uncertainty. Actionable next run: review first warning turn and adjust tempo one step earlier.', 'Causa principal: microdecisiones acumuladas bajo incertidumbre. Acción para la próxima partida: revisar el primer turno de alerta y ajustar el ritmo un paso antes.');
 }
 
 
 function buildReflectionPrompts() {
   const log = G.turnLog;
   const staticPrompts = [
-    { text:'Which signal influenced your choices most?', dynamic:false },
-    { text:'Did waiting feel like strategy or surrender?', dynamic:false },
-    { text:'Did the outcome feel earned, or imposed by the system?', dynamic:false },
+    { text: uiText('Which signal influenced your choices most?', '¿Qué señal influyó más en tus elecciones?'), dynamic:false },
+    { text: uiText('Did waiting feel like strategy or surrender?', '¿Esperar se sintió como estrategia o como rendición?'), dynamic:false },
+    { text: uiText('Did the outcome feel earned, or imposed by the system?', '¿El resultado se sintió ganado o impuesto por el sistema?'), dynamic:false },
   ];
   const dynamicPool = [];
 

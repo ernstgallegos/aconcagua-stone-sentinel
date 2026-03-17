@@ -96,7 +96,7 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
  
 ### Prototipo activo — `prototype/web-v1/`
 
-El prototipo web interactivo es la superficie activa de desarrollo. Implementa el engine completo de Environmental Pressure / Body Tolerance, seis personajes diferenciados, presión por permiso, ventana de decisión por tiempo, acción contextual por personaje y puente narrativo de Parte 2 con acceso condicionado por outcome y cambio de idioma en UI (inglés, español y portugués-BR).
+El prototipo web interactivo es la superficie activa de desarrollo. Implementa el engine completo de Environmental Pressure / Body Tolerance, seis personajes diferenciados, presión por permiso, ventana de decisión por tiempo, acción contextual por personaje y puente narrativo de Parte 2 con acceso condicionado por outcome y cambio de idioma en UI (inglés y español).
 
 ### Artefacto de referencia — `prototype/mra-v0/` (congelado)
 

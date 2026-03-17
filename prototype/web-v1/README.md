@@ -13,7 +13,7 @@ Canonical active web prototype for Aconcagua: Stone Sentinel.
 
 ## Language support
 
-The web prototype now includes a persistent language selector with three options: English, Spanish, and Brazilian Portuguese.
+The web prototype now includes a persistent language selector with two options: English and Spanish.
 
 
 ## Engine contract
