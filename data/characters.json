@@ -5,7 +5,7 @@
     "role": "Teacher & Amateur Runner",
     "bio": "Physical education teacher from Mendoza. Exceptional endurance from years of trail running. No technical high-altitude experience. Carrying a photo of his friend Mateo in his left pocket.",
     "traits": [
-      "Unusual physical and mental endurance — sustains pace long after others slow down.",
+      "Unusual physical and mental endurance \u2014 sustains pace long after others slow down.",
       "Physical warning signals appear with low prominence. You must learn to read them actively."
     ],
     "difficultyLabel": "Standard",
@@ -15,9 +15,9 @@
       "resourceEfficiency": 1.05,
       "fatigueResistance": 1.25,
       "exposureResistance": 0.95,
-      "confidenceStability": 0.94,
-      "riskTolerance": 1.1,
-      "perceptionBias": 2,
+      "confidenceStability": 0.9,
+      "riskTolerance": 1.15,
+      "perceptionBias": 3,
       "perceptionGuardrails": {
         "minConfidence": 20,
         "maxNoise": 31,
@@ -56,19 +56,19 @@
     "role": "Emergency Physician",
     "bio": "South Korean ER doctor on burnout leave. Three years in intensive care during the pandemic. Reads physiological signals with clinical precision. Came to the mountain to recover control over her own life.",
     "traits": [
-      "Most precise signal reader in the group — lowest noise, highest confidence.",
+      "Most precise signal reader in the group \u2014 lowest noise, highest confidence.",
       "When a decision affects only herself, the window closes faster. Her default is caution."
     ],
     "difficultyLabel": "Favorable",
     "engine": {
       "functionalCapacityBonus": 0,
       "acclimatizationRate": 1.12,
-      "resourceEfficiency": 1.16,
+      "resourceEfficiency": 1.22,
       "fatigueResistance": 1.05,
       "exposureResistance": 1.1,
-      "confidenceStability": 1.18,
-      "riskTolerance": 0.84,
-      "perceptionBias": -3,
+      "confidenceStability": 1.22,
+      "riskTolerance": 0.8,
+      "perceptionBias": -4,
       "perceptionGuardrails": {
         "minConfidence": 28,
         "maxNoise": 25,
@@ -107,7 +107,7 @@
     "role": "Offshore Engineer",
     "bio": "Norwegian mountaineer with Kilimanjaro, Elbrus, Mont Blanc and Denali behind him. Aconcagua is the last of the Seven Summits. Fifteen years of success have made retreat feel like failure.",
     "traits": [
-      "Strong technical execution — reads routes and manages gear with real expertise.",
+      "Strong technical execution \u2014 reads routes and manages gear with real expertise.",
       "Risk signals have a higher activation threshold. His ego filters what the mountain is saying."
     ],
     "difficultyLabel": "Demanding",
@@ -117,9 +117,9 @@
       "resourceEfficiency": 1.12,
       "fatigueResistance": 1.1,
       "exposureResistance": 1.05,
-      "confidenceStability": 0.9,
-      "riskTolerance": 1.34,
-      "perceptionBias": 5,
+      "confidenceStability": 0.85,
+      "riskTolerance": 1.42,
+      "perceptionBias": 7,
       "perceptionGuardrails": {
         "minConfidence": 18,
         "maxNoise": 33,
@@ -158,19 +158,19 @@
     "role": "Photographer & Journalist",
     "bio": "Italian freelance photojournalist, 26. Lost her editorial assignment a week before departure and came anyway. Extraordinary observer of environment and people. Her body is the most vulnerable to altitude in the group.",
     "traits": [
-      "Most accurate environmental reader — detects light, weather and group shifts before anyone else.",
+      "Most accurate environmental reader \u2014 detects light, weather and group shifts before anyone else.",
       "Lowest acclimatization rate in the group. The gap between what she sees and what her body can do is the whole game."
     ],
     "difficultyLabel": "Demanding",
     "engine": {
       "functionalCapacityBonus": -3,
       "acclimatizationRate": 0.72,
-      "resourceEfficiency": 0.96,
-      "fatigueResistance": 0.98,
+      "resourceEfficiency": 0.92,
+      "fatigueResistance": 0.95,
       "exposureResistance": 0.85,
       "confidenceStability": 1.12,
-      "riskTolerance": 1.0,
-      "perceptionBias": -6,
+      "riskTolerance": 1.05,
+      "perceptionBias": -5,
       "perceptionGuardrails": {
         "minConfidence": 26,
         "maxNoise": 26,
@@ -207,7 +207,7 @@
     "id": "blake",
     "name": "Blake Harris",
     "role": "Strategy Executive",
-    "bio": "American executive, 58. Bought the best gear three weeks ago. Thirty years building an identity out of closing deals — the mountain is another deal to close. Nine months from a forced partial retirement he didn't ask for.",
+    "bio": "American executive, 58. Bought the best gear three weeks ago. Thirty years building an identity out of closing deals \u2014 the mountain is another deal to close. Nine months from a forced partial retirement he didn't ask for.",
     "traits": [
       "Genuine psychological determination. Has survived extreme pressure in boardrooms.",
       "The gap between his confidence and his actual physical preparation is the widest in the group."
@@ -216,12 +216,12 @@
     "engine": {
       "functionalCapacityBonus": -6,
       "acclimatizationRate": 0.75,
-      "resourceEfficiency": 0.84,
-      "fatigueResistance": 0.88,
+      "resourceEfficiency": 0.8,
+      "fatigueResistance": 0.85,
       "exposureResistance": 0.9,
       "confidenceStability": 0.8,
-      "riskTolerance": 1.28,
-      "perceptionBias": 7,
+      "riskTolerance": 1.35,
+      "perceptionBias": 8,
       "perceptionGuardrails": {
         "minConfidence": 16,
         "maxNoise": 34,
@@ -260,19 +260,19 @@
     "role": "Former Pro Climber",
     "bio": "Russian ex-professional climber, now an alpinism instructor in St. Petersburg. Elbrus, Pik Lenin, Khan Tengri, two attempts on Broad Peak. Left professional climbing at 35 for her daughter. This is her first high-altitude expedition outside a professional context in six years.",
     "traits": [
-      "Best physical baseline in the group — strongest acclimatization, best resource efficiency.",
+      "Best physical baseline in the group \u2014 strongest acclimatization, best resource efficiency.",
       "Highest perceptual noise in the group. Experience built on past patterns can blind her to what this mountain is actually saying."
     ],
     "difficultyLabel": "Demanding",
     "engine": {
       "functionalCapacityBonus": 10,
       "acclimatizationRate": 1.42,
-      "resourceEfficiency": 1.22,
+      "resourceEfficiency": 1.28,
       "fatigueResistance": 1.15,
       "exposureResistance": 1.05,
       "confidenceStability": 0.82,
-      "riskTolerance": 1.38,
-      "perceptionBias": 8,
+      "riskTolerance": 1.48,
+      "perceptionBias": 9,
       "perceptionGuardrails": {
         "minConfidence": 17,
         "maxNoise": 34,

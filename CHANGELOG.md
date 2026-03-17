@@ -24,11 +24,17 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
 
 ### Fixed
+- Fixed critical web-v1 runtime blockers in `prototype/web-v1/ui/screens.js` by restoring a module-local `TUNING` fallback, persisting `G.finalOutcome`/`G.hasSummited` from resolved turn outcomes, wiring `acclimatizationGain` into turn execution, and persisting rolling `pressureHistory` samples for non-steady trend estimation.
+- Fixed narrative/UI consistency in `prototype/web-v1/ui/screens.js` and `prototype/web-v1/index.html` by correcting high-altitude `wait` narrative gating, replacing unreachable trend key `improving` with `easing`, removing dead `valentina`/`diego` branches, fixing `makeDots()` off-by-one rendering, adding `shoot_photo` debrief labels, and updating title eyebrow version text to `Prototype · v1.4`.
+- Fixed terminal outcome guard ordering in `prototype/web-v1/engine/turn-resolution.js` so `High Point Return` cannot overwrite `Summit and Safe Return` after canonical terminal derivation.
 - Fixed `prototype/web-v1` character-selection progression by restoring required global button handlers (`confirmCharacter`, `confirmScenario`, `startGame`, etc.) for inline `onclick` wiring, unblocking the "This is my expedition." CTA.
 - Fixed `prototype/web-v1/ui/screens.js` action resolution to always return numeric `fatigueDelta`/`exposureDelta`/`capacityDelta` defaults from `getActionModifier()`, preventing `NaN` body-state propagation that blocked effective movement decisions at expedition start.
 - Fixed `prototype/web-v1/ui/screens.js` decision logging to use `turnResult.resolvedAction`, restoring consistent action-state synchronization for inline controls and keyboard command routing during active runs.
 
 ### Changed
+- Updated `data/characters.json` with canonical v1.4 engine values for Francisco, Laura, Erik, Daniela, Blake, and Irina (`perceptionBias`, `riskTolerance`, and related balancing fields) to realign roster identity and expected win-rate dispersion.
+- Updated `.github/workflows/ci.yml` JSON validation coverage to include `data/scenarios.web-v1.json`.
+- Updated `package.json` with `"type": "module"` to remove Node typeless-module warnings during test runs.
 - Reworked `prototype/web-v1/index.html` gameplay-screen layout to use viewport-locked grid zones with internal panel scrolling and compact responsive breakpoints, preventing page-level scroll on desktop and mobile while preserving access to decisions and status widgets.
 - Updated `prototype/web-v1/ui/screens.js` scenario selection so predefined cards no longer expose per-seed buttons; selecting a scenario now assigns one configured seed at random and keeps that seed hidden from the selection UI.
 - Expanded predefined seed pools in `data/scenarios.web-v1.json` to at least 10 seeds per scenario so random assignment has meaningful run variety.

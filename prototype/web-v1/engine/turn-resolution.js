@@ -242,7 +242,6 @@ export function createTurnEngine(deps) {
     const outsideCamp = !isCampPosition(state.position);
     if (state.functional_capacity <= 5 || state.exposure >= 99) outcome = 'Fatality';
     else if (state.fatigue >= 100) outcome = outsideCamp ? 'Rescue' : 'Collapse (Fatigue)';
-    else if (state.position === 'horcones' && G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) outcome = 'High Point Return';
 
     if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';
 
@@ -255,6 +254,12 @@ export function createTurnEngine(deps) {
         stage: getCurrentStage(),
         timeWindows: typeof getTimeWindows === 'function' ? getTimeWindows() : null,
       });
+    }
+
+    if (outcome !== 'Summit and Safe Return' &&
+        state.position === 'horcones' &&
+        G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) {
+      outcome = 'High Point Return';
     }
 
     if (state.functional_capacity < 30) flags.push('critical-fatigue');
