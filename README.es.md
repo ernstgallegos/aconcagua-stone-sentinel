@@ -207,6 +207,8 @@ Flujo visible actual en web-v1:
 
 `splash → title → character → scenario → onboarding → game → (summit-success o debrief)`
 
+La selección de personaje ahora incluye una opción `Random Character` que elige automáticamente uno de los seis perfiles disponibles al confirmar la expedición.
+
 Estado de Parte 2 (v1.4):
 
 `part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
