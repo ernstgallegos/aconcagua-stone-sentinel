@@ -1164,6 +1164,82 @@ body {
     margin-bottom: 0.7rem;
   }
 }
+
+/* ───── GAME INTERFACE REDESIGN V1.4 ───── */
+#screen-game .panel-shell {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, var(--surface2)), var(--surface));
+}
+#screen-game .panel-title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.7rem;
+}
+#screen-game .game-layout-redesign {
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
+}
+#screen-game .command-column {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(180px, auto);
+  gap: 0.75rem;
+  align-content: start;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+#screen-game .watch-header-redesign {
+  align-items: start;
+}
+#screen-game .telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+#screen-game .telemetry-card {
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--surface2) 48%, transparent);
+}
+#screen-game .status-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+#screen-game .permit-widget,
+#screen-game .watch-time-pressure,
+#screen-game .context-widget,
+#screen-game .narrative-box,
+#screen-game .decision-panel,
+#screen-game .watch-panel {
+  margin: 0;
+}
+#screen-game .context-widget,
+#screen-game .narrative-box,
+#screen-game .decision-panel,
+#screen-game .watch-panel {
+  padding: 0.95rem;
+}
+#screen-game .watch-time-pressure,
+#screen-game .permit-widget {
+  padding: 0.7rem;
+}
+@media (max-width: 980px) {
+  #screen-game .game-layout-redesign {
+    grid-template-columns: 1fr;
+  }
+  #screen-game .telemetry-grid,
+  #screen-game .status-row {
+    grid-template-columns: 1fr;
+  }
+  #screen-game .command-column {
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1271,82 +1347,79 @@ body {
 
 <!-- ══════════════════════ GAME ══════════════════════ -->
 <section id="screen-game" class="screen" aria-label="Game">
-  <div class="game-layout">
-    <!-- LEFT -->
-    <div class="left-panel">
-      <div class="mountain-schematic">
+  <div class="game-layout game-layout-redesign">
+    <aside class="left-panel expedition-column">
+      <section class="mountain-schematic panel-shell" aria-label="Route overview">
+        <div class="panel-title">Route Track</div>
         <ul class="position-list" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
-      </div>
-      <div class="action-log">
-        <div class="log-header">Field Log</div>
+      </section>
+      <section class="action-log panel-shell" aria-label="Field log panel">
+        <div class="panel-title">Field Log</div>
         <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
           <div class="log-empty">No entries yet.</div>
         </div>
-      </div>
-    </div>
-    <!-- RIGHT -->
-    <div class="right-panel">
-      <div class="status-stack">
-      <div class="watch-panel" id="watch-panel" aria-label="Expedition status">
-        <div class="watch-header">
-          <span class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</span>
-          <span class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</span>
-          <span class="watch-position" id="watch-position" aria-live="polite">—</span>
-        </div>
+      </section>
+    </aside>
+
+    <main class="right-panel command-column">
+      <section class="watch-panel panel-shell" id="watch-panel" aria-label="Expedition status">
+        <header class="watch-header watch-header-redesign">
+          <div>
+            <div class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</div>
+            <div class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</div>
+          </div>
+          <div class="watch-position" id="watch-position" aria-live="polite">—</div>
+        </header>
+
         <div class="turn-progress" aria-hidden="true"><div class="turn-progress-fill" id="turn-progress-fill"></div></div>
-        <div class="watch-section">
-          <div class="watch-section-label">Environment</div>
-          <div class="watch-row">
-            <span class="watch-row-label">MOUNTAIN PRESSURE</span>
-            <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
-            <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
-          </div>
-          <div class="watch-row">
-            <span class="watch-row-label">TREND</span>
-            <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
-            <span style="font-size:0.62rem;color:var(--stone)" id="watch-uncertainty-inline" aria-live="polite"></span>
-          </div>
-          <div class="watch-row">
-            <span class="watch-row-label">CONFIDENCE</span>
-            <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
-          </div>
+
+        <div class="telemetry-grid">
+          <section class="watch-section telemetry-card">
+            <div class="watch-section-label">Environment</div>
+            <div class="watch-row">
+              <span class="watch-row-label">Mountain pressure</span>
+              <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
+              <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
+            </div>
+            <div class="watch-row">
+              <span class="watch-row-label">Trend</span>
+              <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
+              <span id="watch-uncertainty-inline" aria-live="polite"></span>
+            </div>
+            <div class="watch-row">
+              <span class="watch-row-label">Confidence</span>
+              <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
+            </div>
+          </section>
+
+          <section class="watch-section telemetry-card">
+            <div class="watch-section-label">Body state</div>
+            <div class="watch-body-row"><span class="body-label">Capacity</span><span class="body-value" id="body-capacity" aria-live="polite">—</span></div>
+            <div class="watch-body-row"><span class="body-label">Fatigue</span><span class="body-value" id="body-fatigue" aria-live="polite">—</span></div>
+            <div class="watch-body-row"><span class="body-label">Exposure</span><span class="body-value" id="body-exposure" aria-live="polite">—</span></div>
+            <div class="watch-body-row"><span class="body-label">Acclimatization</span><span class="body-value" id="body-acclimatization" aria-live="polite">—</span></div>
+          </section>
         </div>
-        <div class="watch-section">
-          <div class="watch-section-label">Body State</div>
-          <div class="watch-body-row">
-            <span class="body-label">Capacity</span>
-            <span class="body-value" id="body-capacity" aria-live="polite">—</span>
-          </div>
-          <div class="watch-body-row">
-            <span class="body-label">Fatigue</span>
-            <span class="body-value" id="body-fatigue" aria-live="polite">—</span>
-          </div>
-          <div class="watch-body-row">
-            <span class="body-label">Exposure</span>
-            <span class="body-value" id="body-exposure" aria-live="polite">—</span>
-          </div>
-          <div class="watch-body-row">
-            <span class="body-label">Acclimatization</span>
-            <span class="body-value" id="body-acclimatization" aria-live="polite">—</span>
-          </div>
-        </div>
+
         <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
-        <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
-          <div class="time-pressure-header">
-            <span>Decision window</span>
-            <span id="decision-window-countdown">—</span>
+
+        <div class="status-row">
+          <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
+            <div class="permit-label">Park Permit</div>
+            <div class="permit-name" id="permit-name">—</div>
+            <div class="permit-days" id="permit-days">— days remaining</div>
           </div>
-          <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
+
+          <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
+            <div class="time-pressure-header"><span>Decision window</span><span id="decision-window-countdown">—</span></div>
+            <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
+          </div>
         </div>
-        <!-- FIX: resource-warning now shown inline when depleted -->
+
         <div id="resource-warning-box"></div>
-      </div>
-      <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
-        <div class="permit-label">Park Permit</div>
-        <div class="permit-name" id="permit-name">—</div>
-        <div class="permit-days" id="permit-days">— days remaining</div>
-      </div>
-      <div class="context-widget" id="context-widget" aria-live="polite">
+      </section>
+
+      <section class="context-widget panel-shell" id="context-widget" aria-live="polite">
         <div class="context-widget-label">Context status</div>
         <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
         <div class="context-indicators" id="context-indicators"></div>
@@ -1356,14 +1429,16 @@ body {
           <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
           <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
         </div>
-      </div>
-      </div>
-<div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
-      <div class="narrative-box">
+      </section>
+
+      <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
+
+      <section class="narrative-box panel-shell">
         <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
         <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
-      </div>
-      <div class="decision-panel">
+      </section>
+
+      <section class="decision-panel panel-shell">
         <div class="decision-label">Decision</div>
         <div class="decision-a11y-row">
           <button class="btn-ghost btn-mini" id="btn-focus-pause" onclick="requestDecisionPause()" aria-label="Request brief focus pause">Focus pause [0]</button>
@@ -1400,10 +1475,9 @@ body {
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
             <span class="decision-microcopy">Daniela only: spend a turn for clearer trend/confidence on next reads.</span>
           </button>
-        </div>        </div>
-      </div>
-      </div>
-    </div>
+        </div>
+      </section>
+    </main>
   </div>
 </section>
 

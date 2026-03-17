@@ -34,6 +34,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `prototype/web-v1/ui/screens.js` decision logging to use `turnResult.resolvedAction`, restoring consistent action-state synchronization for inline controls and keyboard command routing during active runs.
 
 ### Changed
+- Rebuilt the main `prototype/web-v1/index.html` gameplay interface with a new command-deck layout (route/log expedition column + telemetry/context/decision command column) while preserving canonical IDs, action controls, permit/watch/context systems, and turn-resolution wiring.
 - Updated `data/characters.json` with canonical v1.4 engine values for Francisco, Laura, Erik, Daniela, Blake, and Irina (`perceptionBias`, `riskTolerance`, and related balancing fields) to realign roster identity and expected win-rate dispersion.
 - Updated `.github/workflows/ci.yml` JSON validation coverage to include `data/scenarios.web-v1.json`.
 - Updated `package.json` with `"type": "module"` to remove Node typeless-module warnings during test runs.
