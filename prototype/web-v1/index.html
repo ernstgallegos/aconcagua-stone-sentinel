@@ -422,21 +422,36 @@ body {
 /* ───── GAME SCREEN ───── */
 #screen-game {
   display: none; flex-direction: column;
-  min-height: 100vh; padding: 1rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  padding: clamp(0.55rem, 1.2vh, 1rem);
+  overflow: hidden;
 }
 #screen-game.active { display: flex; }
 .game-layout {
-  display: grid; grid-template-columns: 1fr 320px;
-  gap: 1rem; flex: 1; max-width: 980px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(290px, 34vw);
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  flex: 1;
+  max-width: 1240px;
+  min-height: 0;
   margin: 0 auto; width: 100%;
 }
 
 /* ─ LEFT: schematic + log ─ */
-.left-panel { display: flex; flex-direction: column; gap: 1rem; }
+.left-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  min-height: 0;
+}
 
 .mountain-schematic {
   border: 1px solid var(--border); background: var(--surface);
   padding: 1rem;
+  min-height: 0;
+  overflow: auto;
 }
 .schematic-label {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
@@ -480,7 +495,9 @@ body {
 
 .action-log {
   border: 1px solid var(--border); background: var(--surface);
-  padding: 1rem; flex: 1;
+  padding: 1rem;
+  min-height: 0;
+  overflow: auto;
 }
 .log-header {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
@@ -513,8 +530,20 @@ body {
 .log-empty { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
 
 /* ─ RIGHT: watch panel ─ */
-.right-panel { display: flex; flex-direction: column; gap: 1rem; }
-.status-stack { display: flex; flex-direction: column; gap: 0.7rem; }
+.right-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: clamp(0.6rem, 1.1vh, 1rem);
+  min-height: 0;
+}
+.status-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
 
 .watch-panel {
   border: 1px solid var(--border); background: linear-gradient(160deg, color-mix(in srgb, var(--surface) 88%, var(--ice-dim) 12%), var(--surface));
@@ -747,6 +776,7 @@ body {
 .decision-panel {
   border: 1px solid var(--border); background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, var(--ice-dim) 8%), var(--surface));
   padding: 1rem;
+  flex-shrink: 0;
 }
 .decision-label {
   font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em;
@@ -1077,8 +1107,62 @@ body {
 
 /* ───── RESPONSIVE ───── */
 @media (max-width: 680px) {
-  .game-layout { grid-template-columns: 1fr; }
-  .right-panel { order: -1; }
+  #screen-game {
+    padding: max(0.45rem, env(safe-area-inset-top))
+      max(0.45rem, env(safe-area-inset-right))
+      max(0.45rem, env(safe-area-inset-bottom))
+      max(0.45rem, env(safe-area-inset-left));
+  }
+  .game-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 0.53fr) minmax(0, 0.47fr);
+  }
+  .left-panel {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .mountain-schematic {
+    padding: 0.7rem;
+  }
+  .action-log {
+    display: none;
+  }
+  .right-panel {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .status-stack {
+    gap: 0.55rem;
+  }
+  .watch-panel,
+  .narrative-box,
+  .decision-panel {
+    padding: 0.7rem;
+  }
+  .decision-buttons {
+    gap: 0.42rem;
+  }
+  .btn-decision {
+    font-size: 0.61rem;
+    padding: 0.52rem 0.42rem;
+  }
+}
+
+@media (max-height: 760px) {
+  .watch-panel,
+  .narrative-box,
+  .decision-panel,
+  .mountain-schematic,
+  .action-log {
+    padding: 0.7rem;
+  }
+  .log-entry {
+    padding: 0.5rem 0;
+  }
+  .watch-header {
+    margin-bottom: 0.75rem;
+  }
+  .watch-section {
+    margin-bottom: 0.7rem;
+  }
 }
 </style>
 </head>
