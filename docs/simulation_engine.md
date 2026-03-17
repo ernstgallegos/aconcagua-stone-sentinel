@@ -1,4 +1,10 @@
-# Simulation Engine — Prototype Web v1.3
+# Simulation Engine — Prototype Web v1.4 (public state)
+
+> **Canonical status (source-anchored):**
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../CHANGELOG.md#unreleased).
+> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
+> - Current public build is **v1.4 in-progress (phased rollout)** with legacy v1.3 contracts preserved where still applicable.
+
 
 ## Core authority
 
@@ -90,10 +96,10 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 - outcome
 
 
-## v1.4 planning notes
+## v1.4 implementation status notes
 
-- A park permit countdown (`permitDay` / `permitMaxDays = 20`) is defined as planned state for expedition-time pressure.
-- `Permit Expired` is documented as an explicit non-success outcome in the consolidated v1.4 design package.
-- `Summit and Safe Return` is documented as the only Part 2 unlock outcome in planning docs.
+- The park permit countdown (`permitDay` / `permitMaxDays = 20`) is implemented as active expedition-time pressure in the public prototype.
+- `Permit Expired` is implemented as an explicit non-success outcome and checked in the outcome-resolution path.
+- `Summit and Safe Return` remains the only implemented Part 2 unlock gate in the current public flow.
 
 See `docs/en/consolidated-design-v1.4.md` and `docs/es/diseno-consolidado-v1.4.md` for scope and rollout phases.

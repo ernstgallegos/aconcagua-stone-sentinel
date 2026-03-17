@@ -279,11 +279,16 @@ ernestogallegos@gmail.com
 
 
 
-## Prototype canonical status (v1.3)
+## Prototype canonical status (v1.4 public state)
 
-The canonical active prototype is **`prototype/web-v1` (v1.3)**.
+> **Canonical status (source-anchored):**
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](./CHANGELOG.md#unreleased).
+> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
+> - Current public build is **v1.4 in-progress (phased rollout)**.
 
-- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine.
+The canonical active prototype is **`prototype/web-v1` (v1.4 public state)**.
+
+- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4 phased mechanics currently in public rollout.
 - `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
 - repository root viewer: replay/view layer for bundled runs.
 
