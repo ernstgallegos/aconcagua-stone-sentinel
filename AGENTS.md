@@ -89,6 +89,7 @@ In addition to the changelog:
 - Post-audit cleanup tasks should remove orphan CSS selectors immediately after flow removals; run targeted grep checks for selector leftovers (base styles + responsive media queries) before final test runs.
 - For large one-shot prompts, execute in strict section order and verify each section with targeted grep/search checks before running full tests.
 - Prefer minimal, precise edits to `index.html` because it contains UI, flow, and engine logic in one file; regressions are easy when moving blocks.
+- During ES-module migrations, keep a temporary `window.*` facade for existing inline button handlers and legacy regex-based tests until all call sites are fully decoupled from global functions.
 - For this repository, final validation baseline should include:
   - `pytest prototype/mra-v0/test_simulator.py -v`
   - `npm test`
