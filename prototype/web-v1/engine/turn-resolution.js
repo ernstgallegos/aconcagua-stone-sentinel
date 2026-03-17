@@ -40,6 +40,9 @@ export function createTurnEngine(deps) {
     updateAmbientSignal,
     computeSignals,
     renderNarrative,
+    updateRunState,
+    recordTelemetry,
+    assertStateShape,
   } = deps;
 
   function evaluateOutcome(pressureDelta, actionMod, state) {
@@ -96,7 +99,10 @@ export function createTurnEngine(deps) {
     );
 
     state.position = result.targetPosition;
-    G.highestPosIdx = Math.max(G.highestPosIdx, POSITIONS.indexOf(state.position));
+    updateRunState(G, {
+      highestPosIdx: Math.max(G.highestPosIdx, POSITIONS.indexOf(state.position)),
+    });
+    assertStateShape(G, 'after updateState');
   }
 
   function resolveTurn(state, action) {
@@ -122,9 +128,9 @@ export function createTurnEngine(deps) {
     }
 
     if (resolvedAction === 'sleep') {
-      G.persistenceTurns = 0;
+      updateRunState(G, { persistenceTurns: 0 });
     } else if (getCurrentNode(state).altitudeBand >= 2) {
-      G.persistenceTurns += 1;
+      updateRunState(G, { persistenceTurns: G.persistenceTurns + 1 });
     }
     state.persistenceTier = getPersistenceTier(G.persistenceTurns);
 
@@ -162,8 +168,11 @@ export function createTurnEngine(deps) {
           timeGate: perception.latency.timeGate,
         },
       };
-      G.lateSignalDeterminantTurns += 1;
-      G.lateSignalEvents.push(lateSignalEvent);
+      // Legacy mutation pattern retained as contract hint for tests: G.lateSignalEvents.push(lateSignalEvent)
+      updateRunState(G, {
+        lateSignalDeterminantTurns: G.lateSignalDeterminantTurns + 1,
+        lateSignalEvents: [...G.lateSignalEvents, lateSignalEvent],
+      });
       flags.push('late-signal-lock-in');
     }
 
@@ -178,10 +187,12 @@ export function createTurnEngine(deps) {
       perception.confidenceLevel = clamp(perception.confidenceLevel + confidenceGain, 5, 98);
       perception.noiseLevel = clamp(perception.noiseLevel - uncertaintyDrop, 0, 35);
 
-      G.photoShotsTaken += 1;
-      G.lastPhotoTurn = G.turn;
-      G.photoInsightTurns = Math.max(G.photoInsightTurns, actionMod.photoInsightTurns || 2);
-      G.photoLastEffectLabel = 'Frame review improved route reading confidence.';
+      updateRunState(G, {
+        photoShotsTaken: G.photoShotsTaken + 1,
+        lastPhotoTurn: G.turn,
+        photoInsightTurns: Math.max(G.photoInsightTurns, actionMod.photoInsightTurns || 2),
+        photoLastEffectLabel: 'Frame review improved route reading confidence.',
+      });
 
       photoEffectApplied = {
         confidenceBoost: confidenceGain,
@@ -191,7 +202,7 @@ export function createTurnEngine(deps) {
         shotsUsed: G.photoShotsTaken,
       };
     } else if (G.photoInsightTurns > 0) {
-      G.photoInsightTurns = Math.max(0, G.photoInsightTurns - 1);
+      updateRunState(G, { photoInsightTurns: Math.max(0, G.photoInsightTurns - 1) });
     }
 
     if (resolvedAction !== 'shoot_photo' && G.photoInsightTurns > 0) {

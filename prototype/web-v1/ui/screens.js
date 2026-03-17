@@ -1,4 +1,4 @@
-import { G } from '../state/game-state.js';
+import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } from '../state/game-state.js';
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
 
 const DEFAULT_CONFIG = {
@@ -82,7 +82,7 @@ async function loadDataConfig() {
     }
   }
   rebuildRouteData();
-  G.modelReady = true;
+  updateUIState(G, { modelReady: true });
 }
 
 // ════════════════════════════════════════════════
@@ -182,6 +182,8 @@ function showScreen(id) {
   if (part2Screens.has(id) && G.finalOutcome !== 'Summit and Safe Return') {
     id = 'debrief';
   }
+
+  updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('screen-' + id);
@@ -473,51 +475,57 @@ function startGame() {
   const ch = G.character;
   const mods = ch.engine || {};
 
-  G.rng = mulberry32(G.seed);
-  G.turn = 1;
-  G.turnLog = [];
-  G.allFlags = [];
-  G.highestPosIdx = POSITIONS.indexOf(sc.initial.position);
-  G.consecutiveWater0 = 0;
-  G.whiteWindRisk = 0;
-  G.day = 1;
-  G.permitDay = 1;
-  G.permitMaxDays = 20;
-  G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
-  G.irreversibleTriggered = false;
-  G.irreversibleTurn = null;
-  G.runNumber = (G.runNumber || 0) + 1;
-  G.acclimatization = 0;
-  G.consecutiveAdvances = 0;
-  G.tutorialSeen = {};
-  G.persistenceTurns = 0;
-  G.pressureHistory = [];
-  G.runLogRecords = [];
-  G.hasSummited = false;
-  G.finalOutcome = 'Strategic Retreat';
-  G.photoShotsTaken = 0;
-  G.photoInsightTurns = 0;
-  G.lastPhotoTurn = -99;
-  G.photoLastEffectLabel = '';
-  G.turnDecisionStartedAt = Date.now();
-  G.decisionTimeSpentMs = 0;
-  G.decisionWindowExceeded = false;
-  G.decisionWindowEffect = null;
-  G.decisionWindowProfile = null;
-  G.decisionPauseUsed = false;
-  G.decisionPauseTurnsLeft = 0;
-  G.lateSignalDeterminantTurns = 0;
-  G.lateSignalEvents = [];
-  G.onboardingLayer = 'essentials';
-  G.currentPrimaryAlert = { label: 'stable', level: 'stable', type: 'stable' };
+  updateRunState(G, {
+    rng: mulberry32(G.seed),
+    turn: 1,
+    turnLog: [],
+    allFlags: [],
+    highestPosIdx: POSITIONS.indexOf(sc.initial.position),
+    consecutiveWater0: 0,
+    whiteWindRisk: 0,
+    day: 1,
+    permitDay: 1,
+    permitMaxDays: 20,
+    minutesOfDay: getSimConfig().dayStartMinutes || TUNING.dayStartMinutes,
+    irreversibleTriggered: false,
+    irreversibleTurn: null,
+    runNumber: (G.runNumber || 0) + 1,
+    acclimatization: 0,
+    consecutiveAdvances: 0,
+    persistenceTurns: 0,
+    pressureHistory: [],
+    hasSummited: false,
+    finalOutcome: 'Strategic Retreat',
+    photoShotsTaken: 0,
+    photoInsightTurns: 0,
+    lastPhotoTurn: -99,
+    photoLastEffectLabel: '',
+    lateSignalDeterminantTurns: 0,
+    lateSignalEvents: [],
+  });
+  updateUIState(G, {
+    tutorialSeen: {},
+    onboardingLayer: 'essentials',
+    currentPrimaryAlert: { label: 'stable', level: 'stable', type: 'stable' },
+  });
+  recordTelemetry(G, {
+    runLogRecords: [],
+    turnDecisionStartedAt: Date.now(),
+    decisionTimeSpentMs: 0,
+    decisionWindowExceeded: false,
+    decisionWindowEffect: null,
+    decisionWindowProfile: null,
+    decisionPauseUsed: false,
+    decisionPauseTurnsLeft: 0,
+  });
 
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
   if (mods.functionalCapacityBonus) s.functional_capacity = clamp(s.functional_capacity + mods.functionalCapacityBonus, 0, 100);
 
-  if (sc._acclimatizationBonus) G.acclimatization = clamp(sc._acclimatizationBonus, 0, 100);
+  if (sc._acclimatizationBonus) updateRunState(G, { acclimatization: clamp(sc._acclimatizationBonus, 0, 100) });
   s.persistenceTier = 'fresh';
-  G.state = s;
+  updateRunState(G, { state: s });
 
   // clear resource warning
   clearElement(document.getElementById('resource-warning-box'));
@@ -530,7 +538,7 @@ function startGame() {
   emptyLog.textContent = 'No entries yet.';
   logEntries.appendChild(emptyLog);
 
-  G.signals = computeSignals();
+  updateRunState(G, { signals: computeSignals() });
   renderWatch();
   updateAmbientSignal([], null);
   maybeShowTutorial('first-turn');
@@ -1416,10 +1424,12 @@ function applyDecisionWindowDegradation(actionMod, perception) {
 
   const effect = { elapsedMs: winState.effectiveElapsed, windowMs: winState.profile.totalWindowMs, exceeded: winState.overMs > 0, overMs: winState.overMs, overSteps: winState.stepsOver, stage: getCurrentStage(), actionPenalty: 0, confidencePenalty: 0, noiseIncrease: 0, capped: false };
   if (winState.overMs <= 0) {
-    G.decisionTimeSpentMs = winState.effectiveElapsed;
-    G.decisionWindowExceeded = false;
-    G.decisionWindowEffect = effect;
-    G.decisionWindowProfile = winState.profile;
+    recordTelemetry(G, {
+      decisionTimeSpentMs: winState.effectiveElapsed,
+      decisionWindowExceeded: false,
+      decisionWindowEffect: effect,
+      decisionWindowProfile: winState.profile,
+    });
     return { actionMod, perception, effect };
   }
 
@@ -1448,10 +1458,12 @@ function applyDecisionWindowDegradation(actionMod, perception) {
   effect.confidencePenalty = confidencePenalty;
   effect.noiseIncrease = noiseIncrease;
   effect.capped = actionPenalty !== actionPenaltyRaw || confidencePenalty !== confidencePenaltyRaw || noiseIncrease !== noiseIncreaseRaw;
-  G.decisionTimeSpentMs = winState.effectiveElapsed;
-  G.decisionWindowExceeded = true;
-  G.decisionWindowEffect = effect;
-  G.decisionWindowProfile = winState.profile;
+  recordTelemetry(G, {
+    decisionTimeSpentMs: winState.effectiveElapsed,
+    decisionWindowExceeded: true,
+    decisionWindowEffect: effect,
+    decisionWindowProfile: winState.profile,
+  });
   return { actionMod: adjustedActionMod, perception: adjustedPerception, effect };
 }
 
@@ -1463,8 +1475,10 @@ function requestDecisionPause() {
     return;
   }
   const profile = getDecisionWindowProfile();
-  G.decisionPauseTurnsLeft = Math.max(G.decisionPauseTurnsLeft || 0, profile.gracePauseMs);
-  G.decisionPauseUsed = true;
+  recordTelemetry(G, {
+    decisionPauseTurnsLeft: Math.max(G.decisionPauseTurnsLeft || 0, profile.gracePauseMs),
+    decisionPauseUsed: true,
+  });
   status.textContent = `Pause granted (+${Math.ceil(profile.gracePauseMs/1000)}s). Keep reading trend, not certainty.`;
   renderWatch();
 }
@@ -1583,6 +1597,9 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   updateAmbientSignal,
   computeSignals,
   renderNarrative,
+  updateRunState,
+  recordTelemetry,
+  assertStateShape,
 });
 
 function makeDecision(decision) {
@@ -1597,9 +1614,10 @@ function makeDecision(decision) {
     return;
   }
 
+  assertStateShape(G, 'before resolveTurn', { throwOnError: true });
   const turnResult = resolveTurn(s, decision);
   const resolvedDecision = turnResult.action || decision;
-  G.signals = computeSignals();
+  updateRunState(G, { signals: computeSignals() });
   renderWatch();
   const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
 
@@ -1625,8 +1643,10 @@ function makeDecision(decision) {
     lateSignalActivation: turnResult.lateSignalEvent,
     narrativeText,
   };
-  G.turnLog.push(logEntry);
-  G.allFlags.push(...turnResult.flags);
+  updateRunState(G, {
+    turnLog: [...G.turnLog, logEntry],
+    allFlags: [...G.allFlags, ...turnResult.flags],
+  });
   addLogEntry(logEntry);
 
   const returnedToHorcones = s.position === 'horcones' && G.highestPosIdx > 0;
@@ -1638,9 +1658,8 @@ function makeDecision(decision) {
     return;
   }
 
-  G.turn++;
-  G.turnDecisionStartedAt = Date.now();
-  G.decisionPauseTurnsLeft = 0;
+  updateRunState(G, { turn: G.turn + 1 });
+  recordTelemetry(G, { turnDecisionStartedAt: Date.now(), decisionPauseTurnsLeft: 0 });
   setTimeout(() => {
     renderWatch();
     renderNarrative(null, G.signals);
@@ -1788,11 +1807,12 @@ function endRun(returnedToHorcones) {
   const s = G.state;
 
   // random mode adaptive fairness
-  if (outcome.cls === 'outcome-collapse') G.consecutiveCollapses++;
-  else G.consecutiveCollapses = 0;
+  updateRunState(G, {
+    consecutiveCollapses: outcome.cls === 'outcome-collapse' ? G.consecutiveCollapses + 1 : 0,
+  });
 
   // save to journal
-  G.runLogRecords = G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label }));
+  recordTelemetry(G, { runLogRecords: G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label })) });
   const runLogExport = buildRunLogExport();
   try { localStorage.setItem('run_log.json', JSON.stringify(runLogExport, null, 2)); } catch (e) {}
   saveJournalEntry({
@@ -1977,17 +1997,17 @@ function buildRunLogExport() {
 
 // FIX: journal navigation helper — records the origin screen
 function openJournalFrom(origin) {
-  G.journalReturnScreen = origin;
+  updateUIState(G, { journalReturnScreen: origin });
   showScreen('journal');
 }
 
 function replaySameSeed() {
-  G.turn = 1; G.turnLog = []; G.allFlags = [];
+  updateRunState(G, { turn: 1, turnLog: [], allFlags: [] });
   startGame();
 }
 function replayNewSeed() {
   const sc = G.scenario;
-  G.seed = sc.seeds ? sc.seeds[Math.floor(Math.random()*sc.seeds.length)] : Math.floor(Math.random()*9000)+1000;
+  updateRunState(G, { seed: sc.seeds ? sc.seeds[Math.floor(Math.random()*sc.seeds.length)] : Math.floor(Math.random()*9000)+1000 });
   startGame();
 }
 function goChooseScenario() {
