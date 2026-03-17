@@ -22,6 +22,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
 
 ### Changed
+- Revised `meta/public-roadmap.md` to align current-stage messaging with the already integrated `prototype/web-v1` behavior, map each stage to objective repository evidence (modules/features/tests), and explicitly separate design-lock completion from implementation completion with a compact v1.4 status matrix linked to the implementation-plan real-progress snapshot.
 - Updated canonical-status documentation across `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`, and `README.md` to reflect the v1.4 public in-progress state with explicit links to `CHANGELOG.md` `[Unreleased]` and implementation-plan snapshots.
 - Added a documentation consistency checklist to `CONTRIBUTING.md` to prevent version-title drift between core docs and implementation reality.
 - Updated `.github/workflows/ci.yml` to run the new Playwright smoke test on pull requests, including browser provisioning before executing `pytest prototype/web-v1/tests/test_smoke_flow.py -v`.
