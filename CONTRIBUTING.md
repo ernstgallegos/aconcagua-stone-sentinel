@@ -135,6 +135,12 @@ When preparing a version bump, keep `package.json` and `package-lock.json` root 
 
 CI enforces this with `npm run check:lock-version` and will fail if `package.json.version` differs from `package-lock.json` root package version.
 
+## Release PR debt review policy
+
+Every release PR must review `docs/technical-debt-register.md` and update it when ownership, risk, symptoms, or exit criteria change.
+
+When debt is paid down or intentionally extended, add a corresponding entry to `CHANGELOG.md` under `[Unreleased]`.
+
 ---
 
 ## Commit Message Format
