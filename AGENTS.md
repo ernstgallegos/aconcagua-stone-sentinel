@@ -120,3 +120,4 @@ In addition to the changelog:
 - Version bumps are safer when lockfile metadata (`packages[""].version`) is guarded by a dedicated CI script; regenerate `package-lock.json` with `npm install --package-lock-only` in the same commit as `package.json` version changes.
 - Route wiring regressions are best caught with one deterministic headless smoke test that asserts screen activation and gate transitions (disabled/enabled controls) instead of brittle visual snapshots.
 - Maintaining an explicit `docs/technical-debt-register.md` with owner/risk/symptoms/exit criteria improves release discipline; require release PRs to review the register and mirror debt paydown/extension in `CHANGELOG.md`.
+- Public roadmap updates should classify each stage with two separate flags (design lock vs implementation completion) and anchor status claims to concrete repo evidence (named modules/tests), with implementation-plan snapshot links for auditability.
