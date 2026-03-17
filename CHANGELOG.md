@@ -25,6 +25,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 - Fixed `prototype/web-v1` character-selection progression by restoring required global button handlers (`confirmCharacter`, `confirmScenario`, `startGame`, etc.) for inline `onclick` wiring, unblocking the "This is my expedition." CTA.
+- Fixed `prototype/web-v1/ui/screens.js` action resolution to always return numeric `fatigueDelta`/`exposureDelta`/`capacityDelta` defaults from `getActionModifier()`, preventing `NaN` body-state propagation that blocked effective movement decisions at expedition start.
+- Fixed `prototype/web-v1/ui/screens.js` decision logging to use `turnResult.resolvedAction`, restoring consistent action-state synchronization for inline controls and keyboard command routing during active runs.
 
 ### Changed
 - Reworked `prototype/web-v1/index.html` gameplay-screen layout to use viewport-locked grid zones with internal panel scrolling and compact responsive breakpoints, preventing page-level scroll on desktop and mobile while preserving access to decisions and status widgets.

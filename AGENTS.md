@@ -124,3 +124,4 @@ In addition to the changelog:
 - Public roadmap updates should classify each stage with two separate flags (design lock vs implementation completion) and anchor status claims to concrete repo evidence (named modules/tests), with implementation-plan snapshot links for auditability.
 - Public-facing status docs should avoid binary visibility wording; explicitly state that prototype code in-repo is public while production/commercial branches remain private to prevent roadmap/readme ambiguity.
 - Scenario UX remained cleaner when predefined cards hid manual seed picking and selected a random configured seed on card selection; preserve at least ~10 seeds per scenario in data to keep replay entropy without user-facing complexity.
+- Action-modifier data currently omits explicit `fatigueDelta`/`exposureDelta`/`capacityDelta`; keep runtime normalization in `getActionModifier()` so missing fields never propagate `NaN` into body-state updates or freeze decision progression.

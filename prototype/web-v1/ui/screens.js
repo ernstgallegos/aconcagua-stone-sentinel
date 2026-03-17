@@ -717,7 +717,38 @@ function isCampPosition(position = G.state.position) {
 }
 
 function getActionModifier(action) {
-  return DATA_CONFIG.actionModifiers[action] || { progress: 0, fatigueMultiplier: 1, exposureMultiplier: 1, timeCost: 60 };
+  const baseByAction = {
+    advance: { fatigueDelta: 6, exposureDelta: 5, capacityDelta: -3 },
+    advance_slowly: { fatigueDelta: 4, exposureDelta: 3, capacityDelta: -2 },
+    wait: { fatigueDelta: 2, exposureDelta: 2, capacityDelta: 1 },
+    descend: { fatigueDelta: 1, exposureDelta: 1, capacityDelta: 2 },
+    sleep: { fatigueDelta: -10, exposureDelta: -8, capacityDelta: 4 },
+    shoot_photo: { fatigueDelta: 2, exposureDelta: 2, capacityDelta: 0 },
+  };
+  const configured = DATA_CONFIG.actionModifiers[action] || {};
+  const fallback = baseByAction[action] || { fatigueDelta: 3, exposureDelta: 3, capacityDelta: -1 };
+
+  const fatigueDelta = Number.isFinite(configured.fatigueDelta)
+    ? configured.fatigueDelta
+    : Number.isFinite(configured.fatigueRecovery)
+      ? -configured.fatigueRecovery
+      : fallback.fatigueDelta;
+  const exposureDelta = Number.isFinite(configured.exposureDelta)
+    ? configured.exposureDelta
+    : Number.isFinite(configured.exposureRecovery)
+      ? -configured.exposureRecovery
+      : fallback.exposureDelta;
+
+  return {
+    progress: 0,
+    fatigueMultiplier: 1,
+    exposureMultiplier: 1,
+    timeCost: 60,
+    ...configured,
+    fatigueDelta,
+    exposureDelta,
+    capacityDelta: Number.isFinite(configured.capacityDelta) ? configured.capacityDelta : fallback.capacityDelta,
+  };
 }
 
 function canUseShootPhoto(state = G.state) {
@@ -1685,7 +1716,7 @@ function makeDecision(decision) {
 
   assertStateShape(G, 'before resolveTurn', { throwOnError: true });
   const turnResult = resolveTurn(s, decision);
-  const resolvedDecision = turnResult.action || decision;
+  const resolvedDecision = turnResult.resolvedAction || decision;
   updateRunState(G, { signals: computeSignals() });
   renderWatch();
   const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
@@ -1700,7 +1731,10 @@ function makeDecision(decision) {
     uncertainty: G.signals.uncertainty,
     body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
     raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure, weatherSeverity: s.weather_severity },
-    pressure: { mountainPressure: pressureBandLabel(turnResult.EP), deltaLabel: pressureDeltaLabel(turnResult.pressureDelta) },
+    pressure: {
+      mountainPressure: pressureBandLabel(turnResult.result?.pressureDelta + calculateBodyTolerance(s)),
+      deltaLabel: pressureDeltaLabel(turnResult.result?.pressureDelta),
+    },
     flags: [...turnResult.flags],
     blocked: turnResult.result.blocked,
     moved: turnResult.result.moved,
