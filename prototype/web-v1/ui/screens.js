@@ -119,6 +119,178 @@ function setModelLoadError(errorMessage) {
 // ════════════════════════════════════════════════
 const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
 const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset']);
+const LANGUAGE_KEY = 'aconcagua_language_v1';
+const VALID_LANGUAGES = new Set(['en', 'es', 'pt-BR']);
+let CURRENT_LANGUAGE = 'en';
+
+const I18N = {
+  en: {
+    langName: 'English',
+    ui: {
+      visualMode: 'Visual mode',
+      language: 'Language',
+      noEntriesYet: 'No entries yet.',
+      randomCharacter: 'Random Character',
+      randomCharacterRole: 'Unpredictable roster slot',
+      randomCharacterBio: 'Let the mountain choose one of the six expedition profiles for this run.',
+      randomCharacterTraitA: 'Fast start for replay runs.',
+      randomCharacterTraitB: 'Maintains full rules and balance.',
+      randomScenario: 'Random Conditions',
+      randomScenarioDesc: 'Procedurally generated conditions. Expedition ID assigned at departure.',
+      randomScenarioTag: 'SCENARIO · RANDOM',
+      clearJournalConfirm: 'Clear all expedition records?',
+      journalEmpty: 'No expeditions recorded. The first run will appear here.',
+      begin: 'BEGIN',
+      titleChooseExpedition: 'Choose Your Expedition',
+      titleSelectScenario: 'Select Scenario',
+      depart: 'Depart',
+      back: 'Back',
+      understoodBegin: 'Understood. Begin.',
+      decision: 'Decision',
+      advance: 'Advance',
+      advanceSlow: 'Advance Slowly',
+      wait: 'Wait',
+      descend: 'Descend',
+      sleep: 'Sleep',
+      shootPhoto: 'Shoot Photo',
+      expeditionJournal: 'Expedition Journal',
+      clearLog: 'Clear log',
+
+    },
+  },
+  es: {
+    langName: 'Español',
+    ui: {
+      visualMode: 'Modo visual',
+      language: 'Idioma',
+      noEntriesYet: 'Aún no hay entradas.',
+      randomCharacter: 'Personaje aleatorio',
+      randomCharacterRole: 'Perfil impredecible',
+      randomCharacterBio: 'Deja que la montaña elija uno de los seis perfiles para esta partida.',
+      randomCharacterTraitA: 'Inicio rápido para rejugadas.',
+      randomCharacterTraitB: 'Mantiene reglas y balance completos.',
+      randomScenario: 'Condiciones aleatorias',
+      randomScenarioDesc: 'Condiciones generadas proceduralmente. El ID de expedición se asigna al partir.',
+      randomScenarioTag: 'ESCENARIO · ALEATORIO',
+      clearJournalConfirm: '¿Borrar todos los registros de expedición?',
+      journalEmpty: 'No hay expediciones registradas. La primera partida aparecerá aquí.',
+      begin: 'COMENZAR',
+      titleChooseExpedition: 'Elige tu expedición',
+      titleSelectScenario: 'Selecciona escenario',
+      depart: 'Partir',
+      back: 'Atrás',
+      understoodBegin: 'Entendido. Comenzar.',
+      decision: 'Decisión',
+      advance: 'Avanzar',
+      advanceSlow: 'Avance lento',
+      wait: 'Esperar',
+      descend: 'Descender',
+      sleep: 'Dormir',
+      shootPhoto: 'Tomar foto',
+      expeditionJournal: 'Diario de expedición',
+      clearLog: 'Limpiar registro',
+
+    },
+  },
+  'pt-BR': {
+    langName: 'Português (Brasil)',
+    ui: {
+      visualMode: 'Modo visual',
+      language: 'Idioma',
+      noEntriesYet: 'Ainda não há registros.',
+      randomCharacter: 'Personagem aleatório',
+      randomCharacterRole: 'Perfil imprevisível',
+      randomCharacterBio: 'Deixe a montanha escolher um dos seis perfis para esta execução.',
+      randomCharacterTraitA: 'Início rápido para replays.',
+      randomCharacterTraitB: 'Mantém regras e balanceamento completos.',
+      randomScenario: 'Condições aleatórias',
+      randomScenarioDesc: 'Condições geradas proceduralmente. O ID da expedição é definido na saída.',
+      randomScenarioTag: 'CENÁRIO · ALEATÓRIO',
+      clearJournalConfirm: 'Limpar todos os registros de expedição?',
+      journalEmpty: 'Nenhuma expedição registrada. A primeira execução aparecerá aqui.',
+      begin: 'INICIAR',
+      titleChooseExpedition: 'Escolha sua expedição',
+      titleSelectScenario: 'Selecionar cenário',
+      depart: 'Partir',
+      back: 'Voltar',
+      understoodBegin: 'Entendido. Iniciar.',
+      decision: 'Decisão',
+      advance: 'Avançar',
+      advanceSlow: 'Avançar devagar',
+      wait: 'Esperar',
+      descend: 'Descer',
+      sleep: 'Dormir',
+      shootPhoto: 'Tirar foto',
+      expeditionJournal: 'Diário de expedição',
+      clearLog: 'Limpar registro',
+
+    },
+  },
+};
+
+
+const CHARACTER_I18N = {
+  es: {
+    francisco: { role: 'Profesor y corredor amateur' },
+    daniela: { role: 'Fotógrafa de montaña' },
+  },
+  'pt-BR': {
+    francisco: { role: 'Professor e corredor amador' },
+    daniela: { role: 'Fotógrafa de montanha' },
+  },
+};
+
+const SCENARIO_I18N = {
+  es: {
+    'assisted-route': { name: 'Ruta asistida' },
+    'weather-window': { name: 'Ventana climática' },
+  },
+  'pt-BR': {
+    'assisted-route': { name: 'Rota assistida' },
+    'weather-window': { name: 'Janela de clima' },
+  },
+};
+
+function localizeCharacter(character) {
+  const patch = CHARACTER_I18N[CURRENT_LANGUAGE]?.[character.id] || {};
+  return { ...character, ...patch };
+}
+
+function localizeScenario(scenario) {
+  const patch = SCENARIO_I18N[CURRENT_LANGUAGE]?.[scenario.id] || {};
+  return { ...scenario, ...patch };
+}
+
+function t(path) {
+  const value = path.split('.').reduce((acc, key) => acc?.[key], I18N[CURRENT_LANGUAGE]);
+  if (value !== undefined) return value;
+  return path.split('.').reduce((acc, key) => acc?.[key], I18N.en) || path;
+}
+
+function setLanguage(lang) {
+  const safe = VALID_LANGUAGES.has(lang) ? lang : 'en';
+  CURRENT_LANGUAGE = safe;
+  document.documentElement.setAttribute('lang', safe);
+  const select = document.getElementById('language-select');
+  if (select && select.value !== safe) select.value = safe;
+  const themeLabel = document.querySelector('.theme-switcher label');
+  if (themeLabel) themeLabel.textContent = t('ui.visualMode');
+  const langLabel = document.querySelector('.lang-switcher label');
+  if (langLabel) langLabel.textContent = t('ui.language');
+  applyStaticTranslations();
+  try { localStorage.setItem(LANGUAGE_KEY, safe); } catch (e) {}
+  buildCharacterGrid();
+  buildScenarioGrid();
+}
+
+function initLanguage() {
+  let stored = 'en';
+  try {
+    const raw = localStorage.getItem(LANGUAGE_KEY);
+    if (raw && VALID_LANGUAGES.has(raw)) stored = raw;
+  } catch (e) {}
+  setLanguage(stored);
+}
 
 function setVisualMode(mode) {
   const safeMode = VALID_VISUAL_MODES.has(mode) ? mode : 'dark';
@@ -256,6 +428,33 @@ function getRandomScenarioConfig() {
 }
 
 
+
+function applyStaticTranslations() {
+  const map = [
+    ['.theme-switcher label', 'ui.visualMode'],
+    ['.lang-switcher label', 'ui.language'],
+    ["#screen-title .btn-primary", 'ui.begin'],
+    ['#screen-character .screen-header h2', 'ui.titleChooseExpedition'],
+    ['#screen-scenario .screen-header h2', 'ui.titleSelectScenario'],
+    ['#btn-scenario-confirm', 'ui.depart'],
+    ['#onboard-back-btn', 'ui.back'],
+    ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
+    ['.decision-label', 'ui.decision'],
+    ['#btn-advance .btn-decision-main span:first-child', 'ui.advance'],
+    ['#btn-advance-slow .btn-decision-main span:first-child', 'ui.advanceSlow'],
+    ['#btn-wait .btn-decision-main span:first-child', 'ui.wait'],
+    ['#btn-descend .btn-decision-main span:first-child', 'ui.descend'],
+    ['#btn-sleep .btn-decision-main span:first-child', 'ui.sleep'],
+    ['#btn-shoot-photo .btn-decision-main span:first-child', 'ui.shootPhoto'],
+    ['#screen-journal .journal-title', 'ui.expeditionJournal'],
+    ['#screen-journal .journal-header .btn-ghost', 'ui.clearLog'],
+  ];
+  map.forEach(([selector, key]) => {
+    const el = document.querySelector(selector);
+    if (el) el.textContent = t(key);
+  });
+}
+
 // ════════════════════════════════════════════════
 // GAME STATE
 // ════════════════════════════════════════════════
@@ -300,7 +499,8 @@ function showScreen(id) {
 function buildCharacterGrid() {
   const grid = document.getElementById('char-grid');
   grid.innerHTML = '';
-  (DATA_CONFIG.characters || []).forEach(c => {
+  (DATA_CONFIG.characters || []).forEach(rawCharacter => {
+    const c = localizeCharacter(rawCharacter);
     const card = document.createElement('div');
     card.className = 'char-card';
     card.id = 'char-' + c.id;
@@ -335,10 +535,10 @@ function buildCharacterGrid() {
   randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacter('random'); } };
   randomCard.innerHTML = `
     <div class="char-emblem" aria-hidden="true">?</div>
-    <div class="char-name">Random Character</div>
-    <div class="char-role">Unpredictable roster slot</div>
-    <div class="char-bio">Let the mountain choose one of the six expedition profiles for this run.</div>
-    <ul class="char-traits"><li>Fast start for replay runs.</li><li>Maintains full rules and balance.</li></ul>
+    <div class="char-name">${t('ui.randomCharacter')}</div>
+    <div class="char-role">${t('ui.randomCharacterRole')}</div>
+    <div class="char-bio">${t('ui.randomCharacterBio')}</div>
+    <ul class="char-traits"><li>${t('ui.randomCharacterTraitA')}</li><li>${t('ui.randomCharacterTraitB')}</li></ul>
     <p class="char-difficulty">Conditions: Variable by selected profile.</p>
   `;
   grid.appendChild(randomCard);
@@ -453,7 +653,8 @@ let selectedSeed = null;
 function buildScenarioGrid() {
   const grid = document.getElementById('scenario-grid');
   grid.innerHTML = '';
-  getConfiguredScenarios().forEach((sc) => {
+  getConfiguredScenarios().forEach((rawScenario) => {
+    const sc = localizeScenario(rawScenario);
     const card = document.createElement('div');
     card.className = 'scenario-card';
     card.id = 'sc-' + sc.id;
@@ -485,9 +686,9 @@ function buildScenarioGrid() {
   randomCard.setAttribute('tabindex', '0');
   randomCard.setAttribute('aria-label', 'Random Scenario');
   randomCard.innerHTML = `
-    <div class="scenario-num">SCENARIO · RANDOM</div>
-    <div class="scenario-name">Random Conditions</div>
-    <div class="scenario-desc">Procedurally generated conditions. Expedition ID assigned at departure.</div>
+    <div class="scenario-num">${t('ui.randomScenarioTag')}</div>
+    <div class="scenario-name">${t('ui.randomScenario')}</div>
+    <div class="scenario-desc">${t('ui.randomScenarioDesc')}</div>
   `;
   randomCard.onclick = () => selectMode('random');
   randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMode('random'); }};
@@ -640,7 +841,7 @@ function startGame() {
   clearElement(logEntries);
   const emptyLog = document.createElement('div');
   emptyLog.className = 'log-empty';
-  emptyLog.textContent = 'No entries yet.';
+  emptyLog.textContent = t('ui.noEntriesYet');
   logEntries.appendChild(emptyLog);
 
   updateRunState(G, { signals: computeSignals() });
@@ -2176,7 +2377,7 @@ function saveJournalEntry(entry) {
   } catch(e) {}
 }
 function clearJournal() {
-  if (!confirm('Clear all expedition records?')) return;
+  if (!confirm(t('ui.clearJournalConfirm'))) return;
   localStorage.removeItem(JOURNAL_KEY);
   renderJournal();
 }
@@ -2187,7 +2388,7 @@ function renderJournal() {
   if (!entries.length) {
     const empty = document.createElement('div');
     empty.className = 'journal-empty';
-    empty.textContent = 'No expeditions recorded. The first run will appear here.';
+    empty.textContent = t('ui.journalEmpty');
     container.appendChild(empty);
     return;
   }
@@ -2242,6 +2443,7 @@ document.addEventListener('keydown', (event) => {
 // INIT
 // ════════════════════════════════════════════════
 initVisualMode();
+initLanguage();
 initSplashScreen();
 
 loadDataConfig().finally(() => {
@@ -2258,6 +2460,7 @@ window.startGame = startGame;
 window.confirmScenario = confirmScenario;
 window.confirmCharacter = confirmCharacter;
 window.confirmPart2Character = confirmPart2Character;
+window.setLanguage = setLanguage;
 window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
 
