@@ -10,6 +10,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `scripts/check-lock-version.js` and `npm run check:lock-version` to fail when `package.json.version` diverges from the lockfile root package version (`package-lock.json` → `packages[""].version`).
+- Added a CI guard step in `.github/workflows/ci.yml` to execute `npm run check:lock-version` during the Node test job.
+- Added version-bump and lockfile synchronization guidance to `CONTRIBUTING.md`, including regeneration and validation commands.
 - Added `docs/model-contract.md` and `data/contracts/model-contract.json` to formalize cross-surface canonical concepts (outcomes, shared state metrics, turn semantics), authority ownership (`web-v1` active vs `mra-v0` historical), and intentional divergences.
 - Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
 

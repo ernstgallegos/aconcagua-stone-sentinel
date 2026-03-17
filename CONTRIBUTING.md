@@ -100,6 +100,25 @@ Both suites run automatically on every push via GitHub Actions (`.github/workflo
 
 ---
 
+## Version bump and lockfile sync
+
+When preparing a version bump, keep `package.json` and `package-lock.json` root metadata aligned in the same commit:
+
+1. Update `package.json` `version`.
+2. Regenerate the lockfile from current package metadata:
+   ```bash
+   npm install --package-lock-only
+   ```
+3. Run the lockfile/version consistency check:
+   ```bash
+   npm run check:lock-version
+   ```
+4. Run tests (`npm test`, plus other relevant suites) before opening the PR.
+
+CI enforces this with `npm run check:lock-version` and will fail if `package.json.version` differs from `package-lock.json` root package version.
+
+---
+
 ## Commit Message Format
 
 Use concise, lowercase imperative messages:
