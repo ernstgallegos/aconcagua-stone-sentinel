@@ -1,5 +1,6 @@
 import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } from '../state/game-state.js';
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
+import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
 
 const DEFAULT_CONFIG = {
   nodes: [],
@@ -766,10 +767,12 @@ function pressureBandLabel(score) {
 function spendResourcesForMinutes(minutes, flags) {
   const stage = getCurrentStage();
   const burn = getSimConfig().resourceBurnPerHour?.[stage] || { water: 0.4, food: 0.3 };
-  const hours = minutes / 60;
   const eff = G.character?.engine?.resourceEfficiency ?? 1.0;
-  const waterBurn = Math.max(0, Math.round((burn.water || 0.4) * hours / eff));
-  const foodBurn  = Math.max(0, Math.round((burn.food  || 0.3) * hours / eff));
+  const { waterBurn, foodBurn } = calculateResourceBurnForMinutes({
+    minutes,
+    burnPerHour: burn,
+    efficiency: eff,
+  });
   G.state.water = Math.max(0, G.state.water - waterBurn);
   G.state.food = Math.max(0, G.state.food - foodBurn);
   if (G.state.water === 0) {
@@ -1497,53 +1500,21 @@ function getDecisionPressureCopy(winState = computeDecisionWindowState()) {
 function applyDecisionWindowDegradation(actionMod, perception) {
   const winState = computeDecisionWindowState();
   const guardrails = perception?.guardrails || getPerceptionGuardrails();
-  const actionPenaltyCap = clamp(guardrails.maxTimingActionPenalty ?? 0.16, 0.06, 0.2);
-  const confidencePenaltyCap = clamp(guardrails.maxTimingConfidencePenalty ?? 12, 4, 16);
-  const noiseIncreaseCap = clamp(guardrails.maxTimingNoiseIncrease ?? 8, 2, 10);
+  const degraded = applyDecisionWindowDegradationRule({
+    actionMod,
+    perception,
+    windowState: winState,
+    guardrails,
+    stage: getCurrentStage(),
+  });
 
-  const effect = { elapsedMs: winState.effectiveElapsed, windowMs: winState.profile.totalWindowMs, exceeded: winState.overMs > 0, overMs: winState.overMs, overSteps: winState.stepsOver, stage: getCurrentStage(), actionPenalty: 0, confidencePenalty: 0, noiseIncrease: 0, capped: false };
-  if (winState.overMs <= 0) {
-    recordTelemetry(G, {
-      decisionTimeSpentMs: winState.effectiveElapsed,
-      decisionWindowExceeded: false,
-      decisionWindowEffect: effect,
-      decisionWindowProfile: winState.profile,
-    });
-    return { actionMod, perception, effect };
-  }
-
-  const stepCap = Math.min(4, winState.stepsOver + 1);
-  const actionPenaltyRaw = stepCap * 0.04;
-  const confidencePenaltyRaw = stepCap * 3;
-  const noiseIncreaseRaw = stepCap * 2;
-  const actionPenalty = Math.min(actionPenaltyRaw, actionPenaltyCap);
-  const confidencePenalty = Math.min(confidencePenaltyRaw, confidencePenaltyCap);
-  const noiseIncrease = Math.min(noiseIncreaseRaw, noiseIncreaseCap);
-
-  const adjustedActionMod = {
-    ...actionMod,
-    fatigueMultiplier: (actionMod.fatigueMultiplier || 1) + actionPenalty,
-    exposureMultiplier: (actionMod.exposureMultiplier || 1) + Math.max(0.02, actionPenalty * 0.7),
-  };
-  const adjustedPerception = {
-    ...perception,
-    confidenceLevel: clamp(perception.confidenceLevel - confidencePenalty, 5, 98),
-    noiseLevel: clamp(perception.noiseLevel + noiseIncrease, 0, 40),
-  };
-
-  if (winState.overRatio >= 0.8 && adjustedPerception.trendEstimate === 'steady') adjustedPerception.trendEstimate = 'uncertain';
-
-  effect.actionPenalty = Number(actionPenalty.toFixed(3));
-  effect.confidencePenalty = confidencePenalty;
-  effect.noiseIncrease = noiseIncrease;
-  effect.capped = actionPenalty !== actionPenaltyRaw || confidencePenalty !== confidencePenaltyRaw || noiseIncrease !== noiseIncreaseRaw;
   recordTelemetry(G, {
     decisionTimeSpentMs: winState.effectiveElapsed,
-    decisionWindowExceeded: true,
-    decisionWindowEffect: effect,
+    decisionWindowExceeded: degraded.effect.exceeded,
+    decisionWindowEffect: degraded.effect,
     decisionWindowProfile: winState.profile,
   });
-  return { actionMod: adjustedActionMod, perception: adjustedPerception, effect };
+  return degraded;
 }
 
 function requestDecisionPause() {
@@ -1676,6 +1647,8 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   updateAmbientSignal,
   computeSignals,
   renderNarrative,
+  deriveTerminalOutcome,
+  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 780 },
   updateRunState,
   recordTelemetry,
   assertStateShape,
