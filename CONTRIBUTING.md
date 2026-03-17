@@ -143,6 +143,15 @@ When debt is paid down or intentionally extended, add a corresponding entry to `
 
 ---
 
+## Documentation consistency checklist (prevent version-title drift)
+
+When a PR changes implementation status, flow wiring, or release phase labels, verify all of the following in the same PR:
+
+- [ ] `CHANGELOG.md` `[Unreleased]` reflects the new implementation reality.
+- [ ] Core docs include an up-to-date **Canonical status** block with links to `[Unreleased]` and `docs/en/implementation-plan-v1.4.md`.
+- [ ] Version labels in titles/headings (e.g., `v1.3`, `v1.4`) match current public state and include phase qualifiers when rollout is in progress.
+- [ ] `README.md`, `README.es.md`, `docs/architecture.md`, and `prototype/web-v1/README.md` do not contradict each other on canonical prototype status.
+
 ## Commit Message Format
 
 Use concise, lowercase imperative messages:
