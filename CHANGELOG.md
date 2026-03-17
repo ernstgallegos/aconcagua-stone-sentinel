@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
+- Added `prototype/web-v1/tests/turn-behavior.test.js` with fixture-based deterministic behavioral tests for `resolveTurn`, `evaluateOutcome`, and `updateState` using controlled RNG.
 - Added `scripts/check-lock-version.js` and `npm run check:lock-version` to fail when `package.json.version` diverges from the lockfile root package version (`package-lock.json` → `packages[""].version`).
 - Added a CI guard step in `.github/workflows/ci.yml` to execute `npm run check:lock-version` during the Node test job.
 - Added version-bump and lockfile synchronization guidance to `CONTRIBUTING.md`, including regeneration and validation commands.
@@ -17,6 +19,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
 
 ### Changed
+- Updated `prototype/web-v1/ui/screens.js` and `prototype/web-v1/engine/turn-resolution.js` to consume shared turn-rule helpers and delegate terminal-outcome precedence checks through an injectable `deriveTerminalOutcome` hook.
+- Reduced `prototype/web-v1/tests/new-mechanics.test.js` string-contract coverage to critical integration hooks while shifting primary confidence to behavioral engine assertions.
 - Pinned Python lint tooling in `requirements-dev.txt` by adding `ruff==0.4.10` so local and CI lint runs use the same versioned dependency.
 - Updated `.github/workflows/ci.yml` to remove ad hoc lint installation and run `ruff` as a blocking gate (`E/F/W`, `E501` ignored) in the Python job for `main` and pull requests targeting `main`.
 - Updated `CONTRIBUTING.md` with the CI lint gate policy and local lint command to match enforced CI behavior.

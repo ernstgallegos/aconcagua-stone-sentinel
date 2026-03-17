@@ -40,6 +40,8 @@ export function createTurnEngine(deps) {
     updateAmbientSignal,
     computeSignals,
     renderNarrative,
+    deriveTerminalOutcome,
+    getTimeWindows,
     updateRunState,
     recordTelemetry,
     assertStateShape,
@@ -243,6 +245,17 @@ export function createTurnEngine(deps) {
     else if (state.position === 'horcones' && G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) outcome = 'High Point Return';
 
     if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';
+
+    if (typeof deriveTerminalOutcome === 'function') {
+      outcome = deriveTerminalOutcome({
+        outcome,
+        state,
+        G,
+        POSITIONS,
+        stage: getCurrentStage(),
+        timeWindows: typeof getTimeWindows === 'function' ? getTimeWindows() : null,
+      });
+    }
 
     if (state.functional_capacity < 30) flags.push('critical-fatigue');
     if (state.exposure > 70) flags.push('critical-exposure');
