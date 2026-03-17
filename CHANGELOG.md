@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `docs/technical-debt-register.md` with active debt ownership, risk, trigger symptoms, measurable exit criteria, and mandatory release-PR review guidance for architecture, data-contract, prototype-divergence, and balance-fragility hotspots.
 - Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
 - Added `prototype/web-v1/tests/turn-behavior.test.js` with fixture-based deterministic behavioral tests for `resolveTurn`, `evaluateOutcome`, and `updateState` using controlled RNG.
 - Added `scripts/check-lock-version.js` and `npm run check:lock-version` to fail when `package.json.version` diverges from the lockfile root package version (`package-lock.json` → `packages[""].version`).
