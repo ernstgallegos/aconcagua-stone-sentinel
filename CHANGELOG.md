@@ -9,6 +9,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- Migrated `prototype/web-v1/index.html` to a lightweight ES-module shell that now loads `prototype/web-v1/ui/screens.js` and keeps temporary global facades (`window.makeDecision`, `window.showScreen`, and run controls) for backward-compatible button/test integration during refactor.
+- Split gameplay code into modules: turn engine logic (`resolveTurn`, `evaluateOutcome`, `updateState`, RNG/clamp helpers) now lives in `prototype/web-v1/engine/turn-resolution.js`, and canonical game-state initialization now lives in `prototype/web-v1/state/game-state.js`.
+- Updated `prototype/web-v1/tests/new-mechanics.test.js` to validate module-based loading and relocated engine/state contracts.
+
 ### Fixed
 - Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in
   `data/environmental_pressure_config.json` made the upper mountain (band 3+) mathematically
