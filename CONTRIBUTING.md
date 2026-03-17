@@ -40,6 +40,13 @@ pytest prototype/mra-v0/test_simulator.py -v
 npm test
 ```
 
+**Headless browser smoke test (requires Playwright browser install):**
+```bash
+pip install -r requirements-dev.txt
+python -m playwright install --with-deps chromium
+pytest prototype/web-v1/tests/test_smoke_flow.py -v
+```
+
 **Python lint (ruff, same gate as CI):**
 ```bash
 ruff check prototype/mra-v0/ --select=E,F,W --ignore=E501
@@ -80,7 +87,7 @@ Manual rate-limit smoke checklist (when touching `api/run.js`):
 2. Confirm requests over the limit return `429` with `retry_after_ms`.
 3. Wait for one rate window and confirm requests are accepted again.
 
-Python tests, Python lint, JSON validation, and web-v1 tests run automatically on pushes to `main` and pull requests targeting `main` via GitHub Actions (`.github/workflows/ci.yml`).
+Python tests, Python lint, JSON validation, web-v1 contract tests, and a headless browser smoke test (pull requests) run automatically via GitHub Actions (`.github/workflows/ci.yml`).
 
 ---
 
