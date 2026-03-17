@@ -6,6 +6,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "check:lock-version": "node scripts/check-lock-version.js",
     "test": "node --test prototype/web-v1/tests/*.test.js"
   }
 }

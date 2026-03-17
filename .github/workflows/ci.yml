@@ -67,6 +67,9 @@ jobs:
           cache: "npm"
           cache-dependency-path: "package-lock.json"
 
+      - name: Verify package and lockfile versions match
+        run: npm run check:lock-version
+
       - name: Install Node dependencies
         run: npm install
 
