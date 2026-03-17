@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `data/scenarios.web-v1.json` as the canonical web-v1 scenario catalog, including predefined scenarios and random-archetype generation ranges/configuration used by runtime scenario selection.
 - Added `docs/technical-debt-register.md` with active debt ownership, risk, trigger symptoms, measurable exit criteria, and mandatory release-PR review guidance for architecture, data-contract, prototype-divergence, and balance-fragility hotspots.
 - Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
 - Added `prototype/web-v1/tests/turn-behavior.test.js` with fixture-based deterministic behavioral tests for `resolveTurn`, `evaluateOutcome`, and `updateState` using controlled RNG.
@@ -22,6 +23,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
 
 ### Changed
+- Updated `prototype/web-v1/ui/screens.js` to load scenarios from `data/scenarios.web-v1.json`, replacing in-file `SCENARIOS` and random-archetype constants with data-driven configuration accessors.
+- Updated `docs/model-contract.md` with explicit web-v1 scenario authority boundaries between data ownership (`data/scenarios.web-v1.json`) and runtime enforcement (`loadDataConfig()` in `screens.js`).
 - Revised `meta/public-roadmap.md` to align current-stage messaging with the already integrated `prototype/web-v1` behavior, map each stage to objective repository evidence (modules/features/tests), and explicitly separate design-lock completion from implementation completion with a compact v1.4 status matrix linked to the implementation-plan real-progress snapshot.
 - Updated canonical-status documentation across `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`, and `README.md` to reflect the v1.4 public in-progress state with explicit links to `CHANGELOG.md` `[Unreleased]` and implementation-plan snapshots.
 - Added a documentation consistency checklist to `CONTRIBUTING.md` to prevent version-title drift between core docs and implementation reality.
@@ -38,6 +41,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to validate module-based loading and relocated engine/state contracts.
 
 ### Fixed
+- Hardened `loadDataConfig()` validation in `prototype/web-v1/ui/screens.js` with required-file checks and runtime schema/contract assertions for `scenarios.web-v1.json` (predefined seeds and random archetype presence), failing fast via fatal screen on violations.
+- Updated `prototype/web-v1/tests/model-contract.test.js` to read web initial-state overlap keys from `data/scenarios.web-v1.json` instead of parsing inline scenario literals from UI source.
 - Annotated `prototype/mra-v0/test_simulator.py` import bootstrap with `# noqa: E402` so the new blocking `ruff` gate accepts the intentional `sys.path` setup used by simulator tests.
 - Hardened `loadDataConfig()` in `prototype/web-v1/ui/screens.js` by treating `nodes`, `actionModifiers`, `stageModifiers`, `characters`, and `outcomes` as required assets with runtime schema checks. Any load/parse/schema failure now raises a blocking fatal screen in `prototype/web-v1/index.html`, includes filename + key-path diagnostics, and keeps `G.modelReady = false` to prevent game start with empty defaults.
 

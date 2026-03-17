@@ -23,21 +23,17 @@ function extractMraOutcomeLabels(simulatorSource) {
   return labels;
 }
 
-function extractWebInitialStateKeys(screensSource) {
-  const initialMatch = screensSource.match(/initial:\s*\{([\s\S]*?)\}\s*,\s*bias:/m);
-  assert.ok(initialMatch, 'web-v1 initial scenario state block found');
-  const keys = new Set();
-  for (const match of initialMatch[1].matchAll(/([a-z_]+)\s*:/g)) {
-    keys.add(match[1]);
-  }
-  return keys;
+function extractWebInitialStateKeys(webScenarioConfig) {
+  const firstScenario = webScenarioConfig.predefinedScenarios?.[0];
+  assert.ok(firstScenario?.initial, 'web-v1 first predefined scenario includes initial state');
+  return new Set(Object.keys(firstScenario.initial));
 }
 
 test('model contract aligns outcomes and shared state overlap across both surfaces', () => {
   const contract = readJson('data/contracts/model-contract.json');
   const webOutcomes = readJson('data/outcomes.json');
   const simulatorSource = readText('prototype/mra-v0/simulator.py');
-  const screensSource = readText('prototype/web-v1/ui/screens.js');
+  const webScenarioConfig = readJson('data/scenarios.web-v1.json');
   const schema = readJson('prototype/mra-v0/scenarios/scenario.schema.json');
 
   assert.deepEqual(webOutcomes, contract.outcomes.webV1Canonical, 'web canonical outcomes match contract');
@@ -49,7 +45,7 @@ test('model contract aligns outcomes and shared state overlap across both surfac
 
   const requiredShared = contract.sharedContract.stateMetricsRequired;
   const mraRequired = new Set(schema.properties.initial_state.required);
-  const webInitialKeys = extractWebInitialStateKeys(screensSource);
+  const webInitialKeys = extractWebInitialStateKeys(webScenarioConfig);
 
   for (const metric of requiredShared) {
     assert.ok(mraRequired.has(metric), `mra initial_state schema requires ${metric}`);

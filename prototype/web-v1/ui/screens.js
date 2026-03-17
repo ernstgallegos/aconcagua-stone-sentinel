@@ -8,12 +8,13 @@ const DEFAULT_CONFIG = {
   actionModifiers: {},
   stageModifiers: {},
   characters: [],
-  outcomes: []
+  outcomes: [],
+  scenariosWebV1: { predefinedScenarios: [], randomScenario: {} }
 };
 let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 let DATA_CONFIG_ERROR = null;
 
-const REQUIRED_CONFIG_FILES = new Set(['nodes', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes']);
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes', 'scenariosWebV1']);
 
 function typeOfValue(value) {
   if (Array.isArray(value)) return 'array';
@@ -64,6 +65,38 @@ function validateDataConfigShape(filename, data) {
     assertConfigPath(filename, data, 'object', '$');
     assertConfigPath(filename, data.altitudePressureByBand, 'object', '$.altitudePressureByBand');
     assertConfigPath(filename, data.simulation, 'object', '$.simulation');
+    return;
+  }
+  if (filename === 'scenariosWebV1') {
+    assertConfigPath(filename, data, 'object', '$');
+    assertConfigPath(filename, data.predefinedScenarios, 'array', '$.predefinedScenarios');
+    assertConfigPath(filename, data.predefinedScenarios[0], 'object', '$.predefinedScenarios[0]');
+    assertConfigPath(filename, data.predefinedScenarios[0]?.id, 'string', '$.predefinedScenarios[0].id');
+    assertConfigPath(filename, data.predefinedScenarios[0]?.initial, 'object', '$.predefinedScenarios[0].initial');
+    assertConfigPath(filename, data.predefinedScenarios[0]?.bias, 'object', '$.predefinedScenarios[0].bias');
+    assertConfigPath(filename, data.randomScenario, 'object', '$.randomScenario');
+    assertConfigPath(filename, data.randomScenario.archetypes, 'array', '$.randomScenario.archetypes');
+    assertConfigPath(filename, data.randomScenario.archetypes[0], 'object', '$.randomScenario.archetypes[0]');
+    assertConfigPath(filename, data.randomScenario.archetypes[0]?.name, 'string', '$.randomScenario.archetypes[0].name');
+    assertConfigPath(filename, data.randomScenario.archetypes[0]?.tweak, 'object', '$.randomScenario.archetypes[0].tweak');
+    return;
+  }
+}
+
+function validateLoadedDataConfig() {
+  const scenarioConfig = DATA_CONFIG.scenariosWebV1 || {};
+  const predefined = scenarioConfig.predefinedScenarios || [];
+  if (!predefined.length) {
+    throw new Error('scenariosWebV1.$.predefinedScenarios must include at least one scenario');
+  }
+  for (const [idx, scenario] of predefined.entries()) {
+    if (!Array.isArray(scenario.seeds) || !scenario.seeds.length) {
+      throw new Error(`scenariosWebV1.$.predefinedScenarios[${idx}].seeds must be a non-empty array`);
+    }
+  }
+  const randomConfig = scenarioConfig.randomScenario || {};
+  if (!Array.isArray(randomConfig.archetypes) || !randomConfig.archetypes.length) {
+    throw new Error('scenariosWebV1.$.randomScenario.archetypes must be a non-empty array');
   }
 }
 
@@ -137,6 +170,7 @@ async function loadDataConfig() {
     ['stageModifiers', '../../data/stage_modifiers.json'],
     ['characters', '../../data/characters.json'],
     ['outcomes', '../../data/outcomes.json'],
+    ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
   ];
   for (const [key, path] of files) {
     try {
@@ -154,6 +188,12 @@ async function loadDataConfig() {
       }
       console.warn(`Using default config for optional file ${key}`, error);
     }
+  }
+  try {
+    validateLoadedDataConfig();
+  } catch (error) {
+    setModelLoadError(`Blocking data contract validation failure: ${error.message}`);
+    return;
   }
   rebuildRouteData();
   updateUIState(G, { modelReady: true });
@@ -199,48 +239,14 @@ function rebuildRouteData() {
 }
 
 
-const SCENARIOS = [
-  {
-    id:'assisted-route', num:'01', name:'Assisted Route',
-    desc:'Your first attempt. Support is available. The systems are forgiving — for now.',
-    intro:'First expedition. Conditions are favorable. Learn to read the signals before they stop being forgiving.',
-    max_turns:50, seeds:[10,20,30], difficulty:'Low',
-    initial:{ position:'horcones', altitude_band:'approach', weather_severity:0, visibility:3, terrain_load:0, functional_capacity:95, fatigue:10, exposure:5, water:26, food:24 },
-    bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:-1 },
-  },
-  {
-    id:'narrow-weather-window', num:'02', name:'Narrow Weather Window',
-    desc:'You left at dawn. The sky is readable, but the mountain has its own schedule.',
-    intro:'Conditions are moderate. There may be a window ahead. There may not. Read the trend.',
-    max_turns:48, seeds:[101,202,303], difficulty:'Medium',
-    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:86, fatigue:22, exposure:14, water:22, food:20 },
-    bias:{ weather_deterioration:1, terrain_growth:0, fatigue_growth:0 },
-  },
-  {
-    id:'false-stability-terrain', num:'03', name:'False Stability Terrain',
-    desc:'Clear skies. Good visibility. The terrain has other plans.',
-    intro:'The weather looks stable. What the terrain is doing is a different question.',
-    max_turns:48, seeds:[404,505,606], difficulty:'Medium',
-    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:88, fatigue:20, exposure:12, water:20, food:18 },
-    bias:{ weather_deterioration:0, terrain_growth:1, fatigue_growth:0 },
-  },
-  {
-    id:'accumulated-fatigue-trap', num:'04', name:'Accumulated Fatigue Trap',
-    desc:'Everything seems manageable. That is the problem.',
-    intro:'Conditions are benign. The trap is not in the weather.',
-    max_turns:50, seeds:[707,808,909], difficulty:'Medium',
-    initial:{ position:'horcones', altitude_band:'approach', weather_severity:1, visibility:2, terrain_load:1, functional_capacity:90, fatigue:18, exposure:10, water:22, food:20 },
-    bias:{ weather_deterioration:0, terrain_growth:0, fatigue_growth:1 },
-  },
-  {
-    id:'weather-window', num:'05', name:'Weather Window',
-    desc:'The weather is breaking. For how long — that is what you have to figure out.',
-    intro:'Bad weather is passing. A window will open. Whether you\'re ready when it does — and whether you recognize when it closes — that\'s the whole game.',
-    max_turns:46, seeds:[151,252,353], difficulty:'Hard',
-    initial:{ position:'horcones', altitude_band:'approach', weather_severity:2, visibility:1, terrain_load:1, functional_capacity:75, fatigue:35, exposure:25, water:22, food:20 },
-    bias:{ weather_deterioration:-1, terrain_growth:0, fatigue_growth:0, window_turns:[3,4,5], post_window_deterioration:2 },
-  },
-];
+function getConfiguredScenarios() {
+  return DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [];
+}
+
+function getRandomScenarioConfig() {
+  return DATA_CONFIG.scenariosWebV1?.randomScenario || {};
+}
+
 
 // ════════════════════════════════════════════════
 // GAME STATE
@@ -413,7 +419,7 @@ let selectedSeed = null;
 function buildScenarioGrid() {
   const grid = document.getElementById('scenario-grid');
   grid.innerHTML = '';
-  SCENARIOS.forEach((sc) => {
+  getConfiguredScenarios().forEach((sc) => {
     const card = document.createElement('div');
     card.className = 'scenario-card';
     card.id = 'sc-' + sc.id;
@@ -485,7 +491,7 @@ function selectSeed(scenarioId, seed, e) {
 }
 function confirmScenario() {
   if (!selectedScenarioId) return;
-  G.scenario = SCENARIOS.find(s => s.id === selectedScenarioId);
+  G.scenario = getConfiguredScenarios().find(s => s.id === selectedScenarioId);
   G.seed = selectedSeed;
   showOnboarding('predefined');
 }
@@ -506,31 +512,29 @@ function showOnboarding(mode) {
 // RANDOM SCENARIO BUILDER
 // ════════════════════════════════════════════════
 function buildRandomScenario() {
-  const rseed = Math.floor(Math.random() * 90000) + 10000;
+  const randomConfig = getRandomScenarioConfig();
+  const seedRange = randomConfig.seedRange || { min: 10000, max: 99999 };
+  const maxTurnsRange = randomConfig.maxTurnsRange || { min: 46, max: 54 };
+  const initialBase = randomConfig.initialBase || { position: 'horcones', altitude_band: 'approach' };
+  const initialRanges = randomConfig.initialRanges || {};
+  const terrainRange = initialRanges.terrain_load || { min: 0, max: 2 };
+  const functionalCapacityRange = initialRanges.functional_capacity || { min: 74, max: 94 };
+  const rseed = Math.floor(Math.random() * (seedRange.max - seedRange.min + 1)) + seedRange.min;
   const rng = mulberry32(rseed);
-  const archetypes = [
-    { name:'Late Winter', tweak:{weather:2, visibility:1, fatigue:28, exposure:22, water:22, food:20, difficulty:'Hard', bias:{weather_deterioration:1, terrain_growth:1, fatigue_growth:1}} },
-    { name:'Perfect Window', tweak:{weather:0, visibility:3, fatigue:18, exposure:10, water:24, food:22, difficulty:'Moderate', bias:{weather_deterioration:-1, terrain_growth:0, fatigue_growth:0, window_turns:[4,5,6], post_window_deterioration:1}} },
-    { name:'The Springboard', tweak:{weather:1, visibility:2, fatigue:14, exposure:12, water:20, food:18, difficulty:'Moderate', _acclimatizationBonus:20, bias:{weather_deterioration:0, terrain_growth:1, fatigue_growth:0}} },
-    { name:'Equinox Trap', tweak:{weather:1, visibility:2, fatigue:24, exposure:16, water:22, food:20, difficulty:'Hard', _equinoxTrapTurn:7, bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:1}} },
-    { name:'The Fog Route', tweak:{weather:1, visibility:0, fatigue:22, exposure:16, water:22, food:20, difficulty:'Hard', bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:0}} },
-    { name:'Resource Audit', tweak:{weather:1, visibility:2, fatigue:20, exposure:14, water:18, food:16, difficulty:'Hard', bias:{weather_deterioration:0, terrain_growth:0, fatigue_growth:1}} },
-    { name:'The Experienced Body', tweak:{weather:1, visibility:2, fatigue:16, exposure:12, water:22, food:20, difficulty:'Moderate', _acclimatizationBonus:32, bias:{weather_deterioration:0, terrain_growth:1, fatigue_growth:0}} },
-    { name:'Pressure System', tweak:{weather:2, visibility:1, fatigue:26, exposure:20, water:22, food:20, difficulty:'Hard', bias:{weather_deterioration:1, terrain_growth:1, fatigue_growth:1, window_turns:[3], post_window_deterioration:2}} },
-  ];
+  const archetypes = randomConfig.archetypes || [];
   const arch = archetypes[rngInt(rng, 0, archetypes.length - 1)];
   return {
     id: 'random-' + rseed,
-    num: '06',
+    num: randomConfig.num || '06',
     name: arch.name,
     desc: `Expedition ${rseed} · ${arch.name}`,
     intro: `Expedition ${rseed}. ${arch.name}. Conditions are never neutral; they only become legible through disciplined turns.`,
-    max_turns: rngInt(rng, 46, 54),
+    max_turns: rngInt(rng, maxTurnsRange.min, maxTurnsRange.max),
     seeds: [rseed],
     difficulty: arch.tweak.difficulty,
     initial: {
-      position: 'horcones', altitude_band: 'approach', weather_severity: arch.tweak.weather,
-      visibility: arch.tweak.visibility, terrain_load: rngInt(rng, 0, 2), functional_capacity: rngInt(rng, 74, 94),
+      position: initialBase.position, altitude_band: initialBase.altitude_band, weather_severity: arch.tweak.weather,
+      visibility: arch.tweak.visibility, terrain_load: rngInt(rng, terrainRange.min, terrainRange.max), functional_capacity: rngInt(rng, functionalCapacityRange.min, functionalCapacityRange.max),
       fatigue: arch.tweak.fatigue, exposure: arch.tweak.exposure, water: arch.tweak.water, food: arch.tweak.food,
     },
     bias: arch.tweak.bias,
