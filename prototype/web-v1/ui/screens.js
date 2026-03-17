@@ -316,22 +316,48 @@ function buildCharacterGrid() {
     grid.appendChild(card);
   });
 
+  const randomCard = document.createElement('div');
+  randomCard.className = 'char-card char-card-random';
+  randomCard.id = 'char-random';
+  randomCard.setAttribute('role', 'radio');
+  randomCard.setAttribute('aria-checked', 'false');
+  randomCard.setAttribute('tabindex', '0');
+  randomCard.setAttribute('aria-label', 'Random character selection');
+  randomCard.onclick = () => selectCharacter('random');
+  randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacter('random'); } };
+  randomCard.innerHTML = `
+    <div class="char-emblem" aria-hidden="true">?</div>
+    <div class="char-name">Random Character</div>
+    <div class="char-role">Unpredictable roster slot</div>
+    <div class="char-bio">Let the mountain choose one of the six expedition profiles for this run.</div>
+    <ul class="char-traits"><li>Fast start for replay runs.</li><li>Maintains full rules and balance.</li></ul>
+    <p class="char-difficulty">Conditions: Variable by selected profile.</p>
+  `;
+  grid.appendChild(randomCard);
+
 }
 function selectCharacter(id) {
   document.querySelectorAll('.char-card').forEach(c => {
     c.classList.remove('selected');
     c.setAttribute('aria-checked', 'false');
   });
-  const card = document.getElementById('char-' + id);
+  const card = document.getElementById(id === 'random' ? 'char-random' : 'char-' + id);
   card.classList.add('selected');
   card.setAttribute('aria-checked', 'true');
-  G.character = (DATA_CONFIG.characters || []).find(c => c.id === id);
+  G.character = id === 'random'
+    ? { id: 'random', name: 'Random Character' }
+    : (DATA_CONFIG.characters || []).find(c => c.id === id);
   const btn = document.getElementById('btn-char-confirm');
   btn.disabled = false;
   btn.removeAttribute('aria-disabled');
 }
 function confirmCharacter() {
   if (!G.character) return;
+  if (G.character.id === 'random') {
+    const availableCharacters = DATA_CONFIG.characters || [];
+    if (!availableCharacters.length) return;
+    G.character = rngChoice(() => Math.random(), availableCharacters);
+  }
   buildScenarioGrid();
   showScreen('scenario');
 }
@@ -2180,5 +2206,11 @@ window.openJournalFrom = openJournalFrom;
 window.replaySameSeed = replaySameSeed;
 window.replayNewSeed = replayNewSeed;
 window.goChooseScenario = goChooseScenario;
+window.startGame = startGame;
+window.confirmScenario = confirmScenario;
+window.confirmCharacter = confirmCharacter;
+window.confirmPart2Character = confirmPart2Character;
+window.requestDecisionPause = requestDecisionPause;
+window.clearJournal = clearJournal;
 
 export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState };

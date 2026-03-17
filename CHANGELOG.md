@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added a `Random Character` card in `prototype/web-v1` character selection so players can start a run with one of the six eligible profiles chosen automatically on confirm.
 - Added `data/scenarios.web-v1.json` as the canonical web-v1 scenario catalog, including predefined scenarios and random-archetype generation ranges/configuration used by runtime scenario selection.
 - Added `docs/technical-debt-register.md` with active debt ownership, risk, trigger symptoms, measurable exit criteria, and mandatory release-PR review guidance for architecture, data-contract, prototype-divergence, and balance-fragility hotspots.
 - Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
@@ -21,6 +22,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
 
 - Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
+
+### Fixed
+- Fixed `prototype/web-v1` character-selection progression by restoring required global button handlers (`confirmCharacter`, `confirmScenario`, `startGame`, etc.) for inline `onclick` wiring, unblocking the "This is my expedition." CTA.
 
 ### Changed
 - Updated `prototype/web-v1/ui/screens.js` to load scenarios from `data/scenarios.web-v1.json`, replacing in-file `SCENARIOS` and random-archetype constants with data-driven configuration accessors.

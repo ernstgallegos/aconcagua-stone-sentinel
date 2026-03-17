@@ -216,6 +216,8 @@ Current visible flow in web-v1 is:
 
 `splash → title → character → scenario → onboarding → game → (summit-success or debrief)`
 
+Character selection now includes a `Random Character` option that auto-picks one of the six available profiles when you confirm the expedition.
+
 Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
 
 `part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
