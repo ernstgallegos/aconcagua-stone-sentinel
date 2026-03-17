@@ -127,3 +127,5 @@ In addition to the changelog:
 - Scenario UX remained cleaner when predefined cards hid manual seed picking and selected a random configured seed on card selection; preserve at least ~10 seeds per scenario in data to keep replay entropy without user-facing complexity.
 - Action-modifier data currently omits explicit `fatigueDelta`/`exposureDelta`/`capacityDelta`; keep runtime normalization in `getActionModifier()` so missing fields never propagate `NaN` into body-state updates or freeze decision progression.
 - Treat `data/environmental_pressure_config.json` as a blocking runtime dependency for `web-v1`; also keep pressure-scale reads null-safe in `calculateEnvironmentalPressure()` so malformed partial payloads degrade gracefully instead of crashing turns.
+
+- Multilingual rollout in `web-v1` is safest when language state is centralized (single source + localStorage) and reapplied after rebuilding dynamic grids (character/scenario) to avoid mixed-language UI fragments.

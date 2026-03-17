@@ -103,6 +103,24 @@ body {
   padding: 0.45rem 0.55rem;
 }
 
+.lang-switcher {
+  position: fixed;
+  top: 3.8rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.55rem;
+}
+
 .theme-select {
   background: var(--surface2);
   color: var(--text);
@@ -1250,6 +1268,15 @@ body {
     <option value="dark">Dark</option>
     <option value="light">Light</option>
     <option value="sunset">Sunset</option>
+  </select>
+</div>
+
+<div class="lang-switcher" aria-label="Language switcher">
+  <label for="language-select">Language</label>
+  <select id="language-select" class="theme-select" onchange="setLanguage(this.value)">
+    <option value="en">English</option>
+    <option value="es">Español</option>
+    <option value="pt-BR">Português (Brasil)</option>
   </select>
 </div>
 
