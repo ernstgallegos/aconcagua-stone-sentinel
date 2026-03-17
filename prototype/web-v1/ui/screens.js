@@ -156,7 +156,7 @@ const I18N = {
       expeditionJournal: 'Expedition Journal',
       clearLog: 'Clear log',
       splashTap: 'Tap / Click to continue',
-      titleTagline: '"The mountain doesn't ask if you're ready. The mountain rules."',
+      titleTagline: '"The mountain doesn\'t ask if you\'re ready. The mountain rules."',
       titleSub: 'A decision game about limits, environment, and knowing when to stop.',
       navTitle: 'Title',
       navCharacter: 'Character',
@@ -2493,6 +2493,7 @@ window.confirmScenario = confirmScenario;
 window.confirmCharacter = confirmCharacter;
 window.confirmPart2Character = confirmPart2Character;
 window.setLanguage = setLanguage;
+window.setVisualMode = setVisualMode;
 window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
 

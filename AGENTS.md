@@ -129,3 +129,5 @@ In addition to the changelog:
 - Treat `data/environmental_pressure_config.json` as a blocking runtime dependency for `web-v1`; also keep pressure-scale reads null-safe in `calculateEnvironmentalPressure()` so malformed partial payloads degrade gracefully instead of crashing turns.
 
 - Multilingual rollout in `web-v1` is safest when language state is centralized (single source + localStorage) and reapplied after rebuilding dynamic grids (character/scenario) to avoid mixed-language UI fragments.
+
+- Inline `onclick` controls in `index.html` depend on both successful ES-module parsing and explicit `window.*` facades; one unescaped apostrophe in i18n strings or a missing facade export (e.g., `setVisualMode`) can disable all title/splash controls at once.
