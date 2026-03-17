@@ -7,7 +7,18 @@
       "desc": "Your first attempt. Support is available. The systems are forgiving — for now.",
       "intro": "First expedition. Conditions are favorable. Learn to read the signals before they stop being forgiving.",
       "max_turns": 50,
-      "seeds": [10, 20, 30],
+      "seeds": [
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ],
       "difficulty": "Low",
       "initial": {
         "position": "horcones",
@@ -34,7 +45,18 @@
       "desc": "You left at dawn. The sky is readable, but the mountain has its own schedule.",
       "intro": "Conditions are moderate. There may be a window ahead. There may not. Read the trend.",
       "max_turns": 48,
-      "seeds": [101, 202, 303],
+      "seeds": [
+        101,
+        202,
+        303,
+        404,
+        505,
+        606,
+        707,
+        808,
+        909,
+        1001
+      ],
       "difficulty": "Medium",
       "initial": {
         "position": "horcones",
@@ -61,7 +83,18 @@
       "desc": "Clear skies. Good visibility. The terrain has other plans.",
       "intro": "The weather looks stable. What the terrain is doing is a different question.",
       "max_turns": 48,
-      "seeds": [404, 505, 606],
+      "seeds": [
+        111,
+        222,
+        333,
+        444,
+        555,
+        666,
+        777,
+        888,
+        999,
+        1111
+      ],
       "difficulty": "Medium",
       "initial": {
         "position": "horcones",
@@ -88,7 +121,18 @@
       "desc": "Everything seems manageable. That is the problem.",
       "intro": "Conditions are benign. The trap is not in the weather.",
       "max_turns": 50,
-      "seeds": [707, 808, 909],
+      "seeds": [
+        121,
+        232,
+        343,
+        454,
+        565,
+        676,
+        787,
+        898,
+        909,
+        1020
+      ],
       "difficulty": "Medium",
       "initial": {
         "position": "horcones",
@@ -115,7 +159,18 @@
       "desc": "The weather is breaking. For how long — that is what you have to figure out.",
       "intro": "Bad weather is passing. A window will open. Whether you're ready when it does — and whether you recognize when it closes — that's the whole game.",
       "max_turns": 46,
-      "seeds": [151, 252, 353],
+      "seeds": [
+        151,
+        252,
+        353,
+        454,
+        555,
+        656,
+        757,
+        858,
+        959,
+        1060
+      ],
       "difficulty": "Hard",
       "initial": {
         "position": "horcones",
@@ -133,32 +188,189 @@
         "weather_deterioration": -1,
         "terrain_growth": 0,
         "fatigue_growth": 0,
-        "window_turns": [3, 4, 5],
+        "window_turns": [
+          3,
+          4,
+          5
+        ],
         "post_window_deterioration": 2
       }
     }
   ],
   "randomScenario": {
     "num": "06",
-    "seedRange": { "min": 10000, "max": 99999 },
-    "maxTurnsRange": { "min": 46, "max": 54 },
+    "seedRange": {
+      "min": 10000,
+      "max": 99999
+    },
+    "maxTurnsRange": {
+      "min": 46,
+      "max": 54
+    },
     "initialBase": {
       "position": "horcones",
       "altitude_band": "approach"
     },
     "initialRanges": {
-      "terrain_load": { "min": 0, "max": 2 },
-      "functional_capacity": { "min": 74, "max": 94 }
+      "terrain_load": {
+        "min": 0,
+        "max": 2
+      },
+      "functional_capacity": {
+        "min": 74,
+        "max": 94
+      }
     },
     "archetypes": [
-      { "name": "Late Winter", "tweak": { "weather": 2, "visibility": 1, "fatigue": 28, "exposure": 22, "water": 22, "food": 20, "difficulty": "Hard", "bias": { "weather_deterioration": 1, "terrain_growth": 1, "fatigue_growth": 1 } } },
-      { "name": "Perfect Window", "tweak": { "weather": 0, "visibility": 3, "fatigue": 18, "exposure": 10, "water": 24, "food": 22, "difficulty": "Moderate", "bias": { "weather_deterioration": -1, "terrain_growth": 0, "fatigue_growth": 0, "window_turns": [4, 5, 6], "post_window_deterioration": 1 } } },
-      { "name": "The Springboard", "tweak": { "weather": 1, "visibility": 2, "fatigue": 14, "exposure": 12, "water": 20, "food": 18, "difficulty": "Moderate", "_acclimatizationBonus": 20, "bias": { "weather_deterioration": 0, "terrain_growth": 1, "fatigue_growth": 0 } } },
-      { "name": "Equinox Trap", "tweak": { "weather": 1, "visibility": 2, "fatigue": 24, "exposure": 16, "water": 22, "food": 20, "difficulty": "Hard", "_equinoxTrapTurn": 7, "bias": { "weather_deterioration": 0, "terrain_growth": 0, "fatigue_growth": 1 } } },
-      { "name": "The Fog Route", "tweak": { "weather": 1, "visibility": 0, "fatigue": 22, "exposure": 16, "water": 22, "food": 20, "difficulty": "Hard", "bias": { "weather_deterioration": 0, "terrain_growth": 0, "fatigue_growth": 0 } } },
-      { "name": "Resource Audit", "tweak": { "weather": 1, "visibility": 2, "fatigue": 20, "exposure": 14, "water": 18, "food": 16, "difficulty": "Hard", "bias": { "weather_deterioration": 0, "terrain_growth": 0, "fatigue_growth": 1 } } },
-      { "name": "The Experienced Body", "tweak": { "weather": 1, "visibility": 2, "fatigue": 16, "exposure": 12, "water": 22, "food": 20, "difficulty": "Moderate", "_acclimatizationBonus": 32, "bias": { "weather_deterioration": 0, "terrain_growth": 1, "fatigue_growth": 0 } } },
-      { "name": "Pressure System", "tweak": { "weather": 2, "visibility": 1, "fatigue": 26, "exposure": 20, "water": 22, "food": 20, "difficulty": "Hard", "bias": { "weather_deterioration": 1, "terrain_growth": 1, "fatigue_growth": 1, "window_turns": [3], "post_window_deterioration": 2 } } }
+      {
+        "name": "Late Winter",
+        "tweak": {
+          "weather": 2,
+          "visibility": 1,
+          "fatigue": 28,
+          "exposure": 22,
+          "water": 22,
+          "food": 20,
+          "difficulty": "Hard",
+          "bias": {
+            "weather_deterioration": 1,
+            "terrain_growth": 1,
+            "fatigue_growth": 1
+          }
+        }
+      },
+      {
+        "name": "Perfect Window",
+        "tweak": {
+          "weather": 0,
+          "visibility": 3,
+          "fatigue": 18,
+          "exposure": 10,
+          "water": 24,
+          "food": 22,
+          "difficulty": "Moderate",
+          "bias": {
+            "weather_deterioration": -1,
+            "terrain_growth": 0,
+            "fatigue_growth": 0,
+            "window_turns": [
+              4,
+              5,
+              6
+            ],
+            "post_window_deterioration": 1
+          }
+        }
+      },
+      {
+        "name": "The Springboard",
+        "tweak": {
+          "weather": 1,
+          "visibility": 2,
+          "fatigue": 14,
+          "exposure": 12,
+          "water": 20,
+          "food": 18,
+          "difficulty": "Moderate",
+          "_acclimatizationBonus": 20,
+          "bias": {
+            "weather_deterioration": 0,
+            "terrain_growth": 1,
+            "fatigue_growth": 0
+          }
+        }
+      },
+      {
+        "name": "Equinox Trap",
+        "tweak": {
+          "weather": 1,
+          "visibility": 2,
+          "fatigue": 24,
+          "exposure": 16,
+          "water": 22,
+          "food": 20,
+          "difficulty": "Hard",
+          "_equinoxTrapTurn": 7,
+          "bias": {
+            "weather_deterioration": 0,
+            "terrain_growth": 0,
+            "fatigue_growth": 1
+          }
+        }
+      },
+      {
+        "name": "The Fog Route",
+        "tweak": {
+          "weather": 1,
+          "visibility": 0,
+          "fatigue": 22,
+          "exposure": 16,
+          "water": 22,
+          "food": 20,
+          "difficulty": "Hard",
+          "bias": {
+            "weather_deterioration": 0,
+            "terrain_growth": 0,
+            "fatigue_growth": 0
+          }
+        }
+      },
+      {
+        "name": "Resource Audit",
+        "tweak": {
+          "weather": 1,
+          "visibility": 2,
+          "fatigue": 20,
+          "exposure": 14,
+          "water": 18,
+          "food": 16,
+          "difficulty": "Hard",
+          "bias": {
+            "weather_deterioration": 0,
+            "terrain_growth": 0,
+            "fatigue_growth": 1
+          }
+        }
+      },
+      {
+        "name": "The Experienced Body",
+        "tweak": {
+          "weather": 1,
+          "visibility": 2,
+          "fatigue": 16,
+          "exposure": 12,
+          "water": 22,
+          "food": 20,
+          "difficulty": "Moderate",
+          "_acclimatizationBonus": 32,
+          "bias": {
+            "weather_deterioration": 0,
+            "terrain_growth": 1,
+            "fatigue_growth": 0
+          }
+        }
+      },
+      {
+        "name": "Pressure System",
+        "tweak": {
+          "weather": 2,
+          "visibility": 1,
+          "fatigue": 26,
+          "exposure": 20,
+          "water": 22,
+          "food": 20,
+          "difficulty": "Hard",
+          "bias": {
+            "weather_deterioration": 1,
+            "terrain_growth": 1,
+            "fatigue_growth": 1,
+            "window_turns": [
+              3
+            ],
+            "post_window_deterioration": 2
+          }
+        }
+      }
     ]
   }
 }

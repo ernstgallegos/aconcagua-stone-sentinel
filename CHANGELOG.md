@@ -27,6 +27,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `prototype/web-v1` character-selection progression by restoring required global button handlers (`confirmCharacter`, `confirmScenario`, `startGame`, etc.) for inline `onclick` wiring, unblocking the "This is my expedition." CTA.
 
 ### Changed
+- Updated `prototype/web-v1/ui/screens.js` scenario selection so predefined cards no longer expose per-seed buttons; selecting a scenario now assigns one configured seed at random and keeps that seed hidden from the selection UI.
+- Expanded predefined seed pools in `data/scenarios.web-v1.json` to at least 10 seeds per scenario so random assignment has meaningful run variety.
 - Updated `prototype/web-v1/ui/screens.js` to load scenarios from `data/scenarios.web-v1.json`, replacing in-file `SCENARIOS` and random-archetype constants with data-driven configuration accessors.
 - Updated `docs/model-contract.md` with explicit web-v1 scenario authority boundaries between data ownership (`data/scenarios.web-v1.json`) and runtime enforcement (`loadDataConfig()` in `screens.js`).
 - Revised `meta/public-roadmap.md` to align current-stage messaging with the already integrated `prototype/web-v1` behavior, map each stage to objective repository evidence (modules/features/tests), and explicitly separate design-lock completion from implementation completion with a compact v1.4 status matrix linked to the implementation-plan real-progress snapshot.

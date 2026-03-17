@@ -40,6 +40,11 @@ Simulation inputs are loaded from `/data`:
 - `characters.json`
 - `outcomes.json`
 
+## Scenario selection
+
+- In `Select Scenario`, players choose the scenario card only; the engine assigns one of that scenario's configured seeds at random at selection time.
+- Seed identity remains hidden in the selection UI to keep scenario runs opaque and replay variety high.
+
 ## Player-facing watch
 
 Public mountain reading is intentionally imperfect:
