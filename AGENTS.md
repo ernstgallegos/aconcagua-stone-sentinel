@@ -123,3 +123,4 @@ In addition to the changelog:
 - Maintaining an explicit `docs/technical-debt-register.md` with owner/risk/symptoms/exit criteria improves release discipline; require release PRs to review the register and mirror debt paydown/extension in `CHANGELOG.md`.
 - Public roadmap updates should classify each stage with two separate flags (design lock vs implementation completion) and anchor status claims to concrete repo evidence (named modules/tests), with implementation-plan snapshot links for auditability.
 - Public-facing status docs should avoid binary visibility wording; explicitly state that prototype code in-repo is public while production/commercial branches remain private to prevent roadmap/readme ambiguity.
+- Scenario UX remained cleaner when predefined cards hid manual seed picking and selected a random configured seed on card selection; preserve at least ~10 seeds per scenario in data to keep replay entropy without user-facing complexity.

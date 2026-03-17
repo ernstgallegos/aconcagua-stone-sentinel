@@ -454,9 +454,6 @@ function buildScenarioGrid() {
     card.setAttribute('aria-checked', 'false');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `Scenario ${sc.num}: ${sc.name} — ${sc.difficulty}`);
-    const seedBtns = sc.seeds.map(s =>
-      `<button class="seed-btn" id="seed-btn-${sc.id}-${s}" onclick="selectSeed('${sc.id}',${s},event)" aria-label="Use seed ${s}">${s}</button>`
-    ).join('');
     const difficultyTier = /hard/i.test(sc.difficulty) ? 3 : ((/medium|moderate/i.test(sc.difficulty) ? 2 : 1));
     const difficultyPips = [0,1,2].map(i => `<span class="diff-pip${i < difficultyTier ? ' active' : ''}"></span>`).join('');
     card.innerHTML = `
@@ -464,14 +461,10 @@ function buildScenarioGrid() {
       <div class="scenario-name">${sc.name}</div>
       <div class="scenario-desc">${sc.desc}</div>
       <div class="scenario-difficulty">Difficulty <span class="diff-pips" aria-hidden="true">${difficultyPips}</span></div>
-      <div class="scenario-seeds">Seeds: ${seedBtns}</div>
     `;
-    card.onclick = (e) => {
-      if (e.target.classList.contains('seed-btn')) return;
-      selectScenario(sc.id, sc.seeds[0]);
-    };
+    card.onclick = () => selectScenario(sc.id);
     card.onkeydown = (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(sc.id, sc.seeds[0]); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(sc.id); }
     };
 
     grid.appendChild(card);
@@ -492,7 +485,7 @@ function buildScenarioGrid() {
   randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMode('random'); }};
   grid.appendChild(randomCard);
 }
-function selectScenario(id, seed) {
+function selectScenario(id) {
   document.querySelectorAll('.scenario-card').forEach(c => {
     c.classList.remove('selected');
     c.setAttribute('aria-checked', 'false');
@@ -502,18 +495,12 @@ function selectScenario(id, seed) {
     card.classList.add('selected');
     card.setAttribute('aria-checked', 'true');
   }
+  const scenario = getConfiguredScenarios().find((sc) => sc.id === id);
   selectedScenarioId = id;
-  selectedSeed = seed;
-  document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
-  const firstBtn = document.getElementById(`seed-btn-${id}-${seed}`);
-  if (firstBtn) firstBtn.classList.add('active');
+  selectedSeed = scenario?.seeds?.[Math.floor(Math.random() * scenario.seeds.length)] || null;
   const btn = document.getElementById('btn-scenario-confirm');
   btn.disabled = false;
   btn.removeAttribute('aria-disabled');
-}
-function selectSeed(scenarioId, seed, e) {
-  e.stopPropagation();
-  selectScenario(scenarioId, seed);
 }
 function confirmScenario() {
   if (!selectedScenarioId) return;
