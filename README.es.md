@@ -102,7 +102,10 @@ El prototipo web interactivo es la superficie activa de desarrollo. Implementa e
 
 El simulador Python validó la hipótesis sistémica inicial y permanece congelado como referencia histórica.
 
-El código de gameplay de producción no es público en esta etapa.
+El alcance público del repositorio es explícito:
+
+- El código del prototipo público está disponible en este repositorio (`prototype/web-v1` activo y `prototype/mra-v0` como artefacto histórico congelado).
+- El alcance de la rama de producción/comercial permanece privado.
  
  ---
  

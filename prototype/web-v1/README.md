@@ -5,6 +5,9 @@
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
 > - Current public build is **v1.4 in-progress (phased rollout)** with shipped phase slices and pending items.
 
+> **Public repository scope:**
+> - Public prototype code is available in this repository (this `prototype/web-v1` implementation and the frozen `prototype/mra-v0` reference artifact).
+> - Production/commercial branch scope remains private.
 
 Canonical active web prototype for Aconcagua: Stone Sentinel.
 

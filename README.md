@@ -120,7 +120,10 @@ See [`docs/architecture.md`](./docs/architecture.md) for the engine flow and dat
 The Python simulator validated the core design hypothesis and is now frozen.
 It will not receive new mechanics. See [`devlog/005-prototype-architecture.md`](./devlog/005-prototype-architecture.md) for the architectural decision record.
 
-No production gameplay code is public at this stage.
+Public repository scope is explicit:
+
+- Public prototype code is available in this repository (active `prototype/web-v1` plus frozen `prototype/mra-v0` reference artifact).
+- Production/commercial branch scope remains private.
 
 ---
 
