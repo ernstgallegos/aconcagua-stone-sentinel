@@ -10,6 +10,71 @@ const DEFAULT_CONFIG = {
   outcomes: []
 };
 let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+let DATA_CONFIG_ERROR = null;
+
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes']);
+
+function typeOfValue(value) {
+  if (Array.isArray(value)) return 'array';
+  if (value === null) return 'null';
+  return typeof value;
+}
+
+function assertConfigPath(filename, value, expectedType, path) {
+  const actualType = typeOfValue(value);
+  if (actualType !== expectedType) {
+    throw new Error(`${filename}:${path} expected ${expectedType} but got ${actualType}`);
+  }
+}
+
+function validateDataConfigShape(filename, data) {
+  if (filename === 'nodes') {
+    assertConfigPath(filename, data, 'array', '$');
+    assertConfigPath(filename, data[0], 'object', '$[0]');
+    assertConfigPath(filename, data[0]?.nodeId, 'string', '$[0].nodeId');
+    assertConfigPath(filename, data[0]?.nodeName, 'string', '$[0].nodeName');
+    return;
+  }
+  if (filename === 'actionModifiers') {
+    assertConfigPath(filename, data, 'object', '$');
+    assertConfigPath(filename, data.advance, 'object', '$.advance');
+    assertConfigPath(filename, data.advance?.progress, 'number', '$.advance.progress');
+    return;
+  }
+  if (filename === 'stageModifiers') {
+    assertConfigPath(filename, data, 'object', '$');
+    assertConfigPath(filename, data.APPROACH, 'object', '$.APPROACH');
+    assertConfigPath(filename, data.APPROACH?.fatigueMultiplier, 'number', '$.APPROACH.fatigueMultiplier');
+    return;
+  }
+  if (filename === 'characters') {
+    assertConfigPath(filename, data, 'array', '$');
+    assertConfigPath(filename, data[0], 'object', '$[0]');
+    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
+    assertConfigPath(filename, data[0]?.engine, 'object', '$[0].engine');
+    return;
+  }
+  if (filename === 'outcomes') {
+    assertConfigPath(filename, data, 'array', '$');
+    assertConfigPath(filename, data[0], 'string', '$[0]');
+    return;
+  }
+  if (filename === 'environmentalPressure') {
+    assertConfigPath(filename, data, 'object', '$');
+    assertConfigPath(filename, data.altitudePressureByBand, 'object', '$.altitudePressureByBand');
+    assertConfigPath(filename, data.simulation, 'object', '$.simulation');
+  }
+}
+
+function setModelLoadError(errorMessage) {
+  DATA_CONFIG_ERROR = errorMessage;
+  updateUIState(G, { modelReady: false });
+  console.error(errorMessage);
+
+  const errorDetails = document.getElementById('blocking-error-details');
+  if (errorDetails) errorDetails.textContent = errorMessage;
+  showScreen('fatal-error');
+}
 
 // ════════════════════════════════════════════════
 // VISUAL MODES
@@ -75,10 +140,18 @@ async function loadDataConfig() {
   for (const [key, path] of files) {
     try {
       const response = await fetch(path, { cache: 'no-store' });
-      if (!response.ok) continue;
-      DATA_CONFIG[key] = await response.json();
+      if (!response.ok) {
+        throw new Error(`${path}: HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      validateDataConfigShape(key, data);
+      DATA_CONFIG[key] = data;
     } catch (error) {
-      console.warn(`Using default config for ${key}`, error);
+      if (REQUIRED_CONFIG_FILES.has(key)) {
+        setModelLoadError(`Blocking data load failure in ${path}: ${error.message}`);
+        return;
+      }
+      console.warn(`Using default config for optional file ${key}`, error);
     }
   }
   rebuildRouteData();
@@ -471,6 +544,12 @@ function buildRandomScenario() {
 // GAME INIT
 // ════════════════════════════════════════════════
 function startGame() {
+  if (!G.modelReady) {
+    const fallback = DATA_CONFIG_ERROR || 'Blocking data error: model did not initialize correctly.';
+    setModelLoadError(fallback);
+    return;
+  }
+
   const sc = G.scenario;
   const ch = G.character;
   const mods = ch.engine || {};

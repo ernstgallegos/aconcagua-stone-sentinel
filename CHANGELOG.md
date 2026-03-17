@@ -20,6 +20,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to validate module-based loading and relocated engine/state contracts.
 
 ### Fixed
+- Hardened `loadDataConfig()` in `prototype/web-v1/ui/screens.js` by treating `nodes`, `actionModifiers`, `stageModifiers`, `characters`, and `outcomes` as required assets with runtime schema checks. Any load/parse/schema failure now raises a blocking fatal screen in `prototype/web-v1/index.html`, includes filename + key-path diagnostics, and keeps `G.modelReady = false` to prevent game start with empty defaults.
+
 - Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in
   `data/environmental_pressure_config.json` made the upper mountain (band 3+) mathematically
   impassable. EP floor at band 3–4 nodes (159–215) permanently exceeded maximum achievable

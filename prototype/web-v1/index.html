@@ -250,6 +250,35 @@ body {
 }
 .btn-ghost:hover { border-color: var(--stone); color: var(--white); }
 
+#screen-fatal-error {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+.blocking-error-box {
+  width: min(100%, 700px);
+  border: 1px solid var(--red-dim);
+  background: color-mix(in srgb, var(--surface2) 86%, var(--red) 14%);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.blocking-error-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.blocking-error-details {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--white);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
 /* ───── CHARACTER SELECT ───── */
 #screen-character { padding: 2.5rem 1.5rem; align-items: center; }
 .screen-header { text-align: center; margin-bottom: 2rem; }
@@ -1088,6 +1117,15 @@ body {
     <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
     <p class="title-sub" style="margin-bottom: 2.5rem; font-size:0.8rem;">A decision game about limits, environment, and knowing when to stop.</p>
     <button class="btn-primary" onclick="showScreen('character')">BEGIN</button>
+  </div>
+</section>
+
+<!-- ══════════════════════ FATAL DATA ERROR ══════════════════════ -->
+<section id="screen-fatal-error" class="screen" aria-label="Blocking data configuration error">
+  <div class="blocking-error-box">
+    <div class="blocking-error-title">Blocking data error</div>
+    <p>The simulation model could not be initialized. Gameplay is disabled until data files are fixed.</p>
+    <pre id="blocking-error-details" class="blocking-error-details">Unknown data loading error.</pre>
   </div>
 </section>
 
