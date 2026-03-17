@@ -1,0 +1,67 @@
+{
+  "contractVersion": "1.0.0",
+  "scope": "Canonical model concepts shared across prototype/mra-v0 and prototype/web-v1",
+  "authoritativeArtifacts": {
+    "outcomes": "data/outcomes.json (web-v1 active canonical source)",
+    "webStateSemantics": "prototype/web-v1/engine/turn-resolution.js",
+    "mraBaselineSemantics": "prototype/mra-v0/simulator.py (historical baseline only)",
+    "mraRequiredStateShape": "prototype/mra-v0/scenarios/scenario.schema.json"
+  },
+  "sharedContract": {
+    "stateMetricsRequired": [
+      "position",
+      "weather_severity",
+      "visibility",
+      "terrain_load",
+      "functional_capacity",
+      "fatigue",
+      "exposure",
+      "water",
+      "food"
+    ],
+    "turnSemantics": [
+      "advance",
+      "wait",
+      "descend"
+    ]
+  },
+  "outcomes": {
+    "webV1Canonical": [
+      "Summit and Safe Return",
+      "High Point Return",
+      "Strategic Retreat",
+      "Rescue",
+      "Collapse (Fatigue)",
+      "Collapse (Exposure)",
+      "Resource Exhaustion",
+      "Expedition Window Closed",
+      "Permit Expired",
+      "Fatality"
+    ],
+    "mraV0Legacy": [
+      "summit",
+      "retreated",
+      "incapacitated",
+      "deteriorated",
+      "stabilized",
+      "survived-marginal"
+    ]
+  },
+  "intentionalDivergences": [
+    {
+      "concept": "Outcome taxonomy",
+      "difference": "web-v1 uses player-facing canonical outcome labels, while mra-v0 keeps historical compressed classes.",
+      "status": "intentional"
+    },
+    {
+      "concept": "Altitude band vocabulary",
+      "difference": "web-v1 stage/route abstraction differs from mra-v0 low/mid/high bands and does not require identical labels.",
+      "status": "intentional"
+    },
+    {
+      "concept": "Active mechanics",
+      "difference": "web-v1 includes permit, decision-window, and character-specific systems that mra-v0 does not implement.",
+      "status": "intentional"
+    }
+  ]
+}
