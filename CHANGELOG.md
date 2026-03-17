@@ -18,7 +18,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `docs/model-contract.md` and `data/contracts/model-contract.json` to formalize cross-surface canonical concepts (outcomes, shared state metrics, turn semantics), authority ownership (`web-v1` active vs `mra-v0` historical), and intentional divergences.
 - Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
 
+- Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
+
 ### Changed
+- Updated `.github/workflows/ci.yml` to run the new Playwright smoke test on pull requests, including browser provisioning before executing `pytest prototype/web-v1/tests/test_smoke_flow.py -v`.
+- Updated `requirements-dev.txt` and `CONTRIBUTING.md` to pin Playwright (`playwright==1.53.0`) and document the local smoke-test command path used by CI.
 - Updated `prototype/web-v1/ui/screens.js` and `prototype/web-v1/engine/turn-resolution.js` to consume shared turn-rule helpers and delegate terminal-outcome precedence checks through an injectable `deriveTerminalOutcome` hook.
 - Reduced `prototype/web-v1/tests/new-mechanics.test.js` string-contract coverage to critical integration hooks while shifting primary confidence to behavioral engine assertions.
 - Pinned Python lint tooling in `requirements-dev.txt` by adding `ruff==0.4.10` so local and CI lint runs use the same versioned dependency.
