@@ -14,6 +14,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 - Expanded Spanish localization coverage in `prototype/web-v1/ui/screens.js` by translating remaining runtime strings (sleep/tooltips, ambient/tutor cues, debrief turning-point and cause messaging, reflection prompts, and narrative text selection) so Spanish sessions no longer surface mixed English copy in core gameplay/debrief flows.
+- Fixed startup interactivity regressions in `prototype/web-v1/ui/screens.js` by escaping the English title-tagline apostrophes (preventing module parse failure) and restoring the `window.setVisualMode` facade required by the title-screen inline visual-mode selector.
 
 ### Added
 - Added multilingual runtime support in `prototype/web-v1` with a persistent language selector (`en`, `es`) and UI translation wiring for core navigation, decision controls, random cards, and journal prompts.
