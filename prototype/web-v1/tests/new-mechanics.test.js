@@ -32,3 +32,8 @@ test('canonical outcomes/data contracts are still present', () => {
   assert.ok(chars.length >= 3);
   assert.ok(chars.every((c) => c.difficultyLabel));
 });
+
+
+test('data loader treats environmental pressure config as required', () => {
+  assert.match(uiSource, /REQUIRED_CONFIG_FILES = new Set\(\['nodes', 'environmentalPressure', 'actionModifiers'/);
+});

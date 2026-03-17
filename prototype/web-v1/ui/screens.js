@@ -18,7 +18,7 @@ const DEFAULT_CONFIG = {
 let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 let DATA_CONFIG_ERROR = null;
 
-const REQUIRED_CONFIG_FILES = new Set(['nodes', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes', 'scenariosWebV1']);
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes', 'scenariosWebV1']);
 
 function typeOfValue(value) {
   if (Array.isArray(value)) return 'array';
@@ -772,16 +772,23 @@ function getStageModifier(position = G.state.position) {
 }
 
 function calculateEnvironmentalPressure(state) {
-  const epConf = DATA_CONFIG.environmentalPressure;
+  const epConf = DATA_CONFIG.environmentalPressure || {};
+  const altitudeScale = epConf.altitudePressureByBand || {};
+  const terrainScale = epConf.terrainLoadScale || {};
+  const weatherScale = epConf.weatherSeverityScale || {};
+  const visibilityScale = epConf.visibilityRiskScale || {};
+  const timeScale = epConf.timeOfDayRiskScale || {};
+  const persistenceScale = epConf.exposurePersistenceScale || {};
+
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
-  const altitudePressure = epConf.altitudePressureByBand[String(node.altitudeBand)] ?? 0;
-  const terrainLoad = epConf.terrainLoadScale[String(clamp(node.terrainLoad, 1, 5))] ?? 0;
-  const weatherSeverity = epConf.weatherSeverityScale[String(clamp(state.weather_severity || 0, 0, 4))] ?? 0;
-  const visibilityRisk = epConf.visibilityRiskScale[String(clamp(4 - (state.visibility ?? 2), 0, 4))] ?? 0;
-  const timeOfDayRiskRaw = epConf.timeOfDayRiskScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
+  const altitudePressure = altitudeScale[String(node.altitudeBand)] ?? 0;
+  const terrainLoad = terrainScale[String(clamp(node.terrainLoad, 1, 5))] ?? 0;
+  const weatherSeverity = weatherScale[String(clamp(state.weather_severity || 0, 0, 4))] ?? 0;
+  const visibilityRisk = visibilityScale[String(clamp(4 - (state.visibility ?? 2), 0, 4))] ?? 0;
+  const timeOfDayRiskRaw = timeScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
   const timeOfDayRisk = timeOfDayRiskRaw * (node.timeSensitivity || 1);
-  const exposurePersistence = epConf.exposurePersistenceScale[state.persistenceTier || 'fresh'] ?? 0;
+  const exposurePersistence = persistenceScale[state.persistenceTier || 'fresh'] ?? 0;
   const pressureScore = altitudePressure + terrainLoad + weatherSeverity + visibilityRisk + timeOfDayRisk + exposurePersistence + (node.weatherBias || 0) + (node.visibilityBias || 0) + (stageMod.weatherSeverityBias || 0);
   return { pressureScore, components: { altitudePressure, terrainLoad, weatherSeverity, visibilityRisk, timeOfDayRisk, exposurePersistence } };
 }
