@@ -3,20 +3,26 @@
     "progress": 20,
     "fatigueMultiplier": 1.18,
     "exposureMultiplier": 1.08,
-    "timeCost": 110
+    "timeCost": 110,
+    "collapse": -45,
+    "survival": 0
   },
   "advance_slowly": {
     "progress": 11,
     "fatigueMultiplier": 0.9,
     "exposureMultiplier": 0.93,
-    "timeCost": 165
+    "timeCost": 165,
+    "collapse": -50,
+    "survival": 0
   },
   "wait": {
     "progress": 0,
     "fatigueMultiplier": 0.62,
     "exposureMultiplier": 0.92,
     "acclimatizationGain": 4,
-    "timeCost": 60
+    "timeCost": 60,
+    "collapse": -65,
+    "survival": 5
   },
   "descend": {
     "progress": -20,
@@ -26,7 +32,9 @@
     "exposureRecovery": 1,
     "pressureDeltaCap": 30,
     "riskRelief": "strong",
-    "timeCost": 110
+    "timeCost": 110,
+    "collapse": -90,
+    "survival": -10
   },
   "sleep": {
     "campOnly": true,
@@ -34,7 +42,9 @@
     "fatigueRecovery": 18,
     "exposureRecovery": 10,
     "acclimatizationGain": 7,
-    "timeReset": "06:00"
+    "timeReset": "06:00",
+    "collapse": -95,
+    "survival": 5
   },
   "shoot_photo": {
     "progress": 0,
@@ -47,6 +57,8 @@
     "photoInsightTurns": 2,
     "photoCarryConfidenceGain": 3,
     "photoCooldownTurns": 2,
-    "photoSessionCap": 4
+    "photoSessionCap": 4,
+    "collapse": -60,
+    "survival": 5
   }
 }

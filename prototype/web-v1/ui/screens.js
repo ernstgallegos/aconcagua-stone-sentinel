@@ -946,6 +946,14 @@ function getActionModifier(action) {
       ? -configured.exposureRecovery
       : fallback.exposureDelta;
 
+  const collapseDefaults = {
+    advance: -45, advance_slowly: -50, wait: -65,
+    descend: -90, sleep: -95, shoot_photo: -60,
+  };
+  const survivalDefaults = {
+    advance: 0, advance_slowly: 0, wait: 5,
+    descend: -10, sleep: 5, shoot_photo: 5,
+  };
   return {
     progress: 0,
     fatigueMultiplier: 1,
@@ -955,6 +963,8 @@ function getActionModifier(action) {
     fatigueDelta,
     exposureDelta,
     capacityDelta: Number.isFinite(configured.capacityDelta) ? configured.capacityDelta : fallback.capacityDelta,
+    collapse: Number.isFinite(configured.collapse) ? configured.collapse : (collapseDefaults[action] ?? 0),
+    survival: Number.isFinite(configured.survival) ? configured.survival : (survivalDefaults[action] ?? 0),
   };
 }
 
