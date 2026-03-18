@@ -113,7 +113,7 @@ test('updateState applies deterministic deltas and updates highest position', as
   assert.ok(state.functional_capacity < 80);
 });
 
-test('resolveTurn enforces summit-return precedence over permit expiry/window and permit ordering over window', async () => {
+test('resolveTurn enforces park-exit precedence for summit return and permit ordering over window', async () => {
   const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
   const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
 
@@ -124,7 +124,7 @@ test('resolveTurn enforces summit-return precedence over permit expiry/window an
   summitFixture.G.permitDay = 21;
   summitFixture.G.minutesOfDay = 1200;
   const summitState = { position: 'horcones', functional_capacity: 90, fatigue: 20, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
-  const summitTurn = summitFixture.engine.resolveTurn(summitState, 'wait');
+  const summitTurn = summitFixture.engine.resolveTurn(summitState, 'descend');
   assert.equal(summitTurn.outcome, 'Summit and Safe Return');
 
   const permitFixture = createFixtureEngine(createTurnEngine, { deriveTerminalOutcome });
@@ -158,4 +158,62 @@ test('decision-window caps and resource rounding floors are deterministic rule c
     efficiency: 1,
   });
   assert.deepEqual(burn, { waterBurn: 0, foodBurn: 0 });
+});
+
+
+test('approach wait cannot generate unintended forward movement', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { engine } = createFixtureEngine(createTurnEngine, {
+    G: { rng: rngFrom([0.5]), highestPosIdx: 0, persistenceTurns: 0, acclimatization: 45, turn: 1, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 600, permitDay: 1, permitMaxDays: 20 },
+    getCurrentNode: () => ({ altitudeBand: 1 }),
+  });
+
+  const state = { position: 'horcones', functional_capacity: 95, fatigue: 10, exposure: 10, weather_severity: 0, visibility: 3, water: 10, food: 10 };
+  const turn = engine.resolveTurn(state, 'wait');
+
+  assert.equal(turn.result.outcome, 'Hold');
+  assert.equal(turn.result.targetPosition, 'horcones');
+  assert.equal(state.position, 'horcones');
+});
+
+test('returning to horcones after an early retreat does not auto-end until the player exits the park', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+  const { engine, G } = createFixtureEngine(createTurnEngine, {
+    deriveTerminalOutcome,
+    G: { rng: rngFrom([0.5, 0.5, 0.2]), highestPosIdx: 1, persistenceTurns: 0, acclimatization: 45, turn: 2, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 600, permitDay: 1, permitMaxDays: 20 },
+    getActionModifier: (action) => action === 'descend'
+      ? { progress: -20, collapse: -90, survival: -10, fatigueDelta: -1, fatigueMultiplier: 1, exposureDelta: -1, exposureMultiplier: 1, capacityDelta: 2, timeCost: 60 }
+      : { progress: 0, collapse: -65, survival: 5, fatigueDelta: 2, fatigueMultiplier: 1, exposureDelta: 2, exposureMultiplier: 1, capacityDelta: 1, timeCost: 60 },
+    getCurrentNode: () => ({ altitudeBand: 1 }),
+    getCurrentStage: () => 'APPROACH',
+  });
+
+  const retreatState = { position: 'camp_colera', functional_capacity: 90, fatigue: 20, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const retreatTurn = engine.resolveTurn(retreatState, 'descend');
+  assert.equal(retreatState.position, 'horcones');
+  assert.equal(retreatTurn.outcome, 'Strategic Retreat');
+
+  const exitTurn = engine.resolveTurn(retreatState, 'descend');
+  assert.equal(exitTurn.outcome, 'High Point Return');
+});
+
+test('descending from horcones without prior ascent exits the park as a strategic retreat', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+  const { engine } = createFixtureEngine(createTurnEngine, {
+    deriveTerminalOutcome,
+    G: { rng: rngFrom([0.5]), highestPosIdx: 0, persistenceTurns: 0, acclimatization: 45, turn: 1, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 600, permitDay: 1, permitMaxDays: 20 },
+    getActionModifier: (action) => action === 'descend'
+      ? { progress: -20, collapse: -90, survival: -10, fatigueDelta: -1, fatigueMultiplier: 1, exposureDelta: -1, exposureMultiplier: 1, capacityDelta: 2, timeCost: 60 }
+      : { progress: 0, collapse: -65, survival: 5, fatigueDelta: 2, fatigueMultiplier: 1, exposureDelta: 2, exposureMultiplier: 1, capacityDelta: 1, timeCost: 60 },
+    getCurrentNode: () => ({ altitudeBand: 0 }),
+    getCurrentStage: () => 'APPROACH',
+  });
+
+  const state = { position: 'horcones', functional_capacity: 90, fatigue: 20, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const turn = engine.resolveTurn(state, 'descend');
+
+  assert.equal(turn.outcome, 'Strategic Retreat');
+  assert.equal(turn.result.targetPosition, 'horcones');
 });

@@ -131,3 +131,6 @@ In addition to the changelog:
 - Multilingual rollout in `web-v1` is safest when language state is centralized (single source + localStorage) and reapplied after rebuilding dynamic grids (character/scenario) to avoid mixed-language UI fragments.
 
 - Inline `onclick` controls in `index.html` depend on both successful ES-module parsing and explicit `window.*` facades; one unescaped apostrophe in i18n strings or a missing facade export (e.g., `setVisualMode`) can disable all title/splash controls at once.
+
+- Park-exit flow in `web-v1` is safer when `horcones` is treated as the park gate rather than an automatic end-state: returning there after a retreat should remain playable until the user explicitly descends to exit, while summit/high-point outcomes can be awarded on that exit turn.
+- Outcome resolution for non-movement actions should guard against zero-progress `wait` turns producing route displacement on low-altitude approach sectors; regression tests should pin both approach waiting and Horcones exit behavior together.

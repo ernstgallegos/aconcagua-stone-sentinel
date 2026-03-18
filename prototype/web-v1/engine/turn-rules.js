@@ -63,12 +63,16 @@ export function applyDecisionWindowDegradationRule({ actionMod, perception, wind
   return { actionMod: adjustedActionMod, perception: adjustedPerception, effect };
 }
 
-export function deriveTerminalOutcome({ outcome, state, G, POSITIONS, stage, timeWindows }) {
+export function deriveTerminalOutcome({ outcome, state, G, POSITIONS, stage, timeWindows, action, previousPosition, exitedPark = false }) {
   const summitIdx = POSITIONS.indexOf('summit');
   const summited = summitIdx >= 0 && G.highestPosIdx >= summitIdx;
-  const returnedToHorcones = state.position === 'horcones' && summited;
+  const explicitParkExit = exitedPark || (previousPosition === 'horcones' && action === 'descend');
 
-  if (returnedToHorcones) return 'Summit and Safe Return';
+  if (explicitParkExit) {
+    if (summited) return 'Summit and Safe Return';
+    if (G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) return 'High Point Return';
+    return 'Strategic Retreat';
+  }
 
   if (G.permitDay > G.permitMaxDays) return 'Permit Expired';
 

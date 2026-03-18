@@ -2014,8 +2014,9 @@ function makeDecision(decision) {
   });
   addLogEntry(logEntry);
 
-  const returnedToHorcones = s.position === 'horcones' && G.highestPosIdx > 0;
-  const ended = returnedToHorcones || turnResult.outcome !== 'Strategic Retreat';
+  const exitedPark = s.position === 'horcones' && resolvedDecision === 'descend';
+  const returnedToHorcones = turnResult.outcome === 'Summit and Safe Return';
+  const ended = exitedPark || turnResult.outcome !== 'Strategic Retreat';
 
   if (ended) {
     updateRunState(G, { finalOutcome: turnResult.outcome });

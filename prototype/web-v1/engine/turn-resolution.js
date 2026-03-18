@@ -47,7 +47,7 @@ export function createTurnEngine(deps) {
     assertStateShape,
   } = deps;
 
-  function evaluateOutcome(pressureDelta, actionMod, state) {
+  function evaluateOutcome(pressureDelta, actionMod, state, context = {}) {
     const effectiveDelta = actionMod.pressureDeltaCap != null
       ? Math.min(pressureDelta, actionMod.pressureDeltaCap)
       : pressureDelta;
@@ -56,6 +56,10 @@ export function createTurnEngine(deps) {
     const collapseChance = clamp(Math.max(0, effectiveDelta) * 2 + (100 - state.functional_capacity) * 0.1 + actionMod.collapse, 0, 96);
     const survivalChance = clamp(100 - collapseChance + actionMod.survival, 4, 98);
 
+    const nodeIndex = POSITIONS.indexOf(state.position);
+    const isApproachWait = context.action === 'wait' && (context.altitudeBand ?? 99) <= 1;
+    const isHorconesExit = context.action === 'descend' && state.position === 'horcones';
+
     const r = G.rng() * 100;
     let outcome;
     if (r < collapseChance) outcome = 'Collapse (Fatigue)';
@@ -63,11 +67,13 @@ export function createTurnEngine(deps) {
     else if (r > survivalChance) outcome = 'Retreat';
     else outcome = 'Hold';
 
-    const nodeIndex = POSITIONS.indexOf(state.position);
+    if (isApproachWait && outcome === 'Advance') outcome = 'Hold';
+    if (isHorconesExit) outcome = 'Advance';
+
     // For actions with negative progress (descend), 'Advance' means moving down the route
     const directionMultiplier = actionMod.progress < 0 ? -1 : 1;
     const step = (outcome === 'Advance' ? 1 : outcome === 'Retreat' ? -1 : 0) * directionMultiplier;
-    const targetIndex = clamp(nodeIndex + step, 0, POSITIONS.length - 1);
+    const targetIndex = isHorconesExit ? nodeIndex : clamp(nodeIndex + step, 0, POSITIONS.length - 1);
 
     if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'High Point Return';
 
@@ -122,6 +128,8 @@ export function createTurnEngine(deps) {
       }
     }
 
+    const previousPosition = state.position;
+    const currentNode = getCurrentNode(state);
     let actionMod = getActionModifier(resolvedAction);
 
     const actionMinutes = applyTimeCost(resolvedAction);
@@ -134,7 +142,7 @@ export function createTurnEngine(deps) {
 
     if (resolvedAction === 'sleep') {
       updateRunState(G, { persistenceTurns: 0 });
-    } else if (getCurrentNode(state).altitudeBand >= 2) {
+    } else if (currentNode.altitudeBand >= 2) {
       updateRunState(G, { persistenceTurns: G.persistenceTurns + 1 });
     }
     state.persistenceTier = getPersistenceTier(G.persistenceTurns);
@@ -238,7 +246,11 @@ export function createTurnEngine(deps) {
       flags.push('summit-difficulty-guard');
     }
 
-    const result = evaluateOutcome(finalPressureDelta, actionMod, state);
+    const result = evaluateOutcome(finalPressureDelta, actionMod, state, {
+      action: resolvedAction,
+      altitudeBand: currentNode.altitudeBand,
+    });
+    const exitedPark = previousPosition === 'horcones' && resolvedAction === 'descend';
     updateState(state, result, resolvedAction);
 
     let outcome = result.outcome;
@@ -256,14 +268,12 @@ export function createTurnEngine(deps) {
         POSITIONS,
         stage: getCurrentStage(),
         timeWindows: typeof getTimeWindows === 'function' ? getTimeWindows() : null,
+        action: resolvedAction,
+        previousPosition,
+        exitedPark,
       });
     }
 
-    if (outcome !== 'Summit and Safe Return' &&
-        state.position === 'horcones' &&
-        G.highestPosIdx >= POSITIONS.indexOf('camp_colera')) {
-      outcome = 'High Point Return';
-    }
 
     if (state.functional_capacity < 30) flags.push('critical-fatigue');
     if (state.exposure > 70) flags.push('critical-exposure');
