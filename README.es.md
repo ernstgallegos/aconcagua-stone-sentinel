@@ -205,7 +205,11 @@ Ver `/docs/simulation_engine.md` para el detalle técnico.
 
 Flujo visible actual en web-v1:
 
-`splash → title → character → scenario → onboarding → game → (summit-success o debrief)`
+`splash → title (dificultad) → character → scenario → onboarding (tutorial/FAQ o comenzar) → game → (summit-success o debrief)`
+
+La pantalla de título ahora incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). Esta elección modifica de forma real la presión, la recuperación, la economía de recursos, el margen del permiso y la generosidad de la ventana de decisión durante toda la partida.
+
+La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo antes de `Understood. Begin.`, con explicación del bucle de partida, sistemas ocultos, referencia de acciones, comportamiento de la dificultad y preguntas frecuentes de reglas.
 
 La selección de personaje ahora incluye una opción `Random Character` que elige automáticamente uno de los seis perfiles disponibles al confirmar la expedición.
 

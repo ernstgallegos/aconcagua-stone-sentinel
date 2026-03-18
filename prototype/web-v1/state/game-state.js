@@ -1,6 +1,7 @@
 const RUN_STATE_DEFAULTS = Object.freeze({
   character: null,
   scenario: null,
+  difficulty: 'standard',
   seed: null,
   rng: null,
   state: null,

@@ -123,6 +123,54 @@ const LANGUAGE_KEY = 'aconcagua_language_v1';
 const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
 
+const DIFFICULTY_STORAGE_KEY = 'aconcagua_difficulty_v1';
+const DIFFICULTY_LEVELS = [
+  {
+    id: 'very-easy',
+    label: { en: 'Very Easy', es: 'Muy fácil' },
+    blurb: { en: 'Extra margin for first ascents and system learning.', es: 'Margen extra para primeras ascensiones y aprendizaje del sistema.' },
+    modifiers: { pressureBias: -12, stageWeatherBias: -2, bodyToleranceBonus: 10, acclimatizationBonus: 12, fatigueMultiplier: 0.78, exposureMultiplier: 0.78, resourceEfficiency: 1.2, permitDaysBonus: 3, initialCapacityBonus: 6, initialWaterBonus: 3, initialFoodBonus: 3, decisionWindowMsBonus: 6000 },
+  },
+  {
+    id: 'easy',
+    label: { en: 'Easy', es: 'Fácil' },
+    blurb: { en: 'Gentler attrition, but retreat timing still matters.', es: 'Desgaste más amable, pero el momento de retirada sigue importando.' },
+    modifiers: { pressureBias: -6, stageWeatherBias: -1, bodyToleranceBonus: 5, acclimatizationBonus: 6, fatigueMultiplier: 0.9, exposureMultiplier: 0.9, resourceEfficiency: 1.1, permitDaysBonus: 2, initialCapacityBonus: 3, initialWaterBonus: 2, initialFoodBonus: 2, decisionWindowMsBonus: 3000 },
+  },
+  {
+    id: 'standard',
+    label: { en: 'Standard', es: 'Normal' },
+    blurb: { en: 'Baseline prototype balance.', es: 'Balance base del prototipo.' },
+    modifiers: { pressureBias: 0, stageWeatherBias: 0, bodyToleranceBonus: 0, acclimatizationBonus: 0, fatigueMultiplier: 1, exposureMultiplier: 1, resourceEfficiency: 1, permitDaysBonus: 0, initialCapacityBonus: 0, initialWaterBonus: 0, initialFoodBonus: 0, decisionWindowMsBonus: 0 },
+  },
+  {
+    id: 'hard',
+    label: { en: 'Hard', es: 'Difícil' },
+    blurb: { en: 'Tighter margins and harsher punishment for late pushes.', es: 'Márgenes más ajustados y castigo mayor para los empujes tardíos.' },
+    modifiers: { pressureBias: 8, stageWeatherBias: 1, bodyToleranceBonus: -6, acclimatizationBonus: -6, fatigueMultiplier: 1.12, exposureMultiplier: 1.15, resourceEfficiency: 0.92, permitDaysBonus: -1, initialCapacityBonus: -4, initialWaterBonus: -1, initialFoodBonus: -1, decisionWindowMsBonus: -2000 },
+  },
+  {
+    id: 'very-hard',
+    label: { en: 'Very Hard', es: 'Muy difícil' },
+    blurb: { en: 'Hostile pressure, weaker recovery, and almost no slack.', es: 'Presión hostil, recuperación más débil y casi sin margen.' },
+    modifiers: { pressureBias: 16, stageWeatherBias: 2, bodyToleranceBonus: -12, acclimatizationBonus: -12, fatigueMultiplier: 1.25, exposureMultiplier: 1.3, resourceEfficiency: 0.85, permitDaysBonus: -2, initialCapacityBonus: -8, initialWaterBonus: -2, initialFoodBonus: -2, decisionWindowMsBonus: -5000 },
+  },
+];
+let CURRENT_DIFFICULTY_ID = 'standard';
+
+function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
+  return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS[2];
+}
+
+function getDifficultyModifiers(id = CURRENT_DIFFICULTY_ID) {
+  return getDifficultyConfig(id).modifiers;
+}
+
+function difficultyLabel(id = CURRENT_DIFFICULTY_ID, lang = CURRENT_LANGUAGE) {
+  const cfg = getDifficultyConfig(id);
+  return cfg.label[lang] || cfg.label.en;
+}
+
 const I18N = {
   en: {
     langName: 'English',
@@ -158,6 +206,11 @@ const I18N = {
       splashTap: 'Tap / Click to continue',
       titleTagline: '"The mountain doesn\'t ask if you\'re ready. The mountain rules."',
       titleSub: 'A decision game about limits, environment, and knowing when to stop.',
+      difficulty: 'Difficulty',
+      difficultyNote: 'Choose the intensity of environmental pressure, resource efficiency, and permit margin before beginning.',
+      tutorialCta: 'Full Tutorial / FAQ',
+      tutorialTitle: 'Expedition tutorial and rules reference',
+      close: 'Close',
       navTitle: 'Title',
       navCharacter: 'Character',
       charSubtitle: 'Your character shapes what you read clearly — and what stays in the dark.',
@@ -204,6 +257,11 @@ const I18N = {
       splashTap: 'Toca / haz clic para continuar',
       titleTagline: '"La montaña no pregunta si estás listo. La montaña manda."',
       titleSub: 'Un juego de decisiones sobre límites, entorno y saber cuándo detenerse.',
+      difficulty: 'Dificultad',
+      difficultyNote: 'Elige la intensidad de la presión ambiental, la eficiencia de recursos y el margen del permiso antes de comenzar.',
+      tutorialCta: 'Tutorial completo / FAQ',
+      tutorialTitle: 'Tutorial de expedición y referencia de reglas',
+      close: 'Cerrar',
       navTitle: 'Título',
       navCharacter: 'Personaje',
       charSubtitle: 'Tu personaje define lo que puedes leer con claridad — y lo que permanece en sombra.',
@@ -232,6 +290,101 @@ const SCENARIO_I18N = {
   },
 };
 
+const TUTORIAL_CONTENT = {
+  en: {
+    intro: 'This guide explains the full playable loop, hidden systems, and the most common reasons a run succeeds or collapses.',
+    metaLoop: 'Read pressure, compare it against your body, choose one action, then reevaluate before the next hour passes.',
+    metaGoal: 'Reach the highest safe point you can still return from before time, body, and permit margin close.',
+    metaDifficulty: 'Difficulty changes pressure, resource burn, recovery margin, permit slack, and decision time allowance.',
+    structureTitle: 'How a run is structured',
+    structure: [
+      'Title: choose language, visual mode, and expedition difficulty.',
+      'Character: each profile changes resistances, signal clarity, and action identity.',
+      'Scenario: seeds define opening weather, visibility, terrain, and route tempo.',
+      'Onboarding: read the scenario briefing, then launch the expedition.',
+      'Game loop: take hourly decisions until you retreat, time out, fail physically, or exit with success.',
+    ],
+    systemsTitle: 'Rules and systems',
+    systems: [
+      'Environmental Pressure rises with altitude, terrain load, weather severity, poor visibility, late hours, and lingering exposure.',
+      'Body Tolerance depends on functional capacity, acclimatization, hydration, nutrition, fatigue, and exposure resistance.',
+      'The watch shows interpreted information, not raw truth. Confidence and noise can mislead you.',
+      'Permit time matters every day. Returning late can convert a strong climb into a failed expedition.',
+      'Summit success only counts if you still return safely through the final exit logic.',
+    ],
+    actionsTitle: 'Action reference',
+    actions: [
+      'Advance: fastest climb, highest fatigue and exposure cost, strongest punishment when pressure is already ahead of tolerance.',
+      'Advance Slowly: lower cost and partial progress chance; useful when you must protect margins without fully stalling.',
+      'Wait: safest informational reset on lower sectors; high on the route it usually only limits damage.',
+      'Descend: the main safety valve. It protects body, daylight, and permit margin, and becomes decisive after warning signs.',
+      'Sleep: only at camps. It resets time to the next day and can recover body state when used before collapse spirals.',
+      'Shoot Photo: Daniela-only action that improves short-term route reading under strict cooldown and run limits.',
+    ],
+    difficultyTitle: 'Difficulty levels',
+    difficulty: [
+      'Very Easy: softer pressure, more efficient resources, longer permit slack, and a stronger initial recovery cushion.',
+      'Easy: gentler attrition with enough pressure to teach the route without removing the need to retreat.',
+      'Standard: baseline prototype balance.',
+      'Hard: tighter margins, heavier pressure, and less forgiveness for late pushes.',
+      'Very Hard: sustained pressure spikes, shorter permit, weaker starting margin, and stronger punishment for indecision.',
+    ],
+    faqTitle: 'Frequently asked questions',
+    faq: [
+      ['Why did I fail after reaching the summit?', 'Summiting is not enough on its own. You still need a safe return and a valid expedition exit before permit/time checks overtake the run.'],
+      ['When should I wait instead of descend?', 'Usually on approach or base sectors when the watch suggests the next hour may stabilize. Above high camp, waiting is rarely a true reset.'],
+      ['What is the biggest beginner mistake?', 'Reading one favorable turn as permission to keep advancing after fatigue, exposure, and time have already crossed into a losing trend.'],
+      ['Does difficulty only change numbers?', 'No. It changes real strategic texture by altering pressure, recovery, resource economy, permit margin, and decision-window generosity together.'],
+    ],
+  },
+  es: {
+    intro: 'Esta guía explica el bucle jugable completo, los sistemas ocultos y las razones más frecuentes por las que una partida triunfa o colapsa.',
+    metaLoop: 'Lee la presión, compárala con tu cuerpo, elige una acción y vuelve a evaluar antes de que pase la siguiente hora.',
+    metaGoal: 'Alcanza el punto seguro más alto desde el que todavía puedas regresar antes de que se cierren el tiempo, el cuerpo y el margen del permiso.',
+    metaDifficulty: 'La dificultad cambia la presión, el consumo de recursos, el margen de recuperación, la holgura del permiso y el tiempo de decisión.',
+    structureTitle: 'Cómo se estructura una partida',
+    structure: [
+      'Título: elige idioma, modo visual y dificultad de la expedición.',
+      'Personaje: cada perfil cambia resistencias, claridad de señales e identidad de acciones.',
+      'Escenario: las semillas definen el clima inicial, la visibilidad, el terreno y el tempo de la ruta.',
+      'Onboarding: lee el briefing del escenario y luego inicia la expedición.',
+      'Bucle de juego: toma decisiones horarias hasta retirarte, agotar el tiempo, fallar físicamente o salir con éxito.',
+    ],
+    systemsTitle: 'Reglas y sistemas',
+    systems: [
+      'La Presión Ambiental sube con la altitud, la carga del terreno, la severidad climática, la mala visibilidad, las horas tardías y la exposición acumulada.',
+      'La Tolerancia Corporal depende de la capacidad funcional, la aclimatación, la hidratación, la nutrición, la fatiga y la resistencia a la exposición.',
+      'El reloj muestra información interpretada, no la verdad bruta. La confianza y el ruido pueden engañarte.',
+      'El tiempo del permiso importa todos los días. Volver tarde puede convertir una gran ascensión en una expedición fallida.',
+      'La cumbre solo cuenta como éxito si todavía regresas a salvo y completas la lógica final de salida.',
+    ],
+    actionsTitle: 'Referencia de acciones',
+    actions: [
+      'Avanzar: la subida más rápida, con el mayor costo de fatiga y exposición; castiga mucho si la presión ya supera tu tolerancia.',
+      'Avance lento: menor costo y progreso parcial; útil cuando debes proteger márgenes sin quedarte totalmente quieto.',
+      'Esperar: el reseteo informativo más seguro en sectores bajos; arriba en la ruta normalmente solo limita daños.',
+      'Descender: la principal válvula de seguridad. Protege cuerpo, luz de día y margen del permiso, y se vuelve decisiva tras las señales de advertencia.',
+      'Dormir: solo en campamentos. Reinicia el tiempo al día siguiente y puede recuperar el estado corporal antes de que aparezca una espiral de colapso.',
+      'Tomar foto: acción exclusiva de Daniela que mejora por poco tiempo la lectura de ruta bajo enfriamiento y límites estrictos por partida.',
+    ],
+    difficultyTitle: 'Niveles de dificultad',
+    difficulty: [
+      'Muy fácil: presión más suave, recursos más eficientes, permiso más largo y mejor colchón inicial de recuperación.',
+      'Fácil: desgaste más amable con suficiente presión para enseñar la ruta sin eliminar la necesidad de retirarse.',
+      'Normal: balance base del prototipo.',
+      'Difícil: márgenes más ajustados, presión más pesada y menos perdón para los empujes tardíos.',
+      'Muy difícil: picos de presión sostenidos, permiso más corto, margen inicial más débil y castigo mayor a la indecisión.',
+    ],
+    faqTitle: 'Preguntas frecuentes',
+    faq: [
+      ['¿Por qué fallé después de llegar a la cumbre?', 'Llegar a la cumbre no alcanza por sí solo. Todavía necesitas un regreso seguro y una salida válida antes de que te alcancen las comprobaciones de permiso/tiempo.'],
+      ['¿Cuándo conviene esperar en lugar de descender?', 'Normalmente en aproximación o sectores base cuando el reloj sugiere que la próxima hora puede estabilizarse. Sobre campamento alto, esperar rara vez es un reseteo real.'],
+      ['¿Cuál es el mayor error de principiantes?', 'Leer un turno favorable como permiso para seguir avanzando cuando fatiga, exposición y tiempo ya entraron en una tendencia perdedora.'],
+      ['¿La dificultad solo cambia números?', 'No. Cambia la textura estratégica real al alterar presión, recuperación, economía de recursos, margen del permiso y generosidad de la ventana de decisión en conjunto.'],
+    ],
+  },
+};
+
 function localizeCharacter(character) {
   const patch = CHARACTER_I18N[CURRENT_LANGUAGE]?.[character.id] || {};
   return { ...character, ...patch };
@@ -253,6 +406,78 @@ function uiText(en, es) {
   return CURRENT_LANGUAGE === 'es' ? es : en;
 }
 
+function renderTutorialContent() {
+  const copy = TUTORIAL_CONTENT[CURRENT_LANGUAGE] || TUTORIAL_CONTENT.en;
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  const setList = (id, items) => { const el = document.getElementById(id); if (el) el.innerHTML = items.map((item) => `<li>${item}</li>`).join(''); };
+  setText('tutorial-modal-title', t('ui.tutorialTitle'));
+  const closeBtn = document.querySelector('#tutorial-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.close');
+  setText('tutorial-intro', copy.intro);
+  setText('tutorial-meta-loop', copy.metaLoop);
+  setText('tutorial-meta-goal', copy.metaGoal);
+  setText('tutorial-meta-difficulty', copy.metaDifficulty);
+  setText('tutorial-section-structure-title', copy.structureTitle);
+  setText('tutorial-section-systems-title', copy.systemsTitle);
+  setText('tutorial-section-actions-title', copy.actionsTitle);
+  setText('tutorial-section-difficulty-title', copy.difficultyTitle);
+  setText('tutorial-section-faq-title', copy.faqTitle);
+  setList('tutorial-section-structure', copy.structure);
+  setList('tutorial-section-systems', copy.systems);
+  setList('tutorial-section-actions', copy.actions);
+  setList('tutorial-section-difficulty', copy.difficulty);
+  const faq = document.getElementById('tutorial-faq-list');
+  if (faq) faq.innerHTML = copy.faq.map(([q, a]) => `<div class="tutorial-faq-item"><h4>${q}</h4><p>${a}</p></div>`).join('');
+}
+
+function renderDifficultySelector() {
+  const grid = document.getElementById('title-difficulty-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  DIFFICULTY_LEVELS.forEach((level) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `difficulty-card${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
+    button.id = `difficulty-choice-${level.id}`;
+    button.setAttribute('role', 'radio');
+    button.setAttribute('aria-checked', String(level.id === CURRENT_DIFFICULTY_ID));
+    button.onclick = () => setDifficulty(level.id);
+    button.innerHTML = `<span class="difficulty-card-title">${level.label[CURRENT_LANGUAGE] || level.label.en}</span><span class="difficulty-card-desc">${level.blurb[CURRENT_LANGUAGE] || level.blurb.en}</span>`;
+    grid.appendChild(button);
+  });
+  const note = document.getElementById('title-difficulty-note');
+  if (note) note.textContent = t('ui.difficultyNote');
+}
+
+function setDifficulty(id) {
+  CURRENT_DIFFICULTY_ID = getDifficultyConfig(id).id;
+  try { localStorage.setItem(DIFFICULTY_STORAGE_KEY, CURRENT_DIFFICULTY_ID); } catch {}
+  renderDifficultySelector();
+  renderTutorialContent();
+}
+
+function initDifficulty() {
+  try {
+    const stored = localStorage.getItem(DIFFICULTY_STORAGE_KEY);
+    if (stored && DIFFICULTY_LEVELS.some((level) => level.id === stored)) CURRENT_DIFFICULTY_ID = stored;
+  } catch {}
+  renderDifficultySelector();
+  renderTutorialContent();
+}
+
+function openTutorialModal() {
+  const modal = document.getElementById('tutorial-modal');
+  if (!modal) return;
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeTutorialModal() {
+  const modal = document.getElementById('tutorial-modal');
+  if (!modal) return;
+  modal.classList.remove('visible');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
 function setLanguage(lang) {
   const safe = VALID_LANGUAGES.has(lang) ? lang : 'en';
   CURRENT_LANGUAGE = safe;
@@ -264,6 +489,8 @@ function setLanguage(lang) {
   const langLabel = document.querySelector('.lang-switcher label');
   if (langLabel) langLabel.textContent = t('ui.language');
   applyStaticTranslations();
+  renderDifficultySelector();
+  renderTutorialContent();
   try { localStorage.setItem(LANGUAGE_KEY, safe); } catch (e) {}
   buildCharacterGrid();
   buildScenarioGrid();
@@ -437,6 +664,8 @@ function applyStaticTranslations() {
     ['#screen-splash .splash-cta', 'ui.splashTap'],
     ['#screen-title .title-tagline', 'ui.titleTagline'],
     ['#screen-title .title-sub', 'ui.titleSub'],
+    ['.title-difficulty-label', 'ui.difficulty'],
+    ['#screen-onboarding .onboard-actions .btn-ghost', 'ui.tutorialCta'],
     ['#screen-character .nav-back', 'ui.navTitle'],
     ['#screen-character .screen-header p', 'ui.charSubtitle'],
     ['#screen-scenario .nav-back', 'ui.navCharacter'],
@@ -722,7 +951,7 @@ function confirmScenario() {
 function showOnboarding(mode) {
   document.getElementById('onboard-intro').textContent = G.scenario.intro || '';
   document.getElementById('onboard-char-line').textContent =
-    `Expedition: ${G.character.name} · ${G.character.role}`;
+    `Expedition: ${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
   const backBtn = document.getElementById('onboard-back-btn');
   backBtn.onclick = () => showScreen('scenario');
   showScreen('onboarding');
@@ -778,6 +1007,8 @@ function startGame() {
   const sc = G.scenario;
   const ch = G.character;
   const mods = ch.engine || {};
+  const difficulty = getDifficultyConfig();
+  const difficultyMods = difficulty.modifiers;
 
   updateRunState(G, {
     rng: mulberry32(G.seed),
@@ -789,7 +1020,7 @@ function startGame() {
     whiteWindRisk: 0,
     day: 1,
     permitDay: 1,
-    permitMaxDays: 20,
+    permitMaxDays: clamp(20 + difficultyMods.permitDaysBonus, 12, 26),
     minutesOfDay: getSimConfig().dayStartMinutes || TUNING.dayStartMinutes,
     irreversibleTriggered: false,
     irreversibleTurn: null,
@@ -826,8 +1057,12 @@ function startGame() {
   // deep copy initial state + apply character mods
   const s = JSON.parse(JSON.stringify(sc.initial));
   if (mods.functionalCapacityBonus) s.functional_capacity = clamp(s.functional_capacity + mods.functionalCapacityBonus, 0, 100);
+  s.functional_capacity = clamp((s.functional_capacity || 0) + difficultyMods.initialCapacityBonus, 0, 100);
+  s.water = clamp((s.water || 0) + difficultyMods.initialWaterBonus, 0, 60);
+  s.food = clamp((s.food || 0) + difficultyMods.initialFoodBonus, 0, 60);
 
-  if (sc._acclimatizationBonus) updateRunState(G, { acclimatization: clamp(sc._acclimatizationBonus, 0, 100) });
+  if (sc._acclimatizationBonus || difficultyMods.acclimatizationBonus) updateRunState(G, { acclimatization: clamp((sc._acclimatizationBonus || 0) + difficultyMods.acclimatizationBonus, 0, 100) });
+  updateRunState(G, { difficulty: difficulty.id });
   s.persistenceTier = 'fresh';
   updateRunState(G, { state: s });
 
@@ -954,7 +1189,8 @@ function getActionModifier(action) {
     advance: 0, advance_slowly: 0, wait: 5,
     descend: -10, sleep: 5, shoot_photo: 5,
   };
-  return {
+  const difficultyMods = getDifficultyModifiers();
+  const modifier = {
     progress: 0,
     fatigueMultiplier: 1,
     exposureMultiplier: 1,
@@ -966,7 +1202,12 @@ function getActionModifier(action) {
     collapse: Number.isFinite(configured.collapse) ? configured.collapse : (collapseDefaults[action] ?? 0),
     survival: Number.isFinite(configured.survival) ? configured.survival : (survivalDefaults[action] ?? 0),
   };
+  modifier.fatigueMultiplier *= difficultyMods.fatigueMultiplier;
+  modifier.exposureMultiplier *= difficultyMods.exposureMultiplier;
+  if (action !== 'sleep') modifier.timeCost = Math.max(30, Math.round(modifier.timeCost / difficultyMods.resourceEfficiency));
+  return modifier;
 }
+
 
 function canUseShootPhoto(state = G.state) {
   if (G.character?.id !== 'daniela') return { allowed: false, reason: 'Only Daniela can use this action.' };
@@ -981,8 +1222,11 @@ function canUseShootPhoto(state = G.state) {
 
 function getStageModifier(position = G.state.position) {
   const stage = getStageForPosition(position);
-  return DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
+  const base = DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
+  const difficultyMods = getDifficultyModifiers();
+  return { ...base, weatherSeverityBias: (base.weatherSeverityBias || 0) + difficultyMods.stageWeatherBias };
 }
+
 
 function calculateEnvironmentalPressure(state) {
   const epConf = DATA_CONFIG.environmentalPressure || {};
@@ -1002,7 +1246,8 @@ function calculateEnvironmentalPressure(state) {
   const timeOfDayRiskRaw = timeScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
   const timeOfDayRisk = timeOfDayRiskRaw * (node.timeSensitivity || 1);
   const exposurePersistence = persistenceScale[state.persistenceTier || 'fresh'] ?? 0;
-  const pressureScore = altitudePressure + terrainLoad + weatherSeverity + visibilityRisk + timeOfDayRisk + exposurePersistence + (node.weatherBias || 0) + (node.visibilityBias || 0) + (stageMod.weatherSeverityBias || 0);
+  const difficultyMods = getDifficultyModifiers();
+  const pressureScore = altitudePressure + terrainLoad + weatherSeverity + visibilityRisk + timeOfDayRisk + exposurePersistence + (node.weatherBias || 0) + (node.visibilityBias || 0) + (stageMod.weatherSeverityBias || 0) + difficultyMods.pressureBias;
   return { pressureScore, components: { altitudePressure, terrainLoad, weatherSeverity, visibilityRisk, timeOfDayRisk, exposurePersistence } };
 }
 
@@ -1012,10 +1257,12 @@ function calculateBodyTolerance(state) {
   const stats = G.character?.engine || {};
   const fatigueResistance = stats.fatigueResistance || 1;
   const exposureResistance = stats.exposureResistance || 1;
+  const difficultyMods = getDifficultyModifiers();
   const bt = (state.functional_capacity * 0.4) +
     ((G.acclimatization || 0) * 0.35) +
     (hydrationState * 0.1) +
-    (nutritionState * 0.05) -
+    (nutritionState * 0.05) +
+    difficultyMods.bodyToleranceBonus -
     ((state.fatigue * 0.05) / fatigueResistance) -
     ((state.exposure * 0.05) / exposureResistance);
   return clamp(bt, 0, 100);
@@ -1779,7 +2026,8 @@ function buildDebriefAnalytics() {
 }
 
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
-  const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, gracePauseMs: 4500, degradeEveryMs: 5000 };
+  const difficultyMods = getDifficultyModifiers();
+  const base = { baseMs: 28000 + difficultyMods.decisionWindowMsBonus, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: Math.max(6000, 9000 + Math.round(difficultyMods.decisionWindowMsBonus * 0.4)), gracePauseMs: 4500, degradeEveryMs: 5000 };
   const p = character?.engine?.decisionWindow || {};
   const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
   const total = (p.baseMs ?? base.baseMs) + (stageMods[stage] ?? 0);
@@ -2505,7 +2753,16 @@ document.addEventListener('keydown', (event) => {
 // ════════════════════════════════════════════════
 initVisualMode();
 initLanguage();
+initDifficulty();
 initSplashScreen();
+
+const tutorialModal = document.getElementById('tutorial-modal');
+if (tutorialModal) {
+  tutorialModal.addEventListener('click', (event) => { if (event.target === tutorialModal) closeTutorialModal(); });
+}
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeTutorialModal();
+});
 
 loadDataConfig().finally(() => {
   buildCharacterGrid();
@@ -2525,5 +2782,8 @@ window.setLanguage = setLanguage;
 window.setVisualMode = setVisualMode;
 window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
+window.setDifficulty = setDifficulty;
+window.openTutorialModal = openTutorialModal;
+window.closeTutorialModal = closeTutorialModal;
 
-export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState };
+export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState, getDifficultyConfig, getDifficultyModifiers, setDifficulty };

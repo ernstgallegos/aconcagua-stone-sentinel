@@ -77,3 +77,9 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 - Critical actions include concise cost/benefit microcopy directly in the decision buttons to reduce onboarding dependency.
 - Debrief now surfaces both the turning point and a primary actionable cause aligned with the final outcome.
 - A one-use `Focus pause` grants a short contextual grace margin for playtesting accessibility without disabling pressure dynamics.
+
+## Difficulty and onboarding additions
+
+- The title screen now asks the player to pick one of five difficulty tiers before starting the expedition flow.
+- Difficulty is not cosmetic: it modifies pressure, stage bias, body tolerance, starting resources, permit days, and the decision timer profile.
+- The onboarding screen now exposes a full tutorial/FAQ modal before the final begin CTA so the player can review rules without leaving the run setup flow.
