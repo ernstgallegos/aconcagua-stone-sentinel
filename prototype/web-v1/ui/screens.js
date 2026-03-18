@@ -129,7 +129,7 @@ const DIFFICULTY_LEVELS = [
     id: 'very-easy',
     label: { en: 'Very Easy', es: 'Muy fácil' },
     blurb: { en: 'Extra margin for first ascents and system learning.', es: 'Margen extra para primeras ascensiones y aprendizaje del sistema.' },
-    modifiers: { pressureBias: -12, stageWeatherBias: -2, bodyToleranceBonus: 10, acclimatizationBonus: 12, fatigueMultiplier: 0.78, exposureMultiplier: 0.78, resourceEfficiency: 1.2, permitDaysBonus: 3, initialCapacityBonus: 6, initialWaterBonus: 3, initialFoodBonus: 3, decisionWindowMsBonus: 6000 },
+    modifiers: { pressureBias: -14, stageWeatherBias: -2, bodyToleranceBonus: 12, acclimatizationBonus: 14, fatigueMultiplier: 0.78, exposureMultiplier: 0.78, resourceEfficiency: 1.25, permitDaysBonus: 4, initialCapacityBonus: 8, initialWaterBonus: 4, initialFoodBonus: 4, decisionWindowMsBonus: 8000 },
   },
   {
     id: 'easy',
@@ -1158,6 +1158,22 @@ function isCampPosition(position = G.state.position) {
   return CAMP_POSITIONS.has(position);
 }
 
+function getCombinedResourceEfficiency() {
+  const characterEfficiency = G.character?.engine?.resourceEfficiency ?? 1.0;
+  const difficultyEfficiency = getDifficultyModifiers().resourceEfficiency ?? 1.0;
+  return Math.max(0.1, characterEfficiency * difficultyEfficiency);
+}
+
+function getDifficultyRecoveryMultiplier(multiplier = 1) {
+  return multiplier > 0 ? clamp(1 / multiplier, 0.75, 1.5) : 1;
+}
+
+function scaleSignedDelta(delta, multiplier = 1) {
+  if (!Number.isFinite(delta)) return delta;
+  if (delta < 0) return delta * getDifficultyRecoveryMultiplier(multiplier);
+  return delta * multiplier;
+}
+
 function getActionModifier(action) {
   const baseByAction = {
     advance: { fatigueDelta: 6, exposureDelta: 5, capacityDelta: -3 },
@@ -1204,7 +1220,15 @@ function getActionModifier(action) {
   };
   modifier.fatigueMultiplier *= difficultyMods.fatigueMultiplier;
   modifier.exposureMultiplier *= difficultyMods.exposureMultiplier;
-  if (action !== 'sleep') modifier.timeCost = Math.max(30, Math.round(modifier.timeCost / difficultyMods.resourceEfficiency));
+  if (modifier.fatigueDelta < 0) {
+    modifier.fatigueDelta = scaleSignedDelta(modifier.fatigueDelta, modifier.fatigueMultiplier);
+    modifier.fatigueMultiplier = 1;
+  }
+  if (modifier.exposureDelta < 0) {
+    modifier.exposureDelta = scaleSignedDelta(modifier.exposureDelta, modifier.exposureMultiplier);
+    modifier.exposureMultiplier = 1;
+  }
+  if (action !== 'sleep') modifier.timeCost = Math.max(30, Math.round(modifier.timeCost / getCombinedResourceEfficiency()));
   return modifier;
 }
 
@@ -1286,7 +1310,7 @@ function pressureBandLabel(score) {
 function spendResourcesForMinutes(minutes, flags) {
   const stage = getCurrentStage();
   const burn = getSimConfig().resourceBurnPerHour?.[stage] || { water: 0.4, food: 0.3 };
-  const eff = G.character?.engine?.resourceEfficiency ?? 1.0;
+  const eff = getCombinedResourceEfficiency();
   const { waterBurn, foodBurn } = calculateResourceBurnForMinutes({
     minutes,
     burnPerHour: burn,
@@ -2027,17 +2051,19 @@ function buildDebriefAnalytics() {
 
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
   const difficultyMods = getDifficultyModifiers();
-  const base = { baseMs: 28000 + difficultyMods.decisionWindowMsBonus, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: Math.max(6000, 9000 + Math.round(difficultyMods.decisionWindowMsBonus * 0.4)), gracePauseMs: 4500, degradeEveryMs: 5000 };
+  const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, gracePauseMs: 4500, degradeEveryMs: 5000 };
   const p = character?.engine?.decisionWindow || {};
+  const baseMs = (p.baseMs ?? base.baseMs) + difficultyMods.decisionWindowMsBonus;
   const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
-  const total = (p.baseMs ?? base.baseMs) + (stageMods[stage] ?? 0);
+  const minFloorMs = Math.max(6000, (p.minFloorMs ?? base.minFloorMs) + Math.round(difficultyMods.decisionWindowMsBonus * 0.4));
+  const total = baseMs + (stageMods[stage] ?? 0);
   return {
-    baseMs: p.baseMs ?? base.baseMs,
+    baseMs,
     stageModifiersMs: stageMods,
-    minFloorMs: p.minFloorMs ?? base.minFloorMs,
+    minFloorMs,
     gracePauseMs: p.gracePauseMs ?? base.gracePauseMs,
     degradeEveryMs: p.degradeEveryMs ?? base.degradeEveryMs,
-    totalWindowMs: Math.max(p.minFloorMs ?? base.minFloorMs, total),
+    totalWindowMs: Math.max(minFloorMs, total),
   };
 }
 

@@ -41,11 +41,20 @@ test('title difficulty selector and onboarding tutorial remain visible integrati
   assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
   assert.match(uiSource, /id: 'very-easy'/);
   assert.match(uiSource, /id: 'very-hard'/);
-  assert.match(uiSource, /pressureBias: -12/);
+  assert.match(uiSource, /pressureBias: -14/);
   assert.match(uiSource, /pressureBias: 16/);
   assert.match(uiSource, /permitDaysBonus: -2/);
   assert.match(uiSource, /window\.setDifficulty = setDifficulty/);
   assert.match(uiSource, /window\.openTutorialModal = openTutorialModal/);
+});
+
+
+test('difficulty scaling reaches runtime systems instead of stopping at title copy', () => {
+  assert.match(uiSource, /function getCombinedResourceEfficiency\(\)/);
+  assert.match(uiSource, /characterEfficiency \* difficultyEfficiency/);
+  assert.match(uiSource, /modifier\.fatigueDelta < 0/);
+  assert.match(uiSource, /modifier\.exposureDelta < 0/);
+  assert.match(uiSource, /const baseMs = \(p\.baseMs \?\? base\.baseMs\) \+ difficultyMods\.decisionWindowMsBonus/);
 });
 
 test('data loader treats environmental pressure config as required', () => {
