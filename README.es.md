@@ -207,7 +207,9 @@ Flujo visible actual en web-v1:
 
 `splash → title (dificultad) → character → scenario → onboarding (tutorial/FAQ o comenzar) → game → (summit-success o debrief)`
 
-La pantalla de título ahora incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). Esta elección modifica de forma real la presión, la recuperación, la economía de recursos, el margen del permiso y la generosidad de la ventana de decisión durante toda la partida.
+La pantalla `Title` incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). La selección modifica de forma real la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión, incluyendo los perfiles temporales propios de cada personaje y las acciones de recuperación.
+
+Los perfiles temporales específicos de cada personaje siguen activos, pero la dificultad elegida en `Title` ahora suma o resta margen sobre esos perfiles en lugar de quedar anulada cuando un personaje define su propia ventana de decisión.
 
 La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo antes de `Understood. Begin.`, con explicación del bucle de partida, sistemas ocultos, referencia de acciones, comportamiento de la dificultad y preguntas frecuentes de reglas.
 

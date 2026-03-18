@@ -81,5 +81,6 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 ## Difficulty and onboarding additions
 
 - The title screen now asks the player to pick one of five difficulty tiers before starting the expedition flow.
-- Difficulty is not cosmetic: it modifies pressure, stage bias, body tolerance, starting resources, permit days, and the decision timer profile.
+- Difficulty is not cosmetic: it modifies pressure, stage bias, body tolerance, starting resources, permit days, recovery strength, combined resource economy, and the decision timer profile.
+- Character decision-window profiles still apply, but title difficulty now adds or removes time on top of those profiles instead of being ignored whenever a character provides custom timing values.
 - The onboarding screen now exposes a full tutorial/FAQ modal before the final begin CTA so the player can review rules without leaving the run setup flow.

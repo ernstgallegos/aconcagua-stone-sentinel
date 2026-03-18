@@ -16,6 +16,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Adjusted `prototype/web-v1` gameplay tuning so difficulty now changes environmental pressure, stage weather bias, body tolerance, initial resources/capacity, permit margin, and decision-window generosity.
 - Updated web-v1 smoke/integration coverage and public readmes to reflect the new title difficulty step and pre-expedition tutorial flow.
 
+### Fixed
+- Fixed `prototype/web-v1/ui/screens.js` difficulty plumbing so title selection now affects runtime recovery, combined resource economy, and character-specific decision windows instead of only a subset of systems.
+- Retuned the `Very Easy` profile in `prototype/web-v1/ui/screens.js` with extra permit/resource/body slack so first-ascent runs can realistically progress beyond Camp 3 when the player selects that tier.
+- Added web-v1 regression coverage to lock the difficulty-runtime wiring between title selection and the underlying economy/timer subsystems.
+
 ### Changed
 - Clarified the web-v1 descend action copy so onboarding and the in-run Horcones button explain that descending again from Horcones exits the park and ends the expedition.
 - Updated the Playwright smoke-test workflow guidance so local contributors get an explicit bootstrap path, while missing Playwright dependencies now produce a skip with actionable setup instructions instead of an import failure.

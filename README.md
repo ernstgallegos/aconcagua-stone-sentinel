@@ -216,7 +216,7 @@ Current visible flow in web-v1 is:
 
 `splash → title (difficulty) → character → scenario → onboarding (tutorial/FAQ or begin) → game → (summit-success or debrief)`
 
-The title screen now includes five global difficulty tiers (`Very Easy`, `Easy`, `Standard`, `Hard`, `Very Hard`). This choice meaningfully reshapes pressure, recovery, resource economy, permit slack, and decision-window leniency across the entire run.
+The title screen now includes five global difficulty tiers (`Very Easy`, `Easy`, `Standard`, `Hard`, `Very Hard`). This choice meaningfully reshapes pressure, recovery, resource economy, permit slack, and decision-window leniency across the entire run, including character-specific timer profiles and signed recovery actions.
 
 The onboarding screen now includes a full tutorial/FAQ entry point before `Understood. Begin.`, covering the run loop, hidden systems, action reference, difficulty behavior, and common rules questions.
 
