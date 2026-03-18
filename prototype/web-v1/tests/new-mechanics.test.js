@@ -37,3 +37,11 @@ test('canonical outcomes/data contracts are still present', () => {
 test('data loader treats environmental pressure config as required', () => {
   assert.match(uiSource, /REQUIRED_CONFIG_FILES = new Set\(\['nodes', 'environmentalPressure', 'actionModifiers'/);
 });
+
+
+test('descend UX copy documents Horcones exit behavior and Daniela guard wiring remains explicit', () => {
+  assert.match(uiSource, /From Horcones, descending again exits the park and ends the expedition\./);
+  assert.match(uiSource, /Only Daniela can use this action\./);
+  assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
+  assert.match(uiSource, /'6': 'btn-shoot-photo'/);
+});

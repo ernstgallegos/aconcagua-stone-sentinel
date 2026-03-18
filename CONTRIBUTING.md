@@ -42,10 +42,12 @@ npm test
 
 **Headless browser smoke test (requires Playwright browser install):**
 ```bash
-pip install -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 python -m playwright install --with-deps chromium
 pytest prototype/web-v1/tests/test_smoke_flow.py -v
 ```
+
+If Playwright is not installed yet, the smoke suite now skips with a bootstrap hint instead of failing at import time.
 
 **Python lint (ruff, same gate as CI):**
 ```bash
