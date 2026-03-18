@@ -9,6 +9,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- Clarified the web-v1 descend action copy so onboarding and the in-run Horcones button explain that descending again from Horcones exits the park and ends the expedition.
+- Updated the Playwright smoke-test workflow guidance so local contributors get an explicit bootstrap path, while missing Playwright dependencies now produce a skip with actionable setup instructions instead of an import failure.
+
+### Fixed
+- Added regression coverage for Daniela-only `Shoot Photo` access in both browser smoke validation and web-v1 contract tests, protecting the UI visibility and keyboard shortcut guard against future regressions.
+
 ### Fixed
 - Corrected `prototype/web-v1` park-exit resolution so returning to `horcones` no longer auto-ends the run, `wait` on approach sectors cannot advance the player, and descending from `horcones` now closes the expedition as an explicit park exit.
 - Added targeted `web-v1` regression coverage for approach wait movement, early retreat-to-Horcones continuity, and Horcones exit handling.

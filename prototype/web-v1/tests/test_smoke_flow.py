@@ -1,3 +1,4 @@
+import pytest
 import contextlib
 import functools
 import http.server
@@ -5,7 +6,11 @@ import socketserver
 import threading
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
+sync_api = pytest.importorskip(
+    "playwright.sync_api",
+    reason="Install requirements-dev.txt and run `python -m playwright install --with-deps chromium` to enable the browser smoke test.",
+)
+sync_playwright = sync_api.sync_playwright
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -93,4 +98,35 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.click('#part2-char-francisco')
         expect_disabled(page, '#btn-part2-confirm', False)
 
+        browser.close()
+
+
+def test_shoot_photo_visibility_stays_daniela_only_smoke():
+    with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        def reach_game_with_character(character_id: str):
+            page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
+            page.click('#screen-splash')
+            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
+            page.click('#screen-title .btn-primary')
+            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-character'")
+            page.click(f'#char-{character_id}')
+            page.click('#btn-char-confirm')
+            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-scenario'")
+            page.click('#scenario-grid .scenario-card[id^="sc-"]')
+            page.click('#btn-scenario-confirm')
+            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
+            page.click('#screen-onboarding .btn-primary')
+            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+
+        reach_game_with_character('francisco')
+        assert page.locator('#btn-shoot-photo').evaluate("button => getComputedStyle(button).display") == 'none'
+        page.keyboard.press('6')
+        assert page.locator('#btn-shoot-photo').evaluate("button => getComputedStyle(button).display") == 'none'
+
+        reach_game_with_character('daniela')
+        assert page.locator('#btn-shoot-photo').evaluate("button => getComputedStyle(button).display") != 'none'
+        assert page.locator('#btn-shoot-photo').is_enabled()
         browser.close()

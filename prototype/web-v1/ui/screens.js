@@ -165,7 +165,7 @@ const I18N = {
       onboardingAdvanceDesc: 'Gain ground. High fatigue + exposure cost. Altitude amplifies all penalties.',
       onboardingAdvanceSlowDesc: 'Gain ground with less cost. 70% chance of progress. Still consumes resources.',
       onboardingWaitDesc: 'Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.',
-      onboardingDescendDesc: 'End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.',
+      onboardingDescendDesc: 'Descend protects return margin and permit time. From Horcones, descending again exits the park and ends the expedition.',
       onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.'
 
     },
@@ -211,7 +211,7 @@ const I18N = {
       onboardingAdvanceDesc: 'Ganar terreno. Alto costo de fatiga + exposición. La altitud amplifica todas las penalizaciones.',
       onboardingAdvanceSlowDesc: 'Ganar terreno con menor costo. 70% de probabilidad de progreso. Sigue consumiendo recursos.',
       onboardingWaitDesc: 'Mantener posición. Recuperar es significativo solo en aproximación y base. Sobre campamento alto, esperar es sobre todo control de daños.',
-      onboardingDescendDesc: 'Finalizar el intento voluntariamente. Menor costo. Siempre es una decisión válida e inteligente.',
+      onboardingDescendDesc: 'Descender protege el margen de regreso y el tiempo de permiso. Desde Horcones, descender otra vez sale del parque y termina la expedición.',
       onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.'
 
     },
@@ -1485,6 +1485,24 @@ function renderWatch() {
   } else {
     sleepBtn.style.display = 'none';
     sleepBtn.title = uiText('Sleep is only possible at camps', 'Solo se puede dormir en campamentos');
+  }
+
+  const descendBtn = document.getElementById('btn-descend');
+  const descendMicrocopy = descendBtn?.querySelector('.decision-microcopy');
+  const descendExitsExpedition = s.position === 'horcones';
+  if (descendBtn) {
+    const descendTitle = descendExitsExpedition
+      ? uiText('Descend again from Horcones to exit the park and end the expedition.', 'Descender otra vez desde Horcones sale del parque y termina la expedición.')
+      : uiText('Concede altitude now to preserve return margin and permit time.', 'Cede altitud ahora para preservar margen de regreso y tiempo de permiso.');
+    descendBtn.title = descendTitle;
+    descendBtn.setAttribute('aria-label', descendExitsExpedition
+      ? uiText('Exit the park from Horcones', 'Salir del parque desde Horcones')
+      : uiText('Descend toward Horcones', 'Descender hacia Horcones'));
+  }
+  if (descendMicrocopy) {
+    descendMicrocopy.textContent = descendExitsExpedition
+      ? uiText('From Horcones, descend exits the park and ends the expedition.', 'Desde Horcones, descender sale del parque y termina la expedición.')
+      : uiText('Concede altitude to protect return margin and permit clock.', 'Cede altitud para proteger el margen de regreso y el reloj del permiso.');
   }
 
   const photoBtn = document.getElementById('btn-shoot-photo');
