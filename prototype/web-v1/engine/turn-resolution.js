@@ -64,7 +64,9 @@ export function createTurnEngine(deps) {
     else outcome = 'Hold';
 
     const nodeIndex = POSITIONS.indexOf(state.position);
-    const step = outcome === 'Advance' ? 1 : outcome === 'Retreat' ? -1 : 0;
+    // For actions with negative progress (descend), 'Advance' means moving down the route
+    const directionMultiplier = actionMod.progress < 0 ? -1 : 1;
+    const step = (outcome === 'Advance' ? 1 : outcome === 'Retreat' ? -1 : 0) * directionMultiplier;
     const targetIndex = clamp(nodeIndex + step, 0, POSITIONS.length - 1);
 
     if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'High Point Return';
@@ -94,8 +96,9 @@ export function createTurnEngine(deps) {
       0,
       100
     );
+    const fcPressureFactor = clamp((result.effectiveDelta || result.pressureDelta) / 20, 0.5, 2.5);
     state.functional_capacity = clamp(
-      state.functional_capacity + actionMod.capacityDelta - (result.effectiveDelta || result.pressureDelta) * 0.18,
+      state.functional_capacity + actionMod.capacityDelta - fcPressureFactor * 2,
       0,
       100
     );

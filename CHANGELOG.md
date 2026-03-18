@@ -13,6 +13,23 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed Brazilian Portuguese from the `prototype/web-v1` runtime language selector and language validation, leaving only English (`en`) and Spanish (`es`) as supported UI locales.
 
 ### Fixed
+- Fixed missing `collapse` and `survival` fields in `data/action_modifiers.json`.
+  The new probabilistic `evaluateOutcome` in `prototype/web-v1/engine/turn-resolution.js`
+  uses these fields to compute `collapseChance` and `survivalChance`. Without them,
+  both evaluate to `NaN`, causing `r < NaN` and `r > NaN` to always be `false` —
+  making collapse and retreat outcomes impossible. Result was 100% Rescue/Fatality
+  across all characters and scenarios. Added calibrated values targeting ~30%
+  Summit and Safe Return rate.
+- Fixed `descend` direction in `evaluateOutcome` (`prototype/web-v1/engine/turn-resolution.js`):
+  the `step` calculation used a fixed `+1 / −1` sign regardless of `actionMod.progress`.
+  For `descend` (progress = −20), `'Advance'` was moving the player **up** the route.
+  Added `directionMultiplier` that flips step sign when `actionMod.progress < 0`.
+- Fixed `functional_capacity` drain rate in `updateState`
+  (`prototype/web-v1/engine/turn-resolution.js`): the formula
+  `capacityDelta − pressureDelta × 0.18` had no upper bound on `pressureDelta`.
+  With δ=130 (night EP), fc drained 23.4/turn causing Fatality in 3–5 turns.
+  Replaced with `pressureFactor × 2` (clamped 0.5–2.5), matching the pre-refactor
+  cap of 1–5 fc/turn.
 - Expanded Spanish localization coverage in `prototype/web-v1/ui/screens.js` by translating remaining runtime strings (sleep/tooltips, ambient/tutor cues, debrief turning-point and cause messaging, reflection prompts, and narrative text selection) so Spanish sessions no longer surface mixed English copy in core gameplay/debrief flows.
 - Fixed startup interactivity regressions in `prototype/web-v1/ui/screens.js` by escaping the English title-tagline apostrophes (preventing module parse failure) and restoring the `window.setVisualMode` facade required by the title-screen inline visual-mode selector.
 
