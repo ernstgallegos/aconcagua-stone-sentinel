@@ -34,6 +34,20 @@ test('canonical outcomes/data contracts are still present', () => {
 });
 
 
+
+test('title difficulty selector and onboarding tutorial remain visible integration points', () => {
+  assert.match(indexSource, /id="title-difficulty-grid"/);
+  assert.match(indexSource, /Full Tutorial \/ FAQ/);
+  assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
+  assert.match(uiSource, /id: 'very-easy'/);
+  assert.match(uiSource, /id: 'very-hard'/);
+  assert.match(uiSource, /pressureBias: -12/);
+  assert.match(uiSource, /pressureBias: 16/);
+  assert.match(uiSource, /permitDaysBonus: -2/);
+  assert.match(uiSource, /window\.setDifficulty = setDifficulty/);
+  assert.match(uiSource, /window\.openTutorialModal = openTutorialModal/);
+});
+
 test('data loader treats environmental pressure config as required', () => {
   assert.match(uiSource, /REQUIRED_CONFIG_FILES = new Set\(\['nodes', 'environmentalPressure', 'actionModifiers'/);
 });

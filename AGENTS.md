@@ -134,3 +134,5 @@ In addition to the changelog:
 
 - Park-exit flow in `web-v1` is safer when `horcones` is treated as the park gate rather than an automatic end-state: returning there after a retreat should remain playable until the user explicitly descends to exit, while summit/high-point outcomes can be awarded on that exit turn.
 - Outcome resolution for non-movement actions should guard against zero-progress `wait` turns producing route displacement on low-altitude approach sectors; regression tests should pin both approach waiting and Horcones exit behavior together.
+- Difficulty presets in `web-v1` are safer when centralized as a single profile table consumed by title UI, onboarding copy, pressure/tolerance math, resource economy, permit limits, and decision-window timing; splitting those knobs across unrelated constants risks fake difficulty that players immediately feel as incoherent.
+- Pre-expedition tutorial overlays are easier to maintain when the long-form copy is rendered from localized data objects instead of hardcoded multilingual HTML, so title/onboarding language switches keep the briefing consistent without duplicating screen markup.

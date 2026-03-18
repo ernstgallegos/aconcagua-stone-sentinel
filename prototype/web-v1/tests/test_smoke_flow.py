@@ -62,6 +62,8 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.click('#screen-splash')
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
 
+        page.click('#difficulty-choice-very-hard')
+        assert 'selected' in page.locator('#difficulty-choice-very-hard').get_attribute('class')
         page.click('#screen-title .btn-primary')
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-character'")
         expect_disabled(page, '#btn-char-confirm', True)
@@ -78,6 +80,11 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.click('#btn-scenario-confirm')
 
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
+        assert 'Very Hard' in page.locator('#onboard-char-line').inner_text()
+        page.click('#screen-onboarding .btn-ghost')
+        page.wait_for_function("() => document.getElementById('tutorial-modal')?.classList.contains('visible')")
+        page.click('#tutorial-modal .btn-ghost')
+        page.wait_for_function("() => !document.getElementById('tutorial-modal')?.classList.contains('visible')")
         page.click('#screen-onboarding .btn-primary')
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
 
@@ -110,6 +117,8 @@ def test_shoot_photo_visibility_stays_daniela_only_smoke():
             page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
             page.click('#screen-splash')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
+            page.click('#difficulty-choice-very-hard')
+            assert 'selected' in page.locator('#difficulty-choice-very-hard').get_attribute('class')
             page.click('#screen-title .btn-primary')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-character'")
             page.click(f'#char-{character_id}')

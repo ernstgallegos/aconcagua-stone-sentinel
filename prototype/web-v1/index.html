@@ -948,6 +948,32 @@ body {
 .analytics-card{border:1px solid var(--border);padding:0.6rem;background:var(--surface2);font-family:var(--mono);font-size:0.66rem;color:var(--stone);}
 .analytics-title{color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem;}
 .sparkline{font-family:var(--mono);font-size:0.7rem;color:var(--ice);line-height:1.4;word-break:break-all;}
+.title-difficulty-panel{margin:0 auto 1.4rem;max-width:720px;padding:1rem 1.1rem;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 92%, transparent);backdrop-filter:blur(6px);}
+.title-difficulty-label{display:block;margin-bottom:0.75rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
+.title-difficulty-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0.6rem;}
+.difficulty-card{border:1px solid var(--border);background:transparent;color:var(--white);padding:0.8rem 0.7rem;text-align:left;cursor:pointer;transition:border-color .2s, transform .2s, background .2s;min-height:96px;}
+.difficulty-card:hover,.difficulty-card:focus-visible{border-color:var(--accent);transform:translateY(-1px);outline:none;}
+.difficulty-card.selected{background:color-mix(in srgb,var(--accent) 16%, transparent);border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 45%, transparent) inset;}
+.difficulty-card-title{display:block;font-size:0.85rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.difficulty-card-desc{display:block;margin-top:0.45rem;font-size:0.72rem;line-height:1.35;color:var(--muted);}
+.title-difficulty-note{margin:0.75rem 0 0;font-size:0.72rem;color:var(--muted);}
+.onboard-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;}
+.tutorial-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:1.25rem;background:rgba(5,10,18,.8);z-index:2500;}
+.tutorial-modal.visible{display:flex;}
+.tutorial-dialog{width:min(860px,100%);max-height:min(88vh,980px);overflow:auto;border:1px solid var(--border);background:var(--surface);padding:1.2rem;box-shadow:0 20px 60px rgba(0,0,0,.45);}
+.tutorial-dialog h3,.tutorial-dialog h4{margin:0 0 0.55rem;}
+.tutorial-dialog section{padding:0.9rem 0;border-top:1px solid var(--border);}
+.tutorial-dialog section:first-of-type{border-top:none;padding-top:0;}
+.tutorial-dialog ul{margin:0.5rem 0 0 1rem;padding:0;}
+.tutorial-dialog li{margin:0.35rem 0;}
+.tutorial-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0.8rem;margin:0.9rem 0;}
+.tutorial-chip{border:1px solid var(--border);padding:0.7rem;font-size:0.74rem;}
+.tutorial-chip strong{display:block;margin-bottom:0.3rem;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.tutorial-faq-item{padding:0.7rem 0;border-top:1px dashed var(--border);}
+.tutorial-faq-item:first-of-type{border-top:none;padding-top:0;}
+.tutorial-faq-item h4{font-size:0.85rem;}
+@media (max-width: 980px) {.title-difficulty-grid,.tutorial-meta{grid-template-columns:1fr 1fr;}}
+@media (max-width: 720px) {.title-difficulty-grid,.tutorial-meta{grid-template-columns:1fr;} .difficulty-card{min-height:auto;}}
 .tutorial-toast{position:fixed;left:1rem;bottom:1rem;max-width:360px;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 94%,transparent);padding:0.7rem;z-index:2000;font-family:var(--mono);font-size:0.68rem;color:var(--white);opacity:0;transform:translateY(6px);transition:opacity .25s, transform .25s;pointer-events:none;}
 .tutorial-toast.visible{opacity:1;transform:translateY(0);}
 .debrief-turning-point {
@@ -1292,7 +1318,12 @@ body {
     <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
     <div class="title-divider"></div>
     <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
-    <p class="title-sub" style="margin-bottom: 2.5rem; font-size:0.8rem;">A decision game about limits, environment, and knowing when to stop.</p>
+    <p class="title-sub" style="margin-bottom: 1.25rem; font-size:0.8rem;">A decision game about limits, environment, and knowing when to stop.</p>
+    <div class="title-difficulty-panel">
+      <label class="title-difficulty-label" for="difficulty-choice-very-easy">Difficulty</label>
+      <div id="title-difficulty-grid" class="title-difficulty-grid" role="radiogroup" aria-label="Difficulty selection"></div>
+      <p class="title-difficulty-note" id="title-difficulty-note">Choose the intensity of environmental pressure, resource efficiency, and permit margin before beginning.</p>
+    </div>
     <button class="btn-primary" onclick="showScreen('character')">BEGIN</button>
   </div>
 </section>
@@ -1365,6 +1396,7 @@ body {
       </div>
       <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
       <div class="onboard-actions">
+        <button class="btn-ghost" onclick="openTutorialModal()">Full Tutorial / FAQ</button>
         <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
       </div>
     </div>
@@ -1693,6 +1725,75 @@ body {
     <div class="journal-entries" id="journal-entries"></div>
   </div>
 </section>
+<div id="tutorial-modal" class="tutorial-modal" aria-hidden="true">
+  <div class="tutorial-dialog" role="dialog" aria-modal="true" aria-labelledby="tutorial-modal-title">
+    <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
+      <div>
+        <div class="screen-kicker">Play Guide</div>
+        <h3 id="tutorial-modal-title">Expedition tutorial and rules reference</h3>
+      </div>
+      <button class="btn-ghost" onclick="closeTutorialModal()" aria-label="Close tutorial">Close</button>
+    </div>
+    <section>
+      <p id="tutorial-intro">This guide explains the full playable loop, hidden systems, and the most common reasons a run succeeds or collapses.</p>
+      <div class="tutorial-meta">
+        <div class="tutorial-chip"><strong>Core loop</strong><span id="tutorial-meta-loop">Read pressure, compare it against your body, choose one action, then reevaluate before the next hour passes.</span></div>
+        <div class="tutorial-chip"><strong>Primary goal</strong><span id="tutorial-meta-goal">Reach the highest safe point you can still return from before time, body, and permit margin close.</span></div>
+        <div class="tutorial-chip"><strong>Difficulty effect</strong><span id="tutorial-meta-difficulty">Difficulty changes pressure, resource burn, recovery margin, permit slack, and decision time allowance.</span></div>
+      </div>
+    </section>
+    <section>
+      <h4 id="tutorial-section-structure-title">How a run is structured</h4>
+      <ul id="tutorial-section-structure">
+        <li>Title: choose language, visual mode, and expedition difficulty.</li>
+        <li>Character: each profile changes resistances, signal clarity, and action identity.</li>
+        <li>Scenario: seeds define opening weather, visibility, terrain, and route tempo.</li>
+        <li>Onboarding: read the scenario briefing, then launch the expedition.</li>
+        <li>Game loop: take hourly decisions until you retreat, time out, fail physically, or exit with success.</li>
+      </ul>
+    </section>
+    <section>
+      <h4 id="tutorial-section-systems-title">Rules and systems</h4>
+      <ul id="tutorial-section-systems">
+        <li>Environmental Pressure rises with altitude, terrain load, weather severity, poor visibility, late hours, and lingering exposure.</li>
+        <li>Body Tolerance depends on functional capacity, acclimatization, hydration, nutrition, fatigue, and exposure resistance.</li>
+        <li>The watch shows interpreted information, not raw truth. Confidence and noise can mislead you.</li>
+        <li>Permit time matters every day. Returning late can convert a strong climb into a failed expedition.</li>
+        <li>Summit success only counts if you still return safely through the final exit logic.</li>
+      </ul>
+    </section>
+    <section>
+      <h4 id="tutorial-section-actions-title">Action reference</h4>
+      <ul id="tutorial-section-actions">
+        <li>Advance: fastest climb, highest fatigue and exposure cost, strongest punishment when pressure is already ahead of tolerance.</li>
+        <li>Advance Slowly: lower cost and partial progress chance; useful when you must protect margins without fully stalling.</li>
+        <li>Wait: safest informational reset on lower sectors; high on the route it usually only limits damage.</li>
+        <li>Descend: the main safety valve. It protects body, daylight, and permit margin, and becomes decisive after warning signs.</li>
+        <li>Sleep: only at camps. It resets time to the next day and can recover body state when used before collapse spirals.</li>
+        <li>Shoot Photo: Daniela-only action that improves short-term route reading under strict cooldown and run limits.</li>
+      </ul>
+    </section>
+    <section>
+      <h4 id="tutorial-section-difficulty-title">Difficulty levels</h4>
+      <ul id="tutorial-section-difficulty">
+        <li>Very Easy: softer pressure, more efficient resources, longer permit slack, and a stronger initial recovery cushion.</li>
+        <li>Easy: gentler attrition with enough pressure to teach the route without removing the need to retreat.</li>
+        <li>Standard: baseline prototype balance.</li>
+        <li>Hard: tighter margins, heavier pressure, and less forgiveness for late pushes.</li>
+        <li>Very Hard: sustained pressure spikes, shorter permit, weaker starting margin, and stronger punishment for indecision.</li>
+      </ul>
+    </section>
+    <section>
+      <h4 id="tutorial-section-faq-title">Frequently asked questions</h4>
+      <div id="tutorial-faq-list">
+        <div class="tutorial-faq-item"><h4>Why did I fail after reaching the summit?</h4><p>Summiting is not enough on its own. You still need a safe return and a valid expedition exit before permit/time checks overtake the run.</p></div>
+        <div class="tutorial-faq-item"><h4>When should I wait instead of descend?</h4><p>Usually on approach or base sectors when the watch suggests the next hour may stabilize. Above high camp, waiting is rarely a true reset.</p></div>
+        <div class="tutorial-faq-item"><h4>What is the biggest beginner mistake?</h4><p>Reading one favorable turn as permission to keep advancing after fatigue, exposure, and time have already crossed into a losing trend.</p></div>
+        <div class="tutorial-faq-item"><h4>Does difficulty only change numbers?</h4><p>No. It changes real strategic texture by altering pressure, recovery, resource economy, permit margin, and decision-window generosity together.</p></div>
+      </div>
+    </section>
+  </div>
+</div>
 <div id="tutorial-toast" class="tutorial-toast" role="status" aria-live="polite"></div>
 
 <script type="module" src="./ui/screens.js"></script>
