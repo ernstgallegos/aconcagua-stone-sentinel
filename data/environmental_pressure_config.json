@@ -22,54 +22,66 @@
   },
   "visibilityRiskScale": {
     "0": 0,
-    "1": 6,
-    "2": 18,
-    "3": 34,
-    "4": 52
+    "1": 4,
+    "2": 10,
+    "3": 20,
+    "4": 34
   },
   "timeOfDayRiskScale": {
-    "early":   0,
+    "early": 0,
     "optimal": 4,
-    "late":    8,
-    "dusk":   18,
-    "night":  40
+    "late": 8,
+    "dusk": 18,
+    "night": 40
   },
   "exposurePersistenceScale": {
-    "fresh":      0,
-    "sustained":  6,
-    "cumulative": 13,
-    "severe":     22,
-    "critical":   32
+    "fresh": 0,
+    "sustained": 4,
+    "cumulative": 9,
+    "severe": 16,
+    "critical": 24
   },
   "simulation": {
     "dayStartMinutes": 360,
     "noiseRangeAtZeroConf": 18,
     "resourceBurnPerHour": {
-      "APPROACH":   { "water": 0.14, "food": 0.10 },
-      "HIGH_CAMP":  { "water": 0.22, "food": 0.16 },
-      "SUMMIT_DAY": { "water": 0.34, "food": 0.24 }
+      "APPROACH": {
+        "water": 0.14,
+        "food": 0.1
+      },
+      "HIGH_CAMP": {
+        "water": 0.22,
+        "food": 0.16
+      },
+      "SUMMIT_DAY": {
+        "water": 0.34,
+        "food": 0.24
+      }
     },
-    "baseCosts": { "fatigue": 10, "exposure": 8 },
+    "baseCosts": {
+      "fatigue": 10,
+      "exposure": 8
+    },
     "progressBands": {
-      "fullMax":       -16,
-      "moderateMax":    10,
-      "limitedMax":     30,
-      "fullStep":        1,
-      "moderateStep":    1,
-      "limitedStep":     0,
+      "fullMax": -16,
+      "moderateMax": 10,
+      "limitedMax": 30,
+      "fullStep": 1,
+      "moderateStep": 1,
+      "limitedStep": 0,
       "blockedRetreat": true
     },
     "bivouacPenalty": {
-      "ep":              30,
-      "fatigue":         30,
-      "exposure":        36,
-      "capacity":        18,
+      "ep": 30,
+      "fatigue": 26,
+      "exposure": 28,
+      "capacity": 14,
       "persistenceTurns": 10
     },
     "timeWindows": {
       "summitOptimalStart": 300,
-      "summitOptimalEnd":   630,
-      "summitLateStart":    960
+      "summitOptimalEnd": 630,
+      "summitLateStart": 1200
     }
   }
 }

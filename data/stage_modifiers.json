@@ -6,14 +6,14 @@
     "confidencePenalty": 0
   },
   "HIGH_CAMP": {
-    "fatigueMultiplier": 1.24,
-    "exposureMultiplier": 1.28,
+    "fatigueMultiplier": 1.14,
+    "exposureMultiplier": 1.18,
     "weatherSeverityBias": 1,
     "confidencePenalty": 10
   },
   "SUMMIT_DAY": {
-    "fatigueMultiplier": 1.42,
-    "exposureMultiplier": 1.5,
+    "fatigueMultiplier": 1.28,
+    "exposureMultiplier": 1.35,
     "weatherSeverityBias": 2,
     "confidencePenalty": 18
   }

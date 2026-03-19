@@ -77,7 +77,7 @@ export function deriveTerminalOutcome({ outcome, state, G, POSITIONS, stage, tim
   if (G.permitDay > G.permitMaxDays) return 'Permit Expired';
 
   const summitLateStart = timeWindows?.summitLateStart;
-  if (stage === 'SUMMIT_DAY' && summitLateStart != null && G.minutesOfDay >= summitLateStart) {
+  if (action !== 'descend' && stage === 'SUMMIT_DAY' && summitLateStart != null && G.minutesOfDay >= summitLateStart) {
     return 'Expedition Window Closed';
   }
 

@@ -20,6 +20,17 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `prototype/web-v1/ui/screens.js` difficulty plumbing so title selection now affects runtime recovery, combined resource economy, and character-specific decision windows instead of only a subset of systems.
 - Retuned the `Very Easy` profile in `prototype/web-v1/ui/screens.js` with extra permit/resource/body slack so first-ascent runs can realistically progress beyond Camp 3 when the player selects that tier.
 - Added web-v1 regression coverage to lock the difficulty-runtime wiring between title selection and the underlying economy/timer subsystems.
+- Removed the premature summit-node `High Point Return` in `prototype/web-v1/engine/turn-resolution.js` so summit arrivals continue into descent instead of terminating before safe park exit.
+- Made `descend` deterministic in `prototype/web-v1/engine/turn-resolution.js`; non-collapse descent turns now always move one node down and no longer stall or reverse uphill.
+- Reworked `prototype/web-v1/engine/turn-resolution.js` recovery handling so sleep/descend restoration no longer scales down under low pressure, `functional_capacity` recovery no longer degrades at altitude, and `hasSummited` is set on first summit arrival for descent-phase UI/logging.
+- Exempted `descend` from `Expedition Window Closed` in `prototype/web-v1/engine/turn-rules.js`, preserving ascent-only cutoff behavior while allowing valid late descents from summit-day sectors.
+- Fixed `prototype/web-v1/ui/screens.js` day rollover so non-sleep actions increment `G.day`/`G.permitDay` after midnight and removed the redundant bivouac day increment path.
+- Corrected `prototype/web-v1/ui/screens.js` park-exit debrief wiring so all Horcones exits show the return message while `Summit and Safe Return` gets a distinct summit-success debrief line.
+- Added targeted engine regression coverage for summit continuation, deterministic descent, fixed-pressure recovery, and descent-window exemption in `prototype/web-v1/tests/turn-behavior.test.js`.
+
+### Balance
+- Recalibrated `prototype/web-v1` descent pacing and upper-mountain pressure after the post-audit regression pass: `descend.timeCost` now reflects ~60-minute descent nodes, recovery values are stronger, and visibility/persistence/bivouac pressure floors were reduced to restore survivable retreat arcs.
+- Added a post-fix regression-validation note to `docs/balance-calibration-notes.md` covering the new summit/descent/pathing assertions and current validation status for the requested balance sweep.
 
 ### Changed
 - Clarified the web-v1 descend action copy so onboarding and the in-run Horcones button explain that descending again from Horcones exits the park and ends the expedition.

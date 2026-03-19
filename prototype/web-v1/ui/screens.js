@@ -335,6 +335,7 @@ const TUTORIAL_CONTENT = {
       ['When should I wait instead of descend?', 'Usually on approach or base sectors when the watch suggests the next hour may stabilize. Above high camp, waiting is rarely a true reset.'],
       ['What is the biggest beginner mistake?', 'Reading one favorable turn as permission to keep advancing after fatigue, exposure, and time have already crossed into a losing trend.'],
       ['Does difficulty only change numbers?', 'No. It changes real strategic texture by altering pressure, recovery, resource economy, permit margin, and decision-window generosity together.'],
+      ['When must I leave Camp 3?', 'Summit pushes must begin by early morning—ideally 05:00–06:00. The afternoon wind on Aconcagua does not negotiate. If your ascent push has not started before the day is well advanced, the expedition window will close and descent is your only option. Once you are descending, the window no longer constrains you.'],
     ],
   },
   es: {
@@ -381,6 +382,7 @@ const TUTORIAL_CONTENT = {
       ['¿Cuándo conviene esperar en lugar de descender?', 'Normalmente en aproximación o sectores base cuando el reloj sugiere que la próxima hora puede estabilizarse. Sobre campamento alto, esperar rara vez es un reseteo real.'],
       ['¿Cuál es el mayor error de principiantes?', 'Leer un turno favorable como permiso para seguir avanzando cuando fatiga, exposición y tiempo ya entraron en una tendencia perdedora.'],
       ['¿La dificultad solo cambia números?', 'No. Cambia la textura estratégica real al alterar presión, recuperación, economía de recursos, margen del permiso y generosidad de la ventana de decisión en conjunto.'],
+      ['¿Cuándo debo salir del Campamento 3?', 'Los ataques a cumbre deben empezar de madrugada, idealmente entre las 05:00 y las 06:00. El viento de la tarde en Aconcagua no negocia. Si tu empuje de ascenso no empezó antes de que el día esté muy avanzado, la ventana de expedición se cerrará y descender será tu única opción. Una vez que ya estás descendiendo, la ventana deja de condicionarte.'],
     ],
   },
 };
@@ -2146,6 +2148,12 @@ function applyTimeCost(action) {
   }
   const minutes = actionMod.timeCost || 60;
   G.minutesOfDay += minutes;
+  // Roll over to next calendar day if past midnight
+  if (G.minutesOfDay >= 1440) {
+    G.day += 1;
+    G.permitDay = G.day;
+    G.minutesOfDay -= 1440;
+  }
   return minutes;
 }
 
@@ -2171,8 +2179,6 @@ function applyBivouacPenalty(state, ep, flags) {
     G.persistenceTurns = Math.max(G.persistenceTurns, biv.persistenceTurns || 8);
     state.persistenceTier = 'critical';
     if (G.minutesOfDay >= 1440) {
-      G.day += 1;
-      G.permitDay = G.day;
       G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
     }
     return ep + (biv.ep || 20);
@@ -2307,14 +2313,12 @@ function makeDecision(decision) {
   addLogEntry(logEntry);
 
   const exitedPark = s.position === 'horcones' && resolvedDecision === 'descend';
-  const returnedToHorcones = turnResult.outcome === 'Summit and Safe Return';
+  const PARK_EXIT_OUTCOMES = new Set(['Summit and Safe Return', 'High Point Return', 'Strategic Retreat']);
+  const returnedToHorcones = exitedPark && PARK_EXIT_OUTCOMES.has(turnResult.outcome);
   const ended = exitedPark || turnResult.outcome !== 'Strategic Retreat';
 
   if (ended) {
     updateRunState(G, { finalOutcome: turnResult.outcome });
-    if (turnResult.outcome === 'Summit and Safe Return') {
-      updateRunState(G, { hasSummited: true });
-    }
     if (decisionPanel) decisionPanel.classList.remove('processing');
     setTimeout(() => endRun(returnedToHorcones), 800);
     return;
@@ -2499,7 +2503,10 @@ function endRun(returnedToHorcones) {
 
   document.querySelectorAll('.debrief-late-msg').forEach((el) => el.remove());
   const retreatMsg = document.getElementById('debrief-retreat-msg');
-  if (returnedToHorcones) {
+  if (G.finalOutcome === 'Summit and Safe Return') {
+    retreatMsg.textContent = 'You reached the summit and returned safely. The mountain accepted the full journey.';
+    retreatMsg.style.display = 'block';
+  } else if (returnedToHorcones) {
     retreatMsg.textContent = 'The expedition ends at Horcones. The true summit is the safe return.';
     retreatMsg.style.display = 'block';
   } else if (outcome.label === 'Expedition Window Closed') {
