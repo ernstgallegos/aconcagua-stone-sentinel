@@ -138,3 +138,5 @@ In addition to the changelog:
 - Pre-expedition tutorial overlays are easier to maintain when the long-form copy is rendered from localized data objects instead of hardcoded multilingual HTML, so title/onboarding language switches keep the briefing consistent without duplicating screen markup.
 
 - Difficulty tuning regressions can hide in sign-sensitive math: if a global fatigue/exposure multiplier is applied directly to negative recovery deltas, easier modes accidentally recover less and harder modes recover more; normalize recovery and resource/timer bonuses through shared helpers so Title difficulty remains mechanically truthful.
+
+- Summit/descent regression fixes are safest when validated at two layers: engine-level deterministic tests for summit continuation, descent movement, recovery math, and window ordering first; only then proceed to broader balance sweeps, because aggregate win-rate data is misleading while those structural blockers remain.

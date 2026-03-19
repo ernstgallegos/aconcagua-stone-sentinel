@@ -217,3 +217,88 @@ test('descending from horcones without prior ascent exits the park as a strategi
   assert.equal(turn.outcome, 'Strategic Retreat');
   assert.equal(turn.result.targetPosition, 'horcones');
 });
+
+
+test('summit arrival keeps the run alive and marks hasSummited before park exit', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+  const { engine, G } = createFixtureEngine(createTurnEngine, {
+    deriveTerminalOutcome,
+    getActionModifier: () => ({ progress: 20, collapse: -45, survival: 0, fatigueDelta: 6, fatigueMultiplier: 1, exposureDelta: 5, exposureMultiplier: 1, capacityDelta: -3, timeCost: 110 }),
+    getCurrentNode: () => ({ altitudeBand: 4 }),
+    getCurrentStage: () => 'SUMMIT_DAY',
+    calculateEnvironmentalPressure: () => ({ pressureScore: 50 }),
+    calculateBodyTolerance: () => 48,
+  });
+  G.rng = rngFrom([0.2]);
+  G.highestPosIdx = 1;
+  G.turn = 4;
+  G.minutesOfDay = 900;
+  G.hasSummited = false;
+
+  const state = { position: 'camp_colera', functional_capacity: 90, fatigue: 20, exposure: 20, weather_severity: 0, visibility: 3, water: 10, food: 10 };
+  const turn = engine.resolveTurn(state, 'advance');
+
+  assert.equal(turn.result.targetPosition, 'summit');
+  assert.equal(turn.outcome, 'Strategic Retreat');
+  assert.equal(G.hasSummited, true);
+  assert.equal(state.position, 'summit');
+});
+
+test('descend always moves one step down unless collapse fires', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { engine } = createFixtureEngine(createTurnEngine, {
+    G: { rng: rngFrom([0.95]), highestPosIdx: 2, persistenceTurns: 0, acclimatization: 45, turn: 5, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 900, permitDay: 1, permitMaxDays: 20 },
+    getActionModifier: () => ({ progress: -20, collapse: -90, survival: -10, fatigueDelta: -4, fatigueMultiplier: 1, exposureDelta: -4, exposureMultiplier: 1, capacityDelta: 2, timeCost: 60, pressureDeltaCap: 30 }),
+    getCurrentNode: () => ({ altitudeBand: 4 }),
+    getCurrentStage: () => 'SUMMIT_DAY',
+    calculateEnvironmentalPressure: () => ({ pressureScore: 70 }),
+    calculateBodyTolerance: () => 55,
+  });
+
+  const state = { position: 'summit', functional_capacity: 80, fatigue: 40, exposure: 30, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const turn = engine.resolveTurn(state, 'descend');
+
+  assert.equal(turn.result.outcome, 'Advance');
+  assert.equal(turn.result.targetPosition, 'camp_colera');
+  assert.equal(state.position, 'camp_colera');
+});
+
+test('updateState applies full fixed recovery at low pressure and keeps sleep fc non-negative at high pressure', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { engine } = createFixtureEngine(createTurnEngine, {
+    getActionModifier: (action) => action === 'sleep'
+      ? { progress: 0, collapse: -95, survival: 5, fatigueDelta: -22, fatigueMultiplier: 1, exposureDelta: -14, exposureMultiplier: 1, capacityDelta: 4, timeCost: 480 }
+      : { progress: 0, collapse: 0, survival: 0, fatigueDelta: 0, fatigueMultiplier: 1, exposureDelta: 0, exposureMultiplier: 1, capacityDelta: 0, timeCost: 60 },
+  });
+
+  const lowPressureState = { position: 'camp_colera', functional_capacity: 70, fatigue: 40, exposure: 30 };
+  engine.updateState(lowPressureState, { targetPosition: 'camp_colera', pressureDelta: 10, effectiveDelta: 10 }, 'sleep');
+  assert.equal(lowPressureState.fatigue, 18);
+  assert.equal(lowPressureState.exposure, 16);
+  assert.equal(lowPressureState.functional_capacity, 74);
+
+  const highPressureState = { position: 'camp_colera', functional_capacity: 70, fatigue: 40, exposure: 30 };
+  engine.updateState(highPressureState, { targetPosition: 'camp_colera', pressureDelta: 50, effectiveDelta: 50 }, 'sleep');
+  assert.equal(highPressureState.fatigue, 18);
+  assert.equal(highPressureState.exposure, 16);
+  assert.equal(highPressureState.functional_capacity, 71);
+});
+
+test('deriveTerminalOutcome exempts descend from summit window checks but blocks late ascent attempts', async () => {
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+  const POSITIONS = ['horcones', 'camp_colera', 'summit'];
+  const base = {
+    outcome: 'Strategic Retreat',
+    state: { position: 'camp_colera' },
+    G: { highestPosIdx: 1, permitDay: 1, permitMaxDays: 20, minutesOfDay: 1300 },
+    POSITIONS,
+    stage: 'SUMMIT_DAY',
+    timeWindows: { summitLateStart: 1200 },
+    previousPosition: 'camp_colera',
+    exitedPark: false,
+  };
+
+  assert.equal(deriveTerminalOutcome({ ...base, action: 'descend' }), 'Strategic Retreat');
+  assert.equal(deriveTerminalOutcome({ ...base, action: 'advance' }), 'Expedition Window Closed');
+});

@@ -110,3 +110,26 @@ SUMMIT_DAY burn is 2.4× the APPROACH rate, keeping resource management active a
 Distribution by character reflects the designed difficulty gradient:
 Laura and Francisco as most viable, Blake as least viable.
 
+
+
+## Post-fix regression validation — 2026-03-19
+
+### Structural regression checks completed
+
+Validated through `prototype/web-v1/tests/turn-behavior.test.js` and direct repository test runs:
+
+- Summit arrival no longer terminates the run; the turn remains `Strategic Retreat` until park exit logic resolves the final outcome.
+- `descend` now deterministically moves one node downward unless collapse fires.
+- Sleep recovery now applies the full configured recovery amount at low pressure, and summit-pressure sleep remains net-positive for `functional_capacity`.
+- `deriveTerminalOutcome()` now exempts `descend` from summit-window closure while still blocking late ascent attempts.
+- Horcones exit behavior remains explicit: `descend` from `horcones` without prior ascent resolves as `Strategic Retreat`, while post-summit exit resolves as `Summit and Safe Return`.
+
+### Current balance evidence
+
+- JSON integrity checks passed for all runtime data files.
+- Node regression suite passed with the new summit/descent/pathing assertions.
+- Frozen `prototype/mra-v0` simulator regression suite passed unchanged.
+
+### Aggregate sweep status
+
+A dedicated batch simulator for `web-v1` is still not checked into the repository. This pass therefore validated the structural blockers and balance-sensitive regression points first, but did **not** yet produce a new 300+ run aggregate outcome table from an in-repo `web-v1` Monte Carlo harness. The next balance pass should add or expose that harness so target-band verification becomes reproducible in CI rather than inferred from manual/browser playtesting.

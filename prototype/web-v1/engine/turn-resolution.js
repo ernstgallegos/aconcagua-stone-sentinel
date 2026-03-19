@@ -70,12 +70,15 @@ export function createTurnEngine(deps) {
     if (isApproachWait && outcome === 'Advance') outcome = 'Hold';
     if (isHorconesExit) outcome = 'Advance';
 
+    // Descend always moves one step down unless the player collapsed.
+    // Gravity makes downward movement reliable — only body failure can stop it.
+    const isDescend = context.action === 'descend' && !isHorconesExit;
+    if (isDescend && outcome !== 'Collapse (Fatigue)') outcome = 'Advance';
+
     // For actions with negative progress (descend), 'Advance' means moving down the route
     const directionMultiplier = actionMod.progress < 0 ? -1 : 1;
     const step = (outcome === 'Advance' ? 1 : outcome === 'Retreat' ? -1 : 0) * directionMultiplier;
     const targetIndex = isHorconesExit ? nodeIndex : clamp(nodeIndex + step, 0, POSITIONS.length - 1);
-
-    if (targetIndex === POSITIONS.length - 1 && actionMod.progress > 0) outcome = 'High Point Return';
 
     return {
       outcome,
@@ -92,19 +95,27 @@ export function createTurnEngine(deps) {
     const actionMod = getActionModifier(action);
     const pressureFactor = clamp((result.effectiveDelta || result.pressureDelta) / 20, 0.5, 2.5);
 
+    // Fatigue: pressure amplifies cost (positive) deltas; recovery (negative) deltas are fixed.
+    const fatigueDelta = actionMod.fatigueDelta * actionMod.fatigueMultiplier;
     state.fatigue = clamp(
-      state.fatigue + (actionMod.fatigueDelta * actionMod.fatigueMultiplier * pressureFactor),
+      state.fatigue + (fatigueDelta >= 0 ? fatigueDelta * pressureFactor : fatigueDelta),
       0,
       100
     );
+
+    // Exposure: same rule.
+    const exposureDelta = actionMod.exposureDelta * actionMod.exposureMultiplier;
     state.exposure = clamp(
-      state.exposure + (actionMod.exposureDelta * actionMod.exposureMultiplier * pressureFactor),
+      state.exposure + (exposureDelta >= 0 ? exposureDelta * pressureFactor : exposureDelta),
       0,
       100
     );
-    const fcPressureFactor = clamp((result.effectiveDelta || result.pressureDelta) / 20, 0.5, 2.5);
+
+    // Functional capacity: pressure adds a degradation cost above pf=1.
+    // Capped so recovery actions (sleep, descend) are always at least neutral on fc.
+    const fcPressureCost = Math.max(0, pressureFactor - 1) * 2;
     state.functional_capacity = clamp(
-      state.functional_capacity + actionMod.capacityDelta - fcPressureFactor * 2,
+      state.functional_capacity + actionMod.capacityDelta - fcPressureCost,
       0,
       100
     );
@@ -113,6 +124,13 @@ export function createTurnEngine(deps) {
     updateRunState(G, {
       highestPosIdx: Math.max(G.highestPosIdx, POSITIONS.indexOf(state.position)),
     });
+
+    // Set hasSummited when the player first reaches the summit node.
+    const summitIdx = POSITIONS.indexOf('summit');
+    if (summitIdx >= 0 && POSITIONS.indexOf(state.position) >= summitIdx && !G.hasSummited) {
+      updateRunState(G, { hasSummited: true });
+    }
+
     assertStateShape(G, 'after updateState');
   }
 
