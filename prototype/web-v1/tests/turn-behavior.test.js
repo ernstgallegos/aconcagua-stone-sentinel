@@ -136,6 +136,26 @@ test('resolveTurn enforces park-exit precedence for summit return and permit ord
   assert.equal(permitTurn.outcome, 'Permit Expired');
 });
 
+test('park exit still awards summit return when hasSummited is true and highestPosIdx is stale', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+
+  const fixture = createFixtureEngine(createTurnEngine, {
+    deriveTerminalOutcome,
+    G: { rng: rngFrom([0.5]), highestPosIdx: 1, hasSummited: true, persistenceTurns: 0, acclimatization: 45, turn: 8, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 900, permitDay: 6, permitMaxDays: 20 },
+    getActionModifier: (action) => action === 'descend'
+      ? { progress: -20, collapse: -90, survival: -10, fatigueDelta: -1, fatigueMultiplier: 1, exposureDelta: -1, exposureMultiplier: 1, capacityDelta: 2, timeCost: 60 }
+      : { progress: 0, collapse: -65, survival: 5, fatigueDelta: 2, fatigueMultiplier: 1, exposureDelta: 2, exposureMultiplier: 1, capacityDelta: 1, timeCost: 60 },
+    getCurrentNode: () => ({ altitudeBand: 0 }),
+    getCurrentStage: () => 'DESCENT',
+  });
+
+  const state = { position: 'horcones', functional_capacity: 90, fatigue: 20, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const turn = fixture.engine.resolveTurn(state, 'descend');
+
+  assert.equal(turn.outcome, 'Summit and Safe Return');
+});
+
 test('decision-window caps and resource rounding floors are deterministic rule contracts', async () => {
   const { applyDecisionWindowDegradationRule, calculateResourceBurnForMinutes } = await loadModule('engine/turn-rules.js');
 
