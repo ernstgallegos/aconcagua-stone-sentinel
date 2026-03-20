@@ -103,3 +103,31 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 - `Summit and Safe Return` remains the only implemented Part 2 unlock gate in the current public flow.
 
 See `docs/en/consolidated-design-v1.4.md` and `docs/es/diseno-consolidado-v1.4.md` for scope and rollout phases.
+
+
+## Engine mechanics post-v1.3
+
+### Sleep position rule
+`sleep` never changes the player's position. `evaluateOutcome` forces `outcome = 'Hold'` 
+for sleep actions even if the probabilistic outcome would have been `'Advance'`.
+
+### Gravity override (descend)
+`descend` always moves one node down. Non-collapse descent turns override `'Retreat'` 
+and `'Hold'` to `'Advance'` via `isDescend` flag in `evaluateOutcome`.
+
+### Summit block
+At summit node, `advance` and `advance_slowly` are blocked. The only valid next 
+actions are `descend`, `wait`, and `sleep`.
+
+### hasSummited
+Set to `true` the first turn the player arrives at `summit` (nodeIndex ≥ 14). Used for 
+`deriveTerminalOutcome` to resolve `Summit and Safe Return` at park exit.
+
+### Time-of-day pressure amplification
+`timeOfDayRisk = timeOfDayRiskScale[bucket] × node.timeSensitivity`  
+`timeSensitivity`: 1 at approach, 2 at HIGH_CAMP band 1-2, 3 at HIGH_CAMP band 3.  
+Night (22:00–06:00) + ts=3 = +120 EP. Intentional design: don't be at high camp at night.
+
+### collapseChance formula
+`collapseChance = clamp(max(0, eff) × 1.2 + (100 - fc) × 0.1 + actionMod.collapse, 0, 96)`  
+At extreme pressure (eff=52): advance → 15.4% collapse. Severe weather is dangerous, not instantly lethal.

@@ -9,7 +9,7 @@ This note records the mechanic extensions added to `prototype/web-v1/index.html`
 ### Changes introduced in web-v1
 
 - **Stage system:** Three explicit stages (`APPROACH`, `HIGH_CAMP`, `SUMMIT_DAY`) mapped by node, each with separate resource burn rates, fatigue multipliers, and progress probabilities.
-- **Diegetic clock:** Runs start at Day 1 · 06:00. Action time costs: `advance` +120 min, `advance_slowly` +180 min, `wait` +60 min, `descend` +120 min, `sleep` → next day 06:00.
+- **Diegetic clock:** Runs start at Day 1 · 06:00. Action time costs: `advance` +110 min, `advance_slowly` +165 min, `wait` +60 min, `descend` +60 min, `sleep` → next day 06:00.
 - **New action — `advance_slowly`:** Slower ascent with different resource and fatigue trade-offs.
 - **New action — `sleep`:** Available only at camp nodes. Triggers full overnight recovery scaled by camp type and current stage.
 - **Forced bivouac:** If the player has not reached a camp node by 22:00, a severe deterministic penalty is applied and the day resets.
@@ -30,6 +30,21 @@ This note records the mechanic extensions added to `prototype/web-v1/index.html`
 | `retreatPenaltyAfterIrreversible` | Extra cost for descending past the first irreversible point |
 | `confidence` | Coefficients for uncertainty display |
 
+| Parameter | Current value | Notes |
+|---|---|---|
+| advance timeCost | 110 min | Standard ascent pace |
+| advance_slowly timeCost | 165 min | Conservative ascent pace |
+| wait timeCost | 60 min | Rest without position change |
+| descend timeCost | 60 min | ~2× faster than ascent (3-day descent model) |
+| sleep | resets to 06:00 next day | +1 permitDay, recovery applied, position unchanged |
+
+### Key engine mechanics (current implementation)
+- **Sleep** never advances position. Recovery is applied in place at the camp.
+- **Descend** always moves one node down (gravity override) unless Collapse fires.
+- **Summit block**: advance/advance_slowly at summit node are silently blocked.
+- **hasSummited**: set to true when player first arrives at summit node.
+- **timeSensitivity**: nodes at altitudeBand 2+ amplify time-of-day EP. Night at ts=3: +120 EP.
+
 ### Relationship to Python MRA v0 (`simulator.py`)
 
 These mechanics are **not replicated** in `simulator.py`. The Python simulator remains the canonical reproducible artifact for hypothesis testing (deterministic, seeded, documented). The web-v1 implementation is an exploratory interactive extension and may diverge further as design evolves.
@@ -42,10 +57,10 @@ These mechanics are **not replicated** in `simulator.py`. The Python simulator r
 - Se añadió una capa explícita de **stage** (`APPROACH`, `HIGH_CAMP`, `SUMMIT_DAY`) mapeada por nodo clave.
 - Se añadió reloj diegético: `Day N` + `minutesOfDay` (inicio 06:00).
 - Nuevas reglas de tiempo por acción:
-  - `ADVANCE` +120 min
-  - `ADVANCE_SLOWLY` +180 min
+  - `ADVANCE` +110 min
+  - `ADVANCE_SLOWLY` +165 min
   - `WAIT` +60 min
-  - `DESCEND` +120 min
+  - `DESCEND` +60 min
   - `SLEEP` -> próximo día 06:00
 - Se agregó acción **SLEEP** (solo en campamentos).
 - A las 22:00 (`nightStartMinutes`), si no estás en campamento, se aplica **forced bivouac** (penalidad severa y determinista) y arranca nuevo día.

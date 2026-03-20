@@ -81,7 +81,7 @@
     "timeWindows": {
       "summitOptimalStart": 300,
       "summitOptimalEnd": 630,
-      "summitLateStart": 1200
+      "summitLateStart": 1020
     }
   }
 }

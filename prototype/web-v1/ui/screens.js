@@ -124,6 +124,11 @@ const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
 
 const DIFFICULTY_STORAGE_KEY = 'aconcagua_difficulty_v1';
+const SUMMIT_ACHIEVED_KEY = 'aconcagua_summit_achieved_v1';
+
+function hasPreviouslySummited() {
+  try { return localStorage.getItem(SUMMIT_ACHIEVED_KEY) === '1'; } catch (e) { return false; }
+}
 const DIFFICULTY_LEVELS = [
   {
     id: 'very-easy',
@@ -335,6 +340,7 @@ const TUTORIAL_CONTENT = {
       ['When should I wait instead of descend?', 'Usually on approach or base sectors when the watch suggests the next hour may stabilize. Above high camp, waiting is rarely a true reset.'],
       ['What is the biggest beginner mistake?', 'Reading one favorable turn as permission to keep advancing after fatigue, exposure, and time have already crossed into a losing trend.'],
       ['Does difficulty only change numbers?', 'No. It changes real strategic texture by altering pressure, recovery, resource economy, permit margin, and decision-window generosity together.'],
+      ['Why does my body state collapse suddenly at high altitude?', 'Environmental pressure increases with altitude, time of day, and persistence above 5,000m. Advancing after 15:00 at high camp multiplies pressure significantly. After 18:00, you risk catastrophic exposure. Sleep at every camp and plan to move between 06:00 and 15:00.'],
       ['When must I leave Camp 3?', 'Summit pushes must begin by early morning—ideally 05:00–06:00. The afternoon wind on Aconcagua does not negotiate. If your ascent push has not started before the day is well advanced, the expedition window will close and descent is your only option. Once you are descending, the window no longer constrains you.'],
     ],
   },
@@ -382,6 +388,7 @@ const TUTORIAL_CONTENT = {
       ['¿Cuándo conviene esperar en lugar de descender?', 'Normalmente en aproximación o sectores base cuando el reloj sugiere que la próxima hora puede estabilizarse. Sobre campamento alto, esperar rara vez es un reseteo real.'],
       ['¿Cuál es el mayor error de principiantes?', 'Leer un turno favorable como permiso para seguir avanzando cuando fatiga, exposición y tiempo ya entraron en una tendencia perdedora.'],
       ['¿La dificultad solo cambia números?', 'No. Cambia la textura estratégica real al alterar presión, recuperación, economía de recursos, margen del permiso y generosidad de la ventana de decisión en conjunto.'],
+      ['¿Por qué mi estado físico colapsa de golpe en alta montaña?', 'La presión ambiental aumenta con la altitud, la hora del día y el tiempo acumulado sobre los 5.000m. Avanzar después de las 15:00 en campo alto multiplica la presión significativamente. Después de las 18:00, el riesgo de colapso es severo. Dormí en cada campamento y planificá moverte entre las 06:00 y las 15:00.'],
       ['¿Cuándo debo salir del Campamento 3?', 'Los ataques a cumbre deben empezar de madrugada, idealmente entre las 05:00 y las 06:00. El viento de la tarde en Aconcagua no negocia. Si tu empuje de ascenso no empezó antes de que el día esté muy avanzado, la ventana de expedición se cerrará y descender será tu única opción. Una vez que ya estás descendiendo, la ventana deja de condicionarte.'],
     ],
   },
@@ -695,7 +702,8 @@ function applyStaticTranslations() {
 // ════════════════════════════════════════════════
 function showScreen(id) {
   const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
-  if (part2Screens.has(id) && G.finalOutcome !== 'Summit and Safe Return') {
+  const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
+  if (part2Screens.has(id) && !canAccessPart2) {
     id = 'debrief';
   }
 
@@ -852,7 +860,7 @@ function selectPart2Character(id) {
 }
 
 function confirmPart2Character() {
-  if (G.finalOutcome !== 'Summit and Safe Return') {
+  if (G.finalOutcome !== 'Summit and Safe Return' && !hasPreviouslySummited()) {
     showScreen('debrief');
     return;
   }
@@ -2648,6 +2656,7 @@ function endRun(returnedToHorcones) {
   });
 
   if (G.finalOutcome === 'Summit and Safe Return') {
+    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
     showScreen('summit-success');
   } else {
     showScreen('debrief');

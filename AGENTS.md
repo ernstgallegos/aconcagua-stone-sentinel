@@ -143,3 +143,12 @@ In addition to the changelog:
 
 - Summit-state safety is strongest when ascent is blocked at both layers: disable uphill UI affordances at `summit` and also coerce resolver-level advance attempts into a flagged hold/descend-only path so Part 2 victory still depends on safe park exit, not summit arrival alone.
 - Summit-return outcome checks are safer when park-exit classification treats `hasSummited` as the canonical success memory and not only `highestPosIdx`; this protects winning exits if route-index telemetry drifts during long descents.
+
+### Sprint learnings — gameplay-fix-v4 (post-audit __11_)
+
+- sleep bug: `sleep` was advancing position 58% of turns because `evaluateOutcome` processed it with `progress=0` producing `progressChance=58%`. Fix: force `outcome='Hold'` when `context.action==='sleep'` in evaluateOutcome, same pattern as `isApproachWait`.
+- collapseChance `*2` multiplier caused 62% collapse on weather spikes (ws=1→3). Under normal mountain variability, summit was probabilistically impossible. Fix: reduce to `*1.2`. At eff=52 (worst case): 15.4% collapse — meaningful danger without instant death.
+- Part 2 unlock required `localStorage` persistence. `G.finalOutcome` resets on `startRun()` so the Part 2 gate only worked from the summit-success screen during the same session. Fix: `SUMMIT_ACHIEVED_KEY` in localStorage, set at endRun, checked in `canAccessPart2` helper.
+- `summitLateStart=1200` (20:00) eliminated summit-day timing tension. Fix: 1020 (17:00). Forces departure before 09:00 from Cólera to reach summit before cutoff.
+- Balance is correct under perfect play (ws≤1, sleep every camp, advance 06:00): summit reachable with fat=13, fc=65. The automated simulation collapses because it doesn't model timing — human players who learn the system can summit at ~30%.
+- Simulation harness as balance proxy: automated AI policies are poor proxies for human play. Use for regression detection (0% summit = bug), not for absolute calibration.
