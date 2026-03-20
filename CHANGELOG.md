@@ -17,6 +17,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated web-v1 smoke/integration coverage and public readmes to reflect the new title difficulty step and pre-expedition tutorial flow.
 
 ### Fixed
+- Fixed `prototype/web-v1` summit handling so once the player reaches `summit`, further ascent actions are blocked in both the resolver and decision UI, the run explicitly redirects toward descent, and `Summit and Safe Return` still unlocks the Part 2 winning bridge only after a safe park exit.
+
 - Fixed `prototype/web-v1/ui/screens.js` difficulty plumbing so title selection now affects runtime recovery, combined resource economy, and character-specific decision windows instead of only a subset of systems.
 - Retuned the `Very Easy` profile in `prototype/web-v1/ui/screens.js` with extra permit/resource/body slack so first-ascent runs can realistically progress beyond Camp 3 when the player selects that tier.
 - Added web-v1 regression coverage to lock the difficulty-runtime wiring between title selection and the underlying economy/timer subsystems.

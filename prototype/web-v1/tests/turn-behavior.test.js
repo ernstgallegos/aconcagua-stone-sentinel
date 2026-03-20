@@ -245,6 +245,31 @@ test('summit arrival keeps the run alive and marks hasSummited before park exit'
   assert.equal(state.position, 'summit');
 });
 
+test('summit blocks further ascent attempts and marks them as blocked hold turns', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { deriveTerminalOutcome } = await loadModule('engine/turn-rules.js');
+  const { engine, G } = createFixtureEngine(createTurnEngine, {
+    deriveTerminalOutcome,
+    G: { rng: rngFrom([0.2]), highestPosIdx: 2, persistenceTurns: 0, acclimatization: 45, turn: 5, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 900, permitDay: 1, permitMaxDays: 20, hasSummited: true },
+    getCurrentNode: () => ({ altitudeBand: 4 }),
+    getCurrentStage: () => 'SUMMIT_DAY',
+    getActionModifier: () => ({ progress: 0, collapse: -100, survival: 0, fatigueDelta: 0, fatigueMultiplier: 1, exposureDelta: 0, exposureMultiplier: 1, capacityDelta: 0, timeCost: 60 }),
+    calculateEnvironmentalPressure: () => ({ pressureScore: 35 }),
+    calculateBodyTolerance: () => 60,
+  });
+
+  const state = { position: 'summit', functional_capacity: 85, fatigue: 30, exposure: 25, weather_severity: 0, visibility: 3, water: 10, food: 10 };
+  const turn = engine.resolveTurn(state, 'advance');
+
+  assert.equal(turn.resolvedAction, 'wait');
+  assert.equal(turn.result.outcome, 'Hold');
+  assert.equal(turn.result.targetPosition, 'summit');
+  assert.equal(turn.result.blocked, true);
+  assert.equal(turn.result.moved, false);
+  assert.ok(turn.flags.includes('summit-descent-only'));
+  assert.equal(state.position, 'summit');
+});
+
 test('descend always moves one step down unless collapse fires', async () => {
   const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
   const { engine } = createFixtureEngine(createTurnEngine, {

@@ -64,6 +64,8 @@ test('data loader treats environmental pressure config as required', () => {
 
 test('descend UX copy documents Horcones exit behavior and Daniela guard wiring remains explicit', () => {
   assert.match(uiSource, /From Horcones, descending again exits the park and ends the expedition\./);
+  assert.match(uiSource, /Summit reached\. No more climbing — start the descent\./);
+  assert.match(uiSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
   assert.match(uiSource, /Only Daniela can use this action\./);
   assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
