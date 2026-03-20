@@ -59,6 +59,12 @@ export function createTurnEngine(deps) {
     const nodeIndex = POSITIONS.indexOf(state.position);
     const isApproachWait = context.action === 'wait' && (context.altitudeBand ?? 99) <= 1;
     const isHorconesExit = context.action === 'descend' && state.position === 'horcones';
+    const isSummit = state.position === 'summit';
+    const isSummitAdvanceAttempt = isSummit && (
+      context.summitAdvanceAttempt ||
+      context.action === 'advance' ||
+      context.action === 'advance_slowly'
+    );
 
     const r = G.rng() * 100;
     let outcome;
@@ -68,6 +74,7 @@ export function createTurnEngine(deps) {
     else outcome = 'Hold';
 
     if (isApproachWait && outcome === 'Advance') outcome = 'Hold';
+    if (isSummitAdvanceAttempt) outcome = 'Hold';
     if (isHorconesExit) outcome = 'Advance';
 
     // Descend always moves one step down unless the player collapsed.
@@ -79,15 +86,20 @@ export function createTurnEngine(deps) {
     const directionMultiplier = actionMod.progress < 0 ? -1 : 1;
     const step = (outcome === 'Advance' ? 1 : outcome === 'Retreat' ? -1 : 0) * directionMultiplier;
     const targetIndex = isHorconesExit ? nodeIndex : clamp(nodeIndex + step, 0, POSITIONS.length - 1);
+    const targetPosition = POSITIONS[targetIndex];
+    const blocked = isSummitAdvanceAttempt;
+    const moved = targetPosition !== state.position;
 
     return {
       outcome,
-      targetPosition: POSITIONS[targetIndex],
+      targetPosition,
       pressureDelta,
       effectiveDelta,
       progressChance,
       collapseChance,
       survivalChance,
+      blocked,
+      moved,
     };
   }
 
@@ -137,6 +149,7 @@ export function createTurnEngine(deps) {
   function resolveTurn(state, action) {
     const flags = [];
     let resolvedAction = action;
+    const attemptedSummitAdvance = state.position === 'summit' && (action === 'advance' || action === 'advance_slowly');
 
     if (resolvedAction === 'shoot_photo') {
       const access = canUseShootPhoto(state);
@@ -144,6 +157,11 @@ export function createTurnEngine(deps) {
         flags.push('photo-action-blocked');
         resolvedAction = 'wait';
       }
+    }
+
+    if (state.position === 'summit' && (resolvedAction === 'advance' || resolvedAction === 'advance_slowly')) {
+      flags.push('summit-descent-only');
+      resolvedAction = 'wait';
     }
 
     const previousPosition = state.position;
@@ -267,6 +285,7 @@ export function createTurnEngine(deps) {
     const result = evaluateOutcome(finalPressureDelta, actionMod, state, {
       action: resolvedAction,
       altitudeBand: currentNode.altitudeBand,
+      summitAdvanceAttempt: attemptedSummitAdvance,
     });
     const exitedPark = previousPosition === 'horcones' && resolvedAction === 'descend';
     updateState(state, result, resolvedAction);

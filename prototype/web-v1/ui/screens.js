@@ -1762,11 +1762,40 @@ function renderWatch() {
 
   const descendBtn = document.getElementById('btn-descend');
   const descendMicrocopy = descendBtn?.querySelector('.decision-microcopy');
+  const advanceBtn = document.getElementById('btn-advance');
+  const advanceSlowBtn = document.getElementById('btn-advance-slow');
+  const advanceMicrocopy = advanceBtn?.querySelector('.decision-microcopy');
+  const advanceSlowMicrocopy = advanceSlowBtn?.querySelector('.decision-microcopy');
   const descendExitsExpedition = s.position === 'horcones';
+  const summitLocked = s.position === 'summit';
+  if (advanceBtn) {
+    advanceBtn.disabled = summitLocked;
+    advanceBtn.title = summitLocked
+      ? uiText('You are already at the summit. It is time to descend and protect the return.', 'Ya estás en la cumbre. Es hora de descender y proteger el regreso.')
+      : uiText('Push upward at full commitment.', 'Empuja hacia arriba con compromiso total.');
+  }
+  if (advanceSlowBtn) {
+    advanceSlowBtn.disabled = summitLocked;
+    advanceSlowBtn.title = summitLocked
+      ? uiText('There is no higher terrain to gain. Descend while the mountain still gives you margin.', 'No hay más terreno por ganar. Desciende mientras la montaña aún te da margen.')
+      : uiText('Advance with reduced speed and lower cost.', 'Avanza con menor velocidad y menor costo.');
+  }
+  if (advanceMicrocopy) {
+    advanceMicrocopy.textContent = summitLocked
+      ? uiText('Summit reached. No more climbing — start the descent.', 'Cumbre alcanzada. No se sigue subiendo: empieza el descenso.')
+      : uiText('Push altitude now, accepting the highest body cost.', 'Gana altitud ahora, aceptando el mayor costo corporal.');
+  }
+  if (advanceSlowMicrocopy) {
+    advanceSlowMicrocopy.textContent = summitLocked
+      ? uiText('Summit reached. Preserve the win by descending safely.', 'Cumbre alcanzada. Conserva la victoria bajando con seguridad.')
+      : uiText('Gain ground with less strain, but still burn time and resources.', 'Gana terreno con menos desgaste, pero sigue consumiendo tiempo y recursos.');
+  }
   if (descendBtn) {
     const descendTitle = descendExitsExpedition
       ? uiText('Descend again from Horcones to exit the park and end the expedition.', 'Descender otra vez desde Horcones sale del parque y termina la expedición.')
-      : uiText('Concede altitude now to preserve return margin and permit time.', 'Cede altitud ahora para preservar margen de regreso y tiempo de permiso.');
+      : summitLocked
+        ? uiText('Summit secured. Descend now to convert it into a safe return.', 'Cumbre asegurada. Desciende ahora para convertirla en un regreso seguro.')
+        : uiText('Concede altitude now to preserve return margin and permit time.', 'Cede altitud ahora para preservar margen de regreso y tiempo de permiso.');
     descendBtn.title = descendTitle;
     descendBtn.setAttribute('aria-label', descendExitsExpedition
       ? uiText('Exit the park from Horcones', 'Salir del parque desde Horcones')
@@ -1775,7 +1804,9 @@ function renderWatch() {
   if (descendMicrocopy) {
     descendMicrocopy.textContent = descendExitsExpedition
       ? uiText('From Horcones, descend exits the park and ends the expedition.', 'Desde Horcones, descender sale del parque y termina la expedición.')
-      : uiText('Concede altitude to protect return margin and permit clock.', 'Cede altitud para proteger el margen de regreso y el reloj del permiso.');
+      : summitLocked
+        ? uiText('Summit reached. Descend now to protect the complete ascent.', 'Cumbre alcanzada. Desciende ahora para proteger la ascensión completa.')
+        : uiText('Concede altitude to protect return margin and permit clock.', 'Cede altitud para proteger el margen de regreso y el reloj del permiso.');
   }
 
   const photoBtn = document.getElementById('btn-shoot-photo');
@@ -1926,7 +1957,8 @@ function renderNarrative(decision, signals, flags=[]) {
   let text = '';
 
   // flag-triggered lines (highest priority)
-  if (flags.includes('weather-window-open')) text = pickNarrative('window_open');
+  if (flags.includes('summit-descent-only')) text = uiText('There is no higher ground left to earn. The only meaningful move now is the descent.', 'Ya no queda terreno más alto por conquistar. El único movimiento con sentido ahora es el descenso.');
+  else if (flags.includes('weather-window-open')) text = pickNarrative('window_open');
   else if (flags.includes('weather-window-closed')) text = pickNarrative('window_close');
   else if (flags.includes('critical-exposure')) text = pickNarrative('crit_exposure');
   else if (flags.includes('critical-fatigue')) text = pickNarrative('crit_fatigue');

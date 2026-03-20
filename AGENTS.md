@@ -140,3 +140,5 @@ In addition to the changelog:
 - Difficulty tuning regressions can hide in sign-sensitive math: if a global fatigue/exposure multiplier is applied directly to negative recovery deltas, easier modes accidentally recover less and harder modes recover more; normalize recovery and resource/timer bonuses through shared helpers so Title difficulty remains mechanically truthful.
 
 - Summit/descent regression fixes are safest when validated at two layers: engine-level deterministic tests for summit continuation, descent movement, recovery math, and window ordering first; only then proceed to broader balance sweeps, because aggregate win-rate data is misleading while those structural blockers remain.
+
+- Summit-state safety is strongest when ascent is blocked at both layers: disable uphill UI affordances at `summit` and also coerce resolver-level advance attempts into a flagged hold/descend-only path so Part 2 victory still depends on safe park exit, not summit arrival alone.
