@@ -1,5 +1,6 @@
 import copy
 import csv
+import io
 import json
 import random
 import subprocess
@@ -398,10 +399,15 @@ class TestRunAllAndSchema(unittest.TestCase):
 
             run_mock.side_effect = fake_run
             with tempfile.TemporaryDirectory() as tmpdir:
+                captured = io.StringIO()
                 with self.assertRaises(SystemExit) as ctx:
-                    with mock.patch.object(sys, "argv", ["run_all.py", "--base", str(ROOT), "--output-dir", tmpdir]):
+                    with mock.patch.object(sys, "argv", ["run_all.py", "--base", str(ROOT), "--output-dir", tmpdir]), \
+                         mock.patch("sys.stdout", captured):
                         run_all.main()
                 self.assertEqual(ctx.exception.code, 1)
+                output = captured.getvalue()
+                self.assertIn("ERROR running accumulated-fatigue-trap seed=707 policy=waiter", output)
+                self.assertIn("Completed with 1 failure(s):", output)
 
     def test_invalid_scenario_json_raises_clear_error(self):
         with tempfile.TemporaryDirectory() as tmpdir:

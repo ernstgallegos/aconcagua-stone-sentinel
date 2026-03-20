@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const packageJsonPath = path.resolve(__dirname, '..', 'package.json');
 const packageLockPath = path.resolve(__dirname, '..', 'package-lock.json');

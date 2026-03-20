@@ -21,9 +21,15 @@
     ],
     "turnSemantics": [
       "advance",
+      "advance_slowly",
       "wait",
-      "descend"
-    ]
+      "descend",
+      "sleep",
+      "shoot_photo"
+    ],
+    "contextualActions": {
+      "shoot_photo": "Exclusive to Daniela De Rossi. Requires water > 0 and food > 0. Subject to cooldown and session cap."
+    }
   },
   "outcomes": {
     "webV1Canonical": [

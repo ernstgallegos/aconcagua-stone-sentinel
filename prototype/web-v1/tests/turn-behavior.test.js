@@ -339,11 +339,36 @@ test('deriveTerminalOutcome exempts descend from summit window checks but blocks
     G: { highestPosIdx: 1, permitDay: 1, permitMaxDays: 20, minutesOfDay: 1300 },
     POSITIONS,
     stage: 'SUMMIT_DAY',
-    timeWindows: { summitLateStart: 1200 },
+    timeWindows: { summitLateStart: 1020 },
     previousPosition: 'camp_colera',
     exitedPark: false,
   };
 
   assert.equal(deriveTerminalOutcome({ ...base, action: 'descend' }), 'Strategic Retreat');
   assert.equal(deriveTerminalOutcome({ ...base, action: 'advance' }), 'Expedition Window Closed');
+});
+
+
+test('sleep never advances or retreats the player position', async () => {
+  const { createTurnEngine } = await loadModule('engine/turn-resolution.js');
+  const { engine } = createFixtureEngine(createTurnEngine, {
+    G: { rng: rngFrom([0.2, 0.97, 0.5]), highestPosIdx: 1, persistenceTurns: 0, acclimatization: 45, turn: 6, lateSignalDeterminantTurns: 0, lateSignalEvents: [], photoInsightTurns: 0, photoShotsTaken: 0, lastPhotoTurn: -99, minutesOfDay: 900, permitDay: 1, permitMaxDays: 20 },
+    getActionModifier: () => ({ progress: 0, collapse: -95, survival: 5, fatigueDelta: -22, fatigueMultiplier: 1, exposureDelta: -14, exposureMultiplier: 1, capacityDelta: 4, timeCost: 480 }),
+    getCurrentNode: () => ({ altitudeBand: 2 }),
+    getCurrentStage: () => 'HIGH_CAMP',
+    calculateEnvironmentalPressure: () => ({ pressureScore: 30 }),
+    calculateBodyTolerance: () => 55,
+  });
+
+  const lowRollState = { position: 'camp_colera', functional_capacity: 70, fatigue: 40, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const lowRollTurn = engine.resolveTurn(lowRollState, 'sleep');
+  assert.equal(lowRollTurn.result.outcome, 'Hold');
+  assert.equal(lowRollTurn.result.targetPosition, 'camp_colera');
+  assert.equal(lowRollState.position, 'camp_colera');
+
+  const highRollState = { position: 'camp_colera', functional_capacity: 70, fatigue: 40, exposure: 20, weather_severity: 1, visibility: 2, water: 10, food: 10 };
+  const highRollTurn = engine.resolveTurn(highRollState, 'sleep');
+  assert.equal(highRollTurn.result.outcome, 'Hold');
+  assert.equal(highRollTurn.result.targetPosition, 'camp_colera');
+  assert.equal(highRollState.position, 'camp_colera');
 });

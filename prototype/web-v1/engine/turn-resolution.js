@@ -53,7 +53,7 @@ export function createTurnEngine(deps) {
       : pressureDelta;
 
     const progressChance = clamp(58 - Math.max(0, effectiveDelta) + actionMod.progress, 4, 92);
-    const collapseChance = clamp(Math.max(0, effectiveDelta) * 2 + (100 - state.functional_capacity) * 0.1 + actionMod.collapse, 0, 96);
+    const collapseChance = clamp(Math.max(0, effectiveDelta) * 1.2 + (100 - state.functional_capacity) * 0.1 + actionMod.collapse, 0, 96);
     const survivalChance = clamp(100 - collapseChance + actionMod.survival, 4, 98);
 
     const nodeIndex = POSITIONS.indexOf(state.position);
@@ -81,6 +81,11 @@ export function createTurnEngine(deps) {
     // Gravity makes downward movement reliable — only body failure can stop it.
     const isDescend = context.action === 'descend' && !isHorconesExit;
     if (isDescend && outcome !== 'Collapse (Fatigue)') outcome = 'Advance';
+
+    // Sleep never moves position — recovery stays at the camp.
+    const isSleep = context.action === 'sleep';
+    if (isSleep && outcome === 'Advance') outcome = 'Hold';
+    if (isSleep && outcome === 'Retreat') outcome = 'Hold';
 
     // For actions with negative progress (descend), 'Advance' means moving down the route
     const directionMultiplier = actionMod.progress < 0 ? -1 : 1;

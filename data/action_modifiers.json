@@ -4,7 +4,7 @@
     "fatigueMultiplier": 1.05,
     "exposureMultiplier": 1.05,
     "timeCost": 110,
-    "collapse": -45,
+    "collapse": -50,
     "survival": 0
   },
   "advance_slowly": {
@@ -12,7 +12,7 @@
     "fatigueMultiplier": 0.82,
     "exposureMultiplier": 0.85,
     "timeCost": 165,
-    "collapse": -50,
+    "collapse": -55,
     "survival": 0
   },
   "wait": {
