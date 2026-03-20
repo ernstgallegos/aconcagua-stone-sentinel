@@ -65,7 +65,7 @@ export function applyDecisionWindowDegradationRule({ actionMod, perception, wind
 
 export function deriveTerminalOutcome({ outcome, state, G, POSITIONS, stage, timeWindows, action, previousPosition, exitedPark = false }) {
   const summitIdx = POSITIONS.indexOf('summit');
-  const summited = summitIdx >= 0 && G.highestPosIdx >= summitIdx;
+  const summited = Boolean(G.hasSummited) || (summitIdx >= 0 && G.highestPosIdx >= summitIdx);
   const explicitParkExit = exitedPark || (previousPosition === 'horcones' && action === 'descend');
 
   if (explicitParkExit) {

@@ -142,3 +142,4 @@ In addition to the changelog:
 - Summit/descent regression fixes are safest when validated at two layers: engine-level deterministic tests for summit continuation, descent movement, recovery math, and window ordering first; only then proceed to broader balance sweeps, because aggregate win-rate data is misleading while those structural blockers remain.
 
 - Summit-state safety is strongest when ascent is blocked at both layers: disable uphill UI affordances at `summit` and also coerce resolver-level advance attempts into a flagged hold/descend-only path so Part 2 victory still depends on safe park exit, not summit arrival alone.
+- Summit-return outcome checks are safer when park-exit classification treats `hasSummited` as the canonical success memory and not only `highestPosIdx`; this protects winning exits if route-index telemetry drifts during long descents.
