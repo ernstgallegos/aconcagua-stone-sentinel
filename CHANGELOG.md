@@ -17,6 +17,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated web-v1 smoke/integration coverage and public readmes to reflect the new title difficulty step and pre-expedition tutorial flow.
 
 ### Fixed
+- Fixed `prototype/web-v1/engine/turn-rules.js` park-exit classification so runs that had already reached `summit` still resolve as `Summit and Safe Return` when `hasSummited` is true even if `highestPosIdx` is stale during the final Horcones exit turn.
 - Fixed `prototype/web-v1` summit handling so once the player reaches `summit`, further ascent actions are blocked in both the resolver and decision UI, the run explicitly redirects toward descent, and `Summit and Safe Return` still unlocks the Part 2 winning bridge only after a safe park exit.
 
 - Fixed `prototype/web-v1/ui/screens.js` difficulty plumbing so title selection now affects runtime recovery, combined resource economy, and character-specific decision windows instead of only a subset of systems.
