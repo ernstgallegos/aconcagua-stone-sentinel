@@ -2,12 +2,13 @@
   "name": "aconcagua-stone-sentinel",
   "type": "module",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
     "check:lock-version": "node scripts/check-lock-version.js",
+    "simulate": "node scripts/monte-carlo-web-v1.js",
     "test": "node --test prototype/web-v1/tests/*.test.js"
   }
 }

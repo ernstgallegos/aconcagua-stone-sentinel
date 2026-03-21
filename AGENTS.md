@@ -152,3 +152,12 @@ In addition to the changelog:
 - `summitLateStart=1200` (20:00) eliminated summit-day timing tension. Fix: 1020 (17:00). Forces departure before 09:00 from Cólera to reach summit before cutoff.
 - Balance is correct under perfect play (ws≤1, sleep every camp, advance 06:00): summit reachable with fat=13, fc=65. The automated simulation collapses because it doesn't model timing — human players who learn the system can summit at ~30%.
 - Simulation harness as balance proxy: automated AI policies are poor proxies for human play. Use for regression detection (0% summit = bug), not for absolute calibration.
+
+### Sprint learnings — Fase 3 completion (audit + Monte Carlo harness)
+
+- Monte Carlo harness for web-v1 is now available via `npm run simulate` (`scripts/monte-carlo-web-v1.js`); runs all 6 characters × 5 scenarios × N seeds headlessly and writes results to `docs/playtest-results/monte-carlo-v1.4.1.md`.
+- The headless AI policy (`reasonablePolicy`) produces 0–4% summit rates vs. 8–20% human target bands — this divergence is expected and documented. Use the harness for regression detection (0% summit = structural bug) not absolute calibration.
+- CHANGELOG consolidation convention: accumulate changes in `[Unreleased]`, then batch-version the block (rename to `[X.Y.Z] — YYYY-MM`) when preparing a release; consolidate any duplicate `### Fixed / Added / Changed` sub-headers into single sections at consolidation time.
+- Documentation sync should happen after every calibration pass: `docs/es/diseno-consolidado-v1.4.md` §6 values and `docs/balance-calibration-notes.md` both need updating whenever `data/*.json` calibration files change.
+- Headless simulators for `web-v1` must normalize `data/nodes.json` nodeId→id mapping (matching `screens.js` `ROUTE_NODES` transform) before constructing POSITIONS; skipping this produces `undefined` positions and silent 0% outcomes.
+- `resolveTurn` uses `'Strategic Retreat'` as the continue-turn marker (not a terminal outcome); runs only end when `exitedPark || outcome !== 'Strategic Retreat'` — mirror this exact condition in any headless simulator loop.

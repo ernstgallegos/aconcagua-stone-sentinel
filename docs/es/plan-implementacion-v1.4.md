@@ -37,10 +37,11 @@ Alinear el prototipo jugable con la estructura sistémica y narrativa mínima de
 - Flujo completo ejecutable sin pantallas huérfanas.
 - Unlock de Parte 2 condicionado únicamente a `Summit and Safe Return`.
 - Permiso visible y decremental en toda corrida.
+- **Nota (corrección anticipada):** El spec de diseño listaba la actualización de `title-eyebrow` a `"v1.3"` como tarea de Fase 1. La implementación muestra correctamente `"Prototype · v1.4"`, reflejando la versión real en curso. El spec fue redactado cuando `v1.4` era la versión entrante; la implementación es intencionalmente más precisa.
 
 ---
 
-## Fase 2 — En progreso (continuidad del sprint actual)
+## Fase 2 — Completada
 
 ### Objetivo
 Agregar diferenciación jugable por personaje y ampliar preparación narrativa de Parte 2.
@@ -84,6 +85,12 @@ Validar estabilidad sistémica, comunicación pública y readiness de distribuci
 - Evidencia documentada de resultados de playtesting.
 - Desviaciones de win rate justificadas o corregidas.
 - Entorno desplegable reproducible.
+
+### Estado real de avance
+- ✅ Harness de playtest Monte Carlo agregado (`scripts/monte-carlo-web-v1.js`) — simulador headless que corre los 6 personajes × 5 escenarios × 50 semillas cada uno.
+- ✅ Verificación de distribución de win rate automatizada con `npm run simulate` — resultados documentados en `docs/playtest-results/monte-carlo-v1.4.1.md`.
+- ✅ Deploy Vercel configurado (`vercel.json` presente con redirección a `prototype/web-v1/index.html`).
+- 🔲 Texto público de presentación (pendiente).
 
 ---
 
