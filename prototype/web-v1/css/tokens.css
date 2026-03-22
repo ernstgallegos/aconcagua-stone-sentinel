@@ -1,0 +1,56 @@
+/* ═══════════════════════════════════════════
+   TOKENS — Design System Custom Properties
+   Andean Modern palette (Decision 10)
+   ═══════════════════════════════════════════ */
+
+/* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
+   Usage: these are documentation tokens; actual @media queries live in responsive.css
+   --bp-sm:  480px
+   --bp-md:  768px
+   --bp-lg:  1024px
+   --bp-xl:  1280px
+*/
+
+:root {
+  /* ── Color palette: Andean Modern ── */
+  --bg:        #0c1017;
+  --surface:   #151a22;
+  --surface2:  #1c2330;
+  --border:    #2b3943;
+  --stone:     #9a8e7a;
+  --ochre:     #c49a5c;
+  --ochre-dim: #8a6d3f;
+  --ice:       #7fb3c8;
+  --ice-dim:   #4f7e94;
+  --white:     #d9d7d2;
+  --red:       #b85450;
+  --red-dim:   #7a3430;
+  --safety:    #6b9e5e;
+  --text:      #c2c8cb;
+  --text-dim:  #76848c;
+  --muted:     #76848c;
+  --accent:    #c49a5c;
+
+  /* ── Typography ── */
+  --heading: 'Plus Jakarta Sans', 'IBM Plex Mono', sans-serif;
+  --mono:    'IBM Plex Mono', monospace;
+  --serif:   'Lora', Georgia, serif;
+  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* ── Spacing scale ── */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+
+  /* ── Border radius ── */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* ── Transition speeds ── */
+  --dur-fast:   0.15s;
+  --dur-normal: 0.2s;
+  --dur-slow:   0.3s;
+}

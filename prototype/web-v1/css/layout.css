@@ -1,0 +1,201 @@
+/* ═══════════════════════════════════════════
+   LAYOUT — Screen container, grid helpers, layout primitives
+   ═══════════════════════════════════════════ */
+
+/* ── Screen base ── */
+.screen {
+  display: none;
+  min-height: 100vh;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  animation: screen-enter var(--dur-slow) ease-out 0.1s both;
+}
+
+/* Game screen overrides display to ensure correct layout */
+#screen-game {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  padding: clamp(0.55rem, 1.2vh, 1rem);
+  overflow: hidden;
+}
+
+#screen-game.active {
+  display: flex;
+}
+
+/* ── Game layout grid ── */
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 34vw);
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  flex: 1;
+  max-width: 1240px;
+  min-height: 0;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.game-layout-redesign {
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
+}
+
+/* ── Left panel: route track + field log ── */
+.left-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  min-height: 0;
+}
+
+/* ── Right panel: watch, context, narrative, decisions ── */
+.right-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: clamp(0.6rem, 1.1vh, 1rem);
+  min-height: 0;
+}
+
+.status-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+/* Command column (right panel) */
+.command-column {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(180px, auto);
+  gap: 0.75rem;
+  align-content: start;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+/* ── Containers ── */
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* ── Telemetry grid inside watch ── */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.telemetry-card {
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--surface2) 48%, transparent);
+}
+
+/* ── Status row (permit + time pressure) ── */
+.status-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+/* ── Shared panel shell ── */
+.panel-shell {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--surface) 92%, var(--surface2)),
+    var(--surface));
+}
+
+.panel-title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.7rem;
+}
+
+/* ── Screen-level inner shells ── */
+.screen-inner {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ── Switchers (theme + lang) — fixed overlays ── */
+.theme-switcher {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.75rem; /* Decision 9: minimum 12px → 0.75rem at 16px base */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.55rem;
+}
+
+.lang-switcher {
+  position: fixed;
+  top: 3.8rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.55rem;
+}
+
+.theme-select {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.35rem;
+  cursor: pointer;
+}
+
+/* ── Utility classes ── */
+.text-center { text-align: center; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
