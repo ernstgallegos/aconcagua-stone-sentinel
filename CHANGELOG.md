@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- `prototype/web-v2/index.html` — semantic HTML5 shell for the web-v2 prototype: 5 screens (hero, character, briefing, game, debrief), nav with language/theme controls, tutorial modal, WCAG-compliant aria attributes, `data-i18n` hooks, Google Fonts, CSS and JS module wiring.
 - `prototype/web-v2/js/` — 7 ES module JavaScript files for the web-v2 prototype:
   - `state.js`: run state defaults, `createInitialGameState()`, `updateRunState()`, `assertStateShape()`, `clamp()`.
   - `engine.js`: complete EP/BT/delta pipeline port from v1; exports `loadEngineData()`, `initRun()`, `resolveTurn()`, `calculateEP()`, `calculateBT()`, `getActionModifier()`, `getPerceivedState()`, `getAvailableActions()`, `getCurrentNode()`, `getCurrentStage()`, RNG helpers, and route accessors.
