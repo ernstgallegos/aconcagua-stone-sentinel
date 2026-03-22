@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+- Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
+- Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).
+
 ### Added
 - CSS module system: extracted all inline CSS from `prototype/web-v1/index.html` into 8 separate files under `prototype/web-v1/css/`: `tokens.css`, `reset.css`, `layout.css`, `components.css`, `screens.css`, `animations.css`, `themes.css`, `responsive.css` (Decision 1).
 - Plus Jakarta Sans added as UI/Headlines font via Google Fonts import; applied to all titles, buttons, labels, and navigation (Decision 8).
