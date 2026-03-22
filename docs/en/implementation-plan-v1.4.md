@@ -37,10 +37,11 @@ Align the playable prototype with the minimum systemic and narrative v1.4 struct
 - Full flow runs without orphan screens.
 - Part 2 unlock depends only on `Summit and Safe Return`.
 - Permit is visible and decrementing during all runs.
+- **Note (forward-correction):** The design spec listed `title-eyebrow` update to `"v1.3"` as a Phase 1 task. The implementation correctly shows `"Prototype · v1.4"`, reflecting the actual current version. The spec was written when `v1.4` was the upcoming version; the implementation is intentionally more accurate.
 
 ---
 
-## Phase 2 — In progress (current sprint follow-up)
+## Phase 2 — Completed
 
 ### Goal
 Add character-specific playable differentiation and expand Part 2 narrative setup.
@@ -84,6 +85,12 @@ Validate systemic stability, public communication, and distribution readiness.
 - Documented evidence of playtesting outcomes.
 - Win-rate deviations justified or corrected.
 - Reproducible deployable environment.
+
+### Real progress snapshot
+- ✅ Monte Carlo playtest harness added (`scripts/monte-carlo-web-v1.js`) — headless simulator running all 6 characters × 5 scenarios × 50 seeds each.
+- ✅ Win-rate distribution verification automated with `npm run simulate` — results documented in `docs/playtest-results/monte-carlo-v1.4.1.md`.
+- ✅ Vercel deploy configured (`vercel.json` present with redirect to `prototype/web-v1/index.html`).
+- 🔲 Public presentation paragraph (pending).
 
 ---
 

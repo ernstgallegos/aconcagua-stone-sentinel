@@ -172,25 +172,30 @@ el loop de éxito correcto es reconocer los límites, no llegar a la cima.
 **Valores de configuración activos** (post-calibración, v1.4):
 
 `data/stage_modifiers.json` — multiplicadores clave:
-- `HIGH_CAMP.fatigueMultiplier`: 1,24 · `HIGH_CAMP.exposureMultiplier`: 1,28
-- `SUMMIT_DAY.fatigueMultiplier`: 1,42 · `SUMMIT_DAY.exposureMultiplier`: 1,50
+- `HIGH_CAMP.fatigueMultiplier`: 1,14 · `HIGH_CAMP.exposureMultiplier`: 1,18
+- `SUMMIT_DAY.fatigueMultiplier`: 1,28 · `SUMMIT_DAY.exposureMultiplier`: 1,35
 - `SUMMIT_DAY.weatherSeverityBias`: 2 · `SUMMIT_DAY.confidencePenalty`: 18
 
 `data/action_modifiers.json` — valores clave:
-- `advance.fatigueMultiplier`: 1,18 · `advance.timeCost`: 110 min
-- `advance_slowly.fatigueMultiplier`: 0,90 · `advance_slowly.timeCost`: 165 min
-- `wait.fatigueMultiplier`: 0,62 · `wait.acclimatizationGain`: 4
-- `sleep.fatigueRecovery`: 18 · `sleep.acclimatizationGain`: 7
+- `advance.fatigueMultiplier`: 1,05 · `advance.timeCost`: 110 min
+- `advance_slowly.fatigueMultiplier`: 0,82 · `advance_slowly.timeCost`: 165 min
+- `wait.fatigueMultiplier`: 0,55 · `wait.acclimatizationGain`: 6
+- `sleep.fatigueRecovery`: 22 · `sleep.acclimatizationGain`: 8
 
 `data/environmental_pressure_config.json` — valores clave:
-- `baseCosts.fatigue`: 9 · `baseCosts.exposure`: 7
-- `altitudePressureByBand[4]`: 100
-- `summitOptimalEnd`: 630 min (10:30) · `summitLateStart`: 750 min (12:30)
-- `bivouacPenalty.fatigue`: 26 · `bivouacPenalty.exposure`: 32
+- `baseCosts.fatigue`: 10 · `baseCosts.exposure`: 8
+- `altitudePressureByBand[4]`: 22
+- `summitOptimalEnd`: 630 min (10:30) · `summitLateStart`: 1020 min (17:00)
+- `bivouacPenalty.fatigue`: 26 · `bivouacPenalty.exposure`: 28
 
 Estos valores difieren del spec pre-calibración (`one-shot-fase1-v1.4.md`) de forma deliberada.
 El spec usaba estimaciones conservadoras; la calibración post-run redujo la penalización para
 recuperar espacio de retirada estratégica y evitar trayectorias dominadas por colapso.
+
+> **Nota de trazabilidad (v1.4.1):** los valores anteriores de este cuadro reflejaban las
+> estimaciones pre-calibración del spec original. Los valores actuales corresponden al estado
+> post-calibración a partir de v1.4.1. Las estimaciones previas quedan registradas en el
+> historial de `CHANGELOG.md` para auditoría.
 
 ---
 

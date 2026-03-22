@@ -9,37 +9,22 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+- Monte Carlo headless simulator (`scripts/monte-carlo-web-v1.js`) for automated win-rate verification across all 6 characters × 5 scenarios × configurable seeds.
+- `simulate` npm script (`npm run simulate`) to run the Monte Carlo harness and write results to `docs/playtest-results/`.
+
+### Changed
+- Bumped version to `1.4.1` in `package.json` and `package-lock.json`.
+
+## [1.4.1] — 2026-03
+
 ### Fixed
 - `prototype/web-v1/engine/turn-resolution.js`: `sleep` action no longer advances the player's position. `evaluateOutcome` now forces `outcome = 'Hold'` for sleep, matching the design intent that sleep is recovery-in-place at a camp (gameplay-fix-v4, Bug A1).
 - `prototype/web-v1/engine/turn-resolution.js`: `collapseChance` multiplier reduced from `× 2` to `× 1.2`. The previous value caused 62% collapse probability on weather spikes (ws=3 at high altitude), making summit statistically impossible under normal mountain variability. At maximum effective pressure (eff=52), collapse chance is now 15.4% for advance — significant but survivable (gameplay-fix-v4, Bug A2).
 - `prototype/web-v1/ui/screens.js`: Part 2 unlock now persists across sessions and difficulty levels via `SUMMIT_ACHIEVED_KEY` in localStorage. Previously, `G.finalOutcome` reset on each `startRun()` call, locking Part 2 after any replay or page reload (gameplay-fix-v4, Bug A4).
 - `prototype/mra-v0/test_simulator.py`: resolved silently-reported failure for `accumulated-fatigue-trap seed=707/waiter` by capturing and asserting the mocked `run_all.py` failure output inside the test instead of leaking it into the suite output (gameplay-fix-v4, Bug minor-1).
-
-### Changed
-- `data/action_modifiers.json`: `advance.collapse` adjusted from `-45` to `-50`; `advance_slowly.collapse` from `-50` to `-55`. With the new `× 1.2` collapse multiplier, these values maintain meaningful collapse risk at extreme pressure while allowing normal expedition progress under standard conditions (gameplay-fix-v4, balance A3).
-- `data/environmental_pressure_config.json`: `summitLateStart` changed from 1200 (20:00) to 1020 (17:00), restoring summit-day timing tension. A 06:00 departure from Cólera with standard advance reaches summit at 13:20 — within the window. Advance-slowly from 06:00 would exceed the cutoff, enforcing the real mountaineering rule of committing to pace on summit day (gameplay-fix-v4, Bug A5).
-- `docs/en/consolidated-design-v1.4.md` §6.3: win-rate targets updated to post-recalibration values (Summit 20–35% for standard/real-mountain difficulty).
-- `prototype/web-v1/DEV_NOTE.md`: time cost values updated; sleep position rule, gravity override, summit block, hasSummited, and timeSensitivity mechanics documented.
-- `data/contracts/model-contract.json`: `turnSemantics` expanded to all six engine actions.
-- `docs/simulation_engine.md`: added documentation for sleep position rule, gravity override, hasSummited, time-of-day amplification, and updated collapseChance formula.
-- `AGENTS.md`: learning log updated with gameplay-fix-v4 findings.
-- `scripts/check-lock-version.js`: converted the lockfile version guard to ESM-compatible imports so `node scripts/check-lock-version.js` works under the repository's `"type": "module"` configuration.
-
-### Added
-- `prototype/web-v1/tests/turn-behavior.test.js`: new test `sleep never advances or retreats the player position` verifying that sleep action forces Hold outcome in evaluateOutcome (gameplay-fix-v4, regression coverage for Bug A1).
-- Timing pressure FAQ entry added to `prototype/web-v1` onboarding: explains that advancing after 15:00 at high altitude significantly increases environmental pressure and that planning around 06:00 departures from high camps is essential.
-
-### Added
-- Added a title-screen difficulty selector with five tiers (Very Easy to Very Hard) for `prototype/web-v1`, plus a full onboarding tutorial/FAQ modal before the expedition begins.
-
-### Changed
-- Adjusted `prototype/web-v1` gameplay tuning so difficulty now changes environmental pressure, stage weather bias, body tolerance, initial resources/capacity, permit margin, and decision-window generosity.
-- Updated web-v1 smoke/integration coverage and public readmes to reflect the new title difficulty step and pre-expedition tutorial flow.
-
-### Fixed
 - Fixed `prototype/web-v1/engine/turn-rules.js` park-exit classification so runs that had already reached `summit` still resolve as `Summit and Safe Return` when `hasSummited` is true even if `highestPosIdx` is stale during the final Horcones exit turn.
 - Fixed `prototype/web-v1` summit handling so once the player reaches `summit`, further ascent actions are blocked in both the resolver and decision UI, the run explicitly redirects toward descent, and `Summit and Safe Return` still unlocks the Part 2 winning bridge only after a safe park exit.
-
 - Fixed `prototype/web-v1/ui/screens.js` difficulty plumbing so title selection now affects runtime recovery, combined resource economy, and character-specific decision windows instead of only a subset of systems.
 - Retuned the `Very Easy` profile in `prototype/web-v1/ui/screens.js` with extra permit/resource/body slack so first-ascent runs can realistically progress beyond Camp 3 when the player selects that tier.
 - Added web-v1 regression coverage to lock the difficulty-runtime wiring between title selection and the underlying economy/timer subsystems.
@@ -50,26 +35,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `prototype/web-v1/ui/screens.js` day rollover so non-sleep actions increment `G.day`/`G.permitDay` after midnight and removed the redundant bivouac day increment path.
 - Corrected `prototype/web-v1/ui/screens.js` park-exit debrief wiring so all Horcones exits show the return message while `Summit and Safe Return` gets a distinct summit-success debrief line.
 - Added targeted engine regression coverage for summit continuation, deterministic descent, fixed-pressure recovery, and descent-window exemption in `prototype/web-v1/tests/turn-behavior.test.js`.
-
-### Balance
-- Recalibrated `prototype/web-v1` descent pacing and upper-mountain pressure after the post-audit regression pass: `descend.timeCost` now reflects ~60-minute descent nodes, recovery values are stronger, and visibility/persistence/bivouac pressure floors were reduced to restore survivable retreat arcs.
-- Added a post-fix regression-validation note to `docs/balance-calibration-notes.md` covering the new summit/descent/pathing assertions and current validation status for the requested balance sweep.
-
-### Changed
-- Clarified the web-v1 descend action copy so onboarding and the in-run Horcones button explain that descending again from Horcones exits the park and ends the expedition.
-- Updated the Playwright smoke-test workflow guidance so local contributors get an explicit bootstrap path, while missing Playwright dependencies now produce a skip with actionable setup instructions instead of an import failure.
-
-### Fixed
 - Added regression coverage for Daniela-only `Shoot Photo` access in both browser smoke validation and web-v1 contract tests, protecting the UI visibility and keyboard shortcut guard against future regressions.
-
-### Fixed
 - Corrected `prototype/web-v1` park-exit resolution so returning to `horcones` no longer auto-ends the run, `wait` on approach sectors cannot advance the player, and descending from `horcones` now closes the expedition as an explicit park exit.
 - Added targeted `web-v1` regression coverage for approach wait movement, early retreat-to-Horcones continuity, and Horcones exit handling.
-
-### Changed
-- Removed Brazilian Portuguese from the `prototype/web-v1` runtime language selector and language validation, leaving only English (`en`) and Spanish (`es`) as supported UI locales.
-
-### Fixed
 - Fixed missing `collapse` and `survival` fields in `data/action_modifiers.json`.
   The new probabilistic `evaluateOutcome` in `prototype/web-v1/engine/turn-resolution.js`
   uses these fields to compute `collapseChance` and `survivalChance`. Without them,
@@ -89,23 +57,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
   cap of 1–5 fc/turn.
 - Expanded Spanish localization coverage in `prototype/web-v1/ui/screens.js` by translating remaining runtime strings (sleep/tooltips, ambient/tutor cues, debrief turning-point and cause messaging, reflection prompts, and narrative text selection) so Spanish sessions no longer surface mixed English copy in core gameplay/debrief flows.
 - Fixed startup interactivity regressions in `prototype/web-v1/ui/screens.js` by escaping the English title-tagline apostrophes (preventing module parse failure) and restoring the `window.setVisualMode` facade required by the title-screen inline visual-mode selector.
-
-### Added
-- Added multilingual runtime support in `prototype/web-v1` with a persistent language selector (`en`, `es`) and UI translation wiring for core navigation, decision controls, random cards, and journal prompts.
-- Added a `Random Character` card in `prototype/web-v1` character selection so players can start a run with one of the six eligible profiles chosen automatically on confirm.
-- Added `data/scenarios.web-v1.json` as the canonical web-v1 scenario catalog, including predefined scenarios and random-archetype generation ranges/configuration used by runtime scenario selection.
-- Added `docs/technical-debt-register.md` with active debt ownership, risk, trigger symptoms, measurable exit criteria, and mandatory release-PR review guidance for architecture, data-contract, prototype-divergence, and balance-fragility hotspots.
-- Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
-- Added `prototype/web-v1/tests/turn-behavior.test.js` with fixture-based deterministic behavioral tests for `resolveTurn`, `evaluateOutcome`, and `updateState` using controlled RNG.
-- Added `scripts/check-lock-version.js` and `npm run check:lock-version` to fail when `package.json.version` diverges from the lockfile root package version (`package-lock.json` → `packages[""].version`).
-- Added a CI guard step in `.github/workflows/ci.yml` to execute `npm run check:lock-version` during the Node test job.
-- Added version-bump and lockfile synchronization guidance to `CONTRIBUTING.md`, including regeneration and validation commands.
-- Added `docs/model-contract.md` and `data/contracts/model-contract.json` to formalize cross-surface canonical concepts (outcomes, shared state metrics, turn semantics), authority ownership (`web-v1` active vs `mra-v0` historical), and intentional divergences.
-- Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
-
-- Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
-
-### Fixed
 - Fixed `prototype/web-v1/ui/screens.js` data bootstrapping to treat `data/environmental_pressure_config.json` as required, preventing silent startup with an incomplete pressure model that later crashed turn resolution.
 - Fixed `prototype/web-v1/ui/screens.js` environmental-pressure calculations to use null-safe scale fallbacks (`altitudePressureByBand`, `terrainLoadScale`, `weatherSeverityScale`, `visibilityRiskScale`, `timeOfDayRiskScale`, `exposurePersistenceScale`) so partial/malformed config payloads no longer throw runtime type errors.
 - Fixed critical web-v1 runtime blockers in `prototype/web-v1/ui/screens.js` by restoring a module-local `TUNING` fallback, persisting `G.finalOutcome`/`G.hasSummited` from resolved turn outcomes, wiring `acclimatizationGain` into turn execution, and persisting rolling `pressureHistory` samples for non-steady trend estimation.
@@ -114,8 +65,64 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `prototype/web-v1` character-selection progression by restoring required global button handlers (`confirmCharacter`, `confirmScenario`, `startGame`, etc.) for inline `onclick` wiring, unblocking the "This is my expedition." CTA.
 - Fixed `prototype/web-v1/ui/screens.js` action resolution to always return numeric `fatigueDelta`/`exposureDelta`/`capacityDelta` defaults from `getActionModifier()`, preventing `NaN` body-state propagation that blocked effective movement decisions at expedition start.
 - Fixed `prototype/web-v1/ui/screens.js` decision logging to use `turnResult.resolvedAction`, restoring consistent action-state synchronization for inline controls and keyboard command routing during active runs.
+- Hardened `loadDataConfig()` validation in `prototype/web-v1/ui/screens.js` with required-file checks and runtime schema/contract assertions for `scenarios.web-v1.json` (predefined seeds and random archetype presence), failing fast via fatal screen on violations.
+- Updated `prototype/web-v1/tests/model-contract.test.js` to read web initial-state overlap keys from `data/scenarios.web-v1.json` instead of parsing inline scenario literals from UI source.
+- Annotated `prototype/mra-v0/test_simulator.py` import bootstrap with `# noqa: E402` so the new blocking `ruff` gate accepts the intentional `sys.path` setup used by simulator tests.
+- Hardened `loadDataConfig()` in `prototype/web-v1/ui/screens.js` by treating `nodes`, `actionModifiers`, `stageModifiers`, `characters`, and `outcomes` as required assets with runtime schema checks. Any load/parse/schema failure now raises a blocking fatal screen in `prototype/web-v1/index.html`, includes filename + key-path diagnostics, and keeps `G.modelReady = false` to prevent game start with empty defaults.
+- Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in
+  `data/environmental_pressure_config.json` made the upper mountain (band 3+) mathematically
+  impassable. EP floor at band 3–4 nodes (159–215) permanently exceeded maximum achievable
+  BT (90), producing 0% summit rate in Monte Carlo simulation of 36,000 runs. Fixed by
+  reducing altitude and terrain pressure scales by ~50–70% at higher bands, reducing
+  `timeOfDayRiskScale` and `exposurePersistenceScale` values, and adjusting `timeSensitivity`
+  and `terrainLoad` for the four summit-day nodes in `data/nodes.json`.
+- Fixed `Math.max(1, ...)` floor in `spendResourcesForMinutes` (`prototype/web-v1/index.html`):
+  minimum water/food cost per action was clamped to 1 unit regardless of actual burn
+  calculation. With calibrated burn rates and 45+ actions per expedition, this made
+  the round trip consume 45+ water units against a 22–26 unit starting pool, making
+  summit completion impossible through resource exhaustion. Changed to `Math.max(0, ...)`.
+- Fixed `summitLateStart` in `data/environmental_pressure_config.json`: value of 750
+  (12:30pm) caused the engine to force descent at La Canaleta (arrival ~14:15) even
+  with one node remaining to summit. Updated to 960 (4pm), matching the actual 11-hour
+  summit-day window from a 6am departure.
+- Updated `resourceBurnPerHour` in `data/environmental_pressure_config.json` to
+  calibrated values that make a full expedition viable within scenario starting
+  resources (APPROACH: 0.14/0.10, HIGH_CAMP: 0.22/0.16, SUMMIT_DAY: 0.34/0.24).
+- Fixed outcome classification order in `prototype/web-v1/index.html`: `Summit and
+  Safe Return` was evaluated after `Expedition Window Closed`, causing players who
+  returned to Horcones on the final turn to receive the wrong outcome. Swapped the
+  two `else if` branches so summit completion takes priority.
+- Fixed descent body-state accumulation in `data/action_modifiers.json`: `descend`
+  now carries `fatigueRecovery: 1` and `exposureRecovery: 1`, activating the
+  existing sign-flip logic in `evaluateOutcome()`. Descending now recovers fatigue
+  and exposure instead of compounding them through stage multipliers. Added
+  `pressureDeltaCap: 30` to prevent night-descent `pressureFactor` from reaching
+  maximum (2.5), which was draining `functional_capacity` to fatal levels over 14
+  descent turns. Implemented cap in `evaluateOutcome()` via a one-line guard.
+- Fixed `max_turns` across all five predefined scenarios and the random scenario
+  generator in `prototype/web-v1/index.html`. Previous values (30–34) were below
+  the minimum of 35 turns required for ascent + descent with one recovery sleep.
+  Updated to 46–50 for predefined scenarios and 46–54 for random mode.
+- Fixed documentation drift between published readmes and prototype behavior by explicitly documenting the current playable flow and Part 2 gating constraints (`Summit and Safe Return` only).
+- Named the Part 2 guides in `prototype/web-v1/index.html` with role-specific narrative copy for Agustina Villanueva and Alejandro Molina.
+- Removed orphaned `screen-mode` CSS rules from `prototype/web-v1/index.html`, including the leftover mobile `.mode-grid` media-query declaration.
+- Expanded Section 6.3 in `docs/en/consolidated-design-v1.4.md` with calibrated win-rate distribution and active configuration values.
+- Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
 
 ### Changed
+- `data/action_modifiers.json`: `advance.collapse` adjusted from `-45` to `-50`; `advance_slowly.collapse` from `-50` to `-55`. With the new `× 1.2` collapse multiplier, these values maintain meaningful collapse risk at extreme pressure while allowing normal expedition progress under standard conditions (gameplay-fix-v4, balance A3).
+- `data/environmental_pressure_config.json`: `summitLateStart` changed from 1200 (20:00) to 1020 (17:00), restoring summit-day timing tension. A 06:00 departure from Cólera with standard advance reaches summit at 13:20 — within the window. Advance-slowly from 06:00 would exceed the cutoff, enforcing the real mountaineering rule of committing to pace on summit day (gameplay-fix-v4, Bug A5).
+- `docs/en/consolidated-design-v1.4.md` §6.3: win-rate targets updated to post-recalibration values (Summit 20–35% for standard/real-mountain difficulty).
+- `prototype/web-v1/DEV_NOTE.md`: time cost values updated; sleep position rule, gravity override, summit block, hasSummited, and timeSensitivity mechanics documented.
+- `data/contracts/model-contract.json`: `turnSemantics` expanded to all six engine actions.
+- `docs/simulation_engine.md`: added documentation for sleep position rule, gravity override, hasSummited, time-of-day amplification, and updated collapseChance formula.
+- `AGENTS.md`: learning log updated with gameplay-fix-v4 findings.
+- `scripts/check-lock-version.js`: converted the lockfile version guard to ESM-compatible imports so `node scripts/check-lock-version.js` works under the repository's `"type": "module"` configuration.
+- Adjusted `prototype/web-v1` gameplay tuning so difficulty now changes environmental pressure, stage weather bias, body tolerance, initial resources/capacity, permit margin, and decision-window generosity.
+- Updated web-v1 smoke/integration coverage and public readmes to reflect the new title difficulty step and pre-expedition tutorial flow.
+- Clarified the web-v1 descend action copy so onboarding and the in-run Horcones button explain that descending again from Horcones exits the park and ends the expedition.
+- Updated the Playwright smoke-test workflow guidance so local contributors get an explicit bootstrap path, while missing Playwright dependencies now produce a skip with actionable setup instructions instead of an import failure.
+- Removed Brazilian Portuguese from the `prototype/web-v1` runtime language selector and language validation, leaving only English (`en`) and Spanish (`es`) as supported UI locales.
 - Rebuilt the main `prototype/web-v1/index.html` gameplay interface with a new command-deck layout (route/log expedition column + telemetry/context/decision command column) while preserving canonical IDs, action controls, permit/watch/context systems, and turn-resolution wiring.
 - Updated `data/characters.json` with canonical v1.4 engine values for Francisco, Laura, Erik, Daniela, Blake, and Irina (`perceptionBias`, `riskTolerance`, and related balancing fields) to realign roster identity and expected win-rate dispersion.
 - Updated `.github/workflows/ci.yml` JSON validation coverage to include `data/scenarios.web-v1.json`.
@@ -140,59 +147,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Split gameplay code into modules: turn engine logic (`resolveTurn`, `evaluateOutcome`, `updateState`, RNG/clamp helpers) now lives in `prototype/web-v1/engine/turn-resolution.js`, and canonical game-state initialization now lives in `prototype/web-v1/state/game-state.js`.
 - Refactored web-v1 runtime state into explicit slices (`runState`, `uiState`, `telemetryState`) in `prototype/web-v1/state/game-state.js`, added guarded helper APIs (`updateRunState`, `updateUIState`, `recordTelemetry`), and wired hot mutation paths (`showScreen`, `startGame`, `resolveTurn`, `endRun`) through these helpers with boundary assertions (`before resolveTurn`, `after updateState`) to catch state-shape drift early.
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to validate module-based loading and relocated engine/state contracts.
-
-### Fixed
-- Hardened `loadDataConfig()` validation in `prototype/web-v1/ui/screens.js` with required-file checks and runtime schema/contract assertions for `scenarios.web-v1.json` (predefined seeds and random archetype presence), failing fast via fatal screen on violations.
-- Updated `prototype/web-v1/tests/model-contract.test.js` to read web initial-state overlap keys from `data/scenarios.web-v1.json` instead of parsing inline scenario literals from UI source.
-- Annotated `prototype/mra-v0/test_simulator.py` import bootstrap with `# noqa: E402` so the new blocking `ruff` gate accepts the intentional `sys.path` setup used by simulator tests.
-- Hardened `loadDataConfig()` in `prototype/web-v1/ui/screens.js` by treating `nodes`, `actionModifiers`, `stageModifiers`, `characters`, and `outcomes` as required assets with runtime schema checks. Any load/parse/schema failure now raises a blocking fatal screen in `prototype/web-v1/index.html`, includes filename + key-path diagnostics, and keeps `G.modelReady = false` to prevent game start with empty defaults.
-
-- Structural balance bug: `altitudePressureByBand` and `terrainLoadScale` values in
-  `data/environmental_pressure_config.json` made the upper mountain (band 3+) mathematically
-  impassable. EP floor at band 3–4 nodes (159–215) permanently exceeded maximum achievable
-  BT (90), producing 0% summit rate in Monte Carlo simulation of 36,000 runs. Fixed by
-  reducing altitude and terrain pressure scales by ~50–70% at higher bands, reducing
-  `timeOfDayRiskScale` and `exposurePersistenceScale` values, and adjusting `timeSensitivity`
-  and `terrainLoad` for the four summit-day nodes in `data/nodes.json`.
-
-- Fixed `Math.max(1, ...)` floor in `spendResourcesForMinutes` (`prototype/web-v1/index.html`):
-  minimum water/food cost per action was clamped to 1 unit regardless of actual burn
-  calculation. With calibrated burn rates and 45+ actions per expedition, this made
-  the round trip consume 45+ water units against a 22–26 unit starting pool, making
-  summit completion impossible through resource exhaustion. Changed to `Math.max(0, ...)`.
-- Fixed `summitLateStart` in `data/environmental_pressure_config.json`: value of 750
-  (12:30pm) caused the engine to force descent at La Canaleta (arrival ~14:15) even
-  with one node remaining to summit. Updated to 960 (4pm), matching the actual 11-hour
-  summit-day window from a 6am departure.
-- Updated `resourceBurnPerHour` in `data/environmental_pressure_config.json` to
-  calibrated values that make a full expedition viable within scenario starting
-  resources (APPROACH: 0.14/0.10, HIGH_CAMP: 0.22/0.16, SUMMIT_DAY: 0.34/0.24).
-
-- Fixed outcome classification order in `prototype/web-v1/index.html`: `Summit and
-  Safe Return` was evaluated after `Expedition Window Closed`, causing players who
-  returned to Horcones on the final turn to receive the wrong outcome. Swapped the
-  two `else if` branches so summit completion takes priority.
-- Fixed descent body-state accumulation in `data/action_modifiers.json`: `descend`
-  now carries `fatigueRecovery: 1` and `exposureRecovery: 1`, activating the
-  existing sign-flip logic in `evaluateOutcome()`. Descending now recovers fatigue
-  and exposure instead of compounding them through stage multipliers. Added
-  `pressureDeltaCap: 30` to prevent night-descent `pressureFactor` from reaching
-  maximum (2.5), which was draining `functional_capacity` to fatal levels over 14
-  descent turns. Implemented cap in `evaluateOutcome()` via a one-line guard.
-- Fixed `max_turns` across all five predefined scenarios and the random scenario
-  generator in `prototype/web-v1/index.html`. Previous values (30–34) were below
-  the minimum of 35 turns required for ascent + descent with one recovery sleep.
-  Updated to 46–50 for predefined scenarios and 46–54 for random mode.
-
-### Added
-- Added a Phase 2 real-progress snapshot section in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to track implemented vs pending scope item-by-item.
-- Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
-- Added an in-debrief new-player comprehension checklist and confusion-notes textarea in `prototype/web-v1/index.html` to capture what users understood (decision goal, loss cause, and improvement path) and to drive microcopy iteration from observed confusion.
-- Added character-level decision-window profiles in `data/characters.json` (`engine.decisionWindow`) with stage modifiers for `APPROACH`, `HIGH_CAMP`, and `SUMMIT_DAY` to differentiate timing pressure behavior across roster archetypes.
-- Added a contextual one-use `Focus pause` fallback in `prototype/web-v1/index.html` to provide a limited accessible grace margin during high-pressure turns.
-- Added perception-latency profiles in `data/characters.json` (`engine.perceptionLatency`) to support delayed signal activation tuning per character, including specialized thresholds for `erik` and `irina`.
-
-### Changed
 - Standardized `prototype/web-v1/index.html` `run_log.json` export payload with stable cross-run comparison aliases (`epScore`, `btScore`) while preserving legacy fields (`EP`, `BT`) for backwards compatibility.
 - Updated `prototype/web-v1/index.html` with layered onboarding cues in the context widget (`essentials` early, `contextual` after early turns or critical risk), capped simultaneous secondary alerts, and enforced a single prioritized primary alert per turn to reduce alert fatigue.
 - Expanded `prototype/web-v1/index.html` run-log export rows with `characterId`, `stage`, `decisionWindowExceeded`, `lateSignalTriggered`, and `specialActionUsed` to improve QA and balance instrumentation.
@@ -220,33 +174,41 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` with regression checks for guardrail fields and SUMMIT_DAY difficulty caps.
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the new `effectiveDelta`/`pressureDeltaCap` path in `evaluateOutcome()` while preserving pressure-factor pipeline coverage.
 - Updated `docs/balance-calibration-notes.md` with explicit rollback criteria when any character drifts outside accepted outcome bands.
-
-
-### Changed
 - Expanded `AGENTS.md` into a living learning log with mandatory session-start read behavior and consolidated project/workflow learnings from v1.4 Phase 1 implementation.
 - Root `AGENTS.md` was restructured in a convention-aligned format (scope, priority, and actionable repository instructions) while preserving existing documentation and changelog policies.
 - Added a consolidated v1.4 design/planning documentation package (ES/EN) with game-structure, character, simulation-pipeline, and phase rollout references.
 - Updated `README.md`, `README.es.md`, `docs/*`, and `meta/public-roadmap.md` to cross-reference the v1.4 documentation baseline and clarify planning-vs-implementation status.
-
-### Added
-- Added Daniela-only contextual action `shoot_photo` in `prototype/web-v1/index.html` and `data/action_modifiers.json`, including capped perception/confidence/trend benefits, finite resource/time cost, cooldown/session guards, and explicit run log instrumentation (`action: "shoot_photo"` with `photoEffectApplied`).
-
-### Changed
 - Updated turn resolution and game UI to render/resolve photo-based route-reading effects diegetically without exposing forbidden raw variables, while preserving canonical resolution order (Environment → EP → BT → pressureDelta → perception → action modifier → outcome).
-
-
-### Changed
 - Updated `README.md` and `README.es.md` to reflect the observable web-v1 state (six characters, decision-window pressure, contextual action support, and gated Part 2 narrative bridge).
 - Updated implementation-plan phase labels in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` from “next sprint” to “in progress” to match real execution status.
 
-### Fixed
-- Fixed documentation drift between published readmes and prototype behavior by explicitly documenting the current playable flow and Part 2 gating constraints (`Summit and Safe Return` only).
+### Added
+- `prototype/web-v1/tests/turn-behavior.test.js`: new test `sleep never advances or retreats the player position` verifying that sleep action forces Hold outcome in evaluateOutcome (gameplay-fix-v4, regression coverage for Bug A1).
+- Timing pressure FAQ entry added to `prototype/web-v1` onboarding: explains that advancing after 15:00 at high altitude significantly increases environmental pressure and that planning around 06:00 departures from high camps is essential.
+- Added a title-screen difficulty selector with five tiers (Very Easy to Very Hard) for `prototype/web-v1`, plus a full onboarding tutorial/FAQ modal before the expedition begins.
+- Added multilingual runtime support in `prototype/web-v1` with a persistent language selector (`en`, `es`) and UI translation wiring for core navigation, decision controls, random cards, and journal prompts.
+- Added a `Random Character` card in `prototype/web-v1` character selection so players can start a run with one of the six eligible profiles chosen automatically on confirm.
+- Added `data/scenarios.web-v1.json` as the canonical web-v1 scenario catalog, including predefined scenarios and random-archetype generation ranges/configuration used by runtime scenario selection.
+- Added `docs/technical-debt-register.md` with active debt ownership, risk, trigger symptoms, measurable exit criteria, and mandatory release-PR review guidance for architecture, data-contract, prototype-divergence, and balance-fragility hotspots.
+- Added `prototype/web-v1/engine/turn-rules.js` with importable deterministic rule helpers for terminal outcome ordering, decision-window degradation caps, and resource-burn rounding floors.
+- Added `prototype/web-v1/tests/turn-behavior.test.js` with fixture-based deterministic behavioral tests for `resolveTurn`, `evaluateOutcome`, and `updateState` using controlled RNG.
+- Added `scripts/check-lock-version.js` and `npm run check:lock-version` to fail when `package.json.version` diverges from the lockfile root package version (`package-lock.json` → `packages[""].version`).
+- Added a CI guard step in `.github/workflows/ci.yml` to execute `npm run check:lock-version` during the Node test job.
+- Added version-bump and lockfile synchronization guidance to `CONTRIBUTING.md`, including regeneration and validation commands.
+- Added `docs/model-contract.md` and `data/contracts/model-contract.json` to formalize cross-surface canonical concepts (outcomes, shared state metrics, turn semantics), authority ownership (`web-v1` active vs `mra-v0` historical), and intentional divergences.
+- Added `prototype/web-v1/tests/model-contract.test.js` and expanded `npm test` coverage to enforce contract overlap checks between `prototype/web-v1` and `prototype/mra-v0`.
+- Added `prototype/web-v1/tests/test_smoke_flow.py` as a headless browser smoke test that validates canonical screen wiring (`splash → title → character → scenario → onboarding → game`) and Part 2 unlock gating from `Summit and Safe Return`.
+- Added a Phase 2 real-progress snapshot section in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to track implemented vs pending scope item-by-item.
+- Added `docs/es/guia-observacion-playtest.md` with a short field checklist for recurrent errors, confusion signals, and abandonment points in qualitative playtests.
+- Added an in-debrief new-player comprehension checklist and confusion-notes textarea in `prototype/web-v1/index.html` to capture what users understood (decision goal, loss cause, and improvement path) and to drive microcopy iteration from observed confusion.
+- Added character-level decision-window profiles in `data/characters.json` (`engine.decisionWindow`) with stage modifiers for `APPROACH`, `HIGH_CAMP`, and `SUMMIT_DAY` to differentiate timing pressure behavior across roster archetypes.
+- Added a contextual one-use `Focus pause` fallback in `prototype/web-v1/index.html` to provide a limited accessible grace margin during high-pressure turns.
+- Added perception-latency profiles in `data/characters.json` (`engine.perceptionLatency`) to support delayed signal activation tuning per character, including specialized thresholds for `erik` and `irina`.
+- Added Daniela-only contextual action `shoot_photo` in `prototype/web-v1/index.html` and `data/action_modifiers.json`, including capped perception/confidence/trend benefits, finite resource/time cost, cooldown/session guards, and explicit run log instrumentation (`action: "shoot_photo"` with `photoEffectApplied`).
 
-### Fixed
-- Named the Part 2 guides in `prototype/web-v1/index.html` with role-specific narrative copy for Agustina Villanueva and Alejandro Molina.
-- Removed orphaned `screen-mode` CSS rules from `prototype/web-v1/index.html`, including the leftover mobile `.mode-grid` media-query declaration.
-- Expanded Section 6.3 in `docs/en/consolidated-design-v1.4.md` with calibrated win-rate distribution and active configuration values.
-- Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
+### Balance
+- Recalibrated `prototype/web-v1` descent pacing and upper-mountain pressure after the post-audit regression pass: `descend.timeCost` now reflects ~60-minute descent nodes, recovery values are stronger, and visibility/persistence/bivouac pressure floors were reduced to restore survivable retreat arcs.
+- Added a post-fix regression-validation note to `docs/balance-calibration-notes.md` covering the new summit/descent/pathing assertions and current validation status for the requested balance sweep.
 
 ## [1.4.0] — 2026-03
 
