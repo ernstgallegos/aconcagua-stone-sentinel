@@ -6,6 +6,8 @@ import { getPositionLabel, getPositionAlt, getPositions, getRouteNodes, getCampP
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 
+const MAX_DIFFICULTY_STARS = 5;
+
 function clearEl(el) {
   while (el && el.firstChild) el.removeChild(el.firstChild);
 }
@@ -15,6 +17,17 @@ function $(id) { return document.getElementById(id); }
 function formatMinutes(minutes) {
   const m = ((minutes % 1440) + 1440) % 1440;
   return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+}
+
+/** Extract initials from a name string (up to maxChars characters). */
+function getCharacterInitials(name, maxChars = 2) {
+  if (!name) return '?';
+  return name.split(' ').filter((w) => w).map((w) => w[0].toUpperCase()).join('').slice(0, maxChars);
+}
+
+/** Render a star rating as filled/empty stars. */
+function renderStars(count, max = MAX_DIFFICULTY_STARS) {
+  return '★'.repeat(count) + '☆'.repeat(max - count);
 }
 
 // (clamp imported from engine.js above)
@@ -136,6 +149,14 @@ export function renderHero(lang) {
   const charPreview = $('hero-char-preview-label');
   if (charPreview) charPreview.textContent = s.characterPreview || '';
 
+  // Update data-i18n heading for characterPreview
+  const charPreviewHeading = $('char-preview-heading');
+  if (charPreviewHeading) charPreviewHeading.textContent = s.characterPreview || '';
+
+  // Update data-i18n heading for whatIsThis
+  const pillarsHeading = $('pillars-heading');
+  if (pillarsHeading) pillarsHeading.textContent = s.whatIsThis || '';
+
   renderDifficultySelector(lang);
 }
 
@@ -177,6 +198,23 @@ export function renderDifficultySelector(lang, selectedId = 'standard', onChange
 
 // ── CHARACTER SELECT ──────────────────────────────────────────────────────────
 
+// Render small avatar preview circles on the hero screen
+export function renderHeroCharPreviews(characters) {
+  const container = $('hero-char-previews');
+  if (!container || !characters?.length) return;
+  clearEl(container);
+  characters.forEach((c) => {
+    const initials = (c.name || '?').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+    const wrap = document.createElement('div');
+    wrap.className = 'char-preview-circle';
+    wrap.title = c.name;
+    wrap.setAttribute('aria-label', c.name);
+    wrap.style.setProperty('--char-accent', c.accent || 'var(--summit)');
+    wrap.textContent = getCharacterInitials(c.name, 2);
+    container.appendChild(wrap);
+  });
+}
+
 export function renderCharacterGrid(characters, lang, onSelect) {
   const grid = $('character-grid');
   if (!grid) return;
@@ -193,8 +231,8 @@ export function renderCharacterGrid(characters, lang, onSelect) {
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${c.name} — ${c.role}`);
 
-    const initials = (c.name || '?')[0].toUpperCase();
-    const stars = '★'.repeat(c.stars || 3) + '☆'.repeat(5 - (c.stars || 3));
+    const initials = getCharacterInitials(c.name, 2);
+    const stars = renderStars(c.stars || 3);
     card.innerHTML = `
       <div class="char-avatar" style="--char-accent:${c.accent || 'var(--summit)'}">
         <span class="char-initial">${initials}</span>
@@ -265,12 +303,12 @@ export function renderCharacterDetail(character, lang, onConfirm) {
   const s = strings[lang]?.character || strings.en.character;
 
   const traits = (character.traits || []).map((tr) => `<li>${tr}</li>`).join('');
-  const stars = '★'.repeat(character.stars || 3) + '☆'.repeat(5 - (character.stars || 3));
+  const stars = renderStars(character.stars || 3);
 
   panel.innerHTML = `
     <div class="detail-header">
       <div class="detail-avatar" style="--char-accent:${character.accent || 'var(--summit)'}">
-        ${(character.name || '?')[0].toUpperCase()}
+        ${getCharacterInitials(character.name, 1)}
       </div>
       <div>
         <h2 class="detail-name">${character.name}</h2>
@@ -638,4 +676,16 @@ function _outcomeClass(outcome) {
 
 export function updateAllText(lang) {
   renderNav(lang);
+
+  // Update all elements with data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    const keys = key.split('.');
+    let obj = strings[lang];
+    for (const k of keys) { obj = obj?.[k]; }
+    if (typeof obj === 'string') el.textContent = obj;
+  });
+
+  // Re-render dynamic sections that need it
+  renderHero(lang);
 }

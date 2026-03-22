@@ -64,6 +64,7 @@ async function init() {
   _setupEventListeners();
   _initIntersectionObserver();
   UI.renderHero(appState.lang);
+  UI.renderHeroCharPreviews(appState.characters);
   UI.showScreen('hero');
 }
 
@@ -292,9 +293,6 @@ function handleAction(action) {
   UI.renderGameTopbar(G, lang);
   UI.renderStatusPanel(G, lang);
   UI.renderPerceptionCard(G, lang);
-
-  const exitedPark = turnResult.result?.targetPosition === G.state.position &&
-    action === 'descend' && G.state.position === 'horcones';
 
   const isTerminal = turnResult.outcome !== 'Strategic Retreat';
 

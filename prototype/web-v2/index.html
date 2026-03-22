@@ -45,6 +45,25 @@
   <!-- Main content -->
   <main id="main">
 
+    <!-- Screen: Loading -->
+    <section id="screen-loading" class="screen" aria-label="Loading">
+      <div class="loading-state">
+        <span class="loading-icon" aria-hidden="true">🏔</span>
+        <p class="loading-text">Cargando expedición…</p>
+        <p id="loading-error" class="loading-error" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Screen: Error -->
+    <section id="screen-error" class="screen" aria-label="Error">
+      <div class="error-state">
+        <span class="error-icon" aria-hidden="true">⚠</span>
+        <h2 class="error-title">Error al cargar</h2>
+        <p id="error-message" class="error-message" aria-live="polite"></p>
+        <button class="btn btn-primary" onclick="location.reload()">Reintentar</button>
+      </div>
+    </section>
+
     <!-- Screen 1: Hero / Landing -->
     <section id="screen-hero" class="screen active" aria-labelledby="hero-title">
       <div class="hero-content">
@@ -74,7 +93,7 @@
         </section>
 
         <section class="section-characters" aria-labelledby="char-preview-heading">
-          <h2 id="char-preview-heading" class="section-title" data-i18n="hero.charLabel"></h2>
+          <h2 id="char-preview-heading" class="section-title" data-i18n="hero.characterPreview"></h2>
           <div id="hero-char-previews" class="char-previews">
             <!-- 6 small avatar circles rendered by JS -->
           </div>
