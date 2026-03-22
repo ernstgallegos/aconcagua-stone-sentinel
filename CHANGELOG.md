@@ -10,6 +10,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- `prototype/web-v2/js/` — 7 ES module JavaScript files for the web-v2 prototype:
+  - `state.js`: run state defaults, `createInitialGameState()`, `updateRunState()`, `assertStateShape()`, `clamp()`.
+  - `engine.js`: complete EP/BT/delta pipeline port from v1; exports `loadEngineData()`, `initRun()`, `resolveTurn()`, `calculateEP()`, `calculateBT()`, `getActionModifier()`, `getPerceivedState()`, `getAvailableActions()`, `getCurrentNode()`, `getCurrentStage()`, RNG helpers, and route accessors.
+  - `characters.js`: `loadCharacters()`, `getCharacterById()`, `selectRandomCharacter()` with per-character accent colors and difficulty stars.
+  - `scenarios.js`: `loadScenarios()`, `getScenarioById()`, `buildRandomScenario()` — full random-archetype scenario builder.
+  - `i18n.js`: complete bilingual (ES/EN) string catalog; `setLanguage()`, `getLang()`, `t()` path resolver.
+  - `ui.js`: DOM rendering layer — screen management, hero/character/briefing/game/debrief renderers, action buttons, status panel, event log, perception card, position list, theme cycling.
+  - `app.js`: main controller — data loading, navigation, language/theme/difficulty persistence, character and scenario selection, full game loop, debrief, `window.app` facade for inline handlers.
 - Monte Carlo headless simulator (`scripts/monte-carlo-web-v1.js`) for automated win-rate verification across all 6 characters × 5 scenarios × configurable seeds.
 - `simulate` npm script (`npm run simulate`) to run the Monte Carlo harness and write results to `docs/playtest-results/`.
 - `prototype/web-v2/css/` — full CSS layer for the web-v2 prototype (7 files, ~3 100 lines):
