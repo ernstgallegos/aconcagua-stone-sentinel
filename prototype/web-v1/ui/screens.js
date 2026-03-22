@@ -164,6 +164,15 @@ const DIFFICULTY_LEVELS = [
 ];
 let CURRENT_DIFFICULTY_ID = 'standard';
 
+// ════════════════════════════════════════════════
+// CAROUSEL STATE — Expedition Setup screen
+// ════════════════════════════════════════════════
+const CAROUSEL_STATE = {
+  difficulty: { index: 2 }, // Default: standard (index 2)
+  character: { index: 0 },
+  scenario: { index: 0 },
+};
+
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS[2];
 }
@@ -225,7 +234,21 @@ const I18N = {
       onboardingAdvanceSlowDesc: 'Gain ground with less cost. 70% chance of progress. Still consumes resources.',
       onboardingWaitDesc: 'Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.',
       onboardingDescendDesc: 'Descend protects return margin and permit time. From Horcones, descending again exits the park and ends the expedition.',
-      onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.'
+      onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.',
+      prepareExpedition: 'Prepare Your Expedition',
+      beginExpedition: '🎯 Begin Expedition',
+      quickStart: '🎲 Quick Start',
+      carouselDifficulty: 'Difficulty',
+      carouselCharacter: 'Character',
+      carouselScenario: 'Scenario',
+      carouselPrevDifficulty: 'Previous difficulty',
+      carouselNextDifficulty: 'Next difficulty',
+      carouselPrevCharacter: 'Previous character',
+      carouselNextCharacter: 'Next character',
+      carouselPrevScenario: 'Previous scenario',
+      carouselNextScenario: 'Next scenario',
+      carouselCharInfo: 'Character info',
+      carouselScenInfo: 'Scenario info',
 
     },
   },
@@ -276,7 +299,21 @@ const I18N = {
       onboardingAdvanceSlowDesc: 'Ganar terreno con menor costo. 70% de probabilidad de progreso. Sigue consumiendo recursos.',
       onboardingWaitDesc: 'Mantener posición. Recuperar es significativo solo en aproximación y base. Sobre campamento alto, esperar es sobre todo control de daños.',
       onboardingDescendDesc: 'Descender protege el margen de regreso y el tiempo de permiso. Desde Horcones, descender otra vez sale del parque y termina la expedición.',
-      onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.'
+      onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.',
+      prepareExpedition: 'Prepara tu expedición',
+      beginExpedition: '🎯 Iniciar expedición',
+      quickStart: '🎲 Inicio rápido',
+      carouselDifficulty: 'Dificultad',
+      carouselCharacter: 'Personaje',
+      carouselScenario: 'Escenario',
+      carouselPrevDifficulty: 'Dificultad anterior',
+      carouselNextDifficulty: 'Dificultad siguiente',
+      carouselPrevCharacter: 'Personaje anterior',
+      carouselNextCharacter: 'Personaje siguiente',
+      carouselPrevScenario: 'Escenario anterior',
+      carouselNextScenario: 'Escenario siguiente',
+      carouselCharInfo: 'Info del personaje',
+      carouselScenInfo: 'Info del escenario',
 
     },
   },};
@@ -523,6 +560,9 @@ function setLanguage(lang) {
   try { localStorage.setItem(LANGUAGE_KEY, safe); } catch (e) {}
   buildCharacterGrid();
   buildScenarioGrid();
+  // Rebuild carousels if expedition-setup is active or was already built
+  const expeditionSetupEl = document.getElementById('screen-expedition-setup');
+  if (expeditionSetupEl) buildExpeditionSetupCarousels();
 }
 
 function initLanguage() {
@@ -682,9 +722,6 @@ function applyStaticTranslations() {
     ['.theme-switcher label', 'ui.visualMode'],
     ['.lang-switcher label', 'ui.language'],
     ["#screen-title .btn-primary", 'ui.begin'],
-    ['#screen-character .screen-header h2', 'ui.titleChooseExpedition'],
-    ['#screen-scenario .screen-header h2', 'ui.titleSelectScenario'],
-    ['#btn-scenario-confirm', 'ui.depart'],
     ['#onboard-back-btn', 'ui.back'],
     ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
     ['.decision-label', 'ui.decision'],
@@ -699,12 +736,7 @@ function applyStaticTranslations() {
     ['#screen-splash .splash-cta', 'ui.splashTap'],
     ['#screen-title .title-tagline', 'ui.titleTagline'],
     ['#screen-title .title-sub', 'ui.titleSub'],
-    ['.title-difficulty-label', 'ui.difficulty'],
     ['#screen-onboarding .onboard-actions .btn-ghost', 'ui.tutorialCta'],
-    ['#screen-character .nav-back', 'ui.navTitle'],
-    ['#screen-character .screen-header p', 'ui.charSubtitle'],
-    ['#screen-scenario .nav-back', 'ui.navCharacter'],
-    ['#screen-scenario .screen-header p', 'ui.scenarioSubtitle'],
     ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(1) .decision-cost', 'ui.onboardingAdvanceDesc'],
     ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(2) .decision-cost', 'ui.onboardingAdvanceSlowDesc'],
     ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(3) .decision-cost', 'ui.onboardingWaitDesc'],
@@ -753,6 +785,8 @@ function showScreen(id) {
 
     if (id === 'part2-character') buildPart2CharacterGrid();
 
+    if (id === 'expedition-setup') buildExpeditionSetupCarousels();
+
     if (id === 'journal') {
       renderJournal();
       const backBtn = document.getElementById('journal-back-btn');
@@ -780,6 +814,7 @@ function showScreen(id) {
 // ════════════════════════════════════════════════
 function buildCharacterGrid() {
   const grid = document.getElementById('char-grid');
+  if (!grid) return;
   grid.innerHTML = '';
   (DATA_CONFIG.characters || []).forEach(rawCharacter => {
     const c = localizeCharacter(rawCharacter);
@@ -852,6 +887,240 @@ function confirmCharacter() {
   showScreen('scenario');
 }
 
+// ════════════════════════════════════════════════
+// EXPEDITION SETUP CAROUSELS
+// ════════════════════════════════════════════════
+function getCarouselItems(type) {
+  if (type === 'difficulty') return DIFFICULTY_LEVELS;
+  if (type === 'character') {
+    const chars = DATA_CONFIG.characters || [];
+    return [...chars, { id: 'random', name: t('ui.randomCharacter'), _random: true }];
+  }
+  if (type === 'scenario') {
+    const scenarios = getConfiguredScenarios();
+    return [...scenarios, { id: 'random', name: t('ui.randomScenario'), _random: true }];
+  }
+  return [];
+}
+
+function carouselPrev(type) {
+  const items = getCarouselItems(type);
+  if (!items.length) return;
+  CAROUSEL_STATE[type].index = (CAROUSEL_STATE[type].index - 1 + items.length) % items.length;
+  renderCarousel(type);
+}
+
+function carouselNext(type) {
+  const items = getCarouselItems(type);
+  if (!items.length) return;
+  CAROUSEL_STATE[type].index = (CAROUSEL_STATE[type].index + 1) % items.length;
+  renderCarousel(type);
+}
+
+function renderCarousel(type) {
+  const items = getCarouselItems(type);
+  if (!items.length) return;
+  const idx = CAROUSEL_STATE[type].index;
+  const item = items[idx];
+
+  const cardEl = document.getElementById(`carousel-card-${type}`);
+  const dotsEl = document.getElementById(`carousel-dots-${type}`);
+  if (!cardEl) return;
+
+  // Render card content based on type
+  if (type === 'difficulty') {
+    const level = item;
+    const labelText = level.label[CURRENT_LANGUAGE] || level.label.en;
+    cardEl.innerHTML = `<div class="carousel-card-name">${labelText}</div>`;
+    const extraEl = document.getElementById('carousel-extra-difficulty');
+    if (extraEl) extraEl.textContent = level.blurb[CURRENT_LANGUAGE] || level.blurb.en;
+    // Keep CURRENT_DIFFICULTY_ID in sync; also persist to localStorage
+    setDifficulty(level.id);
+  } else if (type === 'character') {
+    if (item._random) {
+      cardEl.innerHTML = `
+        <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
+        <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
+        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: Variable</div>
+      `;
+    } else {
+      const c = localizeCharacter(item);
+      cardEl.innerHTML = `
+        <div class="carousel-card-name">${c.name}</div>
+        <div class="carousel-card-role">${c.role}</div>
+        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${c.difficultyLabel}</div>
+        <button class="carousel-info-btn" onclick="toggleCarouselInfo('character', ${idx})" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
+      `;
+    }
+    // Hide info panel when card changes
+    const infoEl = document.getElementById('carousel-info-panel-character');
+    if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
+  } else if (type === 'scenario') {
+    if (item._random) {
+      cardEl.innerHTML = `
+        <div class="carousel-card-num">${t('ui.randomScenarioTag')}</div>
+        <div class="carousel-card-name">${t('ui.randomScenario')}</div>
+        <div class="carousel-card-role">${t('ui.randomScenarioDesc')}</div>
+      `;
+    } else {
+      const sc = localizeScenario(item);
+      cardEl.innerHTML = `
+        <div class="carousel-card-num">SCENARIO ${sc.num} · ${sc.difficulty}</div>
+        <div class="carousel-card-name">${sc.name}</div>
+        <div class="carousel-card-role">${sc.desc}</div>
+        <button class="carousel-info-btn" onclick="toggleCarouselInfo('scenario', ${idx})" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
+      `;
+    }
+    // Hide info panel when card changes
+    const infoEl = document.getElementById('carousel-info-panel-scenario');
+    if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
+  }
+
+  // Render dots
+  if (dotsEl) {
+    dotsEl.innerHTML = items.map((_, i) =>
+      `<span class="carousel-dot${i === idx ? ' active' : ''}"></span>`
+    ).join('');
+  }
+}
+
+function toggleCarouselInfo(type, idx) {
+  const infoEl = document.getElementById(`carousel-info-panel-${type}`);
+  if (!infoEl) return;
+
+  // Toggle: if already shown for this index, hide it
+  if (infoEl.dataset.shownFor === String(idx) && infoEl.classList.contains('visible')) {
+    infoEl.classList.remove('visible');
+    delete infoEl.dataset.shownFor;
+    return;
+  }
+
+  const items = getCarouselItems(type);
+  const item = items[idx];
+
+  if (type === 'character' && !item._random) {
+    const c = localizeCharacter(item);
+    infoEl.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${c.bio}</p>
+        <ul class="carousel-info-traits">${c.traits.map(tr => `<li>${tr}</li>`).join('')}</ul>
+      </div>
+    `;
+  } else if (type === 'scenario' && !item._random) {
+    const sc = localizeScenario(item);
+    infoEl.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${sc.intro || sc.desc}</p>
+      </div>
+    `;
+  } else {
+    return;
+  }
+
+  infoEl.dataset.shownFor = String(idx);
+  infoEl.classList.add('visible');
+}
+
+function buildExpeditionSetupCarousels() {
+  // Sync difficulty carousel index with CURRENT_DIFFICULTY_ID
+  const diffIdx = DIFFICULTY_LEVELS.findIndex(l => l.id === CURRENT_DIFFICULTY_ID);
+  CAROUSEL_STATE.difficulty.index = diffIdx >= 0 ? diffIdx : 2;
+
+  // Clamp character/scenario indices in case data isn't loaded yet
+  const charItems = getCarouselItems('character');
+  if (CAROUSEL_STATE.character.index >= charItems.length) CAROUSEL_STATE.character.index = 0;
+
+  const scenItems = getCarouselItems('scenario');
+  if (CAROUSEL_STATE.scenario.index >= scenItems.length) CAROUSEL_STATE.scenario.index = 0;
+
+  renderCarousel('difficulty');
+  renderCarousel('character');
+  renderCarousel('scenario');
+
+  // Update label text for current language
+  const lblDiff = document.getElementById('carousel-label-difficulty');
+  if (lblDiff) lblDiff.firstChild && (lblDiff.firstChild.textContent = t('ui.carouselDifficulty'));
+
+  const lblChar = document.getElementById('carousel-label-character');
+  if (lblChar) lblChar.firstChild && (lblChar.firstChild.textContent = t('ui.carouselCharacter'));
+
+  const lblScen = document.getElementById('carousel-label-scenario');
+  if (lblScen) lblScen.firstChild && (lblScen.firstChild.textContent = t('ui.carouselScenario'));
+
+  // Update arrow aria-labels for current language
+  const arrowMap = [
+    ['carousel-arrow-difficulty-prev', 'ui.carouselPrevDifficulty'],
+    ['carousel-arrow-difficulty-next', 'ui.carouselNextDifficulty'],
+    ['carousel-arrow-character-prev', 'ui.carouselPrevCharacter'],
+    ['carousel-arrow-character-next', 'ui.carouselNextCharacter'],
+    ['carousel-arrow-scenario-prev', 'ui.carouselPrevScenario'],
+    ['carousel-arrow-scenario-next', 'ui.carouselNextScenario'],
+  ];
+  arrowMap.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('aria-label', t(key));
+  });
+
+  // Screen title
+  const titleEl = document.getElementById('expedition-setup-title');
+  if (titleEl) titleEl.textContent = t('ui.prepareExpedition');
+
+  // Action buttons
+  const beginBtn = document.getElementById('btn-begin-expedition');
+  if (beginBtn) beginBtn.textContent = t('ui.beginExpedition');
+  const quickBtn = document.getElementById('btn-quick-start');
+  if (quickBtn) quickBtn.textContent = t('ui.quickStart');
+}
+
+function beginExpedition() {
+  // Difficulty: already kept in sync via setDifficulty() in renderCarousel
+  // Character
+  const charItems = getCarouselItems('character');
+  const charIdx = CAROUSEL_STATE.character.index;
+  const selectedChar = charItems[charIdx];
+
+  if (selectedChar._random) {
+    const availableChars = DATA_CONFIG.characters || [];
+    if (!availableChars.length) return;
+    G.character = rngChoice(() => Math.random(), availableChars);
+  } else {
+    G.character = selectedChar;
+  }
+
+  // Scenario
+  const scenItems = getCarouselItems('scenario');
+  const scenIdx = CAROUSEL_STATE.scenario.index;
+  const selectedScen = scenItems[scenIdx];
+
+  if (selectedScen._random) {
+    G.scenario = buildRandomScenario();
+    G.seed = G.scenario._randomSeed;
+    showOnboarding('random');
+  } else {
+    G.scenario = selectedScen;
+    const seeds = selectedScen.seeds || [];
+    G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+    showOnboarding('predefined');
+  }
+}
+
+function quickStart() {
+  // Keep difficulty from carousel (already in CURRENT_DIFFICULTY_ID via renderCarousel)
+  // Random character from the 6 characters (not the Random option)
+  const availableChars = DATA_CONFIG.characters || [];
+  if (!availableChars.length) return;
+  G.character = rngChoice(() => Math.random(), availableChars);
+
+  // Random scenario from predefined scenarios
+  const scenarios = getConfiguredScenarios();
+  if (!scenarios.length) return;
+  const scenario = rngChoice(() => Math.random(), scenarios);
+  G.scenario = scenario;
+  const seeds = scenario.seeds || [];
+  G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+  showOnboarding('predefined');
+}
+
 
 function buildPart2CharacterGrid() {
   const grid = document.getElementById('part2-char-grid');
@@ -922,7 +1191,11 @@ function selectMode(mode) {
     showOnboarding(mode);
   } else {
     buildScenarioGrid();
-    showScreen('scenario');
+    if (document.getElementById('screen-scenario')) {
+      showScreen('scenario');
+    } else {
+      showScreen('expedition-setup');
+    }
   }
 }
 
@@ -934,6 +1207,7 @@ let selectedSeed = null;
 
 function buildScenarioGrid() {
   const grid = document.getElementById('scenario-grid');
+  if (!grid) return;
   grid.innerHTML = '';
   getConfiguredScenarios().forEach((rawScenario) => {
     const sc = localizeScenario(rawScenario);
@@ -1008,7 +1282,7 @@ function showOnboarding(mode) {
   document.getElementById('onboard-char-line').textContent =
     `Expedition: ${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
   const backBtn = document.getElementById('onboard-back-btn');
-  backBtn.onclick = () => showScreen('scenario');
+  backBtn.onclick = () => showScreen('expedition-setup');
   showScreen('onboarding');
 }
 
@@ -2690,7 +2964,7 @@ function endRun(returnedToHorcones) {
   [
     { label: 'Same scenario + seed', cls: 'btn-primary', onClick: replaySameSeed },
     { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
-    { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('character') },
+    { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('expedition-setup') },
     { label: 'Same character, new scenario', cls: 'btn-ghost', onClick: goChooseScenario },
     { label: 'Export run_log.json', cls: 'btn-ghost', onClick: exportRunLog },
     { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
@@ -2772,9 +3046,7 @@ function replayNewSeed() {
   startGame();
 }
 function goChooseScenario() {
-  selectedScenarioId = null; selectedSeed = null;
-  buildScenarioGrid();
-  showScreen('scenario');
+  showScreen('expedition-setup');
 }
 
 // ════════════════════════════════════════════════
@@ -2951,6 +3223,13 @@ window.clearJournal = clearJournal;
 window.setDifficulty = setDifficulty;
 window.openTutorialModal = openTutorialModal;
 window.closeTutorialModal = closeTutorialModal;
+window.carouselPrev = carouselPrev;
+window.carouselNext = carouselNext;
+window.renderCarousel = renderCarousel;
+window.toggleCarouselInfo = toggleCarouselInfo;
+window.beginExpedition = beginExpedition;
+window.quickStart = quickStart;
+window.CAROUSEL_STATE = CAROUSEL_STATE;
 
 /* EXPERIMENTAL — Decision 13: Bottom-sheet toggle functions for mobile game screen */
 window.openBottomSheet = function openBottomSheet(sheetId) {

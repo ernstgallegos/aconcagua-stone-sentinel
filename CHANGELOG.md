@@ -9,6 +9,35 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+- New unified `screen-expedition-setup` screen with three horizontal carousel selectors: Difficulty (5 levels), Character (6 + Random), and Scenario (predefined + Random) — replaces the 3-screen pre-game selection flow (`screen-title` difficulty panel → `screen-character` → `screen-scenario`).
+- Carousel component: reusable `.carousel-section` / `.carousel-track` / `.carousel-card` / `.carousel-arrow` / `.carousel-dots` CSS classes in `css/components.css`; supports left/right arrow navigation with wrapping and active-dot position indicators.
+- **"Begin Expedition"** (`btn-primary`) and **"Quick Start"** (`btn-ghost`) action buttons on `screen-expedition-setup`; Quick Start randomizes character and scenario while respecting the player-selected difficulty.
+- `[ℹ]` info expand button on character and scenario carousel cards, revealing a collapsible panel with full bio/traits or scenario intro text.
+- `buildExpeditionSetupCarousels()`, `carouselPrev()`, `carouselNext()`, `renderCarousel()`, `toggleCarouselInfo()`, `beginExpedition()`, and `quickStart()` functions in `ui/screens.js`; all exposed on `window` for inline HTML handlers and tests.
+- `CAROUSEL_STATE` global object exposed on `window` to allow test-time carousel position overrides.
+- i18n keys for new screen in both `en` and `es` locales: `prepareExpedition`, `beginExpedition`, `quickStart`, `carouselDifficulty`, `carouselCharacter`, `carouselScenario`, and carousel arrow `aria-label` strings.
+- `#screen-expedition-setup` background style in `css/screens.css` reusing `concept-curated-4.webp` blurred ambient layer (matches `screen-character` aesthetic). `.expedition-setup-shell` max-width centered container.
+- Carousel mobile-compact overrides in `css/responsive.css` (base/`max-width:479px` breakpoint).
+
+### Changed
+- `screen-title` simplified: removed `title-difficulty-panel` div (difficulty grid + note); BEGIN button now navigates to `showScreen('expedition-setup')` instead of `showScreen('character')`.
+- Version eyebrow on title screen updated from `Prototype · v1.4` to `Prototype · v1.5`.
+- `showOnboarding()` back button now returns to `expedition-setup` instead of `scenario`.
+- Debrief "Change character" action now navigates to `expedition-setup`.
+- `goChooseScenario()` now navigates to `expedition-setup` instead of rebuilding the old scenario grid.
+- `showScreen()` calls `buildExpeditionSetupCarousels()` when navigating to `expedition-setup`.
+- `setLanguage()` rebuilds carousel labels/cards when the expedition-setup screen element exists.
+- `buildCharacterGrid()` and `buildScenarioGrid()` guard against missing container elements (null-safe) since `screen-character` and `screen-scenario` are removed.
+- `applyStaticTranslations()` cleaned up: removed entries for removed screen elements (`screen-character`, `screen-scenario`, `title-difficulty-label`).
+- `new-mechanics.test.js` integration assertion updated: checks for `id="carousel-card-difficulty"` instead of `id="title-difficulty-grid"`.
+- `test_smoke_flow.py` updated to reflect new flow: navigates through `screen-expedition-setup` using carousel arrows and `beginExpedition()`; `reach_game_with_character()` sets carousel index via `window.CAROUSEL_STATE` instead of clicking old character grid cards.
+
+### Removed
+- `screen-character` section from `prototype/web-v1/index.html` (character selection now handled by expedition-setup carousel).
+- `screen-scenario` section from `prototype/web-v1/index.html` (scenario selection now handled by expedition-setup carousel).
+- `title-difficulty-panel` div from `screen-title` (difficulty now in expedition-setup carousel).
+
 ### Fixed
 - Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
 - Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).

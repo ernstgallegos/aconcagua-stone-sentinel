@@ -36,7 +36,7 @@ test('canonical outcomes/data contracts are still present', () => {
 
 
 test('title difficulty selector and onboarding tutorial remain visible integration points', () => {
-  assert.match(indexSource, /id="title-difficulty-grid"/);
+  assert.match(indexSource, /id="carousel-card-difficulty"/);
   assert.match(indexSource, /Full Tutorial \/ FAQ/);
   assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
   assert.match(uiSource, /id: 'very-easy'/);

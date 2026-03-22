@@ -44,6 +44,12 @@ def expect_disabled(page, selector: str, expected: bool):
     assert disabled is expected, f'{selector} disabled state expected {expected}, got {disabled}'
 
 
+def reach_expedition_setup(page):
+    """Navigate from title to expedition-setup screen."""
+    page.click('#screen-title .btn-primary')
+    page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-expedition-setup'")
+
+
 def test_canonical_flow_and_part2_unlock_gate_smoke():
     with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -52,7 +58,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
 
         for screen in [
-            'splash', 'title', 'character', 'scenario', 'onboarding',
+            'splash', 'title', 'expedition-setup', 'onboarding',
             'game', 'debrief', 'summit-success', 'part2-character',
         ]:
             page.wait_for_selector(f'#screen-{screen}')
@@ -62,22 +68,19 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.click('#screen-splash')
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
 
-        page.click('#difficulty-choice-very-hard')
-        assert 'selected' in page.locator('#difficulty-choice-very-hard').get_attribute('class')
-        page.click('#screen-title .btn-primary')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-character'")
-        expect_disabled(page, '#btn-char-confirm', True)
+        reach_expedition_setup(page)
 
-        page.click('#char-grid .char-card')
-        expect_disabled(page, '#btn-char-confirm', False)
-        page.click('#btn-char-confirm')
+        # Navigate difficulty carousel to Very Hard (index 4, starting from Standard=2)
+        page.click('#carousel-arrow-difficulty-next')
+        page.click('#carousel-arrow-difficulty-next')
+        page.wait_for_function(
+            "() => document.getElementById('carousel-card-difficulty')?.querySelector('.carousel-card-name')?.textContent?.includes('Very Hard') || "
+            "document.getElementById('carousel-card-difficulty')?.querySelector('.carousel-card-name')?.textContent?.includes('Muy difícil')"
+        )
 
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-scenario'")
-        expect_disabled(page, '#btn-scenario-confirm', True)
-
-        page.click('#scenario-grid .scenario-card[id^="sc-"]')
-        expect_disabled(page, '#btn-scenario-confirm', False)
-        page.click('#btn-scenario-confirm')
+        # Begin expedition with defaults (Standard difficulty carousel position already valid,
+        # but we navigated to Very Hard above — character/scenario defaults are index 0)
+        page.click('#btn-begin-expedition')
 
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
         assert 'Very Hard' in page.locator('#onboard-char-line').inner_text()
@@ -117,15 +120,20 @@ def test_shoot_photo_visibility_stays_daniela_only_smoke():
             page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
             page.click('#screen-splash')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
-            page.click('#difficulty-choice-very-hard')
-            assert 'selected' in page.locator('#difficulty-choice-very-hard').get_attribute('class')
-            page.click('#screen-title .btn-primary')
-            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-character'")
-            page.click(f'#char-{character_id}')
-            page.click('#btn-char-confirm')
-            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-scenario'")
-            page.click('#scenario-grid .scenario-card[id^="sc-"]')
-            page.click('#btn-scenario-confirm')
+            reach_expedition_setup(page)
+
+            # Use JS to set carousel to the desired character by index
+            # Characters order in data/characters.json: francisco=0, laura=1, erik=2, daniela=3, blake=4, irina=5
+            char_indices = {
+                'francisco': 0, 'laura': 1, 'erik': 2,
+                'daniela': 3, 'blake': 4, 'irina': 5,
+            }
+            char_idx = char_indices.get(character_id, 0)
+            page.evaluate(
+                f"() => {{ window.CAROUSEL_STATE.character.index = {char_idx}; window.renderCarousel('character'); }}"
+            )
+
+            page.click('#btn-begin-expedition')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
             page.click('#screen-onboarding .btn-primary')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")

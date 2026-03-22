@@ -61,6 +61,11 @@
   .title-difficulty-panel { padding: 0.75rem; }
   .difficulty-pill { padding: 0.4rem 0.7rem; font-size: 0.8125rem; }
 
+  /* Carousel — compact on smallest screens */
+  .carousel-card { padding: 0.75rem 0.875rem; }
+  .carousel-card-name { font-size: 0.9375rem; }
+  .expedition-setup-shell { padding: 0 0.25rem; }
+
   .tutorial-meta { grid-template-columns: 1fr; }
 
   .theme-switcher,
