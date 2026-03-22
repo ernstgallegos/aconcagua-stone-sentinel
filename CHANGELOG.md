@@ -9,6 +9,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- `vercel.json`: root `/` redirect now points to `prototype/web-v2/index.html` (302 temporary) to establish `web-v2` as the canonical deployment; added `/prototype/web-v2` → `web-v2/index.html` redirect for consistency; retained `/prototype/web-v1` redirect for backward compatibility.
+
 ### Added
 - `prototype/web-v2/index.html` — semantic HTML5 shell for the web-v2 prototype: 5 screens (hero, character, briefing, game, debrief), nav with language/theme controls, tutorial modal, WCAG-compliant aria attributes, `data-i18n` hooks, Google Fonts, CSS and JS module wiring.
 - `prototype/web-v2/js/` — 7 ES module JavaScript files for the web-v2 prototype:
