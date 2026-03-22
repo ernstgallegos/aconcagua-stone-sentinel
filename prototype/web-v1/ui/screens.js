@@ -2876,6 +2876,10 @@ initVisualMode();
 initLanguage();
 initDifficulty();
 initSplashScreen();
+loadDataConfig().then(() => {
+  buildCharacterGrid();
+  buildScenarioGrid();
+});
 
 const tutorialModal = document.getElementById('tutorial-modal');
 if (tutorialModal) {
