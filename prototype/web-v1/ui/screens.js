@@ -167,14 +167,15 @@ let CURRENT_DIFFICULTY_ID = 'standard';
 // ════════════════════════════════════════════════
 // CAROUSEL STATE — Expedition Setup screen
 // ════════════════════════════════════════════════
+const DEFAULT_DIFFICULTY_ID = 'standard';
 const CAROUSEL_STATE = {
-  difficulty: { index: 2 }, // Default: standard (index 2)
+  difficulty: { index: DIFFICULTY_LEVELS.findIndex(l => l.id === DEFAULT_DIFFICULTY_ID) },
   character: { index: 0 },
   scenario: { index: 0 },
 };
 
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
-  return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS[2];
+  return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
 }
 
 function getDifficultyModifiers(id = CURRENT_DIFFICULTY_ID) {
@@ -945,12 +946,15 @@ function renderCarousel(type) {
       `;
     } else {
       const c = localizeCharacter(item);
+      const safeIdx = Number(idx);
       cardEl.innerHTML = `
         <div class="carousel-card-name">${c.name}</div>
         <div class="carousel-card-role">${c.role}</div>
         <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${c.difficultyLabel}</div>
-        <button class="carousel-info-btn" onclick="toggleCarouselInfo('character', ${idx})" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
+        <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
       `;
+      const infoBtn = cardEl.querySelector('.carousel-info-btn');
+      if (infoBtn) infoBtn.onclick = () => toggleCarouselInfo('character', safeIdx);
     }
     // Hide info panel when card changes
     const infoEl = document.getElementById('carousel-info-panel-character');
@@ -964,12 +968,15 @@ function renderCarousel(type) {
       `;
     } else {
       const sc = localizeScenario(item);
+      const safeIdx = Number(idx);
       cardEl.innerHTML = `
         <div class="carousel-card-num">SCENARIO ${sc.num} · ${sc.difficulty}</div>
         <div class="carousel-card-name">${sc.name}</div>
         <div class="carousel-card-role">${sc.desc}</div>
-        <button class="carousel-info-btn" onclick="toggleCarouselInfo('scenario', ${idx})" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
+        <button class="carousel-info-btn" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
       `;
+      const infoBtn = cardEl.querySelector('.carousel-info-btn');
+      if (infoBtn) infoBtn.onclick = () => toggleCarouselInfo('scenario', safeIdx);
     }
     // Hide info panel when card changes
     const infoEl = document.getElementById('carousel-info-panel-scenario');
@@ -1024,7 +1031,8 @@ function toggleCarouselInfo(type, idx) {
 function buildExpeditionSetupCarousels() {
   // Sync difficulty carousel index with CURRENT_DIFFICULTY_ID
   const diffIdx = DIFFICULTY_LEVELS.findIndex(l => l.id === CURRENT_DIFFICULTY_ID);
-  CAROUSEL_STATE.difficulty.index = diffIdx >= 0 ? diffIdx : 2;
+  const defaultDiffIdx = DIFFICULTY_LEVELS.findIndex(l => l.id === DEFAULT_DIFFICULTY_ID);
+  CAROUSEL_STATE.difficulty.index = diffIdx >= 0 ? diffIdx : (defaultDiffIdx >= 0 ? defaultDiffIdx : 0);
 
   // Clamp character/scenario indices in case data isn't loaded yet
   const charItems = getCarouselItems('character');
@@ -1039,13 +1047,13 @@ function buildExpeditionSetupCarousels() {
 
   // Update label text for current language
   const lblDiff = document.getElementById('carousel-label-difficulty');
-  if (lblDiff) lblDiff.firstChild && (lblDiff.firstChild.textContent = t('ui.carouselDifficulty'));
+  if (lblDiff && lblDiff.firstChild) { lblDiff.firstChild.textContent = t('ui.carouselDifficulty'); }
 
   const lblChar = document.getElementById('carousel-label-character');
-  if (lblChar) lblChar.firstChild && (lblChar.firstChild.textContent = t('ui.carouselCharacter'));
+  if (lblChar && lblChar.firstChild) { lblChar.firstChild.textContent = t('ui.carouselCharacter'); }
 
   const lblScen = document.getElementById('carousel-label-scenario');
-  if (lblScen) lblScen.firstChild && (lblScen.firstChild.textContent = t('ui.carouselScenario'));
+  if (lblScen && lblScen.firstChild) { lblScen.firstChild.textContent = t('ui.carouselScenario'); }
 
   // Update arrow aria-labels for current language
   const arrowMap = [

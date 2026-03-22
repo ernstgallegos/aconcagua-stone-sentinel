@@ -129,6 +129,8 @@ def test_shoot_photo_visibility_stays_daniela_only_smoke():
                 'daniela': 3, 'blake': 4, 'irina': 5,
             }
             char_idx = char_indices.get(character_id, 0)
+            # Ensure char_idx is a plain integer before embedding in JS
+            assert isinstance(char_idx, int) and 0 <= char_idx <= 5, f"Unexpected char_idx {char_idx!r}"
             page.evaluate(
                 f"() => {{ window.CAROUSEL_STATE.character.index = {char_idx}; window.renderCarousel('character'); }}"
             )
