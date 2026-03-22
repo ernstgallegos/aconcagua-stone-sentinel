@@ -1434,3 +1434,217 @@
   color: var(--stone);
   margin-bottom: 0.4rem;
 }
+
+/* ══════════════════════════════════════
+   CAROUSEL — Expedition setup selectors
+   ══════════════════════════════════════ */
+
+.carousel-section {
+  width: 100%;
+  margin-bottom: 1.75rem;
+}
+
+.carousel-label {
+  font-family: var(--heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.carousel-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.carousel-track {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.carousel-card-wrapper {
+  flex: 1;
+  min-height: 72px;
+  display: flex;
+  align-items: stretch;
+}
+
+.carousel-card {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  padding: 1rem 1.25rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: border-color var(--dur-normal);
+}
+
+.carousel-card:hover {
+  border-color: color-mix(in srgb, var(--ochre) 50%, transparent);
+}
+
+.carousel-card-name {
+  font-family: var(--heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.carousel-card-role,
+.carousel-card-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--stone);
+  letter-spacing: 0.06em;
+}
+
+.carousel-card-tag {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ice);
+  letter-spacing: 0.06em;
+}
+
+.carousel-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--stone);
+  cursor: pointer;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  transition:
+    border-color var(--dur-normal),
+    color var(--dur-normal),
+    background var(--dur-normal),
+    transform var(--dur-fast);
+}
+
+.carousel-arrow:hover {
+  border-color: var(--ochre);
+  color: var(--white);
+  background: color-mix(in srgb, var(--ochre) 8%, transparent);
+}
+
+.carousel-arrow:active {
+  transform: scale(0.95);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 0.375rem;
+  justify-content: center;
+  margin-top: 0.625rem;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background var(--dur-normal);
+}
+
+.carousel-dot.active {
+  background: var(--ochre);
+}
+
+.carousel-note {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--stone);
+  text-align: center;
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+  line-height: 1.5;
+}
+
+.carousel-info-btn {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--stone);
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--dur-normal), color var(--dur-normal);
+  flex-shrink: 0;
+}
+
+.carousel-info-btn:hover {
+  border-color: var(--ochre);
+  color: var(--ochre);
+}
+
+.carousel-info-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.carousel-info-panel.visible {
+  max-height: 400px;
+}
+
+.carousel-info-content {
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-top: none;
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+}
+
+.carousel-info-bio {
+  font-family: var(--body);
+  font-size: 0.875rem;
+  color: var(--stone);
+  line-height: 1.65;
+  margin-bottom: 0.625rem;
+}
+
+.carousel-info-traits {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--stone);
+  padding-left: 1.1em;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.carousel-info-traits li {
+  margin-bottom: 0.25rem;
+}
+
+.expedition-setup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.expedition-setup-actions .btn-primary,
+.expedition-setup-actions .btn-ghost {
+  width: 100%;
+  max-width: 400px;
+}

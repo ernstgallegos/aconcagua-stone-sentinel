@@ -47,17 +47,12 @@
 <!-- ══════════════════════ TITLE ══════════════════════ -->
 <section id="screen-title" class="screen" aria-label="Title screen">
   <div class="title-shell">
-    <p class="title-eyebrow">Prototype · v1.4</p>
+    <p class="title-eyebrow">Prototype · v1.5</p>
     <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
     <div class="title-divider"></div>
     <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
     <p class="title-sub" style="margin-bottom: 1.25rem;">A decision game about limits, environment, and knowing when to stop.</p>
-    <div class="title-difficulty-panel">
-      <label class="title-difficulty-label" for="difficulty-choice-very-easy">Difficulty</label>
-      <div id="title-difficulty-grid" class="title-difficulty-grid" role="radiogroup" aria-label="Difficulty selection"></div>
-      <p class="title-difficulty-note" id="title-difficulty-note">Choose the intensity of environmental pressure, resource efficiency, and permit margin before beginning.</p>
-    </div>
-    <button class="btn-primary" onclick="showScreen('character')">BEGIN</button>
+    <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
   </div>
 </section>
 
@@ -70,34 +65,60 @@
   </div>
 </section>
 
-<!-- ══════════════════════ CHARACTER ══════════════════════ -->
-<section id="screen-character" class="screen" aria-label="Character selection">
-  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
+<!-- ══════════════════════ EXPEDITION SETUP ══════════════════════ -->
+<section id="screen-expedition-setup" class="screen" aria-label="Expedition setup">
+  <div class="expedition-setup-shell">
     <button class="nav-back" onclick="showScreen('title')" aria-label="Back to title">Title</button>
     <div class="screen-header">
-      <h2>Choose Your Expedition</h2>
-      <p>Your character shapes what you read clearly — and what stays in the dark.</p>
+      <h2 id="expedition-setup-title">Prepare Your Expedition</h2>
     </div>
-    <div class="char-grid" id="char-grid" role="radiogroup" aria-label="Character selection"></div>
-    <div style="text-align:center;">
-      <button class="btn-primary" id="btn-char-confirm" onclick="confirmCharacter()" disabled aria-disabled="true">This is my expedition.</button>
+
+    <!-- Difficulty carousel -->
+    <div class="carousel-section" role="group" aria-labelledby="carousel-label-difficulty">
+      <div class="carousel-label" id="carousel-label-difficulty">Difficulty</div>
+      <div class="carousel-track">
+        <button class="carousel-arrow" id="carousel-arrow-difficulty-prev" onclick="carouselPrev('difficulty')" aria-label="Previous difficulty">◀</button>
+        <div class="carousel-card-wrapper">
+          <div class="carousel-card" id="carousel-card-difficulty"></div>
+        </div>
+        <button class="carousel-arrow" id="carousel-arrow-difficulty-next" onclick="carouselNext('difficulty')" aria-label="Next difficulty">▶</button>
+      </div>
+      <div class="carousel-dots" id="carousel-dots-difficulty" aria-hidden="true"></div>
+      <p class="carousel-note" id="carousel-extra-difficulty" aria-live="polite"></p>
     </div>
-  </div>
-</section>
 
-
-
-<!-- ══════════════════════ SCENARIO SELECT ══════════════════════ -->
-<section id="screen-scenario" class="screen" aria-label="Scenario selection">
-  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
-    <button class="nav-back" onclick="showScreen('character')" aria-label="Back to character selection">Character</button>
-    <div class="screen-header">
-      <h2>Select Scenario</h2>
-      <p>Start with Scenario 1 if this is your first expedition.</p>
+    <!-- Character carousel -->
+    <div class="carousel-section" role="group" aria-labelledby="carousel-label-character">
+      <div class="carousel-label" id="carousel-label-character">Character</div>
+      <div class="carousel-track">
+        <button class="carousel-arrow" id="carousel-arrow-character-prev" onclick="carouselPrev('character')" aria-label="Previous character">◀</button>
+        <div class="carousel-card-wrapper">
+          <div class="carousel-card" id="carousel-card-character"></div>
+        </div>
+        <button class="carousel-arrow" id="carousel-arrow-character-next" onclick="carouselNext('character')" aria-label="Next character">▶</button>
+      </div>
+      <div class="carousel-dots" id="carousel-dots-character" aria-hidden="true"></div>
+      <div class="carousel-info-panel" id="carousel-info-panel-character"></div>
     </div>
-    <div class="scenario-grid" id="scenario-grid" role="radiogroup" aria-label="Scenario selection"></div>
-    <div style="text-align:center;">
-      <button class="btn-primary" id="btn-scenario-confirm" onclick="confirmScenario()" disabled aria-disabled="true">Depart</button>
+
+    <!-- Scenario carousel -->
+    <div class="carousel-section" role="group" aria-labelledby="carousel-label-scenario">
+      <div class="carousel-label" id="carousel-label-scenario">Scenario</div>
+      <div class="carousel-track">
+        <button class="carousel-arrow" id="carousel-arrow-scenario-prev" onclick="carouselPrev('scenario')" aria-label="Previous scenario">◀</button>
+        <div class="carousel-card-wrapper">
+          <div class="carousel-card" id="carousel-card-scenario"></div>
+        </div>
+        <button class="carousel-arrow" id="carousel-arrow-scenario-next" onclick="carouselNext('scenario')" aria-label="Next scenario">▶</button>
+      </div>
+      <div class="carousel-dots" id="carousel-dots-scenario" aria-hidden="true"></div>
+      <div class="carousel-info-panel" id="carousel-info-panel-scenario"></div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="expedition-setup-actions">
+      <button class="btn-primary" id="btn-begin-expedition" onclick="beginExpedition()">🎯 Begin Expedition</button>
+      <button class="btn-ghost" id="btn-quick-start" onclick="quickStart()">🎲 Quick Start</button>
     </div>
   </div>
 </section>

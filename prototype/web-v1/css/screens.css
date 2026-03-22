@@ -228,6 +228,42 @@
 }
 
 /* ══════════════════════════════════════
+   EXPEDITION SETUP SCREEN
+   ══════════════════════════════════════ */
+
+#screen-expedition-setup {
+  padding: 2.5rem 1.5rem;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#screen-expedition-setup::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('../../art/concept-art/curated/concept-curated-4.webp');
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px) brightness(0.2);
+  transform: scale(1.05);
+}
+
+#screen-expedition-setup > * {
+  position: relative;
+  z-index: 1;
+}
+
+.expedition-setup-shell {
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════
    ONBOARDING — EXPERIMENTAL (Decision 15)
    ══════════════════════════════════════ */
 
