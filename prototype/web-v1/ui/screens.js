@@ -118,7 +118,8 @@ function setModelLoadError(errorMessage) {
 // VISUAL MODES
 // ════════════════════════════════════════════════
 const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
-const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset', 'auto']); /* EXPERIMENTAL Decision 17 */
+/* EXPERIMENTAL Decision 17 */
+const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset', 'auto']);
 const LANGUAGE_KEY = 'aconcagua_language_v1';
 const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
@@ -725,6 +726,9 @@ function applyStaticTranslations() {
 // (was defined twice: once at line ~900 and once at line ~1820 as a patch)
 // Now handles all responsibilities in one place.
 // ════════════════════════════════════════════════
+// Decision 14: exit animation durations
+const SCREEN_EXIT_DURATION_MS = 150;
+const SPLASH_EXIT_DURATION_MS = 600; // slower crossfade for splash→title
 function showScreen(id) {
   const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
@@ -766,7 +770,7 @@ function showScreen(id) {
   } else {
     /* Apply exit animation */
     currentActive.classList.add('exiting');
-    const exitDuration = currentActive.id === 'screen-splash' ? 600 : 150; /* Decision 14: splash→title slower */
+    const exitDuration = currentActive.id === 'screen-splash' ? SPLASH_EXIT_DURATION_MS : SCREEN_EXIT_DURATION_MS;
     setTimeout(activateTarget, exitDuration);
   }
 }

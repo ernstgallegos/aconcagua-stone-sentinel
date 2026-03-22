@@ -61,7 +61,7 @@
 .btn-ghost {
   position: relative;
   font-family: var(--heading); /* Decision 8 */
-  font-size: 0.8125rem;         /* Decision 9: ~13px → use 0.875rem = 14px */
+  font-size: 0.875rem;          /* Decision 9: 14px minimum for buttons */
   letter-spacing: 0.12em;
   text-transform: uppercase;
   background: transparent;
@@ -89,7 +89,7 @@
 /* ── Decision buttons (secondary level) ── */
 .btn-decision {
   font-family: var(--mono);
-  font-size: 0.75rem;            /* Decision 9: min 12px, buttons 14px */
+  font-size: 0.75rem;            /* Decision 9: 12px — minimum allowed for dense action grid */
   letter-spacing: 0.08em;
   padding: 0.65rem 0.5rem;
   background: transparent;
