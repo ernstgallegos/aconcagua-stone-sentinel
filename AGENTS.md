@@ -66,7 +66,7 @@ In addition to the changelog:
 
 ### Project architecture and behavior (important)
 
-- The active prototype is `prototype/web-v1/index.html` with a stateful JS engine centered on EP/BT calculations and turn resolution.
+- The active prototype is `prototype/web-v2/index.html` (deployed via Vercel); `prototype/web-v1/index.html` remains available as the legacy reference.
 - Character mechanics are data-driven from `data/characters.json`; each character must expose the full engine modifier set plus `difficultyLabel`.
 - Canonical outcomes are data-driven from `data/outcomes.json`; outcome checks in `resolveTurn()` must preserve ordering-sensitive logic.
 - Current primary flow after v1.4 Phase 1 is:

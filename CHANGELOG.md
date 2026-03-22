@@ -9,10 +9,32 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-### Changed
-- `vercel.json`: root `/` redirect now points to `prototype/web-v2/index.html` (302 temporary) to establish `web-v2` as the canonical deployment; added `/prototype/web-v2` → `web-v2/index.html` redirect for consistency; retained `/prototype/web-v1` redirect for backward compatibility.
-
 ### Added
+- `prototype/web-v2/index.html`: Added `#screen-summit-success` dedicated celebratory screen shown exclusively on `Summit and Safe Return` outcome, replacing direct debrief navigation.
+- `prototype/web-v2/index.html`: Added `#screen-part2-select` screen with locked character grid (only Francisco active) and a "Coming Soon" placeholder flow for Part 2.
+- `prototype/web-v2/index.html`: Added `#debrief-export-log` button to debrief actions area for JSON run log download.
+- `prototype/web-v2/js/ui.js`: `renderSummitSuccess(G, lang)` — populates the summit-success screen with character name, altitude, i18n copy, and three action buttons.
+- `prototype/web-v2/js/ui.js`: `renderPart2Select(characters, lang, onFranciscoSelect)` — renders the Part 2 locked character grid; all characters except Francisco are visually grayed out and non-interactive.
+- `prototype/web-v2/js/ui.js`: `renderPermitCounter(G, lang)` — populates `#game-permit` with character initials, name, days-remaining countdown, and `permit-counter--warning` / `permit-counter--critical` modifier classes at ≤5 / ≤2 days.
+- `prototype/web-v2/js/app.js`: `SUMMIT_ACHIEVED_KEY` constant for localStorage persistence of summit achievement across sessions.
+- `prototype/web-v2/js/app.js`: `hasPreviouslySummited()` helper that reads `SUMMIT_ACHIEVED_KEY` from localStorage.
+- `prototype/web-v2/js/app.js`: `onExportLog()` — creates a downloadable JSON blob from `G.turnLog` with run metadata (character, scenario, outcome, turns, seed, version).
+- `prototype/web-v2/js/app.js`: Turn log entries now pushed to `G.turnLog` each turn with turn number, day, position, decision, outcome, and flags.
+- `prototype/web-v2/js/i18n.js`: Added `Collapse (Exposure)` and `Resource Exhaustion` to both ES and EN `debrief.outcomes` catalogs.
+- `prototype/web-v2/js/i18n.js`: Added `summitSuccess` i18n block (heading, message, continueP2, newExpedition, viewDebrief) in ES and EN.
+- `prototype/web-v2/js/i18n.js`: Added `part2` i18n block (heading, subtitle, locked, comingSoon, back, continueBtn) in ES and EN.
+- `prototype/web-v2/js/i18n.js`: Added `exportLog` string to `debrief` catalog in ES and EN.
+
+### Changed
+- `prototype/web-v2/index.html`: Footer version corrected from `v2.0` to `v1.4.1` to match `package.json`.
+- `prototype/web-v2/js/app.js`: `handleAction()` now routes `Summit and Safe Return` outcome to `screen-summit-success` instead of directly to `screen-debrief`.
+- `prototype/web-v2/js/app.js`: `_renderGameUI()` now calls `renderPermitCounter()` on every turn update.
+- `prototype/web-v2/js/app.js`: `_rerenderCurrentScreen()` handles `summit-success` and `part2-select` screen re-renders on language change.
+- `prototype/web-v2/js/ui.js`: `renderStatusPanel()` no longer looks for the non-existent `#status-permit` element; permit display is handled exclusively by `renderPermitCounter()` targeting `#game-permit`.
+- `prototype/web-v2/js/ui.js`: `_outcomeClass()` now maps `Collapse (Exposure)` → `outcome-collapse` and `Resource Exhaustion` → `outcome-stabilized`.
+- `AGENTS.md`: Updated active prototype reference from `web-v1/index.html` to `web-v2/index.html` (Vercel deployment); `web-v1` noted as legacy reference.
+
+
 - `prototype/web-v2/index.html` — semantic HTML5 shell for the web-v2 prototype: 5 screens (hero, character, briefing, game, debrief), nav with language/theme controls, tutorial modal, WCAG-compliant aria attributes, `data-i18n` hooks, Google Fonts, CSS and JS module wiring.
 - `prototype/web-v2/js/` — 7 ES module JavaScript files for the web-v2 prototype:
   - `state.js`: run state defaults, `createInitialGameState()`, `updateRunState()`, `assertStateShape()`, `clamp()`.

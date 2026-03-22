@@ -17,6 +17,10 @@ import { strings, setLanguage, getLang, t } from './i18n.js';
 import * as UI from './ui.js';
 import { createInitialGameState, updateRunState } from './state.js';
 
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+
+const SUMMIT_ACHIEVED_KEY = 'aconcagua_v2_summit_achieved';
+
 // ── APP STATE ─────────────────────────────────────────────────────────────────
 // Separate from the game run state (G). Holds app-level selection and settings.
 
@@ -127,6 +131,10 @@ function _rerenderCurrentScreen() {
     }
   } else if (screen === 'game' && appState.gameRunning) {
     _renderGameUI();
+  } else if (screen === 'summit-success') {
+    UI.renderSummitSuccess(G, lang);
+  } else if (screen === 'part2-select') {
+    UI.renderPart2Select(appState.characters, lang, null);
   } else if (screen === 'debrief') {
     UI.renderDebrief(G, lang);
   }
@@ -267,6 +275,7 @@ function _renderGameUI() {
   UI.renderActionButtons(actions, G, lang, handleAction);
   UI.renderStatusPanel(G, lang);
   UI.renderPerceptionCard(G, lang);
+  UI.renderPermitCounter(G, lang);
 }
 
 // ── ACTION HANDLING ───────────────────────────────────────────────────────────
@@ -289,10 +298,21 @@ function handleAction(action) {
   const turnResult = resolveTurn(G, action);
   const lang = appState.lang;
 
+  // Record turn in run log
+  G.turnLog.push({
+    turn: G.turn,
+    day: G.day,
+    position: G.state?.position,
+    decision: turnResult.resolvedAction,
+    outcome: turnResult.outcome,
+    flags: [...(turnResult.flags || [])],
+  });
+
   UI.appendTurnLog(G, turnResult, lang);
   UI.renderGameTopbar(G, lang);
   UI.renderStatusPanel(G, lang);
   UI.renderPerceptionCard(G, lang);
+  UI.renderPermitCounter(G, lang);
 
   const isTerminal = turnResult.outcome !== 'Strategic Retreat';
 
@@ -300,12 +320,17 @@ function handleAction(action) {
     updateRunState(G, { finalOutcome: turnResult.outcome });
     // Persist summit achieved
     if (turnResult.outcome === 'Summit and Safe Return') {
-      try { localStorage.setItem('aconcagua_v2_summit_achieved', '1'); } catch (e) {}
+      try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
     }
     appState.gameRunning = false;
     setTimeout(() => {
-      UI.renderDebrief(G, lang);
-      navigateTo('debrief');
+      if (turnResult.outcome === 'Summit and Safe Return') {
+        UI.renderSummitSuccess(G, lang);
+        navigateTo('summit-success');
+      } else {
+        UI.renderDebrief(G, lang);
+        navigateTo('debrief');
+      }
     }, 900);
     return;
   }
@@ -320,6 +345,10 @@ function handleAction(action) {
 }
 
 // ── DEBRIEF ACTIONS ───────────────────────────────────────────────────────────
+
+function hasPreviouslySummited() {
+  try { return !!localStorage.getItem(SUMMIT_ACHIEVED_KEY); } catch (e) { return false; }
+}
 
 function onNewExpedition() {
   appState.selectedCharacter = null;
@@ -343,6 +372,35 @@ function onShareResult() {
       const btn = document.getElementById('debrief-share');
       if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = s.share; }, 2000); }
     });
+  }
+}
+
+function onExportLog() {
+  const payload = {
+    version: '1.4.1',
+    character: G.character?.id || null,
+    characterName: G.character?.name || null,
+    scenario: G.scenario?.id || null,
+    scenarioName: G.scenario?.name || null,
+    difficulty: G.difficulty || null,
+    seed: G.seed || null,
+    finalOutcome: G.finalOutcome,
+    totalTurns: G.turnLog.length,
+    totalDays: G.day,
+    highestPosIdx: G.highestPosIdx,
+    turnLog: G.turnLog,
+  };
+  try {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `aconcagua-run-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+  } catch (e) {
+    console.warn('[app] Export log failed:', e);
   }
 }
 
@@ -390,6 +448,32 @@ function _setupEventListeners() {
         break;
       case 'debrief-share':
         onShareResult();
+        break;
+      case 'debrief-export-log':
+        onExportLog();
+        break;
+      // Summit success screen buttons
+      case 'summit-continue-part2':
+        UI.renderPart2Select(appState.characters, appState.lang, null);
+        navigateTo('part2-select');
+        break;
+      case 'summit-new-expedition':
+        onNewExpedition();
+        break;
+      case 'summit-view-debrief':
+        UI.renderDebrief(G, appState.lang);
+        navigateTo('debrief');
+        break;
+      // Part 2 select screen buttons
+      case 'btn-back-part2':
+        navigateTo('hero');
+        break;
+      case 'btn-part2-continue': {
+        UI.showPart2ComingSoon();
+        break;
+      }
+      case 'btn-part2-coming-soon-back':
+        navigateTo('hero');
         break;
     }
   });
@@ -452,6 +536,8 @@ window.app = {
   startGame,
   onNewExpedition,
   onShareResult,
+  onExportLog,
+  hasPreviouslySummited,
   selectCharacter: _onCharacterSelected,
   confirmCharacter: _onCharacterConfirmed,
 };
