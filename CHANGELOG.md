@@ -10,11 +10,37 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- Monte Carlo headless simulator (`scripts/monte-carlo-web-v1.js`) for automated win-rate verification across all 6 characters × 5 scenarios × configurable seeds.
-- `simulate` npm script (`npm run simulate`) to run the Monte Carlo harness and write results to `docs/playtest-results/`.
+- CSS module system: extracted all inline CSS from `prototype/web-v1/index.html` into 8 separate files under `prototype/web-v1/css/`: `tokens.css`, `reset.css`, `layout.css`, `components.css`, `screens.css`, `animations.css`, `themes.css`, `responsive.css` (Decision 1).
+- Plus Jakarta Sans added as UI/Headlines font via Google Fonts import; applied to all titles, buttons, labels, and navigation (Decision 8).
+- Ken Burns animation (20 s, `animation-fill-mode: forwards`) on splash image; disabled when `prefers-reduced-motion` is set (Decision 4).
+- Screen entry/exit transitions: `screen-enter` (0.3 s, 12 px up) and `screen-exit` (0.15 s, −8 px); Splash→Title crossfade at 0.6 s; reduced-motion users get a direct cut (Decision 14).
+- 3-level micro-interaction system: primary buttons (BEGIN, CONFIRM) with glow + ripple; secondary (decisions) with border→ochre fill; tertiary (links) with animated underline; all respect `prefers-reduced-motion` (Decision 16).
+- Difficulty pill-row: horizontal scrollable pill selector replaces card grid; selected pill shows description below; mobile-friendly with `scroll-snap-type` (Decision 11).
+- **[EXPERIMENTAL]** 4-mode theme system: Dark + Light + Sunset + Auto (`prefers-color-scheme` detection); toggle extended to 4 options (Decision 17).
+- **[EXPERIMENTAL]** Onboarding single-briefing layout already in place; tutorial pop-up already present (Decision 15, CSS structure support).
+- **[EXPERIMENTAL]** Game screen mobile bottom-sheets: mini status bar, `[⌚ Watch]` and `[🏔 Route]` trigger buttons, swipe-dismiss bottom-sheets with backdrop (Decision 13).
+- **[EXPERIMENTAL]** Debrief hero section: fullbleed `concept-curated-4.webp` background with outcome-specific CSS filter (warm/neutral/cold); headline + key-stats overlay; stats grid (2×3 cards); JS `updateDebriefHero()` populates all elements (Decision 18).
+- `openBottomSheet` / `closeBottomSheet` window-exposed helpers for mobile game panels.
+- `auto` added to `VALID_VISUAL_MODES` set in `screens.js`.
 
 ### Changed
-- Bumped version to `1.4.1` in `package.json` and `package-lock.json`.
+- `prototype/web-v1/index.html`: replaced single `<style>` block (~1 200 lines) with 8 `<link>` tags pointing to CSS modules (Decision 1).
+- `prototype/web-v1/index.html`: splash `<img>` keeps `splash-image` class; JS activates `ken-burns-active` class on load (Decision 4).
+- `prototype/web-v1/index.html`: title screen inline `font-size: 0.8rem` removed from `.title-sub`; now uses CSS minimum 1 rem (Decision 9).
+- `prototype/web-v1/index.html`: theme `<select>` now includes `Auto` option (Decision 17).
+- `prototype/web-v1/index.html`: debrief screen restructured into hero + stats-grid + existing sections (Decision 18).
+- `prototype/web-v1/index.html`: game screen adds mini status bar and bottom-sheet HTML (Decision 13).
+- `prototype/web-v1/css/tokens.css`: new "Andean Modern" palette (`--bg: #0c1017`, `--surface: #151a22`, `--ochre: #c49a5c`, `--ice: #7fb3c8`, `--red: #b85450`, new `--safety: #6b9e5e`) (Decision 10).
+- `prototype/web-v1/css/tokens.css`: base font-size 16 px in `reset.css`; minimum text 12 px enforced (Decision 9).
+- `prototype/web-v1/css/responsive.css`: replaced dispersed 680/720/980 px breakpoints with 5 mobile-first tiers (480/768/1024/1280 px) (Decision 7).
+- `prototype/web-v1/css/screens.css`: splash now uses `object-fit: cover` + `object-position: center top` (Decisions 2 & 3).
+- `prototype/web-v1/css/screens.css`: title screen overlay gradient improved for text legibility (Decision 5).
+- `prototype/web-v1/css/screens.css`: character-select and scenario-select screens use `concept-curated-4.webp` as ambient blurred background (Decision 6).
+- `prototype/web-v1/ui/screens.js`: `renderDifficultySelector()` now renders pill-row with description (Decision 11).
+- `prototype/web-v1/ui/screens.js`: `showScreen()` now triggers `screen-exit` animation on departing screen before activating target (Decision 14).
+- `prototype/web-v1/ui/screens.js`: `initSplashScreen()` activates Ken Burns class on splash image (Decision 4).
+
+
 
 ## [1.4.1] — 2026-03
 

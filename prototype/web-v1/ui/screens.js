@@ -118,7 +118,7 @@ function setModelLoadError(errorMessage) {
 // VISUAL MODES
 // ════════════════════════════════════════════════
 const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
-const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset']);
+const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset', 'auto']); /* EXPERIMENTAL Decision 17 */
 const LANGUAGE_KEY = 'aconcagua_language_v1';
 const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
@@ -442,17 +442,36 @@ function renderDifficultySelector() {
   const grid = document.getElementById('title-difficulty-grid');
   if (!grid) return;
   grid.innerHTML = '';
+
+  /* Decision 11: pill-row replaces card grid */
+  /* Build pill-row container */
+  const pillRow = document.createElement('div');
+  pillRow.className = 'difficulty-pill-row';
+  pillRow.setAttribute('role', 'radiogroup');
+  pillRow.setAttribute('aria-label', 'Difficulty selection');
+
   DIFFICULTY_LEVELS.forEach((level) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `difficulty-card${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
+    button.className = `difficulty-pill${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
     button.id = `difficulty-choice-${level.id}`;
     button.setAttribute('role', 'radio');
     button.setAttribute('aria-checked', String(level.id === CURRENT_DIFFICULTY_ID));
+    button.textContent = level.label[CURRENT_LANGUAGE] || level.label.en;
     button.onclick = () => setDifficulty(level.id);
-    button.innerHTML = `<span class="difficulty-card-title">${level.label[CURRENT_LANGUAGE] || level.label.en}</span><span class="difficulty-card-desc">${level.blurb[CURRENT_LANGUAGE] || level.blurb.en}</span>`;
-    grid.appendChild(button);
+    pillRow.appendChild(button);
   });
+
+  /* Description of currently selected difficulty */
+  const descEl = document.createElement('p');
+  descEl.id = 'difficulty-pill-desc';
+  descEl.className = 'difficulty-pill-desc';
+  const currentLevel = DIFFICULTY_LEVELS.find(l => l.id === CURRENT_DIFFICULTY_ID);
+  descEl.textContent = currentLevel ? (currentLevel.blurb[CURRENT_LANGUAGE] || currentLevel.blurb.en) : '';
+
+  grid.appendChild(pillRow);
+  grid.appendChild(descEl);
+
   const note = document.getElementById('title-difficulty-note');
   if (note) note.textContent = t('ui.difficultyNote');
 }
@@ -548,6 +567,12 @@ function initSplashScreen() {
     splash.addEventListener('pointerup', leaveSplash);
     splash.addEventListener('pointercancel', () => splash.classList.remove('splash-pressed'));
     splash.addEventListener('touchend', leaveSplash, { passive: true });
+
+    /* Decision 4: Ken Burns on splash image — respects prefers-reduced-motion */
+    const splashImg = splash.querySelector('.splash-image');
+    if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      splashImg.classList.add('ken-burns-active');
+    }
   }
 
   document.addEventListener('keydown', (event) => {
@@ -709,24 +734,40 @@ function showScreen(id) {
 
   updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
 
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const target = document.getElementById('screen-' + id);
-  if (!target) { console.error('Unknown screen: ' + id); return; }
-  target.classList.add('active');
-  window.scrollTo(0, 0);
+  /* Decision 14: screen exit animation before switching */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const currentActive = document.querySelector('.screen.active');
 
-  // FIX: journal back button points to the screen we came from
-  if (id === 'part2-character') buildPart2CharacterGrid();
+  const activateTarget = () => {
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active', 'exiting');
+    });
+    const target = document.getElementById('screen-' + id);
+    if (!target) { console.error('Unknown screen: ' + id); return; }
+    target.classList.add('active');
+    window.scrollTo(0, 0);
 
-  if (id === 'journal') {
-    renderJournal();
-    const backBtn = document.getElementById('journal-back-btn');
-    if (backBtn) {
-      const origin = G.journalReturnScreen || 'debrief';
-      const labels = { debrief:'Debrief', title:'Title', game:'Game' };
-      backBtn.textContent = labels[origin] || origin;
-      backBtn.onclick = () => showScreen(origin);
+    if (id === 'part2-character') buildPart2CharacterGrid();
+
+    if (id === 'journal') {
+      renderJournal();
+      const backBtn = document.getElementById('journal-back-btn');
+      if (backBtn) {
+        const origin = G.journalReturnScreen || 'debrief';
+        const labels = { debrief:'Debrief', title:'Title', game:'Game' };
+        backBtn.textContent = labels[origin] || origin;
+        backBtn.onclick = () => showScreen(origin);
+      }
     }
+  };
+
+  if (reduceMotion || !currentActive || currentActive.id === 'screen-' + id) {
+    activateTarget();
+  } else {
+    /* Apply exit animation */
+    currentActive.classList.add('exiting');
+    const exitDuration = currentActive.id === 'screen-splash' ? 600 : 150; /* Decision 14: splash→title slower */
+    setTimeout(activateTarget, exitDuration);
   }
 }
 
@@ -2541,6 +2582,8 @@ function endRun(returnedToHorcones) {
   outEl.textContent = outcome.label;
   outEl.className = 'debrief-outcome-value ' + outcome.cls;
 
+  /* EXPERIMENTAL — Decision 18: Update hero section if present */
+  updateDebriefHero(outcome);
   document.querySelectorAll('.debrief-late-msg').forEach((el) => el.remove());
   const retreatMsg = document.getElementById('debrief-retreat-msg');
   if (G.finalOutcome === 'Summit and Safe Return') {
@@ -2838,9 +2881,50 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') closeTutorialModal();
 });
 
-loadDataConfig().finally(() => {
-  buildCharacterGrid();
-});
+/* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
+function updateDebriefHero(outcome) {
+  const hero = document.getElementById('debrief-hero');
+  if (!hero) return;
+
+  /* Set outcome class for CSS filter */
+  hero.className = 'debrief-hero ' + outcome.cls;
+
+  /* Icon by outcome */
+  const iconMap = {
+    'outcome-success':    '🏔',
+    'outcome-retreat':    '⛰',
+    'outcome-stabilized': '🗻',
+    'outcome-collapse':   '❄',
+  };
+  const icon = hero.querySelector('.debrief-hero-icon');
+  if (icon) icon.textContent = iconMap[outcome.cls] || '🏔';
+
+  /* Headline */
+  const hl = hero.querySelector('.debrief-outcome-headline');
+  if (hl) {
+    hl.textContent = outcome.label;
+    hl.className = 'debrief-outcome-headline ' + outcome.cls;
+  }
+
+  /* Key stats: highest point + turn count */
+  const statsEl = hero.querySelector('.debrief-key-stats');
+  if (statsEl) {
+    const highPos = POS_LABELS[POSITIONS[G.highestPosIdx]] || '—';
+    statsEl.textContent = `${highPos} · ${G.turnLog.length} turns`;
+  }
+
+  /* EXPERIMENTAL — Decision 18: Populate stat grid cards */
+  const sc = DATA_CONFIG.scenariosWebV1?.predefinedScenarios?.find(s => s.id === G.scenarioId)
+    || (DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [])[0] || { name: 'Scenario' };
+  const setId = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+  setId('dsg-days', String(G.currentDay || 1));
+  setId('dsg-alt', POS_LABELS[POSITIONS[G.highestPosIdx]] || '—');
+  setId('dsg-decisions', String(G.turnLog.length));
+  setId('dsg-character', G.character?.name || '—');
+  setId('dsg-scenario', sc.name || '—');
+  setId('dsg-outcome', outcome.label || '—');
+}
+
 
 window.showScreen = showScreen;
 window.makeDecision = makeDecision;
@@ -2859,5 +2943,29 @@ window.clearJournal = clearJournal;
 window.setDifficulty = setDifficulty;
 window.openTutorialModal = openTutorialModal;
 window.closeTutorialModal = closeTutorialModal;
+
+/* EXPERIMENTAL — Decision 13: Bottom-sheet toggle functions for mobile game screen */
+window.openBottomSheet = function openBottomSheet(sheetId) {
+  const sheet = document.getElementById(sheetId);
+  const backdrop = document.getElementById('bottom-sheet-backdrop');
+  if (sheet) sheet.classList.add('open');
+  if (backdrop) backdrop.classList.add('visible');
+};
+window.closeBottomSheet = function closeBottomSheet(sheetId) {
+  const sheet = document.getElementById(sheetId);
+  const backdrop = document.getElementById('bottom-sheet-backdrop');
+  if (sheet) sheet.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('visible');
+};
+/* Backdrop click closes all bottom-sheets */
+document.addEventListener('DOMContentLoaded', () => {
+  const backdrop = document.getElementById('bottom-sheet-backdrop');
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('open'));
+      backdrop.classList.remove('visible');
+    });
+  }
+});
 
 export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState, getDifficultyConfig, getDifficultyModifiers, setDifficulty };

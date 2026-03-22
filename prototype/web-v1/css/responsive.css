@@ -1,0 +1,243 @@
+/* ═══════════════════════════════════════════
+   RESPONSIVE — All @media queries (mobile-first)
+   Decision 7: 5 mobile-first breakpoints
+   Base: 0–479px (small phones)
+   sm:  480px+
+   md:  768px+
+   lg:  1024px+
+   xl:  1280px+
+   ═══════════════════════════════════════════ */
+
+/* ══════════════════════════════════════
+   BASE (0–479px) — Mobile first defaults
+   ══════════════════════════════════════ */
+
+/* Game screen — single column on smallest screens */
+@media (max-width: 479px) {
+  .game-layout,
+  .game-layout-redesign {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .left-panel {
+    grid-template-rows: minmax(0, 1fr);
+    display: none; /* hidden in favor of bottom-sheet EXPERIMENTAL */
+  }
+
+  .right-panel,
+  .command-column {
+    grid-template-rows: auto;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .mountain-schematic,
+  .action-log {
+    padding: 0.7rem;
+  }
+
+  .watch-panel,
+  .narrative-box,
+  .decision-panel {
+    padding: 0.7rem;
+  }
+
+  .decision-buttons { gap: 0.42rem; }
+
+  .btn-decision {
+    font-size: 0.8125rem;
+    padding: 0.52rem 0.42rem;
+  }
+
+  .title-main { font-size: 1.75rem; }
+  .title-divider { margin: 1.25rem auto; }
+  .title-tagline { font-size: 0.875rem; }
+  .title-shell { padding: 2rem 1rem; }
+
+  .char-grid { grid-template-columns: 1fr; }
+  .scenario-grid { grid-template-columns: 1fr; }
+
+  .title-difficulty-panel { padding: 0.75rem; }
+  .difficulty-pill { padding: 0.4rem 0.7rem; font-size: 0.8125rem; }
+
+  .tutorial-meta { grid-template-columns: 1fr; }
+
+  .theme-switcher,
+  .lang-switcher { font-size: 0.75rem; padding: 0.35rem 0.45rem; }
+
+  /* EXPERIMENTAL — Bottom-sheets visible on mobile (Decision 13) */
+  .game-mobile-bar { display: flex; }
+  .bottom-sheet { display: block; }
+  .game-mini-status { display: flex; }
+
+  /* Hide route/log panels replaced by bottom-sheets */
+  .expedition-column { display: none; }
+
+  /* Debrief hero reduced height */
+  .debrief-hero { min-height: 160px; padding: 2rem 1rem 1.5rem; }
+  .debrief-stats-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+}
+
+/* ══════════════════════════════════════
+   SM — 480px+ (standard phones)
+   ══════════════════════════════════════ */
+
+@media (min-width: 480px) {
+  .title-main { font-size: clamp(1.75rem, 6vw, 2.2rem); }
+  .char-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .scenario-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .difficulty-pill-row { flex-wrap: nowrap; }
+  .debrief-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ══════════════════════════════════════
+   MD — 768px+ (tablets portrait)
+   Carousel → grid switch for character (Decision 12)
+   ══════════════════════════════════════ */
+
+@media (min-width: 768px) {
+  /* Game layout: 2-column */
+  .game-layout,
+  .game-layout-redesign {
+    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
+  }
+
+  .left-panel {
+    display: grid;
+    grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
+  }
+
+  .right-panel,
+  .command-column {
+    overflow: auto;
+    padding-right: 0.2rem;
+  }
+
+  /* EXPERIMENTAL — Hide bottom-sheet UI on tablets+ (Decision 13) */
+  .game-mobile-bar { display: none; }
+  .bottom-sheet { display: none !important; }
+  .game-mini-status { display: none; }
+  .expedition-column { display: grid; }
+
+  /* Character grid visible (Decision 12) */
+  .char-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  /* Decision 12 — carousel hidden on tablet+ */
+  .char-carousel-wrapper { display: none; }
+  .char-grid-desktop { display: grid; }
+
+  .scenario-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+  .title-main { font-size: clamp(2rem, 5vw, 2.8rem); }
+
+  .tutorial-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .debrief-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .debrief-hero { min-height: 280px; }
+}
+
+/* ══════════════════════════════════════
+   LG — 1024px+ (tablets landscape / laptops)
+   ══════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+  .game-layout,
+  .game-layout-redesign {
+    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
+  }
+
+  .title-shell { padding: 3rem 2rem; }
+
+  .char-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .debrief-stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══════════════════════════════════════
+   XL — 1280px+ (wide desktop)
+   ══════════════════════════════════════ */
+
+@media (min-width: 1280px) {
+  .game-layout,
+  .game-layout-redesign {
+    gap: 1rem;
+  }
+
+  .title-main { font-size: 2.8rem; }
+
+  .char-grid { max-width: 960px; }
+  .scenario-grid { max-width: 960px; }
+}
+
+/* ══════════════════════════════════════
+   MAX-WIDTH legacy helpers (kept for game screen)
+   ══════════════════════════════════════ */
+
+/* Game redesign collapses at < 980px (kept for panel grid) */
+@media (max-width: 979px) {
+  #screen-game .game-layout-redesign {
+    grid-template-columns: 1fr;
+  }
+
+  #screen-game .telemetry-grid,
+  #screen-game .status-row {
+    grid-template-columns: 1fr;
+  }
+
+  #screen-game .command-column {
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
+/* ══════════════════════════════════════
+   HEIGHT-BASED helpers
+   ══════════════════════════════════════ */
+
+@media (max-height: 760px) {
+  .watch-panel,
+  .narrative-box,
+  .decision-panel,
+  .mountain-schematic,
+  .action-log {
+    padding: 0.7rem;
+  }
+
+  .log-entry    { padding: 0.5rem 0; }
+  .watch-header { margin-bottom: 0.75rem; }
+  .watch-section { margin-bottom: 0.7rem; }
+}
+
+/* ══════════════════════════════════════
+   SAFE AREA (notch / home indicator)
+   ══════════════════════════════════════ */
+
+@supports (padding: env(safe-area-inset-top)) {
+  @media (max-width: 767px) {
+    #screen-game {
+      padding:
+        max(0.45rem, env(safe-area-inset-top))
+        max(0.45rem, env(safe-area-inset-right))
+        max(0.45rem, env(safe-area-inset-bottom))
+        max(0.45rem, env(safe-area-inset-left));
+    }
+  }
+}
+
+/* ══════════════════════════════════════
+   DIFFICULTY — small screen tweaks
+   ══════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .difficulty-pill-row {
+    gap: 0.3rem;
+  }
+
+  .difficulty-pill {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8125rem;
+  }
+}

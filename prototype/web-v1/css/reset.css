@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════
+   RESET — Box model, margin reset, base typography
+   Decision 9: 16px base, 12px absolute minimum
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px; /* Decision 9: base 16px */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video, canvas, audio, iframe, embed, object {
+  display: block;
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Lists used as navigation/UI */
+ul[role='list'], ol[role='list'] {
+  list-style: none;
+}
+
+/* Minimum text sizes — Decision 9 */
+/* No element should render text below 12px */
+small, .text-xs {
+  font-size: 0.75rem; /* 12px at 16px base */
+}
