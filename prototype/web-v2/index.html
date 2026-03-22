@@ -100,7 +100,7 @@
         </section>
 
         <footer class="hero-footer">
-          <p class="footer-version">v2.0 · Prototype · MIT License · <a href="https://github.com/ernstgallegos/aconcagua-stone-sentinel">GitHub</a></p>
+          <p class="footer-version">v1.4.1 · Prototype · MIT License · <a href="https://github.com/ernstgallegos/aconcagua-stone-sentinel">GitHub</a></p>
           <p class="footer-credits">Concept &amp; design: Ernst Gallegos</p>
         </footer>
       </div>
@@ -235,7 +235,55 @@
       </div>
     </section>
 
-    <!-- Screen 5: Debrief -->
+    <!-- Screen 5: Summit Success (dedicated celebratory screen for 'Summit and Safe Return') -->
+    <section id="screen-summit-success" class="screen" aria-labelledby="summit-success-heading">
+      <div class="debrief-inner">
+        <div class="debrief-outcome debrief-outcome--summit" aria-live="polite">
+          <div class="debrief-outcome__icon" aria-hidden="true">🏔️</div>
+          <h1 id="summit-success-heading" class="debrief-outcome__title"></h1>
+          <p id="summit-success-char" class="debrief-outcome__sub"></p>
+          <p class="debrief-outcome__sub">6,962 m</p>
+          <p id="summit-success-message" class="debrief-outcome__sub"></p>
+        </div>
+        <div class="debrief-actions">
+          <button id="summit-continue-part2" class="btn btn-primary" disabled></button>
+          <button id="summit-new-expedition" class="btn btn-secondary"></button>
+          <button id="summit-view-debrief" class="btn btn-ghost"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 6: Part 2 Selection (locked grid — only Francisco active) -->
+    <section id="screen-part2-select" class="screen" aria-labelledby="part2-heading">
+      <div class="screen-header">
+        <button id="btn-back-part2" class="btn btn-ghost" aria-label="Back to hero">
+          ← <span id="part2-back-label">Volver al inicio</span>
+        </button>
+        <h1 id="part2-heading" class="screen-title"></h1>
+        <p id="part2-subtitle" class="screen-subtitle"></p>
+      </div>
+      <div id="part2-grid-wrap">
+        <div id="part2-character-grid" class="character-grid" role="listbox" aria-label="Part 2 character selection">
+          <!-- Part 2 character cards rendered by JS -->
+        </div>
+        <div class="char-bottom-bar">
+          <button id="btn-part2-continue" class="btn btn-primary" disabled></button>
+        </div>
+      </div>
+      <div id="part2-coming-soon" style="display:none;">
+        <div class="debrief-inner">
+          <div class="debrief-outcome debrief-outcome--summit">
+            <div class="debrief-outcome__icon" aria-hidden="true">🏔️</div>
+            <h2 id="part2-coming-soon-title" class="debrief-outcome__title"></h2>
+          </div>
+          <div class="debrief-actions">
+            <button id="btn-part2-coming-soon-back" class="btn btn-secondary"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 7: Debrief -->
     <section id="screen-debrief" class="screen" aria-labelledby="debrief-heading">
       <div class="debrief-content">
         <h1 id="debrief-heading" class="debrief-title"></h1>
@@ -255,6 +303,7 @@
         <div class="debrief-actions">
           <button id="debrief-again" class="btn btn-primary" data-i18n="debrief.again">NUEVA EXPEDICIÓN ▸</button>
           <button id="debrief-share" class="btn btn-secondary" data-i18n="debrief.share">COMPARTIR</button>
+          <button id="debrief-export-log" class="btn btn-ghost" data-i18n="debrief.exportLog">EXPORTAR REGISTRO</button>
         </div>
       </div>
     </section>

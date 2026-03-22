@@ -479,17 +479,42 @@ export function renderStatusPanel(G, lang) {
     foodEl.innerHTML = `<span class="status-label">${labels.food}</span><span class="status-value ${s.food <= 0 ? 'depleted' : s.food <= 3 ? 'warn' : ''}">${Math.round(s.food)}</span>`;
   }
 
-  // Permit
-  const permitEl = $('status-permit');
-  const permitLang = strings[lang]?.game?.permit || strings.en.game.permit;
-  if (permitEl) {
-    const remaining = G.permitMaxDays - G.permitDay + 1;
-    permitEl.textContent = `${remaining} ${permitLang}`;
-    permitEl.className = `permit-counter${remaining <= 3 ? ' critical' : remaining <= 7 ? ' warn' : ''}`;
-  }
+  // Permit counter in sidebar (#game-permit)
+  renderPermitCounter(G, lang);
 
   // Route position list
   renderPositionList(G);
+}
+
+// ── PERMIT THRESHOLDS ─────────────────────────────────────────────────────────
+const PERMIT_CRITICAL_DAYS = 2;
+const PERMIT_WARNING_DAYS = 5;
+
+/** Render the diegetic permit counter widget into #game-permit. */
+export function renderPermitCounter(G, lang) {
+  const el = $('game-permit');
+  if (!el) return;
+  const permitLang = strings[lang]?.game?.permit || strings.en.game.permit;
+  const remaining = G.permitMaxDays - G.permitDay + 1;
+  const char = G.character;
+  const initials = char ? getCharacterInitials(char.name, 2) : '—';
+  const charName = char?.name || '—';
+
+  const modClass = remaining <= PERMIT_CRITICAL_DAYS
+    ? ' permit-counter--critical'
+    : remaining <= PERMIT_WARNING_DAYS
+      ? ' permit-counter--warning'
+      : '';
+
+  el.className = `permit-counter${modClass}`;
+  el.innerHTML = `
+    <div class="permit-counter__icon" aria-hidden="true">${initials}</div>
+    <div class="permit-counter__body">
+      <div class="permit-counter__label">${charName}</div>
+      <div class="permit-counter__value">${remaining}</div>
+      <div class="permit-counter__sub">${permitLang}</div>
+    </div>
+  `;
 }
 
 function _setMetric(id, labelText, value, title) {
@@ -656,6 +681,9 @@ export function renderDebrief(G, lang) {
 
   const shareBtn = $('debrief-share');
   if (shareBtn) shareBtn.textContent = s.share;
+
+  const exportBtn = $('debrief-export-log');
+  if (exportBtn) exportBtn.textContent = s.exportLog || 'EXPORT LOG';
 }
 
 function _outcomeClass(outcome) {
@@ -665,11 +693,130 @@ function _outcomeClass(outcome) {
     'Strategic Retreat': 'outcome-retreat',
     'Rescue': 'outcome-collapse',
     'Collapse (Fatigue)': 'outcome-collapse',
+    'Collapse (Exposure)': 'outcome-collapse',
+    'Resource Exhaustion': 'outcome-stabilized',
     'Permit Expired': 'outcome-stabilized',
     'Expedition Window Closed': 'outcome-stabilized',
     'Fatality': 'outcome-collapse',
   };
   return map[outcome] || 'outcome-retreat';
+}
+
+// ── SUMMIT SUCCESS SCREEN ─────────────────────────────────────────────────────
+
+export function renderSummitSuccess(G, lang) {
+  const s = strings[lang]?.summitSuccess || strings.en.summitSuccess;
+
+  const headingEl = $('summit-success-heading');
+  if (headingEl) headingEl.textContent = s.heading;
+
+  const charEl = $('summit-success-char');
+  if (charEl) charEl.textContent = G.character?.name || '';
+
+  const msgEl = $('summit-success-message');
+  if (msgEl) msgEl.textContent = s.message;
+
+  const contBtn = $('summit-continue-part2');
+  if (contBtn) {
+    contBtn.textContent = s.continueP2;
+    // Enable only if Francisco has summited (first or previous summit)
+    const isFrancisco = G.character?.id === 'francisco';
+    contBtn.disabled = !isFrancisco;
+  }
+
+  const newBtn = $('summit-new-expedition');
+  if (newBtn) newBtn.textContent = s.newExpedition;
+
+  const debriefBtn = $('summit-view-debrief');
+  if (debriefBtn) debriefBtn.textContent = s.viewDebrief;
+}
+
+// ── PART 2 SELECT SCREEN ──────────────────────────────────────────────────────
+
+export function renderPart2Select(characters, lang, onFranciscoSelect) {
+  const s = strings[lang]?.part2 || strings.en.part2;
+
+  const headingEl = $('part2-heading');
+  if (headingEl) headingEl.textContent = s.heading;
+
+  const subtitleEl = $('part2-subtitle');
+  if (subtitleEl) subtitleEl.textContent = s.subtitle;
+
+  const backLabel = $('part2-back-label');
+  if (backLabel) backLabel.textContent = s.back.replace('←', '').trim();
+
+  const grid = $('part2-character-grid');
+  if (!grid) return;
+  clearEl(grid);
+
+  characters.forEach((c) => {
+    const isPlayable = c.id === 'francisco';
+    const card = document.createElement('div');
+    card.className = `char-card${isPlayable ? '' : ' char-card-locked'}`;
+    card.setAttribute('role', 'radio');
+    card.setAttribute('aria-checked', 'false');
+    card.setAttribute('tabindex', isPlayable ? '0' : '-1');
+    card.setAttribute('aria-label', isPlayable ? c.name : `${c.name} — ${s.locked}`);
+    if (!isPlayable) card.style.cssText = 'opacity: 0.4; cursor: not-allowed; pointer-events: none;';
+
+    const initials = getCharacterInitials(c.name, 2);
+    card.innerHTML = `
+      <div class="char-avatar" style="--char-accent:${c.accent || 'var(--summit)'}">
+        <span class="char-initial">${isPlayable ? initials : '🔒'}</span>
+      </div>
+      <div class="char-info">
+        <div class="char-name">${c.name}</div>
+        <div class="char-role">${isPlayable ? c.role : s.locked}</div>
+      </div>
+    `;
+
+    if (isPlayable) {
+      const handleSelect = () => {
+        grid.querySelectorAll('.char-card').forEach((el) => {
+          el.classList.remove('selected');
+          el.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('selected');
+        card.setAttribute('aria-checked', 'true');
+        const continueBtn = $('btn-part2-continue');
+        if (continueBtn) continueBtn.disabled = false;
+        if (onFranciscoSelect) onFranciscoSelect(c);
+      };
+      card.addEventListener('click', handleSelect);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelect(); }
+      });
+    }
+
+    grid.appendChild(card);
+  });
+
+  const continueBtn = $('btn-part2-continue');
+  if (continueBtn) {
+    continueBtn.textContent = s.continueBtn;
+    continueBtn.disabled = true;
+  }
+
+  // Coming-soon placeholder text
+  const comingSoonTitle = $('part2-coming-soon-title');
+  if (comingSoonTitle) comingSoonTitle.textContent = s.comingSoon;
+
+  const comingSoonBackBtn = $('btn-part2-coming-soon-back');
+  if (comingSoonBackBtn) comingSoonBackBtn.textContent = s.back;
+
+  // Ensure grid is shown, coming-soon hidden
+  const gridWrap = $('part2-grid-wrap');
+  const comingSoon = $('part2-coming-soon');
+  if (gridWrap) gridWrap.style.display = '';
+  if (comingSoon) comingSoon.style.display = 'none';
+}
+
+/** Show the Part 2 "Coming Soon" placeholder within #screen-part2-select. */
+export function showPart2ComingSoon() {
+  const gridWrap = $('part2-grid-wrap');
+  const comingSoon = $('part2-coming-soon');
+  if (gridWrap) gridWrap.style.display = 'none';
+  if (comingSoon) comingSoon.style.display = '';
 }
 
 // ── LANGUAGE UPDATE ───────────────────────────────────────────────────────────
