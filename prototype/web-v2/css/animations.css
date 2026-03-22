@@ -1,0 +1,330 @@
+/* ============================================================
+   ANIMATIONS — Keyframes, reveal, screen transitions
+   ============================================================ */
+
+/* ── 1. Fade in up ── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 2. Letter reveal (staggered title) ── */
+@keyframes letter-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) rotateX(-30deg);
+    filter: blur(4px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+.letter-reveal-char {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-reveal 500ms ease forwards;
+}
+
+/* JS sets --delay on each span; e.g. style="--delay:0.05s" */
+.letter-reveal-char {
+  animation-delay: var(--delay, 0s);
+}
+
+/* ── 3. Bounce scroll indicator ── */
+@keyframes bounce-scroll {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+    opacity: 1;
+  }
+}
+
+/* ── 4. Hue shift (mountain background light cycle) ── */
+@keyframes hue-shift {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  25% {
+    filter: hue-rotate(8deg) brightness(1.04);
+  }
+  50% {
+    filter: hue-rotate(15deg) brightness(0.96);
+  }
+  75% {
+    filter: hue-rotate(5deg) brightness(1.02);
+  }
+  100% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+}
+
+/* ── 5. Status bar fill (entrance) ── */
+@keyframes status-bar-fill {
+  from {
+    width: 0%;
+  }
+  /* width target is set via JS or inline style */
+}
+
+.status-bar-fill--animated {
+  animation: status-bar-fill 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── 6. Ripple (button click) ── */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ── 7. Slide up (bottom sheet / toast) ── */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* ── 8. Pulse glow (summit / EP critical) ── */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: var(--shadow-pulse-summit);
+  }
+}
+
+@keyframes pulse-glow-alert {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: var(--shadow-pulse-alert);
+  }
+}
+
+/* ── 9. Reveal (IntersectionObserver) ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--transition-slow),
+    transform var(--transition-slow);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--transition-slow),
+    transform var(--transition-slow);
+}
+
+.reveal-stagger.visible > *:nth-child(1)  { opacity: 1; transform: translateY(0); transition-delay: 0ms;   }
+.reveal-stagger.visible > *:nth-child(2)  { opacity: 1; transform: translateY(0); transition-delay: 60ms;  }
+.reveal-stagger.visible > *:nth-child(3)  { opacity: 1; transform: translateY(0); transition-delay: 120ms; }
+.reveal-stagger.visible > *:nth-child(4)  { opacity: 1; transform: translateY(0); transition-delay: 180ms; }
+.reveal-stagger.visible > *:nth-child(5)  { opacity: 1; transform: translateY(0); transition-delay: 240ms; }
+.reveal-stagger.visible > *:nth-child(6)  { opacity: 1; transform: translateY(0); transition-delay: 300ms; }
+.reveal-stagger.visible > *:nth-child(7)  { opacity: 1; transform: translateY(0); transition-delay: 360ms; }
+.reveal-stagger.visible > *:nth-child(8)  { opacity: 1; transform: translateY(0); transition-delay: 420ms; }
+
+/* ── 10. Screen transitions ── */
+
+/* Entering screen */
+.screen-enter {
+  animation: fade-in-up 350ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Exiting screen */
+.screen-exit {
+  animation: screen-fade-out 250ms cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+
+@keyframes screen-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+/* Slide-in from right (forward navigation) */
+.screen-slide-in {
+  animation: screen-slide-in 320ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes screen-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide-in from left (back navigation) */
+.screen-slide-back {
+  animation: screen-slide-back 320ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes screen-slide-back {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Utility animation classes ── */
+.animate-fade-in-up {
+  animation: fade-in-up var(--transition-base) both;
+}
+
+.animate-fade-in-up--slow {
+  animation: fade-in-up var(--transition-slow) both;
+}
+
+.animate-pulse-summit {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-pulse-alert {
+  animation: pulse-glow-alert 1.5s ease-in-out infinite;
+}
+
+/* Hero content staggered entrance */
+.hero-content > * {
+  opacity: 0;
+  animation: fade-in-up 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.hero-content > *:nth-child(1) { animation-delay: 200ms; }
+.hero-content > *:nth-child(2) { animation-delay: 380ms; }
+.hero-content > *:nth-child(3) { animation-delay: 520ms; }
+.hero-content > *:nth-child(4) { animation-delay: 650ms; }
+.hero-content > *:nth-child(5) { animation-delay: 760ms; }
+
+/* Log entry entrance */
+.log-entry {
+  animation: fade-in-up 200ms ease both;
+}
+
+/* Card hover shimmer (optional, used via .card--shimmer) */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.card--loading {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface2) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  /* All keyframe animations disabled */
+  *,
+  *::before,
+  *::after {
+    animation-name: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Reveal: show immediately without motion */
+  .reveal,
+  .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Hero content: show immediately */
+  .hero-content > * {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  /* Screen transitions: instant */
+  .screen-enter,
+  .screen-exit,
+  .screen-slide-in,
+  .screen-slide-back {
+    animation: none !important;
+  }
+
+  /* Scroll behavior */
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* No hero background animation */
+  #screen-hero {
+    animation: none !important;
+  }
+}
