@@ -3,7 +3,12 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/prototype/web-v1/index.html",
+      "destination": "/prototype/web-v2/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/prototype/web-v2",
+      "destination": "/prototype/web-v2/index.html",
       "permanent": true
     },
     {
