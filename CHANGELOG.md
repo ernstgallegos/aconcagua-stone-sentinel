@@ -12,6 +12,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 - Monte Carlo headless simulator (`scripts/monte-carlo-web-v1.js`) for automated win-rate verification across all 6 characters × 5 scenarios × configurable seeds.
 - `simulate` npm script (`npm run simulate`) to run the Monte Carlo harness and write results to `docs/playtest-results/`.
+- `prototype/web-v2/css/` — full CSS layer for the web-v2 prototype (7 files, ~3 100 lines):
+  - `tokens.css`: design tokens with dark (default), light, and sunset themes; typography, spacing, radius, shadow, and transition scales; character accent color variables.
+  - `base.css`: modern CSS reset, body/typography defaults, skip-to-content link, focus-visible styles, custom scrollbar, `.sr-only`, `.container` utilities.
+  - `components.css`: `.btn` family (primary/secondary/ghost/danger + size variants), `.card`, `.badge`, `.tag`, `.pill`, `.divider`, `.status-bar-wrap`, `.progress-pill`, `.avatar-circle`, `.modal-overlay`/`.modal`, `.nav` with language and theme toggles, `.icon-btn`, `.tooltip`, `.toast`.
+  - `screens.css`: `.screen` base class; per-screen layouts for `#screen-hero` (CSS mountain silhouette via `clip-path`), `#screen-character` (character grid + sticky detail panel), `#screen-briefing` (route map, scenario grid, permit card), `#screen-game` (two-column desktop split), `#screen-debrief` (outcome hero, stats grid, timeline).
+  - `game.css`: `.game-topbar` sticky chips, `.perception-card`, `.action-grid`/`.action-btn` with type variants (advance/descend/rest/sleep/summit/retreat/special), `.event-log`/`.log-entry`, `.status-section`, `.diegetic-clock`, `.permit-counter`, `.ep-bt-display`, `.condition-list`, `.decision-window`.
+  - `responsive.css`: mobile-first breakpoints (480/768/1024/1280/1440 px); character grid 1→2→3 cols, scenario grid 1→2→3 cols, game layout stacked→2-col, nav hamburger↔full-links, modal bottom-sheet on mobile, touch-target enforcement, print rules.
+  - `animations.css`: 8 keyframe definitions (`fade-in-up`, `letter-reveal`, `bounce-scroll`, `hue-shift`, `status-bar-fill`, `ripple`, `slide-up`, `pulse-glow`); `.reveal`/`.reveal-stagger` IntersectionObserver classes; screen transition classes (`.screen-enter`, `.screen-exit`, `.screen-slide-in`, `.screen-slide-back`); full `prefers-reduced-motion` block.
 
 ### Changed
 - Bumped version to `1.4.1` in `package.json` and `package-lock.json`.

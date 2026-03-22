@@ -1,0 +1,403 @@
+/* ============================================================
+   RESPONSIVE — Mobile-first breakpoint overrides
+   Base styles (320–767px) are in other files.
+   ============================================================ */
+
+/* ── Shared helpers ── */
+
+/* Ensure all tap targets meet 44×44 minimum */
+a,
+button,
+[role="button"],
+input[type="checkbox"],
+input[type="radio"],
+select {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Restore natural min-height for inline elements */
+a:not(.btn):not(.nav__logo) {
+  min-height: unset;
+  min-width: unset;
+}
+
+/* ── 480px — large mobile ── */
+@media (min-width: 480px) {
+  .character-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .debrief-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── 768px — tablet ── */
+@media (min-width: 768px) {
+  /* Container padding */
+  .container {
+    padding-inline: var(--space-xl);
+  }
+
+  /* Navigation: show full links, hide hamburger */
+  .nav__hamburger {
+    display: none;
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  /* Hero */
+  .hero-content {
+    padding: var(--space-3xl) var(--space-xl);
+  }
+
+  .hero-cta {
+    gap: var(--space-lg);
+  }
+
+  /* Character grid: 2 columns */
+  .character-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .character-screen-inner {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .character-grid-col {
+    flex: 1;
+  }
+
+  .character-detail {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: calc(56px + var(--space-xl));
+  }
+
+  /* Scenario grid: 2 columns */
+  .scenario-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Route map: show side-by-side */
+  .route-map {
+    min-height: 280px;
+  }
+
+  /* Game layout: still stacked but wider topbar */
+  .game-topbar {
+    gap: var(--space-lg);
+  }
+
+  /* Action grid: 2 columns always */
+  .action-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Debrief */
+  .debrief-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .debrief-inner {
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+  }
+}
+
+/* ── 1024px — desktop ── */
+@media (min-width: 1024px) {
+  /* Container */
+  .container {
+    padding-inline: var(--space-2xl);
+  }
+
+  /* Game layout: 2-column (65 / 35) */
+  .game-layout {
+    flex-direction: row;
+    overflow: hidden;
+    height: calc(100dvh - 56px - 48px); /* viewport minus nav and topbar */
+  }
+
+  .game-main {
+    flex: 65;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    padding: var(--space-lg);
+  }
+
+  .game-sidebar {
+    flex: 35;
+    overflow-y: auto;
+    border-top: none;
+    padding: var(--space-lg);
+    max-width: 380px;
+  }
+
+  /* Character grid: 3 columns */
+  .character-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Character screen: grid + detail side by side */
+  .character-screen-inner {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .character-grid-col {
+    flex: 1;
+  }
+
+  .character-detail {
+    width: 340px;
+  }
+
+  /* Scenario grid: 3 columns */
+  .scenario-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Route map info */
+  .route-map__info {
+    width: 300px;
+  }
+
+  /* Action grid: 3 columns on desktop game-main */
+  .game-main .action-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Debrief */
+  .debrief-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Event log taller */
+  .event-log {
+    max-height: 380px;
+  }
+
+  /* EP/BT display larger */
+  .ep-bt-display__value {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* ── 1280px — large desktop ── */
+@media (min-width: 1280px) {
+  .game-sidebar {
+    max-width: 420px;
+  }
+
+  .character-detail {
+    width: 380px;
+  }
+
+  /* Route map bigger */
+  .route-map {
+    min-height: 320px;
+  }
+}
+
+/* ── 1440px — extra large ── */
+@media (min-width: 1440px) {
+  /* Wider container */
+  .container--wide {
+    max-width: 1600px;
+  }
+
+  .game-main {
+    padding: var(--space-xl);
+  }
+
+  .game-sidebar {
+    max-width: 460px;
+    padding: var(--space-xl);
+  }
+
+  .game-main .action-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Touch / hover affordances ── */
+@media (hover: none) and (pointer: coarse) {
+  /* Reduce hover-state-only transforms on touch */
+  .card--interactive:hover,
+  .character-card:hover,
+  .scenario-card:hover,
+  .action-btn:hover {
+    transform: none;
+  }
+
+  /* Slightly larger action buttons on touch */
+  .action-btn {
+    min-height: 88px;
+    padding: var(--space-md) var(--space-md);
+  }
+
+  /* Larger status bar fill for touch accuracy */
+  .status-bar {
+    height: 8px;
+  }
+}
+
+/* ── Nav mobile: hamburger ── */
+@media (max-width: 767px) {
+  .nav__links {
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-md);
+    flex-direction: column;
+    gap: var(--space-xs);
+    z-index: calc(var(--z-nav) - 1);
+  }
+
+  .nav__links.open {
+    display: flex;
+  }
+
+  .nav__hamburger {
+    display: flex;
+  }
+
+  /* Status sidebar collapsible */
+  .game-sidebar {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    border-top: none;
+    transition: max-height var(--transition-base), padding var(--transition-base);
+  }
+
+  .game-sidebar.expanded {
+    max-height: 420px;
+    overflow-y: auto;
+    padding: var(--space-md);
+    border-top: 1px solid var(--border);
+  }
+
+  /* Sidebar toggle (mobile only) */
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .sidebar-toggle .icon {
+    transition: transform var(--transition-fast);
+  }
+
+  .sidebar-toggle.open .icon {
+    transform: rotate(180deg);
+  }
+
+  /* Hero layout adjustments */
+  .hero-content {
+    gap: var(--space-md);
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Character screen: single column */
+  .character-screen-inner {
+    flex-direction: column;
+  }
+
+  .character-detail {
+    width: 100%;
+    position: static;
+  }
+
+  /* Debrief actions: stacked */
+  .debrief-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .debrief-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Modal: bottom sheet on mobile */
+  .modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    max-height: 85dvh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    transform: translateY(100%);
+  }
+
+  .modal-overlay.modal-open .modal {
+    transform: translateY(0);
+    animation: slide-up 300ms ease forwards;
+  }
+
+  .modal-overlay {
+    align-items: flex-end;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  .nav,
+  .game-topbar,
+  .action-grid,
+  .event-log,
+  .btn,
+  .sidebar-toggle {
+    display: none;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .screen {
+    display: block;
+    min-height: auto;
+  }
+
+  .debrief-inner {
+    padding: 0;
+    max-width: 100%;
+  }
+}
