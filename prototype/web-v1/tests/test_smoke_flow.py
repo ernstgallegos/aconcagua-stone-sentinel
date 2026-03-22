@@ -45,7 +45,7 @@ def expect_disabled(page, selector: str, expected: bool):
 
 
 def reach_expedition_setup(page):
-    """Navigate from title to expedition-setup screen."""
+    """Navigate from welcome screen to expedition-setup screen."""
     page.click('#screen-title .btn-primary')
     page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-expedition-setup'")
 
@@ -58,15 +58,12 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
 
         for screen in [
-            'splash', 'title', 'expedition-setup', 'onboarding',
+            'title', 'expedition-setup', 'onboarding',
             'game', 'debrief', 'summit-success', 'part2-character',
         ]:
             page.wait_for_selector(f'#screen-{screen}')
 
-        assert _active_screen(page) == 'screen-splash'
-
-        page.click('#screen-splash')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
+        assert _active_screen(page) == 'screen-title'
 
         reach_expedition_setup(page)
 
@@ -118,8 +115,6 @@ def test_shoot_photo_visibility_stays_daniela_only_smoke():
 
         def reach_game_with_character(character_id: str):
             page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
-            page.click('#screen-splash')
-            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-title'")
             reach_expedition_setup(page)
 
             # Use JS to set carousel to the desired character by index

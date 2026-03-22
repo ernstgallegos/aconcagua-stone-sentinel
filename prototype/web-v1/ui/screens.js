@@ -219,7 +219,6 @@ const I18N = {
       shootPhoto: 'Shoot Photo',
       expeditionJournal: 'Expedition Journal',
       clearLog: 'Clear log',
-      splashTap: 'Tap / Click to continue',
       titleTagline: '"The mountain doesn\'t ask if you\'re ready. The mountain rules."',
       titleSub: 'A decision game about limits, environment, and knowing when to stop.',
       difficulty: 'Difficulty',
@@ -284,7 +283,6 @@ const I18N = {
       shootPhoto: 'Tomar foto',
       expeditionJournal: 'Diario de expedición',
       clearLog: 'Limpiar registro',
-      splashTap: 'Toca / haz clic para continuar',
       titleTagline: '"La montaña no pregunta si estás listo. La montaña manda."',
       titleSub: 'Un juego de decisiones sobre límites, entorno y saber cuándo detenerse.',
       difficulty: 'Dificultad',
@@ -594,37 +592,14 @@ function initVisualMode() {
   setVisualMode(storedMode);
 }
 
-function leaveSplash() {
-  const splash = document.getElementById('screen-splash');
-  if (!splash || !splash.classList.contains('active')) return;
-  splash.classList.remove('splash-pressed');
-  showScreen('title');
-}
-
-function initSplashScreen() {
-  const splash = document.getElementById('screen-splash');
-  if (splash) {
-    splash.addEventListener('click', leaveSplash);
-    splash.addEventListener('pointerdown', () => splash.classList.add('splash-pressed'));
-    splash.addEventListener('pointerup', leaveSplash);
-    splash.addEventListener('pointercancel', () => splash.classList.remove('splash-pressed'));
-    splash.addEventListener('touchend', leaveSplash, { passive: true });
-
-    /* Decision 4: Ken Burns on splash image — respects prefers-reduced-motion */
-    const splashImg = splash.querySelector('.splash-image');
-    if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      splashImg.classList.add('ken-burns-active');
-    }
+function initWelcomeScreen() {
+  /* Decision 4: Ken Burns on cover image — respects prefers-reduced-motion */
+  const titleScreen = document.getElementById('screen-title');
+  if (!titleScreen) return;
+  const splashImg = titleScreen.querySelector('.splash-image');
+  if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    splashImg.classList.add('ken-burns-active');
   }
-
-  document.addEventListener('keydown', (event) => {
-    const currentSplash = document.getElementById('screen-splash');
-    if (!currentSplash || !currentSplash.classList.contains('active')) return;
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      leaveSplash();
-    }
-  });
 }
 
 async function loadDataConfig() {
@@ -734,7 +709,6 @@ function applyStaticTranslations() {
     ['#btn-shoot-photo .btn-decision-main span:first-child', 'ui.shootPhoto'],
     ['#screen-journal .journal-title', 'ui.expeditionJournal'],
     ['#screen-journal .journal-header .btn-ghost', 'ui.clearLog'],
-    ['#screen-splash .splash-cta', 'ui.splashTap'],
     ['#screen-title .title-tagline', 'ui.titleTagline'],
     ['#screen-title .title-sub', 'ui.titleSub'],
     ['#screen-onboarding .onboard-actions .btn-ghost', 'ui.tutorialCta'],
@@ -759,9 +733,8 @@ function applyStaticTranslations() {
 // (was defined twice: once at line ~900 and once at line ~1820 as a patch)
 // Now handles all responsibilities in one place.
 // ════════════════════════════════════════════════
-// Decision 14: exit animation durations
+// Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
-const SPLASH_EXIT_DURATION_MS = 600; // slower crossfade for splash→title
 function showScreen(id) {
   const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
@@ -805,8 +778,7 @@ function showScreen(id) {
   } else {
     /* Apply exit animation */
     currentActive.classList.add('exiting');
-    const exitDuration = currentActive.id === 'screen-splash' ? SPLASH_EXIT_DURATION_MS : SCREEN_EXIT_DURATION_MS;
-    setTimeout(activateTarget, exitDuration);
+    setTimeout(activateTarget, SCREEN_EXIT_DURATION_MS);
   }
 }
 
@@ -3155,7 +3127,7 @@ document.addEventListener('keydown', (event) => {
 initVisualMode();
 initLanguage();
 initDifficulty();
-initSplashScreen();
+initWelcomeScreen();
 loadDataConfig().then(() => {
   buildCharacterGrid();
   buildScenarioGrid();

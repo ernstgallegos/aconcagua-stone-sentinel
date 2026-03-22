@@ -49,16 +49,9 @@ body[data-theme='light'] .decision-panel {
   background: var(--surface);
 }
 
-body[data-theme='light'] #screen-title {
+body[data-theme='light'] #screen-title::before {
   background:
-    linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%),
-    url('../../art/concept-art/curated/concept-curated-4.webp') center/cover no-repeat;
-}
-
-body[data-theme='light'] .splash-cta {
-  color: var(--stone);
-  border-color: var(--border);
-  background: rgba(255, 250, 242, 0.88);
+    linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%);
 }
 
 /* ══════════════════════════════════════
@@ -93,11 +86,11 @@ body[data-theme='sunset'] .decision-keyhint {
   color: #f1c7aa;
 }
 
-body[data-theme='sunset'] #screen-title {
+body[data-theme='sunset'] #screen-title::before {
   background:
     linear-gradient(180deg, rgba(37, 20, 32, 0.25) 0%, rgba(37, 20, 32, 0.8) 100%),
     radial-gradient(circle at 50% 28%, rgba(255, 158, 94, 0.25), transparent 56%),
-    url('../../art/concept-art/curated/concept-curated-4.webp') center/cover no-repeat;
+    linear-gradient(90deg, rgba(37, 20, 32, 0.44) 0%, rgba(37, 20, 32, 0.14) 50%, rgba(37, 20, 32, 0.38) 100%);
 }
 
 /* ══════════════════════════════════════
@@ -136,10 +129,9 @@ body[data-theme='sunset'] #screen-title {
     color: #4a3f30;
   }
 
-  body[data-theme='auto'] #screen-title {
+  body[data-theme='auto'] #screen-title::before {
     background:
-      linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%),
-      url('../../art/concept-art/curated/concept-curated-4.webp') center/cover no-repeat;
+      linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%);
   }
 }
 

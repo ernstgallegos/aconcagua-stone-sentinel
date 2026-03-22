@@ -10,7 +10,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- New unified `screen-expedition-setup` screen with three horizontal carousel selectors: Difficulty (5 levels), Character (6 + Random), and Scenario (predefined + Random) — replaces the 3-screen pre-game selection flow (`screen-title` difficulty panel → `screen-character` → `screen-scenario`).
+- Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
+
+### Changed
+- `prototype/web-v1/css/screens.css`: replaced per-screen `#screen-splash` block with `.splash-content` absolute-positioned background layer; `#screen-title` now uses cover image via `<img>` element instead of CSS `background-image`; combined overlay gradients into `#screen-title::before`; `.title-shell` z-index bumped to 2.
+- `prototype/web-v1/css/themes.css`: light/sunset/auto theme overrides for `#screen-title` now target `::before` gradient layer instead of `background:` shorthand (no longer include a `url()` since the image is an `<img>` element).
+- `prototype/web-v1/ui/screens.js`: replaced `leaveSplash()` + `initSplashScreen()` with `initWelcomeScreen()` (applies Ken Burns to cover image in `#screen-title`); removed `SPLASH_EXIT_DURATION_MS` constant and special-case exit duration; removed `splashTap` i18n key and `#screen-splash .splash-cta` from `applyStaticTranslations()`.
+- `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
+
+### Fixed
+- `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
+- `prototype/web-v1/css/themes.css`: same path fix for light/sunset/auto theme `#screen-title` background overrides.
+
+
 - Carousel component: reusable `.carousel-section` / `.carousel-track` / `.carousel-card` / `.carousel-arrow` / `.carousel-dots` CSS classes in `css/components.css`; supports left/right arrow navigation with wrapping and active-dot position indicators.
 - **"Begin Expedition"** (`btn-primary`) and **"Quick Start"** (`btn-ghost`) action buttons on `screen-expedition-setup`; Quick Start randomizes character and scenario while respecting the player-selected difficulty.
 - `[ℹ]` info expand button on character and scenario carousel cards, revealing a collapsible panel with full bio/traits or scenario intro text.
