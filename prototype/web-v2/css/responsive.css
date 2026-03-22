@@ -10,10 +10,14 @@ a,
 button,
 [role="button"],
 input[type="checkbox"],
-input[type="radio"],
-select {
+input[type="radio"] {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* select: enforce height only — width is layout-determined */
+select {
+  min-height: 44px;
 }
 
 /* Restore natural min-height for inline elements */
@@ -126,7 +130,7 @@ a:not(.btn):not(.nav__logo) {
   .game-layout {
     flex-direction: row;
     overflow: hidden;
-    height: calc(100dvh - 56px - 48px); /* viewport minus nav and topbar */
+    height: calc(100dvh - var(--nav-height) - var(--topbar-height));
   }
 
   .game-main {
@@ -258,7 +262,7 @@ a:not(.btn):not(.nav__logo) {
   .nav__links {
     display: none;
     position: fixed;
-    top: 56px;
+    top: var(--nav-height);
     left: 0;
     right: 0;
     background: var(--surface);

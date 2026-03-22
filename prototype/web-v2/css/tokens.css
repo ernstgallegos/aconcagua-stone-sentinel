@@ -31,7 +31,7 @@
   --text-lg: 1.25rem;
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
-  --text-hero: clamp(2.5rem, 6vw, 4.5rem);
+  --text-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -67,6 +67,14 @@
   --z-modal: 100;
   --z-nav: 200;
   --z-toast: 300;
+
+  /* Pulse animation shadow values */
+  --shadow-pulse-summit: 0 0 12px 4px rgba(232, 193, 112, 0.35);
+  --shadow-pulse-alert: 0 0 14px 6px rgba(212, 86, 78, 0.3);
+
+  /* Layout heights — keep in sync with .nav and .game-topbar */
+  --nav-height: 56px;
+  --topbar-height: 48px;
 }
 
 /* LIGHT THEME */

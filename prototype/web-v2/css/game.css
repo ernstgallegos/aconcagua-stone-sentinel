@@ -5,9 +5,9 @@
 /* ── Top bar ── */
 .game-topbar {
   position: sticky;
-  top: 56px; /* below nav */
+  top: var(--nav-height);
   z-index: calc(var(--z-nav) - 1);
-  background: rgba(19, 28, 37, 0.92);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
@@ -15,7 +15,7 @@
   align-items: center;
   gap: var(--space-md);
   padding: 0 var(--space-lg);
-  height: 48px;
+  height: var(--topbar-height);
   flex-shrink: 0;
   overflow-x: auto;
   scrollbar-width: none;
@@ -23,14 +23,6 @@
 
 .game-topbar::-webkit-scrollbar {
   display: none;
-}
-
-[data-theme="light"] .game-topbar {
-  background: rgba(255, 255, 255, 0.92);
-}
-
-[data-theme="sunset"] .game-topbar {
-  background: rgba(42, 24, 16, 0.92);
 }
 
 /* Topbar stat chips */
@@ -290,7 +282,7 @@
 
 .action-btn.action-summit {
   border-color: rgba(232, 193, 112, 0.5);
-  background: color-mix(in srgb, var(--surface2) 85%, rgba(232, 193, 112, 0.1));
+  background: color-mix(in srgb, var(--surface2) 90%, var(--summit));
 }
 
 .action-btn.action-summit:hover {
@@ -317,7 +309,7 @@
 
 .action-btn.action-special {
   border-color: rgba(107, 163, 104, 0.5);
-  background: color-mix(in srgb, var(--surface2) 85%, rgba(107, 163, 104, 0.1));
+  background: color-mix(in srgb, var(--surface2) 90%, var(--moss));
 }
 
 .action-btn.action-special:hover {

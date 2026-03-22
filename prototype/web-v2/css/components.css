@@ -43,7 +43,7 @@
 
 .btn-primary {
   background: var(--summit);
-  color: #0B1117;
+  color: var(--bg);
   border-color: var(--summit);
 }
 
@@ -490,8 +490,8 @@
   left: 0;
   right: 0;
   z-index: var(--z-nav);
-  height: 56px;
-  background: rgba(11, 17, 23, 0.85);
+  height: var(--nav-height);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -500,14 +500,6 @@
   padding: 0 var(--space-lg);
   gap: var(--space-md);
   transition: background-color var(--transition-base);
-}
-
-[data-theme="light"] .nav {
-  background: rgba(245, 240, 232, 0.9);
-}
-
-[data-theme="sunset"] .nav {
-  background: rgba(26, 15, 10, 0.9);
 }
 
 .nav__logo {

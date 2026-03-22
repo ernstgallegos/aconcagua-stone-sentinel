@@ -25,7 +25,9 @@
   animation: hue-shift 60s ease-in-out infinite alternate;
 }
 
-/* CSS mountain silhouette */
+/* CSS mountain silhouette — primary ridge
+   Coordinate pairs define the skyline from left (0%) to right (100%).
+   Edit points 30%–50% (peaks) to reshape the summit profile. */
 #screen-hero::before {
   content: '';
   position: absolute;
@@ -44,7 +46,7 @@
   pointer-events: none;
 }
 
-/* Distant second ridge layer */
+/* Distant second ridge layer — sits in front of sky, behind main peaks */
 #screen-hero::after {
   content: '';
   position: absolute;
@@ -141,7 +143,7 @@
    CHARACTER SCREEN
    ============================================================ */
 #screen-character {
-  padding-top: 56px; /* nav height */
+  padding-top: var(--nav-height);
 }
 
 .character-screen-inner {
@@ -274,7 +276,7 @@
    BRIEFING SCREEN
    ============================================================ */
 #screen-briefing {
-  padding-top: 56px;
+  padding-top: var(--nav-height);
 }
 
 .briefing-inner {
@@ -441,7 +443,7 @@
    GAME SCREEN
    ============================================================ */
 #screen-game {
-  padding-top: 56px;
+  padding-top: var(--nav-height);
   flex-direction: column;
 }
 
@@ -483,7 +485,7 @@
    DEBRIEF SCREEN
    ============================================================ */
 #screen-debrief {
-  padding-top: 56px;
+  padding-top: var(--nav-height);
   align-items: center;
   justify-content: flex-start;
 }
