@@ -100,7 +100,7 @@ export const strings = {
       levels: [
         { id: 'very-easy', label: 'Contemplativo', blurb: 'Margen extra. Ideal para conocer el sistema.' },
         { id: 'easy', label: 'Estándar', blurb: 'Balance clásico con algo más de margen.' },
-        { id: 'standard', label: 'Alpinista', blurb: 'Balance base del prototipo.' },
+        { id: 'standard', label: 'Andinista', blurb: 'Balance base del prototipo.' },
         { id: 'hard', label: 'Cumbre Salvaje', blurb: 'Márgenes ajustados, penalizaciones severas.' },
         { id: 'very-hard', label: 'Sin Retorno', blurb: 'Presión máxima. Sin margen de error.' },
       ],
@@ -205,7 +205,7 @@ export const strings = {
       levels: [
         { id: 'very-easy', label: 'Contemplative', blurb: 'Extra margin. Ideal for learning the system.' },
         { id: 'easy', label: 'Standard', blurb: 'Classic balance with more margin.' },
-        { id: 'standard', label: 'Alpinist', blurb: 'Baseline prototype balance.' },
+        { id: 'standard', label: 'Andinist', blurb: 'Baseline prototype balance.' },
         { id: 'hard', label: 'Savage Summit', blurb: 'Tighter margins, harsher penalties.' },
         { id: 'very-hard', label: 'No Return', blurb: 'Maximum pressure. No margin for error.' },
       ],
