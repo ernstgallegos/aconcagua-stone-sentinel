@@ -112,6 +112,54 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         browser.close()
 
 
+
+def test_post_summit_return_requires_explicit_horcones_exit_smoke():
+    with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
+        reach_expedition_setup(page)
+        page.click('#btn-begin-expedition')
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
+        page.click('#screen-onboarding .btn-primary')
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+
+        page.evaluate(
+            """async () => {
+                const state = await import('/prototype/web-v1/state/game-state.js');
+                state.updateRunState(state.G, {
+                    finalOutcome: 'Strategic Retreat',
+                    hasSummited: true,
+                    highestPosIdx: 14,
+                    turn: 12,
+                    turnLog: [],
+                    allFlags: [],
+                });
+                state.G.state.position = 'confluencia';
+                state.G.state.functional_capacity = 80;
+                state.G.state.fatigue = 25;
+                state.G.state.exposure = 15;
+                state.G.state.weather_severity = 0;
+                state.G.state.visibility = 3;
+                state.G.state.water = 10;
+                state.G.state.food = 10;
+                window.makeDecision('descend');
+            }"""
+        )
+
+        page.wait_for_timeout(1200)
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+        assert page.evaluate("async () => (await import('/prototype/web-v1/state/game-state.js')).G.state.position") == 'horcones'
+        assert page.evaluate("async () => (await import('/prototype/web-v1/state/game-state.js')).G.finalOutcome") == 'Strategic Retreat'
+
+        page.evaluate("() => window.makeDecision('descend')")
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-summit-success'")
+        assert page.evaluate("async () => (await import('/prototype/web-v1/state/game-state.js')).G.finalOutcome") == 'Summit and Safe Return'
+
+        browser.close()
+
+
 def test_shoot_photo_visibility_stays_daniela_only_smoke():
     with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
         browser = p.chromium.launch(headless=True)

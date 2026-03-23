@@ -23,6 +23,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
 
 ### Fixed
+- `prototype/web-v1/ui/screens.js`: corrected park-exit detection in `makeDecision()` so arriving at `horcones` after a summit no longer ends the run one turn early as `Strategic Retreat`; the expedition now only finishes on the explicit exit descend from Horcones, preserving `Summit and Safe Return` and the Part 2 unlock path.
+- `prototype/web-v1/tests/test_smoke_flow.py`: added a browser smoke regression covering post-summit arrival at `horcones`, explicit park exit on the following descend, and the resulting `Summit and Safe Return` unlock.
+
+### Fixed
 - `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
 - `prototype/web-v1/css/themes.css`: same path fix for light/sunset/auto theme `#screen-title` background overrides.
 
