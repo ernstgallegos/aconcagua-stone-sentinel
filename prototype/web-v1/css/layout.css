@@ -138,12 +138,28 @@
   flex: 1;
 }
 
-/* ── Switchers (theme + lang) — fixed overlays ── */
-.theme-switcher {
+/* ── Welcome top controls — fixed overlays ── */
+.title-top-controls {
   position: fixed;
   top: 1rem;
+  left: 1rem;
   right: 1rem;
   z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.title-utility-cluster {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.theme-switcher,
+.lang-switcher {
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -154,25 +170,9 @@
   color: var(--stone);
   background: color-mix(in srgb, var(--surface) 78%, transparent);
   border: 1px solid var(--border);
-  padding: 0.45rem 0.55rem;
-}
-
-.lang-switcher {
-  position: fixed;
-  top: 3.8rem;
-  right: 1rem;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--stone);
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  border: 1px solid var(--border);
-  padding: 0.45rem 0.55rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
 }
 
 .theme-select {
@@ -185,6 +185,18 @@
   text-transform: uppercase;
   padding: 0.2rem 0.35rem;
   cursor: pointer;
+}
+
+.theme-select-minimal {
+  min-width: 3.25rem;
+  padding: 0.16rem 1.1rem 0.16rem 0.35rem;
+  border-radius: 999px;
+}
+
+.switcher-icon {
+  color: var(--stone);
+  font-size: 0.72rem;
+  line-height: 1;
 }
 
 /* ── Utility classes ── */

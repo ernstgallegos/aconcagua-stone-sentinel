@@ -54,15 +54,11 @@
   .title-divider { margin: 1.25rem auto; }
   .title-tagline { font-size: 0.875rem; }
   .title-shell { padding: 2rem 1rem; }
-  .title-cta-stack {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .title-cta-stack .btn-primary,
-  .title-cta-stack .title-info-trigger {
-    min-width: 0;
-  }
+  .title-shell-minimal { padding: 1.5rem 1rem; }
+  .title-top-controls { top: 0.75rem; left: 0.75rem; right: 0.75rem; }
+  .title-utility-cluster { gap: 0.35rem; }
+  .title-screen-advance { width: 100%; padding-left: 0; padding-right: 0; }
+  .title-screen-advance span { width: 100%; }
 
   .char-grid { grid-template-columns: 1fr; }
   .scenario-grid { grid-template-columns: 1fr; }
@@ -78,7 +74,7 @@
   .tutorial-meta { grid-template-columns: 1fr; }
 
   .theme-switcher,
-  .lang-switcher { font-size: 0.75rem; padding: 0.35rem 0.45rem; }
+  .lang-switcher { font-size: 0.75rem; padding: 0.3rem 0.38rem; }
 
   /* EXPERIMENTAL — Bottom-sheets visible on mobile (Decision 13) */
   .game-mobile-bar { display: flex; }

@@ -210,6 +210,7 @@ const I18N = {
       clearJournalConfirm: 'Clear all expedition records?',
       journalEmpty: 'No expeditions recorded. The first run will appear here.',
       begin: 'BEGIN',
+      titleAdvanceHint: 'Click or tap anywhere to continue',
       introInfoLabel: 'Open prototype information',
       introTitle: 'About Aconcagua: Stone Sentinel',
       introClose: 'Close',
@@ -225,7 +226,7 @@ const I18N = {
       introCreditsTitle: 'Credits and status',
       introCreditsBody: 'This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.',
       introLinksTitle: 'Repository and contact',
-      introLinksBody: 'Follow development, share feedback, or propose collaborations through the public repository and the creator's email.',
+      introLinksBody: "Follow development, share feedback, or propose collaborations through the public repository and the creator's email.",
       introRepoCta: 'Public repository',
       introEmailCta: 'Email the creator',
       titleChooseExpedition: 'Choose Your Expedition',
@@ -306,6 +307,7 @@ const I18N = {
       clearJournalConfirm: '¿Borrar todos los registros de expedición?',
       journalEmpty: 'No hay expediciones registradas. La primera partida aparecerá aquí.',
       begin: 'COMENZAR',
+      titleAdvanceHint: 'Hacé clic o tocá cualquier parte para continuar',
       introLinksTitle: 'Repositorio y contacto',
       introLinksBody: 'Seguí el desarrollo, compartí feedback o proponé colaboraciones desde el repositorio público y el email del creador.',
       introRepoCta: 'Repositorio público',
@@ -501,6 +503,8 @@ function renderIntroContent() {
     infoTrigger.setAttribute('aria-label', label);
     infoTrigger.setAttribute('title', label);
   }
+  const titleAdvanceHint = document.getElementById('title-advance-hint');
+  if (titleAdvanceHint) titleAdvanceHint.textContent = t('ui.titleAdvanceHint');
   setText('intro-modal-title', t('ui.introTitle'));
   const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');
   setText('intro-modal-summary', t('ui.introSummary'));
@@ -637,6 +641,10 @@ function setLanguage(lang) {
   if (themeLabel) themeLabel.textContent = t('ui.visualMode');
   const langLabel = document.querySelector('.lang-switcher label');
   if (langLabel) langLabel.textContent = t('ui.language');
+  const themeSelect = document.getElementById('theme-select');
+  if (themeSelect) themeSelect.setAttribute('aria-label', t('ui.visualMode'));
+  const languageSelect = document.getElementById('language-select');
+  if (languageSelect) languageSelect.setAttribute('aria-label', t('ui.language'));
   applyStaticTranslations();
   renderDifficultySelector();
   renderIntroContent();
@@ -685,6 +693,21 @@ function initWelcomeScreen() {
   if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     splashImg.classList.add('ken-burns-active');
   }
+
+  titleScreen.addEventListener('click', (event) => {
+    if (!titleScreen.classList.contains('active')) return;
+    if (event.target.closest('button, select, option, a, .tutorial-dialog, .tutorial-backdrop')) return;
+    advanceFromTitle(event);
+  });
+}
+
+function advanceFromTitle(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  closeIntroModal();
+  showScreen('expedition-setup');
 }
 
 async function loadDataConfig() {
@@ -782,7 +805,7 @@ function applyStaticTranslations() {
   const map = [
     ['.theme-switcher label', 'ui.visualMode'],
     ['.lang-switcher label', 'ui.language'],
-    ["#screen-title .btn-primary", 'ui.begin'],
+    ['#title-advance-hint', 'ui.titleAdvanceHint'],
     ['#onboard-back-btn', 'ui.back'],
     ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
     ['.decision-label', 'ui.decision'],
@@ -3290,6 +3313,7 @@ window.setVisualMode = setVisualMode;
 window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
 window.setDifficulty = setDifficulty;
+window.advanceFromTitle = advanceFromTitle;
 window.openIntroModal = openIntroModal;
 window.closeIntroModal = closeIntroModal;
 window.openTutorialModal = openTutorialModal;

@@ -174,3 +174,4 @@ In addition to the changelog:
 - Part 2 bridge selection stays consistent with Part 1 when it reuses the same carousel/card language but hard-limits the dataset and confirmation gate to the single canonical public option set (Francisco + guided Normal Route).
 - Mobile watch/status fixes should reserve extra scroll/padding against the sticky decision footer; otherwise the last telemetry/context rows can look truncated even when the accordion is technically open.
 - Welcome-cover artwork behaves best when portrait/mobile uses centered `cover` (no empty top/bottom bands) and landscape switches to centered `contain`, accepting side gutters so the full composition remains visible on wide screens.
+- Title-screen progression is more robust when the cover itself owns the advance interaction and any visible hint/button is just a facade calling the same handler; keep top-corner utility controls excluded from that catch-all tap target to avoid accidental navigation.

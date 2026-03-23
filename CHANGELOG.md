@@ -10,6 +10,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Changed
+- Simplified the `prototype/web-v1/index.html` welcome screen chrome by moving the info trigger to the top-left corner, compressing the language/theme controls into compact icon-led selectors at the top-right, and replacing the central BEGIN button with a bottom-center full-screen continuation hint.
+
+### Fixed
+- Restored welcome-screen progression in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so tapping/clicking anywhere on the active cover now reliably advances to expedition setup, with an explicit `window.advanceFromTitle` facade preserving the inline fallback control.
+
+### Changed
 - Refined `prototype/web-v1/index.html` + `prototype/web-v1/css/screens.css` / `prototype/web-v1/css/responsive.css` welcome screen so the cover image no longer sits behind a heavy darkening layer, the info trigger moves below the primary BEGIN CTA, the info modal now includes repository/contact CTAs, portrait/mobile keeps the cover full-height without top/bottom gaps, and landscape shows the complete artwork with side margins when needed.
 - Rebuilt the Part 2 entry selection in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` with the same carousel-style setup language used in Part 1 while limiting the available choices to Francisco and the guided Normal Route group expedition.
 
