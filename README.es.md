@@ -205,9 +205,11 @@ Ver `/docs/simulation_engine.md` para el detalle técnico.
 
 Flujo visible actual en web-v1:
 
-`splash → title (dificultad) → character → scenario → onboarding (tutorial/FAQ o comenzar) → game → (summit-success o debrief)`
+`cover de bienvenida (+ modal informativo opcional) → expedition setup → onboarding (tutorial/FAQ o comenzar) → game → (summit-success o debrief)`
 
-La pantalla `Title` incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). La selección modifica de forma real la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión, incluyendo los perfiles temporales propios de cada personaje y las acciones de recuperación.
+La pantalla inicial ahora es deliberadamente minimalista: mantiene la cover como foco principal, deja el avance en un CTA único y mueve versión/contexto/créditos a un modal opcional para quien quiera leer más antes de empezar.
+
+La pantalla `expedition setup` incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). La selección modifica de forma real la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión, incluyendo los perfiles temporales propios de cada personaje y las acciones de recuperación.
 
 Los perfiles temporales específicos de cada personaje siguen activos, pero la dificultad elegida en `Title` ahora suma o resta margen sobre esos perfiles en lugar de quedar anulada cuando un personaje define su propia ventana de decisión.
 

@@ -64,6 +64,10 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
             page.wait_for_selector(f'#screen-{screen}')
 
         assert _active_screen(page) == 'screen-title'
+        page.click('#screen-title .title-info-trigger')
+        page.wait_for_function("() => document.getElementById('intro-modal')?.classList.contains('visible')")
+        page.click('#intro-modal .btn-ghost')
+        page.wait_for_function("() => !document.getElementById('intro-modal')?.classList.contains('visible')")
 
         reach_expedition_setup(page)
 
