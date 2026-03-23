@@ -107,10 +107,21 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-part2-character'")
         expect_disabled(page, '#btn-part2-confirm', True)
 
+        assert page.locator('#part2-character-grid .part2-static-card').count() == 6
+        assert page.locator('#part2-route-grid .part2-static-card').count() >= 3
+        assert page.locator('#part2-char-laura').get_attribute('aria-disabled') == 'true'
+        assert page.locator('#part2-route-independent-normal-route').get_attribute('aria-disabled') == 'true'
+
+        page.click('#part2-char-laura')
+        expect_disabled(page, '#btn-part2-confirm', True)
+
         page.click('#part2-char-francisco')
         expect_disabled(page, '#btn-part2-confirm', True)
 
-        page.click('#part2-scenario-card')
+        page.click('#part2-route-independent-normal-route')
+        expect_disabled(page, '#btn-part2-confirm', True)
+
+        page.click('#part2-route-guided-normal-route')
         expect_disabled(page, '#btn-part2-confirm', False)
 
         page.click('#btn-part2-confirm')

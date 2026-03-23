@@ -179,6 +179,39 @@ const PART2_SELECTION = {
   scenarioId: null,
 };
 
+const PART2_ROUTE_OPTIONS = [
+  {
+    id: 'guided-normal-route',
+    name: { en: 'Guided Ascent', es: 'Ascenso guiado' },
+    tag: { en: 'PART 2 · GUIDED', es: 'PARTE 2 · GUIADO' },
+    desc: {
+      en: 'Licensed guides, fixed team logistics, and the canonical Normal Route transfer.',
+      es: 'Guías habilitados, logística grupal fija y el traslado canónico por la Ruta Normal.',
+    },
+    selectable: true,
+  },
+  {
+    id: 'independent-normal-route',
+    name: { en: 'Independent Team', es: 'Equipo independiente' },
+    tag: { en: 'LOCKED · NORMAL ROUTE', es: 'BLOQUEADO · RUTA NORMAL' },
+    desc: {
+      en: 'Future Part 2 branch for self-managed logistics on the same mountain corridor.',
+      es: 'Rama futura de la Parte 2 para una logística autogestionada sobre el mismo corredor de montaña.',
+    },
+    selectable: false,
+  },
+  {
+    id: 'polish-glacier',
+    name: { en: 'Polish Glacier Route', es: 'Ruta Glaciar de los Polacos' },
+    tag: { en: 'LOCKED · FUTURE ROUTE', es: 'BLOQUEADO · RUTA FUTURA' },
+    desc: {
+      en: 'Reserved for later route variants once the public bridge expands beyond the guided transfer.',
+      es: 'Reservada para variantes futuras cuando el puente público se amplíe más allá del traslado guiado.',
+    },
+    selectable: false,
+  },
+];
+
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
 }
@@ -1209,58 +1242,123 @@ function quickStart() {
   showOnboarding('predefined');
 }
 
+function getPart2RouteOptions() {
+  return PART2_ROUTE_OPTIONS.map((option) => ({
+    ...option,
+    name: option.name[CURRENT_LANGUAGE] || option.name.en,
+    tag: option.tag[CURRENT_LANGUAGE] || option.tag.en,
+    desc: option.desc[CURRENT_LANGUAGE] || option.desc.en,
+  }));
+}
+
+function renderPart2CharacterInfo(character) {
+  const info = document.getElementById('part2-character-info');
+  if (!info) return;
+  const isLocked = character.id !== 'francisco';
+  info.innerHTML = `
+    <div class="carousel-info-content">
+      <p class="carousel-info-bio">${isLocked
+        ? uiText('This climber is visible in the Part 2 roster preview, but their real-expedition branch is still locked for a future update.', 'Este escalador aparece en la vista previa del roster de la Parte 2, pero su rama de expedición real sigue bloqueada para una futura actualización.')
+        : (character.bio || '')}</p>
+      ${isLocked
+        ? `<p class="carousel-info-bio">${uiText('Only Francisco is confirmed in the current public bridge build.', 'Solo Francisco está confirmado en la compilación pública actual del puente narrativo.')}</p>`
+        : `<ul class="carousel-info-traits">${(character.traits || []).map((trait) => `<li>${trait}</li>`).join('')}</ul>`}
+    </div>
+  `;
+}
+
+function renderPart2ScenarioInfo(route) {
+  const info = document.getElementById('part2-scenario-info');
+  if (!info) return;
+  const isLocked = !route.selectable;
+  info.innerHTML = `
+    <div class="carousel-info-content">
+      <p class="carousel-info-bio">${route.desc}</p>
+      <p class="carousel-info-bio">${isLocked
+        ? uiText('This route preview stays visible to show future branches, but only the guided transfer is currently playable in the bridge.', 'Esta vista previa de ruta permanece visible para mostrar ramas futuras, pero solo el traslado guiado es jugable actualmente en el puente.')
+        : uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
+    </div>
+  `;
+}
+
 
 function buildPart2SetupScreen() {
   PART2_SELECTION.characterId = null;
   PART2_SELECTION.scenarioId = null;
 
-  const charCard = document.getElementById('part2-char-grid') || document.getElementById('part2-char-francisco');
+  const charGrid = document.getElementById('part2-character-grid');
   const charInfo = document.getElementById('part2-character-info');
-  const scenarioCard = document.getElementById('part2-scenario-card');
+  const routeGrid = document.getElementById('part2-route-grid');
   const scenarioInfo = document.getElementById('part2-scenario-info');
   const confirmBtn = document.getElementById('btn-part2-confirm');
-  const francisco = localizeCharacter((DATA_CONFIG.characters || []).find((character) => character.id === 'francisco') || {});
+  const characters = (DATA_CONFIG.characters || []).map((character) => localizeCharacter(character));
+  const routes = getPart2RouteOptions();
 
-  if (charCard && francisco.id) {
-    charCard.id = 'part2-char-francisco';
-    charCard.classList.remove('selected');
-    charCard.setAttribute('aria-checked', 'false');
-    charCard.innerHTML = `
-      <div class="carousel-card-name">${francisco.name}</div>
-      <div class="carousel-card-role">${francisco.role || uiText('Lead Climber', 'Escalador principal')}</div>
-      <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${francisco.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
-    `;
-    charCard.onclick = () => selectPart2Character('francisco');
-    charCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Character('francisco'); } };
+  if (charGrid) {
+    charGrid.innerHTML = '';
+    characters.forEach((character) => {
+      const selectable = character.id === 'francisco';
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.id = `part2-char-${character.id}`;
+      card.className = `carousel-card part2-static-card${selectable ? '' : ' part2-locked'}`;
+      card.setAttribute('role', 'radio');
+      card.setAttribute('aria-checked', 'false');
+      card.setAttribute('aria-disabled', selectable ? 'false' : 'true');
+      card.dataset.part2Selectable = selectable ? 'true' : 'false';
+      card.innerHTML = `
+        <div class="carousel-card-name">${character.name}</div>
+        <div class="carousel-card-role">${character.role || uiText('Lead Climber', 'Escalador principal')}</div>
+        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${character.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
+        ${selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>`}
+      `;
+      card.onclick = () => selectPart2Character(character.id);
+      card.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectPart2Character(character.id);
+        }
+      };
+      charGrid.appendChild(card);
+    });
   }
 
-  if (charInfo && francisco.id) {
-    charInfo.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${francisco.bio || ''}</p>
-        <ul class="carousel-info-traits">${(francisco.traits || []).map((trait) => `<li>${trait}</li>`).join('')}</ul>
-      </div>
-    `;
+  if (charInfo) {
+    const francisco = characters.find((character) => character.id === 'francisco');
+    if (francisco) renderPart2CharacterInfo(francisco);
   }
 
-  if (scenarioCard) {
-    scenarioCard.classList.remove('selected');
-    scenarioCard.setAttribute('aria-checked', 'false');
-    scenarioCard.innerHTML = `
-      <div class="carousel-card-num">${uiText('PART 2 · GUIDED ASCENT', 'PARTE 2 · ASCENSO GUIADO')}</div>
-      <div class="carousel-card-name">${uiText('Normal Route Group Expedition', 'Expedición grupal por Ruta Normal')}</div>
-      <div class="carousel-card-role">${uiText('Licensed guides, fixed group logistics, and the canonical Normal Route approach.', 'Guías habilitados, logística grupal fija y el enfoque canónico por la Ruta Normal.')}</div>
-    `;
-    scenarioCard.onclick = () => selectPart2Scenario('guided-normal-route');
-    scenarioCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Scenario('guided-normal-route'); } };
+  if (routeGrid) {
+    routeGrid.innerHTML = '';
+    routes.forEach((route) => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.id = `part2-route-${route.id}`;
+      card.className = `carousel-card part2-static-card${route.selectable ? '' : ' part2-locked'}`;
+      card.setAttribute('role', 'radio');
+      card.setAttribute('aria-checked', 'false');
+      card.setAttribute('aria-disabled', route.selectable ? 'false' : 'true');
+      card.dataset.part2Selectable = route.selectable ? 'true' : 'false';
+      card.innerHTML = `
+        <div class="carousel-card-num">${route.tag}</div>
+        <div class="carousel-card-name">${route.name}</div>
+        <div class="carousel-card-role">${route.desc}</div>
+        ${route.selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Coming later', 'Llega más adelante')}</div>`}
+      `;
+      card.onclick = () => selectPart2Scenario(route.id);
+      card.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectPart2Scenario(route.id);
+        }
+      };
+      routeGrid.appendChild(card);
+    });
   }
 
   if (scenarioInfo) {
-    scenarioInfo.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
-      </div>
-    `;
+    const guided = routes.find((route) => route.id === 'guided-normal-route');
+    if (guided) renderPart2ScenarioInfo(guided);
   }
 
   if (confirmBtn) {
@@ -1280,23 +1378,47 @@ function updatePart2ConfirmState() {
 }
 
 function selectPart2Character(id) {
-  const card = document.getElementById('part2-char-francisco');
-  if (card && id === 'francisco') {
-    PART2_SELECTION.characterId = id;
-    card.classList.add('selected');
-    card.setAttribute('aria-checked', 'true');
+  const characters = (DATA_CONFIG.characters || []).map((character) => localizeCharacter(character));
+  const selectedCharacter = characters.find((character) => character.id === id);
+  document.querySelectorAll('#part2-character-grid .part2-static-card').forEach((card) => {
+    card.classList.remove('selected');
+    card.setAttribute('aria-checked', 'false');
+  });
+  if (!selectedCharacter) return;
+  renderPart2CharacterInfo(selectedCharacter);
+  if (id !== 'francisco') {
+    PART2_SELECTION.characterId = null;
     updatePart2ConfirmState();
+    return;
   }
+  const card = document.getElementById(`part2-char-${id}`);
+  if (!card) return;
+  PART2_SELECTION.characterId = id;
+  card.classList.add('selected');
+  card.setAttribute('aria-checked', 'true');
+  updatePart2ConfirmState();
 }
 
 function selectPart2Scenario(id) {
-  const card = document.getElementById('part2-scenario-card');
-  if (card && id === 'guided-normal-route') {
-    PART2_SELECTION.scenarioId = id;
-    card.classList.add('selected');
-    card.setAttribute('aria-checked', 'true');
+  const routes = getPart2RouteOptions();
+  const selectedRoute = routes.find((route) => route.id === id);
+  document.querySelectorAll('#part2-route-grid .part2-static-card').forEach((card) => {
+    card.classList.remove('selected');
+    card.setAttribute('aria-checked', 'false');
+  });
+  if (!selectedRoute) return;
+  renderPart2ScenarioInfo(selectedRoute);
+  if (id !== 'guided-normal-route') {
+    PART2_SELECTION.scenarioId = null;
     updatePart2ConfirmState();
+    return;
   }
+  const card = document.getElementById(`part2-route-${id}`);
+  if (!card) return;
+  PART2_SELECTION.scenarioId = id;
+  card.classList.add('selected');
+  card.setAttribute('aria-checked', 'true');
+  updatePart2ConfirmState();
 }
 
 function confirmPart2Character() {
