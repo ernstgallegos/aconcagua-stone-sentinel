@@ -148,6 +148,9 @@ In addition to the changelog:
 - Park-exit UI flow in `web-v1` must distinguish **arriving at `horcones`** from **exiting from `horcones`**; if end-run checks read the post-turn position instead of the pre-turn position, valid summit returns are misclassified one turn early as `Strategic Retreat` and Part 2 stays locked.
 
 - Welcome-screen UX stays cleaner when the entry view remains cover-first with a single dominant advance CTA; move explanatory/version/credit copy into an optional modal so curious players can read it without slowing first-time flow.
+
+- Mobile HUD simplification is safer when watch and context/status share the same live panel markup; keeping separate accordions on small screens duplicates scan effort and makes state updates feel inconsistent.
+- Welcome-screen primary navigation works better when the main CTA and prototype-info trigger sit in the same centered action row; floating the info control in a distant corner weakens discoverability.
 - Mobile gameplay readability improves when secondary watch/context/narrative panels collapse by default and the decision panel stays sticky; preserve instant access to actions first, then expose detail progressively.
 
 ### Sprint learnings — gameplay-fix-v4 (post-audit __11_)

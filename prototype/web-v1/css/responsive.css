@@ -54,6 +54,16 @@
   .title-divider { margin: 1.25rem auto; }
   .title-tagline { font-size: 0.875rem; }
   .title-shell { padding: 2rem 1rem; }
+  .title-cta-row {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .title-cta-row .btn-primary,
+  .title-cta-row .title-info-trigger {
+    min-width: 0;
+  }
 
   .char-grid { grid-template-columns: 1fr; }
   .scenario-grid { grid-template-columns: 1fr; }
@@ -245,7 +255,6 @@
   }
 
   #screen-game .watch-panel,
-  #screen-game .context-widget,
   #screen-game .narrative-box {
     padding: 0;
     overflow: hidden;

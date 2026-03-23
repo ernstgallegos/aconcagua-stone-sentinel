@@ -2975,7 +2975,6 @@ function endRun(returnedToHorcones) {
     { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
     { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('expedition-setup') },
     { label: 'Same character, new scenario', cls: 'btn-ghost', onClick: goChooseScenario },
-    { label: 'Export run_log.json', cls: 'btn-ghost', onClick: exportRunLog },
     { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
   ].forEach(({ label, cls, onClick }) => {
     const btn = document.createElement('button');
