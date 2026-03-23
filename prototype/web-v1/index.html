@@ -41,9 +41,11 @@
 <!-- ══════════════════════ WELCOME (merged Splash + Title) ══════════════════════ -->
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
-  <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ</button>
   <div class="title-shell title-shell-minimal">
-    <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
+    <div class="title-cta-row">
+      <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
+      <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
+    </div>
   </div>
 </section>
 
@@ -174,7 +176,7 @@
 
     <main class="right-panel command-column">
       <details class="watch-panel panel-shell mobile-collapsible" id="watch-panel">
-        <summary class="mobile-collapsible-summary">Status watch</summary>
+        <summary class="mobile-collapsible-summary">Watch and status</summary>
         <div class="mobile-collapsible-body" aria-label="Expedition status">
           <header class="watch-header watch-header-redesign">
             <div>
@@ -230,21 +232,18 @@
           </div>
 
           <div id="resource-warning-box"></div>
-        </div>
-      </details>
 
-      <details class="context-widget panel-shell mobile-collapsible" id="context-widget">
-        <summary class="mobile-collapsible-summary">Context and risks</summary>
-        <div class="mobile-collapsible-body" aria-live="polite">
-          <div class="context-widget-label">Context status</div>
-          <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
-          <div class="context-indicators" id="context-indicators"></div>
-          <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
-          <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
-          <div class="coach-layer" id="coach-layer" aria-live="polite">
-            <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
-            <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
-          </div>
+          <section class="watch-section watch-section-status telemetry-card" aria-live="polite">
+            <div class="watch-section-label">Context and risks</div>
+            <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
+            <div class="context-indicators" id="context-indicators"></div>
+            <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
+            <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
+            <div class="coach-layer" id="coach-layer" aria-live="polite">
+              <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
+              <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
+            </div>
+          </section>
         </div>
       </details>
 
@@ -535,6 +534,13 @@
       The bridge from simulation to field is complete. Part 2 continues with the full mountain model,
       team interdependence, and non-scripted outcomes.
     </p>
+    <div class="part2-feedback-cta">
+      <h4>Want to collaborate on the next ascent?</h4>
+      <p>
+        If you want to share ideas, feedback, balancing notes, bug reports, or collaboration proposals,
+        write to <a href="mailto:ernestogallegos@gmail.com">ernestogallegos@gmail.com</a>.
+      </p>
+    </div>
     <div class="part2-step-actions">
       <button class="btn-ghost" onclick="showScreen('part2-transfer')">Back</button>
       <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>

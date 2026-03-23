@@ -758,6 +758,14 @@
   line-height: 1.45;
 }
 
+.watch-section-status {
+  margin-top: 0.9rem;
+}
+
+.watch-section-status .primary-alert {
+  margin-top: 0;
+}
+
 .context-sub {
   margin-top: 0.32rem;
   font-size: 0.75rem;

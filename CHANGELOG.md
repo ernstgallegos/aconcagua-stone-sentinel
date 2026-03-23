@@ -9,6 +9,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- Updated `prototype/web-v1/index.html` welcome screen so the primary BEGIN CTA stays centered and the prototype information button sits beside it, reducing top-corner scan on first load.
+- Unified the gameplay `watch` and `status` content inside a single status panel in `prototype/web-v1/index.html` and tuned `prototype/web-v1/css/components.css` / `prototype/web-v1/css/responsive.css` so mobile players read one simplified stack instead of separate watch/status accordions.
+- Added a collaboration/contact CTA to the Part 2 closure screen in `prototype/web-v1/index.html`, inviting feedback and ideas via `ernestogallegos@gmail.com`.
+
+### Fixed
+- Removed the debrief action that exported `run_log.json` from `prototype/web-v1/ui/screens.js`, leaving replay and journal actions as the end-of-run choices.
+
 ### Added
 - Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
 
