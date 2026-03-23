@@ -54,14 +54,13 @@
   .title-divider { margin: 1.25rem auto; }
   .title-tagline { font-size: 0.875rem; }
   .title-shell { padding: 2rem 1rem; }
-  .title-cta-row {
+  .title-cta-stack {
     width: 100%;
-    flex-direction: row;
     justify-content: center;
   }
 
-  .title-cta-row .btn-primary,
-  .title-cta-row .title-info-trigger {
+  .title-cta-stack .btn-primary,
+  .title-cta-stack .title-info-trigger {
     min-width: 0;
   }
 
@@ -257,7 +256,7 @@
   #screen-game .watch-panel,
   #screen-game .narrative-box {
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .mobile-collapsible {
@@ -296,7 +295,8 @@
 
   .mobile-collapsible[open] > .mobile-collapsible-body {
     display: block;
-    padding: 0 0.9rem 0.9rem;
+    padding: 0 0.9rem 1rem;
+    overflow: visible;
   }
 
   .mobile-collapsible .watch-header {
@@ -324,6 +324,7 @@
     order: -1;
     position: sticky;
     bottom: 0;
+    margin-top: 0.35rem;
     z-index: 20;
     border-color: color-mix(in srgb, var(--stone) 32%, var(--border));
     box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.24);
@@ -365,6 +366,18 @@
     justify-content: space-between;
   }
 
+  #screen-game .command-column {
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  #screen-game .watch-panel[open] {
+    margin-bottom: 0.35rem;
+  }
+
+  #screen-game .watch-panel[open] > .mobile-collapsible-body {
+    padding-bottom: 1.35rem;
+  }
+
   #screen-game .game-mobile-bar {
     position: fixed;
     left: 0;
@@ -389,5 +402,13 @@
   .difficulty-pill {
     padding: 0.4rem 0.65rem;
     font-size: 0.8125rem;
+  }
+}
+
+
+@media (orientation: landscape) {
+  .splash-image {
+    object-fit: contain;
+    object-position: center center;
   }
 }
