@@ -173,81 +173,89 @@
     </aside>
 
     <main class="right-panel command-column">
-      <section class="watch-panel panel-shell" id="watch-panel" aria-label="Expedition status">
-        <header class="watch-header watch-header-redesign">
-          <div>
-            <div class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</div>
-            <div class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</div>
-          </div>
-          <div class="watch-position" id="watch-position" aria-live="polite">—</div>
-        </header>
-
-        <div class="turn-progress" aria-hidden="true"><div class="turn-progress-fill" id="turn-progress-fill"></div></div>
-
-        <div class="telemetry-grid">
-          <section class="watch-section telemetry-card">
-            <div class="watch-section-label">Environment</div>
-            <div class="watch-row">
-              <span class="watch-row-label">Mountain pressure</span>
-              <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
-              <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
+      <details class="watch-panel panel-shell mobile-collapsible" id="watch-panel">
+        <summary class="mobile-collapsible-summary">Status watch</summary>
+        <div class="mobile-collapsible-body" aria-label="Expedition status">
+          <header class="watch-header watch-header-redesign">
+            <div>
+              <div class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</div>
+              <div class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</div>
             </div>
-            <div class="watch-row">
-              <span class="watch-row-label">Trend</span>
-              <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
-              <span id="watch-uncertainty-inline" aria-live="polite"></span>
-            </div>
-            <div class="watch-row">
-              <span class="watch-row-label">Confidence</span>
-              <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
-            </div>
-          </section>
+            <div class="watch-position" id="watch-position" aria-live="polite">—</div>
+          </header>
 
-          <section class="watch-section telemetry-card">
-            <div class="watch-section-label">Body state</div>
-            <div class="watch-body-row"><span class="body-label">Capacity</span><span class="body-value" id="body-capacity" aria-live="polite">—</span></div>
-            <div class="watch-body-row"><span class="body-label">Fatigue</span><span class="body-value" id="body-fatigue" aria-live="polite">—</span></div>
-            <div class="watch-body-row"><span class="body-label">Exposure</span><span class="body-value" id="body-exposure" aria-live="polite">—</span></div>
-            <div class="watch-body-row"><span class="body-label">Acclimatization</span><span class="body-value" id="body-acclimatization" aria-live="polite">—</span></div>
-          </section>
-        </div>
+          <div class="turn-progress" aria-hidden="true"><div class="turn-progress-fill" id="turn-progress-fill"></div></div>
 
-        <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
+          <div class="telemetry-grid">
+            <section class="watch-section telemetry-card">
+              <div class="watch-section-label">Environment</div>
+              <div class="watch-row">
+                <span class="watch-row-label">Mountain pressure</span>
+                <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
+                <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
+              </div>
+              <div class="watch-row">
+                <span class="watch-row-label">Trend</span>
+                <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
+                <span id="watch-uncertainty-inline" aria-live="polite"></span>
+              </div>
+              <div class="watch-row">
+                <span class="watch-row-label">Confidence</span>
+                <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
+              </div>
+            </section>
 
-        <div class="status-row">
-          <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
-            <div class="permit-label">Park Permit</div>
-            <div class="permit-name" id="permit-name">—</div>
-            <div class="permit-days" id="permit-days">— days remaining</div>
+            <section class="watch-section telemetry-card">
+              <div class="watch-section-label">Body state</div>
+              <div class="watch-body-row"><span class="body-label">Capacity</span><span class="body-value" id="body-capacity" aria-live="polite">—</span></div>
+              <div class="watch-body-row"><span class="body-label">Fatigue</span><span class="body-value" id="body-fatigue" aria-live="polite">—</span></div>
+              <div class="watch-body-row"><span class="body-label">Exposure</span><span class="body-value" id="body-exposure" aria-live="polite">—</span></div>
+              <div class="watch-body-row"><span class="body-label">Acclimatization</span><span class="body-value" id="body-acclimatization" aria-live="polite">—</span></div>
+            </section>
           </div>
 
-          <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
-            <div class="time-pressure-header"><span>Decision window</span><span id="decision-window-countdown">—</span></div>
-            <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
+          <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
+
+          <div class="status-row">
+            <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
+              <div class="permit-label">Park Permit</div>
+              <div class="permit-name" id="permit-name">—</div>
+              <div class="permit-days" id="permit-days">— days remaining</div>
+            </div>
+
+            <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
+              <div class="time-pressure-header"><span>Decision window</span><span id="decision-window-countdown">—</span></div>
+              <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
+            </div>
+          </div>
+
+          <div id="resource-warning-box"></div>
+        </div>
+      </details>
+
+      <details class="context-widget panel-shell mobile-collapsible" id="context-widget">
+        <summary class="mobile-collapsible-summary">Context and risks</summary>
+        <div class="mobile-collapsible-body" aria-live="polite">
+          <div class="context-widget-label">Context status</div>
+          <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
+          <div class="context-indicators" id="context-indicators"></div>
+          <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
+          <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
+          <div class="coach-layer" id="coach-layer" aria-live="polite">
+            <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
+            <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
           </div>
         </div>
+      </details>
 
-        <div id="resource-warning-box"></div>
-      </section>
-
-      <section class="context-widget panel-shell" id="context-widget" aria-live="polite">
-        <div class="context-widget-label">Context status</div>
-        <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
-        <div class="context-indicators" id="context-indicators"></div>
-        <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
-        <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
-        <div class="coach-layer" id="coach-layer" aria-live="polite">
-          <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
-          <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
+      <details class="narrative-box panel-shell mobile-collapsible mobile-collapsible-narrative">
+        <summary class="mobile-collapsible-summary">Field notes</summary>
+        <div class="mobile-collapsible-body">
+          <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
+          <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
+          <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
         </div>
-      </section>
-
-      <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
-
-      <section class="narrative-box panel-shell">
-        <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
-        <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
-      </section>
+      </details>
 
       <section class="decision-panel panel-shell">
         <div class="decision-label">Decision</div>
