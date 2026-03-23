@@ -74,3 +74,14 @@ test('descend UX copy documents Horcones exit behavior and Daniela guard wiring 
   assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
 });
+
+test('mobile watch/route sheets and persistent sleep action stay wired to live gameplay state', () => {
+  assert.match(indexSource, /id="bs-watch-position"/);
+  assert.match(indexSource, /id="bs-watch-pressure"/);
+  assert.match(indexSource, /id="bs-position-list"/);
+  assert.match(indexSource, /id="btn-sleep"[^>]*disabled/);
+  assert.doesNotMatch(indexSource, /id="btn-sleep"[^>]*display:none/);
+  assert.match(uiSource, /function syncMobileStatusPanels/);
+  assert.match(uiSource, /mobileList\.innerHTML = list\.innerHTML/);
+  assert.match(uiSource, /sleepBtn\.disabled = !sleepAvailable/);
+});

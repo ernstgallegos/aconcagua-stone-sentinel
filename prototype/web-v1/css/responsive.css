@@ -81,7 +81,8 @@
 
   /* Debrief hero reduced height */
   .debrief-hero { min-height: 160px; padding: 2rem 1rem 1.5rem; }
-  .debrief-stats-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .debrief-stats-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+  .bottom-sheet-watch-metrics { grid-template-columns: 1fr; }
 }
 
 /* ══════════════════════════════════════
@@ -140,7 +141,7 @@
 
   .tutorial-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-  .debrief-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .debrief-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .debrief-hero { min-height: 280px; }
 }
 
@@ -158,7 +159,7 @@
 
   .char-grid { grid-template-columns: repeat(3, 1fr); }
 
-  .debrief-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .debrief-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ══════════════════════════════════════

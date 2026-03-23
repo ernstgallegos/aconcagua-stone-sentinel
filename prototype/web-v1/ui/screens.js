@@ -2126,13 +2126,13 @@ function renderWatch() {
   renderContextWidget(s);
 
   const sleepBtn = document.getElementById('btn-sleep');
-  if (isCampPosition(s.position)) {
-    sleepBtn.style.display = 'inline-block';
-    sleepBtn.disabled = false;
-    sleepBtn.title = uiText('Sleep through the night at this camp', 'Dormir durante la noche en este campamento');
-  } else {
-    sleepBtn.style.display = 'none';
-    sleepBtn.title = uiText('Sleep is only possible at camps', 'Solo se puede dormir en campamentos');
+  if (sleepBtn) {
+    const sleepAvailable = isCampPosition(s.position);
+    sleepBtn.disabled = !sleepAvailable;
+    sleepBtn.setAttribute('aria-disabled', sleepAvailable ? 'false' : 'true');
+    sleepBtn.title = sleepAvailable
+      ? uiText('Sleep through the night at this camp', 'Dormir durante la noche en este campamento')
+      : uiText('Sleep is only possible at camps', 'Solo se puede dormir en campamentos');
   }
 
   const descendBtn = document.getElementById('btn-descend');
@@ -2196,6 +2196,15 @@ function renderWatch() {
 
   renderPositionList();
   updatePermitWidget();
+  syncMobileStatusPanels({
+    state: s,
+    pressureText: `${sig.mountainPressure} · ${sig.trend}`,
+    watchTimeText: `Day ${G.day} · ${formatMinutes(tm)}${suffix}`,
+    capacityText: `${capLbl} · ${metricDisplay(s.functional_capacity, sig.confidence)}`,
+    bodyStateText: `${fatLbl} / ${expLbl}`,
+    resourceText: `Water ${s.water} · Food ${s.food}`,
+    permitText: `${Math.max(G.permitMaxDays - G.permitDay + 1, 0)} day${Math.max(G.permitMaxDays - G.permitDay + 1, 0) !== 1 ? 's' : ''}`,
+  });
 }
 
 
@@ -2206,6 +2215,7 @@ function renderPositionList() {
   const s = G.state;
   const curIdx = POSITIONS.indexOf(s.position);
   const list = document.getElementById('position-list');
+  if (!list) return;
   list.innerHTML = '';
   // render reversed so summit sector is at top
   [...POSITIONS].reverse().forEach(pos => {
@@ -2225,6 +2235,24 @@ function renderPositionList() {
     `;
     list.appendChild(li);
   });
+
+  const mobileList = document.getElementById('bs-position-list');
+  if (mobileList) mobileList.innerHTML = list.innerHTML;
+}
+
+function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  setText('bs-watch-turn', `TURN ${G.turn} / ${G.scenario?.max_turns || 0}`);
+  setText('bs-watch-time', watchTimeText);
+  setText('bs-watch-position', `${POS_LABELS[state.position]} · ${POS_ALT[state.position]}`);
+  setText('bs-watch-pressure', pressureText);
+  setText('bs-watch-capacity', capacityText);
+  setText('bs-watch-body-state', bodyStateText);
+  setText('bs-watch-resources', resourceText);
+  setText('bs-watch-permit', permitText);
 }
 
 // ════════════════════════════════════════════════
@@ -2934,77 +2962,9 @@ function endRun(returnedToHorcones) {
     retreatMsg.parentNode.insertBefore(lateMsg, retreatMsg.nextSibling);
   }
 
-  const debriefStats = document.getElementById('debrief-stats');
-  clearElement(debriefStats);
-  const statsRows = [
-    ['Character', G.character.name],
-    ['Highest position', POS_LABELS[POSITIONS[G.highestPosIdx]]],
-    ['Turns', String(G.turnLog.length)],
-    ['Scenario', `${sc.name} · ${G.seed}`],
-  ];
-  statsRows.forEach(([label, value]) => {
-    const item = document.createElement('div');
-    const labelEl = document.createElement('div');
-    labelEl.className = 'debrief-stat-label';
-    labelEl.textContent = label;
-    const valueEl = document.createElement('div');
-    valueEl.className = 'debrief-stat-val';
-    valueEl.textContent = value;
-    item.appendChild(labelEl);
-    item.appendChild(valueEl);
-    debriefStats.appendChild(item);
-  });
-
   document.getElementById('debrief-turning-point').textContent = findTurningPoint();
   const responsibility = classifyDifficultyResponsibility();
   document.getElementById('debrief-cause').textContent = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
-
-  // log table
-  const table = document.getElementById('debrief-log-table');
-  clearElement(table);
-  const headerRow = document.createElement('tr');
-  ['T','Day/Time','Position','Decision','Trend','Unc.','Capacity','Fatigue','Exposure','Flags'].forEach((label) => {
-    const th = document.createElement('th');
-    th.textContent = label;
-    headerRow.appendChild(th);
-  });
-  table.appendChild(headerRow);
-  G.turnLog.forEach(e => {
-    const tr = document.createElement('tr');
-    const decLabel = { advance:'Advance', advance_slowly:'Adv. Slowly', wait:'Wait', descend:'Descend', sleep:'Sleep', shoot_photo:'Shoot Photo' }[e.decision] || e.decision;
-    const cells = [
-      { value: String(e.turn) },
-      { value: `D${e.day || 1} ${e.time || '06:00'}` },
-      { value: POS_LABELS[e.position] },
-      { value: decLabel, className: 'td-decision' },
-      { value: e.trend },
-      { value: e.uncertainty },
-      { value: e.body.capacity },
-      { value: e.body.fatigue },
-      { value: e.body.exposure },
-      { value: e.flags.join(', '), className: 'td-flag' },
-    ];
-    cells.forEach(({ value, className }) => {
-      const td = document.createElement('td');
-      if (className) td.className = className;
-      td.textContent = value;
-      tr.appendChild(td);
-    });
-    table.appendChild(tr);
-  });
-
-  buildDebriefAnalytics();
-
-  // reflections
-  const reflections = buildReflectionPrompts();
-  const ul = document.getElementById('reflection-list');
-  clearElement(ul);
-  reflections.forEach(r => {
-    const li = document.createElement('li');
-    li.className = r.dynamic ? 'dynamic' : '';
-    li.textContent = r.text;
-    ul.appendChild(li);
-  });
 
   // debrief actions
   // FIX: journal button records that we came from debrief
@@ -3246,19 +3206,17 @@ function updateDebriefHero(outcome) {
   const statsEl = hero.querySelector('.debrief-key-stats');
   if (statsEl) {
     const highPos = POS_LABELS[POSITIONS[G.highestPosIdx]] || '—';
-    statsEl.textContent = `${highPos} · ${G.turnLog.length} turns`;
+    statsEl.textContent = `${G.character?.name || '—'} · ${highPos} · ${G.day} day${G.day !== 1 ? 's' : ''}`;
   }
 
   /* EXPERIMENTAL — Decision 18: Populate stat grid cards */
   const sc = DATA_CONFIG.scenariosWebV1?.predefinedScenarios?.find(s => s.id === G.scenarioId)
     || (DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [])[0] || { name: 'Scenario' };
   const setId = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
-  setId('dsg-days', String(G.currentDay || 1));
+  setId('dsg-days', String(G.day || 1));
   setId('dsg-alt', POS_LABELS[POSITIONS[G.highestPosIdx]] || '—');
   setId('dsg-decisions', String(G.turnLog.length));
-  setId('dsg-character', G.character?.name || '—');
-  setId('dsg-scenario', sc.name || '—');
-  setId('dsg-outcome', outcome.label || '—');
+  setId('dsg-outcome', `${outcome.label || '—'} · ${sc.name || '—'} · Seed ${G.seed || '—'}`);
 }
 
 

@@ -13,6 +13,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
 
 ### Changed
+- Simplified the `prototype/web-v1/index.html` debrief so it now focuses on outcome, core run summary, and one actionable lesson instead of exposing the full turn log, analytics checklist, and reflection blocks by default.
+- Refined `prototype/web-v1/css/screens.css` and `prototype/web-v1/css/responsive.css` debrief styling for a smaller summary-first layout and added compact mobile watch-sheet cards so handheld status panels surface the same key data as the main HUD.
 - Simplified `prototype/web-v1/index.html` gameplay screen for mobile: watch, context, and field-note panels now collapse into compact accordions while the decision panel stays sticky and action buttons hide secondary microcopy/cost details on narrow viewports so primary actions remain visible.
 - `prototype/web-v1/css/responsive.css` now prioritizes mobile playability on `screen-game`: reduced inter-panel spacing, sticky decision footer, fixed mobile utility bar, and compact typography/layout for status accordions.
 - `prototype/web-v1/css/components.css` adds reusable `.mobile-collapsible*` helpers used by the gameplay status panels.
@@ -23,6 +25,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
 
 ### Fixed
+- Fixed `prototype/web-v1/ui/screens.js` debrief day counting so the summary now reads from the live run day counter (`G.day`) instead of the nonexistent `G.currentDay`, eliminating the always-`1` bug after multi-day runs.
+- Fixed `prototype/web-v1/ui/screens.js` mobile WATCH/ROUTE bottom sheets so they mirror the current in-run watch and route data instead of stale placeholder content.
+- Fixed `prototype/web-v1/index.html` + `prototype/web-v1/ui/screens.js` SLEEP action visibility so the button stays present in the decision deck at all times and toggles availability through the disabled state when the current position is not a camp.
 - `prototype/web-v1/ui/screens.js`: corrected park-exit detection in `makeDecision()` so arriving at `horcones` after a summit no longer ends the run one turn early as `Strategic Retreat`; the expedition now only finishes on the explicit exit descend from Horcones, preserving `Summit and Safe Return` and the Part 2 unlock path.
 - `prototype/web-v1/tests/test_smoke_flow.py`: added a browser smoke regression covering post-summit arrival at `horcones`, explicit park exit on the following descend, and the resulting `Summit and Safe Return` unlock.
 
