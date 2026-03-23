@@ -284,7 +284,7 @@
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
             <span class="decision-microcopy">Concede altitude to protect return margin and permit clock.</span>
           </button>
-          <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" style="display:none">
+          <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" disabled>
             <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
             <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"></span></span><span>E<span class="decision-pips"></span></span></span>
             <span class="decision-microcopy">Camp-only reset: lowers fatigue and exposure, spends daylight.</span>
@@ -316,9 +316,36 @@
     <span>⌚ Watch</span>
     <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-watch')" aria-label="Close Watch panel" style="float:right">✕</button>
   </div>
-  <!-- Watch content mirrors game watch panel -->
-  <div id="bs-watch-turn" class="watch-turn" style="margin-bottom:0.5rem;"></div>
-  <div id="bs-watch-body" style="font-family:var(--mono);font-size:0.875rem;color:var(--stone);">Open game to see status.</div>
+  <div class="bottom-sheet-watch-body">
+    <div id="bs-watch-turn" class="watch-turn" style="margin-bottom:0.5rem;"></div>
+    <div id="bs-watch-time" class="watch-position" style="margin-bottom:0.75rem;"></div>
+    <div class="bottom-sheet-watch-metrics" id="bs-watch-body">
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Position</span>
+        <strong id="bs-watch-position">—</strong>
+      </div>
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Pressure</span>
+        <strong id="bs-watch-pressure">—</strong>
+      </div>
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Capacity</span>
+        <strong id="bs-watch-capacity">—</strong>
+      </div>
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Fatigue / Exposure</span>
+        <strong id="bs-watch-body-state">—</strong>
+      </div>
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Resources</span>
+        <strong id="bs-watch-resources">—</strong>
+      </div>
+      <div class="bottom-sheet-watch-card">
+        <span class="bottom-sheet-watch-label">Permit</span>
+        <strong id="bs-watch-permit">—</strong>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- EXPERIMENTAL: Route bottom-sheet (Decision 13) -->
@@ -341,18 +368,17 @@
     <div class="debrief-key-stats" id="debrief-hero-stats">—</div>
   </div>
 
-  <div class="debrief-box" style="margin:0 auto; padding:2rem 1.5rem;">
+  <div class="debrief-box">
     <!-- Legacy outcome display (still updated by JS, used as fallback) -->
     <div class="debrief-header" style="display:none;" aria-hidden="true">
       <div class="debrief-outcome-label">Expedition Outcome</div>
       <div class="debrief-outcome-value" id="debrief-outcome-val" aria-live="polite">—</div>
-      <div class="debrief-retreat-msg" id="debrief-retreat-msg" style="display:none"></div>
+      <div class="debrief-retreat-msg" id="debrief-retreat-msg-legacy" style="display:none"></div>
       <div class="debrief-stats" id="debrief-stats"></div>
     </div>
 
-    <!-- Section 2: Stats grid (Decision 18) -->
     <div class="debrief-section">
-      <div class="debrief-section-title">Expedition Summary</div>
+      <div class="debrief-section-title">Run Summary</div>
       <div class="debrief-stats-grid" id="debrief-stats-grid">
         <div class="debrief-stat-card">
           <div class="debrief-stat-card-label">Days</div>
@@ -367,48 +393,18 @@
           <div class="debrief-stat-card-value" id="dsg-decisions">—</div>
         </div>
         <div class="debrief-stat-card">
-          <div class="debrief-stat-card-label">Character</div>
-          <div class="debrief-stat-card-value" id="dsg-character" style="font-size:1rem">—</div>
-        </div>
-        <div class="debrief-stat-card">
-          <div class="debrief-stat-card-label">Scenario</div>
-          <div class="debrief-stat-card-value" id="dsg-scenario" style="font-size:1rem">—</div>
-        </div>
-        <div class="debrief-stat-card">
-          <div class="debrief-stat-card-label">Outcome</div>
-          <div class="debrief-stat-card-value" id="dsg-outcome" style="font-size:1rem">—</div>
+          <div class="debrief-stat-card-label">Return Status</div>
+          <div class="debrief-stat-card-value debrief-stat-card-value-wide" id="dsg-outcome">—</div>
         </div>
       </div>
+      <p class="debrief-retreat-msg debrief-summary-note" id="debrief-retreat-msg" style="display:none"></p>
     </div>
 
     <div class="debrief-section">
-      <div class="debrief-section-title">First Irreversible Point</div>
+      <div class="debrief-section-title">Key Lesson</div>
       <div class="debrief-turning-point" id="debrief-turning-point">—</div>
       <div class="debrief-cause" id="debrief-cause">Primary cause pending run completion.</div>
     </div>
-    <div class="debrief-section">
-      <div class="debrief-section-title">Turn Log</div>
-      <div style="overflow-x:auto;">
-        <table class="debrief-log-table" id="debrief-log-table" aria-label="Turn by turn log"></table>
-      </div>
-    </div>
-    <div class="debrief-section">
-      <div class="debrief-section-title">Debrief Analytics</div>
-      <div id="debrief-analytics"></div>
-      <div class="playtest-checklist" aria-label="New player comprehension checklist">
-        <label><input type="checkbox" id="playtest-understood-decision"> New player understood what to decide each turn.</label>
-        <label><input type="checkbox" id="playtest-understood-loss"> New player understood why the run was lost.</label>
-        <label><input type="checkbox" id="playtest-understood-improve"> New player identified how to improve next run.</label>
-      </div>
-      <div class="playtest-feedback">
-        <textarea id="playtest-confusions" placeholder="Observed confusion notes (for microcopy iteration): write what users misunderstood, not style preferences."></textarea>
-      </div>
-    </div>
-    <div class="debrief-section">
-      <div class="debrief-section-title">Field Reflection</div>
-      <ul class="reflection-list" id="reflection-list" aria-label="Reflection prompts"></ul>
-    </div>
-    <!-- Section 3: Actions (Decision 18) -->
     <div class="debrief-actions" id="debrief-actions"></div>
   </div>
 

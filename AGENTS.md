@@ -127,6 +127,8 @@ In addition to the changelog:
 - Scenario UX remained cleaner when predefined cards hid manual seed picking and selected a random configured seed on card selection; preserve at least ~10 seeds per scenario in data to keep replay entropy without user-facing complexity.
 - Action-modifier data currently omits explicit `fatigueDelta`/`exposureDelta`/`capacityDelta`; keep runtime normalization in `getActionModifier()` so missing fields never propagate `NaN` into body-state updates or freeze decision progression.
 - Treat `data/environmental_pressure_config.json` as a blocking runtime dependency for `web-v1`; also keep pressure-scale reads null-safe in `calculateEnvironmentalPressure()` so malformed partial payloads degrade gracefully instead of crashing turns.
+- Mobile status shortcuts only stay trustworthy when bottom-sheet/watch-route panels are updated from the same render pass as the main HUD; avoid placeholder-only mobile copies that drift from live state.
+- Debrief readability improved when the end-run screen privileged outcome, concise summary stats, and one actionable lesson; keep verbose per-turn diagnostics behind tooling or exports rather than the primary player-facing surface.
 
 - Multilingual rollout in `web-v1` is safest when language state is centralized (single source + localStorage) and reapplied after rebuilding dynamic grids (character/scenario) to avoid mixed-language UI fragments.
 
