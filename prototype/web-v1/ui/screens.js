@@ -942,7 +942,7 @@ function buildCharacterGrid() {
     const roleGlyph = (c.role || '').split(/\s+/).map(part => part[0] || '').join('').slice(0,2).toUpperCase();
     card.innerHTML = `
       <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
-      <div class="char-name">${c.flag ? c.flag + ' ' : ''}${c.name}</div>
+      <div class="char-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
       <div class="char-role">${c.role}</div>
       <div class="char-bio">${c.bio}</div>
       <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
@@ -1049,7 +1049,7 @@ function renderCarousel(type) {
       const c = localizeCharacter(item);
       const safeIdx = Number(idx);
       cardEl.innerHTML = `
-        <div class="carousel-card-name">${c.flag ? c.flag + ' ' : ''}${c.name}</div>
+        <div class="carousel-card-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
         <div class="carousel-card-role">${c.role}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
         <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
@@ -1297,7 +1297,7 @@ function buildPart2SetupScreen() {
       card.setAttribute('aria-disabled', selectable ? 'false' : 'true');
       card.dataset.part2Selectable = selectable ? 'true' : 'false';
       card.innerHTML = `
-        <div class="carousel-card-name">${character.flag ? character.flag + ' ' : ''}${character.name}</div>
+        <div class="carousel-card-name">${character.name}${character.flag ? ' <span class="char-flag">' + character.flag + '</span>' : ''}</div>
         <div class="carousel-card-role">${character.role || uiText('Lead Climber', 'Escalador principal')}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${character.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
         ${selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>`}
