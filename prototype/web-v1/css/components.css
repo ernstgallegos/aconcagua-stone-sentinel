@@ -527,6 +527,19 @@
   color: var(--text-dim);
 }
 
+
+.mobile-collapsible-summary {
+  display: none;
+}
+
+.mobile-collapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-collapsible-body {
+  display: block;
+}
+
 /* ══════════════════════════════════════
    WATCH / STATUS PANEL
    ══════════════════════════════════════ */

@@ -145,6 +145,7 @@ In addition to the changelog:
 - Summit-return outcome checks are safer when park-exit classification treats `hasSummited` as the canonical success memory and not only `highestPosIdx`; this protects winning exits if route-index telemetry drifts during long descents.
 
 - Welcome-screen UX stays cleaner when the entry view remains cover-first with a single dominant advance CTA; move explanatory/version/credit copy into an optional modal so curious players can read it without slowing first-time flow.
+- Mobile gameplay readability improves when secondary watch/context/narrative panels collapse by default and the decision panel stays sticky; preserve instant access to actions first, then expose detail progressively.
 
 ### Sprint learnings — gameplay-fix-v4 (post-audit __11_)
 

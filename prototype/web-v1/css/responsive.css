@@ -18,6 +18,7 @@
   .game-layout-redesign {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    gap: 0.55rem;
   }
 
   .left-panel {
@@ -30,6 +31,7 @@
     grid-template-rows: auto;
     overflow: visible;
     padding-right: 0;
+    gap: 0.55rem;
   }
 
   .mountain-schematic,
@@ -37,8 +39,6 @@
     padding: 0.7rem;
   }
 
-  .watch-panel,
-  .narrative-box,
   .decision-panel {
     padding: 0.7rem;
   }
@@ -229,6 +229,141 @@
         max(0.45rem, env(safe-area-inset-bottom))
         max(0.45rem, env(safe-area-inset-left));
     }
+  }
+}
+
+
+@media (max-width: 767px) {
+  #screen-game {
+    overflow-y: auto;
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  #screen-game .game-layout-redesign {
+    align-content: start;
+  }
+
+  #screen-game .watch-panel,
+  #screen-game .context-widget,
+  #screen-game .narrative-box {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .mobile-collapsible {
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 94%, var(--surface2));
+  }
+
+  .mobile-collapsible-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    list-style: none;
+    cursor: pointer;
+    padding: 0.8rem 0.9rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .mobile-collapsible-summary::after {
+    content: '+';
+    font-size: 1rem;
+    color: var(--stone);
+  }
+
+  .mobile-collapsible[open] .mobile-collapsible-summary::after {
+    content: '–';
+  }
+
+  .mobile-collapsible:not([open]) > .mobile-collapsible-body {
+    display: none;
+  }
+
+  .mobile-collapsible[open] > .mobile-collapsible-body {
+    display: block;
+    padding: 0 0.9rem 0.9rem;
+  }
+
+  .mobile-collapsible .watch-header {
+    margin-bottom: 0.8rem;
+  }
+
+  .mobile-collapsible .watch-resources {
+    gap: 0.65rem 1rem;
+  }
+
+  .mobile-collapsible .watch-row {
+    grid-template-columns: 70px 1fr auto;
+  }
+
+  .mobile-collapsible .context-main,
+  .mobile-collapsible .context-sub,
+  .mobile-collapsible .coach-body,
+  .mobile-collapsible .narrative-text,
+  .mobile-collapsible .narrative-passive {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  #screen-game .decision-panel {
+    order: -1;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    border-color: color-mix(in srgb, var(--stone) 32%, var(--border));
+    box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.24);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 98%, transparent), var(--surface));
+  }
+
+  #screen-game .decision-label {
+    margin-bottom: 0.55rem;
+  }
+
+  #screen-game .decision-a11y-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  #screen-game .decision-a11y-status {
+    text-align: left;
+  }
+
+  #screen-game .decision-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #screen-game .decision-costs,
+  #screen-game .decision-microcopy {
+    display: none;
+  }
+
+  #screen-game .btn-decision {
+    min-height: 3.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #screen-game .btn-decision-main {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #screen-game .game-mobile-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    backdrop-filter: blur(10px);
   }
 }
 

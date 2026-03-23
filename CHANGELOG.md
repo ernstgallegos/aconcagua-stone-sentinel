@@ -13,6 +13,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
 
 ### Changed
+- Simplified `prototype/web-v1/index.html` gameplay screen for mobile: watch, context, and field-note panels now collapse into compact accordions while the decision panel stays sticky and action buttons hide secondary microcopy/cost details on narrow viewports so primary actions remain visible.
+- `prototype/web-v1/css/responsive.css` now prioritizes mobile playability on `screen-game`: reduced inter-panel spacing, sticky decision footer, fixed mobile utility bar, and compact typography/layout for status accordions.
+- `prototype/web-v1/css/components.css` adds reusable `.mobile-collapsible*` helpers used by the gameplay status panels.
 - Simplified `prototype/web-v1/index.html` welcome screen so the visible layout now keeps the cover image plus the primary advance CTA, while prototype description, version/status, and credits move into an optional modal opened from a compact info trigger.
 - `prototype/web-v1/css/screens.css`: replaced per-screen `#screen-splash` block with `.splash-content` absolute-positioned background layer; `#screen-title` now uses cover image via `<img>` element instead of CSS `background-image`; combined overlay gradients into `#screen-title::before`; `.title-shell` z-index bumped to 2.
 - `prototype/web-v1/css/themes.css`: light/sunset/auto theme overrides for `#screen-title` now target `::before` gradient layer instead of `background:` shorthand (no longer include a `url()` since the image is an `<img>` element).
