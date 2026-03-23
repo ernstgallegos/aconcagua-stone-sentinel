@@ -20,32 +20,39 @@
 </head>
 <body>
 
-<div class="theme-switcher" aria-label="Visual mode switcher">
-  <label for="theme-select">Visual mode</label>
-  <select id="theme-select" class="theme-select" onchange="setVisualMode(this.value)">
-    <option value="dark">Dark</option>
-    <option value="light">Light</option>
-    <option value="sunset">Sunset</option>
-    <option value="auto">Auto</option><!-- EXPERIMENTAL Decision 17 -->
-  </select>
-</div>
+<div class="title-top-controls" aria-label="Welcome screen controls">
+  <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
 
-<div class="lang-switcher" aria-label="Language switcher">
-  <label for="language-select">Language</label>
-  <select id="language-select" class="theme-select" onchange="setLanguage(this.value)">
-    <option value="en">English</option>
-    <option value="es">Español</option>
-  </select>
+  <div class="title-utility-cluster">
+    <div class="theme-switcher" aria-label="Visual mode switcher">
+      <label for="theme-select" class="sr-only">Visual mode</label>
+      <span class="switcher-icon" aria-hidden="true">◐</span>
+      <select id="theme-select" class="theme-select theme-select-minimal" onchange="setVisualMode(this.value)">
+        <option value="dark">D</option>
+        <option value="light">L</option>
+        <option value="sunset">S</option>
+        <option value="auto">A</option><!-- EXPERIMENTAL Decision 17 -->
+      </select>
+    </div>
+
+    <div class="lang-switcher" aria-label="Language switcher">
+      <label for="language-select" class="sr-only">Language</label>
+      <span class="switcher-icon" aria-hidden="true">文</span>
+      <select id="language-select" class="theme-select theme-select-minimal" onchange="setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+      </select>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════ WELCOME (merged Splash + Title) ══════════════════════ -->
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
-    <div class="title-cta-stack">
-      <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
-      <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
-    </div>
+    <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
+      <span id="title-advance-hint">Click or tap anywhere to continue</span>
+    </button>
   </div>
 </section>
 
