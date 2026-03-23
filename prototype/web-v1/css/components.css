@@ -276,6 +276,11 @@
   margin: 0.9rem 0 0.2rem;
 }
 
+.char-flag {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-weight: normal;
+}
+
 .char-role {
   font-family: var(--mono);
   font-size: 0.75rem;

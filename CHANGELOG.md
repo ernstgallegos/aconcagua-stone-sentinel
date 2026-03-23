@@ -22,7 +22,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed difficulty-carousel i18n keys (`difficulty`, `difficultyNote`, `carouselPrevDifficulty`, `carouselNextDifficulty`) from both `en` and `es` in `prototype/web-v1/ui/screens.js`.
 - Updated `TUTORIAL_CONTENT` difficulty section in both languages to describe expedition scenario types instead of abstract difficulty levels.
 - Updated `buildExpeditionSetupCarousels()` in `prototype/web-v1/ui/screens.js` to remove difficulty carousel sync and render calls.
-- Updated character name rendering in carousel cards, character grid, and Part 2 setup screen to display the nationality flag emoji alongside the character name.
+- Updated character name rendering in carousel cards, character grid, and Part 2 setup screen: moved nationality flag emoji to the right of the name (after the name) and wrapped it in `<span class="char-flag">` to ensure correct emoji rendering regardless of heading font.
 - Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the difficulty carousel is absent from the HTML.
 
 ### Changed
