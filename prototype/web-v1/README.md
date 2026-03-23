@@ -76,7 +76,6 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 - The watch panel shows countdown/overage and partial-information microcopy, and each run records timing, over-window status, and applied effect in `run_log.json`.
 - Critical actions include concise cost/benefit microcopy directly in the decision buttons to reduce onboarding dependency.
 - Debrief now surfaces both the turning point and a primary actionable cause aligned with the final outcome.
-- A one-use `Focus pause` grants a short contextual grace margin for playtesting accessibility without disabling pressure dynamics.
 
 ## Difficulty and onboarding additions
 

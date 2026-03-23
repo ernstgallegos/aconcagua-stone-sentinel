@@ -49,8 +49,6 @@ const TELEMETRY_STATE_DEFAULTS = Object.freeze({
   decisionWindowExceeded: false,
   decisionWindowEffect: null,
   decisionWindowProfile: null,
-  decisionPauseUsed: false,
-  decisionPauseTurnsLeft: 0,
 });
 
 const SLICE_DEFS = {

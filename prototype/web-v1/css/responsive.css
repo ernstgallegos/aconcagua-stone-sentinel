@@ -193,6 +193,7 @@
     grid-template-columns: 1fr;
   }
 
+  #screen-game .watch-status-layout,
   #screen-game .telemetry-grid,
   #screen-game .status-row {
     grid-template-columns: 1fr;
@@ -253,6 +254,22 @@
   #screen-game .narrative-box {
     padding: 0;
     overflow: visible;
+  }
+
+  #screen-game .watch-panel {
+    overflow: visible;
+  }
+
+  #screen-game .watch-panel:not([open]) {
+    min-height: 0;
+  }
+
+  #screen-game .watch-status-layout {
+    display: block;
+  }
+
+  #screen-game .watch-status-column {
+    margin-top: 0.8rem;
   }
 
   .mobile-collapsible {

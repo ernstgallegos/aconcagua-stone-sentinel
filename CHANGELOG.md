@@ -10,6 +10,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Changed
+- Replaced the single-letter visual-mode labels in `prototype/web-v1/index.html` with emoji glyphs for dark/light/sunset/auto while keeping the same selector values and screen-reader labeling.
+- Clarified the expedition-setup secondary CTA in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so Quick Start explicitly advertises its random character/scenario behavior.
+- Rebalanced `prototype/web-v1/index.html` + `prototype/web-v1/css/layout.css` / `prototype/web-v1/css/responsive.css` watch-status panel so desktop now presents the same watch, permit, decision-window, and risk data in a clear two-column status layout while mobile keeps the compact accordion flow.
+
+### Removed
+- Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
+
+### Fixed
+- Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
+- Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
+
+### Changed
 - Simplified the `prototype/web-v1/index.html` welcome screen chrome by moving the info trigger to the top-left corner, compressing the language/theme controls into compact icon-led selectors at the top-right, and replacing the central BEGIN button with a bottom-center full-screen continuation hint.
 
 ### Fixed
