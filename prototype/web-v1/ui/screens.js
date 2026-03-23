@@ -2681,6 +2681,7 @@ function makeDecision(decision) {
   }
 
   assertStateShape(G, 'before resolveTurn', { throwOnError: true });
+  const previousPosition = s.position;
   const turnResult = resolveTurn(s, decision);
   const resolvedDecision = turnResult.resolvedAction || decision;
   applyAcclimatizationGain(resolvedDecision);
@@ -2719,7 +2720,7 @@ function makeDecision(decision) {
   });
   addLogEntry(logEntry);
 
-  const exitedPark = s.position === 'horcones' && resolvedDecision === 'descend';
+  const exitedPark = previousPosition === 'horcones' && resolvedDecision === 'descend';
   const PARK_EXIT_OUTCOMES = new Set(['Summit and Safe Return', 'High Point Return', 'Strategic Retreat']);
   const returnedToHorcones = exitedPark && PARK_EXIT_OUTCOMES.has(turnResult.outcome);
   const ended = exitedPark || turnResult.outcome !== 'Strategic Retreat';

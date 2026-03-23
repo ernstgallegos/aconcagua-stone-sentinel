@@ -143,6 +143,7 @@ In addition to the changelog:
 
 - Summit-state safety is strongest when ascent is blocked at both layers: disable uphill UI affordances at `summit` and also coerce resolver-level advance attempts into a flagged hold/descend-only path so Part 2 victory still depends on safe park exit, not summit arrival alone.
 - Summit-return outcome checks are safer when park-exit classification treats `hasSummited` as the canonical success memory and not only `highestPosIdx`; this protects winning exits if route-index telemetry drifts during long descents.
+- Park-exit UI flow in `web-v1` must distinguish **arriving at `horcones`** from **exiting from `horcones`**; if end-run checks read the post-turn position instead of the pre-turn position, valid summit returns are misclassified one turn early as `Strategic Retreat` and Part 2 stays locked.
 
 - Welcome-screen UX stays cleaner when the entry view remains cover-first with a single dominant advance CTA; move explanatory/version/credit copy into an optional modal so curious players can read it without slowing first-time flow.
 - Mobile gameplay readability improves when secondary watch/context/narrative panels collapse by default and the decision panel stays sticky; preserve instant access to actions first, then expose detail progressively.
