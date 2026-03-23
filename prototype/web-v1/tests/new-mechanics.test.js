@@ -39,7 +39,7 @@ test('welcome info modal, difficulty selector, and onboarding tutorial remain vi
   assert.match(indexSource, /class="title-info-trigger"/);
   assert.match(indexSource, /id="intro-modal"/);
   assert.doesNotMatch(indexSource, /class="title-main"/);
-  assert.match(indexSource, /id="carousel-card-difficulty"/);
+  assert.doesNotMatch(indexSource, /id="carousel-card-difficulty"/);
   assert.match(indexSource, /Full Tutorial \/ FAQ/);
   assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
   assert.match(uiSource, /id: 'very-easy'/);

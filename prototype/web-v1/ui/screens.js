@@ -169,7 +169,6 @@ let CURRENT_DIFFICULTY_ID = 'standard';
 // ════════════════════════════════════════════════
 const DEFAULT_DIFFICULTY_ID = 'standard';
 const CAROUSEL_STATE = {
-  difficulty: { index: DIFFICULTY_LEVELS.findIndex(l => l.id === DEFAULT_DIFFICULTY_ID) },
   character: { index: 0 },
   scenario: { index: 0 },
 };
@@ -217,6 +216,10 @@ function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
 }
 
 function getDifficultyModifiers(id = CURRENT_DIFFICULTY_ID) {
+  // If a scenario is loaded and has embedded modifiers, use those
+  if (G.scenario && G.scenario.difficultyModifiers) {
+    return G.scenario.difficultyModifiers;
+  }
   return getDifficultyConfig(id).modifiers;
 }
 
@@ -278,8 +281,6 @@ const I18N = {
       clearLog: 'Clear log',
       titleTagline: '"The mountain doesn\'t ask if you\'re ready. The mountain rules."',
       titleSub: 'A decision game about limits, environment, and knowing when to stop.',
-      difficulty: 'Difficulty',
-      difficultyNote: 'Choose the intensity of environmental pressure, resource efficiency, and permit margin before beginning.',
       tutorialCta: 'Full Tutorial / FAQ',
       tutorialTitle: 'Expedition tutorial and rules reference',
       close: 'Close',
@@ -295,11 +296,9 @@ const I18N = {
       prepareExpedition: 'Prepare Your Expedition',
       beginExpedition: '🎯 Begin Expedition',
       quickStart: '🎲 Quick Start (Random)',
-      carouselDifficulty: 'Difficulty',
+      charDifficultyLabel: 'Profile',
       carouselCharacter: 'Character',
       carouselScenario: 'Scenario',
-      carouselPrevDifficulty: 'Previous difficulty',
-      carouselNextDifficulty: 'Next difficulty',
       carouselPrevCharacter: 'Previous character',
       carouselNextCharacter: 'Next character',
       carouselPrevScenario: 'Previous scenario',
@@ -361,8 +360,6 @@ const I18N = {
       clearLog: 'Limpiar registro',
       titleTagline: '"La montaña no pregunta si estás listo. La montaña manda."',
       titleSub: 'Un juego de decisiones sobre límites, entorno y saber cuándo detenerse.',
-      difficulty: 'Dificultad',
-      difficultyNote: 'Elige la intensidad de la presión ambiental, la eficiencia de recursos y el margen del permiso antes de comenzar.',
       tutorialCta: 'Tutorial completo / FAQ',
       tutorialTitle: 'Tutorial de expedición y referencia de reglas',
       close: 'Cerrar',
@@ -378,11 +375,9 @@ const I18N = {
       prepareExpedition: 'Prepara tu expedición',
       beginExpedition: '🎯 Iniciar expedición',
       quickStart: '🎲 Inicio rápido (aleatorio)',
-      carouselDifficulty: 'Dificultad',
+      charDifficultyLabel: 'Perfil',
       carouselCharacter: 'Personaje',
       carouselScenario: 'Escenario',
-      carouselPrevDifficulty: 'Dificultad anterior',
-      carouselNextDifficulty: 'Dificultad siguiente',
       carouselPrevCharacter: 'Personaje anterior',
       carouselNextCharacter: 'Personaje siguiente',
       carouselPrevScenario: 'Escenario anterior',
@@ -439,13 +434,14 @@ const TUTORIAL_CONTENT = {
       'Sleep: only at camps. It resets time to the next day and can recover body state when used before collapse spirals.',
       'Shoot Photo: Daniela-only action that improves short-term route reading under strict cooldown and run limits.',
     ],
-    difficultyTitle: 'Difficulty levels',
+    difficultyTitle: 'Expedition types',
     difficulty: [
-      'Very Easy: softer pressure, more efficient resources, longer permit slack, and a stronger initial recovery cushion.',
-      'Easy: gentler attrition with enough pressure to teach the route without removing the need to retreat.',
-      'Standard: baseline prototype balance.',
-      'Hard: tighter margins, heavier pressure, and less forgiveness for late pushes.',
-      'Very Hard: sustained pressure spikes, shorter permit, weaker starting margin, and stronger punishment for indecision.',
+      'Scenario 01 — Assisted Route: first ascent conditions. Extra margin, lower attrition. Ideal for learning the route.',
+      'Scenario 02 — Narrow Weather Window: moderate pressure, deteriorating weather trend.',
+      'Scenario 03 — False Stability Terrain: clear skies, aggressive terrain load.',
+      'Scenario 04 — Accumulated Fatigue Trap: benign conditions, progressive fatigue pressure.',
+      'Scenario 05 — Weather Window: hostile opening, brief window, hard closure.',
+      'Random Conditions: procedurally generated scenario. Unpredictable archetype assigned at departure.',
     ],
     faqTitle: 'Frequently asked questions',
     faq: [
@@ -487,13 +483,14 @@ const TUTORIAL_CONTENT = {
       'Dormir: solo en campamentos. Reinicia el tiempo al día siguiente y puede recuperar el estado corporal antes de que aparezca una espiral de colapso.',
       'Tomar foto: acción exclusiva de Daniela que mejora por poco tiempo la lectura de ruta bajo enfriamiento y límites estrictos por partida.',
     ],
-    difficultyTitle: 'Niveles de dificultad',
+    difficultyTitle: 'Tipos de expedición',
     difficulty: [
-      'Muy fácil: presión más suave, recursos más eficientes, permiso más largo y mejor colchón inicial de recuperación.',
-      'Fácil: desgaste más amable con suficiente presión para enseñar la ruta sin eliminar la necesidad de retirarse.',
-      'Normal: balance base del prototipo.',
-      'Difícil: márgenes más ajustados, presión más pesada y menos perdón para los empujes tardíos.',
-      'Muy difícil: picos de presión sostenidos, permiso más corto, margen inicial más débil y castigo mayor a la indecisión.',
+      'Escenario 01 — Ruta asistida: condiciones de primera ascensión. Margen extra, menor desgaste. Ideal para aprender la ruta.',
+      'Escenario 02 — Ventana climática estrecha: presión moderada, tendencia climática en deterioro.',
+      'Escenario 03 — Falsa estabilidad del terreno: cielos despejados, carga de terreno agresiva.',
+      'Escenario 04 — Trampa de fatiga acumulada: condiciones benignas, presión de fatiga progresiva.',
+      'Escenario 05 — Ventana climática: apertura hostil, ventana breve, cierre duro.',
+      'Condiciones aleatorias: escenario generado proceduralmente. Arquetipo impredecible asignado al partir.',
     ],
     faqTitle: 'Preguntas frecuentes',
     faq: [
@@ -945,7 +942,7 @@ function buildCharacterGrid() {
     const roleGlyph = (c.role || '').split(/\s+/).map(part => part[0] || '').join('').slice(0,2).toUpperCase();
     card.innerHTML = `
       <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
-      <div class="char-name">${c.name}</div>
+      <div class="char-name">${c.flag ? c.flag + ' ' : ''}${c.name}</div>
       <div class="char-role">${c.role}</div>
       <div class="char-bio">${c.bio}</div>
       <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
@@ -1005,7 +1002,6 @@ function confirmCharacter() {
 // EXPEDITION SETUP CAROUSELS
 // ════════════════════════════════════════════════
 function getCarouselItems(type) {
-  if (type === 'difficulty') return DIFFICULTY_LEVELS;
   if (type === 'character') {
     const chars = DATA_CONFIG.characters || [];
     return [...chars, { id: 'random', name: t('ui.randomCharacter'), _random: true }];
@@ -1042,28 +1038,20 @@ function renderCarousel(type) {
   if (!cardEl) return;
 
   // Render card content based on type
-  if (type === 'difficulty') {
-    const level = item;
-    const labelText = level.label[CURRENT_LANGUAGE] || level.label.en;
-    cardEl.innerHTML = `<div class="carousel-card-name">${labelText}</div>`;
-    const extraEl = document.getElementById('carousel-extra-difficulty');
-    if (extraEl) extraEl.textContent = level.blurb[CURRENT_LANGUAGE] || level.blurb.en;
-    // Keep CURRENT_DIFFICULTY_ID in sync; also persist to localStorage
-    setDifficulty(level.id);
-  } else if (type === 'character') {
+  if (type === 'character') {
     if (item._random) {
       cardEl.innerHTML = `
         <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
         <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
-        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: Variable</div>
+        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: Variable</div>
       `;
     } else {
       const c = localizeCharacter(item);
       const safeIdx = Number(idx);
       cardEl.innerHTML = `
-        <div class="carousel-card-name">${c.name}</div>
+        <div class="carousel-card-name">${c.flag ? c.flag + ' ' : ''}${c.name}</div>
         <div class="carousel-card-role">${c.role}</div>
-        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${c.difficultyLabel}</div>
+        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
         <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
       `;
       const infoBtn = cardEl.querySelector('.carousel-info-btn');
@@ -1142,11 +1130,6 @@ function toggleCarouselInfo(type, idx) {
 }
 
 function buildExpeditionSetupCarousels() {
-  // Sync difficulty carousel index with CURRENT_DIFFICULTY_ID
-  const diffIdx = DIFFICULTY_LEVELS.findIndex(l => l.id === CURRENT_DIFFICULTY_ID);
-  const defaultDiffIdx = DIFFICULTY_LEVELS.findIndex(l => l.id === DEFAULT_DIFFICULTY_ID);
-  CAROUSEL_STATE.difficulty.index = diffIdx >= 0 ? diffIdx : (defaultDiffIdx >= 0 ? defaultDiffIdx : 0);
-
   // Clamp character/scenario indices in case data isn't loaded yet
   const charItems = getCarouselItems('character');
   if (CAROUSEL_STATE.character.index >= charItems.length) CAROUSEL_STATE.character.index = 0;
@@ -1154,14 +1137,10 @@ function buildExpeditionSetupCarousels() {
   const scenItems = getCarouselItems('scenario');
   if (CAROUSEL_STATE.scenario.index >= scenItems.length) CAROUSEL_STATE.scenario.index = 0;
 
-  renderCarousel('difficulty');
   renderCarousel('character');
   renderCarousel('scenario');
 
   // Update label text for current language
-  const lblDiff = document.getElementById('carousel-label-difficulty');
-  if (lblDiff && lblDiff.firstChild) { lblDiff.firstChild.textContent = t('ui.carouselDifficulty'); }
-
   const lblChar = document.getElementById('carousel-label-character');
   if (lblChar && lblChar.firstChild) { lblChar.firstChild.textContent = t('ui.carouselCharacter'); }
 
@@ -1170,8 +1149,6 @@ function buildExpeditionSetupCarousels() {
 
   // Update arrow aria-labels for current language
   const arrowMap = [
-    ['carousel-arrow-difficulty-prev', 'ui.carouselPrevDifficulty'],
-    ['carousel-arrow-difficulty-next', 'ui.carouselNextDifficulty'],
     ['carousel-arrow-character-prev', 'ui.carouselPrevCharacter'],
     ['carousel-arrow-character-next', 'ui.carouselNextCharacter'],
     ['carousel-arrow-scenario-prev', 'ui.carouselPrevScenario'],
@@ -1191,6 +1168,17 @@ function buildExpeditionSetupCarousels() {
   if (beginBtn) beginBtn.textContent = t('ui.beginExpedition');
   const quickBtn = document.getElementById('btn-quick-start');
   if (quickBtn) quickBtn.textContent = t('ui.quickStart');
+}
+
+function deriveDifficultyFromScenario() {
+  if (G.scenario && G.scenario.difficultyModifiers) {
+    const diffHint = (G.scenario.difficulty || '').toLowerCase();
+    if (diffHint.includes('very') && diffHint.includes('easy')) CURRENT_DIFFICULTY_ID = 'very-easy';
+    else if (diffHint.includes('easy')) CURRENT_DIFFICULTY_ID = 'easy';
+    else if (diffHint.includes('very') && diffHint.includes('hard')) CURRENT_DIFFICULTY_ID = 'very-hard';
+    else if (diffHint.includes('hard')) CURRENT_DIFFICULTY_ID = 'hard';
+    else CURRENT_DIFFICULTY_ID = 'standard';
+  }
 }
 
 function beginExpedition() {
@@ -1216,17 +1204,18 @@ function beginExpedition() {
   if (selectedScen._random) {
     G.scenario = buildRandomScenario();
     G.seed = G.scenario._randomSeed;
+    deriveDifficultyFromScenario();
     showOnboarding('random');
   } else {
     G.scenario = selectedScen;
     const seeds = selectedScen.seeds || [];
     G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+    deriveDifficultyFromScenario();
     showOnboarding('predefined');
   }
 }
 
 function quickStart() {
-  // Keep difficulty from carousel (already in CURRENT_DIFFICULTY_ID via renderCarousel)
   // Random character from the 6 characters (not the Random option)
   const availableChars = DATA_CONFIG.characters || [];
   if (!availableChars.length) return;
@@ -1239,6 +1228,7 @@ function quickStart() {
   G.scenario = scenario;
   const seeds = scenario.seeds || [];
   G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+  deriveDifficultyFromScenario();
   showOnboarding('predefined');
 }
 
@@ -1307,9 +1297,9 @@ function buildPart2SetupScreen() {
       card.setAttribute('aria-disabled', selectable ? 'false' : 'true');
       card.dataset.part2Selectable = selectable ? 'true' : 'false';
       card.innerHTML = `
-        <div class="carousel-card-name">${character.name}</div>
+        <div class="carousel-card-name">${character.flag ? character.flag + ' ' : ''}${character.name}</div>
         <div class="carousel-card-role">${character.role || uiText('Lead Climber', 'Escalador principal')}</div>
-        <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${character.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
+        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${character.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
         ${selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>`}
       `;
       card.onclick = () => selectPart2Character(character.id);
@@ -1559,6 +1549,7 @@ function buildRandomScenario() {
     max_turns: rngInt(rng, maxTurnsRange.min, maxTurnsRange.max),
     seeds: [rseed],
     difficulty: arch.tweak.difficulty,
+    difficultyModifiers: arch.difficultyModifiers || null,
     initial: {
       position: initialBase.position, altitude_band: initialBase.altitude_band, weather_severity: arch.tweak.weather,
       visibility: arch.tweak.visibility, terrain_load: rngInt(rng, terrainRange.min, terrainRange.max), functional_capacity: rngInt(rng, functionalCapacityRange.min, functionalCapacityRange.max),

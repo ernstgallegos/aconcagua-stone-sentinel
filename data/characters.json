@@ -2,6 +2,7 @@
   {
     "id": "francisco",
     "name": "Francisco Aguirre",
+    "flag": "🇦🇷",
     "role": "Teacher & Amateur Runner",
     "bio": "Physical education teacher from Mendoza. Exceptional endurance from years of trail running. No technical high-altitude experience. Carrying a photo of his friend Mateo in his left pocket.",
     "traits": [
@@ -52,6 +53,7 @@
   {
     "id": "laura",
     "name": "Laura Kim",
+    "flag": "🇰🇷",
     "role": "Emergency Physician",
     "bio": "South Korean ER doctor on burnout leave. Three years in intensive care during the pandemic. Reads physiological signals with clinical precision. Came to the mountain to recover control over her own life.",
     "traits": [
@@ -102,6 +104,7 @@
   {
     "id": "erik",
     "name": "Erik Lundvall",
+    "flag": "🇳🇴",
     "role": "Offshore Engineer",
     "bio": "Norwegian mountaineer with Kilimanjaro, Elbrus, Mont Blanc and Denali behind him. Aconcagua is the last of the Seven Summits. Fifteen years of success have made retreat feel like failure.",
     "traits": [
@@ -152,6 +155,7 @@
   {
     "id": "daniela",
     "name": "Daniela De Rossi",
+    "flag": "🇮🇹",
     "role": "Photographer & Journalist",
     "bio": "Italian freelance photojournalist, 26. Lost her editorial assignment a week before departure and came anyway. Extraordinary observer of environment and people. Her body is the most vulnerable to altitude in the group.",
     "traits": [
@@ -202,6 +206,7 @@
   {
     "id": "blake",
     "name": "Blake Harris",
+    "flag": "🇺🇸",
     "role": "Strategy Executive",
     "bio": "American executive, 58. Bought the best gear three weeks ago. Thirty years building an identity out of closing deals \u2014 the mountain is another deal to close. Nine months from a forced partial retirement he didn't ask for.",
     "traits": [
@@ -252,6 +257,7 @@
   {
     "id": "irina",
     "name": "Irina Orlova",
+    "flag": "🇷🇺",
     "role": "Former Pro Climber",
     "bio": "Russian ex-professional climber, now an alpinism instructor in St. Petersburg. Elbrus, Pik Lenin, Khan Tengri, two attempts on Broad Peak. Left professional climbing at 35 for her daughter. This is her first high-altitude expedition outside a professional context in six years.",
     "traits": [

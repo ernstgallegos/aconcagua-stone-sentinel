@@ -9,6 +9,22 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+- Added `difficultyModifiers` field to each predefined scenario and random archetype in `data/scenarios.web-v1.json`, embedding the difficulty configuration directly in the scenario data.
+- Added `flag` emoji field to each character in `data/characters.json` representing their nationality.
+- Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
+
+### Changed
+- Removed the difficulty carousel from `prototype/web-v1/index.html` (`screen-expedition-setup` now has two carousels: character and scenario).
+- Updated `getDifficultyModifiers()` in `prototype/web-v1/ui/screens.js` to read embedded `difficultyModifiers` from the active scenario when available, falling back to `DIFFICULTY_LEVELS` table.
+- Updated `beginExpedition()` and `quickStart()` in `prototype/web-v1/ui/screens.js` to derive `CURRENT_DIFFICULTY_ID` from the selected scenario after scenario resolution.
+- Replaced `carouselDifficulty` i18n key with `charDifficultyLabel` (`'Profile'` / `'Perfil'`) used in character cards in `prototype/web-v1/ui/screens.js`.
+- Removed difficulty-carousel i18n keys (`difficulty`, `difficultyNote`, `carouselPrevDifficulty`, `carouselNextDifficulty`) from both `en` and `es` in `prototype/web-v1/ui/screens.js`.
+- Updated `TUTORIAL_CONTENT` difficulty section in both languages to describe expedition scenario types instead of abstract difficulty levels.
+- Updated `buildExpeditionSetupCarousels()` in `prototype/web-v1/ui/screens.js` to remove difficulty carousel sync and render calls.
+- Updated character name rendering in carousel cards, character grid, and Part 2 setup screen to display the nationality flag emoji alongside the character name.
+- Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the difficulty carousel is absent from the HTML.
+
 ### Changed
 - Replaced the single-letter visual-mode labels in `prototype/web-v1/index.html` with emoji glyphs for dark/light/sunset/auto while keeping the same selector values and screen-reader labeling.
 - Clarified the expedition-setup secondary CTA in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so Quick Start explicitly advertises its random character/scenario behavior.
