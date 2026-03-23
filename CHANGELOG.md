@@ -18,6 +18,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
 
 ### Fixed
+- Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
 - Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
 - Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
 

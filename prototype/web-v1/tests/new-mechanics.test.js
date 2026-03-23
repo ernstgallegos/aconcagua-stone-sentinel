@@ -92,3 +92,15 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
   assert.doesNotMatch(uiSource, /requestDecisionPause/);
   assert.doesNotMatch(uiSource, /decisionPauseUsed/);
 });
+
+test('Part 2 bridge keeps the full roster visible while gating the public path', () => {
+  assert.match(indexSource, /id="part2-character-grid"/);
+  assert.match(indexSource, /id="part2-route-grid"/);
+  assert.match(uiSource, /const PART2_ROUTE_OPTIONS = \[/);
+  assert.match(uiSource, /id: 'guided-normal-route'/);
+  assert.match(uiSource, /id: 'independent-normal-route'/);
+  assert.match(uiSource, /id !== 'francisco'/);
+  assert.match(uiSource, /id !== 'guided-normal-route'/);
+  assert.match(uiSource, /part2-lock-pill/);
+  assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
+});

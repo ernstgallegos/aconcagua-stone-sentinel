@@ -441,21 +441,19 @@
     <button class="nav-back" onclick="showScreen('summit-success')" aria-label="Back to summit-success">Back</button>
     <div class="screen-header part2-setup-header">
       <h2>The Real Expedition</h2>
-      <p>Choose the only confirmed climber and the guided Normal Route transfer into Part 2.</p>
+      <p>Browse the full Part 2 roster, but for now only Francisco and the guided Normal Route transfer are unlocked.</p>
     </div>
 
     <div class="carousel-section" role="group" aria-labelledby="part2-character-label">
       <div class="carousel-label" id="part2-character-label">Character</div>
-      <div class="carousel-card-wrapper part2-static-card-wrapper">
-        <button class="carousel-card part2-static-card" id="part2-char-grid" type="button" role="radio" aria-checked="false" aria-label="Part 2 character selection"></button>
+      <div class="part2-option-grid" id="part2-character-grid" role="radiogroup" aria-labelledby="part2-character-label">
       </div>
       <div class="carousel-info-panel visible" id="part2-character-info"></div>
     </div>
 
     <div class="carousel-section" role="group" aria-labelledby="part2-scenario-label">
-      <div class="carousel-label" id="part2-scenario-label">Scenario</div>
-      <div class="carousel-card-wrapper part2-static-card-wrapper">
-        <button class="carousel-card part2-static-card" id="part2-scenario-card" type="button" role="radio" aria-checked="false" aria-label="Part 2 route selection"></button>
+      <div class="carousel-label" id="part2-scenario-label">Route</div>
+      <div class="part2-option-grid" id="part2-route-grid" role="radiogroup" aria-labelledby="part2-scenario-label">
       </div>
       <div class="carousel-info-panel visible" id="part2-scenario-info"></div>
     </div>

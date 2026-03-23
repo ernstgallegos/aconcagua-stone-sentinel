@@ -312,20 +312,53 @@
   letter-spacing: 0.25em;
 }
 
-.part2-static-card-wrapper {
+.part2-option-grid {
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
 }
 
 .part2-static-card {
   width: 100%;
   text-align: left;
   min-height: 0;
+  position: relative;
 }
 
 .part2-static-card.selected {
   border-color: var(--ochre);
   background: color-mix(in srgb, var(--surface2) 92%, var(--ochre) 8%);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--ochre) 30%, transparent);
+}
+
+.part2-static-card.part2-locked {
+  opacity: 0.7;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--border) 70%, var(--stone) 30%);
+  background: color-mix(in srgb, var(--surface) 90%, var(--bg) 10%);
+}
+
+.part2-static-card.part2-locked:hover,
+.part2-static-card.part2-locked:focus-visible {
+  border-color: color-mix(in srgb, var(--border) 60%, var(--stone) 40%);
+  transform: none;
+  box-shadow: none;
+}
+
+.part2-lock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .part2-setup-actions {
