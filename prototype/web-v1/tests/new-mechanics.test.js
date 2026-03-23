@@ -75,13 +75,20 @@ test('descend UX copy documents Horcones exit behavior and Daniela guard wiring 
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
 });
 
-test('mobile watch/route sheets and persistent sleep action stay wired to live gameplay state', () => {
+test('watch/status layout keeps desktop grouping, mobile sync, and retired controls out of gameplay', () => {
+  assert.match(indexSource, /id="btn-quick-start"[\s\S]*?Quick Start \(Random\)/);
+  assert.match(indexSource, /class="watch-status-layout"/);
+  assert.match(indexSource, /class="watch-core-column"/);
+  assert.match(indexSource, /class="watch-status-column"/);
   assert.match(indexSource, /id="bs-watch-position"/);
   assert.match(indexSource, /id="bs-watch-pressure"/);
   assert.match(indexSource, /id="bs-position-list"/);
   assert.match(indexSource, /id="btn-sleep"[^>]*disabled/);
   assert.doesNotMatch(indexSource, /id="btn-sleep"[^>]*display:none/);
+  assert.doesNotMatch(indexSource, /btn-focus-pause/);
   assert.match(uiSource, /function syncMobileStatusPanels/);
   assert.match(uiSource, /mobileList\.innerHTML = list\.innerHTML/);
   assert.match(uiSource, /sleepBtn\.disabled = !sleepAvailable/);
+  assert.doesNotMatch(uiSource, /requestDecisionPause/);
+  assert.doesNotMatch(uiSource, /decisionPauseUsed/);
 });

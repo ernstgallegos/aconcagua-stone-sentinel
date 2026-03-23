@@ -81,6 +81,24 @@
   padding-right: 0.2rem;
 }
 
+.watch-status-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.watch-core-column,
+.watch-status-column {
+  min-width: 0;
+}
+
+.watch-status-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 /* ── Containers ── */
 .container {
   width: 100%;

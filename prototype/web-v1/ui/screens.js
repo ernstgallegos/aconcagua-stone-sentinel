@@ -261,7 +261,7 @@ const I18N = {
       onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.',
       prepareExpedition: 'Prepare Your Expedition',
       beginExpedition: '🎯 Begin Expedition',
-      quickStart: '🎲 Quick Start',
+      quickStart: '🎲 Quick Start (Random)',
       carouselDifficulty: 'Difficulty',
       carouselCharacter: 'Character',
       carouselScenario: 'Scenario',
@@ -344,7 +344,7 @@ const I18N = {
       onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.',
       prepareExpedition: 'Prepara tu expedición',
       beginExpedition: '🎯 Iniciar expedición',
-      quickStart: '🎲 Inicio rápido',
+      quickStart: '🎲 Inicio rápido (aleatorio)',
       carouselDifficulty: 'Dificultad',
       carouselCharacter: 'Personaje',
       carouselScenario: 'Escenario',
@@ -865,7 +865,7 @@ function showScreen(id) {
     target.classList.add('active');
     window.scrollTo(0, 0);
 
-    if (id === 'part2-character') buildPart2CharacterGrid();
+    if (id === 'part2-character') buildPart2SetupScreen();
 
     if (id === 'expedition-setup') buildExpeditionSetupCarousels();
 
@@ -1506,8 +1506,6 @@ function startGame() {
     decisionWindowExceeded: false,
     decisionWindowEffect: null,
     decisionWindowProfile: null,
-    decisionPauseUsed: false,
-    decisionPauseTurnsLeft: 0,
   });
 
   // deep copy initial state + apply character mods
@@ -2140,9 +2138,6 @@ function renderWatch() {
     statusEl.textContent = pressureCopy.text;
     statusEl.className = `time-pressure-status${pressureCopy.cls ? ' ' + pressureCopy.cls : ''}`;
   }
-  const pauseStatus = document.getElementById('focus-pause-status');
-  if (pauseStatus && !G.decisionPauseUsed) pauseStatus.textContent = 'Short pause available for overload moments.';
-
   const capLbl = capacityLabel(s.functional_capacity);
   const fatLbl = fatigueLabel(s.fatigue);
   const expLbl = exposureLabel(s.exposure);
@@ -2567,7 +2562,7 @@ function buildDebriefAnalytics() {
 
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
   const difficultyMods = getDifficultyModifiers();
-  const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, gracePauseMs: 4500, degradeEveryMs: 5000 };
+  const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, degradeEveryMs: 5000 };
   const p = character?.engine?.decisionWindow || {};
   const baseMs = (p.baseMs ?? base.baseMs) + difficultyMods.decisionWindowMsBonus;
   const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
@@ -2577,7 +2572,6 @@ function getDecisionWindowProfile(character = G.character, stage = getCurrentSta
     baseMs,
     stageModifiersMs: stageMods,
     minFloorMs,
-    gracePauseMs: p.gracePauseMs ?? base.gracePauseMs,
     degradeEveryMs: p.degradeEveryMs ?? base.degradeEveryMs,
     totalWindowMs: Math.max(minFloorMs, total),
   };
@@ -2586,7 +2580,7 @@ function getDecisionWindowProfile(character = G.character, stage = getCurrentSta
 function computeDecisionWindowState() {
   const profile = getDecisionWindowProfile();
   const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt || Date.now()));
-  const effectiveElapsed = Math.max(0, elapsed - (G.decisionPauseTurnsLeft || 0));
+  const effectiveElapsed = elapsed;
   const overMs = Math.max(0, effectiveElapsed - profile.totalWindowMs);
   const stepsOver = Math.floor(overMs / Math.max(profile.degradeEveryMs, 1000));
   const overRatio = overMs > 0 ? clamp(overMs / Math.max(profile.totalWindowMs, 1), 0, 2) : 0;
@@ -2623,27 +2617,11 @@ function applyDecisionWindowDegradation(actionMod, perception) {
   return degraded;
 }
 
-function requestDecisionPause() {
-  const status = document.getElementById('focus-pause-status');
-  if (!status) return;
-  if (G.decisionPauseUsed) {
-    status.textContent = 'Focus pause already used in this run.';
-    return;
-  }
-  const profile = getDecisionWindowProfile();
-  recordTelemetry(G, {
-    decisionPauseTurnsLeft: Math.max(G.decisionPauseTurnsLeft || 0, profile.gracePauseMs),
-    decisionPauseUsed: true,
-  });
-  status.textContent = `Pause granted (+${Math.ceil(profile.gracePauseMs/1000)}s). Keep reading trend, not certainty.`;
-  renderWatch();
-}
-
 // ════════════════════════════════════════════════
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo','btn-focus-pause'].forEach(id => {
+  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo'].forEach(id => {
     const btn = document.getElementById(id);
     btn.disabled = !enabled;
     if (enabled) btn.removeAttribute('aria-disabled');
@@ -2844,7 +2822,7 @@ function makeDecision(decision) {
   updateRunState(G, { pressureHistory: updatedHistory });
 
   updateRunState(G, { turn: G.turn + 1 });
-  recordTelemetry(G, { turnDecisionStartedAt: Date.now(), decisionPauseTurnsLeft: 0 });
+  recordTelemetry(G, { turnDecisionStartedAt: Date.now() });
   setTimeout(() => {
     renderWatch();
     renderNarrative(null, G.signals);
@@ -3217,7 +3195,6 @@ document.addEventListener('keydown', (event) => {
     '4': 'btn-descend',
     '5': 'btn-sleep',
     '6': 'btn-shoot-photo',
-    '0': 'btn-focus-pause',
   };
   const buttonId = map[event.key];
   if (!buttonId) return;
@@ -3310,7 +3287,6 @@ window.confirmCharacter = confirmCharacter;
 window.confirmPart2Character = confirmPart2Character;
 window.setLanguage = setLanguage;
 window.setVisualMode = setVisualMode;
-window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
 window.setDifficulty = setDifficulty;
 window.advanceFromTitle = advanceFromTitle;

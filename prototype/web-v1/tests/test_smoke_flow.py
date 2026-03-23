@@ -64,6 +64,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
             page.wait_for_selector(f'#screen-{screen}')
 
         assert _active_screen(page) == 'screen-title'
+        assert page.locator('#theme-select option').all_inner_texts() == ['🌙', '☀️', '🌇', '🌓']
         page.click('#screen-title .title-info-trigger')
         page.wait_for_function("() => document.getElementById('intro-modal')?.classList.contains('visible')")
         page.click('#intro-modal .btn-ghost')
@@ -111,6 +112,9 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
 
         page.click('#part2-scenario-card')
         expect_disabled(page, '#btn-part2-confirm', False)
+
+        page.click('#btn-part2-confirm')
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-part2-hotel'")
 
         browser.close()
 

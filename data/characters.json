@@ -45,7 +45,6 @@
           "SUMMIT_DAY": -3000
         },
         "minFloorMs": 10000,
-        "gracePauseMs": 5000,
         "degradeEveryMs": 6000
       }
     }
@@ -96,7 +95,6 @@
           "SUMMIT_DAY": -5000
         },
         "minFloorMs": 9000,
-        "gracePauseMs": 4500,
         "degradeEveryMs": 4500
       }
     }
@@ -147,7 +145,6 @@
           "SUMMIT_DAY": -6000
         },
         "minFloorMs": 8500,
-        "gracePauseMs": 4000,
         "degradeEveryMs": 4200
       }
     }
@@ -198,7 +195,6 @@
           "SUMMIT_DAY": -2000
         },
         "minFloorMs": 11000,
-        "gracePauseMs": 5500,
         "degradeEveryMs": 6200
       }
     }
@@ -249,7 +245,6 @@
           "SUMMIT_DAY": -7000
         },
         "minFloorMs": 8000,
-        "gracePauseMs": 4000,
         "degradeEveryMs": 4000
       }
     }
@@ -300,7 +295,6 @@
           "SUMMIT_DAY": -4500
         },
         "minFloorMs": 9000,
-        "gracePauseMs": 4500,
         "degradeEveryMs": 4300
       }
     }
