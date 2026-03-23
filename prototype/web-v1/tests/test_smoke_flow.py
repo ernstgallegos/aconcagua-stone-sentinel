@@ -107,6 +107,9 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         expect_disabled(page, '#btn-part2-confirm', True)
 
         page.click('#part2-char-francisco')
+        expect_disabled(page, '#btn-part2-confirm', True)
+
+        page.click('#part2-scenario-card')
         expect_disabled(page, '#btn-part2-confirm', False)
 
         browser.close()

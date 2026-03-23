@@ -10,6 +10,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Changed
+- Refined `prototype/web-v1/index.html` + `prototype/web-v1/css/screens.css` / `prototype/web-v1/css/responsive.css` welcome screen so the cover image no longer sits behind a heavy darkening layer, the info trigger moves below the primary BEGIN CTA, the info modal now includes repository/contact CTAs, portrait/mobile keeps the cover full-height without top/bottom gaps, and landscape shows the complete artwork with side margins when needed.
+- Rebuilt the Part 2 entry selection in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` with the same carousel-style setup language used in Part 1 while limiting the available choices to Francisco and the guided Normal Route group expedition.
+
+### Fixed
+- Adjusted `prototype/web-v1/css/responsive.css` mobile gameplay spacing/overflow so the Watch and status accordion can expand without clipping the lower telemetry/context content behind the sticky decision panel.
+
+### Changed
 - Updated `prototype/web-v1/index.html` welcome screen so the primary BEGIN CTA stays centered and the prototype information button sits beside it, reducing top-corner scan on first load.
 - Unified the gameplay `watch` and `status` content inside a single status panel in `prototype/web-v1/index.html` and tuned `prototype/web-v1/css/components.css` / `prototype/web-v1/css/responsive.css` so mobile players read one simplified stack instead of separate watch/status accordions.
 - Added a collaboration/contact CTA to the Part 2 closure screen in `prototype/web-v1/index.html`, inviting feedback and ideas via `ernestogallegos@gmail.com`.

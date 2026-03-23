@@ -42,7 +42,7 @@
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
-    <div class="title-cta-row">
+    <div class="title-cta-stack">
       <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
       <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
     </div>
@@ -427,17 +427,33 @@
 </section>
 
 <!-- ══════════════════════ PART 2 CHARACTER ══════════════════════ -->
-<section id="screen-part2-character" class="screen" aria-label="Part 2 character selection">
-  <div style="max-width:860px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
-    <div class="screen-header" style="text-align:center; margin-bottom:2rem;">
-      <h2 style="font-family:var(--mono); font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--stone); margin-bottom:0.5rem;">The Real Expedition</h2>
-      <p style="font-style:italic; color:var(--text-dim); font-size:0.9rem;">One path forward. One character available.</p>
+<section id="screen-part2-character" class="screen" aria-label="Part 2 character and route selection">
+  <div class="expedition-setup-shell part2-setup-shell">
+    <button class="nav-back" onclick="showScreen('summit-success')" aria-label="Back to summit-success">Back</button>
+    <div class="screen-header part2-setup-header">
+      <h2>The Real Expedition</h2>
+      <p>Choose the only confirmed climber and the guided Normal Route transfer into Part 2.</p>
     </div>
-    <div class="char-grid" id="part2-char-grid" role="radiogroup" aria-label="Part 2 character selection"></div>
-    <div style="text-align:center; margin-top:1.5rem; display:flex; flex-wrap:wrap; gap:0.75rem; justify-content:center;">
-      <button class="btn-ghost" onclick="showScreen('summit-success')">Back</button>
+
+    <div class="carousel-section" role="group" aria-labelledby="part2-character-label">
+      <div class="carousel-label" id="part2-character-label">Character</div>
+      <div class="carousel-card-wrapper part2-static-card-wrapper">
+        <button class="carousel-card part2-static-card" id="part2-char-grid" type="button" role="radio" aria-checked="false" aria-label="Part 2 character selection"></button>
+      </div>
+      <div class="carousel-info-panel visible" id="part2-character-info"></div>
+    </div>
+
+    <div class="carousel-section" role="group" aria-labelledby="part2-scenario-label">
+      <div class="carousel-label" id="part2-scenario-label">Scenario</div>
+      <div class="carousel-card-wrapper part2-static-card-wrapper">
+        <button class="carousel-card part2-static-card" id="part2-scenario-card" type="button" role="radio" aria-checked="false" aria-label="Part 2 route selection"></button>
+      </div>
+      <div class="carousel-info-panel visible" id="part2-scenario-info"></div>
+    </div>
+
+    <div class="expedition-setup-actions part2-setup-actions">
       <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
-      <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" onclick="confirmPart2Character()">Francisco. Let's go.</button>
+      <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" onclick="confirmPart2Character()">Continue to Mendoza</button>
     </div>
   </div>
 </section>
@@ -585,6 +601,14 @@
     <section>
       <h4 id="intro-section-credits-title">Credits and status</h4>
       <p id="intro-section-credits-body">This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.</p>
+    </section>
+    <section class="intro-links-section">
+      <h4 id="intro-links-title">Repository and contact</h4>
+      <p id="intro-links-body">Follow development, share feedback, or propose collaborations through the public repository and the creator's email.</p>
+      <div class="intro-link-actions">
+        <a class="btn-ghost intro-link-btn" id="intro-repo-link" href="https://github.com/search?q=aconcagua-stone-sentinel&type=repositories" target="_blank" rel="noreferrer noopener">Public repository</a>
+        <a class="btn-ghost intro-link-btn" id="intro-email-link" href="mailto:ernestogallegos@gmail.com?subject=Aconcagua%3A%20Stone%20Sentinel%20feedback">Email the creator</a>
+      </div>
     </section>
   </div>
 </div>

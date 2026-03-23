@@ -174,6 +174,11 @@ const CAROUSEL_STATE = {
   scenario: { index: 0 },
 };
 
+const PART2_SELECTION = {
+  characterId: null,
+  scenarioId: null,
+};
+
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
 }
@@ -219,6 +224,10 @@ const I18N = {
       introAboutBody: 'You guide an expedition on Aconcagua through hourly decisions shaped by environmental pressure, body state, limited resources, and permit time. Reaching the summit is not enough: success depends on returning safely.',
       introCreditsTitle: 'Credits and status',
       introCreditsBody: 'This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.',
+      introLinksTitle: 'Repository and contact',
+      introLinksBody: 'Follow development, share feedback, or propose collaborations through the public repository and the creator's email.',
+      introRepoCta: 'Public repository',
+      introEmailCta: 'Email the creator',
       titleChooseExpedition: 'Choose Your Expedition',
       titleSelectScenario: 'Select Scenario',
       depart: 'Depart',
@@ -297,6 +306,10 @@ const I18N = {
       clearJournalConfirm: '¿Borrar todos los registros de expedición?',
       journalEmpty: 'No hay expediciones registradas. La primera partida aparecerá aquí.',
       begin: 'COMENZAR',
+      introLinksTitle: 'Repositorio y contacto',
+      introLinksBody: 'Seguí el desarrollo, compartí feedback o proponé colaboraciones desde el repositorio público y el email del creador.',
+      introRepoCta: 'Repositorio público',
+      introEmailCta: 'Enviar email al creador',
       titleChooseExpedition: 'Elige tu expedición',
       titleSelectScenario: 'Selecciona escenario',
       depart: 'Partir',
@@ -501,6 +514,10 @@ function renderIntroContent() {
   setText('intro-section-about-body', t('ui.introAboutBody'));
   setText('intro-section-credits-title', t('ui.introCreditsTitle'));
   setText('intro-section-credits-body', t('ui.introCreditsBody'));
+  setText('intro-links-title', t('ui.introLinksTitle'));
+  setText('intro-links-body', t('ui.introLinksBody'));
+  setText('intro-repo-link', t('ui.introRepoCta'));
+  setText('intro-email-link', t('ui.introEmailCta'));
 }
 
 function renderTutorialContent() {
@@ -1170,54 +1187,92 @@ function quickStart() {
 }
 
 
-function buildPart2CharacterGrid() {
-  const grid = document.getElementById('part2-char-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  const chars = DATA_CONFIG.characters || [];
-  chars.forEach(c => {
-    const card = document.createElement('div');
-    const isActive = c.id === 'francisco';
-    card.className = 'char-card' + (isActive ? '' : ' char-locked');
-    card.id = 'part2-char-' + c.id;
-    card.setAttribute('role', 'radio');
-    card.setAttribute('aria-checked', 'false');
-    card.setAttribute('tabindex', isActive ? '0' : '-1');
-    card.setAttribute('aria-label', isActive ? `${c.name} — ${c.role}` : `${c.name} — locked`);
-    card.setAttribute('aria-disabled', isActive ? 'false' : 'true');
+function buildPart2SetupScreen() {
+  PART2_SELECTION.characterId = null;
+  PART2_SELECTION.scenarioId = null;
 
-    if (isActive) {
-      card.onclick = () => selectPart2Character(c.id);
-      card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Character(c.id); }};
-    }
+  const charCard = document.getElementById('part2-char-grid') || document.getElementById('part2-char-francisco');
+  const charInfo = document.getElementById('part2-character-info');
+  const scenarioCard = document.getElementById('part2-scenario-card');
+  const scenarioInfo = document.getElementById('part2-scenario-info');
+  const confirmBtn = document.getElementById('btn-part2-confirm');
+  const francisco = localizeCharacter((DATA_CONFIG.characters || []).find((character) => character.id === 'francisco') || {});
 
-    const roleGlyph = (c.role || '').split(/\s+/).map(p => p[0] || '').join('').slice(0,2).toUpperCase();
-    card.innerHTML = `
-      <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
-      <div class="char-name">${c.name}</div>
-      <div class="char-role">${c.role}</div>
-      ${isActive
-        ? `<div class="char-bio">${c.bio}</div><ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>${c.difficultyLabel ? `<p class="char-difficulty">Conditions: ${c.difficultyLabel}</p>` : ''}`
-        : `<div class="char-bio char-bio--locked">Available in future expeditions.</div><div class="char-lock-icon" aria-hidden="true">◈</div>`
-      }
+  if (charCard && francisco.id) {
+    charCard.id = 'part2-char-francisco';
+    charCard.classList.remove('selected');
+    charCard.setAttribute('aria-checked', 'false');
+    charCard.innerHTML = `
+      <div class="carousel-card-name">${francisco.name}</div>
+      <div class="carousel-card-role">${francisco.role || uiText('Lead Climber', 'Escalador principal')}</div>
+      <div class="carousel-card-tag">${t('ui.carouselDifficulty')}: ${francisco.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
     `;
+    charCard.onclick = () => selectPart2Character('francisco');
+    charCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Character('francisco'); } };
+  }
 
-    grid.appendChild(card);
-  });
+  if (charInfo && francisco.id) {
+    charInfo.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${francisco.bio || ''}</p>
+        <ul class="carousel-info-traits">${(francisco.traits || []).map((trait) => `<li>${trait}</li>`).join('')}</ul>
+      </div>
+    `;
+  }
 
+  if (scenarioCard) {
+    scenarioCard.classList.remove('selected');
+    scenarioCard.setAttribute('aria-checked', 'false');
+    scenarioCard.innerHTML = `
+      <div class="carousel-card-num">${uiText('PART 2 · GUIDED ASCENT', 'PARTE 2 · ASCENSO GUIADO')}</div>
+      <div class="carousel-card-name">${uiText('Normal Route Group Expedition', 'Expedición grupal por Ruta Normal')}</div>
+      <div class="carousel-card-role">${uiText('Licensed guides, fixed group logistics, and the canonical Normal Route approach.', 'Guías habilitados, logística grupal fija y el enfoque canónico por la Ruta Normal.')}</div>
+    `;
+    scenarioCard.onclick = () => selectPart2Scenario('guided-normal-route');
+    scenarioCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPart2Scenario('guided-normal-route'); } };
+  }
+
+  if (scenarioInfo) {
+    scenarioInfo.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
+      </div>
+    `;
+  }
+
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.setAttribute('aria-disabled', 'true');
+    confirmBtn.textContent = uiText('Continue to Mendoza', 'Continuar a Mendoza');
+  }
+}
+
+function updatePart2ConfirmState() {
+  const btn = document.getElementById('btn-part2-confirm');
+  if (!btn) return;
+  const ready = PART2_SELECTION.characterId === 'francisco' && PART2_SELECTION.scenarioId === 'guided-normal-route';
+  btn.disabled = !ready;
+  if (ready) btn.removeAttribute('aria-disabled');
+  else btn.setAttribute('aria-disabled', 'true');
 }
 
 function selectPart2Character(id) {
-  document.querySelectorAll('#part2-char-grid .char-card').forEach(c => {
-    c.classList.remove('selected');
-    c.setAttribute('aria-checked', 'false');
-  });
-  const card = document.getElementById('part2-char-' + id);
+  const card = document.getElementById('part2-char-francisco');
   if (card && id === 'francisco') {
+    PART2_SELECTION.characterId = id;
     card.classList.add('selected');
     card.setAttribute('aria-checked', 'true');
-    const btn = document.getElementById('btn-part2-confirm');
-    if (btn) { btn.disabled = false; btn.removeAttribute('aria-disabled'); }
+    updatePart2ConfirmState();
+  }
+}
+
+function selectPart2Scenario(id) {
+  const card = document.getElementById('part2-scenario-card');
+  if (card && id === 'guided-normal-route') {
+    PART2_SELECTION.scenarioId = id;
+    card.classList.add('selected');
+    card.setAttribute('aria-checked', 'true');
+    updatePart2ConfirmState();
   }
 }
 
@@ -1226,6 +1281,7 @@ function confirmPart2Character() {
     showScreen('debrief');
     return;
   }
+  if (PART2_SELECTION.characterId !== 'francisco' || PART2_SELECTION.scenarioId !== 'guided-normal-route') return;
   showScreen('part2-hotel');
 }
 

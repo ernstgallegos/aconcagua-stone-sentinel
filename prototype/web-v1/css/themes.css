@@ -50,8 +50,7 @@ body[data-theme='light'] .decision-panel {
 }
 
 body[data-theme='light'] #screen-title::before {
-  background:
-    linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%);
+  background: radial-gradient(circle at 50% 28%, rgba(74, 109, 124, 0.1), transparent 54%);
 }
 
 /* ══════════════════════════════════════
@@ -87,10 +86,7 @@ body[data-theme='sunset'] .decision-keyhint {
 }
 
 body[data-theme='sunset'] #screen-title::before {
-  background:
-    linear-gradient(180deg, rgba(37, 20, 32, 0.25) 0%, rgba(37, 20, 32, 0.8) 100%),
-    radial-gradient(circle at 50% 28%, rgba(255, 158, 94, 0.25), transparent 56%),
-    linear-gradient(90deg, rgba(37, 20, 32, 0.44) 0%, rgba(37, 20, 32, 0.14) 50%, rgba(37, 20, 32, 0.38) 100%);
+  background: radial-gradient(circle at 50% 28%, rgba(232, 188, 116, 0.12), transparent 54%);
 }
 
 /* ══════════════════════════════════════
@@ -130,8 +126,7 @@ body[data-theme='sunset'] #screen-title::before {
   }
 
   body[data-theme='auto'] #screen-title::before {
-    background:
-      linear-gradient(180deg, rgba(244, 239, 230, 0.25) 0%, rgba(244, 239, 230, 0.78) 100%);
+    background: radial-gradient(circle at 50% 28%, rgba(74, 109, 124, 0.1), transparent 54%);
   }
 }
 
