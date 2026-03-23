@@ -277,8 +277,9 @@
 }
 
 .char-flag {
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', emoji, sans-serif;
   font-weight: normal;
+  letter-spacing: 0;
 }
 
 .char-role {

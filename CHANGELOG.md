@@ -9,6 +9,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+- Fixed nationality flag emoji not rendering as colored flags on desktop (Linux/Chrome): added CSS4 `emoji` generic font family to `.char-flag` font-family stack so the browser uses its built-in emoji renderer when platform-specific fonts (Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji) are unavailable. Also added `letter-spacing: 0` to prevent regional-indicator character pairs from being split by inherited spacing.
+
 ### Added
 - Added `difficultyModifiers` field to each predefined scenario and random archetype in `data/scenarios.web-v1.json`, embedding the difficulty configuration directly in the scenario data.
 - Added `flag` emoji field to each character in `data/characters.json` representing their nationality.
