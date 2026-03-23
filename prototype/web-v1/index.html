@@ -41,12 +41,8 @@
 <!-- ══════════════════════ WELCOME (merged Splash + Title) ══════════════════════ -->
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
-  <div class="title-shell">
-    <p class="title-eyebrow">Prototype · v1.5</p>
-    <h1 class="title-main">Aconcagua:<br><span class="title-sentinel">Stone Sentinel</span></h1>
-    <div class="title-divider"></div>
-    <p class="title-tagline">"The mountain doesn't ask if you're ready. The mountain rules."</p>
-    <p class="title-sub" style="margin-bottom: 1.25rem;">A decision game about limits, environment, and knowing when to stop.</p>
+  <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ</button>
+  <div class="title-shell title-shell-minimal">
     <button class="btn-primary" onclick="showScreen('expedition-setup')">BEGIN</button>
   </div>
 </section>
@@ -555,6 +551,33 @@
     <div class="journal-entries" id="journal-entries"></div>
   </div>
 </section>
+<div id="intro-modal" class="tutorial-modal" aria-hidden="true">
+  <div class="tutorial-dialog intro-dialog" role="dialog" aria-modal="true" aria-labelledby="intro-modal-title">
+    <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
+      <div>
+        <div class="screen-kicker">Prototype Info</div>
+        <h3 id="intro-modal-title">About Aconcagua: Stone Sentinel</h3>
+      </div>
+      <button class="btn-ghost" onclick="closeIntroModal()" aria-label="Close information">Close</button>
+    </div>
+    <section>
+      <p id="intro-modal-summary">A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.</p>
+      <div class="tutorial-meta">
+        <div class="tutorial-chip"><strong id="intro-chip-version-label">Version</strong><span id="intro-chip-version">Prototype · v1.5</span></div>
+        <div class="tutorial-chip"><strong id="intro-chip-format-label">Format</strong><span id="intro-chip-format">Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.</span></div>
+        <div class="tutorial-chip"><strong id="intro-chip-access-label">Access</strong><span id="intro-chip-access">The full tutorial remains available later from the onboarding screen for players who want deeper rules.</span></div>
+      </div>
+    </section>
+    <section>
+      <h4 id="intro-section-about-title">What this game is</h4>
+      <p id="intro-section-about-body">You guide an expedition on Aconcagua through hourly decisions shaped by environmental pressure, body state, limited resources, and permit time. Reaching the summit is not enough: success depends on returning safely.</p>
+    </section>
+    <section>
+      <h4 id="intro-section-credits-title">Credits and status</h4>
+      <p id="intro-section-credits-body">This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.</p>
+    </section>
+  </div>
+</div>
 <div id="tutorial-modal" class="tutorial-modal" aria-hidden="true">
   <div class="tutorial-dialog" role="dialog" aria-modal="true" aria-labelledby="tutorial-modal-title">
     <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">

@@ -67,6 +67,38 @@
   z-index: 2;
 }
 
+.title-shell-minimal {
+  width: 100%;
+  max-width: none;
+  justify-content: flex-end;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.title-info-trigger {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 3;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(10, 13, 16, 0.42);
+  color: var(--white);
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.title-info-trigger:hover,
+.title-info-trigger:focus-visible {
+  border-color: var(--ice);
+  background: rgba(10, 13, 16, 0.58);
+  box-shadow: 0 0 0 3px rgba(127, 179, 200, 0.16);
+}
+
 .title-eyebrow {
   font-family: var(--heading); /* Decision 8 */
   font-size: 0.875rem;

@@ -205,6 +205,20 @@ const I18N = {
       clearJournalConfirm: 'Clear all expedition records?',
       journalEmpty: 'No expeditions recorded. The first run will appear here.',
       begin: 'BEGIN',
+      introInfoLabel: 'Open prototype information',
+      introTitle: 'About Aconcagua: Stone Sentinel',
+      introClose: 'Close',
+      introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
+      introVersionLabel: 'Version',
+      introVersionValue: 'Prototype · v1.5',
+      introFormatLabel: 'Format',
+      introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
+      introAccessLabel: 'Access',
+      introAccessValue: 'The full tutorial remains available later from the onboarding screen for players who want deeper rules.',
+      introAboutTitle: 'What this game is',
+      introAboutBody: 'You guide an expedition on Aconcagua through hourly decisions shaped by environmental pressure, body state, limited resources, and permit time. Reaching the summit is not enough: success depends on returning safely.',
+      introCreditsTitle: 'Credits and status',
+      introCreditsBody: 'This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.',
       titleChooseExpedition: 'Choose Your Expedition',
       titleSelectScenario: 'Select Scenario',
       depart: 'Depart',
@@ -258,6 +272,20 @@ const I18N = {
       visualMode: 'Modo visual',
       language: 'Idioma',
       noEntriesYet: 'Aún no hay entradas.',
+      introInfoLabel: 'Abrir información del prototipo',
+      introTitle: 'Sobre Aconcagua: Stone Sentinel',
+      introClose: 'Cerrar',
+      introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
+      introVersionLabel: 'Versión',
+      introVersionValue: 'Prototipo · v1.5',
+      introFormatLabel: 'Formato',
+      introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
+      introAccessLabel: 'Acceso',
+      introAccessValue: 'El tutorial completo sigue disponible más adelante desde la pantalla de onboarding para quien quiera profundizar en las reglas.',
+      introAboutTitle: 'De qué trata el juego',
+      introAboutBody: 'Guiás una expedición en el Aconcagua mediante decisiones horarias atravesadas por la presión ambiental, el estado físico, los recursos limitados y el tiempo del permiso. Llegar a la cumbre no alcanza: el éxito depende de regresar a salvo.',
+      introCreditsTitle: 'Créditos y estado',
+      introCreditsBody: 'Esta build forma parte de la línea pública del prototipo web de Aconcagua: Stone Sentinel. Está pensada para playtesting, iteración de UX y validación de balance antes de fases posteriores de producción.',
       randomCharacter: 'Personaje aleatorio',
       randomCharacterRole: 'Perfil impredecible',
       randomCharacterBio: 'Deja que la montaña elija uno de los seis perfiles para esta partida.',
@@ -452,6 +480,29 @@ function uiText(en, es) {
   return CURRENT_LANGUAGE === 'es' ? es : en;
 }
 
+function renderIntroContent() {
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  const infoTrigger = document.querySelector('.title-info-trigger');
+  if (infoTrigger) {
+    const label = t('ui.introInfoLabel');
+    infoTrigger.setAttribute('aria-label', label);
+    infoTrigger.setAttribute('title', label);
+  }
+  setText('intro-modal-title', t('ui.introTitle'));
+  const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');
+  setText('intro-modal-summary', t('ui.introSummary'));
+  setText('intro-chip-version-label', t('ui.introVersionLabel'));
+  setText('intro-chip-version', t('ui.introVersionValue'));
+  setText('intro-chip-format-label', t('ui.introFormatLabel'));
+  setText('intro-chip-format', t('ui.introFormatValue'));
+  setText('intro-chip-access-label', t('ui.introAccessLabel'));
+  setText('intro-chip-access', t('ui.introAccessValue'));
+  setText('intro-section-about-title', t('ui.introAboutTitle'));
+  setText('intro-section-about-body', t('ui.introAboutBody'));
+  setText('intro-section-credits-title', t('ui.introCreditsTitle'));
+  setText('intro-section-credits-body', t('ui.introCreditsBody'));
+}
+
 function renderTutorialContent() {
   const copy = TUTORIAL_CONTENT[CURRENT_LANGUAGE] || TUTORIAL_CONTENT.en;
   const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
@@ -517,6 +568,7 @@ function setDifficulty(id) {
   CURRENT_DIFFICULTY_ID = getDifficultyConfig(id).id;
   try { localStorage.setItem(DIFFICULTY_STORAGE_KEY, CURRENT_DIFFICULTY_ID); } catch {}
   renderDifficultySelector();
+  renderIntroContent();
   renderTutorialContent();
 }
 
@@ -526,7 +578,22 @@ function initDifficulty() {
     if (stored && DIFFICULTY_LEVELS.some((level) => level.id === stored)) CURRENT_DIFFICULTY_ID = stored;
   } catch {}
   renderDifficultySelector();
+  renderIntroContent();
   renderTutorialContent();
+}
+
+function openIntroModal() {
+  const modal = document.getElementById('intro-modal');
+  if (!modal) return;
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeIntroModal() {
+  const modal = document.getElementById('intro-modal');
+  if (!modal) return;
+  modal.classList.remove('visible');
+  modal.setAttribute('aria-hidden', 'true');
 }
 
 function openTutorialModal() {
@@ -555,6 +622,7 @@ function setLanguage(lang) {
   if (langLabel) langLabel.textContent = t('ui.language');
   applyStaticTranslations();
   renderDifficultySelector();
+  renderIntroContent();
   renderTutorialContent();
   try { localStorage.setItem(LANGUAGE_KEY, safe); } catch (e) {}
   buildCharacterGrid();
@@ -3133,12 +3201,19 @@ loadDataConfig().then(() => {
   buildScenarioGrid();
 });
 
+const introModal = document.getElementById('intro-modal');
+if (introModal) {
+  introModal.addEventListener('click', (event) => { if (event.target === introModal) closeIntroModal(); });
+}
 const tutorialModal = document.getElementById('tutorial-modal');
 if (tutorialModal) {
   tutorialModal.addEventListener('click', (event) => { if (event.target === tutorialModal) closeTutorialModal(); });
 }
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeTutorialModal();
+  if (event.key === 'Escape') {
+    closeIntroModal();
+    closeTutorialModal();
+  }
 });
 
 /* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
@@ -3201,6 +3276,8 @@ window.setVisualMode = setVisualMode;
 window.requestDecisionPause = requestDecisionPause;
 window.clearJournal = clearJournal;
 window.setDifficulty = setDifficulty;
+window.openIntroModal = openIntroModal;
+window.closeIntroModal = closeIntroModal;
 window.openTutorialModal = openTutorialModal;
 window.closeTutorialModal = closeTutorialModal;
 window.carouselPrev = carouselPrev;

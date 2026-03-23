@@ -144,6 +144,8 @@ In addition to the changelog:
 - Summit-state safety is strongest when ascent is blocked at both layers: disable uphill UI affordances at `summit` and also coerce resolver-level advance attempts into a flagged hold/descend-only path so Part 2 victory still depends on safe park exit, not summit arrival alone.
 - Summit-return outcome checks are safer when park-exit classification treats `hasSummited` as the canonical success memory and not only `highestPosIdx`; this protects winning exits if route-index telemetry drifts during long descents.
 
+- Welcome-screen UX stays cleaner when the entry view remains cover-first with a single dominant advance CTA; move explanatory/version/credit copy into an optional modal so curious players can read it without slowing first-time flow.
+
 ### Sprint learnings — gameplay-fix-v4 (post-audit __11_)
 
 - sleep bug: `sleep` was advancing position 58% of turns because `evaluateOutcome` processed it with `progress=0` producing `progressChance=58%`. Fix: force `outcome='Hold'` when `context.action==='sleep'` in evaluateOutcome, same pattern as `isApproachWait`.

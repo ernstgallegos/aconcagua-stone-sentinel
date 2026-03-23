@@ -35,7 +35,10 @@ test('canonical outcomes/data contracts are still present', () => {
 
 
 
-test('title difficulty selector and onboarding tutorial remain visible integration points', () => {
+test('welcome info modal, difficulty selector, and onboarding tutorial remain visible integration points', () => {
+  assert.match(indexSource, /class="title-info-trigger"/);
+  assert.match(indexSource, /id="intro-modal"/);
+  assert.doesNotMatch(indexSource, /class="title-main"/);
   assert.match(indexSource, /id="carousel-card-difficulty"/);
   assert.match(indexSource, /Full Tutorial \/ FAQ/);
   assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
@@ -45,6 +48,7 @@ test('title difficulty selector and onboarding tutorial remain visible integrati
   assert.match(uiSource, /pressureBias: 16/);
   assert.match(uiSource, /permitDaysBonus: -2/);
   assert.match(uiSource, /window\.setDifficulty = setDifficulty/);
+  assert.match(uiSource, /window\.openIntroModal = openIntroModal/);
   assert.match(uiSource, /window\.openTutorialModal = openTutorialModal/);
 });
 
