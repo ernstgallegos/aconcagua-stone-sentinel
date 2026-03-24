@@ -122,7 +122,7 @@ Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Rea
 ### Objective repository evidence
 - **Design lock complete:** integration targets are explicit in v1.4 consolidated design and implementation-plan DoD statements.
 - **Implementation in progress (already substantially integrated):**
-  - Canonical playable flow is wired and validated (`splash → title → character → scenario → onboarding → game → summit-success/debrief`) in `prototype/web-v1/ui/screens.js` and smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py`.
+  - Canonical playable flow is wired and validated (`welcome/title → expedition-setup → onboarding → game → summit-success/debrief`) in `prototype/web-v1/ui/screens.js` and smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py`.
   - Engine-state/UI integration is modularized across `prototype/web-v1/state/game-state.js`, `prototype/web-v1/engine/turn-resolution.js`, and `prototype/web-v1/ui/screens.js`.
   - Part 2 narrative bridge gating is implemented in `prototype/web-v1/index.html` and documented as in-progress production scope in `docs/en/implementation-plan-v1.4.md`.
 

@@ -6,7 +6,7 @@ Use this prompt as the next implementation brief for `prototype/web-v1`. It assu
 
 ## Context you must preserve
 
-- Canonical flow remains `splash → title → character → scenario → onboarding → game → (summit-success or debrief)`.
+- Canonical flow remains `welcome/title → expedition-setup (character + scenario carousels) → onboarding → game → (summit-success or debrief)`.
 - `horcones` is **the park access point**, not the final automatic endpoint of a run.
 - The expedition must end only when the player **explicitly exits the park**. In practice: if the player is already at `horcones` and chooses `descend`, that turn means **leave the park alive**.
 - `Summit and Safe Return` must keep precedence over permit/window failures, but only once the return is **fully completed through park exit**.

@@ -98,6 +98,16 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
 
 El prototipo web interactivo es la superficie activa de desarrollo. Implementa el engine completo de Environmental Pressure / Body Tolerance, seis personajes diferenciados, presión por permiso, ventana de decisión por tiempo, acción contextual por personaje y puente narrativo de Parte 2 con acceso condicionado por outcome y cambio de idioma en UI (inglés y español).
 
+Jugable en la URL canónica de Vercel. Ejecutar localmente con:
+
+```bash
+python3 -m http.server 4173
+# Abrir: http://localhost:4173/prototype/web-v1/
+```
+
+Ver [`prototype/web-v1/README.md`](./prototype/web-v1/README.md) para instrucciones completas.
+Ver [`docs/architecture.md`](./docs/architecture.md) para el flujo del engine y mapa de datos.
+
 ### Artefacto de referencia — `prototype/mra-v0/` (congelado)
 
 El simulador Python validó la hipótesis sistémica inicial y permanece congelado como referencia histórica.
@@ -209,9 +219,7 @@ Flujo visible actual en web-v1:
 
 La pantalla inicial ahora es deliberadamente minimalista: mantiene la cover como foco principal, deja el avance en un CTA único y mueve versión/contexto/créditos a un modal opcional para quien quiera leer más antes de empezar.
 
-La pantalla `expedition setup` incluye cinco niveles globales de dificultad (`Muy fácil`, `Fácil`, `Normal`, `Difícil`, `Muy difícil`). La selección modifica de forma real la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión, incluyendo los perfiles temporales propios de cada personaje y las acciones de recuperación.
-
-Los perfiles temporales específicos de cada personaje siguen activos, pero la dificultad elegida en `Title` ahora suma o resta margen sobre esos perfiles en lugar de quedar anulada cuando un personaje define su propia ventana de decisión.
+La pantalla `expedition setup` presenta dos carruseles: personaje y escenario. Cada escenario incluye sus propios modificadores de dificultad, por lo que el escenario seleccionado determina la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión — incluyendo los perfiles temporales de cada personaje y las acciones de recuperación.
 
 La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo antes de `Understood. Begin.`, con explicación del bucle de partida, sistemas ocultos, referencia de acciones, comportamiento de la dificultad y preguntas frecuentes de reglas.
 
@@ -251,3 +259,33 @@ Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expe
  No está permitido reutilizar, modificar, redistribuir ni comercializar ninguna parte del proyecto —incluyendo su concepto, documentación o arte— sin autorización explícita.
  
  Para más detalles, ver [`LICENSE.md`](./LICENSE.md).
+
+---
+
+## Contacto
+
+Para consultas profesionales, conversaciones curatoriales o propuestas de colaboración:
+
+**Ernesto Gallegos**  
+Creador del proyecto  
+ernestogallegos@gmail.com
+
+---
+
+*Aconcagua: Stone Sentinel explora la idea de que avanzar no siempre significa progresar, y que reconocer los límites —externos e internos— puede ser una forma de éxito.*
+
+
+## Estado canónico del prototipo (v1.4 estado público)
+
+> **Estado canónico (anclado al código):**
+> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[Unreleased]`](./CHANGELOG.md#unreleased).
+> - El progreso por fase se rastrea en [`docs/es/plan-implementacion-v1.4.md`](./docs/es/plan-implementacion-v1.4.md) (versión en inglés: `docs/en/implementation-plan-v1.4.md`).
+> - La versión pública actual es **v1.4 en progreso (despliegue por fases)**.
+
+El prototipo activo canónico es **`prototype/web-v1` (v1.4 estado público)**.
+
+- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.4 en despliegue público.
+- `prototype/mra-v0/`: MRA histórico congelado para validación temprana de hipótesis.
+- Visor raíz del repositorio: capa de reproducción/visualización de corridas bundleadas.
+
+Ver `docs/architecture.md` y `docs/simulation_engine.md` para contratos técnicos.
