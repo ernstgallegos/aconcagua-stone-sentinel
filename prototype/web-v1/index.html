@@ -299,7 +299,8 @@
         </section>
       </div>
     </div>
-    <!-- Hidden state data populated by renderWatch for JS internals -->
+    <!-- Hidden state data: populated by renderWatch() for internal JS reads (watch-turn, watch-time, watch-position).
+         Kept for backwards-compatibility with renderWatch() output logic; not displayed to the user. -->
     <div aria-hidden="true" style="display:none">
       <div id="watch-turn"></div>
       <div id="watch-time"></div>

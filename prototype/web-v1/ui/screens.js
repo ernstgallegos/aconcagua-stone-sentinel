@@ -2363,7 +2363,7 @@ function renderWatch() {
   const acclState = accl >= 55 ? 'stable' : (accl >= 30 ? 'degrading' : 'critical');
   if (acclEl) { acclEl.textContent = `${accl}/100`; acclEl.className = 'body-value ' + acclState; }
 
-  // ── Watch band body cell ──
+  // Composite body score: capacity weighted 40% (primary), fatigue/exposure 30% each (inversed for readability)
   const compositeNormal = (s.functional_capacity * 0.4) + ((100 - s.fatigue) * 0.3) + ((100 - s.exposure) * 0.3);
   const bodyBarEl = document.getElementById('wc-body-bar');
   if (bodyBarEl) {
