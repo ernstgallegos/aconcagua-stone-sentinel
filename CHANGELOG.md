@@ -10,119 +10,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- Added character portrait images to the carousel card in `screen-expedition-setup`: introduced `getCharacterImagePath()` utility in `prototype/web-v1/ui/screens.js` and rendered `<img class="carousel-card-portrait">` above the character name for each real character option.
-- Added character photo to the permit widget in `screen-game`: updated markup in `prototype/web-v1/index.html` (`permit-widget-body`, `permit-photo`, `permit-info`) and updated `updatePermitWidget()` in `prototype/web-v1/ui/screens.js` to set the photo on each turn.
-- Added `.carousel-card-portrait`, `.permit-widget-body`, `.permit-photo`, and `.permit-info` styles to `prototype/web-v1/css/components.css`.
-- Added `difficultyModifiers` field to each predefined scenario and random archetype in `data/scenarios.web-v1.json`, embedding the difficulty configuration directly in the scenario data.
-- Added `flag` emoji field to each character in `data/characters.json` representing their nationality.
-- Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
-
-### Changed
-- Removed emoji prefix from BEGIN EXPEDITION (🎯) and QUICK START (🎲) buttons in `prototype/web-v1/index.html` and matching i18n keys (`beginExpedition`, `quickStart`) in both `en` and `es` in `prototype/web-v1/ui/screens.js`.
-- Removed the difficulty carousel from `prototype/web-v1/index.html` (`screen-expedition-setup` now has two carousels: character and scenario).
-- Updated `getDifficultyModifiers()` in `prototype/web-v1/ui/screens.js` to read embedded `difficultyModifiers` from the active scenario when available, falling back to `DIFFICULTY_LEVELS` table.
-- Updated `beginExpedition()` and `quickStart()` in `prototype/web-v1/ui/screens.js` to derive `CURRENT_DIFFICULTY_ID` from the selected scenario after scenario resolution.
-- Replaced `carouselDifficulty` i18n key with `charDifficultyLabel` (`'Profile'` / `'Perfil'`) used in character cards in `prototype/web-v1/ui/screens.js`.
-- Removed difficulty-carousel i18n keys (`difficulty`, `difficultyNote`, `carouselPrevDifficulty`, `carouselNextDifficulty`) from both `en` and `es` in `prototype/web-v1/ui/screens.js`.
-- Updated `TUTORIAL_CONTENT` difficulty section in both languages to describe expedition scenario types instead of abstract difficulty levels.
-- Updated `buildExpeditionSetupCarousels()` in `prototype/web-v1/ui/screens.js` to remove difficulty carousel sync and render calls.
-- Updated character name rendering in carousel cards, character grid, and Part 2 setup screen: moved nationality flag emoji to the right of the name (after the name) and wrapped it in `<span class="char-flag">` to ensure correct emoji rendering regardless of heading font.
-- Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the difficulty carousel is absent from the HTML.
-
-### Changed
-- Replaced the single-letter visual-mode labels in `prototype/web-v1/index.html` with emoji glyphs for dark/light/sunset/auto while keeping the same selector values and screen-reader labeling.
-- Clarified the expedition-setup secondary CTA in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so Quick Start explicitly advertises its random character/scenario behavior.
-- Rebalanced `prototype/web-v1/index.html` + `prototype/web-v1/css/layout.css` / `prototype/web-v1/css/responsive.css` watch-status panel so desktop now presents the same watch, permit, decision-window, and risk data in a clear two-column status layout while mobile keeps the compact accordion flow.
-
-### Removed
-- Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
-
-### Fixed
-- Fixed nationality flag emoji (`.char-flag`) not rendering correctly on desktop: added `display: none` inside `@media (min-width: 1024px)` in `prototype/web-v1/css/responsive.css` so flags are shown only on mobile/tablet where emoji rendering is reliable.
-- Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
-- Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
-- Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
-
-### Changed
-- Simplified the `prototype/web-v1/index.html` welcome screen chrome by moving the info trigger to the top-left corner, compressing the language/theme controls into compact icon-led selectors at the top-right, and replacing the central BEGIN button with a bottom-center full-screen continuation hint.
-
-### Fixed
-- Restored welcome-screen progression in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so tapping/clicking anywhere on the active cover now reliably advances to expedition setup, with an explicit `window.advanceFromTitle` facade preserving the inline fallback control.
-
-### Changed
-- Refined `prototype/web-v1/index.html` + `prototype/web-v1/css/screens.css` / `prototype/web-v1/css/responsive.css` welcome screen so the cover image no longer sits behind a heavy darkening layer, the info trigger moves below the primary BEGIN CTA, the info modal now includes repository/contact CTAs, portrait/mobile keeps the cover full-height without top/bottom gaps, and landscape shows the complete artwork with side margins when needed.
-- Rebuilt the Part 2 entry selection in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` with the same carousel-style setup language used in Part 1 while limiting the available choices to Francisco and the guided Normal Route group expedition.
-
-### Fixed
-- Adjusted `prototype/web-v1/css/responsive.css` mobile gameplay spacing/overflow so the Watch and status accordion can expand without clipping the lower telemetry/context content behind the sticky decision panel.
-
-### Changed
-- Updated `prototype/web-v1/index.html` welcome screen so the primary BEGIN CTA stays centered and the prototype information button sits beside it, reducing top-corner scan on first load.
-- Unified the gameplay `watch` and `status` content inside a single status panel in `prototype/web-v1/index.html` and tuned `prototype/web-v1/css/components.css` / `prototype/web-v1/css/responsive.css` so mobile players read one simplified stack instead of separate watch/status accordions.
-- Added a collaboration/contact CTA to the Part 2 closure screen in `prototype/web-v1/index.html`, inviting feedback and ideas via `ernestogallegos@gmail.com`.
-
-### Fixed
-- Removed the debrief action that exported `run_log.json` from `prototype/web-v1/ui/screens.js`, leaving replay and journal actions as the end-of-run choices.
-
-### Added
-- Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
-
-### Changed
-- Simplified the `prototype/web-v1/index.html` debrief so it now focuses on outcome, core run summary, and one actionable lesson instead of exposing the full turn log, analytics checklist, and reflection blocks by default.
-- Refined `prototype/web-v1/css/screens.css` and `prototype/web-v1/css/responsive.css` debrief styling for a smaller summary-first layout and added compact mobile watch-sheet cards so handheld status panels surface the same key data as the main HUD.
-- Simplified `prototype/web-v1/index.html` gameplay screen for mobile: watch, context, and field-note panels now collapse into compact accordions while the decision panel stays sticky and action buttons hide secondary microcopy/cost details on narrow viewports so primary actions remain visible.
-- `prototype/web-v1/css/responsive.css` now prioritizes mobile playability on `screen-game`: reduced inter-panel spacing, sticky decision footer, fixed mobile utility bar, and compact typography/layout for status accordions.
-- `prototype/web-v1/css/components.css` adds reusable `.mobile-collapsible*` helpers used by the gameplay status panels.
-- Simplified `prototype/web-v1/index.html` welcome screen so the visible layout now keeps the cover image plus the primary advance CTA, while prototype description, version/status, and credits move into an optional modal opened from a compact info trigger.
-- `prototype/web-v1/css/screens.css`: replaced per-screen `#screen-splash` block with `.splash-content` absolute-positioned background layer; `#screen-title` now uses cover image via `<img>` element instead of CSS `background-image`; combined overlay gradients into `#screen-title::before`; `.title-shell` z-index bumped to 2.
-- `prototype/web-v1/css/themes.css`: light/sunset/auto theme overrides for `#screen-title` now target `::before` gradient layer instead of `background:` shorthand (no longer include a `url()` since the image is an `<img>` element).
-- `prototype/web-v1/ui/screens.js`: replaced `leaveSplash()` + `initSplashScreen()` with `initWelcomeScreen()` (applies Ken Burns to cover image in `#screen-title`); removed `SPLASH_EXIT_DURATION_MS` constant and special-case exit duration; removed `splashTap` i18n key and `#screen-splash .splash-cta` from `applyStaticTranslations()`.
-- `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
-
-### Fixed
-- Fixed `prototype/web-v1/ui/screens.js` debrief day counting so the summary now reads from the live run day counter (`G.day`) instead of the nonexistent `G.currentDay`, eliminating the always-`1` bug after multi-day runs.
-- Fixed `prototype/web-v1/ui/screens.js` mobile WATCH/ROUTE bottom sheets so they mirror the current in-run watch and route data instead of stale placeholder content.
-- Fixed `prototype/web-v1/index.html` + `prototype/web-v1/ui/screens.js` SLEEP action visibility so the button stays present in the decision deck at all times and toggles availability through the disabled state when the current position is not a camp.
-- `prototype/web-v1/ui/screens.js`: corrected park-exit detection in `makeDecision()` so arriving at `horcones` after a summit no longer ends the run one turn early as `Strategic Retreat`; the expedition now only finishes on the explicit exit descend from Horcones, preserving `Summit and Safe Return` and the Part 2 unlock path.
-- `prototype/web-v1/tests/test_smoke_flow.py`: added a browser smoke regression covering post-summit arrival at `horcones`, explicit park exit on the following descend, and the resulting `Summit and Safe Return` unlock.
-
-### Fixed
-- `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
-- `prototype/web-v1/css/themes.css`: same path fix for light/sunset/auto theme `#screen-title` background overrides.
-
-
-- Carousel component: reusable `.carousel-section` / `.carousel-track` / `.carousel-card` / `.carousel-arrow` / `.carousel-dots` CSS classes in `css/components.css`; supports left/right arrow navigation with wrapping and active-dot position indicators.
-- **"Begin Expedition"** (`btn-primary`) and **"Quick Start"** (`btn-ghost`) action buttons on `screen-expedition-setup`; Quick Start randomizes character and scenario while respecting the player-selected difficulty.
-- `[ℹ]` info expand button on character and scenario carousel cards, revealing a collapsible panel with full bio/traits or scenario intro text.
-- `buildExpeditionSetupCarousels()`, `carouselPrev()`, `carouselNext()`, `renderCarousel()`, `toggleCarouselInfo()`, `beginExpedition()`, and `quickStart()` functions in `ui/screens.js`; all exposed on `window` for inline HTML handlers and tests.
-- `CAROUSEL_STATE` global object exposed on `window` to allow test-time carousel position overrides.
-- i18n keys for new screen in both `en` and `es` locales: `prepareExpedition`, `beginExpedition`, `quickStart`, `carouselDifficulty`, `carouselCharacter`, `carouselScenario`, and carousel arrow `aria-label` strings.
-- `#screen-expedition-setup` background style in `css/screens.css` reusing `concept-curated-4.webp` blurred ambient layer (matches `screen-character` aesthetic). `.expedition-setup-shell` max-width centered container.
-- Carousel mobile-compact overrides in `css/responsive.css` (base/`max-width:479px` breakpoint).
-
-### Changed
-- `screen-title` simplified: removed `title-difficulty-panel` div (difficulty grid + note); BEGIN button now navigates to `showScreen('expedition-setup')` instead of `showScreen('character')`.
-- Version eyebrow on title screen updated from `Prototype · v1.4` to `Prototype · v1.5`.
-- `showOnboarding()` back button now returns to `expedition-setup` instead of `scenario`.
-- Debrief "Change character" action now navigates to `expedition-setup`.
-- `goChooseScenario()` now navigates to `expedition-setup` instead of rebuilding the old scenario grid.
-- `showScreen()` calls `buildExpeditionSetupCarousels()` when navigating to `expedition-setup`.
-- `setLanguage()` rebuilds carousel labels/cards when the expedition-setup screen element exists.
-- `buildCharacterGrid()` and `buildScenarioGrid()` guard against missing container elements (null-safe) since `screen-character` and `screen-scenario` are removed.
-- `applyStaticTranslations()` cleaned up: removed entries for removed screen elements (`screen-character`, `screen-scenario`, `title-difficulty-label`).
-- `new-mechanics.test.js` integration assertion updated: checks for `id="carousel-card-difficulty"` instead of `id="title-difficulty-grid"`.
-- `test_smoke_flow.py` updated to reflect new flow: navigates through `screen-expedition-setup` using carousel arrows and `beginExpedition()`; `reach_game_with_character()` sets carousel index via `window.CAROUSEL_STATE` instead of clicking old character grid cards.
-
-### Removed
-- `screen-character` section from `prototype/web-v1/index.html` (character selection now handled by expedition-setup carousel).
-- `screen-scenario` section from `prototype/web-v1/index.html` (scenario selection now handled by expedition-setup carousel).
-- `title-difficulty-panel` div from `screen-title` (difficulty now in expedition-setup carousel).
-
-### Fixed
-- Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
-- Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).
-
-### Added
 - CSS module system: extracted all inline CSS from `prototype/web-v1/index.html` into 8 separate files under `prototype/web-v1/css/`: `tokens.css`, `reset.css`, `layout.css`, `components.css`, `screens.css`, `animations.css`, `themes.css`, `responsive.css` (Decision 1).
 - Plus Jakarta Sans added as UI/Headlines font via Google Fonts import; applied to all titles, buttons, labels, and navigation (Decision 8).
 - Ken Burns animation (20 s, `animation-fill-mode: forwards`) on splash image; disabled when `prefers-reduced-motion` is set (Decision 4).
@@ -135,6 +22,21 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - **[EXPERIMENTAL]** Debrief hero section: fullbleed `concept-curated-4.webp` background with outcome-specific CSS filter (warm/neutral/cold); headline + key-stats overlay; stats grid (2×3 cards); JS `updateDebriefHero()` populates all elements (Decision 18).
 - `openBottomSheet` / `closeBottomSheet` window-exposed helpers for mobile game panels.
 - `auto` added to `VALID_VISUAL_MODES` set in `screens.js`.
+- Carousel component: reusable `.carousel-section` / `.carousel-track` / `.carousel-card` / `.carousel-arrow` / `.carousel-dots` CSS classes in `css/components.css`; supports left/right arrow navigation with wrapping and active-dot position indicators.
+- **"Begin Expedition"** (`btn-primary`) and **"Quick Start"** (`btn-ghost`) action buttons on `screen-expedition-setup`; Quick Start randomizes character and scenario while respecting the player-selected difficulty.
+- `[ℹ]` info expand button on character and scenario carousel cards, revealing a collapsible panel with full bio/traits or scenario intro text.
+- `buildExpeditionSetupCarousels()`, `carouselPrev()`, `carouselNext()`, `renderCarousel()`, `toggleCarouselInfo()`, `beginExpedition()`, and `quickStart()` functions in `ui/screens.js`; all exposed on `window` for inline HTML handlers and tests.
+- `CAROUSEL_STATE` global object exposed on `window` to allow test-time carousel position overrides.
+- i18n keys for new screen in both `en` and `es` locales: `prepareExpedition`, `beginExpedition`, `quickStart`, `carouselDifficulty`, `carouselCharacter`, `carouselScenario`, and carousel arrow `aria-label` strings.
+- `#screen-expedition-setup` background style in `css/screens.css` reusing `concept-curated-4.webp` blurred ambient layer (matches `screen-character` aesthetic). `.expedition-setup-shell` max-width centered container.
+- Carousel mobile-compact overrides in `css/responsive.css` (base/`max-width:479px` breakpoint).
+- Merged `screen-splash` and `screen-title` into a single unified welcome screen (`screen-title`) in `prototype/web-v1/index.html`: cover image (`cover-concept-1.png`) as fullbleed background with Ken Burns animation, overlay gradients for text legibility, and the existing BEGIN button. Reduces pre-game navigation steps from Splash → Title → Expedition Setup to Welcome → Expedition Setup.
+- Added character portrait images to the carousel card in `screen-expedition-setup`: introduced `getCharacterImagePath()` utility in `prototype/web-v1/ui/screens.js` and rendered `<img class="carousel-card-portrait">` above the character name for each real character option.
+- Added character photo to the permit widget in `screen-game`: updated markup in `prototype/web-v1/index.html` (`permit-widget-body`, `permit-photo`, `permit-info`) and updated `updatePermitWidget()` in `prototype/web-v1/ui/screens.js` to set the photo on each turn.
+- Added `.carousel-card-portrait`, `.permit-widget-body`, `.permit-photo`, and `.permit-info` styles to `prototype/web-v1/css/components.css`.
+- Added `difficultyModifiers` field to each predefined scenario and random archetype in `data/scenarios.web-v1.json`, embedding the difficulty configuration directly in the scenario data.
+- Added `flag` emoji field to each character in `data/characters.json` representing their nationality.
+- Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
 
 ### Changed
 - `prototype/web-v1/index.html`: replaced single `<style>` block (~1 200 lines) with 8 `<link>` tags pointing to CSS modules (Decision 1).
@@ -152,7 +54,70 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/ui/screens.js`: `renderDifficultySelector()` now renders pill-row with description (Decision 11).
 - `prototype/web-v1/ui/screens.js`: `showScreen()` now triggers `screen-exit` animation on departing screen before activating target (Decision 14).
 - `prototype/web-v1/ui/screens.js`: `initSplashScreen()` activates Ken Burns class on splash image (Decision 4).
+- `screen-title` simplified: removed `title-difficulty-panel` div (difficulty grid + note); BEGIN button now navigates to `showScreen('expedition-setup')` instead of `showScreen('character')`.
+- Version eyebrow on title screen updated from `Prototype · v1.4` to `Prototype · v1.5`.
+- `showOnboarding()` back button now returns to `expedition-setup` instead of `scenario`.
+- Debrief "Change character" action now navigates to `expedition-setup`.
+- `goChooseScenario()` now navigates to `expedition-setup` instead of rebuilding the old scenario grid.
+- `showScreen()` calls `buildExpeditionSetupCarousels()` when navigating to `expedition-setup`.
+- `setLanguage()` rebuilds carousel labels/cards when the expedition-setup screen element exists.
+- `buildCharacterGrid()` and `buildScenarioGrid()` guard against missing container elements (null-safe) since `screen-character` and `screen-scenario` are removed.
+- `applyStaticTranslations()` cleaned up: removed entries for removed screen elements (`screen-character`, `screen-scenario`, `title-difficulty-label`).
+- `new-mechanics.test.js` integration assertion updated: checks for `id="carousel-card-difficulty"` instead of `id="title-difficulty-grid"`.
+- `test_smoke_flow.py` updated to reflect new flow: navigates through `screen-expedition-setup` using carousel arrows and `beginExpedition()`; `reach_game_with_character()` sets carousel index via `window.CAROUSEL_STATE` instead of clicking old character grid cards.
+- Simplified the `prototype/web-v1/index.html` debrief so it now focuses on outcome, core run summary, and one actionable lesson instead of exposing the full turn log, analytics checklist, and reflection blocks by default.
+- Refined `prototype/web-v1/css/screens.css` and `prototype/web-v1/css/responsive.css` debrief styling for a smaller summary-first layout and added compact mobile watch-sheet cards so handheld status panels surface the same key data as the main HUD.
+- Simplified `prototype/web-v1/index.html` gameplay screen for mobile: watch, context, and field-note panels now collapse into compact accordions while the decision panel stays sticky and action buttons hide secondary microcopy/cost details on narrow viewports so primary actions remain visible.
+- `prototype/web-v1/css/responsive.css` now prioritizes mobile playability on `screen-game`: reduced inter-panel spacing, sticky decision footer, fixed mobile utility bar, and compact typography/layout for status accordions.
+- `prototype/web-v1/css/components.css` adds reusable `.mobile-collapsible*` helpers used by the gameplay status panels.
+- Simplified `prototype/web-v1/index.html` welcome screen so the visible layout now keeps the cover image plus the primary advance CTA, while prototype description, version/status, and credits move into an optional modal opened from a compact info trigger.
+- `prototype/web-v1/css/screens.css`: replaced per-screen `#screen-splash` block with `.splash-content` absolute-positioned background layer; `#screen-title` now uses cover image via `<img>` element instead of CSS `background-image`; combined overlay gradients into `#screen-title::before`; `.title-shell` z-index bumped to 2.
+- `prototype/web-v1/css/themes.css`: light/sunset/auto theme overrides for `#screen-title` now target `::before` gradient layer instead of `background:` shorthand (no longer include a `url()` since the image is an `<img>` element).
+- `prototype/web-v1/ui/screens.js`: replaced `leaveSplash()` + `initSplashScreen()` with `initWelcomeScreen()` (applies Ken Burns to cover image in `#screen-title`); removed `SPLASH_EXIT_DURATION_MS` constant and special-case exit duration; removed `splashTap` i18n key and `#screen-splash .splash-cta` from `applyStaticTranslations()`.
+- `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
+- Updated `prototype/web-v1/index.html` welcome screen so the primary BEGIN CTA stays centered and the prototype information button sits beside it, reducing top-corner scan on first load.
+- Unified the gameplay `watch` and `status` content inside a single status panel in `prototype/web-v1/index.html` and tuned `prototype/web-v1/css/components.css` / `prototype/web-v1/css/responsive.css` so mobile players read one simplified stack instead of separate watch/status accordions.
+- Added a collaboration/contact CTA to the Part 2 closure screen in `prototype/web-v1/index.html`, inviting feedback and ideas via `ernestogallegos@gmail.com`.
+- Refined `prototype/web-v1/index.html` + `prototype/web-v1/css/screens.css` / `prototype/web-v1/css/responsive.css` welcome screen so the cover image no longer sits behind a heavy darkening layer, the info trigger moves below the primary BEGIN CTA, the info modal now includes repository/contact CTAs, portrait/mobile keeps the cover full-height without top/bottom gaps, and landscape shows the complete artwork with side margins when needed.
+- Rebuilt the Part 2 entry selection in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` with the same carousel-style setup language used in Part 1 while limiting the available choices to Francisco and the guided Normal Route group expedition.
+- Simplified the `prototype/web-v1/index.html` welcome screen chrome by moving the info trigger to the top-left corner, compressing the language/theme controls into compact icon-led selectors at the top-right, and replacing the central BEGIN button with a bottom-center full-screen continuation hint.
+- Replaced the single-letter visual-mode labels in `prototype/web-v1/index.html` with emoji glyphs for dark/light/sunset/auto while keeping the same selector values and screen-reader labeling.
+- Clarified the expedition-setup secondary CTA in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so Quick Start explicitly advertises its random character/scenario behavior.
+- Rebalanced `prototype/web-v1/index.html` + `prototype/web-v1/css/layout.css` / `prototype/web-v1/css/responsive.css` watch-status panel so desktop now presents the same watch, permit, decision-window, and risk data in a clear two-column status layout while mobile keeps the compact accordion flow.
+- Removed emoji prefix from BEGIN EXPEDITION (🎯) and QUICK START (🎲) buttons in `prototype/web-v1/index.html` and matching i18n keys (`beginExpedition`, `quickStart`) in both `en` and `es` in `prototype/web-v1/ui/screens.js`.
+- Removed the difficulty carousel from `prototype/web-v1/index.html` (`screen-expedition-setup` now has two carousels: character and scenario).
+- Updated `getDifficultyModifiers()` in `prototype/web-v1/ui/screens.js` to read embedded `difficultyModifiers` from the active scenario when available, falling back to `DIFFICULTY_LEVELS` table.
+- Updated `beginExpedition()` and `quickStart()` in `prototype/web-v1/ui/screens.js` to derive `CURRENT_DIFFICULTY_ID` from the selected scenario after scenario resolution.
+- Replaced `carouselDifficulty` i18n key with `charDifficultyLabel` (`'Profile'` / `'Perfil'`) used in character cards in `prototype/web-v1/ui/screens.js`.
+- Removed difficulty-carousel i18n keys (`difficulty`, `difficultyNote`, `carouselPrevDifficulty`, `carouselNextDifficulty`) from both `en` and `es` in `prototype/web-v1/ui/screens.js`.
+- Updated `TUTORIAL_CONTENT` difficulty section in both languages to describe expedition scenario types instead of abstract difficulty levels.
+- Updated `buildExpeditionSetupCarousels()` in `prototype/web-v1/ui/screens.js` to remove difficulty carousel sync and render calls.
+- Updated character name rendering in carousel cards, character grid, and Part 2 setup screen: moved nationality flag emoji to the right of the name (after the name) and wrapped it in `<span class="char-flag">` to ensure correct emoji rendering regardless of heading font.
+- Updated `prototype/web-v1/tests/new-mechanics.test.js` to assert the difficulty carousel is absent from the HTML.
 
+### Removed
+- `screen-character` section from `prototype/web-v1/index.html` (character selection now handled by expedition-setup carousel).
+- `screen-scenario` section from `prototype/web-v1/index.html` (scenario selection now handled by expedition-setup carousel).
+- `title-difficulty-panel` div from `screen-title` (difficulty now in expedition-setup carousel).
+- Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
+
+### Fixed
+- Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
+- Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).
+- `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
+- `prototype/web-v1/css/themes.css`: same path fix for light/sunset/auto theme `#screen-title` background overrides.
+- Fixed `prototype/web-v1/ui/screens.js` debrief day counting so the summary now reads from the live run day counter (`G.day`) instead of the nonexistent `G.currentDay`, eliminating the always-`1` bug after multi-day runs.
+- Fixed `prototype/web-v1/ui/screens.js` mobile WATCH/ROUTE bottom sheets so they mirror the current in-run watch and route data instead of stale placeholder content.
+- Fixed `prototype/web-v1/index.html` + `prototype/web-v1/ui/screens.js` SLEEP action visibility so the button stays present in the decision deck at all times and toggles availability through the disabled state when the current position is not a camp.
+- `prototype/web-v1/ui/screens.js`: corrected park-exit detection in `makeDecision()` so arriving at `horcones` after a summit no longer ends the run one turn early as `Strategic Retreat`; the expedition now only finishes on the explicit exit descend from Horcones, preserving `Summit and Safe Return` and the Part 2 unlock path.
+- `prototype/web-v1/tests/test_smoke_flow.py`: added a browser smoke regression covering post-summit arrival at `horcones`, explicit park exit on the following descend, and the resulting `Summit and Safe Return` unlock.
+- Removed the debrief action that exported `run_log.json` from `prototype/web-v1/ui/screens.js`, leaving replay and journal actions as the end-of-run choices.
+- Adjusted `prototype/web-v1/css/responsive.css` mobile gameplay spacing/overflow so the Watch and status accordion can expand without clipping the lower telemetry/context content behind the sticky decision panel.
+- Restored welcome-screen progression in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so tapping/clicking anywhere on the active cover now reliably advances to expedition setup, with an explicit `window.advanceFromTitle` facade preserving the inline fallback control.
+- Fixed nationality flag emoji (`.char-flag`) not rendering correctly on desktop: added `display: none` inside `@media (min-width: 1024px)` in `prototype/web-v1/css/responsive.css` so flags are shown only on mobile/tablet where emoji rendering is reliable.
+- Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
+- Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
+- Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
 
 
 ## [1.4.1] — 2026-03
