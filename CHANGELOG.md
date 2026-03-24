@@ -10,6 +10,28 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Game screen redesign: new single-column layout replacing the two-column `game-layout-redesign` grid.
+  - `.situation-bar`: persistent top bar with character portrait (32 px circle, border encodes body state), position+altitude, day/time, turn counter, and trend glyph.
+  - `.mountain-view`: dominant zone with compact route strip (small dots only, no labels) + narrative area in serif italic font + "View field log" link.
+  - `.watch-band`: compact 4-cell horizontal band (Body, Pressure, Supplies, Permit); tap/click opens the watch detail overlay.
+  - `.signal-line`: single italic serif sentence of contextual alert text, replacing the 5-text-area context section.
+  - Decision bar: simplified to action buttons + embedded decision-window timer; microcopy and cost pips removed from visible default view.
+  - `#watch-detail-overlay`: progressive disclosure modal exposing full body metrics, environment, resources, permit, and risk chips on demand.
+  - `#field-log-overlay`: slide-up overlay for the field log, accessible via "View field log" link.
+  - `openWatchDetail()` / `closeWatchDetail()` / `openFieldLog()` / `closeFieldLog()` functions exposed on `window`.
+  - `showScreen()` now hides `title-top-controls` during gameplay and restores them when leaving the game screen.
+
+### Changed
+- `css/layout.css`: replaced two-column game grid with single-column flex stack; `watch-status-layout` / `watch-core-column` / `watch-status-column` retained for watch detail overlay.
+- `css/components.css`: added `.situation-portrait`, `.watch-band`, `.watch-cell`, `.watch-cell-bar`, `.signal-line`, `.watch-detail-overlay`, `.field-log-overlay` styles.
+- `css/screens.css`: replaced old watch panel padding overrides with new game screen structure overrides.
+- `css/responsive.css`: simplified game breakpoints (single-column needs fewer overrides); removed old mobile-collapsible and command-column rules.
+- `renderWatch()` in `ui/screens.js`: now populates situation bar (portrait, position, datetime, turn, trend), watch band cells (body bar + state, pressure dots + trend, supplies, permit days), and keeps populating detail overlay elements.
+- `renderContextWidget()`: populates `.signal-line` with a single-sentence alert based on the risk profile.
+- `updatePermitWidget()`: also sets `situation-portrait` src, `wc-permit-days` watch band cell, and watch detail overlay character name/difficulty.
+- Data reduction: default view shows ~12 data points (was ~36+); full detail available via watch overlay on demand.
+
+### Added
 - CSS module system: extracted all inline CSS from `prototype/web-v1/index.html` into 8 separate files under `prototype/web-v1/css/`: `tokens.css`, `reset.css`, `layout.css`, `components.css`, `screens.css`, `animations.css`, `themes.css`, `responsive.css` (Decision 1).
 - Plus Jakarta Sans added as UI/Headlines font via Google Fonts import; applied to all titles, buttons, labels, and navigation (Decision 8).
 - Ken Burns animation (20 s, `animation-fill-mode: forwards`) on splash image; disabled when `prefers-reduced-motion` is set (Decision 4).

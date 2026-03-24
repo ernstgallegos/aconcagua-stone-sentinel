@@ -882,6 +882,12 @@ function showScreen(id) {
 
   updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
 
+  // Hide fixed utility controls during gameplay; restore on other screens
+  const titleControls = document.querySelector('.title-top-controls');
+  if (titleControls) {
+    titleControls.style.display = id === 'game' ? 'none' : '';
+  }
+
   /* Decision 14: screen exit animation before switching */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const currentActive = document.querySelector('.screen.active');
@@ -2132,19 +2138,31 @@ function updatePermitWidget() {
   daysEl.className = 'permit-days';
   if (remaining <= 3) daysEl.classList.add('permit-critical');
   else if (remaining <= 7) daysEl.classList.add('permit-warn');
-  // Character photo
+  // Character photo (overlay)
+  const imgPath = getCharacterImagePath(G.character?.id);
   if (photoEl) {
-    const imgPath = getCharacterImagePath(G.character?.id);
-    if (imgPath) {
-      photoEl.src = imgPath;
-      photoEl.alt = name;
-      photoEl.style.display = '';
-    } else {
-      photoEl.src = '';
-      photoEl.alt = '';
-      photoEl.style.display = 'none';
-    }
+    if (imgPath) { photoEl.src = imgPath; photoEl.alt = name; photoEl.style.display = ''; }
+    else { photoEl.src = ''; photoEl.alt = ''; photoEl.style.display = 'none'; }
   }
+  // Situation portrait (always visible, main screen)
+  const sitPortrait = document.getElementById('situation-portrait');
+  if (sitPortrait) {
+    if (imgPath) { sitPortrait.src = imgPath; sitPortrait.alt = name; }
+    else { sitPortrait.src = ''; sitPortrait.alt = ''; }
+  }
+  // Watch band permit cell
+  const wcPermit = document.getElementById('wc-permit-days');
+  if (wcPermit) {
+    wcPermit.textContent = remaining > 0 ? `${remaining}d` : '—';
+    wcPermit.className = 'watch-cell-state';
+    if (remaining <= 3) wcPermit.classList.add('state-critical');
+    else if (remaining <= 7) wcPermit.classList.add('state-warning');
+  }
+  // Watch detail overlay identity
+  const detailNameEl = document.getElementById('watch-detail-name');
+  if (detailNameEl) detailNameEl.textContent = name;
+  const detailDiffEl = document.getElementById('watch-detail-difficulty');
+  if (detailDiffEl) detailDiffEl.textContent = G.character?.difficultyLabel || '';
 }
 
 function getOnboardingLayer(activeRisks = []) {
@@ -2237,6 +2255,24 @@ function renderContextWidget(state) {
 
   G.onboardingLayer = profile.layer;
   G.currentPrimaryAlert = profile.primary;
+
+  // Signal line — single sentence visible on main screen
+  const signalEl = document.getElementById('signal-line');
+  if (signalEl) {
+    let signalText, signalClass;
+    if (profile.primary.level === 'critical') {
+      signalText = `${profile.primary.label} — stabilize before advancing.`;
+      signalClass = 'signal-line critical';
+    } else if (profile.primary.level === 'warning') {
+      signalText = `${profile.primary.label} — advance only with disciplined pacing.`;
+      signalClass = 'signal-line warning';
+    } else {
+      signalText = 'System stable — push only if trend and confidence align.';
+      signalClass = 'signal-line';
+    }
+    signalEl.textContent = signalText;
+    signalEl.className = signalClass;
+  }
 }
 
 function renderWatch() {
@@ -2244,8 +2280,8 @@ function renderWatch() {
   const sig = G.signals;
   const sc = G.scenario;
 
-  document.getElementById('watch-turn').textContent =
-    `TURN ${G.turn} / ${sc.max_turns}`;
+  const watchTurnEl = document.getElementById('watch-turn');
+  if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
   const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 660, summitLateStart: 780 };
@@ -2253,28 +2289,51 @@ function renderWatch() {
   const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
   const watchTime = document.getElementById('watch-time');
-  watchTime.textContent = `Day ${G.day} · ${formatMinutes(tm)}${suffix}`;
-  watchTime.className = 'watch-position ' + (isOptimal ? 'time-optimal' : (isLate ? 'time-late' : ''));
-  document.getElementById('watch-position').textContent =
-    `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
+  if (watchTime) {
+    watchTime.textContent = `Day ${G.day} · ${formatMinutes(tm)}${suffix}`;
+    watchTime.className = 'watch-position ' + (isOptimal ? 'time-optimal' : (isLate ? 'time-late' : ''));
+  }
+  const watchPos = document.getElementById('watch-position');
+  if (watchPos) watchPos.textContent = `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
+
+  // ── Situation bar ──
+  const sitPosition = document.getElementById('situation-position');
+  if (sitPosition) sitPosition.textContent = `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
+
+  const sitDatetime = document.getElementById('situation-datetime');
+  if (sitDatetime) {
+    sitDatetime.textContent = `Day ${G.day} · ${formatMinutes(tm)}`;
+    sitDatetime.className = 'situation-datetime' + (isOptimal ? ' time-optimal' : (isLate ? ' time-late' : ''));
+  }
+
+  const sitTurn = document.getElementById('situation-turn');
+  if (sitTurn) sitTurn.textContent = `T${G.turn}/${sc.max_turns}`;
+
+  const sitTrend = document.getElementById('situation-trend');
+  if (sitTrend) {
+    const trendArrow = sig.trend === 'rising' ? '↗' : sig.trend === 'falling' ? '↘' : sig.trend === 'variable' ? '↕' : '→';
+    sitTrend.textContent = trendArrow;
+    sitTrend.className = `situation-trend${sig.trend === 'rising' ? ' trend-bad' : ''}`;
+  }
 
   const weatherDots = document.getElementById('dots-weather');
   const visibilityDots = document.getElementById('dots-visibility');
   const terrainDots = document.getElementById('dots-terrain');
-  clearElement(weatherDots);
-  clearElement(visibilityDots);
-  clearElement(terrainDots);
-  weatherDots.appendChild(makeDots(Math.ceil((sig.wHint + sig.tHint) / 2)));
-  visibilityDots.appendChild(makeDots(sig.vHint));
-  terrainDots.appendChild(makeDots(Math.ceil(sig.confidence / 25)));
+  if (weatherDots) { clearElement(weatherDots); weatherDots.appendChild(makeDots(Math.ceil((sig.wHint + sig.tHint) / 2))); }
+  if (visibilityDots) { clearElement(visibilityDots); visibilityDots.appendChild(makeDots(sig.vHint)); }
+  if (terrainDots) { clearElement(terrainDots); terrainDots.appendChild(makeDots(Math.ceil(sig.confidence / 25))); }
 
   const trendEl = document.getElementById('watch-trend');
-  trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
-  trendEl.className = 'watch-trend';
+  if (trendEl) {
+    trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
+    trendEl.className = 'watch-trend';
+  }
 
   const uncertaintyInline = document.getElementById('watch-uncertainty-inline');
-  uncertaintyInline.textContent = `${sig.signalReadability} · trend ${sig.trend} · stage ${getCurrentStage()}${sig.lateSignalActive ? ' · delayed lock-in' : ''}`;
-  uncertaintyInline.className = `signal-readability ${sig.lateSignalActive ? 'latency-active' : ''}`;
+  if (uncertaintyInline) {
+    uncertaintyInline.textContent = `${sig.signalReadability} · trend ${sig.trend} · stage ${getCurrentStage()}${sig.lateSignalActive ? ' · delayed lock-in' : ''}`;
+    uncertaintyInline.className = `signal-readability ${sig.lateSignalActive ? 'latency-active' : ''}`;
+  }
 
   const pressureCopy = getDecisionPressureCopy();
   const countdownEl = document.getElementById('decision-window-countdown');
@@ -2282,7 +2341,7 @@ function renderWatch() {
   if (countdownEl) countdownEl.textContent = pressureCopy.countdown;
   if (statusEl) {
     statusEl.textContent = pressureCopy.text;
-    statusEl.className = `time-pressure-status${pressureCopy.cls ? ' ' + pressureCopy.cls : ''}`;
+    statusEl.className = `decision-window-status-inline${pressureCopy.cls ? ' ' + pressureCopy.cls : ''}`;
   }
   const capLbl = capacityLabel(s.functional_capacity);
   const fatLbl = fatigueLabel(s.fatigue);
@@ -2297,48 +2356,85 @@ function renderWatch() {
   const fatEl = document.getElementById('body-fatigue');
   const expEl = document.getElementById('body-exposure');
   const acclEl = document.getElementById('body-acclimatization');
-  setMetricValue(capEl, `${capLbl} ${capArrow} · ${metricDisplay(s.functional_capacity, sig.confidence)}`, s.functional_capacity);
-  setMetricValue(fatEl, `${fatLbl} ${fatArrow} · ${metricDisplay(s.fatigue, sig.confidence)}`, s.fatigue);
-  setMetricValue(expEl, `${expLbl} ${expArrow} · ${metricDisplay(s.exposure, sig.confidence)}`, s.exposure);
-  capEl.className = 'body-value metric ' + bodyValueClass(capLbl);
-  fatEl.className = 'body-value metric ' + bodyValueClass(fatLbl);
-  expEl.className = 'body-value metric ' + bodyValueClass(expLbl);
+  if (capEl) { setMetricValue(capEl, `${capLbl} ${capArrow} · ${metricDisplay(s.functional_capacity, sig.confidence)}`, s.functional_capacity); capEl.className = 'body-value metric ' + bodyValueClass(capLbl); }
+  if (fatEl) { setMetricValue(fatEl, `${fatLbl} ${fatArrow} · ${metricDisplay(s.fatigue, sig.confidence)}`, s.fatigue); fatEl.className = 'body-value metric ' + bodyValueClass(fatLbl); }
+  if (expEl) { setMetricValue(expEl, `${expLbl} ${expArrow} · ${metricDisplay(s.exposure, sig.confidence)}`, s.exposure); expEl.className = 'body-value metric ' + bodyValueClass(expLbl); }
   const accl = Math.round(G.acclimatization);
   const acclState = accl >= 55 ? 'stable' : (accl >= 30 ? 'degrading' : 'critical');
-  acclEl.textContent = `${accl}/100`;
-  acclEl.className = 'body-value ' + acclState;
+  if (acclEl) { acclEl.textContent = `${accl}/100`; acclEl.className = 'body-value ' + acclState; }
+
+  // ── Watch band body cell ──
+  const compositeNormal = (s.functional_capacity * 0.4) + ((100 - s.fatigue) * 0.3) + ((100 - s.exposure) * 0.3);
+  const bodyBarEl = document.getElementById('wc-body-bar');
+  if (bodyBarEl) {
+    bodyBarEl.style.width = `${Math.round(clamp(compositeNormal, 0, 100))}%`;
+    bodyBarEl.className = `watch-cell-bar ${bodyValueClass(capLbl)}`;
+  }
+  const bodyStateEl = document.getElementById('wc-body-state');
+  if (bodyStateEl) {
+    bodyStateEl.textContent = capLbl.toLowerCase();
+    bodyStateEl.className = `watch-cell-state ${bodyValueClass(capLbl)}`;
+  }
+  // Update situation portrait border class
+  const sitPortraitEl = document.getElementById('situation-portrait');
+  if (sitPortraitEl) {
+    sitPortraitEl.classList.remove('state-warning', 'state-critical');
+    if (s.functional_capacity <= 25 || s.fatigue >= 80 || s.exposure >= 75) {
+      sitPortraitEl.classList.add('state-critical');
+    } else if (s.functional_capacity <= 40 || s.fatigue >= 60 || s.exposure >= 55) {
+      sitPortraitEl.classList.add('state-warning');
+    }
+  }
 
   const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
   const waterTurns = stageBurn.water > 0 ? Math.floor(s.water / Math.max(stageBurn.water * 2, 1)) : s.water;
   const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
   const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
   const resEl = document.getElementById('watch-resources');
-  clearElement(resEl);
-  const buildResourceItem = (label, amount, turns) => {
-    const outer = document.createElement('span');
-    const cls = amount === 0 ? 'depleted' : resClass(turns);
-    outer.className = cls ? `resource-item ${cls}` : 'resource-item';
-    outer.append(document.createTextNode(`${label} `));
-    const value = document.createElement('span');
-    value.textContent = `${amount} · ${turns}t`;
-    outer.appendChild(value);
-    return outer;
-  };
-  resEl.appendChild(buildResourceItem('Water', s.water, waterTurns));
-  resEl.appendChild(buildResourceItem('Food', s.food, foodTurns));
+  if (resEl) {
+    clearElement(resEl);
+    const buildResourceItem = (label, amount, turns) => {
+      const outer = document.createElement('span');
+      const cls = amount === 0 ? 'depleted' : resClass(turns);
+      outer.className = cls ? `resource-item ${cls}` : 'resource-item';
+      outer.append(document.createTextNode(`${label} `));
+      const value = document.createElement('span');
+      value.textContent = `${amount} · ${turns}t`;
+      outer.appendChild(value);
+      return outer;
+    };
+    resEl.appendChild(buildResourceItem('Water', s.water, waterTurns));
+    resEl.appendChild(buildResourceItem('Food', s.food, foodTurns));
+  }
+
+  // ── Watch band supplies cells ──
+  const wcWater = document.getElementById('wc-water');
+  const wcFood = document.getElementById('wc-food');
+  if (wcWater) {
+    wcWater.textContent = `💧 ${s.water}`;
+    const wCls = s.water === 0 ? 'state-critical' : (resClass(waterTurns) ? 'state-warning' : '');
+    wcWater.className = wCls;
+  }
+  if (wcFood) {
+    wcFood.textContent = `🥫 ${s.food}`;
+    const fCls = s.food === 0 ? 'state-critical' : (resClass(foodTurns) ? 'state-warning' : '');
+    wcFood.className = fCls;
+  }
 
   const warnBox = document.getElementById('resource-warning-box');
   const warns = [];
   if (s.water === 0) warns.push('WATER DEPLETED');
   if (s.food === 0) warns.push('FOOD DEPLETED');
-  clearElement(warnBox);
-  if (warns.length) {
-    warns.forEach((w) => {
-      const warning = document.createElement('div');
-      warning.className = 'resource-warning';
-      warning.textContent = `⚠ ${w}`;
-      warnBox.appendChild(warning);
-    });
+  if (warnBox) {
+    clearElement(warnBox);
+    if (warns.length) {
+      warns.forEach((w) => {
+        const warning = document.createElement('div');
+        warning.className = 'resource-warning';
+        warning.textContent = `⚠ ${w}`;
+        warnBox.appendChild(warning);
+      });
+    }
   }
 
 
@@ -3471,5 +3567,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+/* Watch detail overlay — opened by tapping the watch band */
+function openWatchDetail() {
+  const overlay = document.getElementById('watch-detail-overlay');
+  const backdrop = document.getElementById('watch-detail-backdrop');
+  if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+  if (backdrop) backdrop.classList.add('visible');
+}
+function closeWatchDetail() {
+  const overlay = document.getElementById('watch-detail-overlay');
+  const backdrop = document.getElementById('watch-detail-backdrop');
+  if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+  if (backdrop) backdrop.classList.remove('visible');
+}
+window.openWatchDetail = openWatchDetail;
+window.closeWatchDetail = closeWatchDetail;
+
+/* Field log overlay — opened via "View field log" link in mountain-main */
+function openFieldLog() {
+  const overlay = document.getElementById('field-log-overlay');
+  const backdrop = document.getElementById('field-log-backdrop');
+  if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+  if (backdrop) backdrop.classList.add('visible');
+}
+function closeFieldLog() {
+  const overlay = document.getElementById('field-log-overlay');
+  const backdrop = document.getElementById('field-log-backdrop');
+  if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+  if (backdrop) backdrop.classList.remove('visible');
+}
+window.openFieldLog = openFieldLog;
+window.closeFieldLog = closeFieldLog;
 
 export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState, getDifficultyConfig, getDifficultyModifiers, setDifficulty };
