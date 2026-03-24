@@ -984,6 +984,28 @@
   gap: 0.2rem;
 }
 
+.permit-widget-body {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.permit-photo {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  object-position: center top;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.permit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
 .permit-label {
   font-family: var(--mono);
   font-size: 0.75rem;
@@ -1540,6 +1562,17 @@
   font-size: 0.75rem;
   color: var(--ice);
   letter-spacing: 0.06em;
+}
+
+/* ── Character portrait in carousel card ── */
+.carousel-card-portrait {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  object-position: center top;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .carousel-arrow {

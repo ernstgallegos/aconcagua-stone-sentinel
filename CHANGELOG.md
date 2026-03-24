@@ -9,15 +9,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-### Fixed
-- Fixed nationality flag emoji not rendering as colored flags on desktop (Linux/Chrome): added CSS4 `emoji` generic font family to `.char-flag` font-family stack so the browser uses its built-in emoji renderer when platform-specific fonts (Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji) are unavailable. Also added `letter-spacing: 0` to prevent regional-indicator character pairs from being split by inherited spacing.
-
 ### Added
+- Added character portrait images to the carousel card in `screen-expedition-setup`: introduced `getCharacterImagePath()` utility in `prototype/web-v1/ui/screens.js` and rendered `<img class="carousel-card-portrait">` above the character name for each real character option.
+- Added character photo to the permit widget in `screen-game`: updated markup in `prototype/web-v1/index.html` (`permit-widget-body`, `permit-photo`, `permit-info`) and updated `updatePermitWidget()` in `prototype/web-v1/ui/screens.js` to set the photo on each turn.
+- Added `.carousel-card-portrait`, `.permit-widget-body`, `.permit-photo`, and `.permit-info` styles to `prototype/web-v1/css/components.css`.
 - Added `difficultyModifiers` field to each predefined scenario and random archetype in `data/scenarios.web-v1.json`, embedding the difficulty configuration directly in the scenario data.
 - Added `flag` emoji field to each character in `data/characters.json` representing their nationality.
 - Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
 
 ### Changed
+- Removed emoji prefix from BEGIN EXPEDITION (🎯) and QUICK START (🎲) buttons in `prototype/web-v1/index.html` and matching i18n keys (`beginExpedition`, `quickStart`) in both `en` and `es` in `prototype/web-v1/ui/screens.js`.
 - Removed the difficulty carousel from `prototype/web-v1/index.html` (`screen-expedition-setup` now has two carousels: character and scenario).
 - Updated `getDifficultyModifiers()` in `prototype/web-v1/ui/screens.js` to read embedded `difficultyModifiers` from the active scenario when available, falling back to `DIFFICULTY_LEVELS` table.
 - Updated `beginExpedition()` and `quickStart()` in `prototype/web-v1/ui/screens.js` to derive `CURRENT_DIFFICULTY_ID` from the selected scenario after scenario resolution.
@@ -37,6 +38,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
 
 ### Fixed
+- Fixed nationality flag emoji (`.char-flag`) not rendering correctly on desktop: added `display: none` inside `@media (min-width: 1024px)` in `prototype/web-v1/css/responsive.css` so flags are shown only on mobile/tablet where emoji rendering is reliable.
 - Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
 - Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
 - Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.

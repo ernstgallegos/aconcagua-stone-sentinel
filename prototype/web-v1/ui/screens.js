@@ -294,8 +294,8 @@ const I18N = {
       onboardingDescendDesc: 'Descend protects return margin and permit time. From Horcones, descending again exits the park and ends the expedition.',
       onboardingNote: 'Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.',
       prepareExpedition: 'Prepare Your Expedition',
-      beginExpedition: '🎯 Begin Expedition',
-      quickStart: '🎲 Quick Start (Random)',
+      beginExpedition: 'Begin Expedition',
+      quickStart: 'Quick Start (Random)',
       charDifficultyLabel: 'Profile',
       carouselCharacter: 'Character',
       carouselScenario: 'Scenario',
@@ -373,8 +373,8 @@ const I18N = {
       onboardingDescendDesc: 'Descender protege el margen de regreso y el tiempo de permiso. Desde Horcones, descender otra vez sale del parque y termina la expedición.',
       onboardingNote: 'Empieza con lo esencial: tendencia, cuerpo y permiso. El contexto se desbloquea tras los primeros turnos o cuando sube el riesgo. Tu reloj tiene ruido: confía en la tendencia, no en el impulso.',
       prepareExpedition: 'Prepara tu expedición',
-      beginExpedition: '🎯 Iniciar expedición',
-      quickStart: '🎲 Inicio rápido (aleatorio)',
+      beginExpedition: 'Iniciar expedición',
+      quickStart: 'Inicio rápido (aleatorio)',
       charDifficultyLabel: 'Perfil',
       carouselCharacter: 'Personaje',
       carouselScenario: 'Escenario',
@@ -1027,6 +1027,20 @@ function carouselNext(type) {
   renderCarousel(type);
 }
 
+function getCharacterImagePath(charId) {
+  const nameMap = {
+    francisco: 'francisco-aguirre',
+    laura: 'laura-kim',
+    erik: 'erik-lundvall',
+    daniela: 'daniela-de-rossi',
+    blake: 'blake-harris',
+    irina: 'irina-orlova',
+  };
+  const filename = nameMap[charId];
+  if (!filename) return null;
+  return `../../art/characters/${filename}.png`;
+}
+
 function renderCarousel(type) {
   const items = getCarouselItems(type);
   if (!items.length) return;
@@ -1048,7 +1062,12 @@ function renderCarousel(type) {
     } else {
       const c = localizeCharacter(item);
       const safeIdx = Number(idx);
+      const imgPath = getCharacterImagePath(item.id);
+      const imgHtml = imgPath
+        ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" />`
+        : '';
       cardEl.innerHTML = `
+        ${imgHtml}
         <div class="carousel-card-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
         <div class="carousel-card-role">${c.role}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
@@ -2104,6 +2123,7 @@ function setMetricValue(el, text, normalizedValue) {
 function updatePermitWidget() {
   const nameEl = document.getElementById('permit-name');
   const daysEl = document.getElementById('permit-days');
+  const photoEl = document.getElementById('permit-photo');
   if (!nameEl || !daysEl) return;
   const name = G.character?.name || '—';
   const remaining = G.permitMaxDays - G.permitDay + 1;
@@ -2112,6 +2132,19 @@ function updatePermitWidget() {
   daysEl.className = 'permit-days';
   if (remaining <= 3) daysEl.classList.add('permit-critical');
   else if (remaining <= 7) daysEl.classList.add('permit-warn');
+  // Character photo
+  if (photoEl) {
+    const imgPath = getCharacterImagePath(G.character?.id);
+    if (imgPath) {
+      photoEl.src = imgPath;
+      photoEl.alt = name;
+      photoEl.style.display = '';
+    } else {
+      photoEl.src = '';
+      photoEl.alt = '';
+      photoEl.style.display = 'none';
+    }
+  }
 }
 
 function getOnboardingLayer(activeRisks = []) {
