@@ -1041,6 +1041,7 @@ function getCharacterImagePath(charId) {
     daniela: 'daniela-de-rossi',
     blake: 'blake-harris',
     irina: 'irina-orlova',
+    random: 'random',
   };
   const filename = nameMap[charId];
   if (!filename) return null;
@@ -1060,7 +1061,9 @@ function renderCarousel(type) {
   // Render card content based on type
   if (type === 'character') {
     if (item._random) {
+      const imgPath = '../../art/characters/random.png';
       cardEl.innerHTML = `
+        <img class="carousel-card-portrait" src="${imgPath}" alt="${t('ui.randomCharacter')}" loading="lazy" />
         <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
         <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: Variable</div>
