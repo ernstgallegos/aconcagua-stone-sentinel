@@ -103,8 +103,8 @@
 
     <!-- Action buttons -->
     <div class="expedition-setup-actions">
-      <button class="btn-primary" id="btn-begin-expedition" onclick="beginExpedition()">🎯 Begin Expedition</button>
-      <button class="btn-ghost" id="btn-quick-start" onclick="quickStart()">🎲 Quick Start (Random)</button>
+      <button class="btn-primary" id="btn-begin-expedition" onclick="beginExpedition()">Begin Expedition</button>
+      <button class="btn-ghost" id="btn-quick-start" onclick="quickStart()">Quick Start (Random)</button>
     </div>
   </div>
 </section>
@@ -218,8 +218,13 @@
               <div class="status-row">
                 <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
                   <div class="permit-label">Park Permit</div>
-                  <div class="permit-name" id="permit-name">—</div>
-                  <div class="permit-days" id="permit-days">— days remaining</div>
+                  <div class="permit-widget-body">
+                    <img class="permit-photo" id="permit-photo" src="" alt="" aria-hidden="true" />
+                    <div class="permit-info">
+                      <div class="permit-name" id="permit-name">—</div>
+                      <div class="permit-days" id="permit-days">— days remaining</div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
