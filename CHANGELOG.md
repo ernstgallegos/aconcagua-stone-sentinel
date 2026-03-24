@@ -118,6 +118,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
 - Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
 - Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
+- Corrected stale "five global difficulty tiers" reference in `README.md` — expedition-setup now uses two carousels (character + scenario) with difficulty embedded in each scenario rather than as an independent user-selectable carousel.
+- Corrected stale difficulty reference ("cinco niveles globales de dificultad") in `README.es.md` to describe the scenario-embedded difficulty model.
+- Updated stale flow reference in `AGENTS.md` from `splash → title → character → scenario → onboarding → game` to `welcome/title → expedition-setup → onboarding → game` to reflect the merged welcome screen and consolidated expedition-setup carousels.
+- Updated stale flow reference in `meta/public-roadmap.md` Stage 6 evidence to match current merged-screen architecture.
+- Updated stale flow reference in `docs/web-v1-playtesting-remediation-one-shot-prompt.md` to reflect current canonical flow.
+- Added missing sections to `README.es.md` (Contact, Prototype canonical status, local preview instructions) for parity with English `README.md`.
+- Consolidated duplicate section headers in `CHANGELOG.md` `[Unreleased]` block (10× Changed, 7× Fixed, 3× Added, 2× Removed → one each) per Keep a Changelog convention.
 
 
 ## [1.4.1] — 2026-03

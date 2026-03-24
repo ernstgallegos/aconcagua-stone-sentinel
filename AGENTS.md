@@ -70,7 +70,7 @@ In addition to the changelog:
 - Character mechanics are data-driven from `data/characters.json`; each character must expose the full engine modifier set plus `difficultyLabel`.
 - Canonical outcomes are data-driven from `data/outcomes.json`; outcome checks in `resolveTurn()` must preserve ordering-sensitive logic.
 - Current primary flow after v1.4 Phase 1 is:
-  `splash → title → character → scenario → onboarding → game → (summit-success or debrief)`.
+  `welcome/title → expedition-setup (character + scenario carousels) → onboarding → game → (summit-success or debrief)`.
 
 ### Sprint learnings — v1.4 Phase 1 (external playtesting push)
 
