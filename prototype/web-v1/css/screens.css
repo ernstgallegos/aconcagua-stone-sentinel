@@ -387,29 +387,28 @@
 }
 
 /* ══════════════════════════════════════
-   GAME SCREEN (Decision 13 EXPERIMENTAL)
+   GAME SCREEN — new single-column layout
    ══════════════════════════════════════ */
 
 /* Panel overrides inside game screen */
-#screen-game .permit-widget,
-#screen-game .watch-time-pressure,
-#screen-game .context-widget,
-#screen-game .narrative-box,
-#screen-game .decision-panel,
-#screen-game .watch-panel {
+#screen-game .decision-panel {
   margin: 0;
+  padding: 0.75rem 0.85rem;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
 }
 
-#screen-game .context-widget,
-#screen-game .narrative-box,
-#screen-game .decision-panel,
-#screen-game .watch-panel {
-  padding: 0.95rem;
+/* Mountain view fills the available space */
+#screen-game .mountain-view {
+  flex: 1;
+  min-height: 0;
 }
 
-#screen-game .watch-time-pressure,
-#screen-game .permit-widget {
-  padding: 0.7rem;
+/* Overlay panels inside watch-detail-overlay use normal padding */
+.watch-detail-overlay .watch-body-row {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
 }
 
 /* EXPERIMENTAL — Mobile bottom-sheet triggers (Decision 13) */

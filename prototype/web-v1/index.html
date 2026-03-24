@@ -145,165 +145,184 @@
 
 <!-- ══════════════════════ GAME ══════════════════════ -->
 <section id="screen-game" class="screen" aria-label="Game">
-  <!-- EXPERIMENTAL: Mini status bar for mobile (Decision 13) -->
-  <div class="game-mini-status" id="game-mini-status" aria-label="Quick status" aria-live="polite">
-    <strong id="mini-day">D1</strong>
-    <span id="mini-time">06:00</span>
-    <span id="mini-temp">—</span>
-    <span>EP:</span><span id="mini-ep">—</span>
+
+  <!-- ① SITUATION BAR — always visible, fixed top -->
+  <div class="situation-bar" id="situation-bar" aria-live="polite" aria-label="Expedition situation">
+    <img class="situation-portrait" id="situation-portrait" src="" alt="" aria-hidden="true" />
+    <div class="situation-info">
+      <span class="situation-position" id="situation-position" aria-live="polite">—</span>
+    </div>
+    <div class="situation-center">
+      <span class="situation-datetime" id="situation-datetime" aria-live="polite">—</span>
+    </div>
+    <div class="situation-right">
+      <span class="situation-turn" id="situation-turn" aria-live="polite">—</span>
+      <span class="situation-trend" id="situation-trend" aria-live="polite">—</span>
+    </div>
+  </div>
+  <div class="turn-progress" aria-hidden="true"><div class="turn-progress-fill" id="turn-progress-fill"></div></div>
+
+  <!-- ② MOUNTAIN VIEW — dominant zone: route strip + narrative -->
+  <div class="mountain-view">
+    <div class="route-strip" aria-label="Route position">
+      <ul class="position-list position-list-compact" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
+    </div>
+    <div class="mountain-main">
+      <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
+      <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
+      <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
+      <button class="btn-link field-log-trigger" type="button" onclick="openFieldLog()" aria-label="View field log" aria-haspopup="dialog">View field log</button>
+    </div>
   </div>
 
-  <div class="game-layout game-layout-redesign">
-    <aside class="left-panel expedition-column">
-      <section class="mountain-schematic panel-shell" aria-label="Route overview">
-        <div class="panel-title">Route Track</div>
-        <ul class="position-list" id="position-list" aria-label="Route positions" aria-live="polite"></ul>
-      </section>
-      <section class="action-log panel-shell" aria-label="Field log panel">
-        <div class="panel-title">Field Log</div>
-        <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
-          <div class="log-empty">No entries yet.</div>
-        </div>
-      </section>
-    </aside>
-
-    <main class="right-panel command-column">
-      <details class="watch-panel panel-shell mobile-collapsible" id="watch-panel" open>
-        <summary class="mobile-collapsible-summary">Watch and status</summary>
-        <div class="mobile-collapsible-body" aria-label="Expedition status">
-          <div class="watch-status-layout">
-            <div class="watch-core-column">
-              <header class="watch-header watch-header-redesign">
-                <div>
-                  <div class="watch-turn" id="watch-turn" aria-live="polite">TURN 1 / 12</div>
-                  <div class="watch-position" id="watch-time" aria-live="polite">Day 1 · 06:00</div>
-                </div>
-                <div class="watch-position" id="watch-position" aria-live="polite">—</div>
-              </header>
-
-              <div class="turn-progress" aria-hidden="true"><div class="turn-progress-fill" id="turn-progress-fill"></div></div>
-
-              <div class="telemetry-grid">
-                <section class="watch-section telemetry-card">
-                  <div class="watch-section-label">Environment</div>
-                  <div class="watch-row">
-                    <span class="watch-row-label">Mountain pressure</span>
-                    <div class="watch-dots" id="dots-weather" aria-label="Weather severity"></div>
-                    <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
-                  </div>
-                  <div class="watch-row">
-                    <span class="watch-row-label">Trend</span>
-                    <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
-                    <span id="watch-uncertainty-inline" aria-live="polite"></span>
-                  </div>
-                  <div class="watch-row">
-                    <span class="watch-row-label">Confidence</span>
-                    <div class="watch-dots" id="dots-terrain" aria-label="Terrain difficulty"></div>
-                  </div>
-                </section>
-
-                <section class="watch-section telemetry-card">
-                  <div class="watch-section-label">Body state</div>
-                  <div class="watch-body-row"><span class="body-label">Capacity</span><span class="body-value" id="body-capacity" aria-live="polite">—</span></div>
-                  <div class="watch-body-row"><span class="body-label">Fatigue</span><span class="body-value" id="body-fatigue" aria-live="polite">—</span></div>
-                  <div class="watch-body-row"><span class="body-label">Exposure</span><span class="body-value" id="body-exposure" aria-live="polite">—</span></div>
-                  <div class="watch-body-row"><span class="body-label">Acclimatization</span><span class="body-value" id="body-acclimatization" aria-live="polite">—</span></div>
-                </section>
-              </div>
-
-              <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
-            </div>
-
-            <div class="watch-status-column">
-              <div class="status-row">
-                <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
-                  <div class="permit-label">Park Permit</div>
-                  <div class="permit-widget-body">
-                    <img class="permit-photo" id="permit-photo" src="" alt="" aria-hidden="true" />
-                    <div class="permit-info">
-                      <div class="permit-name" id="permit-name">—</div>
-                      <div class="permit-days" id="permit-days">— days remaining</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="watch-time-pressure" id="watch-time-pressure" aria-live="polite">
-                  <div class="time-pressure-header"><span>Decision window</span><span id="decision-window-countdown">—</span></div>
-                  <div class="time-pressure-status" id="decision-window-status">Partial information: hold trend over impulse.</div>
-                </div>
-              </div>
-
-              <div id="resource-warning-box"></div>
-
-              <section class="watch-section watch-section-status telemetry-card" aria-live="polite">
-                <div class="watch-section-label">Context and risks</div>
-                <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
-                <div class="context-indicators" id="context-indicators"></div>
-                <div class="context-main" id="context-main">Stability baseline pending first turn.</div>
-                <div class="context-sub" id="context-sub">Risk chips update from body, permit, resource and window thresholds.</div>
-                <div class="coach-layer" id="coach-layer" aria-live="polite">
-                  <div class="coach-title" id="coach-title">Onboarding layer · essentials</div>
-                  <div class="coach-body" id="coach-body">Focus now: choose pace each turn and preserve return margin.</div>
-                </div>
-              </section>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="narrative-box panel-shell mobile-collapsible mobile-collapsible-narrative">
-        <summary class="mobile-collapsible-summary">Field notes</summary>
-        <div class="mobile-collapsible-body">
-          <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
-          <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
-          <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
-        </div>
-      </details>
-
-      <section class="decision-panel panel-shell">
-        <div class="decision-label">Decision</div>
-        <div class="decision-buttons" role="group" aria-label="Choose your action">
-          <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">
-            <span class="btn-decision-main"><span>Advance</span><span class="decision-keyhint">[1]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span></span>
-            <span class="decision-microcopy">Fastest gain, highest fatigue/exposure spike.</span>
-          </button>
-          <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">
-            <span class="btn-decision-main"><span>Advance Slowly</span><span class="decision-keyhint">[2]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
-            <span class="decision-microcopy">Moderate gain with lower body cost and pace risk.</span>
-          </button>
-          <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">
-            <span class="btn-decision-main"><span>Wait</span><span class="decision-keyhint">[3]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
-            <span class="decision-microcopy">Stabilizes only at lower camps; above high camp it mainly buys time.</span>
-          </button>
-          <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">
-            <span class="btn-decision-main"><span>Descend</span><span class="decision-keyhint">[4]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
-            <span class="decision-microcopy">Concede altitude to protect return margin and permit clock.</span>
-          </button>
-          <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" disabled>
-            <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"></span></span><span>E<span class="decision-pips"></span></span></span>
-            <span class="decision-microcopy">Camp-only reset: lowers fatigue and exposure, spends daylight.</span>
-          </button>
-          <button class="btn-decision" id="btn-shoot-photo" onclick="makeDecision('shoot_photo')" aria-label="Shoot a photo for route reading" style="display:none">
-            <span class="btn-decision-main"><span>Shoot Photo</span><span class="decision-keyhint">[6]</span></span>
-            <span class="decision-costs" aria-hidden="true"><span>F<span class="decision-pips"><span class="decision-pip active"></span></span></span><span>E<span class="decision-pips"><span class="decision-pip active"></span></span></span></span>
-            <span class="decision-microcopy">Daniela only: spend a turn for clearer trend/confidence on next reads.</span>
-          </button>
-        </div>
-      </section>
-    </main>
+  <!-- ③ THE WATCH BAND — compact 4-cell horizontal, tap to expand detail -->
+  <div class="watch-band" id="watch-band" role="button" tabindex="0"
+       onclick="openWatchDetail()"
+       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWatchDetail();}"
+       aria-label="Watch status — press Enter or tap for full detail" aria-haspopup="dialog">
+    <div class="watch-cell" id="wc-body" aria-label="Body state">
+      <div class="watch-cell-label">Body</div>
+      <div class="watch-cell-bar-wrap" aria-hidden="true"><div class="watch-cell-bar" id="wc-body-bar"></div></div>
+      <div class="watch-cell-state" id="wc-body-state">—</div>
+    </div>
+    <div class="watch-cell" id="wc-pressure" aria-label="Mountain pressure">
+      <div class="watch-cell-label">Pressure</div>
+      <div class="watch-dots" id="dots-weather" aria-label="Pressure level"></div>
+      <span class="watch-trend" id="watch-trend" aria-live="polite">—</span>
+    </div>
+    <div class="watch-cell" id="wc-supplies" aria-label="Supplies">
+      <div class="watch-cell-label">Supplies</div>
+      <div class="watch-cell-supplies">
+        <span id="wc-water" aria-live="polite">—</span>
+        <span id="wc-food" aria-live="polite">—</span>
+      </div>
+    </div>
+    <div class="watch-cell" id="wc-permit" aria-label="Permit days remaining">
+      <div class="watch-cell-label">Permit</div>
+      <div class="watch-cell-state" id="wc-permit-days" aria-live="polite">—</div>
+    </div>
   </div>
 
-  <!-- EXPERIMENTAL: Mobile bottom-sheet trigger bar (Decision 13) -->
+  <!-- ④ SIGNAL LINE — single contextual sentence -->
+  <div class="signal-line" id="signal-line" aria-live="polite">—</div>
+
+  <!-- ⑤ DECISION BAR — actions + embedded decision-window timer -->
+  <section class="decision-panel panel-shell">
+    <div class="decision-window-bar">
+      <span class="decision-label">Decision</span>
+      <span class="decision-window-inline" aria-live="polite">
+        <span id="decision-window-countdown">—</span>
+        <span class="decision-window-status-inline" id="decision-window-status"></span>
+      </span>
+    </div>
+    <div class="decision-buttons" role="group" aria-label="Choose your action">
+      <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">
+        <span class="btn-decision-main"><span>Advance</span><span class="decision-keyhint">[1]</span></span>
+      </button>
+      <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">
+        <span class="btn-decision-main"><span>Advance Slowly</span><span class="decision-keyhint">[2]</span></span>
+      </button>
+      <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">
+        <span class="btn-decision-main"><span>Wait</span><span class="decision-keyhint">[3]</span></span>
+      </button>
+      <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">
+        <span class="btn-decision-main"><span>Descend</span><span class="decision-keyhint">[4]</span></span>
+      </button>
+      <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" disabled>
+        <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
+      </button>
+      <button class="btn-decision" id="btn-shoot-photo" onclick="makeDecision('shoot_photo')" aria-label="Shoot a photo for route reading" style="display:none">
+        <span class="btn-decision-main"><span>Shoot Photo</span><span class="decision-keyhint">[6]</span></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Mobile bottom-sheet trigger bar (kept for mobile compat) -->
   <div class="game-mobile-bar" aria-label="Open status panels" role="toolbar">
     <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">⌚ Watch</button>
     <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
   </div>
 </section>
+
+<!-- WATCH DETAIL OVERLAY — full detail on demand (tap watch band) -->
+<div id="watch-detail-overlay" class="watch-detail-overlay" role="dialog" aria-modal="true" aria-label="Watch detail" aria-hidden="true">
+  <div class="watch-detail-dialog">
+    <div class="watch-detail-header">
+      <img class="permit-photo" id="permit-photo" src="" alt="" aria-hidden="true" />
+      <div class="watch-detail-identity">
+        <div class="watch-detail-name" id="watch-detail-name">—</div>
+        <div class="watch-detail-difficulty" id="watch-detail-difficulty"></div>
+      </div>
+      <button class="btn-link watch-detail-close" type="button" onclick="closeWatchDetail()" aria-label="Close watch detail">✕</button>
+    </div>
+    <!-- Preserved class names for test compatibility and JS population -->
+    <div class="watch-status-layout">
+      <div class="watch-core-column">
+        <div class="watch-section-label">Body State</div>
+        <div class="watch-body-row"><span class="body-label">Capacity</span><span class="body-value" id="body-capacity" aria-live="polite">—</span></div>
+        <div class="watch-body-row"><span class="body-label">Fatigue</span><span class="body-value" id="body-fatigue" aria-live="polite">—</span></div>
+        <div class="watch-body-row"><span class="body-label">Exposure</span><span class="body-value" id="body-exposure" aria-live="polite">—</span></div>
+        <div class="watch-body-row"><span class="body-label">Acclimatization</span><span class="body-value" id="body-acclimatization" aria-live="polite">—</span></div>
+        <div class="watch-section-label" style="margin-top:0.75rem">Environment</div>
+        <div class="watch-row">
+          <span class="watch-row-label">Trend</span>
+          <div class="watch-dots" id="dots-visibility" aria-label="Visibility"></div>
+          <span id="watch-uncertainty-inline" aria-live="polite"></span>
+        </div>
+        <div class="watch-row">
+          <span class="watch-row-label">Confidence</span>
+          <div class="watch-dots" id="dots-terrain" aria-label="Confidence level"></div>
+        </div>
+        <div class="watch-resources" id="watch-resources" aria-live="polite"></div>
+        <div id="resource-warning-box"></div>
+      </div>
+      <div class="watch-status-column">
+        <div class="permit-widget" id="permit-widget" aria-label="Park permit status">
+          <div class="permit-label">Park Permit</div>
+          <div class="permit-widget-body">
+            <div class="permit-info">
+              <div class="permit-name" id="permit-name">—</div>
+              <div class="permit-days" id="permit-days">— days remaining</div>
+            </div>
+          </div>
+        </div>
+        <section class="watch-section watch-section-status" aria-live="polite">
+          <div class="watch-section-label">Active Risks</div>
+          <div class="primary-alert" id="primary-alert" aria-live="polite">Primary alert: stable</div>
+          <div class="context-indicators" id="context-indicators"></div>
+          <div class="context-main" id="context-main">—</div>
+          <div class="context-sub" id="context-sub" style="display:none"></div>
+          <div class="coach-layer" id="coach-layer" aria-live="polite" style="display:none">
+            <div class="coach-title" id="coach-title"></div>
+            <div class="coach-body" id="coach-body"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- Hidden state data: populated by renderWatch() for internal JS reads (watch-turn, watch-time, watch-position).
+         Kept for backwards-compatibility with renderWatch() output logic; not displayed to the user. -->
+    <div aria-hidden="true" style="display:none">
+      <div id="watch-turn"></div>
+      <div id="watch-time"></div>
+      <div id="watch-position"></div>
+    </div>
+  </div>
+</div>
+<div class="watch-detail-backdrop" id="watch-detail-backdrop" aria-hidden="true" onclick="closeWatchDetail()"></div>
+
+<!-- FIELD LOG OVERLAY — field log accessible via link -->
+<div id="field-log-overlay" class="field-log-overlay" role="dialog" aria-modal="true" aria-label="Field log" aria-hidden="true">
+  <div class="field-log-dialog">
+    <div class="field-log-header">
+      <span class="field-log-title">Field Log</span>
+      <button class="btn-link" type="button" onclick="closeFieldLog()" aria-label="Close field log">✕</button>
+    </div>
+    <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
+      <div class="log-empty">No entries yet.</div>
+    </div>
+  </div>
+</div>
+<div class="field-log-backdrop" id="field-log-backdrop" aria-hidden="true" onclick="closeFieldLog()"></div>
 
 <!-- EXPERIMENTAL: Bottom-sheet backdrop (Decision 13) -->
 <div id="bottom-sheet-backdrop" class="bottom-sheet-backdrop" aria-hidden="true"></div>

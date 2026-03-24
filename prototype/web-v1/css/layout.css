@@ -22,7 +22,7 @@
   min-height: 100dvh;
   height: 100vh;
   height: 100dvh;
-  padding: clamp(0.55rem, 1.2vh, 1rem);
+  padding: 0;
   overflow: hidden;
 }
 
@@ -30,7 +30,65 @@
   display: flex;
 }
 
-/* ── Game layout grid ── */
+/* ── Game single-column vertical stack ── */
+.mountain-view {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  gap: 0;
+}
+
+.route-strip {
+  display: flex;
+  flex-direction: column;
+  width: 2.2rem;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 0.4rem 0;
+  overflow: hidden;
+  align-items: center;
+}
+
+.mountain-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: clamp(0.6rem, 1.5vh, 1.1rem) clamp(0.75rem, 2vw, 1.25rem);
+  overflow-y: auto;
+  gap: 0.5rem;
+}
+
+/* ── Watch band horizontal layout ── */
+.watch-band {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ── Watch detail overlay layout ── */
+.watch-status-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.85fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.watch-core-column,
+.watch-status-column {
+  min-width: 0;
+}
+
+.watch-status-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Legacy game layout kept for overlay/overlay compat ── */
 .game-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(290px, 34vw);
@@ -46,22 +104,6 @@
   grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
 }
 
-/* ── Left panel: route track + field log ── */
-.left-panel {
-  display: grid;
-  grid-template-rows: minmax(0, 0.56fr) minmax(0, 0.44fr);
-  gap: clamp(0.6rem, 1.2vw, 1rem);
-  min-height: 0;
-}
-
-/* ── Right panel: watch, context, narrative, decisions ── */
-.right-panel {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
-  gap: clamp(0.6rem, 1.1vh, 1rem);
-  min-height: 0;
-}
-
 .status-stack {
   display: flex;
   flex-direction: column;
@@ -69,34 +111,6 @@
   min-height: 0;
   overflow: auto;
   padding-right: 0.2rem;
-}
-
-/* Command column (right panel) */
-.command-column {
-  display: grid;
-  grid-template-rows: auto auto auto auto minmax(180px, auto);
-  gap: 0.75rem;
-  align-content: start;
-  overflow: auto;
-  padding-right: 0.2rem;
-}
-
-.watch-status-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-  gap: 0.85rem;
-  align-items: start;
-}
-
-.watch-core-column,
-.watch-status-column {
-  min-width: 0;
-}
-
-.watch-status-column {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 /* ── Containers ── */
