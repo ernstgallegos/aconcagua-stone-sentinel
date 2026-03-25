@@ -1253,6 +1253,10 @@
   margin-top: 1.5rem;
 }
 
+.onboarding-back-link {
+  margin-left: auto;
+}
+
 /* ══════════════════════════════════════
    BLOCKING ERROR
    ══════════════════════════════════════ */
@@ -1361,6 +1365,11 @@
   padding: 1.25rem;
   background: rgba(5, 10, 18, 0.8);
   z-index: 2500;
+}
+
+/* Onboarding modal sits below other modals so tutorial can open on top */
+#onboarding-modal {
+  z-index: 2400;
 }
 
 .tutorial-modal.visible { display: flex; }

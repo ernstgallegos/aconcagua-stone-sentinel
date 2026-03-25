@@ -9,6 +9,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- Onboarding screen converted to a popup modal overlay (`#onboarding-modal`) that appears on top of the game screen instead of as a separate full-screen step. `showOnboarding()` now calls `startGame()` first (activating `screen-game`) and then shows the modal over it. Players can dismiss the modal with "Understood. Begin." to start playing, open the full tutorial from within the modal, or return to expedition setup via "Back to Setup" (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`, `prototype/web-v1/css/screens.css`).
+- `#onboarding-modal` z-index set to 2400 (below general tutorial-modal at 2500) so the tutorial/FAQ modal can open on top of the onboarding modal without interception (`prototype/web-v1/css/components.css`).
+- Removed `#screen-onboarding` section from `index.html` and its CSS rule from `screens.css`.
+- Updated `applyStaticTranslations()` to use new `#onboarding-modal` selectors instead of removed `#screen-onboarding` selectors.
+- Smoke tests updated to verify onboarding modal visibility over game screen instead of `screen-onboarding` activation (`prototype/web-v1/tests/test_smoke_flow.py`).
+
 ### Removed
 - Color scheme selector (theme switcher) removed from the welcome screen header. The game now uses the "sunset" palette exclusively — `prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/themes.css`.
 - Light, auto, and dark override theme CSS rules removed from `themes.css`; only sunset palette rules remain.

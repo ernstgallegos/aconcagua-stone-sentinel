@@ -335,13 +335,6 @@
    ONBOARDING — EXPERIMENTAL (Decision 15)
    ══════════════════════════════════════ */
 
-/* EXPERIMENTAL — Consolidated single briefing screen */
-#screen-onboarding {
-  padding: 2.5rem 1.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ══════════════════════════════════════
    FATAL ERROR
    ══════════════════════════════════════ */

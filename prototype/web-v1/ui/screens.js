@@ -816,8 +816,7 @@ function getRandomScenarioConfig() {
 function applyStaticTranslations() {
   const map = [
     ['.lang-switcher label', 'ui.language'],
-    ['#onboard-back-btn', 'ui.back'],
-    ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
+    ['#onboarding-understood-btn', 'ui.understoodBegin'],
     ['.decision-label', 'ui.decision'],
     ['#btn-advance .btn-decision-main span:first-child', 'ui.advance'],
     ['#btn-advance-slow .btn-decision-main span:first-child', 'ui.advanceSlow'],
@@ -829,12 +828,12 @@ function applyStaticTranslations() {
     ['#screen-journal .journal-header .btn-ghost', 'ui.clearLog'],
     ['#screen-title .title-tagline', 'ui.titleTagline'],
     ['#screen-title .title-sub', 'ui.titleSub'],
-    ['#screen-onboarding .onboard-actions .btn-ghost', 'ui.tutorialCta'],
-    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(1) .decision-cost', 'ui.onboardingAdvanceDesc'],
-    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(2) .decision-cost', 'ui.onboardingAdvanceSlowDesc'],
-    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(3) .decision-cost', 'ui.onboardingWaitDesc'],
-    ['#screen-onboarding .onboard-decisions .onboard-decision:nth-child(4) .decision-cost', 'ui.onboardingDescendDesc'],
-    ['#screen-onboarding .onboard-note', 'ui.onboardingNote'],
+    ['#onboarding-tutorial-btn', 'ui.tutorialCta'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(1) .decision-cost', 'ui.onboardingAdvanceDesc'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(2) .decision-cost', 'ui.onboardingAdvanceSlowDesc'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(3) .decision-cost', 'ui.onboardingWaitDesc'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(4) .decision-cost', 'ui.onboardingDescendDesc'],
+    ['#onboarding-modal .onboard-note', 'ui.onboardingNote'],
   ];
   map.forEach(([selector, key]) => {
     const el = document.querySelector(selector);
@@ -1571,11 +1570,22 @@ function confirmScenario() {
 // ════════════════════════════════════════════════
 function showOnboarding(mode) {
   document.getElementById('onboard-intro').textContent = G.scenario.intro || '';
-  document.getElementById('onboard-char-line').textContent =
-    `Expedition: ${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
-  const backBtn = document.getElementById('onboard-back-btn');
-  backBtn.onclick = () => showScreen('expedition-setup');
-  showScreen('onboarding');
+  const titleEl = document.getElementById('onboarding-modal-title');
+  if (titleEl) titleEl.textContent =
+    `${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
+  startGame();
+  const modal = document.getElementById('onboarding-modal');
+  if (modal) { modal.classList.add('visible'); modal.setAttribute('aria-hidden', 'false'); }
+}
+
+function closeOnboardingModal() {
+  const modal = document.getElementById('onboarding-modal');
+  if (modal) { modal.classList.remove('visible'); modal.setAttribute('aria-hidden', 'true'); }
+}
+
+function abandonOnboarding() {
+  closeOnboardingModal();
+  showScreen('expedition-setup');
 }
 
 // ════════════════════════════════════════════════
@@ -3817,6 +3827,8 @@ window.openIntroModal = openIntroModal;
 window.closeIntroModal = closeIntroModal;
 window.openTutorialModal = openTutorialModal;
 window.closeTutorialModal = closeTutorialModal;
+window.closeOnboardingModal = closeOnboardingModal;
+window.abandonOnboarding = abandonOnboarding;
 window.carouselPrev = carouselPrev;
 window.carouselNext = carouselNext;
 window.renderCarousel = renderCarousel;
