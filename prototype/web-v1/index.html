@@ -97,39 +97,7 @@
   </div>
 </section>
 
-<!-- ══════════════════════ ONBOARDING ══════════════════════ -->
-<section id="screen-onboarding" class="screen" aria-label="Expedition briefing">
-  <div style="max-width:560px; width:100%; margin:0 auto; padding:2rem 1.5rem; display:flex; flex-direction:column; flex:1;">
-    <button class="nav-back" id="onboard-back-btn" aria-label="Back">Back</button>
-    <div class="onboard-box">
-      <div class="onboard-intro" id="onboard-intro"></div>
-      <div class="onboard-char-line" id="onboard-char-line"></div>
-      <div class="onboard-decisions">
-        <div class="onboard-decision">
-          <div class="decision-key">ADVANCE</div>
-          <div class="decision-cost">Gain ground. High fatigue + exposure cost. Altitude amplifies all penalties.</div>
-        </div>
-        <div class="onboard-decision">
-          <div class="decision-key">ADVANCE SLOWLY</div>
-          <div class="decision-cost">Gain ground with less cost. 70% chance of progress. Still consumes resources.</div>
-        </div>
-        <div class="onboard-decision">
-          <div class="decision-key">WAIT</div>
-          <div class="decision-cost">Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.</div>
-        </div>
-        <div class="onboard-decision">
-          <div class="decision-key">DESCEND</div>
-          <div class="decision-cost">End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.</div>
-        </div>
-      </div>
-      <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
-      <div class="onboard-actions">
-        <button class="btn-ghost" onclick="openTutorialModal()">Full Tutorial / FAQ</button>
-        <button class="btn-primary" onclick="startGame()">Understood. Begin.</button>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ══════════════════════ GAME ══════════════════════ -->
 <section id="screen-game" class="screen" aria-label="Game">
@@ -706,6 +674,47 @@
   </div>
 </div>
 <div id="tutorial-toast" class="tutorial-toast" role="status" aria-live="polite"></div>
+
+<!-- ══════════════════════ ONBOARDING MODAL ══════════════════════ -->
+<div id="onboarding-modal" class="tutorial-modal" aria-hidden="true">
+  <div class="tutorial-dialog onboarding-dialog" role="dialog" aria-modal="true" aria-labelledby="onboarding-modal-title">
+    <div>
+      <div class="screen-kicker" id="onboarding-modal-kicker">Expedition Briefing</div>
+      <h3 id="onboarding-modal-title" class="onboard-char-line" style="margin:0;font-size:1rem;"></h3>
+    </div>
+    <section>
+      <p class="onboard-intro" id="onboard-intro" style="margin:0;padding:0;border:none;"></p>
+    </section>
+    <section>
+      <div class="onboard-decisions">
+        <div class="onboard-decision">
+          <div class="decision-key">ADVANCE</div>
+          <div class="decision-cost">Gain ground. High fatigue + exposure cost. Altitude amplifies all penalties.</div>
+        </div>
+        <div class="onboard-decision">
+          <div class="decision-key">ADVANCE SLOWLY</div>
+          <div class="decision-cost">Gain ground with less cost. 70% chance of progress. Still consumes resources.</div>
+        </div>
+        <div class="onboard-decision">
+          <div class="decision-key">WAIT</div>
+          <div class="decision-cost">Hold position. Recovery is meaningful only on approach and base sectors. Above high camp, waiting is mostly damage control.</div>
+        </div>
+        <div class="onboard-decision">
+          <div class="decision-key">DESCEND</div>
+          <div class="decision-cost">End the attempt voluntarily. Lowest cost. Always a valid and intelligent choice.</div>
+        </div>
+      </div>
+      <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
+    </section>
+    <section class="onboarding-cta-section">
+      <button class="btn-primary onboarding-begin-btn" onclick="closeOnboardingModal()" id="onboarding-understood-btn">Begin Expedition</button>
+      <div class="onboard-actions">
+        <button class="btn-ghost" onclick="openTutorialModal()" id="onboarding-tutorial-btn">Full Tutorial / FAQ</button>
+        <button class="btn-ghost onboarding-back-link" onclick="abandonOnboarding()" id="onboarding-back-btn">Back to Setup</button>
+      </div>
+    </section>
+  </div>
+</div>
 
 <script type="module" src="./ui/screens.js"></script>
 

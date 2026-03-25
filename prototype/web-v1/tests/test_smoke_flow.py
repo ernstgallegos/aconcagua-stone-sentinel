@@ -58,7 +58,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
 
         for screen in [
-            'title', 'expedition-setup', 'onboarding',
+            'title', 'expedition-setup',
             'game', 'debrief', 'summit-success', 'part2-character',
         ]:
             page.wait_for_selector(f'#screen-{screen}', state='attached')
@@ -75,15 +75,17 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         # Begin expedition with defaults (character/scenario defaults are index 0)
         page.click('#btn-begin-expedition')
 
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
-        onboard_text = page.locator('#onboard-char-line').inner_text()
+        # Onboarding now appears as a modal over the game screen
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+        page.wait_for_function("() => document.getElementById('onboarding-modal')?.classList.contains('visible')")
+        onboard_text = page.locator('#onboarding-modal-title').inner_text()
         assert len(onboard_text) > 0
-        page.click('#screen-onboarding .btn-ghost')
+        page.click('#onboarding-tutorial-btn')
         page.wait_for_function("() => document.getElementById('tutorial-modal')?.classList.contains('visible')")
         page.click('#tutorial-modal .btn-ghost')
         page.wait_for_function("() => !document.getElementById('tutorial-modal')?.classList.contains('visible')")
-        page.click('#screen-onboarding .btn-primary')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+        page.click('#onboarding-understood-btn')
+        page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
 
         page.evaluate("() => window.showScreen('part2-character')")
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-debrief'")
@@ -139,9 +141,10 @@ def test_post_summit_return_requires_explicit_horcones_exit_smoke():
         page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
         reach_expedition_setup(page)
         page.click('#btn-begin-expedition')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
-        page.click('#screen-onboarding .btn-primary')
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+        page.wait_for_function("() => document.getElementById('onboarding-modal')?.classList.contains('visible')")
+        page.click('#onboarding-understood-btn')
+        page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
 
         page.evaluate(
             """async () => {
@@ -201,9 +204,10 @@ def test_shoot_photo_visibility_stays_daniela_only_smoke():
             )
 
             page.click('#btn-begin-expedition')
-            page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-onboarding'")
-            page.click('#screen-onboarding .btn-primary')
             page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+            page.wait_for_function("() => document.getElementById('onboarding-modal')?.classList.contains('visible')")
+            page.click('#onboarding-understood-btn')
+            page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
 
         reach_game_with_character('francisco')
         assert page.locator('#btn-shoot-photo').evaluate("button => getComputedStyle(button).display") == 'none'
