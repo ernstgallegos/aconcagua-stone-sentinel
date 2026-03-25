@@ -12,6 +12,17 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Fixed
 - Replaced personal email `ernestogallegos@gmail.com` with the official project contact address `aconcaguastonesentinel@gmail.com` across all interfaces, code, and documentation (`prototype/web-v1/index.html`, `LICENSE.md`, `README.md`, `README.es.md`, `CONTRIBUTING.md`).
 - Random character card in expedition-setup carousel now displays the portrait image (`art/characters/random.png`). Added `random: 'random'` to `getCharacterImagePath()` nameMap and added `<img class="carousel-card-portrait">` to the `item._random` render block in `renderCarousel()` (`prototype/web-v1/ui/screens.js`).
+- Fixed pre-existing bug in `prototype/web-v1/tests/test_smoke_flow.py`: `wait_for_selector` calls used default `state='visible'` which timed out on hidden screens; changed to `state='attached'`. Also fixed incorrect selectors `.title-info-trigger` (was scoped to `#screen-title`, now top-level) and `.title-screen-advance` (was `.btn-primary` inside title screen).
+
+### Changed
+- `screen-part2-character` (Part 2 character and route selection) now uses the same carousel structure and visual treatment as `screen-expedition-setup`: blurred concept-art background (`concept-curated-4.webp`), carousel tracks with arrows and position dots, character portrait images, and collapsible info panel (`prototype/web-v1/index.html`, `prototype/web-v1/css/screens.css`, `prototype/web-v1/ui/screens.js`).
+- Part 2 carousel starts at Francisco + Guided Ascent (the only unlocked pair), so the confirm button is immediately enabled — matching Part 1 expedition-setup behavior. Navigating to a locked character or route disables it.
+- Locked Part 2 options render with dashed border and `🔒 LOCKED FOR NOW` / `🔒 Coming later` pill on the carousel card, same `.part2-lock-pill` style as before.
+- CSS sync rule: `#screen-expedition-setup` and `#screen-part2-character` now share a single selector block for background, padding, and z-index stacking in `css/screens.css`. A comment mandates mirroring any background changes across both selectors.
+- JS sync rule: `renderPart2Carousel()` in `ui/screens.js` carries an explicit code comment that it mirrors `renderCarousel()` for character cards. Any future change to the Part 1 card template (portrait, name/role/tag rows, info button) must also be applied to `renderPart2Carousel()`.
+- Part 2 setup functions refactored: `buildPart2SetupScreen()` now initializes `CAROUSEL_STATE_PART2` and calls `renderPart2Carousel()`. Removed `PART2_SELECTION` object, `selectPart2Character()`, and `selectPart2Scenario()` (carousel index is now the canonical selection). Added `getPart2CarouselItems()`, `renderPart2Carousel()`, `togglePart2CarouselInfo()`, `part2CarouselPrev()`, `part2CarouselNext()`.
+- Updated `test_smoke_flow.py` Part 2 assertions to use carousel-based navigation (arrow clicks, dot count) instead of grid card IDs.
+- Updated `new-mechanics.test.js` Part 2 bridge test to check for `id="part2-carousel-card-character"` / `id="part2-carousel-card-route"` instead of the removed grid IDs.
 
 ### Added
 - Game screen redesign: new single-column layout replacing the two-column `game-layout-redesign` grid.

@@ -173,9 +173,13 @@ const CAROUSEL_STATE = {
   scenario: { index: 0 },
 };
 
-const PART2_SELECTION = {
-  characterId: null,
-  scenarioId: null,
+// NOTE: CAROUSEL_STATE_PART2 mirrors CAROUSEL_STATE for screen-part2-character.
+// It is kept separate to avoid interfering with Part 1 expedition-setup navigation.
+// The Part 2 carousels are rendered by renderPart2Carousel(), which intentionally
+// mirrors renderCarousel() — keep both in sync when changing card templates.
+const CAROUSEL_STATE_PART2 = {
+  character: { index: 0 },
+  route: { index: 0 },
 };
 
 const PART2_ROUTE_OPTIONS = [
@@ -1033,6 +1037,46 @@ function carouselNext(type) {
   renderCarousel(type);
 }
 
+// ════════════════════════════════════════════════
+// PART 2 CAROUSELS — mirrors expedition-setup carousels
+// NOTE: getPart2CarouselItems, renderPart2Carousel, and togglePart2CarouselInfo
+// intentionally mirror their Part 1 counterparts (getCarouselItems, renderCarousel,
+// toggleCarouselInfo). When updating the character card template in renderCarousel(),
+// apply the same changes to the character branch of renderPart2Carousel() so that
+// both screens stay visually in sync.
+// ════════════════════════════════════════════════
+function getPart2CarouselItems(type) {
+  if (type === 'character') {
+    return (DATA_CONFIG.characters || []).map((c) => ({
+      ...c,
+      // Only Francisco is unlocked for Part 2
+      _part2Locked: c.id !== 'francisco',
+    }));
+  }
+  if (type === 'route') {
+    return getPart2RouteOptions().map((r) => ({
+      ...r,
+      // Only guided-normal-route is unlocked for Part 2
+      _part2Locked: r.id !== 'guided-normal-route',
+    }));
+  }
+  return [];
+}
+
+function part2CarouselPrev(type) {
+  const items = getPart2CarouselItems(type);
+  if (!items.length) return;
+  CAROUSEL_STATE_PART2[type].index = (CAROUSEL_STATE_PART2[type].index - 1 + items.length) % items.length;
+  renderPart2Carousel(type);
+}
+
+function part2CarouselNext(type) {
+  const items = getPart2CarouselItems(type);
+  if (!items.length) return;
+  CAROUSEL_STATE_PART2[type].index = (CAROUSEL_STATE_PART2[type].index + 1) % items.length;
+  renderPart2Carousel(type);
+}
+
 function getCharacterImagePath(charId) {
   const nameMap = {
     francisco: 'francisco-aguirre',
@@ -1269,174 +1313,165 @@ function getPart2RouteOptions() {
   }));
 }
 
-function renderPart2CharacterInfo(character) {
-  const info = document.getElementById('part2-character-info');
-  if (!info) return;
-  const isLocked = character.id !== 'francisco';
-  info.innerHTML = `
-    <div class="carousel-info-content">
-      <p class="carousel-info-bio">${isLocked
-        ? uiText('This climber is visible in the Part 2 roster preview, but their real-expedition branch is still locked for a future update.', 'Este escalador aparece en la vista previa del roster de la Parte 2, pero su rama de expedición real sigue bloqueada para una futura actualización.')
-        : (character.bio || '')}</p>
-      ${isLocked
-        ? `<p class="carousel-info-bio">${uiText('Only Francisco is confirmed in the current public bridge build.', 'Solo Francisco está confirmado en la compilación pública actual del puente narrativo.')}</p>`
-        : `<ul class="carousel-info-traits">${(character.traits || []).map((trait) => `<li>${trait}</li>`).join('')}</ul>`}
-    </div>
-  `;
+// NOTE: renderPart2Carousel mirrors renderCarousel() for visual consistency between
+// screen-part2-character and screen-expedition-setup. When changing the character
+// card HTML template (portrait, name/role/tag rows, info button) in renderCarousel(),
+// apply the same changes here. The lock pill is the only Part 2-specific addition.
+function renderPart2Carousel(type) {
+  const items = getPart2CarouselItems(type);
+  if (!items.length) return;
+  const idx = CAROUSEL_STATE_PART2[type].index;
+  const item = items[idx];
+
+  const cardEl = document.getElementById(`part2-carousel-card-${type}`);
+  const dotsEl = document.getElementById(`part2-carousel-dots-${type}`);
+  if (!cardEl) return;
+
+  const isLocked = !!item._part2Locked;
+
+  if (type === 'character') {
+    const c = localizeCharacter(item);
+    // safeIdx captures the current index value for the onclick closure (mirrors renderCarousel pattern)
+    const safeIdx = idx;
+    const imgPath = getCharacterImagePath(item.id);
+    const imgHtml = imgPath
+      ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" />`
+      : '';
+    // Apply locked style on the card element itself (matches .carousel-card.part2-locked in CSS)
+    cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
+    cardEl.innerHTML = `
+      ${imgHtml}
+      <div class="carousel-card-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
+      <div class="carousel-card-role">${c.role}</div>
+      <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
+      ${isLocked ? `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>` : ''}
+      <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
+    `;
+    const infoBtn = cardEl.querySelector('.carousel-info-btn');
+    if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('character', safeIdx);
+  } else if (type === 'route') {
+    const safeIdx = idx; // capture for onclick closure (mirrors renderCarousel pattern)
+    cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
+    cardEl.innerHTML = `
+      <div class="carousel-card-num">${item.tag}</div>
+      <div class="carousel-card-name">${item.name}</div>
+      <div class="carousel-card-role">${item.desc}</div>
+      ${isLocked ? `<div class="part2-lock-pill">🔒 ${uiText('Coming later', 'Llega más adelante')}</div>` : ''}
+      <button class="carousel-info-btn" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
+    `;
+    const infoBtn = cardEl.querySelector('.carousel-info-btn');
+    if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('route', safeIdx);
+  }
+
+  // Hide info panel when card changes
+  const infoEl = document.getElementById(`part2-carousel-info-${type}`);
+  if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
+
+  // Render dots
+  if (dotsEl) {
+    dotsEl.innerHTML = items.map((_, i) =>
+      `<span class="carousel-dot${i === idx ? ' active' : ''}"></span>`
+    ).join('');
+  }
+
+  // Update confirm button based on current carousel positions
+  updatePart2ConfirmState();
 }
 
-function renderPart2ScenarioInfo(route) {
-  const info = document.getElementById('part2-scenario-info');
-  if (!info) return;
-  const isLocked = !route.selectable;
-  info.innerHTML = `
-    <div class="carousel-info-content">
-      <p class="carousel-info-bio">${route.desc}</p>
-      <p class="carousel-info-bio">${isLocked
-        ? uiText('This route preview stays visible to show future branches, but only the guided transfer is currently playable in the bridge.', 'Esta vista previa de ruta permanece visible para mostrar ramas futuras, pero solo el traslado guiado es jugable actualmente en el puente.')
-        : uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
-    </div>
-  `;
-}
+// NOTE: togglePart2CarouselInfo mirrors toggleCarouselInfo() for Part 2.
+// When updating info panel content logic in toggleCarouselInfo(), apply the same
+// structural changes here; the only difference is the locked-item copy.
+function togglePart2CarouselInfo(type, idx) {
+  const infoEl = document.getElementById(`part2-carousel-info-${type}`);
+  if (!infoEl) return;
 
+  // Toggle: if already shown for this index, hide it
+  if (infoEl.dataset.shownFor === String(idx) && infoEl.classList.contains('visible')) {
+    infoEl.classList.remove('visible');
+    delete infoEl.dataset.shownFor;
+    return;
+  }
+
+  const items = getPart2CarouselItems(type);
+  const item = items[idx];
+  const isLocked = !!item._part2Locked;
+
+  if (type === 'character') {
+    const c = localizeCharacter(item);
+    infoEl.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${isLocked
+          ? uiText('This climber is visible in the Part 2 roster preview, but their real-expedition branch is still locked for a future update.', 'Este escalador aparece en la vista previa del roster de la Parte 2, pero su rama de expedición real sigue bloqueada para una futura actualización.')
+          : (c.bio || '')}</p>
+        ${isLocked
+          ? `<p class="carousel-info-bio">${uiText('Only Francisco is confirmed in the current public bridge build.', 'Solo Francisco está confirmado en la compilación pública actual del puente narrativo.')}</p>`
+          : `<ul class="carousel-info-traits">${(c.traits || []).map((tr) => `<li>${tr}</li>`).join('')}</ul>`}
+      </div>
+    `;
+  } else if (type === 'route') {
+    infoEl.innerHTML = `
+      <div class="carousel-info-content">
+        <p class="carousel-info-bio">${item.desc}</p>
+        <p class="carousel-info-bio">${isLocked
+          ? uiText('This route preview stays visible to show future branches, but only the guided transfer is currently playable in the bridge.', 'Esta vista previa de ruta permanece visible para mostrar ramas futuras, pero solo el traslado guiado es jugable actualmente en el puente.')
+          : uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
+      </div>
+    `;
+  } else {
+    return;
+  }
+
+  infoEl.dataset.shownFor = String(idx);
+  infoEl.classList.add('visible');
+}
 
 function buildPart2SetupScreen() {
-  PART2_SELECTION.characterId = null;
-  PART2_SELECTION.scenarioId = null;
+  // Initialize Part 2 carousels: start at Francisco (only selectable character)
+  // and guided-normal-route (only selectable route), matching expedition-setup
+  // behaviour where the default item is immediately confirmable.
+  const charItems = getPart2CarouselItems('character');
+  const franciscoIdx = charItems.findIndex((c) => c.id === 'francisco');
+  CAROUSEL_STATE_PART2.character.index = franciscoIdx >= 0 ? franciscoIdx : 0;
 
-  const charGrid = document.getElementById('part2-character-grid');
-  const charInfo = document.getElementById('part2-character-info');
-  const routeGrid = document.getElementById('part2-route-grid');
-  const scenarioInfo = document.getElementById('part2-scenario-info');
+  const routeItems = getPart2CarouselItems('route');
+  const guidedIdx = routeItems.findIndex((r) => r.id === 'guided-normal-route');
+  CAROUSEL_STATE_PART2.route.index = guidedIdx >= 0 ? guidedIdx : 0;
+
+  renderPart2Carousel('character');
+  renderPart2Carousel('route');
+
+  // Update label text for current language
+  const lblChar = document.getElementById('part2-carousel-label-character');
+  if (lblChar) lblChar.textContent = t('ui.carouselCharacter');
+  const lblRoute = document.getElementById('part2-carousel-label-route');
+  if (lblRoute) lblRoute.textContent = uiText('Route', 'Ruta');
+
+  // Screen subtitle
+  const subtitleEl = document.getElementById('part2-setup-subtitle');
+  if (subtitleEl) {
+    subtitleEl.textContent = uiText(
+      'Browse the full Part 2 roster. Only Francisco and the guided Normal Route are unlocked.',
+      'Explorá el roster completo de la Parte 2. Solo Francisco y la Ruta Normal guiada están desbloqueados.'
+    );
+  }
+
+  // Action button text
   const confirmBtn = document.getElementById('btn-part2-confirm');
-  const characters = (DATA_CONFIG.characters || []).map((character) => localizeCharacter(character));
-  const routes = getPart2RouteOptions();
-
-  if (charGrid) {
-    charGrid.innerHTML = '';
-    characters.forEach((character) => {
-      const selectable = character.id === 'francisco';
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.id = `part2-char-${character.id}`;
-      card.className = `carousel-card part2-static-card${selectable ? '' : ' part2-locked'}`;
-      card.setAttribute('role', 'radio');
-      card.setAttribute('aria-checked', 'false');
-      card.setAttribute('aria-disabled', selectable ? 'false' : 'true');
-      card.dataset.part2Selectable = selectable ? 'true' : 'false';
-      card.innerHTML = `
-        <div class="carousel-card-name">${character.name}${character.flag ? ' <span class="char-flag">' + character.flag + '</span>' : ''}</div>
-        <div class="carousel-card-role">${character.role || uiText('Lead Climber', 'Escalador principal')}</div>
-        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${character.difficultyLabel || uiText('High commitment', 'Compromiso alto')}</div>
-        ${selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>`}
-      `;
-      card.onclick = () => selectPart2Character(character.id);
-      card.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          selectPart2Character(character.id);
-        }
-      };
-      charGrid.appendChild(card);
-    });
-  }
-
-  if (charInfo) {
-    const francisco = characters.find((character) => character.id === 'francisco');
-    if (francisco) renderPart2CharacterInfo(francisco);
-  }
-
-  if (routeGrid) {
-    routeGrid.innerHTML = '';
-    routes.forEach((route) => {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.id = `part2-route-${route.id}`;
-      card.className = `carousel-card part2-static-card${route.selectable ? '' : ' part2-locked'}`;
-      card.setAttribute('role', 'radio');
-      card.setAttribute('aria-checked', 'false');
-      card.setAttribute('aria-disabled', route.selectable ? 'false' : 'true');
-      card.dataset.part2Selectable = route.selectable ? 'true' : 'false';
-      card.innerHTML = `
-        <div class="carousel-card-num">${route.tag}</div>
-        <div class="carousel-card-name">${route.name}</div>
-        <div class="carousel-card-role">${route.desc}</div>
-        ${route.selectable ? '' : `<div class="part2-lock-pill">🔒 ${uiText('Coming later', 'Llega más adelante')}</div>`}
-      `;
-      card.onclick = () => selectPart2Scenario(route.id);
-      card.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          selectPart2Scenario(route.id);
-        }
-      };
-      routeGrid.appendChild(card);
-    });
-  }
-
-  if (scenarioInfo) {
-    const guided = routes.find((route) => route.id === 'guided-normal-route');
-    if (guided) renderPart2ScenarioInfo(guided);
-  }
-
-  if (confirmBtn) {
-    confirmBtn.disabled = true;
-    confirmBtn.setAttribute('aria-disabled', 'true');
-    confirmBtn.textContent = uiText('Continue to Mendoza', 'Continuar a Mendoza');
-  }
+  if (confirmBtn) confirmBtn.textContent = uiText('Continue to Mendoza', 'Continuar a Mendoza');
 }
 
 function updatePart2ConfirmState() {
   const btn = document.getElementById('btn-part2-confirm');
   if (!btn) return;
-  const ready = PART2_SELECTION.characterId === 'francisco' && PART2_SELECTION.scenarioId === 'guided-normal-route';
+  // Confirm is enabled only when the current carousel items are the unlocked pair
+  const charItems = getPart2CarouselItems('character');
+  const routeItems = getPart2CarouselItems('route');
+  const currentChar = charItems[CAROUSEL_STATE_PART2.character.index];
+  const currentRoute = routeItems[CAROUSEL_STATE_PART2.route.index];
+  const ready = !!(currentChar && !currentChar._part2Locked && currentRoute && !currentRoute._part2Locked);
   btn.disabled = !ready;
   if (ready) btn.removeAttribute('aria-disabled');
   else btn.setAttribute('aria-disabled', 'true');
-}
-
-function selectPart2Character(id) {
-  const characters = (DATA_CONFIG.characters || []).map((character) => localizeCharacter(character));
-  const selectedCharacter = characters.find((character) => character.id === id);
-  document.querySelectorAll('#part2-character-grid .part2-static-card').forEach((card) => {
-    card.classList.remove('selected');
-    card.setAttribute('aria-checked', 'false');
-  });
-  if (!selectedCharacter) return;
-  renderPart2CharacterInfo(selectedCharacter);
-  if (id !== 'francisco') {
-    PART2_SELECTION.characterId = null;
-    updatePart2ConfirmState();
-    return;
-  }
-  const card = document.getElementById(`part2-char-${id}`);
-  if (!card) return;
-  PART2_SELECTION.characterId = id;
-  card.classList.add('selected');
-  card.setAttribute('aria-checked', 'true');
-  updatePart2ConfirmState();
-}
-
-function selectPart2Scenario(id) {
-  const routes = getPart2RouteOptions();
-  const selectedRoute = routes.find((route) => route.id === id);
-  document.querySelectorAll('#part2-route-grid .part2-static-card').forEach((card) => {
-    card.classList.remove('selected');
-    card.setAttribute('aria-checked', 'false');
-  });
-  if (!selectedRoute) return;
-  renderPart2ScenarioInfo(selectedRoute);
-  if (id !== 'guided-normal-route') {
-    PART2_SELECTION.scenarioId = null;
-    updatePart2ConfirmState();
-    return;
-  }
-  const card = document.getElementById(`part2-route-${id}`);
-  if (!card) return;
-  PART2_SELECTION.scenarioId = id;
-  card.classList.add('selected');
-  card.setAttribute('aria-checked', 'true');
-  updatePart2ConfirmState();
 }
 
 function confirmPart2Character() {
@@ -1444,7 +1479,13 @@ function confirmPart2Character() {
     showScreen('debrief');
     return;
   }
-  if (PART2_SELECTION.characterId !== 'francisco' || PART2_SELECTION.scenarioId !== 'guided-normal-route') return;
+  const charItems = getPart2CarouselItems('character');
+  const routeItems = getPart2CarouselItems('route');
+  const currentChar = charItems[CAROUSEL_STATE_PART2.character.index];
+  const currentRoute = routeItems[CAROUSEL_STATE_PART2.route.index];
+  // Guard: only proceed when Francisco + guided-normal-route are current
+  if (!currentChar || currentChar.id !== 'francisco') return;
+  if (!currentRoute || currentRoute.id !== 'guided-normal-route') return;
   showScreen('part2-hotel');
 }
 
@@ -3530,6 +3571,9 @@ window.startGame = startGame;
 window.confirmScenario = confirmScenario;
 window.confirmCharacter = confirmCharacter;
 window.confirmPart2Character = confirmPart2Character;
+window.part2CarouselPrev = part2CarouselPrev;
+window.part2CarouselNext = part2CarouselNext;
+window.CAROUSEL_STATE_PART2 = CAROUSEL_STATE_PART2;
 window.setLanguage = setLanguage;
 window.setVisualMode = setVisualMode;
 window.clearJournal = clearJournal;

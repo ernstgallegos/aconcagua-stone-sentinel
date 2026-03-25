@@ -46,7 +46,7 @@ def expect_disabled(page, selector: str, expected: bool):
 
 def reach_expedition_setup(page):
     """Navigate from welcome screen to expedition-setup screen."""
-    page.click('#screen-title .btn-primary')
+    page.click('.title-screen-advance')
     page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-expedition-setup'")
 
 
@@ -61,11 +61,11 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
             'title', 'expedition-setup', 'onboarding',
             'game', 'debrief', 'summit-success', 'part2-character',
         ]:
-            page.wait_for_selector(f'#screen-{screen}')
+            page.wait_for_selector(f'#screen-{screen}', state='attached')
 
         assert _active_screen(page) == 'screen-title'
         assert page.locator('#theme-select option').all_inner_texts() == ['🌙', '☀️', '🌇', '🌓']
-        page.click('#screen-title .title-info-trigger')
+        page.click('.title-info-trigger')
         page.wait_for_function("() => document.getElementById('intro-modal')?.classList.contains('visible')")
         page.click('#intro-modal .btn-ghost')
         page.wait_for_function("() => !document.getElementById('intro-modal')?.classList.contains('visible')")
@@ -97,23 +97,31 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         )
 
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-part2-character'")
+
+        # Screen starts at Francisco + guided-normal-route → confirm immediately enabled
+        expect_disabled(page, '#btn-part2-confirm', False)
+
+        # Character carousel has one card per character (6 dots)
+        assert page.locator('#part2-carousel-dots-character .carousel-dot').count() == 6
+        # Route carousel has one card per route (3 dots)
+        assert page.locator('#part2-carousel-dots-route .carousel-dot').count() >= 3
+
+        # Navigate character to a locked character (Laura, index 1)
+        page.click('#part2-carousel-arrow-character-next')
         expect_disabled(page, '#btn-part2-confirm', True)
+        assert page.locator('#part2-carousel-card-character .part2-lock-pill').count() == 1
 
-        assert page.locator('#part2-character-grid .part2-static-card').count() == 6
-        assert page.locator('#part2-route-grid .part2-static-card').count() >= 3
-        assert page.locator('#part2-char-laura').get_attribute('aria-disabled') == 'true'
-        assert page.locator('#part2-route-independent-normal-route').get_attribute('aria-disabled') == 'true'
+        # Navigate back to Francisco — confirm should be enabled again
+        page.click('#part2-carousel-arrow-character-prev')
+        expect_disabled(page, '#btn-part2-confirm', False)
 
-        page.click('#part2-char-laura')
+        # Navigate route to a locked route (independent-normal-route, index 1)
+        page.click('#part2-carousel-arrow-route-next')
         expect_disabled(page, '#btn-part2-confirm', True)
+        assert page.locator('#part2-carousel-card-route .part2-lock-pill').count() == 1
 
-        page.click('#part2-char-francisco')
-        expect_disabled(page, '#btn-part2-confirm', True)
-
-        page.click('#part2-route-independent-normal-route')
-        expect_disabled(page, '#btn-part2-confirm', True)
-
-        page.click('#part2-route-guided-normal-route')
+        # Navigate back to guided-normal-route — confirm should be enabled
+        page.click('#part2-carousel-arrow-route-prev')
         expect_disabled(page, '#btn-part2-confirm', False)
 
         page.click('#btn-part2-confirm')
