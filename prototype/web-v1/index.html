@@ -446,29 +446,48 @@
 </section>
 
 <!-- ══════════════════════ PART 2 CHARACTER ══════════════════════ -->
+<!-- NOTE: This screen intentionally mirrors screen-expedition-setup's carousel structure
+     and visual treatment. Visual changes to the expedition-setup carousel (renderCarousel
+     in ui/screens.js) must also be applied to renderPart2Carousel(). CSS changes to
+     #screen-expedition-setup background/padding must be mirrored in #screen-part2-character
+     (see css/screens.css). -->
 <section id="screen-part2-character" class="screen" aria-label="Part 2 character and route selection">
-  <div class="expedition-setup-shell part2-setup-shell">
+  <div class="expedition-setup-shell">
     <button class="nav-back" onclick="showScreen('summit-success')" aria-label="Back to summit-success">Back</button>
-    <div class="screen-header part2-setup-header">
-      <h2>The Real Expedition</h2>
-      <p>Browse the full Part 2 roster, but for now only Francisco and the guided Normal Route transfer are unlocked.</p>
+    <div class="screen-header">
+      <h2 id="part2-setup-title">The Real Expedition</h2>
+      <p id="part2-setup-subtitle">Browse the full Part 2 roster. Only Francisco and the guided Normal Route are unlocked.</p>
     </div>
 
-    <div class="carousel-section" role="group" aria-labelledby="part2-character-label">
-      <div class="carousel-label" id="part2-character-label">Character</div>
-      <div class="part2-option-grid" id="part2-character-grid" role="radiogroup" aria-labelledby="part2-character-label">
+    <!-- Character carousel (Part 2) — mirrors expedition-setup character carousel -->
+    <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-character">
+      <div class="carousel-label" id="part2-carousel-label-character">Character</div>
+      <div class="carousel-track">
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-prev" onclick="part2CarouselPrev('character')" aria-label="Previous character">◀</button>
+        <div class="carousel-card-wrapper">
+          <div class="carousel-card" id="part2-carousel-card-character"></div>
+        </div>
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-next" onclick="part2CarouselNext('character')" aria-label="Next character">▶</button>
       </div>
-      <div class="carousel-info-panel visible" id="part2-character-info"></div>
+      <div class="carousel-dots" id="part2-carousel-dots-character" aria-hidden="true"></div>
+      <div class="carousel-info-panel" id="part2-carousel-info-character"></div>
     </div>
 
-    <div class="carousel-section" role="group" aria-labelledby="part2-scenario-label">
-      <div class="carousel-label" id="part2-scenario-label">Route</div>
-      <div class="part2-option-grid" id="part2-route-grid" role="radiogroup" aria-labelledby="part2-scenario-label">
+    <!-- Route carousel (Part 2) — mirrors expedition-setup scenario carousel -->
+    <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-route">
+      <div class="carousel-label" id="part2-carousel-label-route">Route</div>
+      <div class="carousel-track">
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-prev" onclick="part2CarouselPrev('route')" aria-label="Previous route">◀</button>
+        <div class="carousel-card-wrapper">
+          <div class="carousel-card" id="part2-carousel-card-route"></div>
+        </div>
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-next" onclick="part2CarouselNext('route')" aria-label="Next route">▶</button>
       </div>
-      <div class="carousel-info-panel visible" id="part2-scenario-info"></div>
+      <div class="carousel-dots" id="part2-carousel-dots-route" aria-hidden="true"></div>
+      <div class="carousel-info-panel" id="part2-carousel-info-route"></div>
     </div>
 
-    <div class="expedition-setup-actions part2-setup-actions">
+    <div class="expedition-setup-actions">
       <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
       <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" onclick="confirmPart2Character()">Continue to Mendoza</button>
     </div>

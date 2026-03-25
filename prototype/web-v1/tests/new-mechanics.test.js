@@ -94,8 +94,8 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
 });
 
 test('Part 2 bridge keeps the full roster visible while gating the public path', () => {
-  assert.match(indexSource, /id="part2-character-grid"/);
-  assert.match(indexSource, /id="part2-route-grid"/);
+  assert.match(indexSource, /id="part2-carousel-card-character"/);
+  assert.match(indexSource, /id="part2-carousel-card-route"/);
   assert.match(uiSource, /const PART2_ROUTE_OPTIONS = \[/);
   assert.match(uiSource, /id: 'guided-normal-route'/);
   assert.match(uiSource, /id: 'independent-normal-route'/);
