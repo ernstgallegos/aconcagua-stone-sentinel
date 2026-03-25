@@ -231,6 +231,26 @@ Estado de Parte 2 (v1.4):
 
 Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
 
+### Deep-link URLs
+
+Cada pantalla del prototipo es accesible directamente mediante una URL basada en hash. Después de cargar los datos, `handleDeepLink()` lee `window.location.hash` y navega en consecuencia. La navegación normal dentro de la app mantiene el hash sincronizado, por lo que cualquier pantalla es compartible.
+
+Formato: `https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#<screenId>[&param=valor…]`
+
+Ejemplos:
+
+```
+#title
+#expedition-setup
+#game&character=francisco&scenario=assisted-route&seed=1234
+#onboarding&character=laura&scenario=narrow-weather-window
+#debrief&outcome=Collapse%20(Fatigue)
+#summit-success
+#part2-character&force=1
+```
+
+Tabla completa con las 14 pantallas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+
 ## Estructura del repositorio
  
  - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español) y propuesta de artefacto mínimo reproducible (solo en inglés).

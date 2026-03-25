@@ -919,6 +919,14 @@ function showScreen(id) {
         backBtn.onclick = () => showScreen(origin);
       }
     }
+
+    // Sync URL hash so the current screen is shareable.
+    // Suppressed during deep-link bootstrap to avoid overwriting the incoming URL.
+    if (_suppressHashSync) {
+      _suppressHashSync = false;
+    } else {
+      try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    }
   };
 
   if (reduceMotion || !currentActive || currentActive.id === 'screen-' + id) {
@@ -3501,6 +3509,7 @@ initWelcomeScreen();
 loadDataConfig().then(() => {
   buildCharacterGrid();
   buildScenarioGrid();
+  handleDeepLink();
 });
 
 const introModal = document.getElementById('intro-modal');
@@ -3560,6 +3569,254 @@ function updateDebriefHero(outcome) {
   setId('dsg-outcome', `${outcome.label || '—'} · ${sc.name || '—'} · Seed ${G.seed || '—'}`);
 }
 
+
+// ════════════════════════════════════════════════
+// DEEP-LINK SUPPORT
+// Hash format: #<screenId>[&key=val[&key=val...]]
+// Supported params: character, scenario, seed, outcome, force
+// ════════════════════════════════════════════════
+
+/** Flag set to true while handling a deep-link navigation so showScreen()
+ *  does not immediately overwrite the incoming hash. Resets inside activateTarget(). */
+let _suppressHashSync = false;
+
+/**
+ * Parse window.location.hash into { screenId, params }.
+ * Returns null when hash is empty or has no screen segment.
+ */
+function parseDeepLinkHash() {
+  const raw = window.location.hash.slice(1); // strip leading #
+  if (!raw) return null;
+  const segments = raw.split('&');
+  const screenId = decodeURIComponent(segments[0]);
+  if (!screenId) return null;
+  const params = {};
+  for (let i = 1; i < segments.length; i++) {
+    const eq = segments[i].indexOf('=');
+    if (eq !== -1) {
+      params[decodeURIComponent(segments[i].slice(0, eq))] = decodeURIComponent(segments[i].slice(eq + 1));
+    } else {
+      params[decodeURIComponent(segments[i])] = true;
+    }
+  }
+  return { screenId, params };
+}
+
+/**
+ * Build a minimal plausible turn log for mock debrief display.
+ * Keeps analytics / sparkline widgets non-empty.
+ */
+function buildMockTurnLog(outcomeLabel) {
+  const collapseOutcomes = new Set(['Rescue', 'Collapse (Fatigue)', 'Collapse (Exposure)', 'Resource Exhaustion', 'Permit Expired', 'Fatality']);
+  const isCollapse = collapseOutcomes.has(outcomeLabel);
+    turn,
+    decision,
+    position: POSITIONS[posIdx] || POSITIONS[0] || 'horcones',
+    trend,
+    flags,
+    outcome: 'Strategic Retreat',
+    raw: { capacity: 80 - turn * 4, fatigue: 10 + turn * 3, exposure: 5 + turn * 2 },
+  });
+  return [
+    mkEntry(1, 'advance',        0, 'stable',    []),
+    mkEntry(2, 'advance',        1, 'stable',    []),
+    mkEntry(3, 'wait',           1, 'worsening', []),
+    mkEntry(4, 'advance_slowly', 2, 'stable',    isCollapse ? ['critical-fatigue'] : []),
+    mkEntry(5, 'descend',        1, 'worsening', []),
+  ];
+}
+
+/**
+ * Set up a minimal mock state so the debrief screen renders without a live run.
+ * Used by handleDeepLink for #debrief deep links (option A: mock data).
+ */
+function bootstrapMockDebrief(params) {
+  const chars = DATA_CONFIG.characters || [];
+  const char = (params.character && chars.find(c => c.id === params.character)) || chars[0];
+  if (!char) { showScreen('title'); return; }
+
+  const scenarios = getConfiguredScenarios();
+  const scenario = (params.scenario && scenarios.find(s => s.id === params.scenario)) || scenarios[0];
+  if (!scenario) { showScreen('title'); return; }
+
+  const VALID_OUTCOMES = CANONICAL_OUTCOMES.size > 0 ? CANONICAL_OUTCOMES : new Set([
+    'Summit and Safe Return', 'High Point Return', 'Strategic Retreat', 'Rescue',
+    'Collapse (Fatigue)', 'Collapse (Exposure)', 'Resource Exhaustion',
+    'Expedition Window Closed', 'Permit Expired', 'Fatality',
+  ]);
+  const finalOutcome = (params.outcome && VALID_OUTCOMES.has(params.outcome))
+    ? params.outcome
+    : 'Strategic Retreat';
+
+  const seeds = scenario.seeds || [];
+  const seed = params.seed
+    ? parseInt(params.seed, 10)
+    : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+
+  const highIdx = finalOutcome === 'Summit and Safe Return'
+    ? POSITIONS.length - 1
+    : Math.floor(POSITIONS.length / 2);
+
+  const mockLog = buildMockTurnLog(finalOutcome);
+
+  // Apply minimal G state so classifyOutcome / updateDebriefHero / analytics work
+  G.character = char;
+  G.scenario = scenario;
+  G.seed = seed;
+  deriveDifficultyFromScenario();
+  updateRunState(G, {
+    finalOutcome,
+    day: 4,
+    turn: mockLog.length + 1,
+    highestPosIdx: Math.min(highIdx, POSITIONS.length - 1),
+    turnLog: mockLog,
+    allFlags: [],
+    hasSummited: finalOutcome === 'Summit and Safe Return',
+    permitDay: 4,
+    permitMaxDays: 20,
+    runNumber: (G.runNumber || 0) + 1,
+    consecutiveCollapses: 0,
+    lateSignalDeterminantTurns: 0,
+    lateSignalEvents: [],
+  });
+
+  // Populate debrief DOM (mirrors relevant parts of endRun())
+  const outcomeObj = classifyOutcome();
+  const outEl = document.getElementById('debrief-outcome-val');
+  if (outEl) {
+    outEl.textContent = outcomeObj.label;
+    outEl.className = 'debrief-outcome-value ' + outcomeObj.cls;
+  }
+  updateDebriefHero(outcomeObj);
+  document.querySelectorAll('.debrief-late-msg').forEach(el => el.remove());
+  const retreatMsg = document.getElementById('debrief-retreat-msg');
+  if (retreatMsg) {
+    retreatMsg.style.display = finalOutcome === 'Summit and Safe Return' ? 'block' : 'none';
+    if (finalOutcome === 'Summit and Safe Return') {
+      retreatMsg.textContent = uiText(
+        'You reached the summit and returned safely. The mountain accepted the full journey.',
+        'Alcanzaste la cumbre y regresaste sano. La montaña aceptó el viaje completo.'
+      );
+    }
+  }
+  const tpEl = document.getElementById('debrief-turning-point');
+  if (tpEl) tpEl.textContent = uiText(
+    'Deep-link preview — no live turn log. Start a run for full analysis.',
+    'Vista previa de deep link — sin log de turno en vivo. Iniciá una partida para el análisis completo.'
+  );
+  const causeEl = document.getElementById('debrief-cause');
+  if (causeEl) {
+    const responsibility = classifyDifficultyResponsibility();
+    causeEl.textContent = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
+  }
+  buildDebriefAnalytics();
+
+  const debriefActions = document.getElementById('debrief-actions');
+  if (debriefActions) {
+    clearElement(debriefActions);
+    [
+      { label: uiText('Change character', 'Cambiar personaje'), cls: 'btn-primary', onClick: () => showScreen('expedition-setup') },
+      { label: uiText('View Expedition Journal', 'Ver diario de expedición'), cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
+    ].forEach(({ label, cls, onClick }) => {
+      const btn = document.createElement('button');
+      btn.className = cls;
+      btn.textContent = label;
+      btn.onclick = onClick;
+      debriefActions.appendChild(btn);
+    });
+  }
+
+  if (finalOutcome === 'Summit and Safe Return') {
+    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
+  }
+
+  _suppressHashSync = true;
+  showScreen('debrief');
+}
+
+/**
+ * Resolve a character param string to a DATA_CONFIG character object.
+ * Falls back to the first available character.
+ */
+function _resolveCharacter(charParam) {
+  const chars = DATA_CONFIG.characters || [];
+  return (charParam && chars.find(c => c.id === charParam)) || chars[0] || null;
+}
+
+/**
+ * Resolve a scenario param string to a configured scenario object.
+ * Falls back to the first predefined scenario.
+ */
+function _resolveScenario(scenParam) {
+  const scenarios = getConfiguredScenarios();
+  return (scenParam && scenarios.find(s => s.id === scenParam)) || scenarios[0] || null;
+}
+
+/**
+ * Handle hash-based deep links after data config is loaded.
+ * Called once in the loadDataConfig().then() chain.
+ * Reads window.location.hash and navigates / bootstraps state accordingly.
+ */
+function handleDeepLink() {
+  const parsed = parseDeepLinkHash();
+  if (!parsed) return;
+
+  const { screenId, params } = parsed;
+
+  // Part 2 screens — bypass gating when &force=1 is present
+  const PART2_SCREEN_IDS = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
+    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
+    updateRunState(G, { finalOutcome: 'Summit and Safe Return' });
+    _suppressHashSync = true;
+    showScreen(screenId);
+    return;
+  }
+
+  if (screenId === 'game') {
+    const char = _resolveCharacter(params.character);
+    const scenario = _resolveScenario(params.scenario);
+    if (!char || !scenario) { return; } // stay on title
+    G.character = char;
+    G.scenario = scenario;
+    const seeds = scenario.seeds || [];
+    G.seed = params.seed
+      ? parseInt(params.seed, 10)
+      : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+    deriveDifficultyFromScenario();
+    // startGame() calls showScreen('game') internally — suppress hash overwrite
+    _suppressHashSync = true;
+    startGame();
+    return;
+  }
+
+  if (screenId === 'onboarding') {
+    const char = _resolveCharacter(params.character);
+    const scenario = _resolveScenario(params.scenario);
+    if (!char || !scenario) { showScreen('expedition-setup'); return; }
+    G.character = char;
+    G.scenario = scenario;
+    const seeds = scenario.seeds || [];
+    G.seed = params.seed
+      ? parseInt(params.seed, 10)
+      : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+    deriveDifficultyFromScenario();
+    _suppressHashSync = true;
+    showOnboarding('predefined');
+    return;
+  }
+
+  if (screenId === 'debrief') {
+    bootstrapMockDebrief(params);
+    return;
+  }
+
+  // All other screens: just navigate directly
+  _suppressHashSync = true;
+  showScreen(screenId);
+}
+
+window.handleDeepLink = handleDeepLink;
 
 window.showScreen = showScreen;
 window.makeDecision = makeDecision;
