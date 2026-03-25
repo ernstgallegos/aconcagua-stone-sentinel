@@ -64,7 +64,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
             page.wait_for_selector(f'#screen-{screen}', state='attached')
 
         assert _active_screen(page) == 'screen-title'
-        assert page.locator('#theme-select option').all_inner_texts() == ['🌙', '☀️', '🌇', '🌓']
+        assert page.locator('#theme-select').count() == 0
         page.click('.title-info-trigger')
         page.wait_for_function("() => document.getElementById('intro-modal')?.classList.contains('visible')")
         page.click('#intro-modal .btn-ghost')
