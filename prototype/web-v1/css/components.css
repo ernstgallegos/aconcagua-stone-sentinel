@@ -1565,10 +1565,12 @@
 }
 
 /* ── Character portrait in carousel card ── */
+/* Images are 1024×1024 squares; aspect-ratio: 1/1 keeps the box square so
+   object-fit: cover fills it exactly — no cropping on any viewport size. */
 .carousel-card-portrait {
   display: block;
   width: 100%;
-  max-height: 220px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: center top;
   margin-bottom: 0.75rem;
