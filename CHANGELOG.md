@@ -9,6 +9,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+- Hash-based deep-link support for `prototype/web-v1`: every screen can now be opened directly via `index.html#<screenId>[&param=value…]`. Added `parseDeepLinkHash()`, `handleDeepLink()`, `bootstrapMockDebrief()`, and `buildMockTurnLog()` in `prototype/web-v1/ui/screens.js`. `showScreen()` now syncs the URL hash on each navigation, making every screen shareable. Part 2 screens accept `&force=1` to bypass the summit-achieved gate during evaluation.
+- `docs/deep-links.web-v1.md`: bilingual (EN + ES) reference document listing all 14 screen deep-link URLs, supported parameters (`character`, `scenario`, `seed`, `outcome`, `force`), character/scenario IDs, outcome values, and a maintenance note for keeping the list in sync with `index.html`.
+- README.md and README.es.md: added "Deep-link URLs" subsection with format description, copy-pasteable examples, and a link to the full reference document.
+
 ### Fixed
 - Replaced personal email `ernestogallegos@gmail.com` with the official project contact address `aconcaguastonesentinel@gmail.com` across all interfaces, code, and documentation (`prototype/web-v1/index.html`, `LICENSE.md`, `README.md`, `README.es.md`, `CONTRIBUTING.md`).
 - Random character card in expedition-setup carousel now displays the portrait image (`art/characters/random.png`). Added `random: 'random'` to `getCharacterImagePath()` nameMap and added `<img class="carousel-card-portrait">` to the `item._random` render block in `renderCarousel()` (`prototype/web-v1/ui/screens.js`).

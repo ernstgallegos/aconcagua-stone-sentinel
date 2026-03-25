@@ -232,6 +232,26 @@ Unlock is exclusive to `Summit and Safe Return`.
 
 See `docs/simulation_engine.md` and `docs/architecture.md` for full mechanics.
 
+### Deep-link URLs
+
+Every screen in the prototype is directly accessible via a hash-based URL. After data loads, `handleDeepLink()` reads `window.location.hash` and navigates accordingly. In-app navigation keeps the hash in sync so any screen is shareable.
+
+Format: `https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#<screenId>[&param=value…]`
+
+Examples:
+
+```
+#title
+#expedition-setup
+#game&character=francisco&scenario=assisted-route&seed=1234
+#onboarding&character=laura&scenario=narrow-weather-window
+#debrief&outcome=Collapse%20(Fatigue)
+#summit-success
+#part2-character&force=1
+```
+
+Full table with all 14 screens, parameter reference, character/scenario/outcome IDs, and copy-pasteable links: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+
 
 ## Consolidated design v1.4 (planning)
 
