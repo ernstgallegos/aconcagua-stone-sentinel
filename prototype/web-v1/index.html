@@ -678,12 +678,9 @@
 <!-- ══════════════════════ ONBOARDING MODAL ══════════════════════ -->
 <div id="onboarding-modal" class="tutorial-modal" aria-hidden="true">
   <div class="tutorial-dialog onboarding-dialog" role="dialog" aria-modal="true" aria-labelledby="onboarding-modal-title">
-    <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
-      <div>
-        <div class="screen-kicker" id="onboarding-modal-kicker">Expedition Briefing</div>
-        <h3 id="onboarding-modal-title" class="onboard-char-line" style="margin:0;font-size:1rem;"></h3>
-      </div>
-      <button class="btn-ghost" onclick="closeOnboardingModal()" id="onboarding-understood-btn">Understood. Begin.</button>
+    <div>
+      <div class="screen-kicker" id="onboarding-modal-kicker">Expedition Briefing</div>
+      <h3 id="onboarding-modal-title" class="onboard-char-line" style="margin:0;font-size:1rem;"></h3>
     </div>
     <section>
       <p class="onboard-intro" id="onboard-intro" style="margin:0;padding:0;border:none;"></p>
@@ -709,7 +706,8 @@
       </div>
       <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
     </section>
-    <section style="border-top:1px solid var(--border);padding-top:0.9rem;">
+    <section class="onboarding-cta-section">
+      <button class="btn-primary onboarding-begin-btn" onclick="closeOnboardingModal()" id="onboarding-understood-btn">Begin Expedition</button>
       <div class="onboard-actions">
         <button class="btn-ghost" onclick="openTutorialModal()" id="onboarding-tutorial-btn">Full Tutorial / FAQ</button>
         <button class="btn-ghost onboarding-back-link" onclick="abandonOnboarding()" id="onboarding-back-btn">Back to Setup</button>

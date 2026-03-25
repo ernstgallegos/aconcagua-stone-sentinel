@@ -816,7 +816,7 @@ function getRandomScenarioConfig() {
 function applyStaticTranslations() {
   const map = [
     ['.lang-switcher label', 'ui.language'],
-    ['#onboarding-understood-btn', 'ui.understoodBegin'],
+    ['#onboarding-understood-btn', 'ui.beginExpedition'],
     ['.decision-label', 'ui.decision'],
     ['#btn-advance .btn-decision-main span:first-child', 'ui.advance'],
     ['#btn-advance-slow .btn-decision-main span:first-child', 'ui.advanceSlow'],
