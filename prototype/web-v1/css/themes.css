@@ -1,60 +1,9 @@
 /* ═══════════════════════════════════════════
-   THEMES — Dark / Light / Sunset / Auto
-   EXPERIMENTAL (Decision 17)
-   All 4 modes with updated Andean Modern palette (Decision 10)
+   THEMES — Sunset (fixed palette)
    ═══════════════════════════════════════════ */
 
 /* ══════════════════════════════════════
-   DARK (default — no data-theme attr)
-   Defined in tokens.css — no duplication
-   ══════════════════════════════════════ */
-
-/* ══════════════════════════════════════
-   LIGHT THEME (EXPERIMENTAL — Decision 17)
-   Corrected for WCAG AA contrast
-   ══════════════════════════════════════ */
-
-body[data-theme='light'] {
-  --bg:        #f4efe6;
-  --surface:   #fffaf2;
-  --surface2:  #f7f0e5;
-  --border:    #d9ccb8;
-  --stone:     #6b5f50;     /* darkened for AA contrast on light bg */
-  --ochre:     #9a6200;     /* darkened for readability */
-  --ochre-dim: #7a4e00;
-  --ice:       #2e6577;     /* darkened for AA */
-  --ice-dim:   #3a6070;
-  --white:     #1e1812;     /* inverted: dark text on light bg */
-  --red:       #943535;
-  --red-dim:   #702020;
-  --safety:    #3d6c2f;
-  --text:      #2e271f;
-  --text-dim:  #6b5f50;
-  --muted:     #6b5f50;
-  --accent:    #9a6200;
-}
-
-/* Light-specific readability overrides */
-body[data-theme='light'] .decision-microcopy,
-body[data-theme='light'] .context-sub,
-body[data-theme='light'] .watch-section-label,
-body[data-theme='light'] .context-widget-label,
-body[data-theme='light'] .decision-keyhint {
-  color: #4a3f30;
-}
-
-body[data-theme='light'] .watch-panel,
-body[data-theme='light'] .narrative-box,
-body[data-theme='light'] .decision-panel {
-  background: var(--surface);
-}
-
-body[data-theme='light'] #screen-title::before {
-  background: radial-gradient(circle at 50% 28%, rgba(74, 109, 124, 0.1), transparent 54%);
-}
-
-/* ══════════════════════════════════════
-   SUNSET THEME (EXPERIMENTAL — Decision 17)
+   SUNSET THEME
    ══════════════════════════════════════ */
 
 body[data-theme='sunset'] {
@@ -87,52 +36,4 @@ body[data-theme='sunset'] .decision-keyhint {
 
 body[data-theme='sunset'] #screen-title::before {
   background: radial-gradient(circle at 50% 28%, rgba(232, 188, 116, 0.12), transparent 54%);
-}
-
-/* ══════════════════════════════════════
-   AUTO THEME (EXPERIMENTAL — Decision 17)
-   Detects prefers-color-scheme from OS
-   When user selects "auto", data-theme="auto"
-   ══════════════════════════════════════ */
-
-/* EXPERIMENTAL */
-@media (prefers-color-scheme: light) {
-  body[data-theme='auto'] {
-    --bg:        #f4efe6;
-    --surface:   #fffaf2;
-    --surface2:  #f7f0e5;
-    --border:    #d9ccb8;
-    --stone:     #6b5f50;
-    --ochre:     #9a6200;
-    --ochre-dim: #7a4e00;
-    --ice:       #2e6577;
-    --ice-dim:   #3a6070;
-    --white:     #1e1812;
-    --red:       #943535;
-    --red-dim:   #702020;
-    --safety:    #3d6c2f;
-    --text:      #2e271f;
-    --text-dim:  #6b5f50;
-    --muted:     #6b5f50;
-    --accent:    #9a6200;
-  }
-
-  body[data-theme='auto'] .decision-microcopy,
-  body[data-theme='auto'] .context-sub,
-  body[data-theme='auto'] .watch-section-label,
-  body[data-theme='auto'] .context-widget-label,
-  body[data-theme='auto'] .decision-keyhint {
-    color: #4a3f30;
-  }
-
-  body[data-theme='auto'] #screen-title::before {
-    background: radial-gradient(circle at 50% 28%, rgba(74, 109, 124, 0.1), transparent 54%);
-  }
-}
-
-/* Auto dark — matches default dark tokens (no extra rules needed, :root handles it) */
-@media (prefers-color-scheme: dark) {
-  body[data-theme='auto'] {
-    /* Inherits :root dark tokens — already set in tokens.css */
-  }
 }

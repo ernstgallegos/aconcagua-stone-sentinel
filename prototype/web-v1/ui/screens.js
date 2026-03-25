@@ -117,9 +117,6 @@ function setModelLoadError(errorMessage) {
 // ════════════════════════════════════════════════
 // VISUAL MODES
 // ════════════════════════════════════════════════
-const VISUAL_MODE_KEY = 'aconcagua_visual_mode_v1';
-/* EXPERIMENTAL Decision 17 */
-const VALID_VISUAL_MODES = new Set(['dark', 'light', 'sunset', 'auto']);
 const LANGUAGE_KEY = 'aconcagua_language_v1';
 const VALID_LANGUAGES = new Set(['en', 'es']);
 let CURRENT_LANGUAGE = 'en';
@@ -667,12 +664,8 @@ function setLanguage(lang) {
   document.documentElement.setAttribute('lang', safe);
   const select = document.getElementById('language-select');
   if (select && select.value !== safe) select.value = safe;
-  const themeLabel = document.querySelector('.theme-switcher label');
-  if (themeLabel) themeLabel.textContent = t('ui.visualMode');
   const langLabel = document.querySelector('.lang-switcher label');
   if (langLabel) langLabel.textContent = t('ui.language');
-  const themeSelect = document.getElementById('theme-select');
-  if (themeSelect) themeSelect.setAttribute('aria-label', t('ui.visualMode'));
   const languageSelect = document.getElementById('language-select');
   if (languageSelect) languageSelect.setAttribute('aria-label', t('ui.language'));
   applyStaticTranslations();
@@ -696,23 +689,12 @@ function initLanguage() {
   setLanguage(stored);
 }
 
-function setVisualMode(mode) {
-  const safeMode = VALID_VISUAL_MODES.has(mode) ? mode : 'dark';
-  document.body.setAttribute('data-theme', safeMode);
-
-  const modeSelect = document.getElementById('theme-select');
-  if (modeSelect && modeSelect.value !== safeMode) modeSelect.value = safeMode;
-
-  try { localStorage.setItem(VISUAL_MODE_KEY, safeMode); } catch (e) {}
+function setVisualMode() {
+  document.body.setAttribute('data-theme', 'sunset');
 }
 
 function initVisualMode() {
-  let storedMode = 'dark';
-  try {
-    const rawMode = localStorage.getItem(VISUAL_MODE_KEY);
-    if (rawMode && VALID_VISUAL_MODES.has(rawMode)) storedMode = rawMode;
-  } catch (e) {}
-  setVisualMode(storedMode);
+  setVisualMode('sunset');
 }
 
 function initWelcomeScreen() {
@@ -833,7 +815,6 @@ function getRandomScenarioConfig() {
 
 function applyStaticTranslations() {
   const map = [
-    ['.theme-switcher label', 'ui.visualMode'],
     ['.lang-switcher label', 'ui.language'],
     ['#onboard-back-btn', 'ui.back'],
     ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
