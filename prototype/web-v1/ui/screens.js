@@ -250,7 +250,6 @@ const I18N = {
       clearJournalConfirm: 'Clear all expedition records?',
       journalEmpty: 'No expeditions recorded. The first run will appear here.',
       begin: 'BEGIN',
-      titleAdvanceHint: 'Click or tap anywhere to continue',
       introInfoLabel: 'Open prototype information',
       introTitle: 'About Aconcagua: Stone Sentinel',
       introClose: 'Close',
@@ -343,7 +342,6 @@ const I18N = {
       clearJournalConfirm: '¿Borrar todos los registros de expedición?',
       journalEmpty: 'No hay expediciones registradas. La primera partida aparecerá aquí.',
       begin: 'COMENZAR',
-      titleAdvanceHint: 'Hacé clic o tocá cualquier parte para continuar',
       introLinksTitle: 'Repositorio y contacto',
       introLinksBody: 'Seguí el desarrollo, compartí feedback o proponé colaboraciones desde el repositorio público y el email del creador.',
       introRepoCta: 'Repositorio público',
@@ -537,8 +535,6 @@ function renderIntroContent() {
     infoTrigger.setAttribute('aria-label', label);
     infoTrigger.setAttribute('title', label);
   }
-  const titleAdvanceHint = document.getElementById('title-advance-hint');
-  if (titleAdvanceHint) titleAdvanceHint.textContent = t('ui.titleAdvanceHint');
   setText('intro-modal-title', t('ui.introTitle'));
   const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');
   setText('intro-modal-summary', t('ui.introSummary'));
@@ -839,7 +835,6 @@ function applyStaticTranslations() {
   const map = [
     ['.theme-switcher label', 'ui.visualMode'],
     ['.lang-switcher label', 'ui.language'],
-    ['#title-advance-hint', 'ui.titleAdvanceHint'],
     ['#onboard-back-btn', 'ui.back'],
     ['#screen-onboarding .onboard-actions .btn-primary', 'ui.understoodBegin'],
     ['.decision-label', 'ui.decision'],
@@ -3609,6 +3604,7 @@ function parseDeepLinkHash() {
 function buildMockTurnLog(outcomeLabel) {
   const collapseOutcomes = new Set(['Rescue', 'Collapse (Fatigue)', 'Collapse (Exposure)', 'Resource Exhaustion', 'Permit Expired', 'Fatality']);
   const isCollapse = collapseOutcomes.has(outcomeLabel);
+  const mkEntry = (turn, decision, posIdx, trend, flags) => ({
     turn,
     decision,
     position: POSITIONS[posIdx] || POSITIONS[0] || 'horcones',
