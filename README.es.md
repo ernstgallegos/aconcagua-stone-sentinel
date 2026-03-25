@@ -268,7 +268,7 @@ Para consultas profesionales, conversaciones curatoriales o propuestas de colabo
 
 **Ernesto Gallegos**  
 Creador del proyecto  
-ernestogallegos@gmail.com
+aconcaguastonesentinel@gmail.com
 
 ---
 

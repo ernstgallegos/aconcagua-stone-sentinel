@@ -42,7 +42,7 @@ No rights are granted beyond those explicitly stated in this license.
 
 ## Contact and Permissions
 
-For permissions beyond the scope of this license, including commercial use or derivative works, please contact the author directly at ernestogallegos@gmail.com
+For permissions beyond the scope of this license, including commercial use or derivative works, please contact the author directly at aconcaguastonesentinel@gmail.com
 
 ---
 

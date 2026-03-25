@@ -282,7 +282,7 @@ For professional inquiries, curatorial conversations, or collaboration proposals
 
 **Ernesto Gallegos**  
 Project creator  
-ernestogallegos@gmail.com
+aconcaguastonesentinel@gmail.com
 
 ---
 

@@ -172,4 +172,4 @@ Prefix options: `fix`, `feat`, `docs`, `test`, `refactor`, `chore`.
 
 For design proposals, collaboration inquiries, or questions outside the scope of code:
 
-**Ernesto Gallegos** — ernestogallegos@gmail.com
+**Ernesto Gallegos** — aconcaguastonesentinel@gmail.com
