@@ -198,6 +198,11 @@ export function createTurnEngine(deps) {
     spendResourcesForMinutes(Math.max(actionMinutes, 30), flags);
 
     markStage(trace, 'apply-weather-and-persistence');
+    if (resolvedAction !== 'sleep') {
+      state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
+      state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
+    }
+
     let contextEvent = null;
     if (typeof applyContextEvents === 'function') {
       contextEvent = applyContextEvents({
@@ -208,11 +213,6 @@ export function createTurnEngine(deps) {
         flags,
       });
       if (contextEvent?.id) flags.push('weather-event-active');
-    }
-
-    if (resolvedAction !== 'sleep') {
-      state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
-      state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
     }
 
     if (resolvedAction === 'sleep') {

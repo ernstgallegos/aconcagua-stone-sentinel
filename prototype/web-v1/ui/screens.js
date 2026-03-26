@@ -6,7 +6,7 @@ import { buildHelpSections } from './helpers/help-overlay-content.js';
 import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature } from './helpers/debrief.js';
 import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper } from './helpers/run-log.js';
 import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
-import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent } from './helpers/events.js';
+import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -2952,6 +2952,12 @@ function applyTimeCost(action) {
   return minutes;
 }
 
+function applyEventTimePenalty(minutes) {
+  if (!minutes) return;
+  const synced = applyClockDelta({ minutesOfDay: G.minutesOfDay, day: G.day, deltaMinutes: minutes });
+  updateRunState(G, synced);
+}
+
 function applyAcclimatizationGain(action) {
   const mod = getActionModifier(action);
   const gain = mod.acclimatizationGain || 0;
@@ -3017,8 +3023,10 @@ function applySummitDifficultyRegressionGuard({ stage, acclPenalty, decisionEffe
 
 function applyContextEvents({ state, action, stage, flags }) {
   const eventEffect = applyTurnEvents({ G, state, action, stage });
-  if (eventEffect) updateRunState(G, { activeEnvironmentEvent: eventEffect });
-  else updateRunState(G, { activeEnvironmentEvent: null });
+  if (eventEffect) {
+    updateRunState(G, { activeEnvironmentEvent: eventEffect });
+    if (eventEffect.timePenalty) applyEventTimePenalty(eventEffect.timePenalty);
+  } else updateRunState(G, { activeEnvironmentEvent: null });
 
   const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags });
   if (charEffect?.characterId) {

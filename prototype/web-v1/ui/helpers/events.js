@@ -8,6 +8,22 @@ const EVENT_ARCHETYPES = [
   { id: 'summit-window-tightening', icon: '⌛', label: 'Summit window tightening', turns: [14, 15], weatherDelta: 1, visibilityDelta: 0, timePenalty: 20 },
 ];
 
+
+export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
+  let nextMinutes = minutesOfDay + deltaMinutes;
+  let nextDay = day;
+
+  while (nextMinutes >= 1440) {
+    nextMinutes -= 1440;
+    nextDay += 1;
+  }
+  while (nextMinutes < 0) {
+    nextMinutes += 1440;
+    nextDay = Math.max(1, nextDay - 1);
+  }
+
+  return { minutesOfDay: nextMinutes, day: nextDay, permitDay: nextDay };
+}
 export function buildEnvironmentEventPlan(seed, maxTurns = 40) {
   const offset = Number(seed || 0) % 3;
   return EVENT_ARCHETYPES
@@ -23,9 +39,7 @@ export function applyTurnEvents({ G, state, action, stage }) {
   state.weather_severity = clamp(state.weather_severity + active.weatherDelta, 0, 4);
   state.visibility = clamp(state.visibility + active.visibilityDelta, 0, 3);
 
-  if (active.timePenalty && stage === 'SUMMIT_DAY') {
-    G.minutesOfDay += active.timePenalty;
-  }
+  const appliedTimePenalty = active.timePenalty && stage === 'SUMMIT_DAY' ? active.timePenalty : 0;
 
   return {
     id: active.id,
@@ -33,7 +47,7 @@ export function applyTurnEvents({ G, state, action, stage }) {
     label: active.label,
     weatherDelta: active.weatherDelta,
     visibilityDelta: active.visibilityDelta,
-    timePenalty: active.timePenalty || 0,
+    timePenalty: appliedTimePenalty,
   };
 }
 
