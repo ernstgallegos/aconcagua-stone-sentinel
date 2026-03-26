@@ -5,7 +5,7 @@
  * Usage:
  *   node scripts/monte-carlo-web-v1.js [--seeds N] [--output path]
  *
- * Defaults: 50 seeds per scenario, output to docs/playtest-results/monte-carlo-v1.4.1.md
+ * Defaults: 50 seeds per scenario, output to docs/playtest-results/monte-carlo-v<package-version>.md
  */
 
 import fs from 'node:fs';
@@ -30,6 +30,9 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
+const PACKAGE_JSON = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+const ENGINE_VERSION = PACKAGE_JSON.version;
+const DEFAULT_REPORT_PATH = path.join(ROOT, 'docs', 'playtest-results', `monte-carlo-v${ENGINE_VERSION}.md`);
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(path.join(DATA, file), 'utf8'));
@@ -835,7 +838,7 @@ function buildReport(batchResult) {
   md += `## Run metadata\n\n`;
   md += `- **Date:** ${now}\n`;
   md += `- **Total simulated runs:** ${totalRuns.toLocaleString()}\n`;
-  md += `- **Engine version:** web-v1 / v1.4.1 (turn-resolution.js + turn-rules.js)\n`;
+  md += `- **Engine version:** web-v1 / v${ENGINE_VERSION} (turn-resolution.js + turn-rules.js)\n`;
   md += `- **Script:** \`scripts/monte-carlo-web-v1.js\`\n`;
   md += `- **Policy:** \`reasonablePolicy\` (conservative AI agent)\n`;
   md += `- **Difficulty:** Standard\n`;
@@ -851,7 +854,7 @@ function buildReport(batchResult) {
 // ─────────────────────────────────────────────
 function parseArgs() {
   const args = process.argv.slice(2);
-  const opts = { seeds: 50, output: path.join(ROOT, 'docs', 'playtest-results', 'monte-carlo-v1.4.1.md') };
+  const opts = { seeds: 50, output: DEFAULT_REPORT_PATH };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--seeds' && args[i + 1]) { opts.seeds = parseInt(args[++i], 10); }
     if (args[i] === '--output' && args[i + 1]) { opts.output = args[++i]; }

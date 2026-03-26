@@ -189,6 +189,7 @@ export function createTurnEngine(deps) {
 
     const previousPosition = state.position;
     const currentNode = getCurrentNode(state);
+    const stageAtTurnStart = getCurrentStage();
     let actionMod = getActionModifier(resolvedAction);
 
     markStage(trace, 'consume-time-and-resources');
@@ -212,7 +213,7 @@ export function createTurnEngine(deps) {
     let epResult = calculateEnvironmentalPressure(state);
     epResult.pressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
-    const currentStageForAccl = getCurrentStage();
+    const currentStageForAccl = stageAtTurnStart;
     const acclNow = G.acclimatization || 0;
     let acclPenaltyApplied = 0;
     if (currentStageForAccl === 'HIGH_CAMP' && acclNow < 20) {
@@ -233,7 +234,7 @@ export function createTurnEngine(deps) {
     if (perception.latency?.active && perception.latency.activationRatio >= 0.75 && pressureDelta >= 18) {
       lateSignalEvent = {
         turn: G.turn,
-        stage: getCurrentStage(),
+        stage: stageAtTurnStart,
         activationRatio: Number(perception.latency.activationRatio.toFixed(2)),
         pressureDelta: Number(pressureDelta.toFixed(2)),
         readability: perception.latency.readabilityLabel,
@@ -352,6 +353,46 @@ export function createTurnEngine(deps) {
     updateAmbientSignal(flags, resolvedAction);
     const signals = computeSignals();
     const narrative = renderNarrative(resolvedAction, signals, flags);
+
+    if (typeof recordTelemetry === 'function') {
+      recordTelemetry(G, {
+        lastTurnRecord: {
+          turn: G.turn,
+          action: resolvedAction,
+          previousPosition,
+          resultingPosition: state.position,
+          stage: stageAtTurnStart,
+          environment: {
+            altitudeBand: currentNode?.altitudeBand ?? null,
+            terrainLoad: currentNode?.terrainLoad ?? null,
+            weatherSeverity: state.weather_severity,
+            visibility: state.visibility,
+            persistenceTier: state.persistenceTier,
+          },
+          pressure: {
+            EP: Number((epResult.pressureScore || 0).toFixed(2)),
+            BT: Number((BT || 0).toFixed(2)),
+            delta: Number((result.pressureDelta || 0).toFixed(2)),
+            effectiveDelta: Number((result.effectiveDelta || 0).toFixed(2)),
+          },
+          perceivedSignals: {
+            trend: timedPerception?.trendEstimate,
+            confidence: timedPerception?.confidenceLevel,
+            uncertainty: timedPerception?.noiseLevel,
+            readability: timedPerception?.latency?.readabilityLabel || 'clear reading',
+          },
+          outcome,
+          flags: [...flags],
+          state: {
+            functionalCapacity: state.functional_capacity,
+            fatigue: state.fatigue,
+            exposure: state.exposure,
+            water: state.water,
+            food: state.food,
+          },
+        },
+      });
+    }
 
     return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
   }
