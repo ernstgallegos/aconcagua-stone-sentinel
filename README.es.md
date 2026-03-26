@@ -130,7 +130,7 @@ Se incorporó un paquete documental de diseño/planificación v1.4 para alinear 
 - Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
 - Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
 
-> Nota: la documentación/planificación v1.4 ya tiene implementación parcial en el prototipo público. Revisar `CHANGELOG.md` (`[Unreleased]`) y los planes de implementación para el progreso real por fase.
+> Nota: la documentación/planificación v1.4 ya tiene implementación parcial en el prototipo público. Revisar `CHANGELOG.md` (bloque `1.4.2`) y los planes de implementación para el progreso real por fase.
 
 ---
 
@@ -295,16 +295,16 @@ aconcaguastonesentinel@gmail.com
 *Aconcagua: Stone Sentinel explora la idea de que avanzar no siempre significa progresar, y que reconocer los límites —externos e internos— puede ser una forma de éxito.*
 
 
-## Estado canónico del prototipo (v1.4 estado público)
+## Estado canónico del prototipo (v1.4.2 estado público)
 
 > **Estado canónico (anclado al código):**
-> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[Unreleased]`](./CHANGELOG.md#unreleased).
+> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[1.4.2]`](./CHANGELOG.md#142--2026-03).
 > - El progreso por fase se rastrea en [`docs/es/plan-implementacion-v1.4.md`](./docs/es/plan-implementacion-v1.4.md) (versión en inglés: `docs/en/implementation-plan-v1.4.md`).
-> - La versión pública actual es **v1.4 en progreso (despliegue por fases)**.
+> - La versión pública actual es **v1.4.2 (despliegue público por fases)**.
 
-El prototipo activo canónico es **`prototype/web-v1` (v1.4 estado público)**.
+El prototipo activo canónico es **`prototype/web-v1` (v1.4.2 estado público)**.
 
-- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.4 en despliegue público.
+- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.4.2 en despliegue público.
 - `prototype/mra-v0/`: MRA histórico congelado para validación temprana de hipótesis.
 - Visor raíz del repositorio: capa de reproducción/visualización de corridas bundleadas.
 

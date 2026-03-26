@@ -1,9 +1,9 @@
-# Prototype Web v1.4 (public state)
+# Prototype Web v1.4.2 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../../CHANGELOG.md#unreleased).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.2]`](../../CHANGELOG.md#142--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4 in-progress (phased rollout)** with shipped phase slices and pending items.
+> - Current public build is **v1.4.2 (public phased rollout)** with shipped phase slices and stabilized release documentation.
 
 > **Public repository scope:**
 > - Public prototype code is available in this repository (this `prototype/web-v1` implementation and the frozen `prototype/mra-v0` reference artifact).

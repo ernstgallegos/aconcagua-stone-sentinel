@@ -182,3 +182,13 @@ In addition to the changelog:
 - Part 2 bridge selection feels closer to Part 1 when the screen renders the full roster/route gallery and treats future branches as visibly locked cards; keep the one public path selectable, but let locked cards still update contextual copy so the gate reads as intentional progression rather than missing UI.
 - `screen-part2-character` now uses the same carousel component structure as `screen-expedition-setup`; visual sync is maintained through: (1) shared CSS selector block for background/padding, (2) `renderPart2Carousel()` which mirrors `renderCarousel()` card templates with a code comment mandating parallel updates, and (3) `CAROUSEL_STATE_PART2` kept separate to avoid Part 1 navigation interference.
 - Playwright smoke tests for `web-v1` must use `state='attached'` (not the default `'visible'`) when asserting screen existence, since all non-active screens are hidden. Also, title-screen advance is `.title-screen-advance` (not `.btn-primary`) and `.title-info-trigger` lives outside `#screen-title` in `.title-top-controls`.
+- When a release decision is explicit (e.g., `v1.4.2`), promote the entire pending changelog batch from `[Unreleased]` into that version block and reset `[Unreleased]` to only active WIP items to avoid mixed-status release notes.
+
+
+- Release-cut alignment is safer when version labels in UI strings and package metadata are updated in the same commit as changelog promotion to the target patch release (e.g., `1.4.2`).
+
+- Intro-modal external links should always use canonical project URLs (not discovery/search URLs) to preserve contributor trust and reduce onboarding friction.
+
+- Changelog release consolidations should also prune superseded contradictory bullets (e.g., deprecated-vs-experimental theme notes) so one version block reflects one final policy state.
+
+- Release-complete snapshots should keep `[Unreleased]` explicitly empty and move late documentation/link fixes into the same versioned block when product confirms they belong to that release.
