@@ -13,15 +13,20 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Published reusable engine formula module `prototype/web-v1/engine/pressure-model.js` plus deterministic harness `prototype/web-v1/tests/harness/turn-harness.js` for turn-level regression checks.
 - Added web-v1 engine unit tests for Environmental Pressure and Body Tolerance calculations and a resolve-turn pipeline ordering contract (`prototype/web-v1/tests/engine/pressure-calculations.test.js`, `prototype/web-v1/tests/engine/resolve-turn-pipeline.test.js`).
 - Added in-game `Pressure & Trend Help` overlay with bilingual content and keyboard escape-close support (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`).
+- Added systemic acceptance coverage for the EP→BT→Perception pipeline constraints, uncertainty guarantees, and conditional action optimality (`prototype/web-v1/tests/engine/systemic-acceptance.test.js`).
 
 ### Changed
 - `prototype/web-v1/engine/turn-resolution.js` now exports a canonical `RESOLVE_TURN_PIPELINE` contract and `resolveTurnWithTrace()` so tests can enforce resolver stage ordering.
 - `prototype/web-v1/ui/screens.js` now delegates EP/BT calculations to `engine/pressure-model.js`, keeping runtime math centralized and testable.
 - Improved gameplay readability by increasing watch/status typography, strengthening text contrast for critical HUD labels, and applying consistent `:focus-visible` states to interactive controls (`prototype/web-v1/css/components.css`).
 - Expanded web-v1 test discovery to include nested engine test suites via `package.json` `npm test` glob update.
+- `resolveTurn()` now persists a structured per-turn telemetry snapshot (`lastTurnRecord`) including environment, pressure tuple, perception, action, and resulting state for deterministic auditability (`prototype/web-v1/engine/turn-resolution.js`).
+- Updated engine documentation with the canonical resolver order and systemic acceptance contract (`docs/simulation_engine.md`).
 
 ### Fixed
 - Locked resolver integration against pipeline drift with explicit ordered stage tracing in tests and harness runs, reducing risk of silent turn-order regressions.
+- Fixed Monte Carlo simulator metadata/output drift by deriving report filename and engine version from `package.json` instead of the stale `v1.4.1` literal (`scripts/monte-carlo-web-v1.js`).
+- Fixed `docs/simulation_engine.md` coherence drift so the public build status matches `v1.4.2` and the canonical outcomes list includes `Permit Expired`.
 
 ## [1.4.2] — 2026-03
 

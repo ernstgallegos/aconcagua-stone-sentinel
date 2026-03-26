@@ -3,7 +3,7 @@
 > **Canonical status (source-anchored):**
 > - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../CHANGELOG.md#unreleased).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4 in-progress (phased rollout)** with legacy v1.3 contracts preserved where still applicable.
+> - Current public build is **v1.4.2** with legacy v1.3 contracts preserved where still applicable.
 
 
 ## Core authority
@@ -13,6 +13,18 @@ The only authoritative turn resolver is:
 `resolveTurn(state, action)`
 
 All turn consequences (progress, physiology, risk, and final outcomes) emerge from this function.
+
+Canonical resolver order is enforced by `RESOLVE_TURN_PIPELINE` in `prototype/web-v1/engine/turn-resolution.js`:
+
+1. normalize-action
+2. consume-time-and-resources
+3. apply-weather-and-persistence
+4. compute-pressure-and-perception
+5. apply-decision-window-effects
+6. evaluate-outcome
+7. update-state
+8. classify-terminal-outcome
+9. emit-signals-and-narrative
 
 ## Environmental Pressure
 
@@ -78,6 +90,7 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 - Collapse (Exposure)
 - Resource Exhaustion
 - Expedition Window Closed
+- Permit Expired
 - Fatality
 
 `Rescue` is a real system outcome and is logged.
@@ -94,6 +107,26 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 - fatigue, exposure
 - confidence, trendEstimate
 - outcome
+
+`resolveTurn()` now also records `lastTurnRecord` telemetry with the full systemic chain:
+
+- environment snapshot (`altitudeBand`, `terrainLoad`, `weatherSeverity`, `visibility`, `persistenceTier`)
+- pressure tuple (`EP`, `BT`, `delta`, `effectiveDelta`)
+- perceived signals (`trend`, `confidence`, `uncertainty`, `readability`)
+- action, flags, resulting body/resources, and resolved outcome
+
+This keeps each turn reproducible without exposing raw certainty to player-facing UI.
+
+## Systemic acceptance suite
+
+`prototype/web-v1/tests/engine/systemic-acceptance.test.js` verifies the non-negotiable architecture:
+
+- outcomes come from `resolveTurn()` (no bypass)
+- environment is evaluated every turn and precedes body/perception
+- flattening environment pressure degrades system meaning
+- perceived signals preserve uncertainty
+- `WAIT` is conditionally optimal in high-pressure contexts
+- `DESCEND` is conditionally optimal in high-pressure contexts
 
 
 ## v1.4 implementation status notes
