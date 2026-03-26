@@ -9,13 +9,23 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+- No unreleased entries yet.
+
+## [1.4.2] — 2026-03
+
 ### Changed
+- Public-facing prototype version was consolidated as `v1.4.2` across runtime metadata and intro/tutorial UI labels (`package.json`, `package-lock.json`, `prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`).
+- Tutorial flow text now reflects the active navigation (`title → expedition-setup`) and no longer claims title-level visual mode/difficulty selection (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`).
+- Readme status references now point to the current `1.4.2` release block instead of `[Unreleased]` to avoid mixed-state guidance (`README.md`, `README.es.md`).
 - Onboarding screen converted to a popup modal overlay (`#onboarding-modal`) that appears on top of the game screen instead of as a separate full-screen step. `showOnboarding()` now calls `startGame()` first (activating `screen-game`) and then shows the modal over it. Players can open the full tutorial from within the modal or return to expedition setup via "Back to Setup" (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`, `prototype/web-v1/css/screens.css`).
 - Onboarding modal primary action renamed from "Understood. Begin." to "Begin Expedition" (reuses existing `beginExpedition` i18n key, ES: "Iniciar expedición"). Button moved from the top-right header to a centered `btn-primary` CTA at the bottom of the modal, below the action reference and secondary links (`prototype/web-v1/index.html`, `prototype/web-v1/css/components.css`, `prototype/web-v1/ui/screens.js`).
 - `#onboarding-modal` z-index set to 2400 (below general tutorial-modal at 2500) so the tutorial/FAQ modal can open on top of the onboarding modal without interception (`prototype/web-v1/css/components.css`).
 - Removed `#screen-onboarding` section from `index.html` and its CSS rule from `screens.css`.
 - Updated `applyStaticTranslations()` to use new `#onboarding-modal` selectors instead of removed `#screen-onboarding` selectors.
 - Smoke tests updated to verify onboarding modal visibility over game screen instead of `screen-onboarding` activation (`prototype/web-v1/tests/test_smoke_flow.py`).
+
+### Deprecated
+- Visual-mode switching is officially deprecated for current public playtesting; sunset-only presentation is the active policy baseline.
 
 ### Removed
 - Color scheme selector (theme switcher) removed from the welcome screen header. The game now uses the "sunset" palette exclusively — `prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/themes.css`.
@@ -27,6 +37,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - README.md and README.es.md: added "Deep-link URLs" subsection with format description, copy-pasteable examples, and a link to the full reference document.
 
 ### Fixed
+- Replaced the intro modal repository CTA URL in `prototype/web-v1/index.html` from a generic GitHub search query to the canonical repository link (`https://github.com/ernstgallegos/aconcagua-stone-sentinel`).
 - **Critical bug:** restored missing `const mkEntry = (turn, decision, posIdx, trend, flags) => ({` line in `buildMockTurnLog()` in `prototype/web-v1/ui/screens.js`. The missing line caused a syntax error that prevented the ES module from loading entirely, so `window.advanceFromTitle` was never assigned and the welcome screen click/tap handler was broken on all devices.
 - Removed "Click or tap anywhere to continue" legend (`#title-advance-hint` span) from the welcome screen in `prototype/web-v1/index.html`. Removed corresponding `titleAdvanceHint` i18n keys (EN/ES) from `screens.js` and cleaned up all references in `renderIntroContent()` and `applyStaticTranslations()`.
 - Replaced personal email `ernestogallegos@gmail.com` with the official project contact address `aconcaguastonesentinel@gmail.com` across all interfaces, code, and documentation (`prototype/web-v1/index.html`, `LICENSE.md`, `README.md`, `README.es.md`, `CONTRIBUTING.md`).
@@ -61,7 +72,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Screen entry/exit transitions: `screen-enter` (0.3 s, 12 px up) and `screen-exit` (0.15 s, −8 px); Splash→Title crossfade at 0.6 s; reduced-motion users get a direct cut (Decision 14).
 - 3-level micro-interaction system: primary buttons (BEGIN, CONFIRM) with glow + ripple; secondary (decisions) with border→ochre fill; tertiary (links) with animated underline; all respect `prefers-reduced-motion` (Decision 16).
 - Difficulty pill-row: horizontal scrollable pill selector replaces card grid; selected pill shows description below; mobile-friendly with `scroll-snap-type` (Decision 11).
-- **[EXPERIMENTAL]** 4-mode theme system: Dark + Light + Sunset + Auto (`prefers-color-scheme` detection); toggle extended to 4 options (Decision 17).
 - **[EXPERIMENTAL]** Onboarding single-briefing layout already in place; tutorial pop-up already present (Decision 15, CSS structure support).
 - **[EXPERIMENTAL]** Game screen mobile bottom-sheets: mini status bar, `[⌚ Watch]` and `[🏔 Route]` trigger buttons, swipe-dismiss bottom-sheets with backdrop (Decision 13).
 - **[EXPERIMENTAL]** Debrief hero section: fullbleed `concept-curated-4.webp` background with outcome-specific CSS filter (warm/neutral/cold); headline + key-stats overlay; stats grid (2×3 cards); JS `updateDebriefHero()` populates all elements (Decision 18).
@@ -95,7 +105,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/index.html`: replaced single `<style>` block (~1 200 lines) with 8 `<link>` tags pointing to CSS modules (Decision 1).
 - `prototype/web-v1/index.html`: splash `<img>` keeps `splash-image` class; JS activates `ken-burns-active` class on load (Decision 4).
 - `prototype/web-v1/index.html`: title screen inline `font-size: 0.8rem` removed from `.title-sub`; now uses CSS minimum 1 rem (Decision 9).
-- `prototype/web-v1/index.html`: theme `<select>` now includes `Auto` option (Decision 17).
 - `prototype/web-v1/index.html`: debrief screen restructured into hero + stats-grid + existing sections (Decision 18).
 - `prototype/web-v1/index.html`: game screen adds mini status bar and bottom-sheet HTML (Decision 13).
 - `prototype/web-v1/css/tokens.css`: new "Andean Modern" palette (`--bg: #0c1017`, `--surface: #151a22`, `--ochre: #c49a5c`, `--ice: #7fb3c8`, `--red: #b85450`, new `--safety: #6b9e5e`) (Decision 10).
@@ -108,7 +117,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/ui/screens.js`: `showScreen()` now triggers `screen-exit` animation on departing screen before activating target (Decision 14).
 - `prototype/web-v1/ui/screens.js`: `initSplashScreen()` activates Ken Burns class on splash image (Decision 4).
 - `screen-title` simplified: removed `title-difficulty-panel` div (difficulty grid + note); BEGIN button now navigates to `showScreen('expedition-setup')` instead of `showScreen('character')`.
-- Version eyebrow on title screen updated from `Prototype · v1.4` to `Prototype · v1.5`.
+- Version eyebrow on title screen standardized to `Prototype · v1.4.2` to match release metadata and docs.
 - `showOnboarding()` back button now returns to `expedition-setup` instead of `scenario`.
 - Debrief "Change character" action now navigates to `expedition-setup`.
 - `goChooseScenario()` now navigates to `expedition-setup` instead of rebuilding the old scenario grid.
@@ -125,7 +134,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `prototype/web-v1/css/components.css` adds reusable `.mobile-collapsible*` helpers used by the gameplay status panels.
 - Simplified `prototype/web-v1/index.html` welcome screen so the visible layout now keeps the cover image plus the primary advance CTA, while prototype description, version/status, and credits move into an optional modal opened from a compact info trigger.
 - `prototype/web-v1/css/screens.css`: replaced per-screen `#screen-splash` block with `.splash-content` absolute-positioned background layer; `#screen-title` now uses cover image via `<img>` element instead of CSS `background-image`; combined overlay gradients into `#screen-title::before`; `.title-shell` z-index bumped to 2.
-- `prototype/web-v1/css/themes.css`: light/sunset/auto theme overrides for `#screen-title` now target `::before` gradient layer instead of `background:` shorthand (no longer include a `url()` since the image is an `<img>` element).
 - `prototype/web-v1/ui/screens.js`: replaced `leaveSplash()` + `initSplashScreen()` with `initWelcomeScreen()` (applies Ken Burns to cover image in `#screen-title`); removed `SPLASH_EXIT_DURATION_MS` constant and special-case exit duration; removed `splashTap` i18n key and `#screen-splash .splash-cta` from `applyStaticTranslations()`.
 - `prototype/web-v1/tests/test_smoke_flow.py`: updated test flow to start from `screen-title` as the active screen (removed `#screen-splash` click and intermediate wait); updated `reach_expedition_setup` docstring; simplified `reach_game_with_character` helper.
 - Updated `prototype/web-v1/index.html` welcome screen so the primary BEGIN CTA stays centered and the prototype information button sits beside it, reducing top-corner scan on first load.
@@ -134,7 +142,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Refined `prototype/web-v1/index.html` + `prototype/web-v1/css/screens.css` / `prototype/web-v1/css/responsive.css` welcome screen so the cover image no longer sits behind a heavy darkening layer, the info trigger moves below the primary BEGIN CTA, the info modal now includes repository/contact CTAs, portrait/mobile keeps the cover full-height without top/bottom gaps, and landscape shows the complete artwork with side margins when needed.
 - Rebuilt the Part 2 entry selection in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` with the same carousel-style setup language used in Part 1 while limiting the available choices to Francisco and the guided Normal Route group expedition.
 - Simplified the `prototype/web-v1/index.html` welcome screen chrome by moving the info trigger to the top-left corner, compressing the language/theme controls into compact icon-led selectors at the top-right, and replacing the central BEGIN button with a bottom-center full-screen continuation hint.
-- Replaced the single-letter visual-mode labels in `prototype/web-v1/index.html` with emoji glyphs for dark/light/sunset/auto while keeping the same selector values and screen-reader labeling.
 - Clarified the expedition-setup secondary CTA in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so Quick Start explicitly advertises its random character/scenario behavior.
 - Rebalanced `prototype/web-v1/index.html` + `prototype/web-v1/css/layout.css` / `prototype/web-v1/css/responsive.css` watch-status panel so desktop now presents the same watch, permit, decision-window, and risk data in a clear two-column status layout while mobile keeps the compact accordion flow.
 - Removed emoji prefix from BEGIN EXPEDITION (🎯) and QUICK START (🎲) buttons in `prototype/web-v1/index.html` and matching i18n keys (`beginExpedition`, `quickStart`) in both `en` and `es` in `prototype/web-v1/ui/screens.js`.
@@ -158,7 +165,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
 - Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).
 - `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
-- `prototype/web-v1/css/themes.css`: same path fix for light/sunset/auto theme `#screen-title` background overrides.
 - Fixed `prototype/web-v1/ui/screens.js` debrief day counting so the summary now reads from the live run day counter (`G.day`) instead of the nonexistent `G.currentDay`, eliminating the always-`1` bug after multi-day runs.
 - Fixed `prototype/web-v1/ui/screens.js` mobile WATCH/ROUTE bottom sheets so they mirror the current in-run watch and route data instead of stale placeholder content.
 - Fixed `prototype/web-v1/index.html` + `prototype/web-v1/ui/screens.js` SLEEP action visibility so the button stays present in the decision deck at all times and toggles availability through the disabled state when the current position is not a camp.
@@ -170,7 +176,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed nationality flag emoji (`.char-flag`) not rendering correctly on desktop: added `display: none` inside `@media (min-width: 1024px)` in `prototype/web-v1/css/responsive.css` so flags are shown only on mobile/tablet where emoji rendering is reliable.
 - Reworked the Part 2 `The Real Expedition` bridge in `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js` so the screen now shows the full character roster plus a multi-route preview, keeps non-public branches visibly locked, and restores the `Continue to Mendoza` CTA once Francisco + the guided transfer are selected.
 - Restored the Part 2 `The Real Expedition` selection flow in `prototype/web-v1/ui/screens.js` so entering `screen-part2-character` rebuilds the static Francisco + guided Normal Route cards, re-enables selection state, and lets the confirm CTA advance into the Mendoza bridge again.
-- Expanded `prototype/web-v1/tests/test_smoke_flow.py` to assert the emoji visual-mode options and verify that completing both Part 2 selections enables the CTA and opens `screen-part2-hotel`.
 - Corrected stale "five global difficulty tiers" reference in `README.md` — expedition-setup now uses two carousels (character + scenario) with difficulty embedded in each scenario rather than as an independent user-selectable carousel.
 - Corrected stale difficulty reference ("cinco niveles globales de dificultad") in `README.es.md` to describe the scenario-embedded difficulty model.
 - Updated stale flow reference in `AGENTS.md` from `splash → title → character → scenario → onboarding → game` to `welcome/title → expedition-setup → onboarding → game` to reflect the merged welcome screen and consolidated expedition-setup carousels.
@@ -297,7 +302,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `prototype/web-v1/ui/screens.js` to load scenarios from `data/scenarios.web-v1.json`, replacing in-file `SCENARIOS` and random-archetype constants with data-driven configuration accessors.
 - Updated `docs/model-contract.md` with explicit web-v1 scenario authority boundaries between data ownership (`data/scenarios.web-v1.json`) and runtime enforcement (`loadDataConfig()` in `screens.js`).
 - Revised `meta/public-roadmap.md` to align current-stage messaging with the already integrated `prototype/web-v1` behavior, map each stage to objective repository evidence (modules/features/tests), and explicitly separate design-lock completion from implementation completion with a compact v1.4 status matrix linked to the implementation-plan real-progress snapshot.
-- Updated canonical-status documentation across `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`, and `README.md` to reflect the v1.4 public in-progress state with explicit links to `CHANGELOG.md` `[Unreleased]` and implementation-plan snapshots.
+- Updated canonical-status documentation across `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`, and `README.md` to reflect the v1.4 public in-progress state with explicit links to `CHANGELOG.md` `[1.4.2]` and implementation-plan snapshots.
 - Clarified public/private code visibility scope across `README.md`, `README.es.md`, `prototype/web-v1/README.md`, and `meta/public-roadmap.md`: public prototype code is available in-repo, while production/commercial branch scope remains private.
 - Added a documentation consistency checklist to `CONTRIBUTING.md` to prevent version-title drift between core docs and implementation reality.
 - Updated `.github/workflows/ci.yml` to run the new Playwright smoke test on pull requests, including browser provisioning before executing `pytest prototype/web-v1/tests/test_smoke_flow.py -v`.
@@ -322,7 +327,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated critical-action microcopy in `prototype/web-v1/index.html` to describe immediate cost/benefit tradeoffs directly in action buttons without extending onboarding flow.
 - Added staged risk indicators (`warning`/`critical`) in `prototype/web-v1/index.html` contextual chips using engine-aligned thresholds for body state, resources, permit days, and decision window pressure.
 - Reinforced debrief output in `prototype/web-v1/index.html` with a primary actionable cause line paired with the existing turning-point section.
-- Tuned readability in `prototype/web-v1/index.html` for `dark`, `light`, and `sunset` themes on secondary microcopy and contextual labels.
 - Updated `prototype/web-v1/README.md` and root `README*.md` references to document contextual risk reading and playtest observation support.
 - Extended `prototype/web-v1/index.html` Part 2 bridge into a navigable transition sequence (`part2-hotel` → `part2-intro` → `part2-guides` → `part2-transfer` → `part2-closure`) with connected back/forward controls and explicit safe exits to debrief/title.
 - Replaced `confirmPart2Character()` placeholder alert in `prototype/web-v1/index.html` with real progression to the Part 2 narrative flow, guarded so unlock remains exclusive to `G.finalOutcome === "Summit and Safe Return"`.

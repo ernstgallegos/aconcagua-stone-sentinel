@@ -233,7 +233,6 @@ const I18N = {
   en: {
     langName: 'English',
     ui: {
-      visualMode: 'Visual mode',
       language: 'Language',
       noEntriesYet: 'No entries yet.',
       randomCharacter: 'Random Character',
@@ -252,7 +251,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.5',
+      introVersionValue: 'Prototype · v1.4.2',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -311,7 +310,6 @@ const I18N = {
   es: {
     langName: 'Español',
     ui: {
-      visualMode: 'Modo visual',
       language: 'Idioma',
       noEntriesYet: 'Aún no hay entradas.',
       introInfoLabel: 'Abrir información del prototipo',
@@ -319,7 +317,7 @@ const I18N = {
       introClose: 'Cerrar',
       introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
       introVersionLabel: 'Versión',
-      introVersionValue: 'Prototipo · v1.5',
+      introVersionValue: 'Prototipo · v1.4.2',
       introFormatLabel: 'Formato',
       introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
       introAccessLabel: 'Acceso',
@@ -410,7 +408,7 @@ const TUTORIAL_CONTENT = {
     metaDifficulty: 'Difficulty changes pressure, resource burn, recovery margin, permit slack, and decision time allowance.',
     structureTitle: 'How a run is structured',
     structure: [
-      'Title: choose language, visual mode, and expedition difficulty.',
+      'Title: choose language and continue to expedition setup (character + scenario).',
       'Character: each profile changes resistances, signal clarity, and action identity.',
       'Scenario: seeds define opening weather, visibility, terrain, and route tempo.',
       'Onboarding: read the scenario briefing, then launch the expedition.',

@@ -8,7 +8,7 @@ Objetivo: capturar fricciones repetibles sin interrumpir la sesión.
 - **Lectura de riesgo**: si entiende la diferencia entre chips de `warning` y `critical` antes de decidir.
 - **Decisiones críticas**: si el microcopy ayuda a elegir sin leer onboarding completo.
 - **Debrief accionable**: si identifica “turning point” + causa principal y propone un ajuste concreto para la próxima corrida.
-- **Legibilidad por tema**: validar dark/light/sunset (texto tenue, chips de riesgo, hints de teclas, estado contextual).
+- **Legibilidad de interfaz base**: validar la paleta sunset canónica (texto tenue, chips de riesgo, hints de teclas, estado contextual).
 
 ## Errores recurrentes esperados
 
@@ -34,7 +34,7 @@ Objetivo: capturar fricciones repetibles sin interrumpir la sesión.
 ## Formato mínimo de registro por sesión
 
 - Perfil jugador/a: nuevo / recurrente.
-- Tema visual usado: dark / light / sunset.
+- Plataforma y viewport usados: desktop / mobile (anotar navegador).
 - Turno de mayor fricción:
 - Error principal observado:
 - Qué entendió bien:
