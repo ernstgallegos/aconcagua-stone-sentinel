@@ -18,6 +18,18 @@ export function rngWeighted(rng, choices, weights) {
 }
 export function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+export const RESOLVE_TURN_PIPELINE = Object.freeze([
+  'normalize-action',
+  'consume-time-and-resources',
+  'apply-weather-and-persistence',
+  'compute-pressure-and-perception',
+  'apply-decision-window-effects',
+  'evaluate-outcome',
+  'update-state',
+  'classify-terminal-outcome',
+  'emit-signals-and-narrative',
+]);
+
 export function createTurnEngine(deps) {
   const {
     G,
@@ -46,6 +58,10 @@ export function createTurnEngine(deps) {
     recordTelemetry,
     assertStateShape,
   } = deps;
+
+  function markStage(trace, stage) {
+    if (trace) trace.push(stage);
+  }
 
   function evaluateOutcome(pressureDelta, actionMod, state, context = {}) {
     const effectiveDelta = actionMod.pressureDeltaCap != null
@@ -151,8 +167,10 @@ export function createTurnEngine(deps) {
     assertStateShape(G, 'after updateState');
   }
 
-  function resolveTurn(state, action) {
+  function resolveTurn(state, action, options = {}) {
+    const trace = Array.isArray(options.pipelineTrace) ? options.pipelineTrace : null;
     const flags = [];
+    markStage(trace, 'normalize-action');
     let resolvedAction = action;
     const attemptedSummitAdvance = state.position === 'summit' && (action === 'advance' || action === 'advance_slowly');
 
@@ -173,9 +191,11 @@ export function createTurnEngine(deps) {
     const currentNode = getCurrentNode(state);
     let actionMod = getActionModifier(resolvedAction);
 
+    markStage(trace, 'consume-time-and-resources');
     const actionMinutes = applyTimeCost(resolvedAction);
     spendResourcesForMinutes(Math.max(actionMinutes, 30), flags);
 
+    markStage(trace, 'apply-weather-and-persistence');
     if (resolvedAction !== 'sleep') {
       state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
       state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
@@ -188,6 +208,7 @@ export function createTurnEngine(deps) {
     }
     state.persistenceTier = getPersistenceTier(G.persistenceTurns);
 
+    markStage(trace, 'compute-pressure-and-perception');
     let epResult = calculateEnvironmentalPressure(state);
     epResult.pressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
@@ -266,6 +287,7 @@ export function createTurnEngine(deps) {
       };
     }
 
+    markStage(trace, 'apply-decision-window-effects');
     const decisionAdjusted = applyDecisionWindowDegradation(actionMod, perception);
     actionMod = decisionAdjusted.actionMod;
     const timedPerception = decisionAdjusted.perception;
@@ -287,12 +309,14 @@ export function createTurnEngine(deps) {
       flags.push('summit-difficulty-guard');
     }
 
+    markStage(trace, 'evaluate-outcome');
     const result = evaluateOutcome(finalPressureDelta, actionMod, state, {
       action: resolvedAction,
       altitudeBand: currentNode.altitudeBand,
       summitAdvanceAttempt: attemptedSummitAdvance,
     });
     const exitedPark = previousPosition === 'horcones' && resolvedAction === 'descend';
+    markStage(trace, 'update-state');
     updateState(state, result, resolvedAction);
 
     let outcome = result.outcome;
@@ -302,6 +326,7 @@ export function createTurnEngine(deps) {
 
     if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';
 
+    markStage(trace, 'classify-terminal-outcome');
     if (typeof deriveTerminalOutcome === 'function') {
       outcome = deriveTerminalOutcome({
         outcome,
@@ -323,12 +348,19 @@ export function createTurnEngine(deps) {
     if (state.food <= 0) flags.push('food-depletion');
     if (state.fatigue >= 100 || state.exposure >= 99 || state.functional_capacity <= 5) flags.push('fatality-threshold');
 
+    markStage(trace, 'emit-signals-and-narrative');
     updateAmbientSignal(flags, resolvedAction);
     const signals = computeSignals();
     const narrative = renderNarrative(resolvedAction, signals, flags);
 
-    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, decisionWindowEffect: decisionAdjusted.effect };
+    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
   }
 
-  return { resolveTurn, evaluateOutcome, updateState };
+  function resolveTurnWithTrace(state, action) {
+    const pipelineTrace = [];
+    const turn = resolveTurn(state, action, { pipelineTrace });
+    return { ...turn, pipelineTrace };
+  }
+
+  return { resolveTurn, resolveTurnWithTrace, evaluateOutcome, updateState };
 }
