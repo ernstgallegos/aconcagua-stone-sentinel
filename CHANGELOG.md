@@ -10,6 +10,31 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- _No entries yet._
+
+## [1.4.3] — 2026-03
+
+### Added
+- Added a deterministic regression layer for web-v1 with golden scenario structural assertions and outcome-derivation tests covering park-exit outcomes, permit expiry, and summit-window closure (`prototype/web-v1/tests/engine/golden-scenarios.test.js`, `prototype/web-v1/tests/engine/outcome-derivation.test.js`).
+- Added lightweight modular helpers under `prototype/web-v1/ui/helpers/` for help-overlay content, debrief/run-signature analysis, run-log serialization, accessibility focus handling, and seed-driven event logic.
+- Added a seed-driven dynamic environment event layer (calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening) integrated into the canonical resolver weather stage with subtle watch cues (`prototype/web-v1/ui/screens.js`, `prototype/web-v1/engine/turn-resolution.js`, `prototype/web-v1/ui/helpers/events.js`).
+- Added one lightweight character-specific event per protagonist with bounded systemic effects and narrative cues, preserving mountain-first authority in `resolveTurn(state, action)`.
+- Added structured debrief sections, run signature summary/copy action, and local turn-review controls to improve replay and post-run readability (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`).
+- Added accessibility smoke coverage for modal focus helpers and run-log export contract coverage for `run_log.json` summary structure (`prototype/web-v1/tests/accessibility-smoke.test.js`, `prototype/web-v1/tests/model-contract.runlog.test.js`).
+
+### Changed
+- Expanded in-game help overlay content to explain pressure labels, trend categories, confidence semantics, retreat legitimacy, and "How to read this game" guidance without exposing raw system truth (`prototype/web-v1/ui/helpers/help-overlay-content.js`, `prototype/web-v1/ui/screens.js`).
+- Enriched run-log turn entries with stage/node metadata, warning-state/context-event telemetry, and kept exports backward-compatible via additive fields.
+- Improved keyboard/readability support with stronger focus-visible states, reduced-motion hardening, and reusable focus-return modal helpers (`prototype/web-v1/css/components.css`, `prototype/web-v1/ui/helpers/accessibility.js`).
+- Added contributor-friendly validation scripts `test:webv1` and `test:full` in `package.json`.
+
+### Fixed
+- Ensured context events are tracked in telemetry (`lastTurnRecord.contextEvent`) without introducing duplicate resolver branches.
+
+### Security
+- No security-impacting changes in this release.
+
+### Added
 - Published reusable engine formula module `prototype/web-v1/engine/pressure-model.js` plus deterministic harness `prototype/web-v1/tests/harness/turn-harness.js` for turn-level regression checks.
 - Added web-v1 engine unit tests for Environmental Pressure and Body Tolerance calculations and a resolve-turn pipeline ordering contract (`prototype/web-v1/tests/engine/pressure-calculations.test.js`, `prototype/web-v1/tests/engine/resolve-turn-pipeline.test.js`).
 - Added in-game `Pressure & Trend Help` overlay with bilingual content and keyboard escape-close support (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`).

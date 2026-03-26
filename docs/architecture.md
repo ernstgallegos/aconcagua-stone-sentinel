@@ -1,9 +1,9 @@
 # Architecture — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../CHANGELOG.md#unreleased).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](../CHANGELOG.md#143--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4 in-progress (phased rollout)**, not the legacy v1.3 baseline.
+> - Current public build is **v1.4.3** with phased rollout contracts preserved.
 
 Prototype Web v1.4 (public branch state) is the canonical active prototype in this repository, with completed and in-progress items from the v1.4 phase plan.
 
@@ -35,3 +35,9 @@ All simulation tuning is loaded from `/data`:
 - `prototype/web-v1/`: **active canonical prototype** (v1.4 public state, phased progress).
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
 - `index.html` at repo root: replay/viewer surface only.
+
+
+## v1.4.3 additions
+
+- Added a seed-driven environment-event layer that mutates weather/visibility inside the canonical resolver weather stage; no parallel progression authority was added.
+- Added debrief/run-review helpers and accessibility helper modules under `prototype/web-v1/ui/helpers/` as low-risk modularization preparation for future TS migration.

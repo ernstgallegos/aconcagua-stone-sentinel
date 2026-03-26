@@ -32,6 +32,12 @@ const RUN_STATE_DEFAULTS = Object.freeze({
   photoLastEffectLabel: '',
   lateSignalDeterminantTurns: 0,
   lateSignalEvents: [],
+  environmentEventPlan: [],
+  activeEnvironmentEvent: null,
+  characterEventHistory: [],
+  characterConfidenceDrift: 0,
+  runSignature: '',
+  reviewTurnIndex: 0,
 });
 
 const UI_STATE_DEFAULTS = Object.freeze({

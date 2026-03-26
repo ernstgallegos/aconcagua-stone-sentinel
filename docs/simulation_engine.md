@@ -1,9 +1,9 @@
 # Simulation Engine — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[Unreleased]`](../CHANGELOG.md#unreleased).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](../CHANGELOG.md#143--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.2** with legacy v1.3 contracts preserved where still applicable.
+> - Current public build is **v1.4.3** with legacy v1.3 contracts preserved where still applicable.
 
 
 ## Core authority
@@ -164,3 +164,14 @@ Night (22:00–06:00) + ts=3 = +120 EP. Intentional design: don't be at high cam
 ### collapseChance formula
 `collapseChance = clamp(max(0, eff) × 1.2 + (100 - fc) × 0.1 + actionMod.collapse, 0, 96)`  
 At extreme pressure (eff=52): advance → 15.4% collapse. Severe weather is dangerous, not instantly lethal.
+
+
+## v1.4.3 event layer
+
+A lightweight, reproducible environment-event layer now runs during `apply-weather-and-persistence` in `resolveTurn()`.
+
+- Archetypes: calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening.
+- Integration path: event effects mutate weather/visibility/time, then EP/BT/perception continue unchanged through the canonical chain.
+- Telemetry: per-turn `lastTurnRecord.contextEvent` plus run log `contextEvent` fields where active.
+
+Character-specific micro-events also run in the same stage with modest bounded effects (small fatigue/exposure/confidence drift), preserving mountain-first systemic authority.
