@@ -262,7 +262,7 @@ A v1.4 design/planning documentation package was added to align vision, game str
 - Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
 - Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
 
-> Note: v1.4 documentation and planning are now partially implemented in the current public prototype. Check the changelog `1.4.2` release block and implementation plan files for latest phase progress.
+> Note: v1.4 documentation and planning are now partially implemented in the current public prototype. Check the changelog `1.4.3` release block and implementation plan files for latest phase progress.
 
 
 ## Repository Structure
@@ -310,16 +310,16 @@ aconcaguastonesentinel@gmail.com
 
 
 
-## Prototype canonical status (v1.4.2 public state)
+## Prototype canonical status (v1.4.3 public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.2]`](./CHANGELOG.md#142--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](./CHANGELOG.md#142--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.2 (public phased rollout)**.
+> - Current public build is **v1.4.3 (public phased rollout)**.
 
-The canonical active prototype is **`prototype/web-v1` (v1.4.2 public state)**.
+The canonical active prototype is **`prototype/web-v1` (v1.4.3 public state)**.
 
-- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.2 phased mechanics currently in public rollout.
+- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.3 phased mechanics currently in public rollout.
 - `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
 - repository root viewer: replay/view layer for bundled runs.
 

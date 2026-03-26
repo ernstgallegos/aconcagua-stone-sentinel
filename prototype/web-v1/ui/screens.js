@@ -2,6 +2,11 @@ import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } f
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
 import { calculateEnvironmentalPressureScore, calculateBodyToleranceScore } from '../engine/pressure-model.js';
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
+import { buildHelpSections } from './helpers/help-overlay-content.js';
+import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature } from './helpers/debrief.js';
+import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper } from './helpers/run-log.js';
+import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
+import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -252,7 +257,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.2',
+      introVersionValue: 'Prototype · v1.4.3',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -324,7 +329,7 @@ const I18N = {
       introClose: 'Cerrar',
       introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
       introVersionLabel: 'Versión',
-      introVersionValue: 'Prototipo · v1.4.2',
+      introVersionValue: 'Prototipo · v1.4.3',
       introFormatLabel: 'Formato',
       introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
       introAccessLabel: 'Acceso',
@@ -1683,6 +1688,12 @@ function startGame() {
     photoLastEffectLabel: '',
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
+    activeEnvironmentEvent: null,
+    characterEventHistory: [],
+    characterConfidenceDrift: 0,
+    runSignature: '',
+    reviewTurnIndex: 0,
   });
   updateUIState(G, {
     tutorialSeen: {},
@@ -2032,6 +2043,7 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
     5,
     95
   );
+  confidenceLevel = clamp(confidenceLevel + (G.characterConfidenceDrift || 0), 5, 98);
   const currentEp = EP ?? calculateEnvironmentalPressure(state).pressureScore;
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
   let trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
@@ -2359,6 +2371,17 @@ function renderWatch() {
   if (trendEl) {
     trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
     trendEl.className = 'watch-trend';
+  }
+
+  const eventCue = document.getElementById('watch-event-cue');
+  if (eventCue) {
+    const active = G.activeEnvironmentEvent;
+    if (active?.label) {
+      eventCue.textContent = `${active.icon || '◌'} ${active.label}`;
+      eventCue.style.display = 'block';
+    } else {
+      eventCue.style.display = 'none';
+    }
   }
 
   const uncertaintyInline = document.getElementById('watch-uncertainty-inline');
@@ -2722,6 +2745,12 @@ function renderNarrative(decision, signals, flags=[]) {
   else if (flags.includes('white-wind-hit')) text = pickNarrative('white_wind_hit');
   else if (flags.includes('white-wind-precursor')) text = pickNarrative('white_wind_sign');
   else if (flags.includes('high-altitude-entered')) text = pickNarrative('first_high');
+  else if (flags.includes('char-francisco-limit-read')) text = uiText('Francisco feels the pull to keep pushing, then chooses to protect one margin.', 'Francisco siente el impulso de seguir, y luego decide proteger un margen.');
+  else if (flags.includes('char-laura-clock-discipline')) text = uiText('Laura reads the shrinking clock and keeps discipline over altitude impulse.', 'Laura lee el reloj que se achica y sostiene disciplina sobre el impulso de altura.');
+  else if (flags.includes('char-irina-noisy-read')) text = uiText('Irina trusts strength, but today the mountain answers with noisy signals.', 'Irina confía en su fuerza, pero hoy la montaña responde con señales ruidosas.');
+  else if (flags.includes('char-erik-ego-check')) text = uiText('Erik turns competence into restraint before ego narrows the corridor.', 'Erik convierte competencia en contención antes de que el ego cierre el corredor.');
+  else if (flags.includes('char-daniela-tradeoff')) text = uiText('Daniela sees the line clearly, while the body asks for stricter pacing.', 'Daniela ve la línea con claridad, mientras el cuerpo pide un ritmo más estricto.');
+  else if (flags.includes('char-blake-prep-gap')) text = uiText('Blake keeps determination, but preparation debt is now impossible to ignore.', 'Blake mantiene determinación, pero la deuda de preparación ya no se puede ignorar.');
   else if (decision === 'advance' || decision === 'advance_slowly') {
     if (decision === 'advance_slowly') text = pickNarrative('advance_slowly');
     else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
@@ -2923,6 +2952,12 @@ function applyTimeCost(action) {
   return minutes;
 }
 
+function applyEventTimePenalty(minutes) {
+  if (!minutes) return;
+  const synced = applyClockDelta({ minutesOfDay: G.minutesOfDay, day: G.day, deltaMinutes: minutes });
+  updateRunState(G, synced);
+}
+
 function applyAcclimatizationGain(action) {
   const mod = getActionModifier(action);
   const gain = mod.acclimatizationGain || 0;
@@ -2985,6 +3020,22 @@ function applySummitDifficultyRegressionGuard({ stage, acclPenalty, decisionEffe
   return guard;
 }
 
+
+function applyContextEvents({ state, action, stage, flags }) {
+  const eventEffect = applyTurnEvents({ G, state, action, stage });
+  if (eventEffect) {
+    updateRunState(G, { activeEnvironmentEvent: eventEffect });
+    if (eventEffect.timePenalty) applyEventTimePenalty(eventEffect.timePenalty);
+  } else updateRunState(G, { activeEnvironmentEvent: null });
+
+  const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags });
+  if (charEffect?.characterId) {
+    updateRunState(G, { characterEventHistory: [...G.characterEventHistory, charEffect.characterId] });
+  }
+
+  return eventEffect;
+}
+
 function classifyDifficultyResponsibility() {
   const total = Math.max(1, G.turnLog.length);
   const systemicFlags = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
@@ -3025,6 +3076,7 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   updateRunState,
   recordTelemetry,
   assertStateShape,
+  applyContextEvents,
 });
 
 function makeDecision(decision) {
@@ -3053,6 +3105,8 @@ function makeDecision(decision) {
     day: G.day,
     time: formatMinutes(G.minutesOfDay),
     position: s.position,
+    node: s.position,
+    stage: getCurrentStage(),
     decision: resolvedDecision,
     trend: G.signals.trend,
     uncertainty: G.signals.uncertainty,
@@ -3071,6 +3125,8 @@ function makeDecision(decision) {
     onboardingLayer: G.onboardingLayer,
     primaryAlert: G.currentPrimaryAlert,
     lateSignalActivation: turnResult.lateSignalEvent,
+    warningState: G.currentPrimaryAlert,
+    contextEvent: turnResult.contextEvent || G.activeEnvironmentEvent,
     narrativeText,
   };
   updateRunState(G, {
@@ -3295,7 +3351,31 @@ function endRun(returnedToHorcones) {
 
   document.getElementById('debrief-turning-point').textContent = findTurningPoint();
   const responsibility = classifyDifficultyResponsibility();
-  document.getElementById('debrief-cause').textContent = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
+  const dominantRiskAxis = computeDominantRiskAxis({ turnLog: G.turnLog, finalOutcome: G.finalOutcome, allFlags: G.allFlags });
+  const decisionPattern = computeDecisionPattern(G.turnLog);
+  const recommendation = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
+  document.getElementById('debrief-cause').textContent = recommendation;
+
+  const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text || '—'; };
+  setText('debrief-outcome-detail', outcome.label);
+  setText('debrief-highest-point', POS_LABELS[POSITIONS[G.highestPosIdx]] || '—');
+  setText('debrief-turning-point-detail', findTurningPoint());
+  setText('debrief-primary-pressure', dominantRiskAxis);
+  setText('debrief-decision-pattern', decisionPattern);
+  setText('debrief-next-run-recommendation', recommendation);
+
+  const signature = buildRunSignature({
+    characterName: G.character?.name,
+    scenarioName: sc.name,
+    seed: G.seed,
+    turns: G.turnLog.length,
+    highestNode: POS_LABELS[POSITIONS[G.highestPosIdx]],
+    finalOutcome: outcome.label,
+    dominantRiskAxis,
+  });
+  setText('run-signature-content', signature);
+  updateRunState(G, { runSignature: signature });
+  updateRunReviewPanel(0);
 
   // debrief actions
   // FIX: journal button records that we came from debrief
@@ -3306,6 +3386,8 @@ function endRun(returnedToHorcones) {
     { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
     { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('expedition-setup') },
     { label: 'Same character, new scenario', cls: 'btn-ghost', onClick: goChooseScenario },
+    { label: 'Review Turns', cls: 'btn-ghost', onClick: () => updateRunReviewPanel(Math.max(0, G.turnLog.length - 1)) },
+    { label: 'Copy Run Signature', cls: 'btn-ghost', onClick: copyRunSignature },
     { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
   ].forEach(({ label, cls, onClick }) => {
     const btn = document.createElement('button');
@@ -3323,6 +3405,45 @@ function endRun(returnedToHorcones) {
   }
 }
 
+
+function updateRunReviewPanel(index = 0) {
+  const entries = G.turnLog || [];
+  const root = document.getElementById('debrief-review-content');
+  const indexEl = document.getElementById('debrief-review-index');
+  if (!root || !indexEl) return;
+  if (!entries.length) {
+    root.textContent = 'No turn records available for this run.';
+    indexEl.textContent = '0 / 0';
+    return;
+  }
+  const safeIndex = clamp(index, 0, entries.length - 1);
+  updateRunState(G, { reviewTurnIndex: safeIndex });
+  const entry = entries[safeIndex];
+  indexEl.textContent = `${safeIndex + 1} / ${entries.length}`;
+  root.textContent = `T${entry.turn} · Day ${entry.day} ${entry.time} · ${POS_LABELS[entry.position]}
+Action: ${entry.decision} · ${entry.trend}/${entry.uncertainty}
+Body: ${entry.body.capacity}, ${entry.body.fatigue}, ${entry.body.exposure}
+Flags: ${(entry.flags || []).join(', ') || 'none'}
+Note: ${entry.narrativeText || '—'}`;
+}
+
+
+function reviewPrevTurn() {
+  updateRunReviewPanel((G.reviewTurnIndex || 0) - 1);
+}
+
+function reviewNextTurn() {
+  updateRunReviewPanel((G.reviewTurnIndex || 0) + 1);
+}
+
+function copyRunSignature() {
+  const text = G.runSignature || '';
+  if (!text) return;
+  if (navigator?.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+}
+
 function exportRunLog() {
   const blob = new Blob([JSON.stringify(buildRunLogExport(), null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -3335,38 +3456,11 @@ function exportRunLog() {
 }
 
 function summarizeRunLog(records) {
-  const summary = {
-    totalTurns: records.length,
-    criticalEventCount: 0,
-    decisionWindowExceededCount: 0,
-    lateSignalTriggeredCount: 0,
-    specialActionUsedCount: 0,
-  };
-
-  records.forEach((entry) => {
-    const hasCriticalFlag = (entry.flags || []).some((flag) =>
-      ['critical-fatigue', 'critical-exposure', 'fatality-threshold'].includes(flag)
-    );
-    if (hasCriticalFlag) summary.criticalEventCount += 1;
-    if (entry.decisionWindowExceeded) summary.decisionWindowExceededCount += 1;
-    if (entry.lateSignalTriggered || entry.lateSignalActivation) summary.lateSignalTriggeredCount += 1;
-    if (entry.specialActionUsed) summary.specialActionUsedCount += 1;
-  });
-
-  return summary;
+  return summarizeRunLogHelper(records);
 }
 
 function buildRunLogExport() {
-  if (!G.runLogRecords.length) return [];
-
-  const summary = summarizeRunLog(G.runLogRecords);
-  return G.runLogRecords.map((entry, idx) => {
-    if (idx !== G.runLogRecords.length - 1) return entry;
-    return {
-      ...entry,
-      runSummary: summary,
-    };
-  });
+  return buildRunLogExportHelper(G.runLogRecords);
 }
 
 // FIX: journal navigation helper — records the origin screen
@@ -3659,6 +3753,12 @@ function bootstrapMockDebrief(params) {
     consecutiveCollapses: 0,
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
+    activeEnvironmentEvent: null,
+    characterEventHistory: [],
+    characterConfidenceDrift: 0,
+    runSignature: '',
+    reviewTurnIndex: 0,
   });
 
   // Populate debrief DOM (mirrors relevant parts of endRun())
@@ -3867,53 +3967,20 @@ function buildGameHelpContent() {
   if (!host) return;
   const closeBtn = document.getElementById('game-help-close-btn');
   if (closeBtn) closeBtn.setAttribute('aria-label', t('ui.gameHelpClose'));
-
-  const pressureRows = [
-    [uiText('Low', 'Baja'), uiText('Broad tactical margin. Keep rhythm but monitor hydration and time.', 'Margen táctico amplio. Mantén el ritmo, pero vigila hidratación y tiempo.')],
-    [uiText('Manageable', 'Manejable'), uiText('Progress is viable if body trend remains stable and confidence is not collapsing.', 'El progreso es viable si la tendencia corporal se mantiene estable y la confianza no cae.')],
-    [uiText('Severe', 'Severa'), uiText('Narrow margin. Prefer slower pushes and pre-plan retreat windows.', 'Margen estrecho. Prioriza avances lentos y planifica ventanas de retirada.')],
-    [uiText('Very Severe', 'Muy severa'), uiText('High attrition risk. Advance only with strong body state and clean signal.', 'Riesgo alto de desgaste. Avanza solo con estado corporal fuerte y señal clara.')],
-    [uiText('Extreme', 'Extrema'), uiText('System is near refusal. Preservation and descent logic should dominate.', 'El sistema está cerca de la negativa. Deben dominar la preservación y la lógica de descenso.')],
-  ];
-
-  const trendRows = [
-    [uiText('Easing', 'Mejorando'), uiText('Pressure is relaxing. Confirm with confidence before committing long pushes.', 'La presión afloja. Confírmalo con confianza antes de comprometer empujes largos.')],
-    [uiText('Steady', 'Estable'), uiText('Conditions are persistent. Keep economy discipline and avoid overconfidence.', 'Las condiciones persisten. Mantén disciplina económica y evita el exceso de confianza.')],
-    [uiText('Worsening', 'Empeorando'), uiText('Risk is rising. Reduce aggressiveness and protect descent options.', 'El riesgo está subiendo. Reduce agresividad y protege opciones de descenso.')],
-    [uiText('Worsening fast', 'Empeorando rápido'), uiText('Rapid instability. Prioritize survival margin over altitude gain.', 'Inestabilidad rápida. Prioriza el margen de supervivencia por encima de ganar altura.')],
-    [uiText('Uncertain', 'Incierta'), uiText('Signal quality is degraded. Prefer robust actions with lower exposure cost.', 'La calidad de señal está degradada. Prefiere acciones robustas con menor costo de exposición.')],
-  ];
-
-  const buildChips = (rows) => rows.map(([label, text]) => `<div class="help-chip"><strong>${label}</strong><small>${text}</small></div>`).join('');
-
-  host.innerHTML = `
-    <section>
-      <h4>${t('ui.gameHelpPressureTitle')}</h4>
-      <div class="game-help-grid">${buildChips(pressureRows)}</div>
-    </section>
-    <section>
-      <h4>${t('ui.gameHelpTrendTitle')}</h4>
-      <div class="game-help-grid">${buildChips(trendRows)}</div>
-    </section>
-  `;
+  host.innerHTML = buildHelpSections(uiText, t);
 }
 
 function openGameHelp() {
   buildGameHelpContent();
   const overlay = document.getElementById('game-help-overlay');
   const dialog = overlay?.querySelector('.game-help-dialog');
-  if (!overlay) return;
-  overlay.classList.add('open');
-  overlay.setAttribute('aria-hidden', 'false');
-  dialog?.focus();
+  const trigger = document.getElementById('game-help-trigger');
+  openModalWithFocus({ overlay, dialog, trigger });
 }
 
 function closeGameHelp() {
   const overlay = document.getElementById('game-help-overlay');
-  if (!overlay) return;
-  overlay.classList.remove('open');
-  overlay.setAttribute('aria-hidden', 'true');
-  document.getElementById('game-help-trigger')?.focus();
+  closeModalWithFocusReturn({ overlay, fallbackTriggerId: 'game-help-trigger' });
 }
 
 
@@ -3950,5 +4017,8 @@ window.openFieldLog = openFieldLog;
 window.closeFieldLog = closeFieldLog;
 window.openGameHelp = openGameHelp;
 window.closeGameHelp = closeGameHelp;
+window.reviewPrevTurn = reviewPrevTurn;
+window.reviewNextTurn = reviewNextTurn;
+window.copyRunSignature = copyRunSignature;
 
 export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState, getDifficultyConfig, getDifficultyModifiers, setDifficulty };

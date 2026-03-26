@@ -57,6 +57,7 @@ export function createTurnEngine(deps) {
     updateRunState,
     recordTelemetry,
     assertStateShape,
+    applyContextEvents,
   } = deps;
 
   function markStage(trace, stage) {
@@ -200,6 +201,18 @@ export function createTurnEngine(deps) {
     if (resolvedAction !== 'sleep') {
       state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
       state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
+    }
+
+    let contextEvent = null;
+    if (typeof applyContextEvents === 'function') {
+      contextEvent = applyContextEvents({
+        state,
+        action: resolvedAction,
+        stage: stageAtTurnStart,
+        previousPosition,
+        flags,
+      });
+      if (contextEvent?.id) flags.push('weather-event-active');
     }
 
     if (resolvedAction === 'sleep') {
@@ -381,6 +394,7 @@ export function createTurnEngine(deps) {
             uncertainty: timedPerception?.noiseLevel,
             readability: timedPerception?.latency?.readabilityLabel || 'clear reading',
           },
+          contextEvent,
           outcome,
           flags: [...flags],
           state: {
@@ -394,7 +408,7 @@ export function createTurnEngine(deps) {
       });
     }
 
-    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
+    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, contextEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
   }
 
   function resolveTurnWithTrace(state, action) {

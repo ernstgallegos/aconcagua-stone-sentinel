@@ -1,9 +1,9 @@
-# Prototype Web v1.4.2 (public state)
+# Prototype Web v1.4.3 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.2]`](../../CHANGELOG.md#142--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](../../CHANGELOG.md#143--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.2 (public phased rollout)** with shipped phase slices and stabilized release documentation.
+> - Current public build is **v1.4.3 (public phased rollout)** with shipped phase slices and stabilized release documentation.
 
 > **Public repository scope:**
 > - Public prototype code is available in this repository (this `prototype/web-v1` implementation and the frozen `prototype/mra-v0` reference artifact).
@@ -94,3 +94,12 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Deterministic turn harness: `prototype/web-v1/tests/harness/turn-harness.js`
 - Engine formula tests: `prototype/web-v1/tests/engine/*.test.js`
 - Run all web-v1 tests: `npm test`
+
+## Sprint upgrades (v1.4.3)
+
+- Added deterministic golden regression coverage and outcome-derivation tests for canonical terminal outcomes, permit/window behavior, and run-log export shape.
+- Added lightweight dynamic environment events (calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening), all seed-driven through the existing resolver pipeline.
+- Added one lightweight character-specific event per protagonist with modest systemic effects and narrative cues, without bypassing `resolveTurn(state, action)`.
+- Upgraded debrief with structured sections, run signature text, and a local turn-by-turn review panel plus one-click signature copy.
+- Expanded help overlay content with confidence semantics, retreat framing, and “How to read this game” guidance while preserving partial-information constraints.
+- Accessibility improvements include stronger focus-visible styles, keyboard-safe modal focus return behavior, and reduced-motion support hardening.
