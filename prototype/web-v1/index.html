@@ -128,6 +128,7 @@
       <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
       <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
       <button class="btn-link field-log-trigger" type="button" onclick="openFieldLog()" aria-label="View field log" aria-haspopup="dialog">View field log</button>
+      <button class="btn-link game-help-trigger" id="game-help-trigger" type="button" onclick="openGameHelp()" aria-label="Open pressure and trend help" aria-haspopup="dialog">Pressure & Trend Help</button>
     </div>
   </div>
 
@@ -199,6 +200,22 @@
     <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
   </div>
 </section>
+
+
+
+<!-- IN-GAME HELP OVERLAY -->
+<div id="game-help-overlay" class="game-help-overlay" role="dialog" aria-modal="true" aria-label="Pressure and trend help" aria-hidden="true">
+  <div class="game-help-dialog" tabindex="-1">
+    <div class="watch-detail-header">
+      <div class="watch-detail-identity">
+        <div class="watch-detail-name" id="game-help-title">Pressure and Trend Guide</div>
+        <div class="watch-detail-difficulty" id="game-help-subtitle">Read mountain pressure labels and trend categories before committing movement.</div>
+      </div>
+      <button class="btn-link watch-detail-close" type="button" id="game-help-close-btn" onclick="closeGameHelp()" aria-label="Close help">✕</button>
+    </div>
+    <div id="game-help-content"></div>
+  </div>
+</div>
 
 <!-- WATCH DETAIL OVERLAY — full detail on demand (tap watch band) -->
 <div id="watch-detail-overlay" class="watch-detail-overlay" role="dialog" aria-modal="true" aria-label="Watch detail" aria-hidden="true">

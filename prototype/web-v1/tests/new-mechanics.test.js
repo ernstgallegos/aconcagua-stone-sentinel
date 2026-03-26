@@ -104,3 +104,12 @@ test('Part 2 bridge keeps the full roster visible while gating the public path',
   assert.match(uiSource, /part2-lock-pill/);
   assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
 });
+
+
+test('in-game help overlay wiring is present for pressure labels and trend categories', () => {
+  assert.match(indexSource, /id="game-help-trigger"/);
+  assert.match(indexSource, /id="game-help-overlay"/);
+  assert.match(uiSource, /function buildGameHelpContent\(\)/);
+  assert.match(uiSource, /window\.openGameHelp = openGameHelp/);
+  assert.match(uiSource, /window\.closeGameHelp = closeGameHelp/);
+});

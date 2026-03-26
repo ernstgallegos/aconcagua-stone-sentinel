@@ -201,7 +201,7 @@ Short observation companion: [`docs/es/guia-observacion-playtest.md`](./docs/es/
 
 The web prototype follows a unified environmental-dominance resolution pipeline:
 
-`Environment → Environmental Pressure (EP) → Body Tolerance (BT) → Pressure Delta → Perception → Action Modifier → Outcome`
+`normalize action → resources/time → weather+persistence → Environmental Pressure (EP) + Body Tolerance (BT) → perception/timing effects → outcome evaluation → state update → terminal classification`
 
 All simulation parameters are loaded from `/data`:
 

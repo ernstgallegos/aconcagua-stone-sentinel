@@ -1,5 +1,6 @@
 import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } from '../state/game-state.js';
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
+import { calculateEnvironmentalPressureScore, calculateBodyToleranceScore } from '../engine/pressure-model.js';
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
 
 const TUNING = {
@@ -304,6 +305,12 @@ const I18N = {
       carouselNextScenario: 'Next scenario',
       carouselCharInfo: 'Character info',
       carouselScenInfo: 'Scenario info',
+      gameHelpTrigger: 'Pressure & Trend Help',
+      gameHelpTitle: 'Pressure and Trend Guide',
+      gameHelpSubtitle: 'Use this quick reference before committing movement.',
+      gameHelpPressureTitle: 'Pressure labels',
+      gameHelpTrendTitle: 'Trend categories',
+      gameHelpClose: 'Close help',
 
     },
   },
@@ -381,6 +388,12 @@ const I18N = {
       carouselNextScenario: 'Escenario siguiente',
       carouselCharInfo: 'Info del personaje',
       carouselScenInfo: 'Info del escenario',
+      gameHelpTrigger: 'Ayuda de presión y tendencia',
+      gameHelpTitle: 'Guía de presión y tendencia',
+      gameHelpSubtitle: 'Usa esta referencia rápida antes de comprometer movimiento.',
+      gameHelpPressureTitle: 'Etiquetas de presión',
+      gameHelpTrendTitle: 'Categorías de tendencia',
+      gameHelpClose: 'Cerrar ayuda',
 
     },
   },};
@@ -832,6 +845,9 @@ function applyStaticTranslations() {
     ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(3) .decision-cost', 'ui.onboardingWaitDesc'],
     ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(4) .decision-cost', 'ui.onboardingDescendDesc'],
     ['#onboarding-modal .onboard-note', 'ui.onboardingNote'],
+    ['#game-help-trigger', 'ui.gameHelpTrigger'],
+    ['#game-help-title', 'ui.gameHelpTitle'],
+    ['#game-help-subtitle', 'ui.gameHelpSubtitle'],
   ];
   map.forEach(([selector, key]) => {
     const el = document.querySelector(selector);
@@ -1881,43 +1897,23 @@ function getStageModifier(position = G.state.position) {
 
 
 function calculateEnvironmentalPressure(state) {
-  const epConf = DATA_CONFIG.environmentalPressure || {};
-  const altitudeScale = epConf.altitudePressureByBand || {};
-  const terrainScale = epConf.terrainLoadScale || {};
-  const weatherScale = epConf.weatherSeverityScale || {};
-  const visibilityScale = epConf.visibilityRiskScale || {};
-  const timeScale = epConf.timeOfDayRiskScale || {};
-  const persistenceScale = epConf.exposurePersistenceScale || {};
-
-  const node = getCurrentNode(state);
-  const stageMod = getStageModifier(state.position);
-  const altitudePressure = altitudeScale[String(node.altitudeBand)] ?? 0;
-  const terrainLoad = terrainScale[String(clamp(node.terrainLoad, 1, 5))] ?? 0;
-  const weatherSeverity = weatherScale[String(clamp(state.weather_severity || 0, 0, 4))] ?? 0;
-  const visibilityRisk = visibilityScale[String(clamp(4 - (state.visibility ?? 2), 0, 4))] ?? 0;
-  const timeOfDayRiskRaw = timeScale[getTimeOfDayBucket(G.minutesOfDay)] ?? 0;
-  const timeOfDayRisk = timeOfDayRiskRaw * (node.timeSensitivity || 1);
-  const exposurePersistence = persistenceScale[state.persistenceTier || 'fresh'] ?? 0;
-  const difficultyMods = getDifficultyModifiers();
-  const pressureScore = altitudePressure + terrainLoad + weatherSeverity + visibilityRisk + timeOfDayRisk + exposurePersistence + (node.weatherBias || 0) + (node.visibilityBias || 0) + (stageMod.weatherSeverityBias || 0) + difficultyMods.pressureBias;
-  return { pressureScore, components: { altitudePressure, terrainLoad, weatherSeverity, visibilityRisk, timeOfDayRisk, exposurePersistence } };
+  return calculateEnvironmentalPressureScore({
+    state,
+    node: getCurrentNode(state),
+    stageModifier: getStageModifier(state.position),
+    difficultyModifiers: getDifficultyModifiers(),
+    timeOfDayBucket: getTimeOfDayBucket(G.minutesOfDay),
+    environmentalPressureConfig: DATA_CONFIG.environmentalPressure,
+  });
 }
 
 function calculateBodyTolerance(state) {
-  const hydrationState = clamp((state.water / 36) * 100, 0, 100);
-  const nutritionState = clamp((state.food / 36) * 100, 0, 100);
-  const stats = G.character?.engine || {};
-  const fatigueResistance = stats.fatigueResistance || 1;
-  const exposureResistance = stats.exposureResistance || 1;
-  const difficultyMods = getDifficultyModifiers();
-  const bt = (state.functional_capacity * 0.4) +
-    ((G.acclimatization || 0) * 0.35) +
-    (hydrationState * 0.1) +
-    (nutritionState * 0.05) +
-    difficultyMods.bodyToleranceBonus -
-    ((state.fatigue * 0.05) / fatigueResistance) -
-    ((state.exposure * 0.05) / exposureResistance);
-  return clamp(bt, 0, 100);
+  return calculateBodyToleranceScore({
+    state,
+    acclimatization: G.acclimatization || 0,
+    characterEngine: G.character?.engine || {},
+    difficultyModifiers: getDifficultyModifiers(),
+  });
 }
 
 function pressureDeltaLabel(delta) {
@@ -3857,7 +3853,69 @@ document.addEventListener('DOMContentLoaded', () => {
       backdrop.classList.remove('visible');
     });
   }
+
+  document.addEventListener('keydown', (event) => {
+    const helpOpen = document.getElementById('game-help-overlay')?.classList.contains('open');
+    if (helpOpen && event.key === 'Escape') closeGameHelp();
+  });
 });
+
+
+
+function buildGameHelpContent() {
+  const host = document.getElementById('game-help-content');
+  if (!host) return;
+  const closeBtn = document.getElementById('game-help-close-btn');
+  if (closeBtn) closeBtn.setAttribute('aria-label', t('ui.gameHelpClose'));
+
+  const pressureRows = [
+    [uiText('Low', 'Baja'), uiText('Broad tactical margin. Keep rhythm but monitor hydration and time.', 'Margen táctico amplio. Mantén el ritmo, pero vigila hidratación y tiempo.')],
+    [uiText('Manageable', 'Manejable'), uiText('Progress is viable if body trend remains stable and confidence is not collapsing.', 'El progreso es viable si la tendencia corporal se mantiene estable y la confianza no cae.')],
+    [uiText('Severe', 'Severa'), uiText('Narrow margin. Prefer slower pushes and pre-plan retreat windows.', 'Margen estrecho. Prioriza avances lentos y planifica ventanas de retirada.')],
+    [uiText('Very Severe', 'Muy severa'), uiText('High attrition risk. Advance only with strong body state and clean signal.', 'Riesgo alto de desgaste. Avanza solo con estado corporal fuerte y señal clara.')],
+    [uiText('Extreme', 'Extrema'), uiText('System is near refusal. Preservation and descent logic should dominate.', 'El sistema está cerca de la negativa. Deben dominar la preservación y la lógica de descenso.')],
+  ];
+
+  const trendRows = [
+    [uiText('Easing', 'Mejorando'), uiText('Pressure is relaxing. Confirm with confidence before committing long pushes.', 'La presión afloja. Confírmalo con confianza antes de comprometer empujes largos.')],
+    [uiText('Steady', 'Estable'), uiText('Conditions are persistent. Keep economy discipline and avoid overconfidence.', 'Las condiciones persisten. Mantén disciplina económica y evita el exceso de confianza.')],
+    [uiText('Worsening', 'Empeorando'), uiText('Risk is rising. Reduce aggressiveness and protect descent options.', 'El riesgo está subiendo. Reduce agresividad y protege opciones de descenso.')],
+    [uiText('Worsening fast', 'Empeorando rápido'), uiText('Rapid instability. Prioritize survival margin over altitude gain.', 'Inestabilidad rápida. Prioriza el margen de supervivencia por encima de ganar altura.')],
+    [uiText('Uncertain', 'Incierta'), uiText('Signal quality is degraded. Prefer robust actions with lower exposure cost.', 'La calidad de señal está degradada. Prefiere acciones robustas con menor costo de exposición.')],
+  ];
+
+  const buildChips = (rows) => rows.map(([label, text]) => `<div class="help-chip"><strong>${label}</strong><small>${text}</small></div>`).join('');
+
+  host.innerHTML = `
+    <section>
+      <h4>${t('ui.gameHelpPressureTitle')}</h4>
+      <div class="game-help-grid">${buildChips(pressureRows)}</div>
+    </section>
+    <section>
+      <h4>${t('ui.gameHelpTrendTitle')}</h4>
+      <div class="game-help-grid">${buildChips(trendRows)}</div>
+    </section>
+  `;
+}
+
+function openGameHelp() {
+  buildGameHelpContent();
+  const overlay = document.getElementById('game-help-overlay');
+  const dialog = overlay?.querySelector('.game-help-dialog');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+  dialog?.focus();
+}
+
+function closeGameHelp() {
+  const overlay = document.getElementById('game-help-overlay');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.getElementById('game-help-trigger')?.focus();
+}
+
 
 /* Watch detail overlay — opened by tapping the watch band */
 function openWatchDetail() {
@@ -3890,5 +3948,7 @@ function closeFieldLog() {
 }
 window.openFieldLog = openFieldLog;
 window.closeFieldLog = closeFieldLog;
+window.openGameHelp = openGameHelp;
+window.closeGameHelp = closeGameHelp;
 
 export { showScreen, makeDecision, renderWatch, buildCharacterGrid, resolveTurn, evaluateOutcome, updateState, getDifficultyConfig, getDifficultyModifiers, setDifficulty };

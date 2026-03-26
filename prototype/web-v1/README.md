@@ -22,9 +22,9 @@ All turn resolution flows through:
 
 `resolveTurn(state, action)`
 
-Pipeline:
+Pipeline (ordering contract):
 
-`Environment → EP → BT → pressureDelta → perception → timed degradation → action modifier → outcome`
+`normalize action → consume time/resources → weather+persistence update → EP/BT/perception → decision-window degradation → outcome evaluation → state update → terminal classification → signals+narrative`
 
 ## Canonical route
 
@@ -83,3 +83,14 @@ Canonical outcome set includes `Rescue` as a real gameplay outcome.
 - Difficulty is not cosmetic: it modifies pressure, stage bias, body tolerance, starting resources, permit days, recovery strength, combined resource economy, and the decision timer profile.
 - Character decision-window profiles still apply, but title difficulty now adds or removes time on top of those profiles instead of being ignored whenever a character provides custom timing values.
 - The onboarding screen now exposes a full tutorial/FAQ modal before the final begin CTA so the player can review rules without leaving the run setup flow.
+
+
+## In-game help overlay
+
+A runtime help overlay is available from the game screen (`Pressure & Trend Help`) and explains pressure labels plus trend categories without leaving the run.
+
+## Engine unit-test harness
+
+- Deterministic turn harness: `prototype/web-v1/tests/harness/turn-harness.js`
+- Engine formula tests: `prototype/web-v1/tests/engine/*.test.js`
+- Run all web-v1 tests: `npm test`
