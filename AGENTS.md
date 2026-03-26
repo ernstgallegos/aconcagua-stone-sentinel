@@ -194,3 +194,4 @@ In addition to the changelog:
 - Release-complete snapshots should keep `[Unreleased]` explicitly empty and move late documentation/link fixes into the same versioned block when product confirms they belong to that release.
 - Systemic integrity audits are easier to maintain when `resolveTurn()` emits one structured per-turn telemetry object containing environment, EP/BT/delta, perceived signals, action, and resulting state; acceptance tests can then assert pipeline integrity without scraping UI text.
 - Release/version coherence checks should include simulation tooling and docs metadata (`scripts/monte-carlo-web-v1.js`, `docs/simulation_engine.md`) so hardcoded version strings/report filenames do not drift from `package.json`.
+- State-slice whitelist safety (`recordTelemetry`/`updateRunState`) requires adding new keys to `*_STATE_DEFAULTS` in the same commit as new writes; otherwise runtime throws can bypass tests that stub those writers.

@@ -44,6 +44,7 @@ const UI_STATE_DEFAULTS = Object.freeze({
 
 const TELEMETRY_STATE_DEFAULTS = Object.freeze({
   runLogRecords: [],
+  lastTurnRecord: null,
   turnDecisionStartedAt: 0,
   decisionTimeSpentMs: 0,
   decisionWindowExceeded: false,
