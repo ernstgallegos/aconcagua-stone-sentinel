@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+
+const files = [
+  'data/nodes.json',
+  'data/environmental_pressure_config.json',
+  'data/action_modifiers.json',
+  'data/stage_modifiers.json',
+  'data/characters.json',
+  'data/character_events.json',
+  'data/outcomes.json',
+  'data/scenarios.web-v1.json',
+];
+
+test('runtime data files parse as JSON', async () => {
+  for (const file of files) {
+    const raw = await readFile(file, 'utf8');
+    assert.doesNotThrow(() => JSON.parse(raw), `${file} should parse`);
+  }
+});
+
+test('character event contract includes all six active characters', async () => {
+  const events = JSON.parse(await readFile('data/character_events.json', 'utf8'));
+  const charIds = new Set(events.map((entry) => entry.characterId));
+  ['francisco', 'laura', 'irina', 'erik', 'daniela', 'blake'].forEach((id) => {
+    assert.equal(charIds.has(id), true, `${id} requires at least one event`);
+  });
+  events.forEach((event) => {
+    assert.ok(event.limits?.maxPerRun >= 1);
+    assert.ok(event.limits?.cooldownTurns >= 0);
+    assert.equal(typeof event.telemetryTag, 'string');
+  });
+});

@@ -8,7 +8,6 @@ const EVENT_ARCHETYPES = [
   { id: 'summit-window-tightening', icon: '⌛', label: 'Summit window tightening', turns: [14, 15], weatherDelta: 1, visibilityDelta: 0, timePenalty: 20 },
 ];
 
-
 export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
   let nextMinutes = minutesOfDay + deltaMinutes;
   let nextDay = day;
@@ -24,6 +23,7 @@ export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
 
   return { minutesOfDay: nextMinutes, day: nextDay, permitDay: nextDay };
 }
+
 export function buildEnvironmentEventPlan(seed, maxTurns = 40) {
   const offset = Number(seed || 0) % 3;
   return EVENT_ARCHETYPES
@@ -51,40 +51,55 @@ export function applyTurnEvents({ G, state, action, stage }) {
   };
 }
 
-export function maybeApplyCharacterEvent({ G, state, action, stage, flags }) {
-  const id = G.character?.id;
-  if (!id) return null;
-  const seen = new Set(G.characterEventHistory || []);
-  if (seen.has(id)) return null;
+function eventMatchesTrigger(event, { G, state, action, stage }) {
+  const trigger = event.trigger || {};
+  if (Array.isArray(trigger.actions) && !trigger.actions.includes(action)) return false;
+  if (Array.isArray(trigger.stages) && !trigger.stages.includes(stage)) return false;
+  if (trigger.minTurn != null && G.turn < trigger.minTurn) return false;
+  if (trigger.minPersistenceTurns != null && G.persistenceTurns < trigger.minPersistenceTurns) return false;
+  if (trigger.minWeatherSeverity != null && state.weather_severity < trigger.minWeatherSeverity) return false;
+  if (trigger.minFunctionalCapacity != null && state.functional_capacity < trigger.minFunctionalCapacity) return false;
+  if (trigger.maxFunctionalCapacity != null && state.functional_capacity > trigger.maxFunctionalCapacity) return false;
+  if (trigger.maxWater != null && state.water > trigger.maxWater) return false;
+  if (trigger.maxFood != null && state.food > trigger.maxFood) return false;
+  return true;
+}
 
-  const trigger = {
-    francisco: stage !== 'APPROACH' && action === 'advance' && G.persistenceTurns >= 3,
-    laura: action === 'wait' && G.minutesOfDay >= 900,
-    irina: action === 'advance' && state.weather_severity >= 2,
-    erik: action === 'advance_slowly' && stage === 'SUMMIT_DAY',
-    daniela: action === 'shoot_photo' && state.functional_capacity <= 55,
-    blake: action === 'advance' && (state.water <= 4 || state.food <= 4),
-  };
+export function maybeApplyCharacterEvent({ G, state, action, stage, flags, characterEvents = [] }) {
+  const characterId = G.character?.id;
+  if (!characterId) return null;
+  const available = characterEvents.filter((event) => event.characterId === characterId);
+  if (!available.length) return null;
 
-  if (!trigger[id]) return null;
+  const eventState = { ...(G.characterEventState || {}) };
 
-  const effects = {
-    francisco: { narrative: 'Persistence keeps the line moving, but you choose to preserve one margin now.', fatigueDelta: -2, flag: 'char-francisco-limit-read' },
-    laura: { narrative: 'Disciplined caution buys clarity; your next move should honor the shrinking clock.', confidenceBoost: 4, flag: 'char-laura-clock-discipline' },
-    irina: { narrative: 'Strength is intact, but readings feel noisier than expected in this wind cycle.', confidenceBoost: -5, flag: 'char-irina-noisy-read' },
-    erik: { narrative: 'Competence checks ego: one measured step preserves the return corridor.', fatigueDelta: -1, flag: 'char-erik-ego-check' },
-    daniela: { narrative: 'Environmental reading is sharp, but body strain requests a narrower tactical line.', confidenceBoost: 4, exposureDelta: 1, flag: 'char-daniela-tradeoff' },
-    blake: { narrative: 'Determination is real; preparation debt is now visible and must be managed.', fatigueDelta: 2, flag: 'char-blake-prep-gap' },
-  };
+  for (const event of available) {
+    const snapshot = eventState[event.id] || { uses: 0, lastTurn: -999 };
+    const limits = event.limits || { cooldownTurns: 0, maxPerRun: 1 };
+    if (snapshot.uses >= (limits.maxPerRun ?? 1)) continue;
+    if (G.turn - snapshot.lastTurn < (limits.cooldownTurns ?? 0)) continue;
+    if (!eventMatchesTrigger(event, { G, state, action, stage })) continue;
 
-  const fx = effects[id];
-  if (!fx) return null;
-  state.fatigue = clamp(state.fatigue + (fx.fatigueDelta || 0), 0, 100);
-  state.exposure = clamp(state.exposure + (fx.exposureDelta || 0), 0, 100);
-  if (fx.confidenceBoost) {
-    G.characterConfidenceDrift = clamp((G.characterConfidenceDrift || 0) + fx.confidenceBoost, -12, 12);
+    const effects = event.effects || {};
+    state.fatigue = clamp(state.fatigue + (effects.fatigueDelta || 0), 0, 100);
+    state.exposure = clamp(state.exposure + (effects.exposureDelta || 0), 0, 100);
+    if (effects.confidenceDelta) {
+      G.characterConfidenceDrift = clamp((G.characterConfidenceDrift || 0) + effects.confidenceDelta, -12, 12);
+    }
+
+    if (event.telemetryTag) flags.push(event.telemetryTag);
+    eventState[event.id] = { uses: snapshot.uses + 1, lastTurn: G.turn };
+
+    return {
+      id: event.id,
+      characterId,
+      category: event.category,
+      narrative: event.narrative,
+      telemetryTag: event.telemetryTag,
+      effects,
+      eventState,
+    };
   }
 
-  if (fx.flag) flags.push(fx.flag);
-  return { characterId: id, ...fx };
+  return null;
 }

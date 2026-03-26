@@ -35,6 +35,7 @@ const RUN_STATE_DEFAULTS = Object.freeze({
   environmentEventPlan: [],
   activeEnvironmentEvent: null,
   characterEventHistory: [],
+  characterEventState: {},
   characterConfidenceDrift: 0,
   runSignature: '',
   reviewTurnIndex: 0,

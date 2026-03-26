@@ -10,7 +10,21 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- _No entries yet._
+- Added `docs/repo-truth.md` as the canonical repository truth baseline (active/frozen prototypes, roster truth, canonical outcomes, source-of-truth map, resolver authority statement).
+- Added bounded character-event data contracts in `data/character_events.json` for all six active Part 1 characters, including trigger/effect/limit/telemetry definitions.
+- Added minimal TypeScript scaffolding for engine-first migration (`tsconfig.json`, `prototype/web-v1/src/**`) with domain/data-contract types and boot/engine module boundaries.
+- Added structured test taxonomy suites under `prototype/web-v1/tests/{unit,integration,regression,contracts,parity,smoke}` for event bounds, data contracts, deterministic seeds, repo-truth parity, and boot readiness.
+
+### Changed
+- Changed web-v1 runtime data loading in `prototype/web-v1/ui/screens.js` to use extracted helper modules for data loading/validation/normalization/selectors, reducing monolithic UI ownership.
+- Changed character-event resolution to a formal data-backed path with cooldown/cap enforcement and telemetry-state tracking (`characterEventState`), including Daniela `shoot_photo` integration through contract data.
+- Changed canonical public version references to `v1.4.4` across package metadata, UI labels, and architecture/simulation/prototype/readme status docs.
+
+### Fixed
+- Fixed blocking/runtime drift risk by making `data/character_events.json` a required model dependency with fail-fast validation in the load pipeline.
+
+### Security
+- No security-impacting changes in this release window.
 
 ## [1.4.3] — 2026-03
 

@@ -756,9 +756,9 @@ function buildReport(batchResult) {
     'Fatality':               'Fatal',
   };
 
-  let md = `# Monte Carlo Playtest Results — v1.4.1\n\n`;
+  let md = `# Monte Carlo Playtest Results — v${ENGINE_VERSION}\n\n`;
   md += `**Date:** ${now}  \n`;
-  md += `**Engine version:** 1.4.1  \n`;
+  md += `**Engine version:** ${ENGINE_VERSION}  \n`;
   md += `**Script:** \`scripts/monte-carlo-web-v1.js\`  \n`;
   md += `**Total runs:** ${totalRuns.toLocaleString()} (${chars.length} characters × ${scenarios.length} scenarios × ${extraSeeds} seeds)  \n`;
   md += `**Difficulty:** Standard (neutral modifiers)  \n\n`;
