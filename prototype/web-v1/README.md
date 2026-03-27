@@ -1,15 +1,17 @@
-# Prototype Web v1.4.3 (public state)
+# Prototype Web v1.4.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](../../CHANGELOG.md#143--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.4]`](../../CHANGELOG.md#144--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.3 (public phased rollout)** with shipped phase slices and stabilized release documentation.
+> - Current public build is **v1.4.4 (public phased rollout)** with shipped phase slices and stabilized release documentation.
 
 > **Public repository scope:**
 > - Public prototype code is available in this repository (this `prototype/web-v1` implementation and the frozen `prototype/mra-v0` reference artifact).
 > - Production/commercial branch scope remains private.
 
 Canonical active web prototype for Aconcagua: Stone Sentinel.
+
+Repository-wide truth baseline: [`docs/repo-truth.md`](../../docs/repo-truth.md).
 
 ## Language support
 
@@ -43,6 +45,7 @@ Simulation inputs are loaded from `/data`:
 - `action_modifiers.json`
 - `stage_modifiers.json`
 - `characters.json`
+- `character_events.json`
 - `outcomes.json`
 
 ## Scenario selection
@@ -95,7 +98,7 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Engine formula tests: `prototype/web-v1/tests/engine/*.test.js`
 - Run all web-v1 tests: `npm test`
 
-## Sprint upgrades (v1.4.3)
+## Sprint upgrades (v1.4.4)
 
 - Added deterministic golden regression coverage and outcome-derivation tests for canonical terminal outcomes, permit/window behavior, and run-log export shape.
 - Added lightweight dynamic environment events (calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening), all seed-driven through the existing resolver pipeline.

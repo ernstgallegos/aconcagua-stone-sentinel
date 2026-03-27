@@ -1,0 +1,62 @@
+[
+  {
+    "id": "francisco-rhythm-check",
+    "characterId": "francisco",
+    "category": "onset_context",
+    "narrative": "Francisco reins in pace to protect the return corridor.",
+    "trigger": { "actions": ["advance"], "stages": ["HIGH_CAMP", "SUMMIT_DAY"], "minPersistenceTurns": 3 },
+    "effects": { "fatigueDelta": -2, "confidenceDelta": 2 },
+    "limits": { "cooldownTurns": 4, "maxPerRun": 2 },
+    "telemetryTag": "char-francisco-rhythm-check"
+  },
+  {
+    "id": "laura-clock-discipline",
+    "characterId": "laura",
+    "category": "pacing_hesitation",
+    "narrative": "Laura pauses deliberately to recover signal quality before committing.",
+    "trigger": { "actions": ["wait"], "minTurn": 6 },
+    "effects": { "confidenceDelta": 4 },
+    "limits": { "cooldownTurns": 3, "maxPerRun": 3 },
+    "telemetryTag": "char-laura-clock-discipline"
+  },
+  {
+    "id": "irina-noise-filter",
+    "characterId": "irina",
+    "category": "pressure_interpretation",
+    "narrative": "Irina filters noisy cues and accepts slower certainty.",
+    "trigger": { "actions": ["advance", "advance_slowly"], "minWeatherSeverity": 2 },
+    "effects": { "confidenceDelta": -3, "exposureDelta": 1 },
+    "limits": { "cooldownTurns": 4, "maxPerRun": 2 },
+    "telemetryTag": "char-irina-noise-filter"
+  },
+  {
+    "id": "erik-ego-check",
+    "characterId": "erik",
+    "category": "body_mind_drift",
+    "narrative": "Erik accepts measured progress to preserve reserve capacity.",
+    "trigger": { "actions": ["advance_slowly"], "stages": ["SUMMIT_DAY"] },
+    "effects": { "fatigueDelta": -1, "confidenceDelta": 1 },
+    "limits": { "cooldownTurns": 3, "maxPerRun": 2 },
+    "telemetryTag": "char-erik-ego-check"
+  },
+  {
+    "id": "daniela-photo-read",
+    "characterId": "daniela",
+    "category": "observation",
+    "narrative": "Daniela's photo sharpens local interpretation but costs exposure time.",
+    "trigger": { "actions": ["shoot_photo"], "maxFunctionalCapacity": 60 },
+    "effects": { "confidenceDelta": 4, "exposureDelta": 1 },
+    "limits": { "cooldownTurns": 4, "maxPerRun": 2 },
+    "telemetryTag": "char-daniela-photo-read"
+  },
+  {
+    "id": "blake-supply-reckoning",
+    "characterId": "blake",
+    "category": "onset_context",
+    "narrative": "Blake's push reveals logistics debt and raises fatigue pressure.",
+    "trigger": { "actions": ["advance"], "maxWater": 4 },
+    "effects": { "fatigueDelta": 2, "confidenceDelta": -2 },
+    "limits": { "cooldownTurns": 3, "maxPerRun": 2 },
+    "telemetryTag": "char-blake-supply-reckoning"
+  }
+]

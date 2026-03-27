@@ -7,108 +7,16 @@ import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature } fr
 import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper } from './helpers/run-log.js';
 import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
+import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
+import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 
 const TUNING = {
   dayStartMinutes: 360,
 };
 
-const DEFAULT_CONFIG = {
-  nodes: [],
-  environmentalPressure: {},
-  actionModifiers: {},
-  stageModifiers: {},
-  characters: [],
-  outcomes: [],
-  scenariosWebV1: { predefinedScenarios: [], randomScenario: {} }
-};
-let DATA_CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+let DATA_CONFIG = createDefaultDataConfig();
 let DATA_CONFIG_ERROR = null;
-
-const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'outcomes', 'scenariosWebV1']);
-
-function typeOfValue(value) {
-  if (Array.isArray(value)) return 'array';
-  if (value === null) return 'null';
-  return typeof value;
-}
-
-function assertConfigPath(filename, value, expectedType, path) {
-  const actualType = typeOfValue(value);
-  if (actualType !== expectedType) {
-    throw new Error(`${filename}:${path} expected ${expectedType} but got ${actualType}`);
-  }
-}
-
-function validateDataConfigShape(filename, data) {
-  if (filename === 'nodes') {
-    assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.nodeId, 'string', '$[0].nodeId');
-    assertConfigPath(filename, data[0]?.nodeName, 'string', '$[0].nodeName');
-    return;
-  }
-  if (filename === 'actionModifiers') {
-    assertConfigPath(filename, data, 'object', '$');
-    assertConfigPath(filename, data.advance, 'object', '$.advance');
-    assertConfigPath(filename, data.advance?.progress, 'number', '$.advance.progress');
-    return;
-  }
-  if (filename === 'stageModifiers') {
-    assertConfigPath(filename, data, 'object', '$');
-    assertConfigPath(filename, data.APPROACH, 'object', '$.APPROACH');
-    assertConfigPath(filename, data.APPROACH?.fatigueMultiplier, 'number', '$.APPROACH.fatigueMultiplier');
-    return;
-  }
-  if (filename === 'characters') {
-    assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
-    assertConfigPath(filename, data[0]?.engine, 'object', '$[0].engine');
-    return;
-  }
-  if (filename === 'outcomes') {
-    assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'string', '$[0]');
-    return;
-  }
-  if (filename === 'environmentalPressure') {
-    assertConfigPath(filename, data, 'object', '$');
-    assertConfigPath(filename, data.altitudePressureByBand, 'object', '$.altitudePressureByBand');
-    assertConfigPath(filename, data.simulation, 'object', '$.simulation');
-    return;
-  }
-  if (filename === 'scenariosWebV1') {
-    assertConfigPath(filename, data, 'object', '$');
-    assertConfigPath(filename, data.predefinedScenarios, 'array', '$.predefinedScenarios');
-    assertConfigPath(filename, data.predefinedScenarios[0], 'object', '$.predefinedScenarios[0]');
-    assertConfigPath(filename, data.predefinedScenarios[0]?.id, 'string', '$.predefinedScenarios[0].id');
-    assertConfigPath(filename, data.predefinedScenarios[0]?.initial, 'object', '$.predefinedScenarios[0].initial');
-    assertConfigPath(filename, data.predefinedScenarios[0]?.bias, 'object', '$.predefinedScenarios[0].bias');
-    assertConfigPath(filename, data.randomScenario, 'object', '$.randomScenario');
-    assertConfigPath(filename, data.randomScenario.archetypes, 'array', '$.randomScenario.archetypes');
-    assertConfigPath(filename, data.randomScenario.archetypes[0], 'object', '$.randomScenario.archetypes[0]');
-    assertConfigPath(filename, data.randomScenario.archetypes[0]?.name, 'string', '$.randomScenario.archetypes[0].name');
-    assertConfigPath(filename, data.randomScenario.archetypes[0]?.tweak, 'object', '$.randomScenario.archetypes[0].tweak');
-    return;
-  }
-}
-
-function validateLoadedDataConfig() {
-  const scenarioConfig = DATA_CONFIG.scenariosWebV1 || {};
-  const predefined = scenarioConfig.predefinedScenarios || [];
-  if (!predefined.length) {
-    throw new Error('scenariosWebV1.$.predefinedScenarios must include at least one scenario');
-  }
-  for (const [idx, scenario] of predefined.entries()) {
-    if (!Array.isArray(scenario.seeds) || !scenario.seeds.length) {
-      throw new Error(`scenariosWebV1.$.predefinedScenarios[${idx}].seeds must be a non-empty array`);
-    }
-  }
-  const randomConfig = scenarioConfig.randomScenario || {};
-  if (!Array.isArray(randomConfig.archetypes) || !randomConfig.archetypes.length) {
-    throw new Error('scenariosWebV1.$.randomScenario.archetypes must be a non-empty array');
-  }
-}
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'outcomes', 'scenariosWebV1']);
 
 function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
@@ -257,7 +165,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.3',
+      introVersionValue: 'Prototype · v1.4.4',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -329,7 +237,7 @@ const I18N = {
       introClose: 'Cerrar',
       introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
       introVersionLabel: 'Versión',
-      introVersionValue: 'Prototipo · v1.4.3',
+      introVersionValue: 'Prototipo · v1.4.4',
       introFormatLabel: 'Formato',
       introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
       introAccessLabel: 'Acceso',
@@ -739,38 +647,12 @@ function advanceFromTitle(event) {
 }
 
 async function loadDataConfig() {
-  const files = [
-    ['nodes', '../../data/nodes.json'],
-    ['environmentalPressure', '../../data/environmental_pressure_config.json'],
-    ['actionModifiers', '../../data/action_modifiers.json'],
-    ['stageModifiers', '../../data/stage_modifiers.json'],
-    ['characters', '../../data/characters.json'],
-    ['outcomes', '../../data/outcomes.json'],
-    ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
-  ];
-  for (const [key, path] of files) {
-    try {
-      const response = await fetch(path, { cache: 'no-store' });
-      if (!response.ok) {
-        throw new Error(`${path}: HTTP ${response.status}`);
-      }
-      const data = await response.json();
-      validateDataConfigShape(key, data);
-      DATA_CONFIG[key] = data;
-    } catch (error) {
-      if (REQUIRED_CONFIG_FILES.has(key)) {
-        setModelLoadError(`Blocking data load failure in ${path}: ${error.message}`);
-        return;
-      }
-      console.warn(`Using default config for optional file ${key}`, error);
-    }
-  }
-  try {
-    validateLoadedDataConfig();
-  } catch (error) {
-    setModelLoadError(`Blocking data contract validation failure: ${error.message}`);
-    return;
-  }
+  const loaded = await loadDataConfigFiles({
+    fetchImpl: fetch,
+    onError: setModelLoadError,
+  });
+  if (!loaded) return;
+  DATA_CONFIG = loaded;
   rebuildRouteData();
   updateUIState(G, { modelReady: true });
 }
@@ -789,42 +671,26 @@ let CANONICAL_OUTCOMES = new Set();
 let DECISION_TICKER = null;
 
 function rebuildRouteData() {
-  ROUTE_NODES = (DATA_CONFIG.nodes || []).map((node, idx) => ({
-    id: node.nodeId || `node_${idx}`,
-    name: node.nodeName,
-    altitudeMeters: node.altitudeMeters || null,
-    altitudeBand: node.altitudeBand,
-    terrainLoad: node.terrainLoad,
-    weatherBias: node.weatherBias,
-    visibilityBias: node.visibilityBias,
-    timeSensitivity: node.timeSensitivity,
-    isCamp: !!node.isCamp,
-    stage: node.stageHint || (idx <= 4 ? 'APPROACH' : idx <= 10 ? 'HIGH_CAMP' : 'SUMMIT_DAY'),
-    routeIndex: node.routeIndex ?? idx,
-  })).sort((a, b) => a.routeIndex - b.routeIndex);
-  // FIX: mutar el array en lugar de reasignar — createTurnEngine ya capturó esta referencia
+  const normalized = normalizeRouteData(DATA_CONFIG);
+  ROUTE_NODES = normalized.routeNodes;
   POSITIONS.length = 0;
-  POSITIONS.push(...ROUTE_NODES.map((n) => n.id));
-  POS_LABELS = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = n.name; return acc; }, {});
-  POS_ALT = ROUTE_NODES.reduce((acc, n) => {
-    acc[n.id] = n.altitudeMeters ? `${n.altitudeMeters.toLocaleString('en-US')} m` : '—';
-    return acc;
-  }, {});
-  POS_BAND = ROUTE_NODES.reduce((acc, n) => { acc[n.id] = `band_${n.altitudeBand}`; return acc; }, {});
-  CAMP_POSITIONS = new Set(ROUTE_NODES.filter(n => n.isCamp).map(n => n.id));
-  STAGE_BY_POSITION = ROUTE_NODES.reduce((acc, node) => { acc[node.id] = node.stage; return acc; }, {});
-  // FIX: mutar el Set en lugar de reasignar — ídem
+  POSITIONS.push(...normalized.positions);
+  POS_LABELS = normalized.labels;
+  POS_ALT = normalized.altitudes;
+  POS_BAND = normalized.bands;
+  CAMP_POSITIONS = normalized.campPositions;
+  STAGE_BY_POSITION = normalized.stageByPosition;
   CANONICAL_OUTCOMES.clear();
-  (DATA_CONFIG.outcomes || []).forEach(o => CANONICAL_OUTCOMES.add(o));
+  (DATA_CONFIG.outcomes || []).forEach((o) => CANONICAL_OUTCOMES.add(o));
 }
 
 
 function getConfiguredScenarios() {
-  return DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [];
+  return getConfiguredScenariosFromConfig(DATA_CONFIG);
 }
 
 function getRandomScenarioConfig() {
-  return DATA_CONFIG.scenariosWebV1?.randomScenario || {};
+  return getRandomScenarioConfigFromConfig(DATA_CONFIG);
 }
 
 
@@ -1691,6 +1557,7 @@ function startGame() {
     environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
+    characterEventState: {},
     characterConfidenceDrift: 0,
     runSignature: '',
     reviewTurnIndex: 0,
@@ -3028,9 +2895,12 @@ function applyContextEvents({ state, action, stage, flags }) {
     if (eventEffect.timePenalty) applyEventTimePenalty(eventEffect.timePenalty);
   } else updateRunState(G, { activeEnvironmentEvent: null });
 
-  const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags });
+  const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags, characterEvents: DATA_CONFIG.characterEvents || [] });
   if (charEffect?.characterId) {
-    updateRunState(G, { characterEventHistory: [...G.characterEventHistory, charEffect.characterId] });
+    updateRunState(G, {
+      characterEventHistory: [...G.characterEventHistory, charEffect.id],
+      characterEventState: charEffect.eventState || G.characterEventState || {},
+    });
   }
 
   return eventEffect;
@@ -3756,6 +3626,7 @@ function bootstrapMockDebrief(params) {
     environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
+    characterEventState: {},
     characterConfidenceDrift: 0,
     runSignature: '',
     reviewTurnIndex: 0,

@@ -1,9 +1,9 @@
 # Simulation Engine — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.3]`](../CHANGELOG.md#143--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.4]`](../CHANGELOG.md#144--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.3** with legacy v1.3 contracts preserved where still applicable.
+> - Current public build is **v1.4.4** with legacy v1.3 contracts preserved where still applicable.
 
 
 ## Core authority
@@ -13,6 +13,8 @@ The only authoritative turn resolver is:
 `resolveTurn(state, action)`
 
 All turn consequences (progress, physiology, risk, and final outcomes) emerge from this function.
+
+Canonical live/frozen/version/roster status is centralized in [`docs/repo-truth.md`](./repo-truth.md).
 
 Canonical resolver order is enforced by `RESOLVE_TURN_PIPELINE` in `prototype/web-v1/engine/turn-resolution.js`:
 
@@ -166,7 +168,7 @@ Night (22:00–06:00) + ts=3 = +120 EP. Intentional design: don't be at high cam
 At extreme pressure (eff=52): advance → 15.4% collapse. Severe weather is dangerous, not instantly lethal.
 
 
-## v1.4.3 event layer
+## v1.4.4 event layer
 
 A lightweight, reproducible environment-event layer now runs during `apply-weather-and-persistence` in `resolveTurn()`.
 
