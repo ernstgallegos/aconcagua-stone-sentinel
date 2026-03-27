@@ -228,7 +228,7 @@ La selección de personaje ahora incluye una opción `Random Character` que elig
 
 Estado de Parte 2 (v1.4):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road`
 
 Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
 
@@ -250,7 +250,7 @@ Ejemplos:
 #part2-character&force=1
 ```
 
-Tabla completa con las 14 pantallas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+Tabla completa con las 15 pantallas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
 
 ## Estructura del repositorio
  

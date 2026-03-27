@@ -209,3 +209,4 @@ In addition to the changelog:
 - Modal accessibility in `web-v1` is more robust when all overlays (help, watch detail, field log) share one helper path with focus trap + focus return instead of bespoke open/close toggles per dialog.
 
 - Canonical character coherence is safest when `docs/es/Personajes_v_3.md` remains the source-of-truth and every English mirror/data-facing profile (`docs/en/characters_v_3_en.md`, `data/characters.json`, character-event narrative copy) is synced in the same commit to prevent roster drift (e.g., stray character swaps or profession/age mismatches).
+- Part 2 narrative bridge edits are more maintainable when screen prose is stored as a single ordered metadata array (id/eyebrow/title/body/cta/variant/animationPreset/visualMode) and rendered into dedicated screen hosts; this keeps titleless variants, deep-link routing, and animation preset mapping aligned without duplicating HTML content.

@@ -87,6 +87,51 @@
 
 .pop-in { animation: pop-in 0.2s ease-out; }
 
+
+/* ══════════════════════════════════════
+   PART 2 CONTEMPLATIVE LAYER
+   ══════════════════════════════════════ */
+
+@keyframes part2-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes part2-paragraph-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes part2-bg-drift {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.03) translate(var(--part2-pan-x, 0.45%), var(--part2-pan-y, -0.12%));
+  }
+}
+
+@keyframes part2-night-breath {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.045);
+  }
+}
+
 /* ══════════════════════════════════════
    REDUCE MOTION (Decisions 4, 14, 16)
    Respects prefers-reduced-motion
@@ -111,6 +156,19 @@
   /* Ripple — off */
   .btn-primary::after {
     display: none;
+  }
+
+  .part2-narrative-shell,
+  .part2-narrative-paragraph,
+  #screen-mendoza_room::before,
+  #screen-team_presentation::before,
+  #screen-after_circle::before,
+  #screen-guides::before,
+  #screen-briefing_night::before,
+  #screen-departure_road::before {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 
   /* All transitions minimal */

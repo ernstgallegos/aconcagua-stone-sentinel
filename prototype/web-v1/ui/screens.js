@@ -126,6 +126,154 @@ const PART2_ROUTE_OPTIONS = [
     selectable: false,
   },
 ];
+const PART2_NARRATIVE_SEQUENCE = [
+  {
+    id: 'mendoza_room',
+    eyebrow: 'Night before departure',
+    title: 'Mendoza',
+    body: `The room feels smaller than it should. Not because of its size, but because of everything already happening inside it. Two open backpacks on the floor, gear spread across the beds, the quiet tension of a departure that has already begun even if the mountain is still far away.
+
+Blake moves with precision, reorganizing his equipment for the third time. He doesn’t seem nervous. He seems calibrated. "Weight is everything," he says. "Every gram counts."
+
+Francisco doesn’t answer. He checks his own gear slowly, touching each object more than inspecting it. As if recognition mattered more than verification.
+
+For a moment, Blake looks at him. "You’ve done altitude before?"
+
+Francisco shakes his head.
+
+Blake nods. No judgment, no encouragement. Just a small adjustment somewhere invisible. Then he goes back to his system.
+
+Francisco sits on the edge of the bed. Takes Mateo’s photo out of a side pocket. Looks at it for a few seconds. Not long enough to think. Just enough to remember. Then he puts it back.
+
+Outside, Mendoza is still warm, still moving, still indifferent. Inside, something has already shifted.
+
+They share a room. But not the same mountain.`,
+    cta: 'Go downstairs',
+    variant: 'standard',
+    animationPreset: 'room_stillness',
+    visualMode: 'hotel-room',
+  },
+  {
+    id: 'team_presentation',
+    eyebrow: 'Hotel lobby',
+    title: 'The Group',
+    body: `By the time they reach the lobby, the expedition already exists in fragments. Boots that don’t belong in a city, voices overlapping, faces that carry traces of other altitudes. For a moment, everyone looks interchangeable. Then differences begin to emerge.
+
+The group forms a loose circle. Names start to circulate. Laura speaks with clarity, as if she had already organized this moment in her head. Erik is concise, almost economical with words. Daniela listens before speaking, measuring the space before entering it. Irina barely moves, but nothing about her feels passive.
+
+Blake shortens his sentences here. His precision becomes social. Controlled, but contained.
+
+When it’s his turn, Francisco says his name, says that he runs, says that he’s ready. The words come out in the right order. They sound almost true.
+
+It’s easy to build quick impressions in moments like this. Who feels solid. Who feels uncertain. Who might become a problem later. They all seem clear. Too clear.
+
+Most of them will change.
+
+The group is now real. Trust is not.`,
+    cta: 'Continue',
+    variant: 'standard',
+    animationPreset: 'lobby_drift',
+    visualMode: 'hotel-lobby',
+  },
+  {
+    id: 'after_circle',
+    eyebrow: 'Unstructured time',
+    title: 'After the Introductions',
+    body: `The circle dissolves without a signal. Smaller conversations begin to form, overlap, disappear. The expedition reorganizes itself in a more informal way, less visible but more revealing.
+
+Laura asks questions. Erik evaluates answers. Daniela observes more than she speaks. Blake explains things no one asked him to explain, but in a way that still makes sense.
+
+Irina steps outside. Not abruptly, not dramatically. Just leaving the frame.
+
+Francisco stays where he is. He tries to understand the group, but mostly he tries to locate himself inside it. The two are not the same.
+
+For a few minutes, conversations happen without him. Not intentionally. Just naturally. There is no clear entry point. No obvious role to take.
+
+The group is forming.
+
+He is still outside of it.`,
+    cta: 'Keep going',
+    variant: 'standard',
+    animationPreset: 'social_fragments',
+    visualMode: 'lobby-side',
+  },
+  {
+    id: 'guides',
+    eyebrow: 'Structure',
+    title: 'Who Leads',
+    body: `When the guides speak, something stabilizes. Not because they impose authority, but because they remove ambiguity.
+
+Agustina talks without emphasis. "The mountain decides. We adapt. Turning back is not failure." The sentences are simple, almost obvious, but they don’t land lightly.
+
+Alejandro stands beside her, not reinforcing her words but not contradicting them either.
+
+Then come the logistics. Mules. Loads. Camps. Timings that will not depend entirely on them. Jorge moves ahead with the animals. Tomás operates between layers, visible and invisible at the same time.
+
+Names become roles. Roles become responsibility.
+
+The expedition starts to take shape.
+
+It also becomes more fragile.`,
+    cta: 'Listen',
+    variant: 'standard',
+    animationPreset: 'guided_stability',
+    visualMode: 'briefing-room',
+  },
+  {
+    id: 'briefing_night',
+    eyebrow: 'Before departure',
+    title: '',
+    body: `"Eat. Drink. Say it early." The instructions are minimal, almost reductive. Everyone hears them. No one understands them in the same way. Not yet.
+
+The meeting ends, but no one moves immediately. The words stay suspended for a few seconds longer than expected, as if waiting to be interpreted.
+
+Later, back in the room, the energy changes again. Blake continues adjusting his gear, repeating variations of the same system. There is comfort in repetition.
+
+Francisco lies down without turning off the light at first. The city is still there, filtering through the window, reminding him of something that is about to stop mattering.
+
+He tries to imagine the mountain. He can’t. Not really. Only fragments come. Wind. Distance. Something large enough to erase detail.
+
+When the light finally goes off, the room fills with two different rhythms of breathing.
+
+Out of sync.`,
+    cta: 'Wake up',
+    variant: 'titleless',
+    animationPreset: 'night_breath',
+    visualMode: 'dark-room',
+  },
+  {
+    id: 'departure_road',
+    eyebrow: 'Early morning',
+    title: 'Road to Horcones',
+    body: `The morning is colder than expected. Movements become automatic: pack, check, lift. No one needs to say much anymore. The expedition has already begun to contract into something more focused.
+
+Blake is efficient, almost silent. Francisco feels ready, but the feeling is unstable, as if it depended on something he cannot yet identify. A small hesitation appears, without a name.
+
+The bus is waiting. It is still possible to stay. No one does.
+
+As they leave Mendoza behind, the transition happens gradually. First the edges of the city, then the vineyards, then the dryness that starts to take over the landscape. Buildings thin out. Then disappear.
+
+No one says it, but everyone notices: the references are changing. What counted before is losing weight.
+
+The bus grows quieter. Some people sleep. Others look outside. Blake checks distance, tracks elevation, reduces everything to measurable variables.
+
+Francisco looks at the landscape without trying to interpret it. The mountain is not visible yet, but it is already present. Not ahead. Around them.
+
+By the time they reach Horcones, this will stop being an idea.
+
+It will become movement.
+
+And movement has consequences.`,
+    cta: 'Arrive at Horcones',
+    variant: 'standard',
+    animationPreset: 'road_transition',
+    visualMode: 'bus-window',
+  },
+];
+
+const PART2_NARRATIVE_IDS = PART2_NARRATIVE_SEQUENCE.map((screen) => screen.id);
+const PART2_NARRATIVE_BY_ID = new Map(PART2_NARRATIVE_SEQUENCE.map((screen) => [screen.id, screen]));
+
 
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
@@ -745,7 +893,7 @@ function applyStaticTranslations() {
 // Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
 function showScreen(id) {
-  const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const part2Screens = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
   if (part2Screens.has(id) && !canAccessPart2) {
     id = 'debrief';
@@ -773,6 +921,8 @@ function showScreen(id) {
     window.scrollTo(0, 0);
 
     if (id === 'part2-character') buildPart2SetupScreen();
+
+    if (PART2_NARRATIVE_BY_ID.has(id)) renderPart2NarrativeScreen(id);
 
     if (id === 'expedition-setup') buildExpeditionSetupCarousels();
 
@@ -1349,6 +1499,41 @@ function updatePart2ConfirmState() {
   else btn.setAttribute('aria-disabled', 'true');
 }
 
+function renderPart2NarrativeScreen(id) {
+  const data = PART2_NARRATIVE_BY_ID.get(id);
+  if (!data) return;
+
+  const host = document.querySelector(`#screen-${id} .part2-narrative`);
+  if (!host) return;
+
+  const paragraphs = String(data.body || '').split(/\n\n/);
+  const step = data.animationPreset === 'social_fragments' ? 190 : 150;
+
+  host.dataset.animationPreset = data.animationPreset || 'guided_stability';
+  host.dataset.visualMode = data.visualMode || 'briefing-room';
+  host.dataset.variant = data.variant || 'standard';
+
+  host.innerHTML = `
+    <article class="part2-narrative-shell">
+      <p class="part2-narrative-eyebrow">${data.eyebrow || ''}</p>
+      <h3 class="part2-narrative-title" ${data.title ? '' : 'hidden'}>${data.title || ''}</h3>
+      <div class="part2-narrative-body">
+        ${paragraphs.map((paragraph, index) => `<p class="part2-narrative-paragraph" style="--part2-para-delay:${120 + (index * step)}ms">${paragraph}</p>`).join('')}
+      </div>
+      <div class="part2-step-actions">
+        <button class="btn-primary" id="btn-part2-next-${data.id}">${data.cta || 'Continue'}</button>
+      </div>
+    </article>
+  `;
+
+  const nextIndex = PART2_NARRATIVE_IDS.indexOf(id) + 1;
+  const nextId = PART2_NARRATIVE_IDS[nextIndex] || null;
+  const cta = host.querySelector(`#btn-part2-next-${data.id}`);
+  if (cta) {
+    cta.onclick = () => showScreen(nextId || 'title');
+  }
+}
+
 function confirmPart2Character() {
   if (G.finalOutcome !== 'Summit and Safe Return' && !hasPreviouslySummited()) {
     showScreen('debrief');
@@ -1361,7 +1546,7 @@ function confirmPart2Character() {
   // Guard: only proceed when Francisco + guided-normal-route are current
   if (!currentChar || currentChar.id !== 'francisco') return;
   if (!currentRoute || currentRoute.id !== 'guided-normal-route') return;
-  showScreen('part2-hotel');
+  showScreen(PART2_NARRATIVE_SEQUENCE[0].id);
 }
 
 // ════════════════════════════════════════════════
@@ -3689,7 +3874,7 @@ function handleDeepLink() {
   const { screenId, params } = parsed;
 
   // Part 2 screens — bypass gating when &force=1 is present
-  const PART2_SCREEN_IDS = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const PART2_SCREEN_IDS = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
   if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
     try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
     updateRunState(G, { finalOutcome: 'Summit and Safe Return' });

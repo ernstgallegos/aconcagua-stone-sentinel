@@ -127,7 +127,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         expect_disabled(page, '#btn-part2-confirm', False)
 
         page.click('#btn-part2-confirm')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-part2-hotel'")
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-mendoza_room'")
 
         browser.close()
 

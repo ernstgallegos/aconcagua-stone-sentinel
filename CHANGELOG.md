@@ -15,7 +15,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/ui/helpers/startup-ui.js` and `prototype/web-v1/ui/helpers/routing.js` so startup blocking-error rendering and deep-link hash parsing/sync live outside the `screens.js` monolith.
 - Added startup failure-classification smoke tests (`prototype/web-v1/tests/smoke/model-ready.test.js`) and routing parser unit coverage (`prototype/web-v1/tests/unit/routing.test.js`).
 
+- Added a six-screen Part 2 pre-threshold narrative sequence renderer with canonical IDs (`mendoza_room` → `departure_road`) and per-screen metadata fields (`eyebrow`, `title`, `body`, `cta`, `variant`, `animationPreset`, `visualMode`) wired in `prototype/web-v1/ui/screens.js` and `prototype/web-v1/index.html`.
 ### Changed
+- Replaced the old five-step static Part 2 bridge screens with a linear, no-branch contemplative narrative flow and updated Part 2 gating/deep-link routing to include the six canonical pre-threshold screen IDs.
+- Updated Part 2 documentation flow/deep-link references in `README.md`, `README.es.md`, and `docs/deep-links.web-v1.md` to match the new six-screen sequence and total screen count.
 - Clarified module ownership by moving turn-review log-entry shaping into `prototype/web-v1/ui/helpers/run-log.js` and keeping `ui/screens.js` as orchestration/render wiring only.
 - Strengthened event boundedness in `prototype/web-v1/engine/events-core.js` with explicit per-effect clamps for context/character events plus sanitized cooldown/max-per-run handling, preventing hidden authority drift from data misconfiguration.
 - Expanded `docs/repo-truth.md` with a “Guaranteed by tests” section and tightened `docs/simulation_engine.md` legacy wording to explicitly scope remaining v1.3 compatibility contracts.
@@ -30,6 +33,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Rewrote `docs/en/characters_v_3_en.md` to match the six-character canonical cast and interaction map from the Spanish master bible.
 
 ### Fixed
+- Fixed web-v1 browser smoke coverage for the Part 2 handoff by asserting the new first narrative screen (`screen-mendoza_room`) after character/route confirmation.
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
 - Fixed CI test discovery by replacing the quoted `**/*.test.js` Node test glob with a `find`-driven file list so `npm test` resolves web-v1 test files correctly on GitHub Actions shells.
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.

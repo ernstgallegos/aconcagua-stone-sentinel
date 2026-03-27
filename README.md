@@ -227,7 +227,7 @@ Character selection now includes a `Random Character` option that auto-picks one
 
 Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road`
 
 Unlock is exclusive to `Summit and Safe Return`.
 
@@ -251,7 +251,7 @@ Examples:
 #part2-character&force=1
 ```
 
-Full table with all 14 screens, parameter reference, character/scenario/outcome IDs, and copy-pasteable links: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+Full table with all 15 screens, parameter reference, character/scenario/outcome IDs, and copy-pasteable links: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
 
 
 ## Consolidated design v1.4 (planning)
