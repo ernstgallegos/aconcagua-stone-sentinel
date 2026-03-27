@@ -28,6 +28,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
+- Fixed CI test discovery by replacing the quoted `**/*.test.js` Node test glob with a `find`-driven file list so `npm test` resolves web-v1 test files correctly on GitHub Actions shells.
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
 - Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
 - Fixed blocking startup diagnostics to distinguish missing file, HTTP failure, invalid JSON/shape, and post-load contract validation failures with per-file detail in the fatal screen.
