@@ -27,6 +27,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Refined startup status microcopy to keep the loading/ready states calm and mountain-toned (`Preparing mountain model…`, `Model ready. Begin when prepared.`).
 
 ### Fixed
+- Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
 - Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
 - Fixed blocking startup diagnostics to distinguish missing file, HTTP failure, invalid JSON/shape, and post-load contract validation failures with per-file detail in the fatal screen.
