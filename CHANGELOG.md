@@ -12,8 +12,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 - Added focused event hardening and parity suites: `character-events-coverage`, `event-nondominance`, and `repo-truth-guarantees` tests to enforce bounded effects, cooldown/max-per-run behavior, and documented-repo guarantees.
 - Added canonical `data/context_events.json` and wired web-v1 to load environment-event archetypes from data contracts (with runtime fallback defaults) instead of hardcoded UI-adjacent constants.
-- Added `prototype/web-v1/ui/helpers/startup-ui.js` and `prototype/web-v1/ui/helpers/routing.js` so startup blocking-error rendering and deep-link hash parsing/sync live outside the `screens.js` monolith.
-- Added startup failure-classification smoke tests (`prototype/web-v1/tests/smoke/model-ready.test.js`) and routing parser unit coverage (`prototype/web-v1/tests/unit/routing.test.js`).
 
 ### Changed
 - Clarified module ownership by moving turn-review log-entry shaping into `prototype/web-v1/ui/helpers/run-log.js` and keeping `ui/screens.js` as orchestration/render wiring only.
@@ -22,13 +20,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Strengthened domain/data contracts to include context-event trigger/effect/limits typing, aliased `CharacterEventLimits`, and enforced `contextEvents` validation in both TS and UI data-load validators.
 - Updated web-v1 event-plan bootstrapping so `buildEnvironmentEventPlan()` receives `DATA_CONFIG.contextEvents`, keeping event ownership in engine logic while preserving seed-based turn offsets.
 - Expanded parity/contract/engine tests to cover context-event schema integrity and docs/runtime authority consistency.
-- Improved title/startup UX with restrained loading state copy and model-readiness gating on the Begin CTA, keeping failure modes explicit without adding non-diegetic UI noise.
 
 ### Fixed
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
 - Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
-- Fixed blocking startup diagnostics to distinguish missing file, HTTP failure, invalid JSON/shape, and post-load contract validation failures with per-file detail in the fatal screen.
-- Fixed mixed-language startup/fatal UX by routing startup and blocking-error copy through the runtime language layer (`setLanguage` + `uiText`) instead of hardcoded English strings.
 
 ### Security
 - No security-impacting changes in this release window.
