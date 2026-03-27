@@ -44,3 +44,4 @@ All simulation tuning is loaded from `/data`:
 
 - Added a seed-driven environment-event layer that mutates weather/visibility inside the canonical resolver weather stage; no parallel progression authority was added.
 - Added debrief/run-review helpers and accessibility helper modules under `prototype/web-v1/ui/helpers/` as low-risk modularization preparation for future TS migration.
+- Added startup/data-boot modular ownership: `ui/helpers/data-config.js` now classifies required-file failures (missing, HTTP, invalid shape, post-load validation), while `ui/helpers/startup-ui.js` renders loading + fatal blocking states so `ui/screens.js` remains orchestration-focused.

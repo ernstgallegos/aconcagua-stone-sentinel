@@ -187,3 +187,14 @@ A lightweight, reproducible environment-event layer now runs during `apply-weath
 - Telemetry: per-turn `lastTurnRecord.contextEvent` plus run log `contextEvent` fields where active.
 
 Character-specific micro-events also run in the same stage with modest bounded effects (small fatigue/exposure/confidence drift), preserving mountain-first systemic authority.
+
+## Startup contract diagnostics (v1.4.5 stabilization)
+
+`prototype/web-v1/ui/helpers/data-config.js` treats required startup files as blocking dependencies and emits typed diagnostics consumed by the fatal screen renderer:
+
+- missing file (`404`)
+- HTTP failure (`non-404 non-ok response`)
+- invalid JSON / invalid shape
+- post-load validation failure (cross-file contract checks)
+
+This keeps startup failures explicit for players/testers while leaving resolver authority unchanged in `resolveTurn(state, action)`.

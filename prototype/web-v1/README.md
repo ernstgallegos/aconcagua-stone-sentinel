@@ -106,3 +106,4 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Upgraded debrief with structured sections, run signature text, and a local turn-by-turn review panel plus one-click signature copy.
 - Expanded help overlay content with confidence semantics, retreat framing, and “How to read this game” guidance while preserving partial-information constraints.
 - Accessibility improvements include stronger focus-visible styles, keyboard-safe modal focus return behavior, and reduced-motion support hardening.
+- Stabilized startup reliability with explicit blocking-error categories (missing file, HTTP failure, invalid shape, post-load validation) and a restrained loading status line that keeps model readiness visible before entering expedition setup.

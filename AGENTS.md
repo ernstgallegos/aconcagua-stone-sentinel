@@ -204,3 +204,4 @@ In addition to the changelog:
 - Gradual TS adoption in this repo is safest as an engine-first sidecar (`prototype/web-v1/src/**` + `tsconfig.json`) while runtime UI stays JS and static deploy remains unchanged.
 
 - Context/environment event tuning in `web-v1` is safer when archetypes are sourced from `data/context_events.json` and normalized in `engine/events-core.js`; keep a runtime fallback table only as a resilience backup, not as the primary source of truth.
+- Startup hardening is cleaner when required-data error typing (missing/HTTP/shape/post-load) stays in `ui/helpers/data-config.js` and fatal/loading copy rendering is isolated in a UI helper (`ui/helpers/startup-ui.js`), keeping `screens.js` orchestration-focused and easier to audit.

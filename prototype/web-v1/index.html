@@ -41,14 +41,15 @@
   <div class="title-shell title-shell-minimal">
     <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
     </button>
+    <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Loading expedition model…</p>
   </div>
 </section>
 
 <!-- ══════════════════════ FATAL DATA ERROR ══════════════════════ -->
 <section id="screen-fatal-error" class="screen" aria-label="Blocking data configuration error">
   <div class="blocking-error-box">
-    <div class="blocking-error-title">Blocking data error</div>
-    <p>The simulation model could not be initialized. Gameplay is disabled until data files are fixed.</p>
+    <div class="blocking-error-title" id="blocking-error-title">Blocking data error</div>
+    <p id="blocking-error-summary">The simulation model could not be initialized. Gameplay is disabled until data files are fixed.</p>
     <pre id="blocking-error-details" class="blocking-error-details">Unknown data loading error.</pre>
   </div>
 </section>
