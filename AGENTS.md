@@ -202,3 +202,5 @@ In addition to the changelog:
 - Repo-truth drift is easier to prevent when `docs/repo-truth.md` is treated as the canonical status source and parity-tested against `package.json`, UI version text, and `data/outcomes.json`.
 - Character-identity depth remains mountain-first when per-character events are loaded from `data/character_events.json` with bounded effects, cooldown, and per-run caps, and never allowed to set terminal outcomes.
 - Gradual TS adoption in this repo is safest as an engine-first sidecar (`prototype/web-v1/src/**` + `tsconfig.json`) while runtime UI stays JS and static deploy remains unchanged.
+
+- Context/environment event tuning in `web-v1` is safer when archetypes are sourced from `data/context_events.json` and normalized in `engine/events-core.js`; keep a runtime fallback table only as a resilience backup, not as the primary source of truth.

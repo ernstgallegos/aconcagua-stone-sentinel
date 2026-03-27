@@ -103,9 +103,24 @@ export interface CharacterEventEffect {
   pressureHintDelta?: number;
 }
 
-export interface EventLimits {
+export interface CharacterEventLimits {
   oncePerRun?: boolean;
   cooldownTurns: number;
+  maxPerRun: number;
+}
+
+export interface ContextEventTrigger {
+  turns: number[];
+  stages?: Stage[];
+}
+
+export interface ContextEventEffect {
+  weatherDelta?: number;
+  visibilityDelta?: number;
+  timePenalty?: number;
+}
+
+export interface ContextEventLimits {
   maxPerRun: number;
 }
 
@@ -115,6 +130,9 @@ export interface ContextEvent {
   icon?: string;
   label: string;
   stage?: Stage;
+  trigger?: ContextEventTrigger;
+  effects?: ContextEventEffect;
+  limits?: ContextEventLimits;
   weatherDelta?: number;
   visibilityDelta?: number;
   timePenalty?: number;
@@ -122,7 +140,10 @@ export interface ContextEvent {
   visibleToPlayer?: boolean;
   hiddenFromPlayer?: boolean;
   narrative?: string;
+  notes?: string;
 }
+
+export type EventLimits = CharacterEventLimits;
 
 export interface CharacterEvent {
   id: string;
@@ -133,7 +154,7 @@ export interface CharacterEvent {
   trigger: CharacterEventTrigger;
   conditions?: Record<string, unknown>;
   effects: CharacterEventEffect;
-  limits: EventLimits;
+  limits: CharacterEventLimits;
   telemetryTag: string;
   visibleToPlayer?: boolean;
   hiddenFromPlayer?: boolean;

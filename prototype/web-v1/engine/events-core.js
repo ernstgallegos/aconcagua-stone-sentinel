@@ -1,12 +1,38 @@
 import { clamp } from './turn-resolution.js';
 
-export const CONTEXT_EVENT_ARCHETYPES = [
-  { id: 'calm-opening', category: 'context', icon: '◌', label: 'Calm opening', turns: [1, 2, 3], weatherDelta: -1, visibilityDelta: 0, telemetryTag: 'ctx-calm-opening', visibleToPlayer: true, hiddenFromPlayer: false },
-  { id: 'rising-wind', category: 'context', icon: '↟', label: 'Rising wind', turns: [6, 7, 8], weatherDelta: 1, visibilityDelta: -1, telemetryTag: 'ctx-rising-wind', visibleToPlayer: true, hiddenFromPlayer: false },
-  { id: 'visibility-drop', category: 'context', icon: '◔', label: 'Visibility drop', turns: [10, 11], weatherDelta: 0, visibilityDelta: -1, telemetryTag: 'ctx-visibility-drop', visibleToPlayer: true, hiddenFromPlayer: false },
-  { id: 'temporary-clearing', category: 'context', icon: '◍', label: 'Temporary clearing', turns: [12, 13], weatherDelta: -1, visibilityDelta: 1, telemetryTag: 'ctx-temporary-clearing', visibleToPlayer: true, hiddenFromPlayer: false },
-  { id: 'summit-window-tightening', category: 'context', icon: '⌛', label: 'Summit window tightening', turns: [14, 15], weatherDelta: 1, visibilityDelta: 0, timePenalty: 20, telemetryTag: 'ctx-summit-window-tightening', visibleToPlayer: true, hiddenFromPlayer: false },
+const DEFAULT_CONTEXT_EVENT_ARCHETYPES = [
+  { id: 'calm-opening', category: 'context', icon: '◌', label: 'Calm opening', trigger: { turns: [1, 2, 3] }, effects: { weatherDelta: -1, visibilityDelta: 0, timePenalty: 0 }, telemetryTag: 'ctx-calm-opening', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
+  { id: 'rising-wind', category: 'context', icon: '↟', label: 'Rising wind', trigger: { turns: [6, 7, 8] }, effects: { weatherDelta: 1, visibilityDelta: -1, timePenalty: 0 }, telemetryTag: 'ctx-rising-wind', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
+  { id: 'visibility-drop', category: 'context', icon: '◔', label: 'Visibility drop', trigger: { turns: [10, 11] }, effects: { weatherDelta: 0, visibilityDelta: -1, timePenalty: 0 }, telemetryTag: 'ctx-visibility-drop', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
+  { id: 'temporary-clearing', category: 'context', icon: '◍', label: 'Temporary clearing', trigger: { turns: [12, 13] }, effects: { weatherDelta: -1, visibilityDelta: 1, timePenalty: 0 }, telemetryTag: 'ctx-temporary-clearing', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
+  { id: 'summit-window-tightening', category: 'context', icon: '⌛', label: 'Summit window tightening', trigger: { turns: [14, 15], stages: ['SUMMIT_DAY'] }, effects: { weatherDelta: 1, visibilityDelta: 0, timePenalty: 20 }, telemetryTag: 'ctx-summit-window-tightening', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
 ];
+
+function normalizeContextArchetype(event) {
+  const trigger = event?.trigger || {};
+  const effects = event?.effects || {};
+  return {
+    id: event.id,
+    category: event.category || 'context',
+    icon: event.icon || '◌',
+    label: event.label || event.id,
+    trigger: {
+      turns: Array.isArray(trigger.turns) ? trigger.turns : Array.isArray(event.turns) ? event.turns : [],
+      stages: Array.isArray(trigger.stages) ? trigger.stages : [],
+    },
+    effects: {
+      weatherDelta: Number(effects.weatherDelta ?? event.weatherDelta ?? 0),
+      visibilityDelta: Number(effects.visibilityDelta ?? event.visibilityDelta ?? 0),
+      timePenalty: Number(effects.timePenalty ?? event.timePenalty ?? 0),
+    },
+    telemetryTag: event.telemetryTag,
+    visibleToPlayer: event.visibleToPlayer ?? true,
+    hiddenFromPlayer: event.hiddenFromPlayer ?? false,
+    limits: event.limits || { maxPerRun: 1 },
+    narrative: event.narrative || '',
+    notes: event.notes || '',
+  };
+}
 
 export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
   let nextMinutes = minutesOfDay + deltaMinutes;
@@ -24,23 +50,33 @@ export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
   return { minutesOfDay: nextMinutes, day: nextDay, permitDay: nextDay };
 }
 
-export function buildEnvironmentEventPlan(seed, maxTurns = 40) {
+export function buildEnvironmentEventPlan(seed, maxTurns = 40, contextEvents = DEFAULT_CONTEXT_EVENT_ARCHETYPES) {
   const offset = Number(seed || 0) % 3;
-  return CONTEXT_EVENT_ARCHETYPES
-    .map((event) => ({ ...event, turns: event.turns.map((turn) => clamp(turn + offset, 1, maxTurns)) }))
+  const archetypes = Array.isArray(contextEvents) && contextEvents.length ? contextEvents : DEFAULT_CONTEXT_EVENT_ARCHETYPES;
+  return archetypes
+    .map(normalizeContextArchetype)
+    .map((event) => ({
+      ...event,
+      turns: event.trigger.turns.map((turn) => clamp(turn + offset, 1, maxTurns)),
+    }))
     .filter((event) => event.turns.some((turn) => turn <= maxTurns));
 }
 
 export function applyContextEvent({ turn, action, stage, state, environmentEventPlan = [] }) {
   const active = environmentEventPlan.find((event) => event.turns.includes(turn));
   if (!active || action === 'sleep') return null;
+  if (active.trigger?.stages?.length && !active.trigger.stages.includes(stage)) return null;
 
-  state.weather_severity = clamp(state.weather_severity + active.weatherDelta, 0, 4);
-  state.visibility = clamp(state.visibility + active.visibilityDelta, 0, 3);
-  const appliedTimePenalty = active.timePenalty && stage === 'SUMMIT_DAY' ? active.timePenalty : 0;
+  const effect = active.effects || {};
+  state.weather_severity = clamp(state.weather_severity + (effect.weatherDelta ?? active.weatherDelta ?? 0), 0, 4);
+  state.visibility = clamp(state.visibility + (effect.visibilityDelta ?? active.visibilityDelta ?? 0), 0, 3);
+  const timePenaltyCandidate = effect.timePenalty ?? active.timePenalty ?? 0;
+  const appliedTimePenalty = timePenaltyCandidate && stage === 'SUMMIT_DAY' ? timePenaltyCandidate : 0;
 
   return {
     ...active,
+    weatherDelta: effect.weatherDelta ?? active.weatherDelta ?? 0,
+    visibilityDelta: effect.visibilityDelta ?? active.visibilityDelta ?? 0,
     timePenalty: appliedTimePenalty,
   };
 }

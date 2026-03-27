@@ -16,7 +16,7 @@ const TUNING = {
 
 let DATA_CONFIG = createDefaultDataConfig();
 let DATA_CONFIG_ERROR = null;
-const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'outcomes', 'scenariosWebV1']);
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
 
 function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
@@ -1554,7 +1554,7 @@ function startGame() {
     photoLastEffectLabel: '',
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
-    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns, DATA_CONFIG.contextEvents || []),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
     characterEventState: {},
@@ -3623,7 +3623,7 @@ function bootstrapMockDebrief(params) {
     consecutiveCollapses: 0,
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
-    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns),
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns, DATA_CONFIG.contextEvents || []),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
     characterEventState: {},

@@ -10,6 +10,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added canonical `data/context_events.json` and wired web-v1 to load environment-event archetypes from data contracts (with runtime fallback defaults) instead of hardcoded UI-adjacent constants.
+
+### Changed
+- Strengthened domain/data contracts to include context-event trigger/effect/limits typing, aliased `CharacterEventLimits`, and enforced `contextEvents` validation in both TS and UI data-load validators.
+- Updated web-v1 event-plan bootstrapping so `buildEnvironmentEventPlan()` receives `DATA_CONFIG.contextEvents`, keeping event ownership in engine logic while preserving seed-based turn offsets.
+- Expanded parity/contract/engine tests to cover context-event schema integrity and docs/runtime authority consistency.
+
+
+### Added
 - None.
 
 ### Changed

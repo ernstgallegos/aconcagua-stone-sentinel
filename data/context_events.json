@@ -1,0 +1,62 @@
+[
+  {
+    "id": "calm-opening",
+    "category": "context",
+    "trigger": { "turns": [1, 2, 3] },
+    "effects": { "weatherDelta": -1, "visibilityDelta": 0, "timePenalty": 0 },
+    "limits": { "maxPerRun": 1 },
+    "telemetryTag": "ctx-calm-opening",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Early calm offers a narrow opening before upper-mountain volatility rises.",
+    "notes": "Seed offset can shift exact turns without changing bounded effects."
+  },
+  {
+    "id": "rising-wind",
+    "category": "context",
+    "trigger": { "turns": [6, 7, 8] },
+    "effects": { "weatherDelta": 1, "visibilityDelta": -1, "timePenalty": 0 },
+    "limits": { "maxPerRun": 1 },
+    "telemetryTag": "ctx-rising-wind",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Wind builds and signal quality deteriorates.",
+    "notes": "No direct outcome assignment; pressure still resolves via EP/BT."
+  },
+  {
+    "id": "visibility-drop",
+    "category": "context",
+    "trigger": { "turns": [10, 11] },
+    "effects": { "weatherDelta": 0, "visibilityDelta": -1, "timePenalty": 0 },
+    "limits": { "maxPerRun": 1 },
+    "telemetryTag": "ctx-visibility-drop",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Cloud texture compresses local readability.",
+    "notes": "Perception uncertainty increases without exposing raw truth."
+  },
+  {
+    "id": "temporary-clearing",
+    "category": "context",
+    "trigger": { "turns": [12, 13] },
+    "effects": { "weatherDelta": -1, "visibilityDelta": 1, "timePenalty": 0 },
+    "limits": { "maxPerRun": 1 },
+    "telemetryTag": "ctx-temporary-clearing",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "A short clearing improves reading before conditions close again.",
+    "notes": "Window is temporary and never bypasses systemic risk."
+  },
+  {
+    "id": "summit-window-tightening",
+    "category": "context",
+    "trigger": { "turns": [14, 15], "stages": ["SUMMIT_DAY"] },
+    "effects": { "weatherDelta": 1, "visibilityDelta": 0, "timePenalty": 20 },
+    "limits": { "maxPerRun": 1 },
+    "telemetryTag": "ctx-summit-window-tightening",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Late-day corridor narrows quickly on summit sectors.",
+    "notes": "Time penalty applies only on SUMMIT_DAY to keep stage-aware pressure."
+  }
+]

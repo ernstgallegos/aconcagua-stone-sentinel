@@ -5,11 +5,12 @@ const DEFAULT_CONFIG = Object.freeze({
   stageModifiers: {},
   characters: [],
   characterEvents: [],
+  contextEvents: [],
   outcomes: [],
   scenariosWebV1: { predefinedScenarios: [], randomScenario: {} },
 });
 
-const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'outcomes', 'scenariosWebV1']);
+const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
 
 function typeOfValue(value) {
   if (Array.isArray(value)) return 'array';
@@ -34,6 +35,17 @@ export function validateDataConfigShape(filename, data) {
     assertConfigPath(filename, data[0]?.trigger, 'object', '$[0].trigger');
     assertConfigPath(filename, data[0]?.effects, 'object', '$[0].effects');
     assertConfigPath(filename, data[0]?.limits, 'object', '$[0].limits');
+    return;
+  }
+
+
+  if (filename === 'contextEvents') {
+    assertConfigPath(filename, data, 'array', '$');
+    assertConfigPath(filename, data[0], 'object', '$[0]');
+    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
+    assertConfigPath(filename, data[0]?.category, 'string', '$[0].category');
+    assertConfigPath(filename, data[0]?.trigger, 'object', '$[0].trigger');
+    assertConfigPath(filename, data[0]?.effects, 'object', '$[0].effects');
     return;
   }
 
@@ -80,6 +92,8 @@ export function validateLoadedDataConfig(config) {
   if (!predefined.length) throw new Error('scenariosWebV1.predefinedScenarios must include at least one scenario');
   const events = config.characterEvents || [];
   if (!events.length) throw new Error('characterEvents must include at least one event');
+  const contextEvents = config.contextEvents || [];
+  if (!contextEvents.length) throw new Error('contextEvents must include at least one event');
 }
 
 export function createDefaultDataConfig() {
@@ -94,6 +108,7 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
     ['stageModifiers', '../../data/stage_modifiers.json'],
     ['characters', '../../data/characters.json'],
     ['characterEvents', '../../data/character_events.json'],
+    ['contextEvents', '../../data/context_events.json'],
     ['outcomes', '../../data/outcomes.json'],
     ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
   ];

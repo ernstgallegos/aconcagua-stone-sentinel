@@ -10,6 +10,7 @@ const pathByName = new Map([
   ['stage_modifiers', 'data/stage_modifiers.json'],
   ['characters', 'data/characters.json'],
   ['character_events', 'data/character_events.json'],
+  ['context_events', 'data/context_events.json'],
   ['outcomes', 'data/outcomes.json'],
   ['scenarios.web-v1', 'data/scenarios.web-v1.json'],
 ]);
@@ -27,4 +28,5 @@ test('data loader reaches model-ready contract with required files', async () =>
   assert.equal(blockingError, null);
   assert.ok(config);
   assert.ok(Array.isArray(config.characterEvents) && config.characterEvents.length > 0);
+  assert.ok(Array.isArray(config.contextEvents) && config.contextEvents.length > 0);
 });

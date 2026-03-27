@@ -5,7 +5,8 @@
     "outcomes": "data/outcomes.json (web-v1 active canonical source)",
     "webStateSemantics": "prototype/web-v1/engine/turn-resolution.js",
     "mraBaselineSemantics": "prototype/mra-v0/simulator.py (historical baseline only)",
-    "mraRequiredStateShape": "prototype/mra-v0/scenarios/scenario.schema.json"
+    "mraRequiredStateShape": "prototype/mra-v0/scenarios/scenario.schema.json",
+    "contextEvents": "data/context_events.json (seeded bounded environment-event contract for web-v1)"
   },
   "sharedContract": {
     "stateMetricsRequired": [

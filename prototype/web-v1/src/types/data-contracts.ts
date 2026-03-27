@@ -2,6 +2,7 @@ import type {
   Character,
   CharacterEvent,
   CharacterEventCategory,
+  ContextEvent,
   RouteNode,
   Scenario,
   Stage,
@@ -42,6 +43,7 @@ export interface DataConfig {
   stageModifiers: Record<string, Record<string, number>>;
   characters: Character[];
   characterEvents: CharacterEvent[];
+  contextEvents: ContextEvent[];
   outcomes: TurnOutcome[];
   scenariosWebV1: {
     predefinedScenarios: Scenario[];
@@ -92,6 +94,27 @@ function assertCharacterEvents(events: unknown): asserts events is CharacterEven
   }
 }
 
+
+function assertContextEvents(events: unknown): asserts events is ContextEvent[] {
+  assertNonEmptyArray(events, 'contextEvents');
+  for (const event of events) {
+    if (!event || typeof event !== 'object') throw new Error('contextEvents must contain objects');
+    const payload = event as Record<string, unknown>;
+    if (typeof payload.id !== 'string' || !payload.id) throw new Error('contextEvents[].id must be string');
+    if ((payload.category ?? 'context') !== 'context') throw new Error(`context event ${String(payload.id)} category must be context`);
+    const trigger = payload.trigger as Record<string, unknown> | undefined;
+    if (!trigger || !Array.isArray(trigger.turns) || trigger.turns.length === 0) {
+      throw new Error(`context event ${String(payload.id)} requires trigger.turns`);
+    }
+    const effects = payload.effects as Record<string, unknown> | undefined;
+    if (!effects || typeof effects !== 'object') throw new Error(`context event ${String(payload.id)} requires effects`);
+    const limits = payload.limits as Record<string, unknown> | undefined;
+    if (!limits || typeof limits.maxPerRun !== 'number' || limits.maxPerRun < 1) {
+      throw new Error(`context event ${String(payload.id)} requires limits.maxPerRun >= 1`);
+    }
+  }
+}
+
 function assertRouteNodes(nodes: unknown): asserts nodes is RouteNode[] {
   assertNonEmptyArray(nodes, 'nodes');
   const validStages = new Set<Stage>(['APPROACH', 'HIGH_CAMP', 'SUMMIT_DAY']);
@@ -107,6 +130,7 @@ export function assertDataConfig(config: Partial<DataConfig>): asserts config is
   assertRouteNodes(config.nodes);
   assertNonEmptyArray(config.characters, 'characters');
   assertCharacterEvents(config.characterEvents);
+  assertContextEvents(config.contextEvents);
   assertNonEmptyArray(config.outcomes, 'outcomes');
   if (!config.scenariosWebV1?.predefinedScenarios?.length) throw new Error('scenariosWebV1.predefinedScenarios must be non-empty');
   if (!config.environmentalPressure || typeof config.environmentalPressure !== 'object') {

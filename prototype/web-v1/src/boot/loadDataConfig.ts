@@ -7,6 +7,7 @@ const FILES: Array<[keyof DataConfig, string]> = [
   ['stageModifiers', '../../data/stage_modifiers.json'],
   ['characters', '../../data/characters.json'],
   ['characterEvents', '../../data/character_events.json'],
+  ['contextEvents', '../../data/context_events.json'],
   ['outcomes', '../../data/outcomes.json'],
   ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
 ];
