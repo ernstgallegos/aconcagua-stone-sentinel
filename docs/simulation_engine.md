@@ -3,7 +3,8 @@
 > **Canonical status (source-anchored):**
 > - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.5]`](../CHANGELOG.md#145--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.5** with legacy v1.3 contracts preserved where still applicable.
+> - Current public build is **v1.4.5**.
+> - Legacy v1.3 compatibility that is intentionally still active is limited to additive run-log aliases and test fixtures in `prototype/mra-v0`; canonical web-v1 authority and outcome taxonomy are v1.4.5 contracts.
 
 
 ## Core authority
@@ -139,6 +140,15 @@ This keeps each turn reproducible without exposing raw certainty to player-facin
 
 See `docs/en/consolidated-design-v1.4.md` and `docs/es/diseno-consolidado-v1.4.md` for scope and rollout phases.
 
+
+
+## Legacy v1.3 compatibility (precise scope)
+
+Legacy references are intentionally narrow and documented:
+
+- `prototype/mra-v0` remains frozen to preserve historical simulator reproducibility and archived outcome-class fixtures.
+- `web-v1` keeps additive run-log aliases only for backward reader compatibility; canonical fields are the structured `lastTurnRecord` + run-log export contract in `ui/helpers/run-log.js`.
+- No legacy contract is allowed to override `resolveTurn(state, action)` authority, current `data/outcomes.json`, or live Part 1 roster rules.
 
 ## Engine mechanics post-v1.3
 

@@ -6,6 +6,8 @@ import {
   applyCharacterEvent,
 } from '../../engine/events-core.js';
 
+// UI ownership note: this file intentionally stays as thin wiring.
+// Canonical event mutation/bounds live in engine/events-core.js.
 export { applyClockDelta, buildEnvironmentEventPlan, eventMatchesTrigger };
 
 export function applyTurnEvents({ G, state, action, stage }) {
