@@ -2,6 +2,19 @@ export type Stage = 'APPROACH' | 'HIGH_CAMP' | 'SUMMIT_DAY';
 
 export type Action = 'advance' | 'advance_slowly' | 'wait' | 'descend' | 'sleep' | 'shoot_photo';
 
+export type ContextualAction = Extract<Action, 'shoot_photo'>;
+
+export type TrendEstimate = 'improving' | 'steady' | 'worsening' | 'uncertain';
+
+export type EventCategory = 'context' | 'character' | 'observation' | 'perception_distortion';
+
+export type CharacterEventCategory =
+  | 'onset_context'
+  | 'pressure_interpretation'
+  | 'pacing_hesitation'
+  | 'observation'
+  | 'body_mind_drift';
+
 export type TurnOutcome =
   | 'Strategic Retreat'
   | 'Rescue'
@@ -59,43 +72,73 @@ export interface PressureResult {
   components?: Record<string, number>;
 }
 
+export interface BodyToleranceResult {
+  toleranceScore: number;
+  components?: Record<string, number>;
+}
+
 export interface PerceptionResult {
   confidenceLevel: number;
   noiseLevel: number;
-  trendEstimate: 'improving' | 'steady' | 'worsening' | 'uncertain';
+  trendEstimate: TrendEstimate;
 }
 
-export interface CharacterEvent {
-  id: string;
-  characterId: string;
-  category: 'onset_context' | 'pressure_interpretation' | 'pacing_hesitation' | 'observation' | 'body_mind_drift';
-  trigger: {
-    actions?: Action[];
-    stage?: Stage[];
-    minTurn?: number;
-    minFunctionalCapacity?: number;
-    maxFunctionalCapacity?: number;
-  };
-  effects: {
-    fatigueDelta?: number;
-    exposureDelta?: number;
-    confidenceDelta?: number;
-    pressureHintDelta?: number;
-  };
-  limits: {
-    cooldownTurns: number;
-    maxPerRun: number;
-  };
-  telemetryTag: string;
+export interface CharacterEventTrigger {
+  actions?: Action[];
+  stages?: Stage[];
+  stage?: Stage[];
+  minTurn?: number;
+  minPersistenceTurns?: number;
+  minWeatherSeverity?: number;
+  minFunctionalCapacity?: number;
+  maxFunctionalCapacity?: number;
+  maxWater?: number;
+  maxFood?: number;
+}
+
+export interface CharacterEventEffect {
+  fatigueDelta?: number;
+  exposureDelta?: number;
+  confidenceDelta?: number;
+  pressureHintDelta?: number;
+}
+
+export interface EventLimits {
+  oncePerRun?: boolean;
+  cooldownTurns: number;
+  maxPerRun: number;
 }
 
 export interface ContextEvent {
   id: string;
+  category?: EventCategory;
   icon?: string;
   label: string;
+  stage?: Stage;
   weatherDelta?: number;
   visibilityDelta?: number;
   timePenalty?: number;
+  telemetryTag?: string;
+  visibleToPlayer?: boolean;
+  hiddenFromPlayer?: boolean;
+  narrative?: string;
+}
+
+export interface CharacterEvent {
+  id: string;
+  category: CharacterEventCategory;
+  characterId: string;
+  scenarioId?: string;
+  stage?: Stage;
+  trigger: CharacterEventTrigger;
+  conditions?: Record<string, unknown>;
+  effects: CharacterEventEffect;
+  limits: EventLimits;
+  telemetryTag: string;
+  visibleToPlayer?: boolean;
+  hiddenFromPlayer?: boolean;
+  narrative?: string;
+  notes?: string;
 }
 
 export interface TurnEvaluation {
@@ -119,6 +162,7 @@ export interface RunLogRecord {
   flags: string[];
   contextEvent?: ContextEvent | null;
   characterEvent?: Pick<CharacterEvent, 'id' | 'characterId' | 'category' | 'telemetryTag'> | null;
+  turnSummary?: string;
 }
 
 export interface GlobalRunState {
