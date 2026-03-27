@@ -3800,7 +3800,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (event) => {
     const helpOpen = document.getElementById('game-help-overlay')?.classList.contains('open');
-    if (helpOpen && event.key === 'Escape') closeGameHelp();
+    const watchOpen = document.getElementById('watch-detail-overlay')?.classList.contains('open');
+    const fieldOpen = document.getElementById('field-log-overlay')?.classList.contains('open');
+    if (event.key === 'Escape') {
+      if (helpOpen) closeGameHelp();
+      else if (watchOpen) closeWatchDetail();
+      else if (fieldOpen) closeFieldLog();
+    }
   });
 });
 
@@ -3831,15 +3837,13 @@ function closeGameHelp() {
 /* Watch detail overlay — opened by tapping the watch band */
 function openWatchDetail() {
   const overlay = document.getElementById('watch-detail-overlay');
-  const backdrop = document.getElementById('watch-detail-backdrop');
-  if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
-  if (backdrop) backdrop.classList.add('visible');
+  const dialog = overlay?.querySelector('.watch-detail-dialog');
+  const trigger = document.getElementById('watch-band');
+  openModalWithFocus({ overlay, dialog, trigger });
 }
 function closeWatchDetail() {
   const overlay = document.getElementById('watch-detail-overlay');
-  const backdrop = document.getElementById('watch-detail-backdrop');
-  if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
-  if (backdrop) backdrop.classList.remove('visible');
+  closeModalWithFocusReturn({ overlay, fallbackTriggerId: 'watch-band' });
 }
 window.openWatchDetail = openWatchDetail;
 window.closeWatchDetail = closeWatchDetail;
@@ -3847,15 +3851,13 @@ window.closeWatchDetail = closeWatchDetail;
 /* Field log overlay — opened via "View field log" link in mountain-main */
 function openFieldLog() {
   const overlay = document.getElementById('field-log-overlay');
-  const backdrop = document.getElementById('field-log-backdrop');
-  if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
-  if (backdrop) backdrop.classList.add('visible');
+  const dialog = overlay?.querySelector('.field-log-dialog');
+  const trigger = document.querySelector('.field-log-trigger');
+  openModalWithFocus({ overlay, dialog, trigger });
 }
 function closeFieldLog() {
   const overlay = document.getElementById('field-log-overlay');
-  const backdrop = document.getElementById('field-log-backdrop');
-  if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
-  if (backdrop) backdrop.classList.remove('visible');
+  closeModalWithFocusReturn({ overlay, fallbackTriggerId: null });
 }
 window.openFieldLog = openFieldLog;
 window.closeFieldLog = closeFieldLog;

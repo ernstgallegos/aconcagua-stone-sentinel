@@ -194,7 +194,8 @@ Character-specific micro-events also run in the same stage with modest bounded e
 
 - missing file (`404`)
 - HTTP failure (`non-404 non-ok response`)
-- invalid JSON / invalid shape
+- invalid JSON
+- invalid shape
 - post-load validation failure (cross-file contract checks)
 
 This keeps startup failures explicit for players/testers while leaving resolver authority unchanged in `resolveTurn(state, action)`.

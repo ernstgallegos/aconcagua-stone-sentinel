@@ -31,7 +31,7 @@ test('data loader reaches model-ready contract with required files', async () =>
   assert.ok(Array.isArray(config.contextEvents) && config.contextEvents.length > 0);
 });
 
-test('data loader classifies missing required file as blocking load failure', async () => {
+test('data loader classifies missing required file as blocking missing-file failure', async () => {
   const errors = [];
   const config = await loadDataConfigFiles({
     fetchImpl: async (requestPath) => {
@@ -45,12 +45,12 @@ test('data loader classifies missing required file as blocking load failure', as
 
   assert.equal(config, null);
   assert.equal(errors.length, 1);
-  assert.equal(errors[0].category, 'load failure');
+  assert.equal(errors[0].category, 'missing file');
   assert.match(errors[0].detail, /missing file/i);
   assert.match(errors[0].file, /context_events\.json/);
 });
 
-test('data loader classifies malformed JSON as blocking load failure', async () => {
+test('data loader classifies malformed JSON as blocking invalid-json failure', async () => {
   const errors = [];
   const config = await loadDataConfigFiles({
     fetchImpl: async (requestPath) => {
@@ -68,9 +68,28 @@ test('data loader classifies malformed JSON as blocking load failure', async () 
 
   assert.equal(config, null);
   assert.equal(errors.length, 1);
-  assert.equal(errors[0].category, 'load failure');
+  assert.equal(errors[0].category, 'invalid json');
   assert.match(errors[0].detail, /invalid JSON/i);
   assert.match(errors[0].file, /outcomes\.json/);
+});
+
+test('data loader classifies non-404 HTTP failures distinctly', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('action_modifiers.json')) {
+        return { ok: false, status: 500, async json() { return {}; } };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'http failure');
+  assert.match(errors[0].detail, /status 500/i);
+  assert.match(errors[0].file, /action_modifiers\.json/);
 });
 
 test('data loader classifies invalid shape as blocking shape failure', async () => {
