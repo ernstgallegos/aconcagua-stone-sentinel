@@ -127,6 +127,215 @@ const PART2_ROUTE_OPTIONS = [
   },
 ];
 
+const PART2_NARRATIVE_SEQUENCE = [
+  {
+    id: 'mendoza_room',
+    eyebrow: 'Night before departure',
+    title: 'Mendoza',
+    body: `When you close the hotel door, Mendoza starts to feel provisional. Two beds become sorting tables. Duffels open. Passport, permits, chargers, straps, gloves, bags inside bags. Everything already belongs to the mountain, even if the mountain is still one transfer away.
+
+STONE SENTINEL EXPEDITIONS has handled the visible logistics: airport pickup, room booking, permit support, rentals, gear check timing. Shared room is standard unless you pay for privacy. Tonight, that means Blake on the other bed, repeating his system like repetition could quiet uncertainty.
+
+“Weight is everything,” he says. “Every gram counts.”
+
+You stay quiet and check your own gear more slowly. For a moment he asks, “You’ve done altitude before?” You shake your head. He nods and returns to straps and categories.
+
+You take Mateo’s photo from a side pocket, look for a few seconds, and put it back. Mateo, older than you, gone since COVID in 2021, still occupies space no bag can carry.
+
+Outside, the city keeps moving.
+
+Inside, something has already shifted.
+
+You share a room.
+
+But not the same mountain.`,
+    variant: 'standard',
+    animationPreset: 'room_stillness',
+    visualMode: 'hotel-room',
+    navButtons: [
+      { label: 'Back to character', action: 'back_to_character', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'team_presentation',
+    eyebrow: 'Hotel lobby',
+    title: 'The Group',
+    body: `In the lobby, the expedition appears in fragments: mountain boots in city light, jackets from other climates, overlapping voices, practiced confidence, concealed doubt.
+
+You and the other five are six clients on a guided Normal Route ascent with STONE SENTINEL EXPEDITIONS. The structure is solid—permits, transfers, mule loads, camp sequence, acclimatization margins, radios, treated water, cooks, support staff. Real competence. Real limits.
+
+Names circulate. Laura is precise. Erik is spare. Daniela measures before speaking. Irina is still without being passive. Blake trims every sentence.
+
+When your turn comes, you say your name, say you are a runner, say you are ready. The words are ordered correctly. That is not the same as certainty.
+
+You read everyone quickly. You know that impulse.
+
+Most of those first readings will be wrong.
+
+The group is now real.
+
+Trust is not.`,
+    variant: 'standard',
+    animationPreset: 'lobby_drift',
+    visualMode: 'hotel-lobby',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'after_circle',
+    eyebrow: 'Unstructured time',
+    title: 'After the Introductions',
+    body: `The circle breaks without ceremony. Small conversations form and dissolve. This is where roles loosen and temperament starts to show.
+
+Laura keeps asking. Erik keeps assessing. Daniela listens first. Blake explains more than requested, usually well. Irina steps outside as if the room already said enough.
+
+You stay in place, trying to read the group and to place yourself inside it. Those are different tasks.
+
+Tomorrow’s chain is clear: remaining permit checks, early transfer, logistics yard, tagged and weighed duffels, park entry, Horcones, first long walk. Everyone knows the order. No one knows the cost.
+
+For a few minutes, talk moves around you without malice and without invitation.
+
+The group is forming.
+
+You are still outside of it.`,
+    variant: 'standard',
+    animationPreset: 'social_fragments',
+    visualMode: 'lobby-side',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'guides',
+    eyebrow: 'Structure',
+    title: 'Who Leads',
+    body: `When the guides begin, the room settles. Not because they dominate it, but because they reduce ambiguity.
+
+Here STONE SENTINEL EXPEDITIONS becomes tangible: not a logo, but a chain—Mendoza coordination, permits, logistics hub, mule transport, comms, treated water, cooking systems, camp rhythm, weather margins, contingency.
+
+Agustina says it plainly: “The mountain decides. We adapt. Turning back is not failure.” In the hotel it sounds like principle. On the mountain it will sound like fact.
+
+Alejandro says less, but his presence completes the tone: attentive, serious, ready for both paperwork under electric light and short commands at altitude.
+
+Then more names appear in the machinery—Jorge with load timing and animal coordination, Tomás moving between baggage, instructions, and whatever breaks first. Food, duffels, and fuel will leave your hands and reappear where needed.
+
+Names become roles. Roles become responsibility. Responsibility becomes tempo.
+
+The expedition starts to take shape.
+
+It also becomes more fragile.`,
+    variant: 'standard',
+    animationPreset: 'guided_stability',
+    visualMode: 'briefing-room',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'briefing_night',
+    eyebrow: 'Before departure',
+    title: '',
+    body: `“Eat. Drink. Say it early.” The instructions sound simple. They are not.
+
+The logistics become concrete: two duffels, different destinations, one daypack for approach essentials, one climbing pack for above base camp. You carry less than expected on the first walk; the rest moves through mule and camp systems.
+
+The briefing ends, but people stay still a moment longer, as if translation were still happening.
+
+Back in the room, Blake keeps adjusting straps. Repetition as comfort. Repetition as fear.
+
+You lie down with the light on, thinking through tomorrow’s hardening sequence: shuttle, logistics yard, park entry, Horcones, Confluencia.
+
+You try to picture the mountain and get only fragments.
+
+When the light goes out, the room fills with two breathing patterns.
+
+Out of sync.`,
+    variant: 'titleless',
+    animationPreset: 'night_breath',
+    visualMode: 'dark-room',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'departure_road',
+    eyebrow: 'Early morning',
+    title: 'Road to Horcones',
+    body: `Morning is colder than expected. Movements turn automatic: pack, check, lift. Conversation thins.
+
+Blake is efficient and quiet. You feel ready, but not steadily.
+
+The bus waits. You could still stay. No one does.
+
+Out of Mendoza, logistics comes first: a stop at the operations yard, duffels tagged and weighed, loads split by timing, storage for what stays behind, day-use items kept close, altitude gear sent forward. This is the least romantic face of a guided expedition, and one of the truest.
+
+Then the valley opens and the city drops away. References change. Preparation meets consequence.
+
+On board, some sleep, some watch the road, Blake tracks distance and elevation.
+
+You look out without forcing meaning. The mountain is not visible yet, but it is already surrounding the day.
+
+Soon the Normal Route sequence begins: Horcones, Confluencia, Plaza de Mulas, carries and camps above.
+
+It will become movement.
+
+And movement has consequences.`,
+    variant: 'standard',
+    animationPreset: 'road_transition',
+    visualMode: 'bus-window',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Continue', action: 'next', role: 'primary' },
+    ],
+  },
+  {
+    id: 'future_cta',
+    eyebrow: 'Development continues',
+    title: 'The Expedition Ahead',
+    body: `What follows is already underway. The real expedition beyond this threshold—full team on the mountain, decisions under consequence—is in development.
+
+This prototype pauses here, but the project continues: deeper field progression on the Normal Route, expanded systems, and a broader narrative arc.
+
+If you want to follow, support, or collaborate, this is the right moment to step closer. Writers, developers, artists, designers, mountaineers, researchers, testers, and curious minds are welcome.
+
+The mountain is still there.
+
+So is the work.`,
+    variant: 'standard',
+    animationPreset: 'future_hold',
+    visualMode: 'end-card',
+    navButtons: [
+      { label: 'Back', action: 'back', role: 'secondary' },
+      { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
+      { label: 'Contact the creators to collaborate', action: 'contact_creators', role: 'primary' },
+      { label: 'Back to title / replay', action: 'back_to_title_or_replay', role: 'secondary' },
+    ],
+  },
+];
+const PART2_NARRATIVE_IDS = new Set(PART2_NARRATIVE_SEQUENCE.map((screen) => screen.id));
+const PART2_NARRATIVE_INDEX_BY_ID = new Map(PART2_NARRATIVE_SEQUENCE.map((screen, index) => [screen.id, index]));
+const PART2_BREATHING_LINES = new Set([
+  'Most of those first readings will be wrong.',
+  'Trust is not.',
+  'It also becomes more fragile.',
+  'Out of sync.',
+  'It will become movement.',
+  'And movement has consequences.',
+  'So is the work.',
+]);
+
 function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
 }
@@ -745,7 +954,7 @@ function applyStaticTranslations() {
 // Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
 function showScreen(id) {
-  const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const part2Screens = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
   if (part2Screens.has(id) && !canAccessPart2) {
     id = 'debrief';
@@ -773,6 +982,7 @@ function showScreen(id) {
     window.scrollTo(0, 0);
 
     if (id === 'part2-character') buildPart2SetupScreen();
+    if (PART2_NARRATIVE_IDS.has(id)) renderPart2NarrativeScreen(id);
 
     if (id === 'expedition-setup') buildExpeditionSetupCarousels();
 
@@ -1349,6 +1559,82 @@ function updatePart2ConfirmState() {
   else btn.setAttribute('aria-disabled', 'true');
 }
 
+function handlePart2NarrativeAction(screenId, action) {
+  const idx = PART2_NARRATIVE_INDEX_BY_ID.get(screenId);
+  if (!Number.isInteger(idx)) return;
+
+  if (action === 'next') {
+    const next = PART2_NARRATIVE_SEQUENCE[idx + 1];
+    if (next) showScreen(next.id);
+    return;
+  }
+  if (action === 'back') {
+    const prev = PART2_NARRATIVE_SEQUENCE[idx - 1];
+    if (prev) showScreen(prev.id);
+    return;
+  }
+  if (action === 'back_to_character') {
+    showScreen('part2-character');
+    return;
+  }
+  if (action === 'return_to_debrief') {
+    showScreen('debrief');
+    return;
+  }
+  if (action === 'back_to_title_or_replay') {
+    showScreen('title');
+    return;
+  }
+  if (action === 'contact_creators') {
+    window.location.href = 'mailto:aconcaguastonesentinel@gmail.com';
+  }
+}
+
+function renderPart2NarrativeScreen(screenId) {
+  const stepEl = document.querySelector(`#screen-${screenId} .part2-step`);
+  if (!stepEl) return;
+  const screen = PART2_NARRATIVE_SEQUENCE.find((item) => item.id === screenId);
+  if (!screen) return;
+
+  stepEl.className = `part2-step part2-anim-${screen.animationPreset || 'room_stillness'} part2-visual-${screen.visualMode || 'hotel-room'}${screen.variant === 'titleless' ? ' part2-step--titleless' : ''}`;
+  stepEl.setAttribute('data-animation-preset', screen.animationPreset || '');
+  stepEl.setAttribute('data-visual-mode', screen.visualMode || '');
+
+  stepEl.innerHTML = '';
+
+  const kicker = document.createElement('div');
+  kicker.className = 'part2-step-kicker';
+  kicker.textContent = screen.eyebrow || '';
+  stepEl.appendChild(kicker);
+
+  const hasTitle = screen.variant !== 'titleless' && (screen.title || '').trim() !== '';
+  if (hasTitle) {
+    const title = document.createElement('h3');
+    title.textContent = screen.title;
+    stepEl.appendChild(title);
+  }
+
+  const paragraphs = String(screen.body || '').split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  paragraphs.forEach((paragraph, index) => {
+    const p = document.createElement('p');
+    p.textContent = paragraph;
+    p.style.setProperty('--part2-paragraph-index', String(index));
+    if (PART2_BREATHING_LINES.has(paragraph)) p.classList.add('part2-breath-line');
+    stepEl.appendChild(p);
+  });
+
+  const actions = document.createElement('div');
+  actions.className = 'part2-step-actions';
+  (screen.navButtons || []).forEach((btnConfig) => {
+    const button = document.createElement('button');
+    button.className = btnConfig.role === 'primary' ? 'btn-primary' : 'btn-ghost';
+    button.textContent = btnConfig.label;
+    button.addEventListener('click', () => handlePart2NarrativeAction(screen.id, btnConfig.action));
+    actions.appendChild(button);
+  });
+  stepEl.appendChild(actions);
+}
+
 function confirmPart2Character() {
   if (G.finalOutcome !== 'Summit and Safe Return' && !hasPreviouslySummited()) {
     showScreen('debrief');
@@ -1361,7 +1647,7 @@ function confirmPart2Character() {
   // Guard: only proceed when Francisco + guided-normal-route are current
   if (!currentChar || currentChar.id !== 'francisco') return;
   if (!currentRoute || currentRoute.id !== 'guided-normal-route') return;
-  showScreen('part2-hotel');
+  showScreen('mendoza_room');
 }
 
 // ════════════════════════════════════════════════
@@ -3689,7 +3975,7 @@ function handleDeepLink() {
   const { screenId, params } = parsed;
 
   // Part 2 screens — bypass gating when &force=1 is present
-  const PART2_SCREEN_IDS = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const PART2_SCREEN_IDS = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
   if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
     try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
     updateRunState(G, { finalOutcome: 'Summit and Safe Return' });

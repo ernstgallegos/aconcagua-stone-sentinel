@@ -65,7 +65,7 @@ Add character-specific playable differentiation and expand Part 2 narrative setu
 - ✅ Daniela photo mechanic implemented in `prototype/web-v1/index.html` + `data/action_modifiers.json` with cooldown/cap and run-log instrumentation.
 - ✅ Character-specific decision timers implemented through `engine.decisionWindow` in `data/characters.json` with gradual penalties (no instant fail).
 - ✅ Late-activation perception behavior for Erik/Irina implemented via `engine.perceptionLatency` and resolver hooks in web-v1.
-- ✅ Part 2 narrative transition sequence implemented end-to-end (`part2-character` to `part2-closure`) with back/continue and safe exits.
+- ✅ Part 2 narrative transition sequence implemented end-to-end (`part2-character` to `future_cta`) with back/continue, debrief return paths, and collaboration CTA exits.
 - ✅ Legibility improvements shipped (contextual status stack, risk chips, debrief actionable cause, targeted microcopy).
 
 ---

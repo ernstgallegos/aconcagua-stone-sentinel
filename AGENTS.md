@@ -209,3 +209,5 @@ In addition to the changelog:
 - Modal accessibility in `web-v1` is more robust when all overlays (help, watch detail, field log) share one helper path with focus trap + focus return instead of bespoke open/close toggles per dialog.
 
 - Canonical character coherence is safest when `docs/es/Personajes_v_3.md` remains the source-of-truth and every English mirror/data-facing profile (`docs/en/characters_v_3_en.md`, `data/characters.json`, character-event narrative copy) is synced in the same commit to prevent roster drift (e.g., stray character swaps or profession/age mismatches).
+- Part 2 pre-threshold narrative rewrites are safer when represented as a single data contract (`id/eyebrow/title/body/variant/animationPreset/visualMode/navButtons`) rendered by one UI path; this preserves pacing controls (paragraph spacing, titleless beats, variable CTA counts) without duplicating static HTML cards.
+- When reducing narrative duration, prefer proportional compression per screen (not removing whole beats): keep canonical logistics anchors and closing cadence lines, then trim interior exposition so pacing drops without flattening tone.

@@ -14,6 +14,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added canonical `data/context_events.json` and wired web-v1 to load environment-event archetypes from data contracts (with runtime fallback defaults) instead of hardcoded UI-adjacent constants.
 - Added `prototype/web-v1/ui/helpers/startup-ui.js` and `prototype/web-v1/ui/helpers/routing.js` so startup blocking-error rendering and deep-link hash parsing/sync live outside the `screens.js` monolith.
 - Added startup failure-classification smoke tests (`prototype/web-v1/tests/smoke/model-ready.test.js`) and routing parser unit coverage (`prototype/web-v1/tests/unit/routing.test.js`).
+- Added a data-driven Part 2 contemplative narrative renderer in `prototype/web-v1/ui/screens.js` with paragraph-aware body layout, variable navigation button counts, titleless support, and action wiring for back/debrief/contact/replay flows.
 
 ### Changed
 - Clarified module ownership by moving turn-review log-entry shaping into `prototype/web-v1/ui/helpers/run-log.js` and keeping `ui/screens.js` as orchestration/render wiring only.
@@ -28,6 +29,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Synchronized canonical character framing across runtime and docs by aligning `data/characters.json` role/bio/trait profiles with the v3 character bible (`docs/es/Personajes_v_3.md`).
 - Rebased `data/character_events.json` narrative strings on canonical psychological arcs so contextual events reflect each character's defined dramatic tension.
 - Rewrote `docs/en/characters_v_3_en.md` to match the six-character canonical cast and interaction map from the Spanish master bible.
+- Replaced the legacy Part 2 bridge cards in `prototype/web-v1/index.html` with the canonical seven-screen pre-threshold Francisco sequence (`mendoza_room` → `future_cta`) and hooked subtle per-preset contemplative animation/visual treatments in `prototype/web-v1/css/screens.css`.
+- Updated Part 2 gating/deep-link/smoke coverage and references to the new narrative screen IDs in `prototype/web-v1/ui/screens.js`, `prototype/web-v1/tests/test_smoke_flow.py`, and `docs/deep-links.web-v1.md`.
+- Tightened Part 2 narrative pacing by rewriting the seven-screen Francisco text block to roughly half the previous reading length while preserving second-person voice, canonical logistics details, and pre-threshold scope.
 
 ### Fixed
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.

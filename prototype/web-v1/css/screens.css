@@ -796,6 +796,19 @@
   justify-content: center;
   text-align: center;
   flex: 1;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: part2ContainerIn 950ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 24%, transparent), color-mix(in srgb, var(--surface2) 20%, transparent));
+  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.part2-step > * {
+  position: relative;
+  z-index: 1;
 }
 
 .part2-step-kicker {
@@ -821,6 +834,9 @@
   margin: 0 auto 0.9rem;
   max-width: 620px;
   font-size: 1rem;
+  opacity: 0;
+  animation: part2ParagraphIn 760ms ease-out forwards;
+  animation-delay: calc(260ms + (var(--part2-paragraph-index, 0) * 160ms));
 }
 
 .part2-step-actions {
@@ -829,6 +845,74 @@
   gap: 0.75rem;
   justify-content: center;
   margin-top: 1.4rem;
+}
+
+.part2-step--titleless h3 {
+  display: none;
+}
+
+.part2-breath-line {
+  margin-top: 0.25rem;
+  margin-bottom: 1.15rem;
+}
+
+.part2-anim-room_stillness { animation-duration: 1080ms; }
+.part2-anim-room_stillness p { animation-delay: calc(330ms + (var(--part2-paragraph-index, 0) * 170ms)); }
+
+.part2-anim-lobby_drift::before,
+.part2-anim-social_fragments::before,
+.part2-anim-road_transition::before,
+.part2-anim-guided_stability::before,
+.part2-anim-night_breath::before,
+.part2-anim-future_hold::before,
+.part2-anim-room_stillness::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(127, 179, 200, 0.06), transparent 60%);
+  transform-origin: center;
+  animation: part2BackgroundDrift 16s ease-in-out infinite alternate;
+}
+
+.part2-anim-lobby_drift::before { animation-duration: 14s; }
+.part2-anim-social_fragments p { animation-delay: calc(220ms + (var(--part2-paragraph-index, 0) * 210ms)); }
+.part2-anim-guided_stability::before { animation-duration: 20s; opacity: 0.45; }
+.part2-anim-night_breath::before {
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.06), transparent 58%);
+  animation: part2BackgroundDrift 18s ease-in-out infinite alternate, part2NightBreath 7.5s ease-in-out infinite;
+}
+.part2-anim-road_transition::before { animation-duration: 12.5s; }
+.part2-anim-future_hold {
+  animation-duration: 1020ms;
+}
+.part2-anim-future_hold::before {
+  animation: none;
+  opacity: 0.28;
+}
+
+.part2-visual-dark-room {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 82%, #000 18%), color-mix(in srgb, var(--surface2) 88%, #000 12%));
+}
+
+@keyframes part2ContainerIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes part2ParagraphIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes part2BackgroundDrift {
+  from { transform: translateX(0px) scale(1.00); }
+  to { transform: translateX(6px) scale(1.03); }
+}
+
+@keyframes part2NightBreath {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.32; }
 }
 
 /* ══════════════════════════════════════

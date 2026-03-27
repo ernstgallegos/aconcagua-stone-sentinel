@@ -65,7 +65,7 @@ Agregar diferenciación jugable por personaje y ampliar preparación narrativa d
 - ✅ Mecánica fotográfica de Daniela implementada en `prototype/web-v1/index.html` + `data/action_modifiers.json` con cooldown/cupo e instrumentación en run-log.
 - ✅ Tiempos de decisión por personaje implementados con `engine.decisionWindow` en `data/characters.json` y penalizaciones graduales (sin fail instantáneo).
 - ✅ Activación perceptual tardía para Erik/Irina implementada con `engine.perceptionLatency` y hooks del resolvedor en web-v1.
-- ✅ Secuencia narrativa de transición Parte 2 implementada de punta a punta (`part2-character` a `part2-closure`) con back/continue y salidas seguras.
+- ✅ Secuencia narrativa de transición Parte 2 implementada de punta a punta (`part2-character` a `future_cta`) con rutas back/continue, retorno al debrief y CTA final de colaboración.
 - ✅ Mejoras de legibilidad desplegadas (stack contextual derecho, chips de riesgo, causa accionable en debrief y microcopy dirigido).
 
 ---
