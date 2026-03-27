@@ -46,6 +46,7 @@ Simulation inputs are loaded from `/data`:
 - `stage_modifiers.json`
 - `characters.json`
 - `character_events.json`
+- `context_events.json`
 - `outcomes.json`
 
 ## Scenario selection
@@ -105,5 +106,5 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Added one lightweight character-specific event per protagonist with modest systemic effects and narrative cues, without bypassing `resolveTurn(state, action)`.
 - Upgraded debrief with structured sections, run signature text, and a local turn-by-turn review panel plus one-click signature copy.
 - Expanded help overlay content with confidence semantics, retreat framing, and “How to read this game” guidance while preserving partial-information constraints.
-- Accessibility improvements include stronger focus-visible styles, keyboard-safe modal focus return behavior, and reduced-motion support hardening.
+- Accessibility improvements include stronger focus-visible styles, keyboard-safe modal focus trapping/return behavior, and reduced-motion support hardening.
 - Stabilized startup reliability with explicit blocking-error categories (missing file, HTTP failure, invalid shape, post-load validation) and a restrained loading status line that keeps model readiness visible before entering expedition setup.

@@ -41,7 +41,7 @@
   <div class="title-shell title-shell-minimal">
     <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
     </button>
-    <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Loading expedition model…</p>
+    <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Preparing mountain model…</p>
   </div>
 </section>
 
@@ -221,7 +221,7 @@
 
 <!-- WATCH DETAIL OVERLAY — full detail on demand (tap watch band) -->
 <div id="watch-detail-overlay" class="watch-detail-overlay" role="dialog" aria-modal="true" aria-label="Watch detail" aria-hidden="true">
-  <div class="watch-detail-dialog">
+  <div class="watch-detail-dialog" tabindex="-1">
     <div class="watch-detail-header">
       <img class="permit-photo" id="permit-photo" src="" alt="" aria-hidden="true" />
       <div class="watch-detail-identity">
@@ -287,7 +287,7 @@
 
 <!-- FIELD LOG OVERLAY — field log accessible via link -->
 <div id="field-log-overlay" class="field-log-overlay" role="dialog" aria-modal="true" aria-label="Field log" aria-hidden="true">
-  <div class="field-log-dialog">
+  <div class="field-log-dialog" tabindex="-1">
     <div class="field-log-header">
       <span class="field-log-title">Field Log</span>
       <button class="btn-link" type="button" onclick="closeFieldLog()" aria-label="Close field log">✕</button>

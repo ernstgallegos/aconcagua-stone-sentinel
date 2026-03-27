@@ -4,7 +4,7 @@ export function setStartupState(state, detail = '') {
   if (!statusEl) return;
 
   if (state === 'loading') {
-    statusEl.textContent = 'Loading expedition model…';
+    statusEl.textContent = 'Preparing mountain model…';
     statusEl.dataset.state = 'loading';
     if (beginBtn) {
       beginBtn.disabled = true;
@@ -14,7 +14,7 @@ export function setStartupState(state, detail = '') {
   }
 
   if (state === 'ready') {
-    statusEl.textContent = 'Model loaded. You can begin.';
+    statusEl.textContent = 'Model ready. Begin when prepared.';
     statusEl.dataset.state = 'ready';
     if (beginBtn) {
       beginBtn.disabled = false;
@@ -49,8 +49,11 @@ export function formatBlockingError(payload) {
   }
 
   const categoryLabels = {
-    'load failure': 'Required file could not be loaded.',
+    'missing file': 'A required data file is missing from the deployed bundle.',
+    'http failure': 'A required data file returned an HTTP error.',
+    'invalid json': 'A required data file could not be parsed as JSON.',
     'invalid shape': 'Required file was loaded but failed contract shape checks.',
+    'load failure': 'A required data file failed to load.',
     'post-load validation failure': 'Files loaded, but cross-file validation failed.',
   };
 

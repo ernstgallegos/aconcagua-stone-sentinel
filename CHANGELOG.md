@@ -23,11 +23,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated web-v1 event-plan bootstrapping so `buildEnvironmentEventPlan()` receives `DATA_CONFIG.contextEvents`, keeping event ownership in engine logic while preserving seed-based turn offsets.
 - Expanded parity/contract/engine tests to cover context-event schema integrity and docs/runtime authority consistency.
 - Improved title/startup UX with restrained loading state copy and model-readiness gating on the Begin CTA, keeping failure modes explicit without adding non-diegetic UI noise.
+- Hardened modal accessibility helpers with focus-trap support and applied them to help, watch-detail, and field-log overlays so keyboard navigation stays inside dialogs until closed.
+- Refined startup status microcopy to keep the loading/ready states calm and mountain-toned (`Preparing mountain model…`, `Model ready. Begin when prepared.`).
 
 ### Fixed
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
 - Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
 - Fixed blocking startup diagnostics to distinguish missing file, HTTP failure, invalid JSON/shape, and post-load contract validation failures with per-file detail in the fatal screen.
+- Fixed startup failure categorization to emit explicit `missing file`, `http failure`, and `invalid json` categories (instead of collapsing all non-shape errors into generic `load failure`).
+- Fixed web-v1 docs data-source drift by adding `data/context_events.json` to architecture/README source-of-truth lists.
 
 ### Security
 - No security-impacting changes in this release window.

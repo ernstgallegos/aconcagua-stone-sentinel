@@ -120,7 +120,7 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
     try {
       const response = await fetchImpl(path, { cache: 'no-store' });
       if (!response.ok) {
-        const kind = response.status === 404 ? 'missing file' : 'HTTP failure';
+        const kind = response.status === 404 ? 'missing file' : 'http failure';
         throw new Error(`[${kind}] ${path} (status ${response.status})`);
       }
       let data;
@@ -133,9 +133,19 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
       config[key] = data;
     } catch (error) {
       if (REQUIRED_CONFIG_FILES.has(key)) {
+        const missingFile = /^\[missing file\]/i.test(error.message);
+        const httpFailure = /^\[http failure\]/i.test(error.message);
         const invalidJson = /^\[invalid JSON\]/i.test(error.message);
         const shapeFailure = !invalidJson && /\$|expected/i.test(error.message);
-        const category = shapeFailure ? 'invalid shape' : 'load failure';
+        const category = missingFile
+          ? 'missing file'
+          : httpFailure
+            ? 'http failure'
+            : shapeFailure
+              ? 'invalid shape'
+              : invalidJson
+                ? 'invalid json'
+                : 'load failure';
         onError?.({
           category,
           file: path,
