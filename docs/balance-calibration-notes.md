@@ -155,28 +155,28 @@ A dedicated batch simulator for `web-v1` is now checked into the repository at `
 
 ---
 
-## Monte Carlo simulator results — v1.4.1 (2026-03)
+## Monte Carlo simulator results — v1.4.5 (2026-03)
 
 ### Run summary
 
-- **Date:** 2026-03-21
+- **Date:** 2026-03-27
 - **Total runs:** 1,500 (6 characters × 5 scenarios × 50 seeds each)
 - **Script:** `scripts/monte-carlo-web-v1.js`
-- **Engine version:** web-v1 / v1.4.1
+- **Engine version:** web-v1 / v1.4.5
 - **Policy:** `reasonablePolicy` (conservative AI agent)
 - **Difficulty:** Standard (neutral modifiers)
-- **Full report:** `docs/playtest-results/monte-carlo-v1.4.1.md`
+- **Full report:** `docs/playtest-results/monte-carlo-v1.4.5.md`
 
 ### Per-character summary
 
 | Character | Summit | Retreat | Collapse | Permit |
 |---|---:|---:|---:|---:|
-| Francisco Aguirre | 1.2% | 28.0% | 56.4% | 3.2% |
-| Laura Kim | 3.6% | 30.4% | 57.2% | 3.2% |
-| Erik Lundvall | 2.4% | 30.0% | 56.0% | 4.8% |
-| Daniela De Rossi | 0.0% | 29.2% | 61.2% | 4.0% |
-| Blake Harris | 0.0% | 32.8% | 60.8% | 2.4% |
-| Irina Orlova | 2.4% | 30.4% | 56.8% | 3.2% |
+| Francisco Aguirre | 1.2% | 28.0% | 56.8% | 4.0% |
+| Laura Kim | 3.6% | 30.4% | 54.8% | 3.6% |
+| Erik Lundvall | 2.4% | 30.0% | 54.4% | 4.8% |
+| Daniela De Rossi | 0.0% | 29.2% | 62.8% | 2.8% |
+| Blake Harris | 0.0% | 32.4% | 63.6% | 1.6% |
+| Irina Orlova | 2.4% | 30.4% | 51.6% | 4.8% |
 
 ### Interpretation
 
@@ -192,4 +192,4 @@ The simulator should be used to detect **structural regressions** (0% summit rat
 
 ### All characters within target bands?
 
-No — 25 band violations across 6 characters. All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.1.md` for the full violation table.
+No — 25 band violations across 6 characters. All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.5.md` for the full violation table.

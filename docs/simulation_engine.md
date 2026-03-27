@@ -98,6 +98,8 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 
 `Rescue` is a real system outcome and is logged.
 
+The Monte Carlo harness (`scripts/monte-carlo-web-v1.js`) reads canonical outcomes directly from `data/outcomes.json` so simulation reporting and runtime terminal taxonomy stay synchronized.
+
 ## Run log contract
 
 `run_log.json` logs per turn from the engine with at least:

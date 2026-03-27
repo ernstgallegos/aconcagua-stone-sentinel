@@ -88,7 +88,7 @@ Validar estabilidad sistémica, comunicación pública y readiness de distribuci
 
 ### Estado real de avance
 - ✅ Harness de playtest Monte Carlo agregado (`scripts/monte-carlo-web-v1.js`) — simulador headless que corre los 6 personajes × 5 escenarios × 50 semillas cada uno.
-- ✅ Verificación de distribución de win rate automatizada con `npm run simulate` — resultados documentados en `docs/playtest-results/monte-carlo-v1.4.1.md`.
+- ✅ Verificación de distribución de win rate automatizada con `npm run simulate` — resultados documentados en `docs/playtest-results/monte-carlo-v1.4.5.md`.
 - ✅ Deploy Vercel configurado (`vercel.json` presente con redirección a `prototype/web-v1/index.html`).
 - 🔲 Texto público de presentación (pendiente).
 
