@@ -207,3 +207,5 @@ In addition to the changelog:
 - Startup hardening is cleaner when required-data error typing (missing/HTTP/shape/post-load) stays in `ui/helpers/data-config.js` and fatal/loading copy rendering is isolated in a UI helper (`ui/helpers/startup-ui.js`), keeping `screens.js` orchestration-focused and easier to audit.
 - Startup diagnostics are more actionable when `invalid JSON` is emitted as its own category (not merged into generic load failures), so fatal screens and smoke tests can distinguish transport vs. parse vs. contract defects.
 - Modal accessibility in `web-v1` is more robust when all overlays (help, watch detail, field log) share one helper path with focus trap + focus return instead of bespoke open/close toggles per dialog.
+
+- Canonical character coherence is safest when `docs/es/Personajes_v_3.md` remains the source-of-truth and every English mirror/data-facing profile (`docs/en/characters_v_3_en.md`, `data/characters.json`, character-event narrative copy) is synced in the same commit to prevent roster drift (e.g., stray character swaps or profession/age mismatches).

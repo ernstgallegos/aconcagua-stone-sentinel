@@ -3,84 +3,175 @@
     "id": "francisco-rhythm-check",
     "category": "onset_context",
     "characterId": "francisco",
-    "trigger": { "actions": ["advance"], "stages": ["HIGH_CAMP", "SUMMIT_DAY"], "minPersistenceTurns": 3 },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt" },
-    "effects": { "fatigueDelta": -2, "confidenceDelta": 2 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 4, "maxPerRun": 2 },
+    "trigger": {
+      "actions": [
+        "advance"
+      ],
+      "stages": [
+        "HIGH_CAMP",
+        "SUMMIT_DAY"
+      ],
+      "minPersistenceTurns": 3
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": -2,
+      "confidenceDelta": 2
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 4,
+      "maxPerRun": 2
+    },
     "telemetryTag": "char-francisco-rhythm-check",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Francisco reins in pace to protect the return corridor.",
+    "narrative": "Francisco eases the surge and chooses listening over mandate, preserving return discipline.",
     "notes": "Persistence modulation only; no direct outcome assignment."
   },
   {
     "id": "laura-clock-discipline",
     "category": "pacing_hesitation",
     "characterId": "laura",
-    "trigger": { "actions": ["wait"], "minTurn": 6 },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt" },
-    "effects": { "confidenceDelta": 4 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 3, "maxPerRun": 3 },
+    "trigger": {
+      "actions": [
+        "wait"
+      ],
+      "minTurn": 6
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "confidenceDelta": 4
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 3,
+      "maxPerRun": 3
+    },
     "telemetryTag": "char-laura-clock-discipline",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Laura pauses deliberately to recover signal quality before committing.",
+    "narrative": "Laura trusts an imperfect-but-timely diagnosis and stabilizes group decision clarity.",
     "notes": "Timing clarity event; bounded confidence modulation."
   },
   {
     "id": "irina-noise-filter",
     "category": "pressure_interpretation",
     "characterId": "irina",
-    "trigger": { "actions": ["advance", "advance_slowly"], "minWeatherSeverity": 2 },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt" },
-    "effects": { "confidenceDelta": -3, "exposureDelta": 1 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 4, "maxPerRun": 2 },
+    "trigger": {
+      "actions": [
+        "advance",
+        "advance_slowly"
+      ],
+      "minWeatherSeverity": 2
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "confidenceDelta": -3,
+      "exposureDelta": 1
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 4,
+      "maxPerRun": 2
+    },
     "telemetryTag": "char-irina-noise-filter",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Irina filters noisy cues and accepts slower certainty.",
+    "narrative": "Irina resists protocol autopilot and re-reads this mountain before committing.",
     "notes": "Strong body with interpretation friction preserved."
   },
   {
     "id": "erik-ego-check",
     "category": "body_mind_drift",
     "characterId": "erik",
-    "trigger": { "actions": ["advance_slowly"], "stages": ["SUMMIT_DAY"] },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt" },
-    "effects": { "fatigueDelta": -1, "confidenceDelta": 1 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 3, "maxPerRun": 2 },
+    "trigger": {
+      "actions": [
+        "advance_slowly"
+      ],
+      "stages": [
+        "SUMMIT_DAY"
+      ]
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": -1,
+      "confidenceDelta": 1
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 3,
+      "maxPerRun": 2
+    },
     "telemetryTag": "char-erik-ego-check",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Erik accepts measured progress to preserve reserve capacity.",
+    "narrative": "Erik yields space to situational reading and protects reserves over prestige pace.",
     "notes": "Competence stays but ego-filter discipline is bounded."
   },
   {
     "id": "daniela-photo-read",
     "category": "observation",
     "characterId": "daniela",
-    "trigger": { "actions": ["shoot_photo"], "maxFunctionalCapacity": 60 },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt", "requiresAction": "shoot_photo" },
-    "effects": { "confidenceDelta": 4, "exposureDelta": 1 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 4, "maxPerRun": 2 },
+    "trigger": {
+      "actions": [
+        "shoot_photo"
+      ],
+      "maxFunctionalCapacity": 60
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt",
+      "requiresAction": "shoot_photo"
+    },
+    "effects": {
+      "confidenceDelta": 4,
+      "exposureDelta": 1
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 4,
+      "maxPerRun": 2
+    },
     "telemetryTag": "char-daniela-photo-read",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Daniela's photo sharpens local interpretation but costs exposure time.",
+    "narrative": "Daniela turns observation into actionable signal, trading comfort for sharper terrain reading.",
     "notes": "Observation bonus remains partial-information bounded."
   },
   {
     "id": "blake-supply-reckoning",
     "category": "onset_context",
     "characterId": "blake",
-    "trigger": { "actions": ["advance"], "maxWater": 4 },
-    "conditions": { "mountainAuthority": "never_bypass_ep_bt" },
-    "effects": { "fatigueDelta": 2, "confidenceDelta": -2 },
-    "limits": { "oncePerRun": false, "cooldownTurns": 3, "maxPerRun": 2 },
+    "trigger": {
+      "actions": [
+        "advance"
+      ],
+      "maxWater": 4
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 2,
+      "confidenceDelta": -2
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 3,
+      "maxPerRun": 2
+    },
     "telemetryTag": "char-blake-supply-reckoning",
     "visibleToPlayer": true,
     "hiddenFromPlayer": false,
-    "narrative": "Blake's push reveals logistics debt and raises fatigue pressure.",
+    "narrative": "Blake confronts logistics reality: determination without resource discipline raises collapse risk.",
     "notes": "Determination under deficit; logistics pressure stays systemic."
   }
 ]
