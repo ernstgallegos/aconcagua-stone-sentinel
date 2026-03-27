@@ -60,6 +60,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         for screen in [
             'title', 'expedition-setup',
             'game', 'debrief', 'summit-success', 'part2-character',
+            'mendoza_room', 'team_presentation', 'after_circle', 'guides', 'briefing_night', 'departure_road', 'future_cta',
         ]:
             page.wait_for_selector(f'#screen-{screen}', state='attached')
 
@@ -127,7 +128,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         expect_disabled(page, '#btn-part2-confirm', False)
 
         page.click('#btn-part2-confirm')
-        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-part2-hotel'")
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-mendoza_room'")
 
         browser.close()
 
