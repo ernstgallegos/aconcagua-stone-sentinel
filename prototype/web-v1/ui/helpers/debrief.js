@@ -51,3 +51,24 @@ export function buildRunSignature({ characterName, scenarioName, seed, turns, hi
     `Dominant risk axis: ${dominantRiskAxis || '—'}`,
   ].join('\n');
 }
+
+
+export function buildSignalInterpretationHint(entry = {}) {
+  const flags = entry.flags || [];
+  const trend = entry.trend || 'uncertain';
+  const uncertainty = entry.uncertainty || 'medium confidence';
+
+  if (flags.includes('decision-window-exceeded')) {
+    return 'Reading hint: late decisions degrade signal reliability even on stable-looking turns.';
+  }
+  if (trend === 'worsening fast' || trend === 'worsening') {
+    return 'Reading hint: worsening trend means body/time debt can outrun one favorable weather moment.';
+  }
+  if (uncertainty === 'low confidence' || flags.includes('late-signal-lock-in')) {
+    return 'Reading hint: low confidence is a warning to prefer resilient choices (wait/descend) over forced gains.';
+  }
+  if (entry.decision === 'wait' || entry.decision === 'descend') {
+    return 'Reading hint: conservative turns are valid when they preserve return margin and body stability.';
+  }
+  return 'Reading hint: one good turn helps, but trend plus body drift determines whether momentum is real.';
+}

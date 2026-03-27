@@ -1,5 +1,19 @@
 import { clamp } from './turn-resolution.js';
 
+// Engine ownership: this module is the canonical event-effect layer.
+// UI may trigger these helpers but cannot bypass their bounded effects.
+const CHARACTER_EVENT_BOUNDS = Object.freeze({
+  fatigueDelta: { min: -3, max: 3 },
+  exposureDelta: { min: -3, max: 3 },
+  confidenceDelta: { min: -5, max: 5 },
+});
+
+const CONTEXT_EVENT_BOUNDS = Object.freeze({
+  weatherDelta: { min: -1, max: 1 },
+  visibilityDelta: { min: -1, max: 1 },
+  timePenalty: { min: 0, max: 30 },
+});
+
 const DEFAULT_CONTEXT_EVENT_ARCHETYPES = [
   { id: 'calm-opening', category: 'context', icon: '◌', label: 'Calm opening', trigger: { turns: [1, 2, 3] }, effects: { weatherDelta: -1, visibilityDelta: 0, timePenalty: 0 }, telemetryTag: 'ctx-calm-opening', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
   { id: 'rising-wind', category: 'context', icon: '↟', label: 'Rising wind', trigger: { turns: [6, 7, 8] }, effects: { weatherDelta: 1, visibilityDelta: -1, timePenalty: 0 }, telemetryTag: 'ctx-rising-wind', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
@@ -8,9 +22,29 @@ const DEFAULT_CONTEXT_EVENT_ARCHETYPES = [
   { id: 'summit-window-tightening', category: 'context', icon: '⌛', label: 'Summit window tightening', trigger: { turns: [14, 15], stages: ['SUMMIT_DAY'] }, effects: { weatherDelta: 1, visibilityDelta: 0, timePenalty: 20 }, telemetryTag: 'ctx-summit-window-tightening', visibleToPlayer: true, hiddenFromPlayer: false, limits: { maxPerRun: 1 } },
 ];
 
+function clampBounded(value, bounds) {
+  return clamp(Number(value || 0), bounds.min, bounds.max);
+}
+
+function sanitizeCharacterEffects(effects = {}) {
+  return {
+    fatigueDelta: clampBounded(effects.fatigueDelta, CHARACTER_EVENT_BOUNDS.fatigueDelta),
+    exposureDelta: clampBounded(effects.exposureDelta, CHARACTER_EVENT_BOUNDS.exposureDelta),
+    confidenceDelta: clampBounded(effects.confidenceDelta, CHARACTER_EVENT_BOUNDS.confidenceDelta),
+  };
+}
+
+function sanitizeContextEffects(effects = {}, fallback = {}) {
+  return {
+    weatherDelta: clampBounded(effects.weatherDelta ?? fallback.weatherDelta, CONTEXT_EVENT_BOUNDS.weatherDelta),
+    visibilityDelta: clampBounded(effects.visibilityDelta ?? fallback.visibilityDelta, CONTEXT_EVENT_BOUNDS.visibilityDelta),
+    timePenalty: clampBounded(effects.timePenalty ?? fallback.timePenalty, CONTEXT_EVENT_BOUNDS.timePenalty),
+  };
+}
+
 function normalizeContextArchetype(event) {
   const trigger = event?.trigger || {};
-  const effects = event?.effects || {};
+  const normalizedEffects = sanitizeContextEffects(event?.effects || {}, event || {});
   return {
     id: event.id,
     category: event.category || 'context',
@@ -20,11 +54,7 @@ function normalizeContextArchetype(event) {
       turns: Array.isArray(trigger.turns) ? trigger.turns : Array.isArray(event.turns) ? event.turns : [],
       stages: Array.isArray(trigger.stages) ? trigger.stages : [],
     },
-    effects: {
-      weatherDelta: Number(effects.weatherDelta ?? event.weatherDelta ?? 0),
-      visibilityDelta: Number(effects.visibilityDelta ?? event.visibilityDelta ?? 0),
-      timePenalty: Number(effects.timePenalty ?? event.timePenalty ?? 0),
-    },
+    effects: normalizedEffects,
     telemetryTag: event.telemetryTag,
     visibleToPlayer: event.visibleToPlayer ?? true,
     hiddenFromPlayer: event.hiddenFromPlayer ?? false,
@@ -67,16 +97,15 @@ export function applyContextEvent({ turn, action, stage, state, environmentEvent
   if (!active || action === 'sleep') return null;
   if (active.trigger?.stages?.length && !active.trigger.stages.includes(stage)) return null;
 
-  const effect = active.effects || {};
-  state.weather_severity = clamp(state.weather_severity + (effect.weatherDelta ?? active.weatherDelta ?? 0), 0, 4);
-  state.visibility = clamp(state.visibility + (effect.visibilityDelta ?? active.visibilityDelta ?? 0), 0, 3);
-  const timePenaltyCandidate = effect.timePenalty ?? active.timePenalty ?? 0;
-  const appliedTimePenalty = timePenaltyCandidate && stage === 'SUMMIT_DAY' ? timePenaltyCandidate : 0;
+  const effect = sanitizeContextEffects(active.effects || {}, active);
+  state.weather_severity = clamp(state.weather_severity + effect.weatherDelta, 0, 4);
+  state.visibility = clamp(state.visibility + effect.visibilityDelta, 0, 3);
+  const appliedTimePenalty = effect.timePenalty && stage === 'SUMMIT_DAY' ? effect.timePenalty : 0;
 
   return {
     ...active,
-    weatherDelta: effect.weatherDelta ?? active.weatherDelta ?? 0,
-    visibilityDelta: effect.visibilityDelta ?? active.visibilityDelta ?? 0,
+    weatherDelta: effect.weatherDelta,
+    visibilityDelta: effect.visibilityDelta,
     timePenalty: appliedTimePenalty,
   };
 }
@@ -106,13 +135,16 @@ export function applyCharacterEvent({ G, state, action, stage, flags, characterE
   for (const event of available) {
     const snapshot = eventState[event.id] || { uses: 0, lastTurn: -999 };
     const limits = event.limits || { cooldownTurns: 0, maxPerRun: 1 };
-    if (snapshot.uses >= (limits.maxPerRun ?? 1)) continue;
-    if (G.turn - snapshot.lastTurn < (limits.cooldownTurns ?? 0)) continue;
+    const maxPerRun = Math.max(1, Number(limits.maxPerRun ?? 1));
+    const cooldownTurns = Math.max(0, Number(limits.cooldownTurns ?? 0));
+
+    if (snapshot.uses >= maxPerRun) continue;
+    if (G.turn - snapshot.lastTurn < cooldownTurns) continue;
     if (!eventMatchesTrigger(event, { G, state, action, stage })) continue;
 
-    const effects = event.effects || {};
-    state.fatigue = clamp(state.fatigue + (effects.fatigueDelta || 0), 0, 100);
-    state.exposure = clamp(state.exposure + (effects.exposureDelta || 0), 0, 100);
+    const effects = sanitizeCharacterEffects(event.effects || {});
+    state.fatigue = clamp(state.fatigue + effects.fatigueDelta, 0, 100);
+    state.exposure = clamp(state.exposure + effects.exposureDelta, 0, 100);
     if (effects.confidenceDelta) {
       G.characterConfidenceDrift = clamp((G.characterConfidenceDrift || 0) + effects.confidenceDelta, -12, 12);
     }

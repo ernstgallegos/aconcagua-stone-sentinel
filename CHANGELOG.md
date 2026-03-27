@@ -10,14 +10,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added focused event hardening and parity suites: `character-events-coverage`, `event-nondominance`, and `repo-truth-guarantees` tests to enforce bounded effects, cooldown/max-per-run behavior, and documented-repo guarantees.
 - Added canonical `data/context_events.json` and wired web-v1 to load environment-event archetypes from data contracts (with runtime fallback defaults) instead of hardcoded UI-adjacent constants.
 
 ### Changed
+- Clarified module ownership by moving turn-review log-entry shaping into `prototype/web-v1/ui/helpers/run-log.js` and keeping `ui/screens.js` as orchestration/render wiring only.
+- Strengthened event boundedness in `prototype/web-v1/engine/events-core.js` with explicit per-effect clamps for context/character events plus sanitized cooldown/max-per-run handling, preventing hidden authority drift from data misconfiguration.
+- Expanded `docs/repo-truth.md` with a “Guaranteed by tests” section and tightened `docs/simulation_engine.md` legacy wording to explicitly scope remaining v1.3 compatibility contracts.
 - Strengthened domain/data contracts to include context-event trigger/effect/limits typing, aliased `CharacterEventLimits`, and enforced `contextEvents` validation in both TS and UI data-load validators.
 - Updated web-v1 event-plan bootstrapping so `buildEnvironmentEventPlan()` receives `DATA_CONFIG.contextEvents`, keeping event ownership in engine logic while preserving seed-based turn offsets.
 - Expanded parity/contract/engine tests to cover context-event schema integrity and docs/runtime authority consistency.
 
 ### Fixed
+- Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
 - Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
 
 ### Security

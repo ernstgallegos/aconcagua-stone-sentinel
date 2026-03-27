@@ -45,8 +45,19 @@ Canonical outcomes are defined by `data/outcomes.json` and enforced by the resol
 - `data/*.json`: simulation tuning and bounded event contracts (including `data/context_events.json` and `data/character_events.json`).
 - `prototype/web-v1/engine/*`: canonical deterministic turn mechanics.
 - `prototype/web-v1/ui/*`: rendering, input wiring, and non-authoritative presentation.
+- `prototype/web-v1/ui/helpers/run-log.js`: run-log serialization/export shape for debrief review and downloadable `run_log.json`.
 - `docs/repo-truth.md`: canonical repo status baseline; parity-tested.
 - `CHANGELOG.md`: release and unreleased change ledger.
 
 ## Canonical turn authority statement
 No UI path, helper, or event layer may directly assign terminal outcomes or bypass EP/BT/delta flow. All consequential outcomes must emerge through `resolveTurn(state, action)`.
+
+## Guaranteed by tests
+The following claims are explicitly parity/contract tested in `prototype/web-v1/tests/parity/*.test.js` and related integration suites:
+- Active prototype remains `prototype/web-v1`.
+- Frozen compatibility artifact remains `prototype/mra-v0`.
+- Public version stays synchronized across `package.json`, UI labels, and this document.
+- Part 1 roster keeps six active characters.
+- Canonical outcomes listed here match `data/outcomes.json`.
+- Canonical turn authority remains `resolveTurn(state, action)` with enforced resolver pipeline order.
+- Live vs deferred boundary remains explicit: Part 1 playable now; Part 2 public bridge is preview/deferred beyond guided transfer.

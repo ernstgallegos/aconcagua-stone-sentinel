@@ -3,8 +3,8 @@ import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } f
 import { calculateEnvironmentalPressureScore, calculateBodyToleranceScore } from '../engine/pressure-model.js';
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
 import { buildHelpSections } from './helpers/help-overlay-content.js';
-import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature } from './helpers/debrief.js';
-import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper } from './helpers/run-log.js';
+import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature, buildSignalInterpretationHint } from './helpers/debrief.js';
+import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper, buildTurnLogEntry } from './helpers/run-log.js';
 import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
@@ -2970,35 +2970,21 @@ function makeDecision(decision) {
   renderWatch();
   const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
 
-  const logEntry = {
-    turn: G.turn,
-    day: G.day,
-    time: formatMinutes(G.minutesOfDay),
-    position: s.position,
-    node: s.position,
+  const logEntry = buildTurnLogEntry({
+    G,
+    state: s,
     stage: getCurrentStage(),
-    decision: resolvedDecision,
-    trend: G.signals.trend,
-    uncertainty: G.signals.uncertainty,
-    body: { capacity: capacityLabel(s.functional_capacity), fatigue: fatigueLabel(s.fatigue), exposure: exposureLabel(s.exposure) },
-    raw: { capacity: s.functional_capacity, fatigue: s.fatigue, exposure: s.exposure, weatherSeverity: s.weather_severity },
-    pressure: {
-      mountainPressure: pressureBandLabel(turnResult.result?.pressureDelta + calculateBodyTolerance(s)),
-      deltaLabel: pressureDeltaLabel(turnResult.result?.pressureDelta),
-    },
-    flags: [...turnResult.flags],
-    blocked: turnResult.result.blocked,
-    moved: turnResult.result.moved,
-    decisionMs: G.decisionTimeSpentMs,
-    decisionWindowExceeded: G.decisionWindowExceeded,
-    decisionWindowEffect: G.decisionWindowEffect,
-    onboardingLayer: G.onboardingLayer,
-    primaryAlert: G.currentPrimaryAlert,
-    lateSignalActivation: turnResult.lateSignalEvent,
-    warningState: G.currentPrimaryAlert,
-    contextEvent: turnResult.contextEvent || G.activeEnvironmentEvent,
+    resolvedDecision,
+    turnResult,
     narrativeText,
-  };
+    formatMinutes,
+    capacityLabel,
+    fatigueLabel,
+    exposureLabel,
+    pressureBandLabel,
+    pressureDeltaLabel,
+    calculateBodyTolerance,
+  });
   updateRunState(G, {
     turnLog: [...G.turnLog, logEntry],
     allFlags: [...G.allFlags, ...turnResult.flags],
@@ -3290,11 +3276,13 @@ function updateRunReviewPanel(index = 0) {
   updateRunState(G, { reviewTurnIndex: safeIndex });
   const entry = entries[safeIndex];
   indexEl.textContent = `${safeIndex + 1} / ${entries.length}`;
+  const readingHint = buildSignalInterpretationHint(entry);
   root.textContent = `T${entry.turn} · Day ${entry.day} ${entry.time} · ${POS_LABELS[entry.position]}
 Action: ${entry.decision} · ${entry.trend}/${entry.uncertainty}
 Body: ${entry.body.capacity}, ${entry.body.fatigue}, ${entry.body.exposure}
 Flags: ${(entry.flags || []).join(', ') || 'none'}
-Note: ${entry.narrativeText || '—'}`;
+Note: ${entry.narrativeText || '—'}
+${readingHint}`;
 }
 
 
