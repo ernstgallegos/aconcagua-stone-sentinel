@@ -10,21 +10,34 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- Added `docs/repo-truth.md` as the canonical repository truth baseline (active/frozen prototypes, roster truth, canonical outcomes, source-of-truth map, resolver authority statement).
-- Added bounded character-event data contracts in `data/character_events.json` for all six active Part 1 characters, including trigger/effect/limit/telemetry definitions.
-- Added minimal TypeScript scaffolding for engine-first migration (`tsconfig.json`, `prototype/web-v1/src/**`) with domain/data-contract types and boot/engine module boundaries.
-- Added structured test taxonomy suites under `prototype/web-v1/tests/{unit,integration,regression,contracts,parity,smoke}` for event bounds, data contracts, deterministic seeds, repo-truth parity, and boot readiness.
+- None.
 
 ### Changed
-- Changed web-v1 runtime data loading in `prototype/web-v1/ui/screens.js` to use extracted helper modules for data loading/validation/normalization/selectors, reducing monolithic UI ownership.
-- Changed character-event resolution to a formal data-backed path with cooldown/cap enforcement and telemetry-state tracking (`characterEventState`), including Daniela `shoot_photo` integration through contract data.
-- Changed canonical public version references to `v1.4.4` across package metadata, UI labels, and architecture/simulation/prototype/readme status docs.
+- None.
 
 ### Fixed
-- Fixed blocking/runtime drift risk by making `data/character_events.json` a required model dependency with fail-fast validation in the load pipeline.
+- None.
 
 ### Security
 - No security-impacting changes in this release window.
+
+## [1.4.5] — 2026-03
+
+### Added
+- Added `prototype/web-v1/engine/events-core.js` as the non-UI ownership layer for contextual event planning/application and character-event trigger/effect/limit resolution.
+- Added stronger runtime data-contract assertions in `prototype/web-v1/src/types/data-contracts.ts` for route node shape, event category validation, and mandatory event limits/telemetry tags.
+- Added explicit event-contract metadata fields in `data/character_events.json` (`conditions`, `visibleToPlayer`, `hiddenFromPlayer`, `oncePerRun`, `notes`) while keeping bounded systemic effects.
+
+### Changed
+- Changed `prototype/web-v1/ui/helpers/events.js` to delegate systemic event mutations to `engine/events-core.js`, keeping UI helpers as thin orchestration wrappers.
+- Expanded TypeScript domain contracts in `prototype/web-v1/src/types/domain.ts` with explicit interfaces for `ContextualAction`, `BodyToleranceResult`, event triggers/effects/limits, and richer run-log/context-event typing.
+- Updated canonical public version references to `v1.4.5` across package metadata, UI labels, and status docs (`README*`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`).
+
+### Fixed
+- Fixed event/data drift risk by testing the expanded character-event contract fields in `prototype/web-v1/tests/contracts/data-contracts.test.js`.
+
+### Security
+- No security-impacting changes in this release.
 
 ## [1.4.3] — 2026-03
 

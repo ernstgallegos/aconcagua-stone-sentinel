@@ -1,6 +1,6 @@
 # Repository Truth — Canonical Runtime and Documentation Contract
 
-_Last updated: March 26, 2026._
+_Last updated: March 27, 2026._
 
 ## Active prototype
 - **Canonical active prototype:** `prototype/web-v1`.
@@ -10,7 +10,7 @@ _Last updated: March 26, 2026._
 - **Frozen compatibility artifact:** `prototype/mra-v0` (no feature evolution; compatibility/test touch only).
 
 ## Public canonical version
-- **Public canonical version after this sprint:** `v1.4.4`.
+- **Public canonical version after this sprint:** `v1.4.5`.
 - Source-of-version truth: `package.json` + `package-lock.json`, mirrored in UI/docs/changelog.
 
 ## Roster truth

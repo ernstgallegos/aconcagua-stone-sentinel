@@ -26,9 +26,22 @@ test('character event contract includes all six active characters', async () => 
   ['francisco', 'laura', 'irina', 'erik', 'daniela', 'blake'].forEach((id) => {
     assert.equal(charIds.has(id), true, `${id} requires at least one event`);
   });
+
+  const allowedCategories = new Set([
+    'onset_context',
+    'pressure_interpretation',
+    'pacing_hesitation',
+    'observation',
+    'body_mind_drift',
+  ]);
+
   events.forEach((event) => {
     assert.ok(event.limits?.maxPerRun >= 1);
     assert.ok(event.limits?.cooldownTurns >= 0);
     assert.equal(typeof event.telemetryTag, 'string');
+    assert.equal(typeof event.visibleToPlayer, 'boolean');
+    assert.equal(typeof event.hiddenFromPlayer, 'boolean');
+    assert.equal(typeof event.conditions?.mountainAuthority, 'string');
+    assert.equal(allowedCategories.has(event.category), true);
   });
 });

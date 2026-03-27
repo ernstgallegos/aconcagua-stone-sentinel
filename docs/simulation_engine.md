@@ -1,9 +1,9 @@
 # Simulation Engine — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.4]`](../CHANGELOG.md#144--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.5]`](../CHANGELOG.md#145--2026-03).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.4** with legacy v1.3 contracts preserved where still applicable.
+> - Current public build is **v1.4.5** with legacy v1.3 contracts preserved where still applicable.
 
 
 ## Core authority
@@ -168,7 +168,7 @@ Night (22:00–06:00) + ts=3 = +120 EP. Intentional design: don't be at high cam
 At extreme pressure (eff=52): advance → 15.4% collapse. Severe weather is dangerous, not instantly lethal.
 
 
-## v1.4.4 event layer
+## v1.4.5 event layer
 
 A lightweight, reproducible environment-event layer now runs during `apply-weather-and-persistence` in `resolveTurn()`.
 
