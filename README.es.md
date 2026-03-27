@@ -306,6 +306,7 @@ aconcaguastonesentinel@gmail.com
 El prototipo activo canónico es **`prototype/web-v1` (v1.4.5 estado público)**.
 
 - `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.4.5 en despliegue público.
+  - Los contratos de arranque son estrictos: los archivos de modelo requeridos deben cargar y validar antes de jugar; los fallos bloqueantes muestran archivo/categoría de diagnóstico.
 - `prototype/mra-v0/`: MRA histórico congelado para validación temprana de hipótesis.
 - Visor raíz del repositorio: capa de reproducción/visualización de corridas bundleadas.
 

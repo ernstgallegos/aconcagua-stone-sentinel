@@ -11,6 +11,17 @@ const DEFAULT_CONFIG = Object.freeze({
 });
 
 const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
+const FILE_PATH_BY_KEY = Object.freeze({
+  nodes: '../../data/nodes.json',
+  environmentalPressure: '../../data/environmental_pressure_config.json',
+  actionModifiers: '../../data/action_modifiers.json',
+  stageModifiers: '../../data/stage_modifiers.json',
+  characters: '../../data/characters.json',
+  characterEvents: '../../data/character_events.json',
+  contextEvents: '../../data/context_events.json',
+  outcomes: '../../data/outcomes.json',
+  scenariosWebV1: '../../data/scenarios.web-v1.json',
+});
 
 function typeOfValue(value) {
   if (Array.isArray(value)) return 'array';
@@ -102,29 +113,35 @@ export function createDefaultDataConfig() {
 }
 
 export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
-  const files = [
-    ['nodes', '../../data/nodes.json'],
-    ['environmentalPressure', '../../data/environmental_pressure_config.json'],
-    ['actionModifiers', '../../data/action_modifiers.json'],
-    ['stageModifiers', '../../data/stage_modifiers.json'],
-    ['characters', '../../data/characters.json'],
-    ['characterEvents', '../../data/character_events.json'],
-    ['contextEvents', '../../data/context_events.json'],
-    ['outcomes', '../../data/outcomes.json'],
-    ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
-  ];
+  const files = Object.entries(FILE_PATH_BY_KEY);
 
   const config = createDefaultDataConfig();
   for (const [key, path] of files) {
     try {
       const response = await fetchImpl(path, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-      const data = await response.json();
+      if (!response.ok) {
+        const kind = response.status === 404 ? 'missing file' : 'HTTP failure';
+        throw new Error(`[${kind}] ${path} (status ${response.status})`);
+      }
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        throw new Error(`[invalid JSON] ${path} (${parseError.message})`);
+      }
       validateDataConfigShape(key, data);
       config[key] = data;
     } catch (error) {
       if (REQUIRED_CONFIG_FILES.has(key)) {
-        onError?.(`Blocking data load failure in ${path}: ${error.message}`);
+        const invalidJson = /^\[invalid JSON\]/i.test(error.message);
+        const shapeFailure = !invalidJson && /\$|expected/i.test(error.message);
+        const category = shapeFailure ? 'invalid shape' : 'load failure';
+        onError?.({
+          category,
+          file: path,
+          detail: error.message,
+          message: `Blocking data ${category} in ${path}: ${error.message}`,
+        });
         return null;
       }
     }
@@ -133,7 +150,12 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
   try {
     validateLoadedDataConfig(config);
   } catch (error) {
-    onError?.(`Blocking data contract validation failure: ${error.message}`);
+    onError?.({
+      category: 'post-load validation failure',
+      file: 'runtime model contract',
+      detail: error.message,
+      message: `Blocking data contract validation failure: ${error.message}`,
+    });
     return null;
   }
   return config;
