@@ -53,6 +53,7 @@ test('context event contract is bounded and mountain-first', async () => {
   assert.ok(events.length >= 4, 'requires multiple context archetypes');
   events.forEach((event) => {
     assert.equal(event.category, 'context');
+    assert.equal(typeof event.label, 'string');
     assert.ok(Array.isArray(event.trigger?.turns) && event.trigger.turns.length >= 1);
     assert.equal(typeof event.effects?.weatherDelta, 'number');
     assert.equal(typeof event.effects?.visibilityDelta, 'number');

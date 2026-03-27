@@ -43,6 +43,7 @@ export function validateDataConfigShape(filename, data) {
     assertConfigPath(filename, data, 'array', '$');
     assertConfigPath(filename, data[0], 'object', '$[0]');
     assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
+    assertConfigPath(filename, data[0]?.label, 'string', '$[0].label');
     assertConfigPath(filename, data[0]?.category, 'string', '$[0].category');
     assertConfigPath(filename, data[0]?.trigger, 'object', '$[0].trigger');
     assertConfigPath(filename, data[0]?.effects, 'object', '$[0].effects');

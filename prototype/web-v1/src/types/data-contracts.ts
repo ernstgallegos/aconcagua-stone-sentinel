@@ -101,6 +101,7 @@ function assertContextEvents(events: unknown): asserts events is ContextEvent[] 
     if (!event || typeof event !== 'object') throw new Error('contextEvents must contain objects');
     const payload = event as Record<string, unknown>;
     if (typeof payload.id !== 'string' || !payload.id) throw new Error('contextEvents[].id must be string');
+    if (typeof payload.label !== 'string' || !payload.label) throw new Error('contextEvents[].label must be string');
     if ((payload.category ?? 'context') !== 'context') throw new Error(`context event ${String(payload.id)} category must be context`);
     const trigger = payload.trigger as Record<string, unknown> | undefined;
     if (!trigger || !Array.isArray(trigger.turns) || trigger.turns.length === 0) {

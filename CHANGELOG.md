@@ -17,15 +17,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated web-v1 event-plan bootstrapping so `buildEnvironmentEventPlan()` receives `DATA_CONFIG.contextEvents`, keeping event ownership in engine logic while preserving seed-based turn offsets.
 - Expanded parity/contract/engine tests to cover context-event schema integrity and docs/runtime authority consistency.
 
-
-### Added
-- None.
-
-### Changed
-- None.
-
 ### Fixed
-- None.
+- Fixed a contract hole where context events could omit `label` despite `ContextEvent.label` being required; both TS and JS validators now enforce a non-empty label and `data/context_events.json` now provides canonical labels.
 
 ### Security
 - No security-impacting changes in this release window.
