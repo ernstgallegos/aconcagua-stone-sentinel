@@ -31,6 +31,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Rewrote `docs/en/characters_v_3_en.md` to match the six-character canonical cast and interaction map from the Spanish master bible.
 - Replaced the legacy Part 2 bridge cards in `prototype/web-v1/index.html` with the canonical seven-screen pre-threshold Francisco sequence (`mendoza_room` → `future_cta`) and hooked subtle per-preset contemplative animation/visual treatments in `prototype/web-v1/css/screens.css`.
 - Updated Part 2 gating/deep-link/smoke coverage and references to the new narrative screen IDs in `prototype/web-v1/ui/screens.js`, `prototype/web-v1/tests/test_smoke_flow.py`, and `docs/deep-links.web-v1.md`.
+- Tightened Part 2 narrative pacing by rewriting the seven-screen Francisco text block to roughly half the previous reading length while preserving second-person voice, canonical logistics details, and pre-threshold scope.
 
 ### Fixed
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
