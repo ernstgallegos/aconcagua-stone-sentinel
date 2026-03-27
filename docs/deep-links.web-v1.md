@@ -59,10 +59,20 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 | `debrief` | Post-run debrief (mock state, option A) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
 | `summit-success` | Narrative bridge after summit + safe return | [`#summit-success`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#summit-success) |
 | `part2-character` | Part 2 character + route selection (gated) | [`#part2-character&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-character&force=1) |
-| `part2-hotel` | Part 2 narrative — Mendoza hotel | [`#part2-hotel&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-hotel&force=1) |
-| `part2-intro` | Part 2 narrative — group presentation | [`#part2-intro&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-intro&force=1) |
-| `part2-guides` | Part 2 narrative — guides meeting | [`#part2-guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-guides&force=1) |
-| `part2-transfer` | Part 2 narrative — transfer to base camp | [`#part2-transfer&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-transfer&force=1) |
+| `part2-hotel` | Part 2 narrative — Mendoza | [`#part2-hotel&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-hotel&force=1) |
+| `part2-shared-space` | Part 2 narrative — shared space | [`#part2-shared-space&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-shared-space&force=1) |
+| `part2-corridor` | Part 2 narrative — corridor transition | [`#part2-corridor&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-corridor&force=1) |
+| `part2-intro` | Part 2 narrative — the group | [`#part2-intro&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-intro&force=1) |
+| `part2-first-impressions` | Part 2 narrative — first impressions | [`#part2-first-impressions&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-first-impressions&force=1) |
+| `part2-fragments` | Part 2 narrative — fragments | [`#part2-fragments&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-fragments&force=1) |
+| `part2-out-of-place` | Part 2 narrative — out of place | [`#part2-out-of-place&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-out-of-place&force=1) |
+| `part2-guides` | Part 2 narrative — who leads | [`#part2-guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-guides&force=1) |
+| `part2-briefing` | Part 2 narrative — briefing | [`#part2-briefing&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-briefing&force=1) |
+| `part2-after-words` | Part 2 narrative — after the words | [`#part2-after-words&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-after-words&force=1) |
+| `part2-night` | Part 2 narrative — before sleep | [`#part2-night&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-night&force=1) |
+| `part2-departure` | Part 2 narrative — departure | [`#part2-departure&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-departure&force=1) |
+| `part2-leaving-city` | Part 2 narrative — leaving the city | [`#part2-leaving-city&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-leaving-city&force=1) |
+| `part2-transfer` | Part 2 narrative — road to Horcones | [`#part2-transfer&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-transfer&force=1) |
 | `part2-closure` | Part 2 narrative — story closure | [`#part2-closure&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-closure&force=1) |
 | `fatal-error` | Blocking data-load error screen | [`#fatal-error`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#fatal-error) |
 
@@ -106,8 +116,18 @@ Part 2 screens normally require a "Summit and Safe Return" outcome. Add `&force=
 ```
 #part2-character&force=1
 #part2-hotel&force=1
+#part2-shared-space&force=1
+#part2-corridor&force=1
 #part2-intro&force=1
+#part2-first-impressions&force=1
+#part2-fragments&force=1
+#part2-out-of-place&force=1
 #part2-guides&force=1
+#part2-briefing&force=1
+#part2-after-words&force=1
+#part2-night&force=1
+#part2-departure&force=1
+#part2-leaving-city&force=1
 #part2-transfer&force=1
 #part2-closure&force=1
 ```
@@ -215,10 +235,20 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 | `debrief` | Análisis post-run (estado simulado) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
 | `summit-success` | Puente narrativo tras cumbre + retorno seguro | [`#summit-success`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#summit-success) |
 | `part2-character` | Selección de personaje/ruta Parte 2 (con gate) | [`#part2-character&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-character&force=1) |
-| `part2-hotel` | Narrativa Parte 2 — hotel en Mendoza | [`#part2-hotel&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-hotel&force=1) |
-| `part2-intro` | Narrativa Parte 2 — presentación del grupo | [`#part2-intro&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-intro&force=1) |
-| `part2-guides` | Narrativa Parte 2 — encuentro con los guías | [`#part2-guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-guides&force=1) |
-| `part2-transfer` | Narrativa Parte 2 — traslado a base camp | [`#part2-transfer&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-transfer&force=1) |
+| `part2-hotel` | Narrativa Parte 2 — Mendoza | [`#part2-hotel&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-hotel&force=1) |
+| `part2-shared-space` | Narrativa Parte 2 — espacio compartido | [`#part2-shared-space&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-shared-space&force=1) |
+| `part2-corridor` | Narrativa Parte 2 — transición en pasillo | [`#part2-corridor&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-corridor&force=1) |
+| `part2-intro` | Narrativa Parte 2 — el grupo | [`#part2-intro&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-intro&force=1) |
+| `part2-first-impressions` | Narrativa Parte 2 — primeras impresiones | [`#part2-first-impressions&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-first-impressions&force=1) |
+| `part2-fragments` | Narrativa Parte 2 — fragmentos | [`#part2-fragments&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-fragments&force=1) |
+| `part2-out-of-place` | Narrativa Parte 2 — fuera de lugar | [`#part2-out-of-place&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-out-of-place&force=1) |
+| `part2-guides` | Narrativa Parte 2 — quién lidera | [`#part2-guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-guides&force=1) |
+| `part2-briefing` | Narrativa Parte 2 — briefing | [`#part2-briefing&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-briefing&force=1) |
+| `part2-after-words` | Narrativa Parte 2 — después de las palabras | [`#part2-after-words&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-after-words&force=1) |
+| `part2-night` | Narrativa Parte 2 — antes de dormir | [`#part2-night&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-night&force=1) |
+| `part2-departure` | Narrativa Parte 2 — salida | [`#part2-departure&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-departure&force=1) |
+| `part2-leaving-city` | Narrativa Parte 2 — dejando la ciudad | [`#part2-leaving-city&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-leaving-city&force=1) |
+| `part2-transfer` | Narrativa Parte 2 — ruta a Horcones | [`#part2-transfer&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-transfer&force=1) |
 | `part2-closure` | Narrativa Parte 2 — cierre de la historia | [`#part2-closure&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-closure&force=1) |
 | `fatal-error` | Pantalla de error bloqueante de carga de datos | [`#fatal-error`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#fatal-error) |
 
@@ -262,8 +292,18 @@ Las pantallas de Parte 2 normalmente requieren un resultado "Summit and Safe Ret
 ```
 #part2-character&force=1
 #part2-hotel&force=1
+#part2-shared-space&force=1
+#part2-corridor&force=1
 #part2-intro&force=1
+#part2-first-impressions&force=1
+#part2-fragments&force=1
+#part2-out-of-place&force=1
 #part2-guides&force=1
+#part2-briefing&force=1
+#part2-after-words&force=1
+#part2-night&force=1
+#part2-departure&force=1
+#part2-leaving-city&force=1
 #part2-transfer&force=1
 #part2-closure&force=1
 ```

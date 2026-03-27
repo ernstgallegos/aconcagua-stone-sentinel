@@ -745,7 +745,7 @@ function applyStaticTranslations() {
 // Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
 function showScreen(id) {
-  const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const part2Screens = new Set(['part2-character', 'part2-hotel', 'part2-shared-space', 'part2-corridor', 'part2-intro', 'part2-first-impressions', 'part2-fragments', 'part2-out-of-place', 'part2-guides', 'part2-briefing', 'part2-after-words', 'part2-night', 'part2-departure', 'part2-leaving-city', 'part2-transfer', 'part2-closure']);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
   if (part2Screens.has(id) && !canAccessPart2) {
     id = 'debrief';
@@ -3689,7 +3689,7 @@ function handleDeepLink() {
   const { screenId, params } = parsed;
 
   // Part 2 screens — bypass gating when &force=1 is present
-  const PART2_SCREEN_IDS = new Set(['part2-character', 'part2-hotel', 'part2-intro', 'part2-guides', 'part2-transfer', 'part2-closure']);
+  const PART2_SCREEN_IDS = new Set(['part2-character', 'part2-hotel', 'part2-shared-space', 'part2-corridor', 'part2-intro', 'part2-first-impressions', 'part2-fragments', 'part2-out-of-place', 'part2-guides', 'part2-briefing', 'part2-after-words', 'part2-night', 'part2-departure', 'part2-leaving-city', 'part2-transfer', 'part2-closure']);
   if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
     try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
     updateRunState(G, { finalOutcome: 'Summit and Safe Return' });

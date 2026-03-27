@@ -228,7 +228,7 @@ La selección de personaje ahora incluye una opción `Random Character` que elig
 
 Estado de Parte 2 (v1.4):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → part2-hotel → part2-shared-space → part2-corridor → part2-intro → part2-first-impressions → part2-fragments → part2-out-of-place → part2-guides → part2-briefing → part2-after-words → part2-night → part2-departure → part2-leaving-city → part2-transfer → part2-closure`
 
 Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
 

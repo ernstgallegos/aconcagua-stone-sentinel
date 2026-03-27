@@ -495,39 +495,159 @@
 </section>
 
 <!-- ══════════════════════ PART 2 TRANSITIONS ══════════════════════ -->
-<section id="screen-part2-hotel" class="screen" aria-label="Part 2 narrative - Mendoza hotel">
+<section id="screen-part2-hotel" class="screen" aria-label="Part 2 narrative - Mendoza">
   <div class="part2-step">
-    <div class="part2-step-kicker">Part 2 · Mendoza</div>
-    <h3>Night before departure — Hotel in Mendoza</h3>
+    <div class="part2-step-kicker">Night before departure</div>
+    <h3>Mendoza</h3>
     <p>
-      The simulation is behind you. Gear is spread across the room, oxygen routines are reviewed,
-      and every small decision now carries real consequences.
-    </p>
-    <p>
-      Tomorrow, the expedition leaves the city and enters the mountain system for real.
+      The room is too small for two expeditions.<br><br>
+      Backpacks open. Gear everywhere.<br><br>
+      Blake reorganizes his equipment for the third time.<br>
+      "Weight is everything," he says.<br>
+      "Every gram counts."<br><br>
+      Francisco checks his things in silence.<br>
+      Touch. Order. Memory.<br><br>
+      Two ways of preparing.<br><br>
+      He sits on the edge of the bed.<br>
+      Takes out Mateo’s photo.<br>
+      Looks. Puts it back.<br><br>
+      Outside, the city is still warm.<br>
+      Inside, something already feels different.<br><br>
+      They share a room.<br>
+      Not the same mountain.
     </p>
     <div class="part2-step-actions">
-      <button class="btn-ghost" onclick="showScreen('part2-character')">Back to character</button>
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
-      <button class="btn-primary" onclick="showScreen('part2-intro')">Continue</button>
+      <button class="btn-primary" onclick="showScreen('part2-shared-space')">Go downstairs</button>
     </div>
   </div>
 </section>
 
-<section id="screen-part2-intro" class="screen" aria-label="Part 2 narrative - group presentation">
+<section id="screen-part2-shared-space" class="screen" aria-label="Part 2 narrative - shared space">
   <div class="part2-step">
-    <div class="part2-step-kicker">Part 2 · Team Presentation</div>
-    <h3>The full expedition team comes together</h3>
+    <div class="part2-step-kicker">Room</div>
+    <h3>Shared Space</h3>
     <p>
-      In the lobby, names become roles: climbers, support staff, and coordinators aligning expectations
-      before entering Aconcagua Provincial Park.
-    </p>
-    <p>
-      Different objectives, shared exposure, one rope of trust.
+      Blake stops moving for a moment.<br><br>
+      Looks at Francisco.<br><br>
+      "You’ve done altitude before?"<br><br>
+      A simple question.<br><br>
+      Francisco shakes his head.<br><br>
+      Blake nods.<br>
+      Not judgment. Not approval.<br><br>
+      Just recalculation.<br><br>
+      He goes back to his gear.<br><br>
+      Something has already shifted.
     </p>
     <div class="part2-step-actions">
-      <button class="btn-ghost" onclick="showScreen('part2-hotel')">Back</button>
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
+      <button class="btn-primary" onclick="showScreen('part2-corridor')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-corridor" class="screen" aria-label="Part 2 narrative - corridor">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Transition</div>
+    <h3>On the Way Down</h3>
+    <p>
+      The hallway smells like cleaning product.<br><br>
+      Doors open. Close. Voices overlap.<br><br>
+      Boots that don’t belong in a city.<br>
+      Faces already marked by sun and altitude.<br><br>
+      For a moment, everyone looks the same.<br><br>
+      Then you start noticing differences.<br><br>
+      Blake walks ahead.<br>
+      Quiet now.<br><br>
+      Francisco follows.<br><br>
+      Up there, no one will introduce themselves twice.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-intro')">Enter the lobby</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-intro" class="screen" aria-label="Part 2 narrative - the group">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Hotel lobby</div>
+    <h3>The Group</h3>
+    <p>
+      The circle forms.<br><br>
+      Names begin.<br><br>
+      Laura speaks clearly.<br>
+      Erik says only what matters.<br>
+      Daniela listens before speaking.<br>
+      Irina barely moves.<br><br>
+      Blake shortens his sentences.<br>
+      Control, but contained.<br><br>
+      Francisco says his name.<br>
+      Says he runs.<br>
+      Says he’s ready.<br><br>
+      It sounds almost true.<br><br>
+      The group is now real.<br><br>
+      Trust is not.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-first-impressions')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-first-impressions" class="screen" aria-label="Part 2 narrative - first impressions">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Perception</div>
+    <h3>First Impressions</h3>
+    <p>
+      You start building quick conclusions.<br><br>
+      Who feels solid.<br>
+      Who feels risky.<br><br>
+      They feel clear.<br><br>
+      Too clear.<br><br>
+      Most of them will change.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-fragments')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-fragments" class="screen" aria-label="Part 2 narrative - fragments">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Unstructured time</div>
+    <h3>Fragments</h3>
+    <p>
+      The circle breaks.<br><br>
+      Small conversations form and dissolve.<br><br>
+      Laura asks.<br>
+      Erik measures.<br>
+      Daniela observes.<br>
+      Blake explains.<br><br>
+      Irina steps outside.<br><br>
+      Francisco stays.<br><br>
+      He tries to understand the group.<br><br>
+      Who is strong.<br>
+      Who is careful.<br>
+      Who is pretending.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-out-of-place')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-out-of-place" class="screen" aria-label="Part 2 narrative - out of place">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Position</div>
+    <h3>Out of Place</h3>
+    <p>
+      For a moment, conversations move without him.<br><br>
+      Not intentionally.<br><br>
+      Just naturally.<br><br>
+      He listens.<br><br>
+      Finds no entry point.<br><br>
+      The group is forming.<br><br>
+      He is still outside of it.
+    </p>
+    <div class="part2-step-actions">
       <button class="btn-primary" onclick="showScreen('part2-guides')">Continue</button>
     </div>
   </div>
@@ -535,45 +655,157 @@
 
 <section id="screen-part2-guides" class="screen" aria-label="Part 2 narrative - guides">
   <div class="part2-step">
-    <div class="part2-step-kicker">Part 2 · Expedition Guides</div>
-    <h3>Stone Sentinel Expeditions — The guides</h3>
+    <div class="part2-step-kicker">Structure</div>
+    <h3>Who Leads</h3>
     <p>
-      The expedition is led by two EPGAMT-certified guides from Mendoza.
-    </p>
-    <p>
-      <strong>Agustina Villanueva</strong> — Lead guide. Twelve seasons on Aconcagua, eight as
-      lead. Certified UIAA mountaineering guide since 27. Direct, economical with words,
-      and precise about conditions. When she says it's time to descend, the discussion ends.
-    </p>
-    <p>
-      <strong>Alejandro Molina</strong> — Assistant guide. Second season. Strong climber,
-      fast learner, tends toward optimism when conditions are uncertain. The group notices
-      the mentor dynamic between them from day one.
-    </p>
-    <p>
-      Their operating principle, stated plainly at the hotel briefing: no summit is worth
-      compromising a safe return.
+      Agustina speaks.<br><br>
+      No effort. No emphasis.<br><br>
+      "The mountain decides."<br>
+      "We adapt."<br>
+      "Turning back is not failure."<br><br>
+      Alejandro listens beside her.<br><br>
+      Logistics follow.<br><br>
+      Mules. Loads. Stages.<br><br>
+      Jorge goes ahead with the animals.<br>
+      Tomás moves between lines.<br><br>
+      Names become roles.<br>
+      Roles become responsibility.
     </p>
     <div class="part2-step-actions">
-      <button class="btn-ghost" onclick="showScreen('part2-intro')">Back</button>
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
+      <button class="btn-primary" onclick="showScreen('part2-briefing')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-briefing" class="screen" aria-label="Part 2 narrative - briefing">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Before departure</div>
+    <h3>What Matters</h3>
+    <p>
+      "Eat."<br>
+      "Drink."<br>
+      "Say it early."<br><br>
+      Simple instructions.<br><br>
+      Hard to follow later.<br><br>
+      Blake adjusts his pack again.<br>
+      Everything already in place.<br><br>
+      Francisco doesn’t write anything.<br><br>
+      He listens.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-after-words')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-after-words" class="screen" aria-label="Part 2 narrative - after the words">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Silence</div>
+    <h3>After the Words</h3>
+    <p>
+      The briefing ends.<br><br>
+      No one moves immediately.<br><br>
+      Instructions stay in the air.<br><br>
+      Everyone heard the same thing.<br><br>
+      No one understood it in the same way.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-night')">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-night" class="screen" aria-label="Part 2 narrative - before sleep">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Late</div>
+    <h3>Before Sleep</h3>
+    <p>
+      Dark room.<br><br>
+      Blake still awake.<br>
+      Rechecking.<br><br>
+      Same system. Small variations.<br><br>
+      Francisco lies still.<br><br>
+      The city hums outside.<br><br>
+      He tries to imagine the mountain.<br><br>
+      He can’t.<br><br>
+      Only fragments.<br><br>
+      Wind. Silence. Distance.<br><br>
+      The light goes off.<br><br>
+      Two breathing patterns.<br>
+      Out of sync.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-departure')">Wake up</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-departure" class="screen" aria-label="Part 2 narrative - departure">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Early morning</div>
+    <h3>Departure</h3>
+    <p>
+      Cold air.<br><br>
+      Movements become automatic.<br><br>
+      Pack. Check. Lift.<br><br>
+      Less talking now.<br><br>
+      Blake is focused.<br>
+      Efficient.<br><br>
+      Francisco feels ready.<br><br>
+      Also something else.<br><br>
+      A small hesitation.<br><br>
+      No name yet.<br><br>
+      The bus is waiting.<br><br>
+      This is the last easy exit.<br><br>
+      No one takes it.
+    </p>
+    <div class="part2-step-actions">
+      <button class="btn-primary" onclick="showScreen('part2-leaving-city')">Board the bus</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-part2-leaving-city" class="screen" aria-label="Part 2 narrative - leaving the city">
+  <div class="part2-step">
+    <div class="part2-step-kicker">Transition</div>
+    <h3>Leaving the City</h3>
+    <p>
+      Buildings thin out.<br><br>
+      Then disappear.<br><br>
+      The last signs of normal life stay behind.<br><br>
+      No one says it.<br><br>
+      But everyone notices.<br><br>
+      There is no easy return from here.
+    </p>
+    <div class="part2-step-actions">
       <button class="btn-primary" onclick="showScreen('part2-transfer')">Continue</button>
     </div>
   </div>
 </section>
 
-<section id="screen-part2-transfer" class="screen" aria-label="Part 2 narrative - transfer">
+<section id="screen-part2-transfer" class="screen" aria-label="Part 2 narrative - road to horcones">
   <div class="part2-step">
-    <div class="part2-step-kicker">Part 2 · Transfer</div>
-    <h3>Road transfer to Horcones begins</h3>
+    <div class="part2-step-kicker">Transit</div>
+    <h3>Road to Horcones</h3>
     <p>
-      Before dawn, vehicles leave Mendoza toward the park entrance. Altitude gains start now,
-      long before the first technical section.
+      The city fades.<br><br>
+      Vineyards. Dry land. Then less.<br><br>
+      The bus is quiet.<br><br>
+      Some sleep.<br>
+      Others watch.<br><br>
+      Blake checks distance.<br>
+      Tracks elevation.<br><br>
+      Francisco looks outside.<br><br>
+      The mountain is not visible yet.<br><br>
+      But it’s there.<br><br>
+      Not ahead.<br><br>
+      Already around them.<br><br>
+      By Horcones, this stops being an idea.<br><br>
+      It becomes movement.<br><br>
+      And movement has consequences.
     </p>
     <div class="part2-step-actions">
-      <button class="btn-ghost" onclick="showScreen('part2-guides')">Back</button>
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
-      <button class="btn-primary" onclick="showScreen('part2-closure')">Continue</button>
+      <button class="btn-primary" onclick="showScreen('part2-closure')">Arrive at Horcones</button>
     </div>
   </div>
 </section>
@@ -594,8 +826,6 @@
       </p>
     </div>
     <div class="part2-step-actions">
-      <button class="btn-ghost" onclick="showScreen('part2-transfer')">Back</button>
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
       <button class="btn-primary" onclick="showScreen('title')">Back to title / replay</button>
     </div>
   </div>

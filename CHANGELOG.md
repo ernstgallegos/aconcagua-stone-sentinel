@@ -25,6 +25,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Improved title/startup UX with restrained loading state copy and model-readiness gating on the Begin CTA, keeping failure modes explicit without adding non-diegetic UI noise.
 - Hardened modal accessibility helpers with focus-trap support and applied them to help, watch-detail, and field-log overlays so keyboard navigation stays inside dialogs until closed.
 - Refined startup status microcopy to keep the loading/ready states calm and mountain-toned (`Preparing mountain model…`, `Model ready. Begin when prepared.`).
+- Replaced the Part 2 pre-threshold bridge in `prototype/web-v1/index.html` with a strict linear 14-screen contemplative sequence from Mendoza to Road to Horcones, preserving single-CTA progression and canonical wording.
+- Updated Part 2 gating/deep-link coverage (`prototype/web-v1/ui/screens.js`, `README.md`, `README.es.md`, `docs/deep-links.web-v1.md`) to include the expanded narrative screen IDs and flow order.
 
 ### Fixed
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.

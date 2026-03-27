@@ -227,7 +227,7 @@ Character selection now includes a `Random Character` option that auto-picks one
 
 Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → part2-hotel → part2-shared-space → part2-corridor → part2-intro → part2-first-impressions → part2-fragments → part2-out-of-place → part2-guides → part2-briefing → part2-after-words → part2-night → part2-departure → part2-leaving-city → part2-transfer → part2-closure`
 
 Unlock is exclusive to `Summit and Safe Return`.
 
