@@ -42,7 +42,7 @@ Canonical outcomes are defined by `data/outcomes.json` and enforced by the resol
 - Any non-canonical progression layer (XP/skill trees remain out-of-scope).
 
 ## Source-of-truth ownership map
-- `data/*.json`: simulation tuning and bounded event contracts.
+- `data/*.json`: simulation tuning and bounded event contracts (including `data/context_events.json` and `data/character_events.json`).
 - `prototype/web-v1/engine/*`: canonical deterministic turn mechanics.
 - `prototype/web-v1/ui/*`: rendering, input wiring, and non-authoritative presentation.
 - `docs/repo-truth.md`: canonical repo status baseline; parity-tested.

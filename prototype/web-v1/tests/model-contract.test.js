@@ -38,13 +38,17 @@ test('model contract aligns outcomes and shared state overlap across both surfac
   const simulatorSource = readText('prototype/mra-v0/simulator.py');
   const webScenarioConfig = readJson('data/scenarios.web-v1.json');
   const schema = readJson('prototype/mra-v0/scenarios/scenario.schema.json');
+  const contextEvents = readJson('data/context_events.json');
 
   assert.deepEqual(webOutcomes, contract.outcomes.webV1Canonical, 'web canonical outcomes match contract');
-
+  assert.equal(typeof contract.authoritativeArtifacts.contextEvents, 'string');
+  assert.ok(contract.authoritativeArtifacts.contextEvents.includes('data/context_events.json'));
   const mraOutcomes = extractMraOutcomeLabels(simulatorSource);
   for (const expected of contract.outcomes.mraV0Legacy) {
     assert.ok(mraOutcomes.has(expected), `mra legacy outcome includes ${expected}`);
   }
+
+  assert.ok(Array.isArray(contextEvents) && contextEvents.length > 0, 'context events contract is present');
 
   const requiredShared = contract.sharedContract.stateMetricsRequired;
   const mraRequired = new Set(schema.properties.initial_state.required);

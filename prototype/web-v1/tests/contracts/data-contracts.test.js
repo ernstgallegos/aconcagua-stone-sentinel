@@ -9,6 +9,7 @@ const files = [
   'data/stage_modifiers.json',
   'data/characters.json',
   'data/character_events.json',
+  'data/context_events.json',
   'data/outcomes.json',
   'data/scenarios.web-v1.json',
 ];
@@ -43,5 +44,21 @@ test('character event contract includes all six active characters', async () => 
     assert.equal(typeof event.hiddenFromPlayer, 'boolean');
     assert.equal(typeof event.conditions?.mountainAuthority, 'string');
     assert.equal(allowedCategories.has(event.category), true);
+  });
+});
+
+
+test('context event contract is bounded and mountain-first', async () => {
+  const events = JSON.parse(await readFile('data/context_events.json', 'utf8'));
+  assert.ok(events.length >= 4, 'requires multiple context archetypes');
+  events.forEach((event) => {
+    assert.equal(event.category, 'context');
+    assert.equal(typeof event.label, 'string');
+    assert.ok(Array.isArray(event.trigger?.turns) && event.trigger.turns.length >= 1);
+    assert.equal(typeof event.effects?.weatherDelta, 'number');
+    assert.equal(typeof event.effects?.visibilityDelta, 'number');
+    assert.ok((event.effects?.timePenalty ?? 0) >= 0);
+    assert.ok((event.limits?.maxPerRun ?? 0) >= 1);
+    assert.equal(typeof event.telemetryTag, 'string');
   });
 });

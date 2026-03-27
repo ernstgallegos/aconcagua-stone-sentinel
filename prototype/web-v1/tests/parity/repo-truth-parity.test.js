@@ -16,3 +16,19 @@ test('repo truth outcome taxonomy matches runtime outcomes data', async () => {
   const outcomes = JSON.parse(await readFile('data/outcomes.json', 'utf8'));
   outcomes.forEach((outcome) => assert.ok(repoTruth.includes(outcome), `missing ${outcome}`));
 });
+
+
+test('repo truth authority and prototype status are mirrored in README and architecture docs', async () => {
+  const repoTruth = await readFile('docs/repo-truth.md', 'utf8');
+  const readme = await readFile('README.md', 'utf8');
+  const architecture = await readFile('docs/architecture.md', 'utf8');
+
+  assert.ok(repoTruth.includes('prototype/web-v1'));
+  assert.ok(repoTruth.includes('prototype/mra-v0'));
+  assert.ok(repoTruth.includes('resolveTurn(state, action)'));
+
+  assert.ok(readme.includes('prototype/web-v1'));
+  assert.ok(readme.includes('prototype/mra-v0'));
+  assert.ok(architecture.includes('prototype/web-v1'));
+  assert.ok(architecture.includes('prototype/mra-v0'));
+});
