@@ -321,6 +321,7 @@ aconcaguastonesentinel@gmail.com
 The canonical active prototype is **`prototype/web-v1` (v1.4.5 public state)**.
 
 - `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.5 phased mechanics currently in public rollout.
+  - Startup contracts are strict: required model files must load and validate before play; blocking failures are rendered with file/category diagnostics.
 - `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
 - repository root viewer: replay/view layer for bundled runs.
 

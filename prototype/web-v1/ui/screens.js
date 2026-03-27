@@ -9,6 +9,8 @@ import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessi
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
+import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
+import { parseDeepLinkHash, syncScreenHash } from './helpers/routing.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -21,10 +23,9 @@ const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'action
 function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
   updateUIState(G, { modelReady: false });
-  console.error(errorMessage);
-
-  const errorDetails = document.getElementById('blocking-error-details');
-  if (errorDetails) errorDetails.textContent = errorMessage;
+  const rendered = renderBlockingError(errorMessage);
+  console.error(rendered.detail);
+  setStartupState('error', 'Model unavailable. Review blocking diagnostics.');
   showScreen('fatal-error');
 }
 
@@ -642,11 +643,16 @@ function advanceFromTitle(event) {
     event.preventDefault();
     event.stopPropagation();
   }
+  if (!G.modelReady) {
+    setStartupState('error', 'Model is still loading or blocked.');
+    return;
+  }
   closeIntroModal();
   showScreen('expedition-setup');
 }
 
 async function loadDataConfig() {
+  setStartupState('loading');
   const loaded = await loadDataConfigFiles({
     fetchImpl: fetch,
     onError: setModelLoadError,
@@ -655,6 +661,7 @@ async function loadDataConfig() {
   DATA_CONFIG = loaded;
   rebuildRouteData();
   updateUIState(G, { modelReady: true });
+  setStartupState('ready');
 }
 
 // ════════════════════════════════════════════════
@@ -785,7 +792,7 @@ function showScreen(id) {
     if (_suppressHashSync) {
       _suppressHashSync = false;
     } else {
-      try { history.replaceState(null, '', '#' + id); } catch (e) {}
+      syncScreenHash(id);
     }
   };
 
@@ -3511,28 +3518,6 @@ function updateDebriefHero(outcome) {
 /** Flag set to true while handling a deep-link navigation so showScreen()
  *  does not immediately overwrite the incoming hash. Resets inside activateTarget(). */
 let _suppressHashSync = false;
-
-/**
- * Parse window.location.hash into { screenId, params }.
- * Returns null when hash is empty or has no screen segment.
- */
-function parseDeepLinkHash() {
-  const raw = window.location.hash.slice(1); // strip leading #
-  if (!raw) return null;
-  const segments = raw.split('&');
-  const screenId = decodeURIComponent(segments[0]);
-  if (!screenId) return null;
-  const params = {};
-  for (let i = 1; i < segments.length; i++) {
-    const eq = segments[i].indexOf('=');
-    if (eq !== -1) {
-      params[decodeURIComponent(segments[i].slice(0, eq))] = decodeURIComponent(segments[i].slice(eq + 1));
-    } else {
-      params[decodeURIComponent(segments[i])] = true;
-    }
-  }
-  return { screenId, params };
-}
 
 /**
  * Build a minimal plausible turn log for mock debrief display.

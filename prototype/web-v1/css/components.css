@@ -1312,6 +1312,12 @@
   color: var(--red);
 }
 
+#blocking-error-summary {
+  color: color-mix(in srgb, var(--text-soft) 66%, var(--white) 34%);
+  line-height: 1.5;
+  max-width: 64ch;
+}
+
 .blocking-error-details {
   font-family: var(--mono);
   font-size: 0.875rem;

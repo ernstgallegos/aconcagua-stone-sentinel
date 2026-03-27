@@ -98,6 +98,12 @@
   transform: translateY(-1px);
 }
 
+.title-screen-advance:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .title-screen-advance span {
   display: inline-flex;
   align-items: center;
@@ -114,6 +120,24 @@
 .title-screen-advance span::before {
   content: '↳';
   color: var(--ochre);
+}
+
+.startup-status-line {
+  margin: 0.35rem auto 0;
+  width: min(100%, 32rem);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--text-soft) 74%, var(--white) 26%);
+}
+
+.startup-status-line[data-state='ready'] {
+  color: color-mix(in srgb, var(--ice) 76%, var(--white) 24%);
+}
+
+.startup-status-line[data-state='error'] {
+  color: color-mix(in srgb, var(--red) 70%, var(--white) 30%);
 }
 
 .title-info-trigger {

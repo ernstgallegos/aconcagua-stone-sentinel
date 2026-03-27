@@ -30,3 +30,63 @@ test('data loader reaches model-ready contract with required files', async () =>
   assert.ok(Array.isArray(config.characterEvents) && config.characterEvents.length > 0);
   assert.ok(Array.isArray(config.contextEvents) && config.contextEvents.length > 0);
 });
+
+test('data loader classifies missing required file as blocking load failure', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('context_events.json')) {
+        return { ok: false, status: 404, async json() { return {}; } };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'load failure');
+  assert.match(errors[0].detail, /missing file/i);
+  assert.match(errors[0].file, /context_events\.json/);
+});
+
+test('data loader classifies malformed JSON as blocking load failure', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('outcomes.json')) {
+        return {
+          ok: true,
+          status: 200,
+          async json() { throw new SyntaxError('Unexpected token } in JSON at position 2'); },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'load failure');
+  assert.match(errors[0].detail, /invalid JSON/i);
+  assert.match(errors[0].file, /outcomes\.json/);
+});
+
+test('data loader classifies invalid shape as blocking shape failure', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('characters.json')) {
+        return { ok: true, status: 200, async json() { return { not: 'an array' }; } };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].file, /characters\.json/);
+});
