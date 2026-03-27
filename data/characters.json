@@ -4,10 +4,10 @@
     "name": "Francisco Aguirre",
     "flag": "🇦🇷",
     "role": "Teacher & Amateur Runner",
-    "bio": "Physical education teacher from Mendoza. Exceptional endurance from years of trail running. No technical high-altitude experience. Carrying a photo of his friend Mateo in his left pocket.",
+    "bio": "Argentine, 33. A teacher and endurance runner from Mendoza. He carries Mateo's photo and confuses pushing forward with honoring grief. His strength is persistence; his risk is turning data and effort into mandate.",
     "traits": [
-      "Unusual physical and mental endurance \u2014 sustains pace long after others slow down.",
-      "Physical warning signals appear with low prominence. You must learn to read them actively."
+      "Exceptional sustained endurance under long effort, even when others slow down.",
+      "Low visibility of early body warnings; he must choose listening over blind persistence."
     ],
     "difficultyLabel": "Standard",
     "engine": {
@@ -55,10 +55,10 @@
     "name": "Laura Kim",
     "flag": "🇰🇷",
     "role": "Emergency Physician",
-    "bio": "South Korean ER doctor on burnout leave. Three years in intensive care during the pandemic. Reads physiological signals with clinical precision. Came to the mountain to recover control over her own life.",
+    "bio": "South Korean, 38. Emergency physician with pandemic triage scars. She reads clinical and group signals with uncommon precision, but her pressure-point is delaying action while searching for total certainty.",
     "traits": [
-      "Most precise signal reader in the group \u2014 lowest noise, highest confidence.",
-      "When a decision affects only herself, the window closes faster. Her default is caution."
+      "Highest diagnostic clarity for body and group cues under stress.",
+      "Can lose tempo by over-validating before acting, especially when stakes feel personal."
     ],
     "difficultyLabel": "Favorable",
     "engine": {
@@ -106,10 +106,10 @@
     "name": "Erik Lundvall",
     "flag": "🇳🇴",
     "role": "Offshore Engineer",
-    "bio": "Norwegian mountaineer with Kilimanjaro, Elbrus, Mont Blanc and Denali behind him. Aconcagua is the last of the Seven Summits. Fifteen years of success have made retreat feel like failure.",
+    "bio": "Norwegian, 45. Offshore engineer and experienced mountaineer pursuing the Seven Summits. Technically strong and structured, but vulnerable to ego-filtered risk reading when conditions challenge his self-image.",
     "traits": [
-      "Strong technical execution \u2014 reads routes and manages gear with real expertise.",
-      "Risk signals have a higher activation threshold. His ego filters what the mountain is saying."
+      "Reliable technical execution on terrain, pacing, and gear management.",
+      "Late risk-signal activation under pressure; pride can delay tactical retreat."
     ],
     "difficultyLabel": "Demanding",
     "engine": {
@@ -157,10 +157,10 @@
     "name": "Daniela De Rossi",
     "flag": "🇮🇹",
     "role": "Photographer & Journalist",
-    "bio": "Italian freelance photojournalist, 26. Lost her editorial assignment a week before departure and came anyway. Extraordinary observer of environment and people. Her body is the most vulnerable to altitude in the group.",
+    "bio": "Italian, 26. Photographer-journalist with sharp environmental perception. She spots weather, terrain, and social shifts early, yet her acclimatization is the weakest in the roster: seeing more does not mean enduring more.",
     "traits": [
-      "Most accurate environmental reader \u2014 detects light, weather and group shifts before anyone else.",
-      "Lowest acclimatization rate in the group. The gap between what she sees and what her body can do is the whole game."
+      "Best early reader of subtle environmental and group changes.",
+      "Low acclimatization margin; observation actions can cost critical body reserves."
     ],
     "difficultyLabel": "Demanding",
     "engine": {
@@ -207,11 +207,11 @@
     "id": "blake",
     "name": "Blake Harris",
     "flag": "🇺🇸",
-    "role": "Strategy Executive",
-    "bio": "American executive, 58. Bought the best gear three weeks ago. Thirty years building an identity out of closing deals \u2014 the mountain is another deal to close. Nine months from a forced partial retirement he didn't ask for.",
+    "role": "Executive",
+    "bio": "American, 58. Senior executive built on visible achievement and external validation. He arrives determined to prove he still can, but the mountain confronts him with vulnerability, logistics limits, and non-negotiable physical truth.",
     "traits": [
-      "Genuine psychological determination. Has survived extreme pressure in boardrooms.",
-      "The gap between his confidence and his actual physical preparation is the widest in the group."
+      "Strong psychological drive and refusal to quit under stress.",
+      "Largest confidence-versus-preparation gap in the group, with high overpush risk."
     ],
     "difficultyLabel": "Very Demanding",
     "engine": {
@@ -259,10 +259,10 @@
     "name": "Irina Orlova",
     "flag": "🇷🇺",
     "role": "Former Pro Climber",
-    "bio": "Russian ex-professional climber, now an alpinism instructor in St. Petersburg. Elbrus, Pik Lenin, Khan Tengri, two attempts on Broad Peak. Left professional climbing at 35 for her daughter. This is her first high-altitude expedition outside a professional context in six years.",
+    "bio": "Russian, 41. Former elite climber returning to high altitude after years away. Her technical memory and economy of movement are elite, but her core challenge is not knowledge—it is avoiding overconfidence from past protocols.",
     "traits": [
-      "Best physical baseline in the group \u2014 strongest acclimatization, best resource efficiency.",
-      "Highest perceptual noise in the group. Experience built on past patterns can blind her to what this mountain is actually saying."
+      "Highest baseline alpine competence and efficient movement economy.",
+      "Pattern-lock risk: prior experience can increase perceptual noise in novel conditions."
     ],
     "difficultyLabel": "Demanding",
     "engine": {

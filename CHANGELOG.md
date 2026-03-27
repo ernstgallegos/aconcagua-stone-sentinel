@@ -25,6 +25,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Improved title/startup UX with restrained loading state copy and model-readiness gating on the Begin CTA, keeping failure modes explicit without adding non-diegetic UI noise.
 - Hardened modal accessibility helpers with focus-trap support and applied them to help, watch-detail, and field-log overlays so keyboard navigation stays inside dialogs until closed.
 - Refined startup status microcopy to keep the loading/ready states calm and mountain-toned (`Preparing mountain model…`, `Model ready. Begin when prepared.`).
+- Synchronized canonical character framing across runtime and docs by aligning `data/characters.json` role/bio/trait profiles with the v3 character bible (`docs/es/Personajes_v_3.md`).
+- Rebased `data/character_events.json` narrative strings on canonical psychological arcs so contextual events reflect each character's defined dramatic tension.
+- Rewrote `docs/en/characters_v_3_en.md` to match the six-character canonical cast and interaction map from the Spanish master bible.
 
 ### Fixed
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.

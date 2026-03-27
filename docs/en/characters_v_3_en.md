@@ -1,101 +1,86 @@
-# Characters v3
+# Characters v3 (Canonical)
 
 ## Overview
 
-This document defines the canonical characters for *Aconcagua: Stone Sentinel*. Each character represents a distinct background, motivation, and psychological profile, contributing to the diversity and narrative depth of the expedition.
+This document is the canonical English character reference for *Aconcagua: Stone Sentinel*.
 
-The information below must be treated as canonical for narrative, visual, and systemic design decisions.
-
----
-
-## Francisco Aguirre
-
-- **Nationality:** Argentine
-- **Age:** 42
-- **Profession:** Technology and innovation consultant
-
-Francisco is driven by a deep internal search rather than external validation. His connection to the mountain is existential: a confrontation with time, memory, and loss.
-
-He carries the memory of Mateo, a close friend who died during the COVID-19 pandemic. Mateo was older than him and played a formative role in his life. The expedition becomes a symbolic dialogue with that absence.
-
-Francisco is reflective, disciplined, and resilient, but also prone to overthinking and emotional weight.
+It is aligned with `docs/es/Personajes_v_3.md` (master narrative bible, v3.0) and must be treated as authoritative for narrative direction, character-facing UX copy, and systemic flavor text.
 
 ---
 
-## Irina Orlova
+## Canonical cast (6)
 
-- **Nationality:** Russian
+### Francisco Aguirre
+
+- **Nationality:** Argentina
+- **Age:** 33
+- **Profession:** Teacher and amateur endurance runner
+
+Francisco arrives carrying unresolved grief for Mateo (older friend, died from COVID-19 in 2021). His playable identity is persistence under pressure; his psychological risk is confusing endurance with meaning. His arc is learning that listening to limits can also be loyalty.
+
+### Laura Kim
+
+- **Nationality:** South Korea
 - **Age:** 38
-- **Profession:** Astrophysicist
+- **Profession:** Emergency physician
 
-Irina approaches the mountain with a scientific mindset, seeing it as a system to be understood. However, beneath that rational layer lies a personal need for distance—from Earth, from people, from emotional entanglement.
+Laura reads body and group signals with clinical precision. Her wound is moral fatigue from pandemic triage. Her risk is over-delaying decisions in pursuit of certainty; her arc is trusting humane, timely judgment under uncertainty.
 
-She is precise, methodical, and emotionally contained. The expedition challenges her ability to control variables and accept uncertainty.
+### Erik Lundvall
 
----
-
-## Blake Harris
-
-- **Nationality:** American
-- **Age:** 35
-- **Profession:** Tech entrepreneur
-
-Blake is used to environments where effort translates directly into success. He arrives at the mountain with a performance-driven mindset, expecting to optimize his way to the summit.
-
-The expedition confronts him with limits he cannot hack or scale. His arc revolves around the tension between control and surrender.
-
----
-
-## Daniela De Rossi
-
-- **Nationality:** Italian
-- **Age:** 40
-- **Profession:** Architect
-
-Daniela experiences the mountain as a form of aesthetic and spatial revelation. She is sensitive to landscapes, structures, and the relationship between human presence and environment.
-
-Her motivation is not conquest but understanding. She seeks to inhabit the mountain rather than overcome it.
-
----
-
-## Erik Lundvall
-
-- **Nationality:** Swedish
+- **Nationality:** Norway
 - **Age:** 45
-- **Profession:** Former military officer
+- **Profession:** Offshore engineer
 
-Erik brings discipline, hierarchy, and survival experience. He is accustomed to extreme conditions and clear chains of command.
+Erik is technically strong and identity-driven by completion (Seven Summits logic). His challenge is ego-filtered risk interpretation: when mountain evidence conflicts with self-image, he can push too long. His arc is leadership through space-sharing, not control saturation.
 
-However, the mountain operates outside military logic. His challenge is adapting from control-based leadership to situational awareness and humility.
+### Daniela De Rossi
+
+- **Nationality:** Italy
+- **Age:** 26
+- **Profession:** Photographer and journalist
+
+Daniela is an elite observer of terrain, weather texture, and subtle human dynamics. Her challenge is low acclimatization and the cost of observation under altitude stress. Her arc is moving from witness-only posture to embodied participation.
+
+### Blake Harris
+
+- **Nationality:** United States
+- **Age:** 58
+- **Profession:** Executive
+
+Blake brings high determination and a success-conditioned identity. The mountain denies status shortcuts: logistics, preparation, and vulnerability matter more than posture. His arc is discovering value without performative proof.
+
+### Irina Orlova
+
+- **Nationality:** Russia
+- **Age:** 41
+- **Profession:** Former professional climber
+
+Irina returns to high altitude after years outside elite climbing. She has strong technical memory and movement economy, but faces a subtle mismatch risk: prior protocols can overfit present uncertainty. Her arc is integrating humility with expertise.
 
 ---
 
-## Mei Lin
+## Canonical interpersonal dynamics
 
-- **Nationality:** Chinese
-- **Age:** 29
-- **Profession:** Documentary filmmaker
+These interaction tensions are canonical for story framing, event flavor, and dialogue scaffolding:
 
-Mei Lin approaches the expedition as a narrative opportunity. She is attentive to human dynamics, subtle gestures, and moments that reveal deeper truths.
-
-Her presence introduces a meta-layer: the act of observing and documenting others while being transformed herself.
+- **Francisco ↔ Laura:** shared guilt-adjacent burden; potential for the expedition’s most functional trust pair.
+- **Erik ↔ Blake:** validation tension (competence filtering vs overcompensation).
+- **Irina ↔ Daniela:** expertise distrust vs observational insight; bridge appears when observation proves mountain-first, not aesthetic-only.
 
 ---
 
-## Design Notes
+## Design integrity notes
 
-- The group is intentionally diverse in gender, nationality, and professional background.
-- Each character embodies a different relationship with risk, control, and meaning.
-- The mountain acts as the dominant system, destabilizing each character’s initial assumptions.
-- Narrative progression should emerge from the interaction between character psychology and environmental pressure.
+- Characters are not lore-only; they are **playable dramatic systems** (biography + mechanics + theme).
+- The mountain is the dominant authority; characters reveal themselves under pressure.
+- Psychological errors must feel internally coherent, never arbitrary player traps.
 
 ---
 
-## Canonical Notes
+## Canonical fixed points
 
-- Mateo is the canonical name of Francisco’s friend.
+- Mateo is the canonical name of Francisco's friend.
 - Mateo was older than Francisco.
 - Mateo died from COVID-19 in 2021.
-
-These elements must remain consistent across all narrative implementations.
 
