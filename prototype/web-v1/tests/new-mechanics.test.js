@@ -103,6 +103,9 @@ test('Part 2 bridge keeps the full roster visible while gating the public path',
   assert.match(uiSource, /id !== 'guided-normal-route'/);
   assert.match(uiSource, /part2-lock-pill/);
   assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
+  assert.match(uiSource, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
+  assert.match(uiSource, /window\.open\('mailto:aconcaguastonesentinel@gmail.com', '_self'\)/);
+  assert.match(uiSource, /window\.open\('https:\/\/www\.instagram\.com\/aconcaguastonesentinel\/', '_blank', 'noopener,noreferrer'\)/);
 });
 
 
