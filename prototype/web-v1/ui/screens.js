@@ -1337,7 +1337,7 @@ function part2CarouselNext(type) {
   renderPart2Carousel(type);
 }
 
-function getCharacterImagePath(charId) {
+function getCharacterImagePath(charId, { part2 = false } = {}) {
   const nameMap = {
     francisco: 'francisco-aguirre',
     laura: 'laura-kim',
@@ -1349,7 +1349,9 @@ function getCharacterImagePath(charId) {
   };
   const filename = nameMap[charId];
   if (!filename) return null;
-  return `../../art/characters/${filename}.png`;
+  return part2
+    ? `../../art/characters/part-2/${filename}.png`
+    : `../../art/characters/${filename}.png`;
 }
 
 function renderCarousel(type) {
@@ -1593,9 +1595,9 @@ function renderPart2Carousel(type) {
     const c = localizeCharacter(item);
     // safeIdx captures the current index value for the onclick closure (mirrors renderCarousel pattern)
     const safeIdx = idx;
-    const imgPath = getCharacterImagePath(item.id);
+    const imgPath = getCharacterImagePath(item.id, { part2: true });
     const imgHtml = imgPath
-      ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" />`
+      ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" onerror="this.onerror=null;this.src='${getCharacterImagePath(item.id)}';" />`
       : '';
     // Apply locked style on the card element itself (matches .carousel-card.part2-locked in CSS)
     cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
