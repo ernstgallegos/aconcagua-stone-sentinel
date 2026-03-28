@@ -457,9 +457,18 @@ const I18N = {
       introAboutBody: 'You guide an expedition on Aconcagua through hourly decisions shaped by environmental pressure, body state, limited resources, and permit time. Reaching the summit is not enough: success depends on returning safely.',
       introCreditsTitle: 'Credits and status',
       introCreditsBody: 'This build is part of the public web prototype line for Aconcagua: Stone Sentinel. It is intended for playtesting, UX iteration, and balance validation before later production phases.',
-      introLinksTitle: 'Repository and contact',
-      introLinksBody: "Follow development, share feedback, or propose collaborations through the public repository and the creator's email.",
+      introLinksTitle: 'Share and contact',
+      introLinksBody: 'One-click shares are a direct way to support this project and help it reach more people. If this prototype resonates with you, share it.',
+      introSupportBody: 'You can also follow the project on Instagram for updates, progress milestones, and new public playtest drops.',
+      introShareMessage: 'I’m supporting Aconcagua: Stone Sentinel — a mountain decision prototype about risk, limits, and safe return.',
+      introShareX: 'Share on X',
+      introShareFacebook: 'Share on Facebook',
+      introShareLinkedIn: 'Share on LinkedIn',
+      introShareWhatsApp: 'Share on WhatsApp',
+      introShareCopy: 'Copy project link',
+      introShareCopied: 'Link copied',
       introRepoCta: 'Public repository',
+      introInstagramCta: 'Instagram',
       introEmailCta: 'Email the creator',
       titleChooseExpedition: 'Choose Your Expedition',
       titleSelectScenario: 'Select Scenario',
@@ -540,8 +549,17 @@ const I18N = {
       clearJournalConfirm: '¿Borrar todos los registros de expedición?',
       journalEmpty: 'No hay expediciones registradas. La primera partida aparecerá aquí.',
       begin: 'COMENZAR',
-      introLinksTitle: 'Repositorio y contacto',
-      introLinksBody: 'Seguí el desarrollo, compartí feedback o proponé colaboraciones desde el repositorio público y el email del creador.',
+      introLinksTitle: 'Compartir y contacto',
+      introLinksBody: 'Compartir con un clic es una forma directa de apoyar el proyecto y ayudar a que llegue a más personas. Si este prototipo te interesa, compartilo.',
+      introSupportBody: 'También podés seguir la cuenta de Instagram del proyecto para ver avances, hitos y nuevas publicaciones de playtesting público.',
+      introShareMessage: 'Estoy apoyando Aconcagua: Stone Sentinel — un prototipo de decisiones de montaña sobre riesgo, límites y regreso seguro.',
+      introShareX: 'Compartir en X',
+      introShareFacebook: 'Compartir en Facebook',
+      introShareLinkedIn: 'Compartir en LinkedIn',
+      introShareWhatsApp: 'Compartir en WhatsApp',
+      introShareCopy: 'Copiar enlace del proyecto',
+      introShareCopied: 'Enlace copiado',
+      introInstagramCta: 'Instagram',
       introRepoCta: 'Repositorio público',
       introEmailCta: 'Enviar email al creador',
       titleChooseExpedition: 'Elige tu expedición',
@@ -731,6 +749,28 @@ function uiText(en, es) {
   return CURRENT_LANGUAGE === 'es' ? es : en;
 }
 
+function getProjectShareUrl() {
+  const url = new URL(window.location.href);
+  url.hash = '';
+  url.search = '';
+  return url.toString();
+}
+
+function updateSocialShareLinks() {
+  const setHref = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('href', value);
+  };
+  const shareUrl = getProjectShareUrl();
+  const shareMessage = t('ui.introShareMessage');
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedMessage = encodeURIComponent(shareMessage);
+  setHref('intro-share-x', `https://twitter.com/intent/tweet?text=${encodedMessage}&url=${encodedUrl}`);
+  setHref('intro-share-facebook', `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`);
+  setHref('intro-share-linkedin', `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`);
+  setHref('intro-share-whatsapp', `https://api.whatsapp.com/send?text=${encodedMessage}%20${encodedUrl}`);
+}
+
 function renderIntroContent() {
   const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
   const infoTrigger = document.querySelector('.title-info-trigger');
@@ -754,8 +794,47 @@ function renderIntroContent() {
   setText('intro-section-credits-body', t('ui.introCreditsBody'));
   setText('intro-links-title', t('ui.introLinksTitle'));
   setText('intro-links-body', t('ui.introLinksBody'));
+  setText('intro-support-body', t('ui.introSupportBody'));
+  setText('intro-share-x', t('ui.introShareX'));
+  setText('intro-share-facebook', t('ui.introShareFacebook'));
+  setText('intro-share-linkedin', t('ui.introShareLinkedIn'));
+  setText('intro-share-whatsapp', t('ui.introShareWhatsApp'));
+  setText('intro-share-copy', t('ui.introShareCopy'));
   setText('intro-repo-link', t('ui.introRepoCta'));
+  setText('intro-instagram-link', t('ui.introInstagramCta'));
   setText('intro-email-link', t('ui.introEmailCta'));
+  updateSocialShareLinks();
+}
+
+function copyProjectShareLink() {
+  const shareUrl = getProjectShareUrl();
+  const copyBtn = document.getElementById('intro-share-copy');
+  const originalLabel = t('ui.introShareCopy');
+  if (copyBtn) copyBtn.textContent = originalLabel;
+  const onCopied = () => {
+    if (!copyBtn) return;
+    copyBtn.textContent = t('ui.introShareCopied');
+    window.setTimeout(() => {
+      copyBtn.textContent = originalLabel;
+    }, 1500);
+  };
+
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(shareUrl).then(onCopied).catch(() => {});
+    return;
+  }
+  const helper = document.createElement('textarea');
+  helper.value = shareUrl;
+  helper.setAttribute('readonly', '');
+  helper.style.position = 'absolute';
+  helper.style.left = '-9999px';
+  document.body.appendChild(helper);
+  helper.select();
+  try {
+    document.execCommand('copy');
+    onCopied();
+  } catch {}
+  document.body.removeChild(helper);
 }
 
 function renderTutorialContent() {
@@ -4312,6 +4391,7 @@ window.setDifficulty = setDifficulty;
 window.advanceFromTitle = advanceFromTitle;
 window.openIntroModal = openIntroModal;
 window.closeIntroModal = closeIntroModal;
+window.copyProjectShareLink = copyProjectShareLink;
 window.openTutorialModal = openTutorialModal;
 window.closeTutorialModal = closeTutorialModal;
 window.closeOnboardingModal = closeOnboardingModal;

@@ -318,10 +318,19 @@
   gap: 0.85rem;
 }
 
+.intro-support-note {
+  margin: 0;
+  color: color-mix(in srgb, var(--text) 84%, var(--ice) 16%);
+}
+
 .intro-link-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.intro-share-actions .intro-link-btn {
+  flex: 1 1 168px;
 }
 
 .intro-link-btn {
