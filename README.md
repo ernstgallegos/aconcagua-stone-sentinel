@@ -6,6 +6,24 @@
 
 Reaching the summit is only one of several valid outcomes.
 
+## Visual references
+
+Repository documentation now includes direct links to current in-repo artwork so contributors can quickly align UI, narrative tone, and character identity.
+
+### Cover concept
+
+![Aconcagua: Stone Sentinel cover concept](art/cover/cover-concept-1.png)
+
+### Character roster preview
+
+| Francisco Aguirre | Daniela De Rossi | Erik Lundvall |
+|---|---|---|
+| ![Francisco Aguirre portrait](art/characters/francisco-aguirre.png) | ![Daniela De Rossi portrait](art/characters/daniela-de-rossi.png) | ![Erik Lundvall portrait](art/characters/erik-lundvall.png) |
+
+### Atmospheric concept art
+
+![Curated mountain concept art](art/concept-art/curated/concept-curated-1.png)
+
 ---
 
 **Project Whitepaper**  

@@ -21,6 +21,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Enriched root documentation (`README.md`, `README.es.md`) with in-repo visual references (cover art, character portraits, and curated concept art) to improve onboarding and style alignment for contributors.
 - Updated `meta/release-hardening-v1.4.5.md` with a consolidated release-hardening audit/checklist snapshot tied to the v1.4.5 stabilization baseline.
 - Updated character portrait sourcing so Part 1 carousel keeps using `art/characters/*.png`, while Part 2 carousel now prefers `art/characters/part-2/*.png` with automatic fallback to Part 1 images when a Part 2 variant is missing.
 - Documented portrait asset contracts and filename mapping in `art/characters/README.MD` and `art/characters/part-2/README.MD` for Part 1 vs Part 2 carousel usage.
