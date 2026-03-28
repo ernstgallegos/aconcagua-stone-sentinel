@@ -2052,6 +2052,10 @@
 .decision-window-status-inline.warn     { color: var(--ochre); }
 .decision-window-status-inline.critical { color: var(--red); }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 /* ── Watch Detail Overlay ── */
 .watch-detail-overlay {
   position: fixed;

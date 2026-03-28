@@ -42,20 +42,43 @@ function detachFocusTrap(overlay) {
   delete overlay.__modalKeydownHandler;
 }
 
+function getModalCount() {
+  const raw = Number(document?.body?.dataset?.modalCount || 0);
+  return Number.isFinite(raw) && raw > 0 ? raw : 0;
+}
+
+function setModalCount(count) {
+  if (!document?.body?.dataset) return;
+  document.body.dataset.modalCount = String(Math.max(0, count));
+  if (count > 0) {
+    document.body.classList?.add('modal-open');
+  } else {
+    document.body.classList?.remove('modal-open');
+  }
+}
+
 export function openModalWithFocus({ overlay, dialog, trigger, openClass = 'open' }) {
   if (!overlay) return;
   overlay.dataset.lastTriggerId = trigger?.id || '';
   overlay.classList.add(openClass);
   overlay.setAttribute('aria-hidden', 'false');
+  setModalCount(getModalCount() + 1);
   attachFocusTrap(overlay, dialog);
   dialog?.focus();
 }
 
 export function closeModalWithFocusReturn({ overlay, fallbackTriggerId, openClass = 'open' }) {
   if (!overlay) return;
+  const isOpen = typeof overlay.classList?.contains === 'function'
+    ? overlay.classList.contains(openClass)
+    : typeof overlay.getAttribute === 'function'
+      ? overlay.getAttribute('aria-hidden') === 'false'
+      : true;
+  if (!isOpen) return;
   detachFocusTrap(overlay);
   overlay.classList.remove(openClass);
   overlay.setAttribute('aria-hidden', 'true');
+  setModalCount(getModalCount() - 1);
   const targetId = overlay.dataset.lastTriggerId || fallbackTriggerId;
   if (targetId) document.getElementById(targetId)?.focus();
 }

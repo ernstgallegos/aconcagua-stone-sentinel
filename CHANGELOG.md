@@ -17,6 +17,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/ui/helpers/startup-ui.js` and `prototype/web-v1/ui/helpers/routing.js` so startup blocking-error rendering and deep-link hash parsing/sync live outside the `screens.js` monolith.
 - Added startup failure-classification smoke tests (`prototype/web-v1/tests/smoke/model-ready.test.js`) and routing parser unit coverage (`prototype/web-v1/tests/unit/routing.test.js`).
 - Added a data-driven Part 2 contemplative narrative renderer in `prototype/web-v1/ui/screens.js` with paragraph-aware body layout, variable navigation button counts, titleless support, and action wiring for back/debrief/contact/replay flows.
+- Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
 - Updated the Monte Carlo harness to source canonical terminal outcomes from `data/outcomes.json` instead of a duplicated hardcoded list, preventing simulator/runtime taxonomy drift.
@@ -38,6 +39,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Replaced the legacy Part 2 bridge cards in `prototype/web-v1/index.html` with the canonical seven-screen pre-threshold Francisco sequence (`mendoza_room` → `future_cta`) and hooked subtle per-preset contemplative animation/visual treatments in `prototype/web-v1/css/screens.css`.
 - Updated Part 2 gating/deep-link/smoke coverage and references to the new narrative screen IDs in `prototype/web-v1/ui/screens.js`, `prototype/web-v1/tests/test_smoke_flow.py`, and `docs/deep-links.web-v1.md`.
 - Tightened Part 2 narrative pacing by rewriting the seven-screen Francisco text block to roughly half the previous reading length while preserving second-person voice, canonical logistics details, and pre-threshold scope.
+- Hardened runtime bootstrap flow in `prototype/web-v1/ui/screens.js` so setup carousels/deep-link initialization only execute after successful required-data loading and failures are surfaced through blocking diagnostics instead of silent partial boot.
+- Hardened global modal behavior in `prototype/web-v1/ui/helpers/accessibility.js` and `prototype/web-v1/ui/screens.js` by adding body scroll-lock state, overlay-dismiss wiring on backdrop clicks, and automatic transient overlay cleanup during screen transitions.
 
 ### Fixed
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
@@ -49,6 +52,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed blocking startup diagnostics to distinguish missing file, HTTP failure, invalid JSON/shape, and post-load contract validation failures with per-file detail in the fatal screen.
 - Fixed startup failure categorization to emit explicit `missing file`, `http failure`, and `invalid json` categories (instead of collapsing all non-shape errors into generic `load failure`).
 - Fixed web-v1 docs data-source drift by adding `data/context_events.json` to architecture/README source-of-truth lists.
+- Fixed a startup resilience defect where `loadDataConfig()` failures still allowed post-load UI bootstrap code to run, which could leave the app in a confusing partially initialized state after a blocking data error.
+- Fixed overlay persistence regressions where help/watch/field-log panels could remain open across route/screen transitions and appear to freeze interaction.
 
 ### Security
 - No security-impacting changes in this release window.

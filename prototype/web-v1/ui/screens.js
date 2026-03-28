@@ -939,11 +939,12 @@ async function loadDataConfig() {
     fetchImpl: fetch,
     onError: setModelLoadError,
   });
-  if (!loaded) return;
+  if (!loaded) return false;
   DATA_CONFIG = loaded;
   rebuildRouteData();
   updateUIState(G, { modelReady: true });
   setStartupState('ready');
+  return true;
 }
 
 // ════════════════════════════════════════════════
@@ -1106,6 +1107,22 @@ function applyStaticTranslations() {
 // ════════════════════════════════════════════════
 // Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
+function dismissTransientUi() {
+  const overlayIds = ['game-help-overlay', 'watch-detail-overlay', 'field-log-overlay'];
+  overlayIds.forEach((id) => {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  });
+  ['watch-detail-backdrop', 'field-log-backdrop', 'bottom-sheet-backdrop'].forEach((id) => {
+    document.getElementById(id)?.classList.remove('visible');
+  });
+  document.querySelectorAll('.bottom-sheet.open').forEach((sheet) => {
+    sheet.classList.remove('open');
+  });
+}
+
 function showScreen(id) {
   const part2Screens = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
   const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
@@ -1114,6 +1131,7 @@ function showScreen(id) {
   }
 
   updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
+  dismissTransientUi();
 
   // Hide fixed utility controls during gameplay; restore on other screens
   const titleControls = document.querySelector('.title-top-controls');
@@ -3946,11 +3964,21 @@ initVisualMode();
 initLanguage();
 initDifficulty();
 initWelcomeScreen();
-loadDataConfig().then(() => {
-  buildCharacterGrid();
-  buildScenarioGrid();
-  handleDeepLink();
-});
+loadDataConfig()
+  .then((isReady) => {
+    if (!isReady) return;
+    buildCharacterGrid();
+    buildScenarioGrid();
+    handleDeepLink();
+  })
+  .catch((error) => {
+    setModelLoadError({
+      category: 'load failure',
+      file: 'runtime bootstrap',
+      detail: error?.message || String(error),
+      message: `Blocking runtime bootstrap failure: ${error?.message || String(error)}`,
+    });
+  });
 
 const introModal = document.getElementById('intro-modal');
 if (introModal) {
@@ -3959,6 +3987,24 @@ if (introModal) {
 const tutorialModal = document.getElementById('tutorial-modal');
 if (tutorialModal) {
   tutorialModal.addEventListener('click', (event) => { if (event.target === tutorialModal) closeTutorialModal(); });
+}
+const gameHelpOverlay = document.getElementById('game-help-overlay');
+if (gameHelpOverlay) {
+  gameHelpOverlay.addEventListener('click', (event) => {
+    if (event.target === gameHelpOverlay) closeGameHelp();
+  });
+}
+const watchDetailOverlay = document.getElementById('watch-detail-overlay');
+if (watchDetailOverlay) {
+  watchDetailOverlay.addEventListener('click', (event) => {
+    if (event.target === watchDetailOverlay) closeWatchDetail();
+  });
+}
+const fieldLogOverlay = document.getElementById('field-log-overlay');
+if (fieldLogOverlay) {
+  fieldLogOverlay.addEventListener('click', (event) => {
+    if (event.target === fieldLogOverlay) closeFieldLog();
+  });
 }
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
