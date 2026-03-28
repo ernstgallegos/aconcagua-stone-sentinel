@@ -233,3 +233,4 @@ In addition to the changelog:
 - Route/deploy documentation drift decreases when one canonical document owns local-preview, Vercel, and CORS instructions (`docs/deploy-routing.md`) and README variants only keep short pointers.
 - Intro/support UX in `web-v1` is clearer when prototype-info modal includes explicit “sharing helps the project” copy, one-click social intent links, and a canonical Instagram CTA; keep these links language-aware and generated from the active runtime URL to avoid stale hardcoded share targets.
 - Release-note hygiene stays cleaner when a patch is declared final (e.g., `v1.4.5`): move all pending `[Unreleased]` bullets into that version block and leave `[Unreleased]` explicitly empty to avoid mixed-status histories.
+- Final-screen collaboration CTAs in Part 2 are more reliable when each external destination (email/Instagram) uses its own explicit action handler and localized nav label instead of overloading one generic contact path.

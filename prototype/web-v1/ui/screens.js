@@ -320,6 +320,7 @@ So is the work.`,
       { label: 'Back', action: 'back', role: 'secondary' },
       { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
       { label: 'Contact the creators to collaborate', action: 'contact_creators', role: 'primary' },
+      { label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' },
       { label: 'Back to title / replay', action: 'back_to_title_or_replay', role: 'secondary' },
     ],
   },
@@ -1842,7 +1843,11 @@ function handlePart2NarrativeAction(screenId, action) {
     return;
   }
   if (action === 'contact_creators') {
-    window.location.href = 'mailto:aconcaguastonesentinel@gmail.com';
+    window.open('mailto:aconcaguastonesentinel@gmail.com', '_self');
+    return;
+  }
+  if (action === 'open_instagram') {
+    window.open('https://www.instagram.com/aconcaguastonesentinel/', '_blank', 'noopener,noreferrer');
   }
 }
 
@@ -1865,6 +1870,7 @@ function localizePart2NavLabel(label) {
     Continue: uiText('Continue', 'Continuar'),
     Back: uiText('Back', 'Atrás'),
     'Contact the creators to collaborate': uiText('Contact the creators to collaborate', 'Contactar a los creadores para colaborar'),
+    'Follow on Instagram': uiText('Follow on Instagram', 'Seguir en Instagram'),
     'Back to title / replay': uiText('Back to title / replay', 'Volver al título / rejugar'),
   };
   return map[label] || label;

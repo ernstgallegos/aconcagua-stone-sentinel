@@ -9,12 +9,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-- No unreleased changes. All pending entries were consolidated into `1.4.5` (2026-03).
+- No unreleased changes.
 
 ## [1.4.5] — 2026-03
 
 ### Added
 - Added one-click social-share actions in the intro modal (`X`, `Facebook`, `LinkedIn`, `WhatsApp`, and copy-link) plus direct Instagram profile access so players can actively amplify project visibility from the web prototype entry flow.
+- Added a dedicated `Follow on Instagram` CTA on the Part 2 final (`future_cta`) screen, linking directly to the canonical project profile so support/follow actions are available from the closing narrative step.
 - Added `docs/deploy-routing.md` as the single canonical source for local preview routes, Vercel routing behavior, and API CORS deployment notes (EN/ES in one document).
 - Added `prototype/mra-v0/viewer/index.html` as the archived legacy run-replay surface, relocating the former root viewer assets (`app.js`, `styles.css`) under the frozen Python prototype scope.
 - Added repository governance baselines `SECURITY.md` and `CODE_OF_CONDUCT.md` to support public reporting/enforcement pathways before wider public scrutiny.
@@ -66,6 +67,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
+- Fixed the Part 2 `future_cta` collaboration action to reliably open the official project contact (`aconcaguastonesentinel@gmail.com`) via `mailto:` from the final screen CTA.
 - Fixed startup/fatal diagnostics copy in `prototype/web-v1/ui/helpers/startup-ui.js` to emit localized English/Spanish messaging (including categorized blocking-error summaries and details) based on active language selection.
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
 - Fixed CI test discovery by replacing the quoted `**/*.test.js` Node test glob with a `find`-driven file list so `npm test` resolves web-v1 test files correctly on GitHub Actions shells.
