@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added deterministic outcome reachability coverage in `prototype/web-v1/tests/engine/outcome-reachability.test.js` to validate `Resource Exhaustion`, `Collapse (Exposure)`, and exposure-driven `Rescue` paths.
+- Added `prototype/web-v1/tests/parity/i18n-static-coverage.test.js` to lock bilingual coverage hooks for static overlays, debrief labels, summit-success CTAs, onboarding action labels, and localized aria attributes.
 - Added focused event hardening and parity suites: `character-events-coverage`, `event-nondominance`, and `repo-truth-guarantees` tests to enforce bounded effects, cooldown/max-per-run behavior, and documented-repo guarantees.
 - Added canonical `data/context_events.json` and wired web-v1 to load environment-event archetypes from data contracts (with runtime fallback defaults) instead of hardcoded UI-adjacent constants.
 - Added `prototype/web-v1/ui/helpers/startup-ui.js` and `prototype/web-v1/ui/helpers/routing.js` so startup blocking-error rendering and deep-link hash parsing/sync live outside the `screens.js` monolith.
@@ -17,6 +19,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added a data-driven Part 2 contemplative narrative renderer in `prototype/web-v1/ui/screens.js` with paragraph-aware body layout, variable navigation button counts, titleless support, and action wiring for back/debrief/contact/replay flows.
 
 ### Changed
+- Updated the Monte Carlo harness to source canonical terminal outcomes from `data/outcomes.json` instead of a duplicated hardcoded list, preventing simulator/runtime taxonomy drift.
+- Updated playtest evidence references from `v1.4.1` to `v1.4.5` in `docs/balance-calibration-notes.md`, `docs/en/implementation-plan-v1.4.md`, and `docs/es/plan-implementacion-v1.4.md`.
+- Updated simulation-engine documentation to state that Monte Carlo outcome taxonomy is loaded from `data/outcomes.json`.
+- Expanded static web-v1 localization pass in `prototype/web-v1/ui/screens.js` so previously hardcoded interface strings (fatal/startup copy, watch labels, debrief sections, tutorial/onboarding labels, summit-success CTAs, and key aria/title attributes) now re-render consistently in the selected language.
 - Clarified module ownership by moving turn-review log-entry shaping into `prototype/web-v1/ui/helpers/run-log.js` and keeping `ui/screens.js` as orchestration/render wiring only.
 - Strengthened event boundedness in `prototype/web-v1/engine/events-core.js` with explicit per-effect clamps for context/character events plus sanitized cooldown/max-per-run handling, preventing hidden authority drift from data misconfiguration.
 - Expanded `docs/repo-truth.md` with a “Guaranteed by tests” section and tightened `docs/simulation_engine.md` legacy wording to explicitly scope remaining v1.3 compatibility contracts.
@@ -34,6 +40,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Tightened Part 2 narrative pacing by rewriting the seven-screen Francisco text block to roughly half the previous reading length while preserving second-person voice, canonical logistics details, and pre-threshold scope.
 
 ### Fixed
+- Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
+- Fixed startup/fatal diagnostics copy in `prototype/web-v1/ui/helpers/startup-ui.js` to emit localized English/Spanish messaging (including categorized blocking-error summaries and details) based on active language selection.
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
 - Fixed CI test discovery by replacing the quoted `**/*.test.js` Node test glob with a `find`-driven file list so `npm test` resolves web-v1 test files correctly on GitHub Actions shells.
 - Fixed debrief turn-review readability by adding per-turn signal-interpretation hints (confidence/trend/conservative-play framing) without exposing raw EP/BT/delta internals.
@@ -85,13 +93,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Security
 - No security-impacting changes in this release.
 
-### Added
+#### Additional Added (same 1.4.3 release batch)
 - Published reusable engine formula module `prototype/web-v1/engine/pressure-model.js` plus deterministic harness `prototype/web-v1/tests/harness/turn-harness.js` for turn-level regression checks.
 - Added web-v1 engine unit tests for Environmental Pressure and Body Tolerance calculations and a resolve-turn pipeline ordering contract (`prototype/web-v1/tests/engine/pressure-calculations.test.js`, `prototype/web-v1/tests/engine/resolve-turn-pipeline.test.js`).
 - Added in-game `Pressure & Trend Help` overlay with bilingual content and keyboard escape-close support (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`, `prototype/web-v1/css/components.css`).
 - Added systemic acceptance coverage for the EP→BT→Perception pipeline constraints, uncertainty guarantees, and conditional action optimality (`prototype/web-v1/tests/engine/systemic-acceptance.test.js`).
 
-### Changed
+#### Additional Changed (same 1.4.3 release batch)
 - `prototype/web-v1/engine/turn-resolution.js` now exports a canonical `RESOLVE_TURN_PIPELINE` contract and `resolveTurnWithTrace()` so tests can enforce resolver stage ordering.
 - `prototype/web-v1/ui/screens.js` now delegates EP/BT calculations to `engine/pressure-model.js`, keeping runtime math centralized and testable.
 - Improved gameplay readability by increasing watch/status typography, strengthening text contrast for critical HUD labels, and applying consistent `:focus-visible` states to interactive controls (`prototype/web-v1/css/components.css`).
@@ -99,7 +107,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `resolveTurn()` now persists a structured per-turn telemetry snapshot (`lastTurnRecord`) including environment, pressure tuple, perception, action, and resulting state for deterministic auditability (`prototype/web-v1/engine/turn-resolution.js`).
 - Updated engine documentation with the canonical resolver order and systemic acceptance contract (`docs/simulation_engine.md`).
 
-### Fixed
+#### Additional Fixed (same 1.4.3 release batch)
 - Locked resolver integration against pipeline drift with explicit ordered stage tracing in tests and harness runs, reducing risk of silent turn-order regressions.
 - Fixed Monte Carlo simulator metadata/output drift by deriving report filename and engine version from `package.json` instead of the stale `v1.4.1` literal (`scripts/monte-carlo-web-v1.js`).
 - Fixed `docs/simulation_engine.md` coherence drift so the public build status matches `v1.4.2` and the canonical outcomes list includes `Permit Expired`.

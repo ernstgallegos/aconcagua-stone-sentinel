@@ -335,8 +335,18 @@ export function createTurnEngine(deps) {
 
     let outcome = result.outcome;
     const outsideCamp = !isCampPosition(state.position);
-    if (state.functional_capacity <= 5 || state.exposure >= 99) outcome = 'Fatality';
-    else if (state.fatigue >= 100) outcome = outsideCamp ? 'Rescue' : 'Collapse (Fatigue)';
+    const resourcesDepleted = state.water <= 0 || state.food <= 0;
+    const criticalExposure = state.exposure >= 94;
+
+    if (state.functional_capacity <= 5 || (state.exposure >= 99 && state.fatigue >= 100)) {
+      outcome = 'Fatality';
+    } else if (resourcesDepleted) {
+      outcome = 'Resource Exhaustion';
+    } else if (criticalExposure) {
+      outcome = outsideCamp ? 'Rescue' : 'Collapse (Exposure)';
+    } else if (state.fatigue >= 100) {
+      outcome = outsideCamp ? 'Rescue' : 'Collapse (Fatigue)';
+    }
 
     if (!CANONICAL_OUTCOMES.has(outcome) && outcome !== 'Strategic Retreat') outcome = 'Strategic Retreat';
 

@@ -25,7 +25,7 @@ function setModelLoadError(errorMessage) {
   updateUIState(G, { modelReady: false });
   const rendered = renderBlockingError(errorMessage);
   console.error(rendered.detail);
-  setStartupState('error', 'Model unavailable. Review blocking diagnostics.');
+  setStartupState('error', uiText('Model unavailable. Review blocking diagnostics.', 'Modelo no disponible. Revisa el diagnóstico bloqueante.'));
   showScreen('fatal-error');
 }
 
@@ -326,6 +326,79 @@ So is the work.`,
 ];
 const PART2_NARRATIVE_IDS = new Set(PART2_NARRATIVE_SEQUENCE.map((screen) => screen.id));
 const PART2_NARRATIVE_INDEX_BY_ID = new Map(PART2_NARRATIVE_SEQUENCE.map((screen, index) => [screen.id, index]));
+const PART2_NARRATIVE_ES = {
+  mendoza_room: {
+    eyebrow: 'Noche antes de partir',
+    title: 'Mendoza',
+    body: `Cuando cierras la puerta del hotel, Mendoza empieza a sentirse provisoria. Las dos camas se vuelven mesas de clasificación. Bolsos abiertos. Pasaporte, permisos, cargadores, correas, guantes, bolsas dentro de bolsas. Todo ya pertenece a la montaña, aunque la montaña todavía esté a un traslado de distancia.
+
+STONE SENTINEL EXPEDITIONS resolvió la logística visible: traslado desde el aeropuerto, habitación, trámite de permiso, alquileres, chequeo de equipo. Compartir cuarto es lo normal salvo que pagues privacidad. Esta noche eso significa Blake en la otra cama, repitiendo su método como si repetir pudiera calmar la incertidumbre.
+
+“El peso es todo”, dice. “Cada gramo cuenta”.
+
+Vos te quedas en silencio y revisas tu equipo más despacio. Por un momento pregunta: “¿Ya hiciste altura antes?”. Negás con la cabeza. Él asiente y vuelve a las correas y categorías.
+
+Sacás la foto de Mateo de un bolsillo lateral, la mirás unos segundos y la guardás. Mateo, mayor que vos, perdido desde el COVID en 2021, sigue ocupando un lugar que ningún bolso puede cargar.
+
+Afuera, la ciudad sigue.
+
+Adentro, algo ya cambió.`,
+  },
+  team_presentation: {
+    eyebrow: 'Lobby del hotel',
+    title: 'El grupo',
+    body: `En el lobby la expedición aparece en fragmentos: botas de montaña bajo luz de ciudad, camperas de otros climas, voces superpuestas, confianza practicada, dudas escondidas.
+
+Martina se presenta con eficiencia serena. Laura llega después: médica de montaña, precisa y sin dramatismo. Erik habla fuerte, como si el ritmo también fuera autoridad. Irina observa más de lo que dice. Daniela registra detalles que casi nadie mira.
+
+Acá nadie se conoce del todo. Pero ya comparten el mismo permiso, el mismo horario de salida y el mismo borde entre entusiasmo y cálculo.`,
+  },
+  after_circle: {
+    eyebrow: 'Tiempo sin estructura',
+    title: 'Después de las presentaciones',
+    body: `El círculo se rompe sin ceremonia. Las conversaciones se arman y se desarman. Es el momento donde los roles aflojan y aparece el temperamento real.
+
+Algunos comparan capas térmicas y guantes. Otros discuten tiempos de aclimatación. Alguien dice que “si el día abre, hay que empujar”. Otro responde que esa frase ya enterró demasiadas expediciones.
+
+Escuchas más de lo que hablas. La montaña todavía no empezó, pero la forma en que cada uno decide ya está ahí.`,
+  },
+  guides: {
+    eyebrow: 'Estructura',
+    title: 'Quién conduce',
+    body: `Cuando hablan los guías, la sala se ordena. No porque impongan volumen, sino porque reducen ambigüedad.
+
+Regla simple: nadie corre a la montaña. Ritmo, lectura y margen de retorno primero.
+
+Recordatorio clave: cumbre no es éxito si no vuelves al parque con margen. Todo el plan gira sobre ese eje.`,
+  },
+  briefing_night: {
+    eyebrow: 'Antes de partir',
+    title: '',
+    body: `“Coman. Tomen agua. Digan todo temprano”. Las instrucciones suenan simples. No lo son.
+
+En la noche previa, casi todo parece controlable. En altura, casi nada lo es.
+
+La expedición todavía es promesa. Mañana será sistema.`,
+  },
+  departure_road: {
+    eyebrow: 'Madrugada',
+    title: 'Camino a Horcones',
+    body: `La mañana está más fría de lo esperado. Los movimientos se vuelven automáticos: cargar, revisar, levantar. La conversación se afina.
+
+Por la ventana, Mendoza queda atrás y aparece el perfil seco del corredor de acceso. El tránsito urbano cambia por viento y piedra.
+
+No hay épica en este tramo. Solo transición. Y, con ella, una decisión silenciosa: cómo vas a leer la montaña cuando te responda.`,
+  },
+  future_cta: {
+    eyebrow: 'El desarrollo continúa',
+    title: 'La expedición que sigue',
+    body: `Lo que viene después de este umbral ya está en construcción. La expedición completa —equipo pleno en montaña, decisiones con consecuencia integral— sigue en desarrollo.
+
+Si llegaste hasta acá, ya hiciste la parte más difícil: sostener atención, no solo impulso.
+
+Gracias por jugar, observar y dejar feedback. Esa información también construye la ruta.`,
+  },
+};
 const PART2_BREATHING_LINES = new Set([
   'Most of those first readings will be wrong.',
   'Trust is not.',
@@ -853,7 +926,7 @@ function advanceFromTitle(event) {
     event.stopPropagation();
   }
   if (!G.modelReady) {
-    setStartupState('error', 'Model is still loading or blocked.');
+    setStartupState('error', uiText('Model is still loading or blocked.', 'El modelo todavía está cargando o está bloqueado.'));
     return;
   }
   closeIntroModal();
@@ -940,6 +1013,86 @@ function applyStaticTranslations() {
     const el = document.querySelector(selector);
     if (el) el.textContent = t(key);
   });
+
+  const bilingualTextMap = [
+    ['.title-info-trigger', 'ⓘ Info', 'ⓘ Info'],
+    ['#startup-status-line[data-state="loading"]', 'Preparing mountain model…', 'Preparando modelo de montaña…'],
+    ['#startup-status-line[data-state="ready"]', 'Model ready. Begin when prepared.', 'Modelo listo. Comienza cuando estés preparado.'],
+    ['#blocking-error-title', 'Blocking data error', 'Error bloqueante de datos'],
+    ['#blocking-error-summary', 'The simulation model could not be initialized. Gameplay is disabled until data files are fixed.', 'No se pudo inicializar el modelo de simulación. La partida queda deshabilitada hasta corregir los archivos de datos.'],
+    ['#field-log-overlay .field-log-title', 'Field Log', 'Bitácora de campo'],
+    ['#field-log-overlay .log-empty', 'No entries yet.', 'Aún no hay entradas.'],
+    ['#watch-band #wc-body .watch-cell-label', 'Body', 'Cuerpo'],
+    ['#watch-band #wc-pressure .watch-cell-label', 'Pressure', 'Presión'],
+    ['#watch-band #wc-supplies .watch-cell-label', 'Supplies', 'Recursos'],
+    ['#watch-band #wc-permit .watch-cell-label', 'Permit', 'Permiso'],
+    ['.game-mobile-bar .btn-ghost:nth-child(1)', '⌚ Watch', '⌚ Reloj'],
+    ['.game-mobile-bar .btn-ghost:nth-child(2)', '🏔 Route', '🏔 Ruta'],
+    ['#bottom-sheet-route .bottom-sheet-title > span', '🏔 Route Track', '🏔 Ruta'],
+    ['#screen-debrief .debrief-section:nth-of-type(1) .debrief-section-title', 'Run Summary', 'Resumen de partida'],
+    ['#screen-debrief .debrief-section:nth-of-type(2) .debrief-section-title', 'Key Lesson', 'Lección clave'],
+    ['#screen-debrief .debrief-section:nth-of-type(3) .debrief-section-title', 'Structured Debrief', 'Debrief estructurado'],
+    ['#screen-debrief .debrief-section:nth-of-type(4) .debrief-section-title:nth-of-type(1)', 'Run Signature', 'Firma de partida'],
+    ['#screen-debrief .debrief-section:nth-of-type(4) .debrief-section-title:nth-of-type(2)', 'Review Turns', 'Revisar turnos'],
+    ['#screen-debrief .review-controls .btn-ghost:first-child', 'Previous', 'Anterior'],
+    ['#screen-debrief .review-controls .btn-ghost:last-child', 'Next', 'Siguiente'],
+    ['#debrief-review-content', 'No turn records available for this run.', 'No hay registros de turnos disponibles para esta partida.'],
+    ['#screen-debrief .debrief-outcome-label', 'Expedition Outcome', 'Resultado de expedición'],
+    ['#screen-debrief .debrief-stat-card:nth-child(1) .debrief-stat-card-label', 'Days', 'Días'],
+    ['#screen-debrief .debrief-stat-card:nth-child(2) .debrief-stat-card-label', 'Highest Point', 'Punto más alto'],
+    ['#screen-debrief .debrief-stat-card:nth-child(3) .debrief-stat-card-label', 'Decisions', 'Decisiones'],
+    ['#screen-debrief .debrief-stat-card:nth-child(4) .debrief-stat-card-label', 'Return Status', 'Estado de retorno'],
+    ['#screen-debrief .debrief-cause', 'Primary cause pending run completion.', 'Causa principal pendiente al finalizar la partida.'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(1) strong', 'Outcome:', 'Resultado:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(2) strong', 'Highest point reached:', 'Punto más alto alcanzado:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(3) strong', 'Turning point:', 'Punto de inflexión:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(4) strong', 'Primary systemic pressure:', 'Presión sistémica principal:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(5) strong', 'Primary decision pattern:', 'Patrón de decisión principal:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(6) strong', 'Recommendation for next run:', 'Recomendación para la próxima partida:'],
+    ['#screen-summit-success [style*="letter-spacing:0.2em"]', 'SUMMIT AND SAFE RETURN', 'CUMBRE Y REGRESO SEGURO'],
+    ['#screen-summit-success h2', 'The summit was reached.<br>The mountain was respected.', 'La cumbre fue alcanzada.<br>La montaña fue respetada.'],
+    ['#screen-summit-success p:not(#summit-success-note)', 'What comes next puts everything you learned here to a different test. Not a simulation. The real expedition — with the full group, the real terrain, and no guaranteed outcomes. The mountain will decide.', 'Lo que sigue pone todo lo que aprendiste aquí bajo otra prueba. No una simulación. La expedición real — con el grupo completo, el terreno real y sin resultados garantizados. La montaña decidirá.'],
+    ['#screen-summit-success .btn-primary', 'Begin the real expedition', 'Comenzar la expedición real'],
+    ['#screen-summit-success .btn-ghost', 'Review this run first', 'Revisar primero esta partida'],
+    ['#screen-part2-character .nav-back', 'Back', 'Atrás'],
+    ['#part2-carousel-label-route', 'Route', 'Ruta'],
+    ['#screen-part2-character .expedition-setup-actions .btn-ghost', 'Return to debrief', 'Volver al debrief'],
+    ['#screen-journal .journal-header .journal-title', 'Expedition Journal', 'Diario de expedición'],
+    ['#intro-modal .screen-kicker', 'Prototype Info', 'Info del prototipo'],
+    ['#tutorial-modal .screen-kicker', 'Play Guide', 'Guía de juego'],
+    ['#tutorial-modal .tutorial-chip:nth-child(1) strong', 'Core loop', 'Bucle central'],
+    ['#tutorial-modal .tutorial-chip:nth-child(2) strong', 'Primary goal', 'Objetivo principal'],
+    ['#tutorial-modal .tutorial-chip:nth-child(3) strong', 'Difficulty effect', 'Efecto de dificultad'],
+    ['#onboarding-modal-kicker', 'Expedition Briefing', 'Briefing de expedición'],
+    ['#onboarding-back-btn', 'Back to Setup', 'Volver a preparación'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(1) .decision-key', 'ADVANCE', 'AVANZAR'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(2) .decision-key', 'ADVANCE SLOWLY', 'AVANZAR LENTO'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(3) .decision-key', 'WAIT', 'ESPERAR'],
+    ['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(4) .decision-key', 'DESCEND', 'DESCENDER'],
+  ];
+  bilingualTextMap.forEach(([selector, en, es]) => {
+    const el = document.querySelector(selector);
+    if (el) el.innerHTML = CURRENT_LANGUAGE === 'es' ? es : en;
+  });
+
+  const ariaMap = [
+    ['.title-info-trigger', 'aria-label', uiText('Open prototype information', 'Abrir información del prototipo')],
+    ['.title-info-trigger', 'title', uiText('Open prototype information', 'Abrir información del prototipo')],
+    ['#field-log-trigger', 'aria-label', uiText('View field log', 'Ver bitácora de campo')],
+    ['#game-help-trigger', 'aria-label', uiText('Open pressure and trend help', 'Abrir ayuda de presión y tendencia')],
+    ['#watch-band', 'aria-label', uiText('Watch status — press Enter or tap for full detail', 'Estado del reloj — pulsa Enter o toca para ver detalle completo')],
+    ['#bottom-sheet-route', 'aria-label', uiText('Route panel', 'Panel de ruta')],
+    ['#bottom-sheet-route .btn-link', 'aria-label', uiText('Close Route panel', 'Cerrar panel de ruta')],
+    ['#screen-journal .nav-back', 'aria-label', uiText('Back', 'Atrás')],
+    ['#screen-journal .journal-header .btn-ghost', 'aria-label', uiText('Clear all journal entries', 'Borrar todas las entradas del diario')],
+    ['#intro-modal .btn-ghost', 'aria-label', uiText('Close information', 'Cerrar información')],
+    ['#tutorial-modal .btn-ghost', 'aria-label', uiText('Close tutorial', 'Cerrar tutorial')],
+    ['#onboarding-back-btn', 'aria-label', uiText('Back to setup', 'Volver a preparación')],
+  ];
+  ariaMap.forEach(([selector, attr, value]) => {
+    const el = document.querySelector(selector);
+    if (el) el.setAttribute(attr, value);
+  });
 }
 
 // ════════════════════════════════════════════════
@@ -991,7 +1144,11 @@ function showScreen(id) {
       const backBtn = document.getElementById('journal-back-btn');
       if (backBtn) {
         const origin = G.journalReturnScreen || 'debrief';
-        const labels = { debrief:'Debrief', title:'Title', game:'Game' };
+        const labels = {
+          debrief: uiText('Debrief', 'Debrief'),
+          title: uiText('Title', 'Título'),
+          game: uiText('Game', 'Juego'),
+        };
         backBtn.textContent = labels[origin] || origin;
         backBtn.onclick = () => showScreen(origin);
       }
@@ -1590,11 +1747,36 @@ function handlePart2NarrativeAction(screenId, action) {
   }
 }
 
+function localizePart2Narrative(screen) {
+  if (CURRENT_LANGUAGE !== 'es') return screen;
+  const patch = PART2_NARRATIVE_ES[screen.id];
+  if (!patch) return screen;
+  return {
+    ...screen,
+    eyebrow: patch.eyebrow ?? screen.eyebrow,
+    title: patch.title ?? screen.title,
+    body: patch.body ?? screen.body,
+  };
+}
+
+function localizePart2NavLabel(label) {
+  const map = {
+    'Back to character': uiText('Back to character', 'Volver a personaje'),
+    'Return to debrief': uiText('Return to debrief', 'Volver al debrief'),
+    Continue: uiText('Continue', 'Continuar'),
+    Back: uiText('Back', 'Atrás'),
+    'Contact the creators to collaborate': uiText('Contact the creators to collaborate', 'Contactar a los creadores para colaborar'),
+    'Back to title / replay': uiText('Back to title / replay', 'Volver al título / rejugar'),
+  };
+  return map[label] || label;
+}
+
 function renderPart2NarrativeScreen(screenId) {
   const stepEl = document.querySelector(`#screen-${screenId} .part2-step`);
   if (!stepEl) return;
-  const screen = PART2_NARRATIVE_SEQUENCE.find((item) => item.id === screenId);
-  if (!screen) return;
+  const rawScreen = PART2_NARRATIVE_SEQUENCE.find((item) => item.id === screenId);
+  if (!rawScreen) return;
+  const screen = localizePart2Narrative(rawScreen);
 
   stepEl.className = `part2-step part2-anim-${screen.animationPreset || 'room_stillness'} part2-visual-${screen.visualMode || 'hotel-room'}${screen.variant === 'titleless' ? ' part2-step--titleless' : ''}`;
   stepEl.setAttribute('data-animation-preset', screen.animationPreset || '');
@@ -1628,8 +1810,8 @@ function renderPart2NarrativeScreen(screenId) {
   (screen.navButtons || []).forEach((btnConfig) => {
     const button = document.createElement('button');
     button.className = btnConfig.role === 'primary' ? 'btn-primary' : 'btn-ghost';
-    button.textContent = btnConfig.label;
-    button.addEventListener('click', () => handlePart2NarrativeAction(screen.id, btnConfig.action));
+    button.textContent = localizePart2NavLabel(btnConfig.label);
+    button.addEventListener('click', () => handlePart2NarrativeAction(rawScreen.id, btnConfig.action));
     actions.appendChild(button);
   });
   stepEl.appendChild(actions);
@@ -2338,7 +2520,9 @@ function updatePermitWidget() {
   const name = G.character?.name || '—';
   const remaining = G.permitMaxDays - G.permitDay + 1;
   nameEl.textContent = name;
-  daysEl.textContent = remaining > 0 ? `${remaining} day${remaining !== 1 ? 's' : ''} remaining` : 'PERMIT EXPIRED';
+  daysEl.textContent = remaining > 0
+    ? uiText(`${remaining} day${remaining !== 1 ? 's' : ''} remaining`, `${remaining} día${remaining !== 1 ? 's' : ''} restantes`)
+    : uiText('PERMIT EXPIRED', 'PERMISO VENCIDO');
   daysEl.className = 'permit-days';
   if (remaining <= 3) daysEl.classList.add('permit-critical');
   else if (remaining <= 7) daysEl.classList.add('permit-warn');
@@ -2417,9 +2601,18 @@ function getRiskProfile(state) {
   }
 
   if (layer === 'contextual') {
-    coach = 'Context unlocked: link trend + confidence + resource burn before each move.';
-    if (primary.type === 'window') coach = 'Context unlocked: timing pressure is now dominant. Late gains can erase return margin.';
-    if (primary.type === 'body') coach = 'Context unlocked: body drift is dominant. A slower action now may save two turns later.';
+    coach = uiText(
+      'Context unlocked: link trend + confidence + resource burn before each move.',
+      'Contexto desbloqueado: vincula tendencia + confianza + consumo de recursos antes de cada movimiento.'
+    );
+    if (primary.type === 'window') coach = uiText(
+      'Context unlocked: timing pressure is now dominant. Late gains can erase return margin.',
+      'Contexto desbloqueado: la presión de tiempo ahora domina. Las ganancias tardías pueden borrar el margen de retorno.'
+    );
+    if (primary.type === 'body') coach = uiText(
+      'Context unlocked: body drift is dominant. A slower action now may save two turns later.',
+      'Contexto desbloqueado: la deriva corporal domina. Una acción más lenta ahora puede salvar dos turnos después.'
+    );
   }
 
   return { primary, chips: secondary, main, sub, layer, coach, allRisks: sorted };
@@ -3322,8 +3515,19 @@ function addLogEntry(entry) {
   const div = document.createElement('div');
   div.className = 'log-entry';
 
-  const decisionDisplay = { advance:'ADVANCED', advance_slowly:'ADV. SLOWLY', wait:'WAITED', descend:'DESCENDED', sleep:'SLEPT', shoot_photo:'PHOTO TAKEN' }[entry.decision];
-  const blockedNote = entry.blocked ? ' · blocked' : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly') ? ' · no progress' : '');
+  const decisionDisplay = {
+    advance: uiText('ADVANCED', 'AVANZÓ'),
+    advance_slowly: uiText('ADV. SLOWLY', 'AV. LENTO'),
+    wait: uiText('WAITED', 'ESPERÓ'),
+    descend: uiText('DESCENDED', 'DESCENDIÓ'),
+    sleep: uiText('SLEPT', 'DURMIÓ'),
+    shoot_photo: uiText('PHOTO TAKEN', 'FOTO TOMADA'),
+  }[entry.decision];
+  const blockedNote = entry.blocked
+    ? uiText(' · blocked', ' · bloqueado')
+    : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly')
+      ? uiText(' · no progress', ' · sin progreso')
+      : '');
 
   const meta = document.createElement('div');
   meta.className = 'log-entry-meta';
@@ -3332,7 +3536,12 @@ function addLogEntry(entry) {
   decisionTag.className = 'decision-tag';
   decisionTag.textContent = decisionDisplay;
   meta.appendChild(decisionTag);
-  const pressureTime = entry.decisionWindowExceeded ? ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late` : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
+  const pressureTime = entry.decisionWindowExceeded
+    ? uiText(
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late`,
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s tarde`
+    )
+    : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
   meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty}${pressureTime} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
 
   const narrative = document.createElement('div');
@@ -3424,14 +3633,20 @@ function buildReflectionPrompts() {
   const earlyDescent = log.find(e => e.decision==='descend' && e.turn < 14);
   if (earlyDescent) dynamicPool.push('You called it early. What signal made that feel like the right moment?');
   const incap = log.find(e => e.flags.includes('critical-fatigue')||e.flags.includes('critical-exposure'));
-  if (incap) dynamicPool.push('The body gave signals before it stopped. At what point did they become hard to ignore?');
+  if (incap) dynamicPool.push(uiText(
+    'The body gave signals before it stopped. At what point did they become hard to ignore?',
+    'El cuerpo dio señales antes de detenerse. ¿En qué punto se volvieron imposibles de ignorar?'
+  ));
 
   // character-specific
   const charPrompts = {
     francisco: 'Endurance kept you moving. Which signals almost got buried under that stamina?',
     laura: 'Your readings were precise. Did caution help timing, or close a useful window?',
     erik: 'Experience sharpened execution. When did confidence start filtering risk signals out?',
-    daniela: 'You read the environment early. How often did your body force a different decision?',
+    daniela: uiText(
+      'You read the environment early. How often did your body force a different decision?',
+      'Leíste el entorno temprano. ¿Cuántas veces tu cuerpo te obligó a decidir distinto?'
+    ),
     blake: 'Determination was real. Which turns revealed the gap between intent and preparation?',
     irina: 'Your baseline was strong. Where did old pattern recognition conflict with present conditions?',
   };
@@ -3561,7 +3776,7 @@ function updateRunReviewPanel(index = 0) {
   const indexEl = document.getElementById('debrief-review-index');
   if (!root || !indexEl) return;
   if (!entries.length) {
-    root.textContent = 'No turn records available for this run.';
+    root.textContent = uiText('No turn records available for this run.', 'No hay registros de turnos disponibles para esta partida.');
     indexEl.textContent = '0 / 0';
     return;
   }

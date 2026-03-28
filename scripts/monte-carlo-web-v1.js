@@ -61,13 +61,16 @@ const actionMods     = readJson('action_modifiers.json');
 const stageMods      = readJson('stage_modifiers.json');
 const epConfig       = readJson('environmental_pressure_config.json');
 const scenariosData  = readJson('scenarios.web-v1.json');
+const outcomesData   = readJson('outcomes.json');
 
 const POSITIONS = nodes.map((n) => n.id);
-const CANONICAL_OUTCOMES = new Set([
-  'Summit and Safe Return', 'High Point Return', 'Strategic Retreat',
-  'Rescue', 'Collapse (Fatigue)', 'Collapse (Exposure)',
-  'Resource Exhaustion', 'Expedition Window Closed', 'Permit Expired', 'Fatality',
-]);
+const canonicalOutcomesArray = Array.isArray(outcomesData)
+  ? outcomesData.filter((entry) => typeof entry === 'string' && entry.trim().length > 0)
+  : [];
+if (!canonicalOutcomesArray.length) {
+  throw new Error('Invalid outcomes contract: data/outcomes.json must contain at least one non-empty outcome string.');
+}
+const CANONICAL_OUTCOMES = new Set(canonicalOutcomesArray);
 
 // ─────────────────────────────────────────────
 // Difficulty: standard (neutral modifiers)
@@ -671,11 +674,7 @@ function runBatch(options = {}) {
   const extraSeeds = options.seeds ?? 50;
   const scenarios  = scenariosData.predefinedScenarios || [];
 
-  const OUTCOME_KEYS = [
-    'Summit and Safe Return', 'High Point Return', 'Strategic Retreat',
-    'Rescue', 'Collapse (Fatigue)', 'Collapse (Exposure)',
-    'Resource Exhaustion', 'Expedition Window Closed', 'Permit Expired', 'Fatality',
-  ];
+  const OUTCOME_KEYS = [...canonicalOutcomesArray];
 
   // Aggregate results: { characterId: { scenarioId: { outcome: count } } }
   const results = {};
