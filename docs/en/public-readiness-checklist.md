@@ -1,0 +1,46 @@
+# Public Readiness Checklist (Repository)
+
+This checklist is the final pass before treating a sprint output as public-facing and review-ready.
+
+## 1) Product/runtime truth
+
+- [ ] `docs/repo-truth.md`, `package.json`, and visible UI version labels are aligned.
+- [ ] `data/outcomes.json` still matches resolver and simulator assumptions.
+- [ ] `README.md` / `README.es.md` describe the currently observable flow and status.
+
+## 2) Engineering quality gates
+
+Run and record:
+
+```bash
+npm run typecheck
+npm test
+pytest prototype/mra-v0/test_simulator.py -v
+python3 - <<'PY'
+import json, pathlib
+for p in pathlib.Path('.').rglob('*.json'):
+    json.loads(p.read_text(encoding='utf-8'))
+print('all-json-ok')
+PY
+```
+
+- [ ] All gates pass locally.
+- [ ] Any skipped check includes an explicit reason in PR notes.
+- [ ] PR/final report includes the exact commands executed for each completed gate.
+
+## 3) Documentation and governance
+
+- [ ] `CHANGELOG.md` updated (Keep a Changelog structure).
+- [ ] `CONTRIBUTING.md` instructions still match current commands/CI behavior.
+- [ ] `SECURITY.md` and `CODE_OF_CONDUCT.md` links remain reachable from README.
+
+## 4) Front-end verification
+
+- [ ] For visible UI changes, include an updated screenshot artifact.
+- [ ] Smoke flow still reaches title → setup → onboarding → game → outcomes.
+
+## 5) Release hygiene
+
+- [ ] No contradictory statements across README, architecture docs, and changelog.
+- [ ] No stale references to removed mechanics/features.
+- [ ] Pending debt updates mirrored in `docs/technical-debt-register.md` and changelog when relevant.

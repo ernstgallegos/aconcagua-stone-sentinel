@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added repository governance baselines `SECURITY.md` and `CODE_OF_CONDUCT.md` to support public reporting/enforcement pathways before wider public scrutiny.
+- Added public-readiness checklists in English/Spanish (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) with explicit pre-release quality gates and docs-coherence checks.
 - Added `prototype/web-v1/tests/unit/startup-ui.test.js` to lock localized startup blocking-error summaries/details for known categories (`missing file`, `invalid json`) and unknown-category fallback behavior.
 - Added deterministic outcome reachability coverage in `prototype/web-v1/tests/engine/outcome-reachability.test.js` to validate `Resource Exhaustion`, `Collapse (Exposure)`, and exposure-driven `Rescue` paths.
 - Added `prototype/web-v1/tests/parity/i18n-static-coverage.test.js` to lock bilingual coverage hooks for static overlays, debrief labels, summit-success CTAs, onboarding action labels, and localized aria attributes.
@@ -21,6 +23,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Strengthened `AGENTS.md` with mandatory AI hard-gate policy requiring completion of the public-readiness checklist, changelog synchronization, and validation evidence before task finalization.
+- Updated `CONTRIBUTING.md` public-readiness policy so AI-assisted/release-facing PRs must include explicit command evidence for readiness gates.
+- Updated EN/ES public-readiness checklist documents to explicitly require command evidence in PR/final reports for completed gates.
+- Updated root readmes to surface governance + readiness links (`CONTRIBUTING`, `SECURITY`, `CODE_OF_CONDUCT`, and localized readiness checklists) for contributor onboarding.
+- Updated `CONTRIBUTING.md` to require the public-readiness checklist pass for release-hardening work and to include the `npm run typecheck` gate in the default validation flow.
 - Enriched root documentation (`README.md`, `README.es.md`) with in-repo visual references (cover art, character portraits, and curated concept art) to improve onboarding and style alignment for contributors.
 - Updated `meta/release-hardening-v1.4.5.md` with a consolidated release-hardening audit/checklist snapshot tied to the v1.4.5 stabilization baseline.
 - Updated character portrait sourcing so Part 1 carousel keeps using `art/characters/*.png`, while Part 2 carousel now prefers `art/characters/part-2/*.png` with automatic fallback to Part 1 images when a Part 2 variant is missing.
@@ -61,7 +68,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed overlay persistence regressions where help/watch/field-log panels could remain open across route/screen transitions and appear to freeze interaction.
 
 ### Security
-- No security-impacting changes in this release window.
+- Added a dedicated `SECURITY.md` with private-reporting instructions, response targets, and coordinated-disclosure policy.
 
 ## [1.4.5] — 2026-03
 

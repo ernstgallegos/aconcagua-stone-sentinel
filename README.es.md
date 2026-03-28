@@ -72,6 +72,17 @@ La observación, las pausas y la atención al entorno no son interrupciones, sin
 
 ---
 
+## Preparación pública y gobernanza
+
+Para mantener el repositorio listo para revisión pública, usar esta base de gobernanza antes de abrir PRs orientados a release:
+
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — límites de contribución, comandos de validación y puertas de CI.
+- [`SECURITY.md`](./SECURITY.md) — reporte privado de vulnerabilidades y tiempos de respuesta.
+- [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — expectativas de convivencia para la comunidad.
+- [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md) — checklist final pre-release para coherencia de código + documentación.
+
+---
+
 ## Lo que este juego no es
 
 - No es un juego de acción  

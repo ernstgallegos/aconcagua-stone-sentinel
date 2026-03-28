@@ -20,6 +20,8 @@ When instructions conflict, use this precedence order:
 ## Mandatory session start behavior (AI agents)
 
 - **Always read this file before starting a new task.**
+- **Always load and follow `docs/en/public-readiness-checklist.md` (or `docs/es/checklist-preparacion-publica.md`) for any task that changes code, docs, CI, data, or release metadata.**
+- Treat the checklist as a **hard gate**: if any item is not satisfied, do not finalize the task/PR/commit.
 - Treat this document as a **living learning log**: after each sprint/task with meaningful decisions, append/update the relevant learning entries.
 - Keep entries concise, operational, and directly useful for future implementation/review cycles.
 
@@ -48,6 +50,15 @@ In addition to the changelog:
 - [ ] Related documentation synchronized (`README*`, `CONTRIBUTING`, `docs/`) as needed.
 - [ ] Relevant tests/checks run locally (`npm test`, `pytest`, scenario validation as applicable).
 - [ ] No contradictions between documented behavior and actual code behavior.
+- [ ] Public-readiness checklist completed and reflected in PR/agent final report with explicit command evidence.
+
+## Mandatory completion policy (AI agents)
+
+- Do not end a task after code/doc changes unless:
+  1. `CHANGELOG.md` is updated appropriately.
+  2. Public-readiness checklist items are verified (or explicitly documented as not applicable).
+  3. Validation commands required by the checklist are executed or a concrete environment limitation is reported.
+- If a requested shortcut conflicts with this policy, ask for an explicit override and document the override in the final report.
 
 ## Changelog writing conventions
 
@@ -212,6 +223,8 @@ In addition to the changelog:
 - Outcome-contract integrity is safer when canonical terminal outcomes declared in `data/outcomes.json` are verified at two layers: (1) resolver-level reachability tests that force each critical terminal path and (2) Monte Carlo/report tooling loading the same outcome list from data (never hardcoded duplicates).
 - Bilingual reliability in `web-v1` improves when static overlay copy and aria/title attributes are passed through one post-render translation sweep (`applyStaticTranslations`) and protected by a parity test that asserts key selector hooks exist.
 - Startup diagnostics regress less when `startup-ui` localization/categorization is pinned by direct helper-level unit tests (not only smoke tests), so copy/category drift is caught before fatal-screen UX degrades.
+- Public-release cleanup remains more durable when governance artifacts (`SECURITY.md`, `CODE_OF_CONDUCT.md`) and a bilingual pre-release checklist are updated in the same sprint as README/CONTRIBUTING links, so quality gates and reporting pathways stay discoverable for outside reviewers.
+- AI-agent compliance is more consistent when readiness requirements are duplicated at three layers (`AGENTS.md` hard gate + `CONTRIBUTING.md` PR policy + checklist evidence line item), so missing command proof is treated as process failure instead of optional documentation.
 
 - Canonical character coherence is safest when `docs/es/Personajes_v_3.md` remains the source-of-truth and every English mirror/data-facing profile (`docs/en/characters_v_3_en.md`, `data/characters.json`, character-event narrative copy) is synced in the same commit to prevent roster drift (e.g., stray character swaps or profession/age mismatches).
 - Part 2 pre-threshold narrative rewrites are safer when represented as a single data contract (`id/eyebrow/title/body/variant/animationPreset/visualMode/navButtons`) rendered by one UI path; this preserves pacing controls (paragraph spacing, titleless beats, variable CTA counts) without duplicating static HTML cards.

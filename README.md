@@ -75,6 +75,17 @@ Observation, pauses, and environmental awareness are not interruptions but core 
 
 ---
 
+## Public-readiness and governance
+
+To keep this repository ready for public review, use the following baseline governance docs before opening release-oriented PRs:
+
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md) — contribution boundaries, validation commands, and CI gates.
+- [`SECURITY.md`](./SECURITY.md) — private vulnerability reporting and response targets.
+- [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — community behavior expectations.
+- [`docs/en/public-readiness-checklist.md`](./docs/en/public-readiness-checklist.md) — final pre-release checklist for code + docs coherence.
+
+---
+
 ## What This Game Is Not
 
 - Not an action game  
