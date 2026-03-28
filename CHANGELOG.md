@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `docs/deploy-routing.md` as the single canonical source for local preview routes, Vercel routing behavior, and API CORS deployment notes (EN/ES in one document).
+- Added `prototype/mra-v0/viewer/index.html` as the archived legacy run-replay surface, relocating the former root viewer assets (`app.js`, `styles.css`) under the frozen Python prototype scope.
 - Added repository governance baselines `SECURITY.md` and `CODE_OF_CONDUCT.md` to support public reporting/enforcement pathways before wider public scrutiny.
 - Added public-readiness checklists in English/Spanish (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) with explicit pre-release quality gates and docs-coherence checks.
 - Added `prototype/web-v1/tests/unit/startup-ui.test.js` to lock localized startup blocking-error summaries/details for known categories (`missing file`, `invalid json`) and unknown-category fallback behavior.
@@ -23,6 +25,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Consolidated duplicated deploy/routing instructions out of `README.md` and `README.es.md`, leaving those files with concise route summaries that now point to the canonical deploy-routing reference.
+- Changed repository root `index.html` to a direct web-v1 entry shell (meta/JS redirect + fallback links), making the active prototype the explicit default in static and deployed contexts.
+- Changed EN/ES README route documentation to simplify onboarding around one canonical entry point (`/`) plus one explicit archived MRA v0 viewer route.
 - Strengthened `AGENTS.md` with mandatory AI hard-gate policy requiring completion of the public-readiness checklist, changelog synchronization, and validation evidence before task finalization.
 - Updated `CONTRIBUTING.md` public-readiness policy so AI-assisted/release-facing PRs must include explicit command evidence for readiness gates.
 - Updated EN/ES public-readiness checklist documents to explicitly require command evidence in PR/final reports for completed gates.

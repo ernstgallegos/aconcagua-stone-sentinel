@@ -10,6 +10,11 @@
       "source": "/prototype/web-v1",
       "destination": "/prototype/web-v1/index.html",
       "permanent": true
+    },
+    {
+      "source": "/prototype/mra-v0/viewer",
+      "destination": "/prototype/mra-v0/viewer/index.html",
+      "permanent": true
     }
   ]
 }

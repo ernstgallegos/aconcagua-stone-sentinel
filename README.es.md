@@ -165,55 +165,16 @@ Se incorporó un paquete documental de diseño/planificación v1.4 para alinear 
 
 ## Frontends web y rutas canónicas
 
-Este repositorio incluye dos superficies web:
+Este repositorio incluye una entrada pública canónica y un visor histórico archivado:
 
-- `index.html`, `styles.css`, `app.js` — **root viewer** para reproducir corridas MRA v0 incluidas
+- `/` — índice canónico que redirige directamente a `prototype/web-v1/index.html`
 - `prototype/web-v1/index.html` — **prototype web-v1** interactivo con mecánicas extendidas
-- `api/run.js` — API serverless que sirve corridas desde `prototype/mra-v0/runs/`
-- `vercel.json` — configuración de runtime y ruteo para Vercel
+- `prototype/mra-v0/viewer/index.html` — visor archivado para reproducir corridas del prototipo Python
 
-En preview local estático: `/` abre el root viewer y `/prototype/web-v1/` abre el prototipo interactivo.
+Para detalles de ruteo/deploy (preview local, Vercel y CORS), usar la referencia canónica única:
+- [`docs/deploy-routing.md`](./docs/deploy-routing.md)
 
-En Vercel: `vercel.json` redirige `/` a `/prototype/web-v1/index.html` (ruta publicada por defecto).
-
-### Vista local
-
-Desde la raíz del repositorio:
-
-```bash
-python3 -m http.server 4173
-```
-
-Luego abrir:
-
-- `http://localhost:4173/` para el root viewer.
-- `http://localhost:4173/prototype/web-v1/` para el prototipo interactivo.
-
-En este modo estático local, la UI lee los JSONL incluidos directamente desde `prototype/mra-v0/runs/` (sin API serverless).
-
-### Publicación en Vercel
-
-- Importar este repositorio en Vercel.
-- **Project Settings → Root Directory:** dejarlo en la raíz del repo (`.`), no en `prototype/mra-v0`.
-- Framework preset: **Other** (estático + funciones serverless).
-- Este vertical slice no requiere build command.
-- Publicar. La ruta por defecto publicada es `/` y redirige a `/prototype/web-v1/index.html`.
-- `/prototype/web-v1` se normaliza a `/prototype/web-v1/index.html`.
-
-#### Allowlist CORS de la API en producción
-
-La API serverless (`api/run.js`) lee `ALLOWED_ORIGINS` como una lista de orígenes exactos separada por comas.
-
-- Configurarlo en **Vercel → Project Settings → Environment Variables** cuando el dominio productivo difiera de los defaults del repo.
-- Ejemplo:
-
-```bash
-ALLOWED_ORIGINS=https://example.com,https://www.example.com
-```
-
-Si `ALLOWED_ORIGINS` no está configurado, la API usa un allowlist hardcodeado como default de desarrollo.
-
-### Corridas bundled incluidas
+### Corridas bundled incluidas en el visor archivado
 
 - `narrow-weather-window-seed101-cautious`
 - `false-stability-terrain-seed505-cautious`

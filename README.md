@@ -160,62 +160,16 @@ Public repository scope is explicit:
 
 ## Web frontends and canonical routes
 
-This repository includes two web surfaces:
+This repository includes one canonical public entry point and one archived viewer:
 
-- **Root viewer (`index.html`)**: lightweight run replay viewer for bundled MRA v0 runs.
+- **Canonical index (`/`)**: redirects directly to `prototype/web-v1/index.html`.
 - **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics.
+- **Archived MRA v0 viewer (`prototype/mra-v0/viewer/index.html`)**: legacy replay interface for bundled Python prototype runs.
 
-In local static preview, root viewer is available at `/` and web-v1 at `/prototype/web-v1/`.
+For deploy/local routing details (including Vercel settings and CORS), use the single canonical reference:
+- [`docs/deploy-routing.md`](./docs/deploy-routing.md)
 
-In Vercel deploys, `vercel.json` redirects `/` to `/prototype/web-v1/index.html` (canonical published route).
-
-Included files:
-
-- `index.html`, `styles.css`, `app.js` — canonical root static run viewer
-- `prototype/web-v1/index.html` — canonical interactive prototype (active development)
-- `api/run.js` — serverless API that serves bundled run files from `prototype/mra-v0/runs/`
-- `vercel.json` — Vercel runtime and routing configuration
-
-### Local preview
-
-From repository root:
-
-```bash
-python3 -m http.server 4173
-```
-
-Then open:
-
-- `http://localhost:4173/` for the root viewer.
-- `http://localhost:4173/prototype/web-v1/` for the interactive prototype.
-
-In this local static mode, both frontends read bundled JSONL files directly from `prototype/mra-v0/runs/` (no serverless API needed).
-
-### Vercel deploy
-
-- Import this repository in Vercel.
-- **Project Settings → Root Directory:** keep it at the repository root (`.`), not `prototype/mra-v0`.
-- Framework preset: **Other** (static + serverless functions).
-- No build command required for this vertical slice.
-- Deploy. The published default route is `/` and it redirects to `/prototype/web-v1/index.html`.
-- `/prototype/web-v1` is normalized to `/prototype/web-v1/index.html`.
-
-#### API CORS allowlist in production
-
-The serverless API (`api/run.js`) reads `ALLOWED_ORIGINS` as a comma-separated list of exact origins.
-
-- Set it in **Vercel → Project Settings → Environment Variables** when your production domain differs from the repository defaults.
-- Example:
-
-```bash
-ALLOWED_ORIGINS=https://example.com,https://www.example.com
-```
-
-If `ALLOWED_ORIGINS` is not configured, the API falls back to a hardcoded development default allowlist.
-
-### Bundled runs currently committed
-
-The root viewer currently ships these bundled JSONL runs:
+### Bundled runs currently committed (archived viewer)
 
 - `narrow-weather-window-seed101-cautious`
 - `false-stability-terrain-seed505-cautious`
@@ -352,6 +306,6 @@ The canonical active prototype is **`prototype/web-v1` (v1.4.5 public state)**.
 - `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.5 phased mechanics currently in public rollout.
   - Startup contracts are strict: required model files must load and validate before play; blocking failures are rendered with file/category diagnostics.
 - `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
-- repository root viewer: replay/view layer for bundled runs.
+- archived MRA v0 viewer (`prototype/mra-v0/viewer`): replay/view layer for bundled runs.
 
 See `docs/architecture.md` and `docs/simulation_engine.md` for technical contracts, and `docs/repo-truth.md` for canonical repo truth parity.
