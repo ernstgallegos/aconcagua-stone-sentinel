@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `prototype/web-v1/tests/unit/startup-ui.test.js` to lock localized startup blocking-error summaries/details for known categories (`missing file`, `invalid json`) and unknown-category fallback behavior.
 - Added deterministic outcome reachability coverage in `prototype/web-v1/tests/engine/outcome-reachability.test.js` to validate `Resource Exhaustion`, `Collapse (Exposure)`, and exposure-driven `Rescue` paths.
 - Added `prototype/web-v1/tests/parity/i18n-static-coverage.test.js` to lock bilingual coverage hooks for static overlays, debrief labels, summit-success CTAs, onboarding action labels, and localized aria attributes.
 - Added focused event hardening and parity suites: `character-events-coverage`, `event-nondominance`, and `repo-truth-guarantees` tests to enforce bounded effects, cooldown/max-per-run behavior, and documented-repo guarantees.
@@ -20,6 +21,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Updated `meta/release-hardening-v1.4.5.md` with a consolidated release-hardening audit/checklist snapshot tied to the v1.4.5 stabilization baseline.
 - Updated character portrait sourcing so Part 1 carousel keeps using `art/characters/*.png`, while Part 2 carousel now prefers `art/characters/part-2/*.png` with automatic fallback to Part 1 images when a Part 2 variant is missing.
 - Documented portrait asset contracts and filename mapping in `art/characters/README.MD` and `art/characters/part-2/README.MD` for Part 1 vs Part 2 carousel usage.
 - Updated the Monte Carlo harness to source canonical terminal outcomes from `data/outcomes.json` instead of a duplicated hardcoded list, preventing simulator/runtime taxonomy drift.

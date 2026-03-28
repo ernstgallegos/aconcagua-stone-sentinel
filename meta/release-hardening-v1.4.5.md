@@ -24,6 +24,7 @@ Scope: `prototype/web-v1` public prototype hardening pass (stability, UX frictio
 ### Medium
 4. **Overlay dismissal parity gap**: game-help/watch/field-log overlays lacked unified overlay-surface click-to-close behavior.
 5. **Regression gap**: no dedicated unit test pinned the new modal lock lifecycle (open count + unlock on close).
+6. **Regression gap**: startup blocking-error localization/categorization copy had smoke-level coverage only, with no direct helper-level assertions.
 
 ## 3) Fixes implemented
 
@@ -44,6 +45,7 @@ Scope: `prototype/web-v1` public prototype hardening pass (stability, UX frictio
 
 5. **Regression coverage added**
    - New `prototype/web-v1/tests/unit/accessibility-modal.test.js` validates modal open/close lock lifecycle and focus restoration.
+   - New `prototype/web-v1/tests/unit/startup-ui.test.js` validates localized blocking-error summaries/details for categorized startup failures and unknown-category fallback copy.
 
 ## 4) Deferred items
 
@@ -55,6 +57,7 @@ Scope: `prototype/web-v1` public prototype hardening pass (stability, UX frictio
 - `npm test`
 - `pytest prototype/mra-v0/test_simulator.py -v`
 - `pytest prototype/web-v1/tests/test_smoke_flow.py -v` (suite skipped in current environment)
+- `node --test prototype/web-v1/tests/unit/startup-ui.test.js`
 
 ## 6) Manual validation checklist outcomes
 
@@ -79,6 +82,7 @@ Status key: ✅ verified, ⚠️ limited by environment
 
 ### Failure behavior
 - ✅ Missing file / invalid JSON / invalid shape / HTTP startup failure categories verified by test suite.
+- ✅ Startup blocking-error helper returns bilingual categorized copy and stable fallback copy for unknown categories.
 
 ## 7) Remaining known risks
 
