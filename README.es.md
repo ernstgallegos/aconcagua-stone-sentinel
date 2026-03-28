@@ -4,6 +4,24 @@
 
 *Aconcagua: Stone Sentinel* es un videojuego indie single-player inspirado en el ascenso real al Cerro Aconcagua. Propone una experiencia lenta, deliberada y basada en sistemas, en la que el jugador no conquista la montaña, sino que aprende a leerla, adaptarse a ella y decidir cuándo avanzar deja de ser la mejor opción.
 
+## Referencias visuales
+
+La documentación ahora incorpora enlaces directos al arte disponible dentro del repositorio para facilitar la alineación entre UI, tono narrativo y construcción de personajes.
+
+### Concepto de portada
+
+![Concepto de portada de Aconcagua: Stone Sentinel](art/cover/cover-concept-1.png)
+
+### Vista rápida del roster de personajes
+
+| Francisco Aguirre | Daniela De Rossi | Erik Lundvall |
+|---|---|---|
+| ![Retrato de Francisco Aguirre](art/characters/francisco-aguirre.png) | ![Retrato de Daniela De Rossi](art/characters/daniela-de-rossi.png) | ![Retrato de Erik Lundvall](art/characters/erik-lundvall.png) |
+
+### Concept art atmosférico
+
+![Concept art curado de montaña](art/concept-art/curated/concept-curated-1.png)
+
 **Whitepaper del proyecto**  
 Este documento presenta la visión, el enfoque y las decisiones fundacionales de *Aconcagua: Stone Sentinel*.  
 Es el mejor punto de entrada para entender qué tipo de juego estamos construyendo y por qué.  
