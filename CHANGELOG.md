@@ -10,6 +10,24 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- No unreleased changes currently.
+
+### Changed
+- No unreleased changes currently.
+
+### Fixed
+- No unreleased changes currently.
+
+### Security
+- No unreleased changes currently.
+
+## [1.4.5] — 2026-03
+
+### Added
+- Added `prototype/web-v1/engine/events-core.js` as the non-UI ownership layer for contextual event planning/application and character-event trigger/effect/limit resolution.
+- Added stronger runtime data-contract assertions in `prototype/web-v1/src/types/data-contracts.ts` for route node shape, event category validation, and mandatory event limits/telemetry tags.
+- Added explicit event-contract metadata fields in `data/character_events.json` (`conditions`, `visibleToPlayer`, `hiddenFromPlayer`, `oncePerRun`, `notes`) while keeping bounded systemic effects.
+
 - Added deterministic outcome reachability coverage in `prototype/web-v1/tests/engine/outcome-reachability.test.js` to validate `Resource Exhaustion`, `Collapse (Exposure)`, and exposure-driven `Rescue` paths.
 - Added `prototype/web-v1/tests/parity/i18n-static-coverage.test.js` to lock bilingual coverage hooks for static overlays, debrief labels, summit-success CTAs, onboarding action labels, and localized aria attributes.
 - Added focused event hardening and parity suites: `character-events-coverage`, `event-nondominance`, and `repo-truth-guarantees` tests to enforce bounded effects, cooldown/max-per-run behavior, and documented-repo guarantees.
@@ -20,6 +38,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Changed `prototype/web-v1/ui/helpers/events.js` to delegate systemic event mutations to `engine/events-core.js`, keeping UI helpers as thin orchestration wrappers.
+- Expanded TypeScript domain contracts in `prototype/web-v1/src/types/domain.ts` with explicit interfaces for `ContextualAction`, `BodyToleranceResult`, event triggers/effects/limits, and richer run-log/context-event typing.
+- Updated canonical public version references to `v1.4.5` across package metadata, UI labels, and status docs (`README*`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`).
+
 - Updated character portrait sourcing so Part 1 carousel keeps using `art/characters/*.png`, while Part 2 carousel now prefers `art/characters/part-2/*.png` with automatic fallback to Part 1 images when a Part 2 variant is missing.
 - Documented portrait asset contracts and filename mapping in `art/characters/README.MD` and `art/characters/part-2/README.MD` for Part 1 vs Part 2 carousel usage.
 - Updated the Monte Carlo harness to source canonical terminal outcomes from `data/outcomes.json` instead of a duplicated hardcoded list, preventing simulator/runtime taxonomy drift.
@@ -45,6 +67,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Hardened global modal behavior in `prototype/web-v1/ui/helpers/accessibility.js` and `prototype/web-v1/ui/screens.js` by adding body scroll-lock state, overlay-dismiss wiring on backdrop clicks, and automatic transient overlay cleanup during screen transitions.
 
 ### Fixed
+- Fixed event/data drift risk by testing the expanded character-event contract fields in `prototype/web-v1/tests/contracts/data-contracts.test.js`.
+
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
 - Fixed startup/fatal diagnostics copy in `prototype/web-v1/ui/helpers/startup-ui.js` to emit localized English/Spanish messaging (including categorized blocking-error summaries and details) based on active language selection.
 - Fixed GitHub Actions workflow YAML parsing by quoting the Python lint step name that contains a colon, resolving CI invalid-workflow failures at `.github/workflows/ci.yml` line 29.
@@ -56,24 +80,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed web-v1 docs data-source drift by adding `data/context_events.json` to architecture/README source-of-truth lists.
 - Fixed a startup resilience defect where `loadDataConfig()` failures still allowed post-load UI bootstrap code to run, which could leave the app in a confusing partially initialized state after a blocking data error.
 - Fixed overlay persistence regressions where help/watch/field-log panels could remain open across route/screen transitions and appear to freeze interaction.
-
-### Security
-- No security-impacting changes in this release window.
-
-## [1.4.5] — 2026-03
-
-### Added
-- Added `prototype/web-v1/engine/events-core.js` as the non-UI ownership layer for contextual event planning/application and character-event trigger/effect/limit resolution.
-- Added stronger runtime data-contract assertions in `prototype/web-v1/src/types/data-contracts.ts` for route node shape, event category validation, and mandatory event limits/telemetry tags.
-- Added explicit event-contract metadata fields in `data/character_events.json` (`conditions`, `visibleToPlayer`, `hiddenFromPlayer`, `oncePerRun`, `notes`) while keeping bounded systemic effects.
-
-### Changed
-- Changed `prototype/web-v1/ui/helpers/events.js` to delegate systemic event mutations to `engine/events-core.js`, keeping UI helpers as thin orchestration wrappers.
-- Expanded TypeScript domain contracts in `prototype/web-v1/src/types/domain.ts` with explicit interfaces for `ContextualAction`, `BodyToleranceResult`, event triggers/effects/limits, and richer run-log/context-event typing.
-- Updated canonical public version references to `v1.4.5` across package metadata, UI labels, and status docs (`README*`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`).
-
-### Fixed
-- Fixed event/data drift risk by testing the expanded character-event contract fields in `prototype/web-v1/tests/contracts/data-contracts.test.js`.
 
 ### Security
 - No security-impacting changes in this release.
@@ -293,7 +299,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated stale flow reference in `docs/web-v1-playtesting-remediation-one-shot-prompt.md` to reflect current canonical flow.
 - Added missing sections to `README.es.md` (Contact, Prototype canonical status, local preview instructions) for parity with English `README.md`.
 - Consolidated duplicate section headers in `CHANGELOG.md` `[Unreleased]` block (10× Changed, 7× Fixed, 3× Added, 2× Removed → one each) per Keep a Changelog convention.
-
 
 ## [1.4.1] — 2026-03
 

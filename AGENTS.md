@@ -193,6 +193,7 @@ In addition to the changelog:
 - Changelog release consolidations should also prune superseded contradictory bullets (e.g., deprecated-vs-experimental theme notes) so one version block reflects one final policy state.
 
 - Release-complete snapshots should keep `[Unreleased]` explicitly empty and move late documentation/link fixes into the same versioned block when product confirms they belong to that release.
+- Release-hardening consolidations are cleaner when `CHANGELOG.md` moves all shipped bullets into the active version block (e.g., `1.4.5`) and leaves `[Unreleased]` as explicit empty placeholders under Added/Changed/Fixed/Security for the next cycle.
 - Systemic integrity audits are easier to maintain when `resolveTurn()` emits one structured per-turn telemetry object containing environment, EP/BT/delta, perceived signals, action, and resulting state; acceptance tests can then assert pipeline integrity without scraping UI text.
 - Release/version coherence checks should include simulation tooling and docs metadata (`scripts/monte-carlo-web-v1.js`, `docs/simulation_engine.md`) so hardcoded version strings/report filenames do not drift from `package.json`.
 - State-slice whitelist safety (`recordTelemetry`/`updateRunState`) requires adding new keys to `*_STATE_DEFAULTS` in the same commit as new writes; otherwise runtime throws can bypass tests that stub those writers.
