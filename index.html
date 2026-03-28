@@ -3,58 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-    <title>Aconcagua: Stone Sentinel — Vertical Slice v1</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <title>Aconcagua: Stone Sentinel — Web v1.4.5</title>
+    <meta http-equiv="refresh" content="0; url=/prototype/web-v1/index.html" />
+    <link rel="canonical" href="/prototype/web-v1/index.html" />
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #0d1217;
+        color: #d4d8dc;
+        font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+      }
+      main {
+        max-width: 680px;
+        padding: 1.2rem;
+        text-align: center;
+      }
+      a { color: #d6ab6e; }
+    </style>
   </head>
   <body>
-    <main class="app-shell">
-      <header class="hero">
-        <p class="kicker">Aconcagua: Stone Sentinel</p>
-        <h1>Web Vertical Slice v1</h1>
-        <p class="lead">
-          Interactive replay of bundled expedition runs from MRA v0. Compare outcomes,
-          inspect each turn, and review constraints that forced retreat, wait, or advance.
-        </p>
-      </header>
-
-      <section class="panel controls">
-        <h2>Run loader</h2>
-        <div class="form-grid">
-          <label>Scenario<select id="scenario"></select></label>
-          <label>Seed<input id="seed" type="number" min="1" value="101" /></label>
-          <label>
-            Policy
-            <select id="policy">
-              <option value="cautious">cautious</option>
-              <option value="aggressive">aggressive</option>
-              <option value="waiter">waiter</option>
-            </select>
-          </label>
-        </div>
-        <div class="controls-actions">
-          <button id="load">Load run</button>
-          <p id="status" aria-live="polite"></p>
-        </div>
-      </section>
-
-      <section id="summary-panel" class="panel" hidden>
-        <h2>Run outcome</h2>
-        <div id="summary" class="summary-grid"></div>
-      </section>
-
-      <section id="timeline-panel" class="panel" hidden>
-        <h2>Turn timeline</h2>
-        <div id="turns" class="turn-list"></div>
-      </section>
+    <main>
+      <h1>Redirecting to the active web prototype…</h1>
+      <p>
+        Open <a href="/prototype/web-v1/index.html">prototype/web-v1/index.html</a>.
+      </p>
+      <p>
+        The archived MRA v0 run viewer remains available at
+        <a href="/prototype/mra-v0/viewer/index.html">prototype/mra-v0/viewer/index.html</a>.
+      </p>
     </main>
-
-    <script src="./app.js" type="module"></script>
     <script>
-      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+      window.location.replace('/prototype/web-v1/index.html');
     </script>
-    <script defer src="/_vercel/speed-insights/script.js"></script>
   </body>
 </html>

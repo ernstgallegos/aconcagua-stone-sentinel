@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <title>Aconcagua: Stone Sentinel — MRA v0 Archived Viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <p class="kicker">Aconcagua: Stone Sentinel</p>
+        <h1>MRA v0 archived run viewer</h1>
+        <p class="lead">
+          Legacy replay interface for bundled Python prototype runs. For the active public
+          prototype, use <a href="/prototype/web-v1/index.html">web-v1</a>.
+        </p>
+      </header>
+
+      <section class="panel controls">
+        <h2>Run loader</h2>
+        <div class="form-grid">
+          <label>Scenario<select id="scenario"></select></label>
+          <label>Seed<input id="seed" type="number" min="1" value="101" /></label>
+          <label>
+            Policy
+            <select id="policy">
+              <option value="cautious">cautious</option>
+              <option value="aggressive">aggressive</option>
+              <option value="waiter">waiter</option>
+            </select>
+          </label>
+        </div>
+        <div class="controls-actions">
+          <button id="load">Load run</button>
+          <p id="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="summary-panel" class="panel" hidden>
+        <h2>Run outcome</h2>
+        <div id="summary" class="summary-grid"></div>
+      </section>
+
+      <section id="timeline-panel" class="panel" hidden>
+        <h2>Turn timeline</h2>
+        <div id="turns" class="turn-list"></div>
+      </section>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
