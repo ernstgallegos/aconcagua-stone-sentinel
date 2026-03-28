@@ -9,7 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+- No unreleased changes. All pending entries were consolidated into `1.4.5` (2026-03).
+
+## [1.4.5] — 2026-03
+
 ### Added
+- Added one-click social-share actions in the intro modal (`X`, `Facebook`, `LinkedIn`, `WhatsApp`, and copy-link) plus direct Instagram profile access so players can actively amplify project visibility from the web prototype entry flow.
 - Added `docs/deploy-routing.md` as the single canonical source for local preview routes, Vercel routing behavior, and API CORS deployment notes (EN/ES in one document).
 - Added `prototype/mra-v0/viewer/index.html` as the archived legacy run-replay surface, relocating the former root viewer assets (`app.js`, `styles.css`) under the frozen Python prototype scope.
 - Added repository governance baselines `SECURITY.md` and `CODE_OF_CONDUCT.md` to support public reporting/enforcement pathways before wider public scrutiny.
@@ -75,22 +80,21 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Security
 - Added a dedicated `SECURITY.md` with private-reporting instructions, response targets, and coordinated-disclosure policy.
 
-## [1.4.5] — 2026-03
+### Added (release baseline)
 
-### Added
 - Added `prototype/web-v1/engine/events-core.js` as the non-UI ownership layer for contextual event planning/application and character-event trigger/effect/limit resolution.
 - Added stronger runtime data-contract assertions in `prototype/web-v1/src/types/data-contracts.ts` for route node shape, event category validation, and mandatory event limits/telemetry tags.
 - Added explicit event-contract metadata fields in `data/character_events.json` (`conditions`, `visibleToPlayer`, `hiddenFromPlayer`, `oncePerRun`, `notes`) while keeping bounded systemic effects.
 
-### Changed
+### Changed (release baseline)
 - Changed `prototype/web-v1/ui/helpers/events.js` to delegate systemic event mutations to `engine/events-core.js`, keeping UI helpers as thin orchestration wrappers.
 - Expanded TypeScript domain contracts in `prototype/web-v1/src/types/domain.ts` with explicit interfaces for `ContextualAction`, `BodyToleranceResult`, event triggers/effects/limits, and richer run-log/context-event typing.
 - Updated canonical public version references to `v1.4.5` across package metadata, UI labels, and status docs (`README*`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`, `prototype/web-v1/README.md`).
 
-### Fixed
+### Fixed (release baseline)
 - Fixed event/data drift risk by testing the expanded character-event contract fields in `prototype/web-v1/tests/contracts/data-contracts.test.js`.
 
-### Security
+### Security (release baseline)
 - No security-impacting changes in this release.
 
 ## [1.4.3] — 2026-03
