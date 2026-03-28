@@ -4,6 +4,13 @@ Thank you for your interest in this project.
 
 This is a curated, author-driven repository. External contributions are welcome within defined boundaries. Please read this document before opening a pull request.
 
+Before proposing public-facing/release hardening changes, complete:
+
+- [`docs/en/public-readiness-checklist.md`](./docs/en/public-readiness-checklist.md)
+- [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md)
+
+For AI-assisted contributions, this checklist is mandatory (not advisory). PR descriptions must include explicit command evidence for each executed gate.
+
 ---
 
 ## Language Policy
@@ -38,6 +45,11 @@ pytest prototype/mra-v0/test_simulator.py -v
 **Web-v1 contract tests (requires Node.js 18+):**
 ```bash
 npm test
+```
+
+**TypeScript/domain type checks (Node.js 18+):**
+```bash
+npm run typecheck
 ```
 
 **Headless browser smoke test (requires Playwright browser install):**
@@ -153,6 +165,14 @@ When a PR changes implementation status, flow wiring, or release phase labels, v
 - [ ] Core docs include an up-to-date **Canonical status** block with links to `[Unreleased]` and `docs/en/implementation-plan-v1.4.md`.
 - [ ] Version labels in titles/headings (e.g., `v1.3`, `v1.4`) match current public state and include phase qualifiers when rollout is in progress.
 - [ ] `README.md`, `README.es.md`, `docs/architecture.md`, and `prototype/web-v1/README.md` do not contradict each other on canonical prototype status.
+
+## Public readiness enforcement policy
+
+Every release-facing or public-readiness PR must:
+
+- include completed checklist evidence from `docs/en/public-readiness-checklist.md` (or Spanish counterpart),
+- include command output evidence for `npm run typecheck`, `npm test`, and `pytest prototype/mra-v0/test_simulator.py -v` (or clearly justify why a gate is not applicable),
+- keep `CHANGELOG.md` synchronized with the exact governance/docs/process changes shipped.
 
 ## Commit Message Format
 
