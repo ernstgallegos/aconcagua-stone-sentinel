@@ -23,6 +23,7 @@ La landing debe comunicar una identidad **premium, coherente con web-v1, interna
 
 ## Oportunidades
 
+- Convertir documentos enlazados (whitepaper/roadmap/repo-truth) a lectura enriquecida bajo estilo de marca consistente.
 - Alinear color tokens a la base sunset del prototipo.
 - Convertir landing a EN-default con selector EN/ES persistente.
 - Mantener semántica, accesibilidad y ritmo editorial sin recargar UI.

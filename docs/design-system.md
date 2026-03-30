@@ -34,6 +34,12 @@
 - Documentation visualization cards: whitepaper, roadmap, and official channels as first-class card variants.
 - Status indicator: `.status`, `.status-dot`
 
+
+## Markdown viewer
+
+- `md-viewer.html` provides enriched rendering for key public markdown docs linked from landing cards.
+- Allowed sources are intentionally constrained to canonical public docs (`project-whitepaper`, `public-roadmap`, `repo-truth`).
+
 ## 3) Interaction rules
 
 - Primary hover motion: subtle upward transform.

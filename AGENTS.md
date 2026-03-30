@@ -246,3 +246,5 @@ In addition to the changelog:
 - Public landing conversion improves when update-follow and contact actions are explicit (Instagram + official email) in a dedicated section instead of being implied only in footer/legal copy.
 
 - Public landing clarity increases when whitepaper and roadmap are surfaced as visual summary cards (not only links), and official channels always include both GitHub and project email as explicit actions.
+
+- Public markdown documents linked from landing are more credible when they open inside a styled viewer constrained to approved sources, avoiding raw markdown UX drift and preserving brand consistency.

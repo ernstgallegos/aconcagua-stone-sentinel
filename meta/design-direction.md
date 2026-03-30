@@ -55,6 +55,11 @@ Alineado con palette sunset de web-v1:
 - Sin animaciones ornamentales pesadas.
 - `prefers-reduced-motion` respetado globalmente.
 
+
+## Document experience
+
+- Markdown sources linked from landing should open through the styled viewer (`md-viewer.html`) to preserve visual coherence and reading quality.
+
 ## Layout
 
 - Header sticky con nav + switch de idioma.

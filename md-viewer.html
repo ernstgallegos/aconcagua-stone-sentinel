@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Viewer — Aconcagua: Stone Sentinel</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #251420;
+        --surface: #331b2c;
+        --surface2: #422139;
+        --border: #684056;
+        --ochre: #ff9e5e;
+        --ice: #ffc89a;
+        --text: #f3d4bf;
+        --muted: #c58f79;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+        background: radial-gradient(circle at 14% 0%, rgba(255,158,94,.18), transparent 32%), linear-gradient(180deg, #20131b 0%, #130b13 100%);
+        color: var(--text);
+      }
+      .shell { width: min(980px, 92vw); margin: 0 auto; padding: 1.2rem 0 3rem; }
+      .topbar {
+        position: sticky; top: 0; z-index: 10;
+        display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; justify-content: space-between;
+        padding: .75rem; border: 1px solid rgba(255,158,94,.28); border-radius: 14px;
+        background: rgba(34, 18, 29, .84); backdrop-filter: blur(8px);
+      }
+      .actions { display:flex; gap:.5rem; flex-wrap: wrap; }
+      .btn {
+        border:1px solid rgba(255,158,94,.35); color:var(--text); background:rgba(30,15,25,.7);
+        border-radius:999px; padding:.5rem .8rem; text-decoration:none; font-weight:600; font-size:.85rem;
+      }
+      .btn:hover { text-decoration:none; background: rgba(46,24,38,.85); }
+      .title { font-size: .92rem; color: var(--muted); margin: 0; }
+      article {
+        margin-top: 1rem;
+        padding: clamp(1rem,2vw,2rem);
+        background: rgba(41, 22, 35, .75);
+        border: 1px solid rgba(255, 158, 94, .24);
+        border-radius: 18px;
+      }
+      h1,h2,h3,h4 { color: #ffe2ce; line-height: 1.2; }
+      p, li { color: var(--text); }
+      a { color: var(--ice); }
+      pre { background: #1b0f17; padding: .8rem; border-radius: 10px; overflow: auto; border:1px solid rgba(255,158,94,.2); }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      blockquote { margin: 1rem 0; padding: .6rem .9rem; border-left: 3px solid var(--ochre); background: rgba(26,14,22,.6); }
+      hr { border: 0; border-top: 1px solid rgba(255,158,94,.25); margin: 1.2rem 0; }
+      table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .92rem; }
+      th, td { border: 1px solid rgba(255,158,94,.25); padding: .5rem; text-align: left; vertical-align: top; }
+      th { background: rgba(255,158,94,.14); }
+      .error { color: #ffd3bd; background: rgba(134, 49, 49, .25); padding: .8rem; border-radius: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <p class="title" id="doc-title">Loading document…</p>
+        <div class="actions">
+          <a class="btn" href="/" id="back-link">← Back to landing</a>
+          <a class="btn" href="#" target="_blank" rel="noreferrer noopener" id="raw-link">Open raw Markdown</a>
+        </div>
+      </header>
+      <article id="content" aria-live="polite"></article>
+    </div>
+
+    <script>
+      const allowed = new Set([
+        '/meta/project-whitepaper.md',
+        '/meta/public-roadmap.md',
+        '/docs/repo-truth.md',
+      ]);
+
+      const params = new URLSearchParams(window.location.search);
+      const file = params.get('file') || '/meta/project-whitepaper.md';
+      const contentEl = document.getElementById('content');
+      const titleEl = document.getElementById('doc-title');
+      const rawLinkEl = document.getElementById('raw-link');
+
+      function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, (ch) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+      }
+
+      function inline(md) {
+        return md
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>');
+      }
+
+      function parseTable(lines, i) {
+        if (!/^\|.*\|\s*$/.test(lines[i] || '')) return null;
+        if (!/^\|?\s*:?-{3,}/.test(lines[i + 1] || '')) return null;
+        const rows = [];
+        let j = i;
+        while (j < lines.length && /^\|.*\|\s*$/.test(lines[j])) {
+          rows.push(lines[j]);
+          j++;
+        }
+        const cells = (row) => row.split('|').slice(1, -1).map((c) => inline(escapeHtml(c.trim())));
+        const head = cells(rows[0]);
+        const body = rows.slice(2).map(cells);
+        let html = '<table><thead><tr>' + head.map((c) => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+        body.forEach((r) => {
+          html += '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>';
+        });
+        html += '</tbody></table>';
+        return { html, next: j };
+      }
+
+      function markdownToHtml(md) {
+        const lines = md.replace(/\r\n/g, '\n').split('\n');
+        let i = 0;
+        let html = '';
+        let inCode = false;
+
+        while (i < lines.length) {
+          const line = lines[i];
+
+          if (line.startsWith('```')) {
+            inCode = !inCode;
+            html += inCode ? '<pre><code>' : '</code></pre>';
+            i++;
+            continue;
+          }
+
+          if (inCode) {
+            html += escapeHtml(line) + '\n';
+            i++;
+            continue;
+          }
+
+          const t = parseTable(lines, i);
+          if (t) {
+            html += t.html;
+            i = t.next;
+            continue;
+          }
+
+          if (/^#{1,4}\s/.test(line)) {
+            const lvl = line.match(/^#+/)[0].length;
+            const text = line.replace(/^#{1,4}\s*/, '');
+            html += `<h${lvl}>${inline(escapeHtml(text))}</h${lvl}>`;
+            i++;
+            continue;
+          }
+
+          if (/^\s*[-*]\s+/.test(line)) {
+            html += '<ul>';
+            while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+              html += `<li>${inline(escapeHtml(lines[i].replace(/^\s*[-*]\s+/, '')))}</li>`;
+              i++;
+            }
+            html += '</ul>';
+            continue;
+          }
+
+          if (/^\s*\d+\.\s+/.test(line)) {
+            html += '<ol>';
+            while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+              html += `<li>${inline(escapeHtml(lines[i].replace(/^\s*\d+\.\s+/, '')))}</li>`;
+              i++;
+            }
+            html += '</ol>';
+            continue;
+          }
+
+          if (/^>\s?/.test(line)) {
+            html += `<blockquote>${inline(escapeHtml(line.replace(/^>\s?/, '')))}</blockquote>`;
+            i++;
+            continue;
+          }
+
+          if (/^---+$/.test(line.trim())) {
+            html += '<hr />';
+            i++;
+            continue;
+          }
+
+          if (!line.trim()) {
+            i++;
+            continue;
+          }
+
+          html += `<p>${inline(escapeHtml(line))}</p>`;
+          i++;
+        }
+
+        return html;
+      }
+
+      async function init() {
+        if (!allowed.has(file)) {
+          titleEl.textContent = 'Unsupported document';
+          contentEl.innerHTML = '<p class="error">This document is not available in the styled viewer.</p>';
+          return;
+        }
+
+        titleEl.textContent = file;
+        rawLinkEl.href = file;
+
+        try {
+          const res = await fetch(file, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const md = await res.text();
+          contentEl.innerHTML = markdownToHtml(md);
+        } catch (err) {
+          contentEl.innerHTML = `<p class="error">Unable to load document (${escapeHtml(String(err.message || err))}).</p>`;
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
