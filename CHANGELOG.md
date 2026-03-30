@@ -104,7 +104,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed in-progress run abandonment risk by adding explicit confirmation before returning to setup from active gameplay contexts.
 - Fixed overlay keyboard-close consistency by applying `Escape` close behavior to onboarding/help/watch/field-log overlays in the global handler path.
 - Fixed startup diagnostics taxonomy with explicit `invalid deep-link` localized messaging in `startup-ui`.
-- Fixed startup loading deadlock risk by introducing per-file data-load timeout classification (`timeout`) and explicit fatal diagnostics for stalled fetches.
+- Fixed startup loading deadlock risk by introducing per-file data-load timeout classification (`timeout`) with `Promise.race` fallback (works even if `AbortController` is unavailable) and explicit fatal diagnostics for stalled fetches.
 - Fixed RNG robustness by sanitizing non-numeric `mulberry32` seeds through deterministic hashing fallback, preventing `NaN`/unstable runtime output.
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
 - Fixed the Part 2 `future_cta` collaboration action to reliably open the official project contact (`aconcaguastonesentinel@gmail.com`) via `mailto:` from the final screen CTA.

@@ -112,14 +112,14 @@ test('data loader classifies invalid shape as blocking shape failure', async () 
 
 test('data loader classifies request timeout as blocking timeout failure', async () => {
   const errors = [];
+  const originalAbortController = global.AbortController;
+  global.AbortController = undefined;
   const config = await loadDataConfigFiles({
-    fetchImpl: async () => {
-      const err = new Error('aborted');
-      err.name = 'AbortError';
-      throw err;
-    },
+    fetchImpl: async () => new Promise(() => {}),
+    timeoutMs: 1,
     onError: (payload) => errors.push(payload),
   });
+  global.AbortController = originalAbortController;
 
   assert.equal(config, null);
   assert.equal(errors.length, 1);

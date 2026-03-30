@@ -112,18 +112,25 @@ export function createDefaultDataConfig() {
   return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 }
 
-export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
+export async function loadDataConfigFiles({ fetchImpl = fetch, onError, timeoutMs = 10000 }) {
   const files = Object.entries(FILE_PATH_BY_KEY);
-  const LOAD_TIMEOUT_MS = 10000;
+  const LOAD_TIMEOUT_MS = Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : 10000;
 
   const config = createDefaultDataConfig();
   for (const [key, path] of files) {
     let timeoutId = null;
     try {
       const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      timeoutId = setTimeout(() => controller?.abort(), LOAD_TIMEOUT_MS);
-      const response = await fetchImpl(path, { cache: 'no-store', ...(controller ? { signal: controller.signal } : {}) });
-      clearTimeout(timeoutId);
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          controller?.abort();
+          const timeoutError = new Error(`Timed out after ${LOAD_TIMEOUT_MS}ms while fetching ${path}`);
+          timeoutError.name = 'TimeoutError';
+          reject(timeoutError);
+        }, LOAD_TIMEOUT_MS);
+      });
+      const fetchPromise = fetchImpl(path, { cache: 'no-store', ...(controller ? { signal: controller.signal } : {}) });
+      const response = await Promise.race([fetchPromise, timeoutPromise]);
       if (!response.ok) {
         const kind = response.status === 404 ? 'missing file' : 'http failure';
         throw new Error(`[${kind}] ${path} (status ${response.status})`);
@@ -137,7 +144,7 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
       validateDataConfigShape(key, data);
       config[key] = data;
     } catch (error) {
-      if (error?.name === 'AbortError') {
+      if (error?.name === 'AbortError' || error?.name === 'TimeoutError') {
         onError?.({
           category: 'timeout',
           file: path,
