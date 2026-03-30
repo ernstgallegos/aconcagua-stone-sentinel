@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    TOKENS — Design System Custom Properties
-   Andean Modern palette (Decision 10)
+   Alpine editorial palette refresh (v1.4.5+ public UX pass)
    ═══════════════════════════════════════════ */
 
 /* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
@@ -12,27 +12,28 @@
 */
 
 :root {
-  /* ── Color palette: Andean Modern ── */
-  --bg:        #0c1017;
-  --surface:   #151a22;
-  --surface2:  #1c2330;
-  --border:    #2b3943;
-  --stone:     #9a8e7a;
-  --ochre:     #c49a5c;
-  --ochre-dim: #8a6d3f;
-  --ice:       #7fb3c8;
-  --ice-dim:   #4f7e94;
-  --white:     #d9d7d2;
-  --red:       #b85450;
-  --red-dim:   #7a3430;
-  --safety:    #6b9e5e;
-  --text:      #c2c8cb;
-  --text-dim:  #76848c;
-  --muted:     #76848c;
-  --accent:    #c49a5c;
+  /* ── Color palette: alpine dusk ── */
+  --bg:        #0b121d;
+  --surface:   #141f2d;
+  --surface2:  #1d2b3d;
+  --border:    #3a4d60;
+  --stone:     #b9ac9e;
+  --ochre:     #d2b48d;
+  --ochre-dim: #967757;
+  --ice:       #b9d3e6;
+  --ice-dim:   #6f90a9;
+  --white:     #eef3f8;
+  --red:       #c96f63;
+  --red-dim:   #8d473f;
+  --safety:    #89b492;
+  --text:      #d6dfe8;
+  --text-dim:  #91a2b3;
+  --text-soft: #abb9c7;
+  --muted:     #91a2b3;
+  --accent:    #d2b48d;
 
   /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'IBM Plex Mono', sans-serif;
+  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
   --mono:    'IBM Plex Mono', monospace;
   --serif:   'Lora', Georgia, serif;
   --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
@@ -46,8 +47,8 @@
   --space-2xl: 3rem;
 
   /* ── Border radius ── */
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;

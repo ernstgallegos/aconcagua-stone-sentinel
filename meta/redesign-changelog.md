@@ -9,6 +9,7 @@ Root public site (`/index.html`) redesign with supporting documentation updates.
 - Reorganized navigation and section flow into: Vision → System → Materials → Status → Outcomes → Primary CTA.
 - Tightened bilingual copy to improve clarity for players, collaborators, festivals, and press.
 - Preserved direct paths to prototype, whitepaper, roadmap, README, GitHub, Instagram, and official contact.
+- Expanded the same visual language into the active `prototype/web-v1` UI shell: refreshed atmospheric palette tokens, calmer contrast model, editorial button hierarchy, and stronger setup-screen framing.
 
 ## Why
 - Increase public trust and perceived project maturity.
@@ -19,6 +20,7 @@ Root public site (`/index.html`) redesign with supporting documentation updates.
 - Faster comprehension of project thesis and play premise.
 - Stronger external confidence for curation/collaboration contexts.
 - Improved readability and navigational calm across mobile/tablet/desktop.
+- Better continuity between public landing expectations and in-prototype experiential tone.
 
 ## Pending / next iteration
 - Optional future addition: dedicated newsroom/press-kit route with downloadable media assets.

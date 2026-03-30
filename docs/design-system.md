@@ -1,7 +1,7 @@
 # Design System — Public Web Surface (`/`)
 
 ## 1) Scope
-This document defines the visual/interaction system for the root public site (`index.html`).
+This document defines the visual/interaction system for the root public site (`index.html`) and the shared tonal extension applied to `prototype/web-v1` shell theming.
 
 ## 2) Design tokens
 
@@ -94,3 +94,8 @@ This document defines the visual/interaction system for the root public site (`i
 - Reduced-motion media query applied.
 - Language switch reflects state with `aria-pressed`.
 - Text/background combinations selected for high contrast in dark mode.
+
+## 11) Prototype extension notes (`prototype/web-v1`)
+- Token refresh keeps the same mountain-first palette family (cold mineral base + restrained amber/ice accents).
+- Welcome/setup surfaces use layered overlays instead of flat dark fills to preserve atmospheric continuity.
+- Primary actions remain high-contrast and calm; secondary/decision controls reduce visual noise while preserving affordance.

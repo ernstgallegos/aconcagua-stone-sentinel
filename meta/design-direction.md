@@ -13,6 +13,7 @@
 1. Progressive revelation: concept first, architecture second, evidence third, CTA last.
 2. Scannable for first-time visitors; rich enough for evaluators.
 3. Every section answers a distinct question (what / how / proof / now what).
+4. Public landing and playable prototype should share the same tonal family (editorial calm + systemic clarity).
 
 ## Typography decisions
 - Primary headline family: high-authority serif (`Iowan Old Style` fallback stack).

@@ -29,6 +29,7 @@
 ## 7) Public perception risks
 - Could be interpreted as “good prototype page” rather than “serious cultural/game project with systemic depth.”
 - External visitors (press/festivals/collaborators) had limited immediate cues of rigor and maturity.
+- Visual gap risk: root landing looked more curated than the playable `web-v1` shell, weakening trust continuity after clicking “Play”.
 
 ## 8) Opportunities detected
 - Build asymmetrical editorial composition to increase identity.
@@ -42,3 +43,4 @@
 - Stronger typography hierarchy (editorial headlines + precise sans body).
 - Explicit information architecture: Vision → System → Materials → Status → Outcomes → Primary CTA.
 - Accessibility-preserving refinements (semantic headings, focus-visible, reduced-motion support, contrast-aware surfaces).
+- Extend core visual language into `prototype/web-v1` entrance/setup shell so public promise and playable tone feel cohesive.
