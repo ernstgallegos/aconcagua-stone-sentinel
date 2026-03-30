@@ -1,43 +1,230 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aconcagua: Stone Sentinel — Web v1.4.5</title>
-    <meta http-equiv="refresh" content="0; url=/prototype/web-v1/index.html" />
-    <link rel="canonical" href="/prototype/web-v1/index.html" />
+    <title>Aconcagua: Stone Sentinel — Landing oficial</title>
+    <meta
+      name="description"
+      content="Landing oficial de Aconcagua: Stone Sentinel. Explora la visión del proyecto y juega ahora el prototipo web app v1.4.5."
+    />
     <style>
-      :root { color-scheme: dark; }
+      :root {
+        color-scheme: dark;
+        --bg: #070b10;
+        --panel: rgba(20, 28, 37, 0.75);
+        --panel-border: rgba(214, 171, 110, 0.24);
+        --text: #e9edf1;
+        --muted: #b8c2cc;
+        --accent: #d6ab6e;
+        --accent-strong: #f4c98c;
+        --ok: #85d0ae;
+      }
+
+      * { box-sizing: border-box; }
+
       body {
         margin: 0;
+        font-family: "Inter", "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+        background:
+          radial-gradient(circle at 15% 20%, rgba(96, 132, 179, 0.18), transparent 34%),
+          radial-gradient(circle at 85% 8%, rgba(214, 171, 110, 0.2), transparent 26%),
+          linear-gradient(180deg, #0b1118 0%, var(--bg) 55%);
+        color: var(--text);
         min-height: 100vh;
+      }
+
+      .shell {
+        width: min(1080px, 92vw);
+        margin: 0 auto;
+        padding: 2.2rem 0 3.6rem;
+      }
+
+      .hero {
         display: grid;
-        place-items: center;
-        background: #0d1217;
-        color: #d4d8dc;
-        font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+        gap: 1.3rem;
+        padding: 2rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        background: linear-gradient(160deg, rgba(22, 31, 40, 0.92), var(--panel));
+        backdrop-filter: blur(3px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
       }
-      main {
-        max-width: 680px;
-        padding: 1.2rem;
-        text-align: center;
+
+      .eyebrow {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.72rem;
+        color: var(--accent);
+        font-weight: 700;
       }
-      a { color: #d6ab6e; }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 6vw, 3.3rem);
+        line-height: 1.05;
+      }
+
+      .lead {
+        margin: 0;
+        color: var(--muted);
+        max-width: 68ch;
+        line-height: 1.6;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 0.72rem 1.15rem;
+        font-weight: 700;
+        border: 1px solid transparent;
+        transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+      }
+
+      .btn:hover,
+      .btn:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(120deg, var(--accent) 0%, var(--accent-strong) 100%);
+        color: #1d2228;
+      }
+
+      .btn-secondary {
+        color: var(--text);
+        background: rgba(12, 17, 24, 0.56);
+        border-color: rgba(214, 171, 110, 0.35);
+      }
+
+      .meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .dot {
+        color: rgba(214, 171, 110, 0.7);
+      }
+
+      .grid {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.85rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .card {
+        background: rgba(15, 22, 30, 0.72);
+        border: 1px solid rgba(194, 165, 126, 0.21);
+        border-radius: 16px;
+        padding: 1rem;
+      }
+
+      .card h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1.02rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 0.95rem;
+      }
+
+      .status-line {
+        margin-top: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #dce7f1;
+        font-size: 0.92rem;
+      }
+
+      .status-dot {
+        width: 0.58rem;
+        height: 0.58rem;
+        border-radius: 999px;
+        background: var(--ok);
+        box-shadow: 0 0 0 0.24rem rgba(133, 208, 174, 0.16);
+      }
+
+      footer {
+        margin-top: 1.6rem;
+        color: #95a3b1;
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        color: var(--accent-strong);
+      }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Redirecting to the active web prototype…</h1>
-      <p>
-        Open <a href="/prototype/web-v1/index.html">prototype/web-v1/index.html</a>.
-      </p>
-      <p>
-        The archived MRA v0 run viewer remains available at
-        <a href="/prototype/mra-v0/viewer/index.html">prototype/mra-v0/viewer/index.html</a>.
-      </p>
+    <main class="shell">
+      <section class="hero" aria-labelledby="landing-title">
+        <p class="eyebrow">Indie narrative-systemic project</p>
+        <h1 id="landing-title">Aconcagua: Stone Sentinel</h1>
+        <p class="lead">
+          Una experiencia de montaña narrativa y sistémica sobre riesgo, percepción y decisiones
+          bajo presión. Esta landing concentra la entrada pública del proyecto y prioriza el
+          acceso inmediato a la demo jugable.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/prototype/web-v1/index.html">▶ Jugar prototipo web app v1.4.5</a>
+          <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel">Repositorio</a>
+          <a class="btn btn-secondary" href="/meta/project-whitepaper.md">Whitepaper</a>
+        </div>
+
+        <p class="status-line"><span class="status-dot" aria-hidden="true"></span>Prototipo público activo: web-v1</p>
+
+        <div class="meta">
+          <span>Single player</span>
+          <span class="dot">•</span>
+          <span>Datos + narrativa</span>
+          <span class="dot">•</span>
+          <span>EN / ES</span>
+          <span class="dot">•</span>
+          <span>Indie en desarrollo</span>
+        </div>
+
+        <div class="grid" aria-label="Pilares rápidos del proyecto">
+          <article class="card">
+            <h2>La montaña manda</h2>
+            <p>La altitud, clima y terreno condicionan cada turno. No hay fantasía de poder.</p>
+          </article>
+          <article class="card">
+            <h2>Información parcial</h2>
+            <p>Decisiones con señales incompletas: leer contexto importa más que “acertar” una fórmula.</p>
+          </article>
+          <article class="card">
+            <h2>Fracasar también es avanzar</h2>
+            <p>Volver, detenerse o retirarse son outcomes válidos y con peso narrativo.</p>
+          </article>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          ¿Buscas el visor histórico del primer prototipo? Disponible en
+          <a href="/prototype/mra-v0/viewer/index.html">prototype/mra-v0/viewer/index.html</a>.
+        </p>
+      </footer>
     </main>
-    <script>
-      window.location.replace('/prototype/web-v1/index.html');
-    </script>
   </body>
 </html>

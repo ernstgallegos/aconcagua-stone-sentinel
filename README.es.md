@@ -167,7 +167,7 @@ Se incorporó un paquete documental de diseño/planificación v1.4 para alinear 
 
 Este repositorio incluye una entrada pública canónica y un visor histórico archivado:
 
-- `/` — índice canónico que redirige directamente a `prototype/web-v1/index.html`
+- `/` — índice canónico que ahora sirve la landing pública del proyecto con CTA principal a `prototype/web-v1/index.html`
 - `prototype/web-v1/index.html` — **prototype web-v1** interactivo con mecánicas extendidas
 - `prototype/mra-v0/viewer/index.html` — visor archivado para reproducir corridas del prototipo Python
 

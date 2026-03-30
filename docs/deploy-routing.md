@@ -6,7 +6,7 @@ This document is the single source of truth for public entry routes, local previ
 
 ### Canonical public routes
 
-- `/` → canonical entry point, redirected to `/prototype/web-v1/index.html`.
+- `/` → canonical public landing page, with a primary CTA to `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` → normalized to `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → archived legacy viewer, normalized to `/prototype/mra-v0/viewer/index.html`.
 
@@ -20,7 +20,7 @@ python3 -m http.server 4173
 
 Then open:
 
-- `http://localhost:4173/` (canonical entry, redirects immediately to web-v1)
+- `http://localhost:4173/` (canonical landing page with a prominent play CTA to web-v1)
 - `http://localhost:4173/prototype/web-v1/` (direct web-v1)
 - `http://localhost:4173/prototype/mra-v0/viewer/` (archived MRA v0 viewer)
 
@@ -49,7 +49,7 @@ ALLOWED_ORIGINS=https://example.com,https://www.example.com
 
 ### Rutas públicas canónicas
 
-- `/` → entrada canónica, redirigida a `/prototype/web-v1/index.html`.
+- `/` → landing pública canónica, con CTA principal a `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` → normalizada a `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → visor histórico archivado, normalizado a `/prototype/mra-v0/viewer/index.html`.
 
@@ -63,7 +63,7 @@ python3 -m http.server 4173
 
 Luego abrir:
 
-- `http://localhost:4173/` (entrada canónica, redirige inmediatamente a web-v1)
+- `http://localhost:4173/` (landing canónica con CTA destacado para jugar web-v1)
 - `http://localhost:4173/prototype/web-v1/` (acceso directo a web-v1)
 - `http://localhost:4173/prototype/mra-v0/viewer/` (visor archivado MRA v0)
 
