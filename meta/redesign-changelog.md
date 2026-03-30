@@ -13,6 +13,7 @@
    - footer,
    - document title + meta description + key alt text.
 5. Kept premium modular layout and improved consistency between landing and prototype.
+6. Added a dedicated community/contact block with direct Instagram follow and email contact CTAs.
 
 ## Why
 

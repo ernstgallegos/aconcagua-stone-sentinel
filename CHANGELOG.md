@@ -11,6 +11,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 - Added a new public root landing page at `/index.html` with a modern hero-first layout, concise project pillars, and a privileged primary CTA to launch the active `web-v1` prototype (`/prototype/web-v1/index.html`).
+- Added a dedicated landing “community” section with direct Instagram follow CTA and official mail contact CTA so visitors can track updates and reach the team without leaving `/`.
 - Added flagship redesign documentation deliverables for the public web surface: `meta/ui-ux-redesign-audit.md`, `meta/design-direction.md`, `docs/design-system.md`, and `meta/redesign-changelog.md`.
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 

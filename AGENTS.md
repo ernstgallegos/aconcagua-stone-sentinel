@@ -242,3 +242,5 @@ In addition to the changelog:
 - Public landing redesigns are more reliable when they are delivered as a full package (audit + direction + design-system doc + implementation changelog) so UX intent, visual system rules, and shipped behavior stay synchronized.
 
 - Landing localization is safest when English is the default public copy and Spanish is delivered through a visible EN/ES switch that also updates metadata (`title`, description, key alt text), preventing mixed-language first impressions.
+
+- Public landing conversion improves when update-follow and contact actions are explicit (Instagram + official email) in a dedicated section instead of being implied only in footer/legal copy.
