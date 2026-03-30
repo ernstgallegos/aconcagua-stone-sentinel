@@ -470,9 +470,49 @@
       .site-footer {
         margin-top: var(--space-7);
         border-top: 1px solid var(--border-soft);
-        padding-top: var(--space-3);
+        padding-top: var(--space-4);
         color: var(--text-muted);
         font-size: 0.88rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .footer-block h3 {
+        margin: 0 0 0.45rem;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent-mineral);
+      }
+
+      .footer-block p {
+        margin: 0;
+        color: var(--text-dim);
+      }
+
+      .footer-links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.25rem;
+      }
+
+      .footer-links a {
+        color: var(--accent-ice);
+      }
+
+      .footer-bottom {
+        margin-top: var(--space-3);
+        border-top: 1px solid var(--border-soft);
+        padding-top: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
       }
 
       @media (min-width: 910px) {
@@ -482,6 +522,7 @@
         .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
         .status-item:first-child { border-left: 0; padding-left: 0; }
+        .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -680,7 +721,32 @@
       </section>
 
       <footer class="site-footer">
-        <p data-i18n="footerLine">Aconcagua: Stone Sentinel · Indie narrative-systemic project · Official contact: <a href="mailto:aconcaguastonesentinel@gmail.com">aconcaguastonesentinel@gmail.com</a></p>
+        <div class="footer-grid">
+          <section class="footer-block" aria-label="Project status and origin">
+            <h3 data-i18n="footerProjectTitle">Project</h3>
+            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.</p>
+          </section>
+          <section class="footer-block" aria-label="Official contact channels">
+            <h3 data-i18n="footerContactTitle">Contact</h3>
+            <ul class="footer-links">
+              <li><a href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="footerContactEmail">Official email</a></li>
+              <li><a href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="footerContactInstagram">Instagram</a></li>
+              <li><a href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" target="_blank" rel="noopener noreferrer" data-i18n="footerContactGithub">GitHub repository</a></li>
+            </ul>
+          </section>
+          <section class="footer-block" aria-label="Legal and governance links">
+            <h3 data-i18n="footerLegalTitle">Legal & governance</h3>
+            <ul class="footer-links">
+              <li><a href="/LICENSE.md" data-i18n="footerLegalLicense">License</a></li>
+              <li><a href="/SECURITY.md" data-i18n="footerLegalSecurity">Security policy</a></li>
+              <li><a href="/CODE_OF_CONDUCT.md" data-i18n="footerLegalConduct">Code of conduct</a></li>
+            </ul>
+          </section>
+        </div>
+        <div class="footer-bottom">
+          <span data-i18n="footerOrigin">Made in Argentina · Proyecto basado en Argentina.</span>
+          <span data-i18n="footerCopyright">© 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.</span>
+        </div>
       </footer>
     </main>
 
@@ -738,7 +804,18 @@
           finalTitle: 'Enter one expedition run. Then inspect the model and debrief trace.',
           finalIntro: 'The fastest way to understand the project is to play, then read the resulting signals against documentation.',
           finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
-          footerLine: 'Aconcagua: Stone Sentinel · Indie narrative-systemic project · Official contact:'
+          footerProjectTitle: 'Project',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.',
+          footerContactTitle: 'Contact',
+          footerContactEmail: 'Official email',
+          footerContactInstagram: 'Instagram',
+          footerContactGithub: 'GitHub repository',
+          footerLegalTitle: 'Legal & governance',
+          footerLegalLicense: 'License',
+          footerLegalSecurity: 'Security policy',
+          footerLegalConduct: 'Code of conduct',
+          footerOrigin: 'Made in Argentina · Argentina-based project.',
+          footerCopyright: '© 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.'
         },
         es: {
           pageTitle: 'Aconcagua: Stone Sentinel — Proyecto narrativo sistémico mountain-first',
@@ -792,7 +869,18 @@
           finalTitle: 'Entrá a una corrida. Luego inspeccioná el modelo y su traza de debrief.',
           finalIntro: 'La forma más rápida de entender el proyecto es jugar y luego leer las señales junto a la documentación.',
           finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
-          footerLine: 'Aconcagua: Stone Sentinel · Proyecto indie narrativo-sistémico · Contacto oficial:'
+          footerProjectTitle: 'Proyecto',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.5 · Sistemas narrativos con la montaña como eje.',
+          footerContactTitle: 'Contacto',
+          footerContactEmail: 'Email oficial',
+          footerContactInstagram: 'Instagram',
+          footerContactGithub: 'Repositorio en GitHub',
+          footerLegalTitle: 'Legal y gobernanza',
+          footerLegalLicense: 'Licencia',
+          footerLegalSecurity: 'Política de seguridad',
+          footerLegalConduct: 'Código de conducta',
+          footerOrigin: 'Hecho en Argentina · Proyecto basado en Argentina.',
+          footerCopyright: '© 2026 Aconcagua: Stone Sentinel. Todos los derechos reservados cuando corresponda.'
         }
       };
 

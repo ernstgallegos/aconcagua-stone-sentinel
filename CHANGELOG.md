@@ -29,6 +29,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Reworked the landing footer into a three-block structure (project status, official contact channels, legal/governance links) and added explicit Argentina-origin messaging (`Made in Argentina` / `Hecho en Argentina`) to clarify project provenance.
 - Changed the shared language-preference storage key on the root landing page to `aconcagua_language_v1` so landing, markdown viewer, and `prototype/web-v1` use one persistent cross-surface language state.
 - Redesigned `md-viewer.html` to use the same visual token family and interaction language as the main landing (header, buttons, surfaces, typography, and focus behavior), keeping markdown-reading routes stylistically consistent with the public site shell.
 - Added language persistence and EN/ES switcher controls to `md-viewer.html`, reusing the same global language key as landing/web-v1.
