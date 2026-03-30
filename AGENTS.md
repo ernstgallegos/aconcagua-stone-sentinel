@@ -248,3 +248,5 @@ In addition to the changelog:
 - Public landing clarity increases when whitepaper and roadmap are surfaced as visual summary cards (not only links), and official channels always include both GitHub and project email as explicit actions.
 
 - Public markdown documents linked from landing are more credible when they open inside a styled viewer constrained to approved sources, avoiding raw markdown UX drift and preserving brand consistency.
+
+- Hero artwork readability is safer when landing images keep original aspect ratio by default (`contain` + auto height); forcing fixed 16:9 crops can destroy key visual information on already-composed illustrations.
