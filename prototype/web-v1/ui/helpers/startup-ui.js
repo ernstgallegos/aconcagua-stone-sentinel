@@ -28,7 +28,7 @@ export function setStartupState(state, detail = '') {
   }
 
   if (state === 'ready') {
-    statusEl.textContent = startupText('Model ready. Begin when prepared.', 'Modelo listo. Comienza cuando estés preparado.');
+    statusEl.textContent = startupText('Model ready. Click/tap to begin.', 'Modelo listo. Haz clic/toca para comenzar.');
     statusEl.dataset.state = 'ready';
     if (beginBtn) {
       beginBtn.disabled = false;

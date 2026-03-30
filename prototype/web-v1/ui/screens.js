@@ -19,12 +19,25 @@ const TUNING = {
 let DATA_CONFIG = createDefaultDataConfig();
 let DATA_CONFIG_ERROR = null;
 const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
+const DEV_HOSTS = new Set(['localhost', '127.0.0.1']);
+
+function reportRuntimeIssue(message, detail = null) {
+  try {
+    const host = globalThis?.location?.hostname || '';
+    if (!DEV_HOSTS.has(host)) return;
+  } catch (_) {
+    return;
+  }
+
+  if (detail != null) console.error(message, detail);
+  else console.error(message);
+}
 
 function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
   updateUIState(G, { modelReady: false });
   const rendered = renderBlockingError(errorMessage);
-  console.error(rendered.detail);
+  reportRuntimeIssue('Blocking startup error', rendered.detail);
   setStartupState('error', uiText('Model unavailable. Review blocking diagnostics.', 'Modelo no disponible. Revisa el diagnóstico bloqueante.'));
   showScreen('fatal-error');
 }
@@ -1098,7 +1111,7 @@ function applyStaticTranslations() {
   const bilingualTextMap = [
     ['.title-info-trigger', 'ⓘ Info', 'ⓘ Info'],
     ['#startup-status-line[data-state="loading"]', 'Preparing mountain model…', 'Preparando modelo de montaña…'],
-    ['#startup-status-line[data-state="ready"]', 'Model ready. Begin when prepared.', 'Modelo listo. Comienza cuando estés preparado.'],
+    ['#startup-status-line[data-state="ready"]', 'Model ready. Click/tap to begin.', 'Modelo listo. Haz clic/toca para comenzar.'],
     ['#blocking-error-title', 'Blocking data error', 'Error bloqueante de datos'],
     ['#blocking-error-summary', 'The simulation model could not be initialized. Gameplay is disabled until data files are fixed.', 'No se pudo inicializar el modelo de simulación. La partida queda deshabilitada hasta corregir los archivos de datos.'],
     ['#field-log-overlay .field-log-title', 'Field Log', 'Bitácora de campo'],
@@ -1228,7 +1241,7 @@ function showScreen(id) {
       s.classList.remove('active', 'exiting');
     });
     const target = document.getElementById('screen-' + id);
-    if (!target) { console.error('Unknown screen: ' + id); return; }
+    if (!target) { reportRuntimeIssue('Unknown screen id', id); return; }
     target.classList.add('active');
     window.scrollTo(0, 0);
 
@@ -4201,9 +4214,7 @@ function bootstrapMockDebrief(params) {
     : 'Strategic Retreat';
 
   const seeds = scenario.seeds || [];
-  const seed = params.seed
-    ? parseInt(params.seed, 10)
-    : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+  const seed = resolveSeed(params.seed, seeds);
 
   const highIdx = finalOutcome === 'Summit and Safe Return'
     ? POSITIONS.length - 1
@@ -4311,6 +4322,15 @@ function _resolveScenario(scenParam) {
   return (scenParam && scenarios.find(s => s.id === scenParam)) || scenarios[0] || null;
 }
 
+function resolveSeed(seedParam, scenarioSeeds = []) {
+  if (seedParam != null) {
+    const parsed = Number.parseInt(seedParam, 10);
+    if (Number.isFinite(parsed)) return parsed;
+    reportRuntimeIssue('Ignoring invalid deep-link seed parameter', seedParam);
+  }
+  return scenarioSeeds[Math.floor(Math.random() * scenarioSeeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+}
+
 /**
  * Handle hash-based deep links after data config is loaded.
  * Called once in the loadDataConfig().then() chain.
@@ -4339,9 +4359,7 @@ function handleDeepLink() {
     G.character = char;
     G.scenario = scenario;
     const seeds = scenario.seeds || [];
-    G.seed = params.seed
-      ? parseInt(params.seed, 10)
-      : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+    G.seed = resolveSeed(params.seed, seeds);
     deriveDifficultyFromScenario();
     // startGame() calls showScreen('game') internally — suppress hash overwrite
     _suppressHashSync = true;
@@ -4356,9 +4374,7 @@ function handleDeepLink() {
     G.character = char;
     G.scenario = scenario;
     const seeds = scenario.seeds || [];
-    G.seed = params.seed
-      ? parseInt(params.seed, 10)
-      : (seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000);
+    G.seed = resolveSeed(params.seed, seeds);
     deriveDifficultyFromScenario();
     _suppressHashSync = true;
     showOnboarding('predefined');

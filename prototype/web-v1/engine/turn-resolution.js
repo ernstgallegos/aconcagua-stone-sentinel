@@ -1,4 +1,7 @@
 export function mulberry32(seed) {
+  if (typeof seed !== 'number' || !Number.isFinite(seed)) {
+    throw new TypeError('mulberry32 requires a finite numeric seed');
+  }
   let s = seed >>> 0;
   return function() {
     s = (s + 0x6D2B79F5) >>> 0;

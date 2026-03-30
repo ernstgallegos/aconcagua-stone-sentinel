@@ -1,13 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { formatBlockingError } from '../../ui/helpers/startup-ui.js';
+import { formatBlockingError, setStartupState } from '../../ui/helpers/startup-ui.js';
 
 function makeStorage(language) {
   return {
     getItem(key) {
       if (key === 'aconcagua_language_v1') return language;
       return null;
+    },
+  };
+}
+
+function makeDom(statusEl, beginBtn) {
+  global.document = {
+    getElementById(id) {
+      return id === 'startup-status-line' ? statusEl : null;
+    },
+    querySelector(selector) {
+      return selector === '.title-screen-advance' ? beginBtn : null;
     },
   };
 }
@@ -47,4 +58,34 @@ test('formatBlockingError falls back to generic copy for unknown categories', ()
   });
   assert.match(result.summary, /initialization failed before gameplay could start/i);
   assert.match(result.detail, /Category: custom failure/);
+});
+
+test('setStartupState ready copy uses updated English CTA text', () => {
+  global.localStorage = makeStorage('en');
+  const statusEl = { textContent: '', dataset: {} };
+  const beginBtn = {
+    disabled: true,
+    attrs: {},
+    setAttribute(name, value) { this.attrs[name] = value; },
+    removeAttribute(name) { delete this.attrs[name]; },
+  };
+  makeDom(statusEl, beginBtn);
+  setStartupState('ready');
+  assert.equal(statusEl.textContent, 'Model ready. Click/tap to begin.');
+  assert.equal(beginBtn.disabled, false);
+});
+
+test('setStartupState ready copy uses updated Spanish CTA text', () => {
+  global.localStorage = makeStorage('es');
+  const statusEl = { textContent: '', dataset: {} };
+  const beginBtn = {
+    disabled: true,
+    attrs: {},
+    setAttribute(name, value) { this.attrs[name] = value; },
+    removeAttribute(name) { delete this.attrs[name]; },
+  };
+  makeDom(statusEl, beginBtn);
+  setStartupState('ready');
+  assert.equal(statusEl.textContent, 'Modelo listo. Haz clic/toca para comenzar.');
+  assert.equal(beginBtn.disabled, false);
 });

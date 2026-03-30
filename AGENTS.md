@@ -255,6 +255,11 @@ In addition to the changelog:
 
 - Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.
 
+- Audit-remediation closures are easier to defend when each external finding is mapped to a repo-traceable matrix (`FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED`) and paired with at least one automated guard where practical (e.g., asset contract tests, RNG input validation tests).
+- Runtime diagnostics in `web-v1` should prefer environment-gated debug logging over unconditional production `console.error` calls; keep player-facing failures in localized startup/fatal UI while preserving localhost troubleshooting visibility.
+- Cross-surface language UX is safest when landing, markdown viewer, and `web-v1` reuse one shared localStorage language key (`aconcagua_language_v1`); splitting keys creates subtle “language reset” friction that feels like a bug.
+- Public markdown reader routes should inherit the same visual token system as `/` (surfaces, borders, typography, focus patterns) so document deep-links feel like the same product, not a detached microsite.
+
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.

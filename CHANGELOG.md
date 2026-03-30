@@ -10,6 +10,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added startup-copy unit coverage in `prototype/web-v1/tests/unit/startup-ui.test.js` to lock the updated ready-state CTA text in both English and Spanish.
+- Added `meta/audit-remediation-2026-03-30.md`, a traceable remediation matrix mapping relevant findings from both 2026-03-30 audits to `FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED` outcomes with evidence.
+- Added `docs/TROUBLESHOOTING.md` with startup/data-contract/asset/deep-link/operator checks for public web-v1 incidents.
+- Added `docs/context-events-guide.md` documenting canonical context-event ownership, contract shape, and regression checks.
+- Added `prototype/web-v1/tests/contracts/assets-contracts.test.js` to enforce critical visual asset existence and portrait parity with `data/characters.json`.
+- Added `prototype/web-v1/tests/engine/rng-seed-validation.test.js` to lock finite-seed validation behavior in `mulberry32`.
 - Added `docs/es/sistema-tipografico-playfair.md` with a full typography audit/proposal for role-based usage (brand, UI, reading, and data) across landing and `web-v1`.
 - Added a new public-web redesign audit snapshot at `meta/ui-ux-redesign-audit.md` focused on clarity, hierarchy, tone, and public-perception gaps for the root landing experience.
 - Added a formal redesign direction brief at `meta/design-direction.md` defining the mountain-first editorial concept, UX/visual principles, responsive logic, and accessibility criteria.
@@ -23,6 +29,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Reworked the landing footer into a three-block structure (project status, official contact channels, legal/governance links) and added explicit Argentina-origin messaging (`Made in Argentina` / `Hecho en Argentina`) to clarify project provenance.
+- Changed the shared language-preference storage key on the root landing page to `aconcagua_language_v1` so landing, markdown viewer, and `prototype/web-v1` use one persistent cross-surface language state.
+- Redesigned `md-viewer.html` to use the same visual token family and interaction language as the main landing (header, buttons, surfaces, typography, and focus behavior), keeping markdown-reading routes stylistically consistent with the public site shell.
+- Added language persistence and EN/ES switcher controls to `md-viewer.html`, reusing the same global language key as landing/web-v1.
+- Updated `prototype/web-v1/ui/screens.js` runtime diagnostics to avoid unconditional production `console.error` noise by routing startup/unknown-screen/invalid-seed reports through a localhost-only debug helper.
+- Hardened deep-link seed parsing in `prototype/web-v1/ui/screens.js` so invalid `seed` params are ignored in favor of safe scenario/default seeds.
 - Refined typography-system guidance to incorporate `Montserrat` as the primary UX/UI sans companion to `Playfair Display`, with updated role tokens in both `docs/design-system.md` and `docs/es/sistema-tipografico-playfair.md`.
 - Updated `docs/design-system.md` typography guidance to center the public visual hierarchy around `Playfair Display` with explicit subordinate roles for UI sans (`Plus Jakarta Sans`) and telemetry mono (`IBM Plex Mono`).
 - Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
@@ -37,6 +49,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed the archived `prototype/mra-v0/viewer` CTA from landing primary action areas so root onboarding now prioritizes active prototype + docs/channels only.
 - Updated landing visual tokens to align with the active web-v1 sunset palette, improving cross-surface brand coherence between `/` and `prototype/web-v1`.
 - Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
+
+### Fixed
+- Fixed markdown-viewer media rendering so Markdown image syntax (`![alt](path)`) now renders as styled images with repository-relative URL resolution, restoring README/linked-doc visual assets inside `md-viewer.html`.
+- Fixed web-v1 startup ready-state copy to show `Click/tap to begin.` (`Haz clic/toca para comenzar.`) instead of the previous wording.
+- Fixed RNG input hardening in `prototype/web-v1/engine/turn-resolution.js` by rejecting non-finite seeds in `mulberry32`, preventing invalid deep-link seed values from silently producing unstable random streams.
 
 ## [1.4.5] — 2026-03
 
