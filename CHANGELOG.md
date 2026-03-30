@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `docs/es/sistema-tipografico-playfair.md` with a full typography audit/proposal for role-based usage (brand, UI, reading, and data) across landing and `web-v1`.
 - Added a new public-web redesign audit snapshot at `meta/ui-ux-redesign-audit.md` focused on clarity, hierarchy, tone, and public-perception gaps for the root landing experience.
 - Added a formal redesign direction brief at `meta/design-direction.md` defining the mountain-first editorial concept, UX/visual principles, responsive logic, and accessibility criteria.
 - Added a redesign delivery log at `meta/redesign-changelog.md` documenting implemented changes, rationale, expected impact, and deferred follow-ups.
@@ -22,6 +23,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Refined typography-system guidance to incorporate `Montserrat` as the primary UX/UI sans companion to `Playfair Display`, with updated role tokens in both `docs/design-system.md` and `docs/es/sistema-tipografico-playfair.md`.
+- Updated `docs/design-system.md` typography guidance to center the public visual hierarchy around `Playfair Display` with explicit subordinate roles for UI sans (`Plus Jakarta Sans`) and telemetry mono (`IBM Plex Mono`).
 - Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
 - Rebuilt `index.html` into a stronger mountain-first editorial presentation with asymmetric hero composition, refined mineral palette, constrained motion, and clearer progression from concept to system evidence and primary CTA.
 - Reworked landing bilingual copy and section IA to better serve first-time external audiences (players, collaborators, press, curators) while preserving direct links to prototype, roadmap, whitepaper, README, and official channels.

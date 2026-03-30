@@ -258,3 +258,5 @@ In addition to the changelog:
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
+- Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
+- For mountain-first UX/UI coherence, pairing `Playfair Display` (editorial hierarchy) with `Montserrat` (operational UI text) yields cleaner cross-surface consistency than mixing multiple sans primaries; keep `IBM Plex Mono` reserved for telemetry/data semantics.
