@@ -92,6 +92,16 @@
       th, td { border: 1px solid var(--border-soft); padding: .5rem; text-align: left; vertical-align: top; }
       th { background: #1a2b3f; color: var(--text-main); }
       .error { color: #ffe4ce; background: #7a243040; border: 1px solid #d0737f80; padding: .8rem; border-radius: 10px; }
+      .md-figure { margin: 1rem 0; display: grid; gap: .4rem; }
+      .md-image {
+        width: 100%;
+        max-height: 72vh;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        background: #0d152180;
+      }
+      .md-figcaption { color: var(--text-muted); font-size: .86rem; }
     </style>
   </head>
   <body>
@@ -186,12 +196,39 @@
         return s.replace(/[&<>"']/g, (ch) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
       }
 
+      function resolveMarkdownUrl(rawUrl) {
+        const trimmed = String(rawUrl || '').trim();
+        if (!trimmed) return '#';
+        if (trimmed.startsWith('#') || trimmed.startsWith('/')) return trimmed;
+        if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+        if (/^javascript:/i.test(trimmed)) return '#';
+
+        const slash = file.lastIndexOf('/');
+        const baseDir = slash >= 0 ? file.slice(0, slash + 1) : '/';
+        try {
+          return new URL(trimmed, window.location.origin + baseDir).pathname;
+        } catch (_) {
+          return '#';
+        }
+      }
+
       function inline(md) {
         return md
+          .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) => {
+            const resolved = resolveMarkdownUrl(url);
+            const safeAlt = escapeHtml(alt || '');
+            const safeCaption = safeAlt ? `<figcaption class="md-figcaption">${safeAlt}</figcaption>` : '';
+            return `<figure class="md-figure"><img class="md-image" loading="lazy" src="${escapeHtml(resolved)}" alt="${safeAlt}" />${safeCaption}</figure>`;
+          })
           .replace(/`([^`]+)`/g, '<code>$1</code>')
           .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
           .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer noopener">$1</a>');
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+            const resolved = resolveMarkdownUrl(url);
+            const external = /^(https?:|mailto:|tel:)/i.test(resolved);
+            const rel = external ? ' rel="noreferrer noopener" target="_blank"' : '';
+            return `<a href="${escapeHtml(resolved)}"${rel}>${text}</a>`;
+          });
       }
 
       function parseTable(lines, i) {
@@ -273,6 +310,12 @@
 
           if (/^>\s?/.test(line)) {
             html += `<blockquote>${inline(escapeHtml(line.replace(/^>\s?/, '')))}</blockquote>`;
+            i++;
+            continue;
+          }
+
+          if (/^\s*!\[[^\]]*\]\([^)]+\)\s*$/.test(line)) {
+            html += inline(escapeHtml(line.trim()));
             i++;
             continue;
           }

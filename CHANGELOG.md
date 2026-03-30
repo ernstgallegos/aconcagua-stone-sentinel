@@ -50,6 +50,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
 
 ### Fixed
+- Fixed markdown-viewer media rendering so Markdown image syntax (`![alt](path)`) now renders as styled images with repository-relative URL resolution, restoring README/linked-doc visual assets inside `md-viewer.html`.
 - Fixed web-v1 startup ready-state copy to show `Click/tap to begin.` (`Haz clic/toca para comenzar.`) instead of the previous wording.
 - Fixed RNG input hardening in `prototype/web-v1/engine/turn-resolution.js` by rejecting non-finite seeds in `mulberry32`, preventing invalid deep-link seed values from silently producing unstable random streams.
 
