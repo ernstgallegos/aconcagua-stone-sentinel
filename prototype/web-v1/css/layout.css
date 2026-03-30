@@ -199,18 +199,18 @@
   font-size: 0.75rem; /* Decision 9: minimum 12px → 0.75rem at 16px base */
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--stone);
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  border: 1px solid var(--border);
+  color: var(--text-soft);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   padding: 0.35rem 0.45rem;
   border-radius: 999px;
   backdrop-filter: blur(8px);
 }
 
 .theme-select {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface2) 90%, transparent);
+  color: var(--text-soft);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   font-family: var(--mono);
   font-size: 0.75rem;
   letter-spacing: 0.08em;

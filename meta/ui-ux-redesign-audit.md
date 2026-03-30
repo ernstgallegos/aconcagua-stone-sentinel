@@ -1,45 +1,46 @@
-# UI/UX Redesign Audit — Public Landing (Revision)
+# UI/UX Redesign Audit — Public Web (`/`)
 
-## Diagnóstico actualizado
+## 1) Clarity problems
+- Previous hero copy mixed many intents (play, docs, channels) without a strong narrative reading order.
+- Project value proposition was present, but not framed early enough for first-time press/collaborator audiences.
+- Outcome framing appeared late and felt disconnected from the conceptual pitch.
 
-1. **Desalineación visual con el producto principal**
-   - La landing no reflejaba suficientemente la paleta del prototipo web-v1 (tema sunset), debilitando coherencia de marca entre entrada pública y experiencia jugable.
+## 2) Visual problems
+- Visual language leaned toward clean landing conventions (`cards` repetition + even rhythm), reducing project-specific identity.
+- Typography did not fully express editorial hierarchy (headline authority vs systemic precision).
+- Background depth existed but lacked a more atmospheric mountain-pressure tone.
 
-2. **Idioma por defecto no orientado a público global**
-   - La experiencia anterior era ES-first sin selector de idioma visible, aumentando fricción para audiencias internacionales y prensa externa.
+## 3) Hierarchy problems
+- Sections had similar visual weight, so high-priority information (premise, model authority, active status) competed with secondary content.
+- CTA hierarchy diluted by too many similarly-styled actions in multiple blocks.
 
-3. **Narrativa y jerarquía mejorables**
-   - Había estructura sólida, pero faltaba un patrón explícito EN-default + switch instantáneo para señal de producto “public-ready”.
+## 4) Consistency problems
+- Some EN/ES labels and navigation naming were inconsistent in emphasis and tone.
+- Section naming switched between product, docs, and marketing language.
 
-4. **Necesidad de i18n utilitario en UI estática**
-   - Se requería traducción de navegación, hero, módulos de sistema/estado/outcomes y metadatos (title/description), no solo copy parcial.
+## 5) Navigation problems
+- Navigation was functional but did not reflect an intentional “read-the-mountain” sequence.
+- There was no explicit progression from concept → system → evidence → action.
 
-5. **Documentación poco visualizada en landing**
-   - La visibilidad documental era baja: whitepaper/roadmap estaban linkeados pero no aparecían como bloques visuales fáciles de escanear.
+## 6) Tone problems
+- Tone was professional but still close to standard product-landing diction.
+- Needed stronger contemplative/editorial register aligned with mountain-as-system identity.
 
-## Hipótesis de posicionamiento
+## 7) Public perception risks
+- Could be interpreted as “good prototype page” rather than “serious cultural/game project with systemic depth.”
+- External visitors (press/festivals/collaborators) had limited immediate cues of rigor and maturity.
+- Visual gap risk: root landing looked more curated than the playable `web-v1` shell, weakening trust continuity after clicking “Play”.
 
-La landing debe comunicar una identidad **premium, coherente con web-v1, internacional por defecto y bilingüe sin fricción**, preservando tono autoral de montaña + sistemas.
+## 8) Opportunities detected
+- Build asymmetrical editorial composition to increase identity.
+- Strengthen serif/sans interplay for authority + technical legibility.
+- Reframe sections around project logic (premise, model, intelligence hub, readiness, outcomes).
+- Keep bilingual accessibility while tightening copy and CTA stratification.
 
-## Oportunidades
-
-- Convertir documentos enlazados (whitepaper/roadmap/repo-truth) a lectura enriquecida bajo estilo de marca consistente.
-- Alinear color tokens a la base sunset del prototipo.
-- Convertir landing a EN-default con selector EN/ES persistente.
-- Mantener semántica, accesibilidad y ritmo editorial sin recargar UI.
-
-## Principios rectores
-
-1. **Coherencia de marca inter-superficie** (landing ↔ prototipo).
-2. **Internacionalización práctica** (EN por defecto + ES inmediato).
-3. **Escaneabilidad premium** con jerarquía y CTA claras.
-4. **Accesibilidad y performance first** en una página estática.
-
-## Decisiones estratégicas
-
-- Rehacer la landing sobre tokens inspirados en `prototype/web-v1/css/themes.css` (sunset).
-- Implementar i18n client-side liviano con:
-  - diccionario EN/ES,
-  - persistencia localStorage,
-  - traducción de texto + atributos + metadatos.
-- Mantener IA modular (vision/system/status/outcomes) y CTA principal hacia web-v1.
+## 9) Chosen corrective guidelines
+- Mountain-first conceptual framing in first fold.
+- Restrained mineral palette with atmospheric depth and sparse accents.
+- Stronger typography hierarchy (editorial headlines + precise sans body).
+- Explicit information architecture: Vision → System → Materials → Status → Outcomes → Primary CTA.
+- Accessibility-preserving refinements (semantic headings, focus-visible, reduced-motion support, contrast-aware surfaces).
+- Extend core visual language into `prototype/web-v1` entrance/setup shell so public promise and playable tone feel cohesive.

@@ -254,3 +254,7 @@ In addition to the changelog:
 - Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
 
 - Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.
+
+- Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
+
+- Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.

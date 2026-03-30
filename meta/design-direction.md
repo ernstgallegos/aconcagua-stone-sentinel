@@ -1,81 +1,66 @@
-# Design Direction — Landing v2 (EN default + ES switch)
+# Design Direction — Public Web Redesign
 
-## Concepto rector
+## Concept
+**"Mountain-first editorial signal"**: the site behaves like a curated public dossier with contemplative pace, not a startup landing.
 
-**"One brand, two languages, one clear path to play."**
+## Visual principles
+1. Atmosphere over decoration.
+2. Hierarchy by scale + whitespace, not effect overload.
+3. Limited accents for intentional emphasis.
+4. Surfaces feel geological/meteorological (layered depth, low-noise texture).
 
-La landing debe sentirse como extensión natural del prototipo activo: misma familia cromática emocional (sunset), misma seriedad sistémica, onboarding más global.
+## UX principles
+1. Progressive revelation: concept first, architecture second, evidence third, CTA last.
+2. Scannable for first-time visitors; rich enough for evaluators.
+3. Every section answers a distinct question (what / how / proof / now what).
+4. Public landing and playable prototype should share the same tonal family (editorial calm + systemic clarity).
 
-## Tono visual
+## Typography decisions
+- Primary headline family: high-authority serif (`Iowan Old Style` fallback stack).
+- Body/UI family: neutral sans (`Inter` + system fallbacks).
+- Strong contrast in scale, restrained weights, moderate line lengths.
 
-- Premium sobrio, cálido y nocturno.
-- Contraste controlado con acentos ochre/ice del sistema web-v1.
-- Profundidad por capas ligeras, sin efectos ruidosos.
+## Chromatic system
+- Base: deep cold neutrals (`--bg-*`, `--surface-*`).
+- Main text: frosted light neutral.
+- Accent set: ice/mineral/amber; used sparingly for interactive and semantic emphasis.
+- No saturated gaming neons; no SaaS gradients.
 
-## Principios UX
+## Spacing rules
+- Vertical rhythm favors broad pauses between conceptual chapters.
+- Dense modules (cards/panels) stay inside controlled spacing bands.
+- CTA spacing remains compact to preserve focus.
 
-1. EN como idioma inicial para alcance internacional.
-2. Selector de idioma EN/ES visible y persistente.
-3. CTA primaria inequívoca: jugar web-v1.
-4. Secciones narrativas modulares y escaneables.
-5. Incluir una sección de visualización documental que destaque whitepaper + roadmap y canales oficiales explícitos (GitHub + email).
+## Composition rules
+- Asymmetric hero (copy-dominant + curated artwork).
+- Alternation between full-width thematic blocks and structured grids.
+- Distinct visual mass for high-priority sections (vision/system/final CTA).
 
-## Sistema tipográfico
+## Image usage
+- Use only project-authentic art.
+- Preserve aspect ratio and avoid aggressive crop.
+- Images support atmosphere and credibility; never become decorative noise.
 
-- Sans contemporánea (`Plus Jakarta Sans` fallback stack) para lectura clara.
-- Escala jerárquica marcada en hero y secciones.
-- Microcopy en caps/letter spacing para navegación y señales.
+## Motion rules
+- Micro-motion only (hover and focus transitions).
+- No parallax, no aggressive transforms.
+- Full reduced-motion respect via media query.
 
-## Sistema de espaciado
+## Responsive logic
+- Mobile-first stacking with preserved semantic order.
+- Desktop introduces asymmetry and multi-column structures without changing content hierarchy.
+- CTA readability and touch targets retained at all breakpoints.
 
-- Escala tokenizada (`--space-1` a `--space-6`).
-- Ritmo vertical alto entre bloques editoriales.
-- Densidad controlada en mobile.
+## Accessibility criteria
+- Semantic landmarks (`header`, `main`, `section`, `footer`).
+- Ordered heading structure.
+- Keyboard-visible focus states.
+- Contrast-safe text/surface combinations.
+- Language toggle with `aria-pressed` state.
+- Skip link and reduced-motion support.
 
-## Sistema de color
-
-Alineado con palette sunset de web-v1:
-- `--bg #251420`
-- `--surface #331b2c`
-- `--surface2 #422139`
-- `--border #684056`
-- `--ochre #ff9e5e`
-- `--ice #ffc89a`
-- `--text #f3d4bf`
-- `--muted #c58f79`
-
-## Uso de imágenes
-
-- Cover art del proyecto como soporte hero principal.
-- Encuadre 16:9 con borde tonal coherente.
-
-## Motion
-
-- Hover/focus sobrios.
-- Sin animaciones ornamentales pesadas.
-- `prefers-reduced-motion` respetado globalmente.
-
-
-## Document experience
-
-- Markdown sources linked from landing should open through the styled viewer (`md-viewer.html`) to preserve visual coherence and reading quality.
-
-## Layout
-
-- Header sticky con nav + switch de idioma.
-- Hero split responsive.
-- Secciones modulares: vision → system → status → outcomes → final CTA.
-
-## Responsive
-
-- Mobile-first.
-- Split layout a partir de desktop amplio.
-- CTAs wrap sin pérdida de legibilidad.
-
-## Accesibilidad
-
-- Skip link.
-- Focus visible consistente.
-- Landmarks semánticos.
-- Botones de idioma con `aria-pressed`.
-- Traducción de atributos clave (`alt`) y metadatos.
+## Things to avoid
+- Template-style hero patterns.
+- Over-cardification.
+- Generic game-marketing epic tone.
+- Technology-first copy detached from mountain/system identity.

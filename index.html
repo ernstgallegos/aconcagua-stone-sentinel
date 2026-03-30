@@ -3,43 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aconcagua: Stone Sentinel — Narrative systemic mountain experience</title>
+    <title>Aconcagua: Stone Sentinel — Mountain-first narrative systems project</title>
     <meta
       name="description"
-      content="Official landing page for Aconcagua: Stone Sentinel. Discover the vision, system model, and play the web v1.4.5 prototype."
+      content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
     <style>
       :root {
         color-scheme: dark;
+        --bg-0: #0b0f14;
+        --bg-1: #101723;
+        --bg-2: #172130;
+        --surface-0: #111a27cc;
+        --surface-1: #172335d9;
+        --surface-2: #213348e6;
+        --border-soft: #93a8bc3d;
+        --border-strong: #d7e6f252;
+        --text-main: #e8eff7;
+        --text-dim: #adbbc9;
+        --text-muted: #8b9aab;
+        --accent-ice: #d6eef9;
+        --accent-mineral: #9bb9ce;
+        --accent-amber: #d9b996;
+        --accent-critical: #f2d4af;
 
-        /* aligned with web-v1 sunset palette */
-        --bg: #251420;
-        --surface: #331b2c;
-        --surface2: #422139;
-        --border: #684056;
-        --stone: #d3a48d;
-        --ochre: #ff9e5e;
-        --ochre-dim: #ca6f3f;
-        --ice: #ffc89a;
-        --ice-dim: #c78461;
-        --white: #ffe3d1;
-        --safety: #8dc47e;
-        --text: #f3d4bf;
-        --muted: #c58f79;
-        --accent: #ff9e5e;
+        --radius-xs: 10px;
+        --radius-sm: 14px;
+        --radius-md: 22px;
+        --radius-lg: 30px;
 
-        --radius-sm: 0.75rem;
-        --radius-md: 1.05rem;
-        --radius-lg: 1.8rem;
+        --shadow-soft: 0 16px 48px #05080d66;
+        --shadow-strong: 0 30px 80px #04070ccc;
 
         --space-1: 0.35rem;
         --space-2: 0.65rem;
         --space-3: 1rem;
-        --space-4: 1.5rem;
-        --space-5: 2.3rem;
-        --space-6: 3.6rem;
+        --space-4: 1.6rem;
+        --space-5: 2.5rem;
+        --space-6: 4rem;
+        --space-7: 6rem;
 
-        --shadow: 0 20px 38px rgba(0, 0, 0, 0.34);
+        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -47,375 +52,440 @@
 
       body {
         margin: 0;
-        font-family: "Plus Jakarta Sans", "Inter", "IBM Plex Sans", system-ui, sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(circle at 9% 0%, rgba(255, 158, 94, 0.2), transparent 30%),
-          radial-gradient(circle at 88% 0%, rgba(255, 200, 154, 0.16), transparent 24%),
-          linear-gradient(180deg, #22141d 0%, #190f18 44%, #130b13 100%);
-        min-height: 100vh;
+        font-family: var(--sans);
+        color: var(--text-main);
         line-height: 1.5;
+        background:
+          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
+          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+        min-height: 100vh;
       }
 
-      a { color: var(--ice); text-decoration: none; }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        opacity: 0.18;
+        pointer-events: none;
+        background-image:
+          linear-gradient(#ffffff04 1px, transparent 1px),
+          linear-gradient(90deg, #ffffff04 1px, transparent 1px);
+        background-size: 34px 34px;
+      }
+
+      a { color: var(--accent-ice); text-decoration: none; }
       a:hover { text-decoration: underline; }
-      img { max-width: 100%; display: block; }
 
       .skip-link {
         position: absolute;
-        left: 0.9rem;
         top: -100px;
-        background: #fff5ea;
-        color: #1b1115;
-        padding: 0.65rem 0.9rem;
-        border-radius: var(--radius-sm);
-        z-index: 120;
+        left: 12px;
+        z-index: 100;
+        padding: 0.6rem 0.9rem;
+        border-radius: var(--radius-xs);
+        background: #f1f7ff;
+        color: #091019;
+        font-weight: 700;
       }
+      .skip-link:focus { top: 10px; }
 
-      .skip-link:focus { top: 0.8rem; }
-
-      .container {
-        width: min(1140px, 92vw);
+      .shell {
+        width: min(1220px, 92vw);
         margin: 0 auto;
       }
 
       .site-header {
         position: sticky;
         top: 0;
-        z-index: 40;
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid rgba(218, 145, 99, 0.24);
-        background: rgba(30, 16, 26, 0.74);
+        z-index: 50;
+        border-bottom: 1px solid var(--border-soft);
+        background: #0f1621c2;
+        backdrop-filter: blur(10px);
       }
 
-      .header-inner {
-        display: flex;
+      .header-row {
+        display: grid;
+        gap: 0.8rem;
         align-items: center;
-        justify-content: space-between;
-        gap: var(--space-3);
-        padding: 0.8rem 0;
+        padding: 0.75rem 0;
       }
 
       .brand {
         margin: 0;
-        font-size: 0.86rem;
-        letter-spacing: 0.11em;
-        text-transform: uppercase;
-        color: #ffd9be;
-        font-weight: 700;
+        font-family: var(--serif);
+        font-size: 1rem;
+        letter-spacing: 0.03em;
       }
 
-      .top-actions {
+      .brand small {
+        display: block;
+        color: var(--text-muted);
+        font-family: var(--sans);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .header-controls {
         display: flex;
-        align-items: center;
-        gap: var(--space-2);
         flex-wrap: wrap;
-        justify-content: flex-end;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+      }
+
+      .nav a {
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 0.35rem 0.66rem;
+        color: var(--text-dim);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .nav a:hover,
+      .nav a:focus-visible {
+        color: var(--text-main);
+        border-color: var(--border-soft);
+        text-decoration: none;
+        outline: none;
       }
 
       .lang-switch {
-        border: 1px solid rgba(232, 165, 120, 0.35);
-        background: rgba(28, 14, 24, 0.7);
-        border-radius: 999px;
-        padding: 0.2rem;
         display: inline-flex;
         gap: 0.2rem;
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        padding: 0.2rem;
+        background: #0e151f99;
       }
 
       .lang-btn {
         border: 0;
         border-radius: 999px;
         background: transparent;
-        color: var(--muted);
+        color: var(--text-dim);
+        font-size: 0.72rem;
         font-weight: 700;
-        font-size: 0.75rem;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 0.34rem 0.6rem;
+        padding: 0.32rem 0.54rem;
         cursor: pointer;
       }
-
       .lang-btn[aria-pressed='true'] {
-        color: #2b1316;
-        background: linear-gradient(120deg, var(--ochre), var(--ice));
+        color: #081019;
+        background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
       }
+      .lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }
 
-      .lang-btn:focus-visible {
-        outline: 2px solid #ffd5b5;
-        outline-offset: 1px;
-      }
-
-      .nav {
-        display: flex;
-        gap: 0.2rem;
-      }
-
-      .nav a {
-        color: var(--muted);
-        font-size: 0.83rem;
-        padding: 0.35rem 0.6rem;
-        border-radius: 999px;
-      }
-
-      .nav a:hover,
-      .nav a:focus-visible {
-        color: var(--text);
-        background: rgba(255, 158, 94, 0.14);
-        text-decoration: none;
-        outline: none;
-      }
-
-      main { padding-bottom: var(--space-6); }
+      main { padding: var(--space-5) 0 var(--space-7); }
 
       .hero {
-        margin-top: var(--space-5);
-        background: linear-gradient(152deg, rgba(52, 27, 44, 0.95), rgba(34, 18, 30, 0.9));
-        border: 1px solid rgba(223, 147, 101, 0.3);
+        display: grid;
+        gap: var(--space-4);
+        align-items: end;
+      }
+
+      .hero-copy {
+        border: 1px solid var(--border-soft);
         border-radius: var(--radius-lg);
-        box-shadow: var(--shadow);
-        padding: clamp(1.2rem, 3vw, 2.3rem);
+        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        box-shadow: var(--shadow-strong);
+        padding: clamp(1.2rem, 3.5vw, 2.7rem);
       }
 
       .eyebrow {
         margin: 0;
-        color: var(--accent);
+        color: var(--accent-mineral);
+        font-size: 0.74rem;
         text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 0.73rem;
+        letter-spacing: 0.15em;
         font-weight: 700;
       }
 
       h1 {
-        margin: 0.45rem 0 0;
-        font-size: clamp(2rem, 5.2vw, 3.8rem);
-        line-height: 1.05;
-        max-width: 16ch;
+        margin: 0.55rem 0 0;
+        font-family: var(--serif);
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        line-height: 1.03;
+        font-size: clamp(2.1rem, 6.5vw, 4.8rem);
+        max-width: 14ch;
       }
 
-      .hero-grid {
-        margin-top: var(--space-4);
+      .hero-lead {
+        margin: 1rem 0 0;
+        color: var(--text-dim);
+        max-width: 58ch;
+        font-size: clamp(1rem, 1.9vw, 1.15rem);
+      }
+
+      .hero-meta {
+        margin-top: var(--space-3);
         display: grid;
-        gap: var(--space-4);
+        gap: 0.35rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
       }
 
-      .lead {
-        margin: 0;
-        color: #f3cdb1;
-        max-width: 62ch;
-        font-size: clamp(1rem, 1.2vw, 1.14rem);
+      .hero-cta {
+        margin-top: var(--space-4);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
       }
-
-      .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 
       .btn {
         border: 1px solid transparent;
         border-radius: 999px;
-        padding: 0.76rem 1.1rem;
+        padding: 0.72rem 1.08rem;
         font-weight: 700;
+        font-size: 0.9rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: transform 170ms ease, background-color 170ms ease, border-color 170ms ease;
+        transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
       }
-
       .btn:hover { transform: translateY(-1px); text-decoration: none; }
-      .btn:focus-visible { outline: 2px solid #ffd8bc; outline-offset: 2px; }
+      .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
 
       .btn-primary {
-        color: #2f130f;
-        background: linear-gradient(120deg, var(--ochre), var(--ice));
+        color: #0a1118;
+        background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
       }
 
       .btn-secondary {
-        color: var(--text);
-        border-color: rgba(255, 158, 94, 0.35);
-        background: rgba(26, 13, 22, 0.58);
+        color: var(--text-main);
+        border-color: var(--border-soft);
+        background: #101a27d0;
       }
 
-      .meta-line {
-        margin-top: var(--space-3);
-        color: #dba989;
-        font-size: 0.9rem;
-      }
-
-      .status {
-        margin-top: var(--space-2);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #ffd9c4;
-        font-size: 0.9rem;
-      }
-
-      .status-dot {
-        width: 0.58rem;
-        height: 0.58rem;
-        border-radius: 999px;
-        background: var(--safety);
-        box-shadow: 0 0 0 0.23rem rgba(141, 196, 126, 0.15);
-      }
-
-      .hero-media {
+      .hero-art {
         border-radius: var(--radius-md);
+        border: 1px solid var(--border-soft);
         overflow: hidden;
-        border: 1px solid rgba(232, 165, 120, 0.28);
+        background: #111926;
+        box-shadow: var(--shadow-soft);
       }
-
-      .hero-media {
-        display: grid;
-        place-items: center;
-        background: rgba(24, 12, 20, 0.92);
-      }
-
-      .hero-media img {
+      .hero-art img {
         width: 100%;
         height: auto;
         object-fit: contain;
+        filter: saturate(0.93) contrast(1.03);
       }
 
       .section {
-        margin-top: var(--space-6);
+        margin-top: var(--space-7);
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .section-head {
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .section-kicker {
+        margin: 0;
+        color: var(--accent-mineral);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.72rem;
+        font-weight: 700;
       }
 
       .section h2 {
         margin: 0;
-        font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+        font-family: var(--serif);
+        font-size: clamp(1.55rem, 3.8vw, 2.7rem);
+        line-height: 1.08;
       }
 
       .section-intro {
-        margin: var(--space-2) 0 0;
-        color: var(--muted);
-        max-width: 66ch;
+        margin: 0;
+        color: var(--text-dim);
+        max-width: 68ch;
       }
 
-      .cards {
-        margin-top: var(--space-4);
-        display: grid;
-        gap: var(--space-3);
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-
-      .card {
-        border: 1px solid rgba(227, 156, 112, 0.24);
+      .manifest {
+        border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: rgba(43, 22, 37, 0.68);
-        padding: var(--space-3);
+        background: linear-gradient(170deg, #162336de 0%, #0f1723d9 100%);
+        padding: var(--space-4);
       }
 
-      .card h3 {
-        margin: 0 0 0.45rem;
-        font-size: 1.05rem;
-        color: #ffd9c1;
+      .manifest-grid {
+        margin-top: var(--space-3);
+        display: grid;
+        gap: 0.9rem;
       }
 
-      .card p {
-        margin: 0;
-        color: var(--muted);
+      .manifest-item {
+        border-left: 2px solid #bfd3e547;
+        padding-left: 0.8rem;
       }
 
-      .split {
-        margin-top: var(--space-4);
+      .manifest-item h3 { margin: 0; font-size: 1rem; }
+      .manifest-item p { margin: 0.36rem 0 0; color: var(--text-dim); }
+
+      .system-layout {
         display: grid;
         gap: var(--space-3);
       }
 
-      .list {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: grid;
-        gap: var(--space-2);
+      .flow {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        background: #132031d1;
+        padding: var(--space-4);
       }
 
-      .list li {
-        background: rgba(35, 18, 30, 0.76);
-        border: 1px solid rgba(223, 147, 101, 0.2);
+      .flow-line {
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .flow-node {
+        border: 1px solid #c7d9ea3b;
         border-radius: var(--radius-sm);
-        padding: 0.72rem 0.85rem;
-        color: #dfaf92;
+        padding: 0.65rem 0.8rem;
+        background: #1a2a3fd9;
+        color: #dce7f2;
+        font-size: 0.93rem;
       }
 
-      .timeline {
-        margin: var(--space-4) 0 0;
-        padding: 0;
-        list-style: none;
+      .flow-arrow {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        padding-left: 0.25rem;
+      }
+
+      .stack {
         display: grid;
-        gap: var(--space-2);
+        gap: var(--space-3);
       }
 
-      .timeline li {
-        border-left: 3px solid rgba(255, 158, 94, 0.85);
-        border-radius: 0 var(--radius-md) var(--radius-md) 0;
-        background: rgba(50, 26, 42, 0.82);
+      .panel {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        background: #131f2fd9;
         padding: var(--space-3);
       }
 
+      .panel h3 { margin: 0; font-size: 1rem; }
+      .panel ul { margin: 0.6rem 0 0; padding-left: 1.05rem; color: var(--text-dim); }
+      .panel li + li { margin-top: 0.35rem; }
 
-      .vision-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        margin-bottom: 0.55rem;
-        padding: 0.26rem 0.58rem;
-        border-radius: 999px;
-        border: 1px solid rgba(255, 158, 94, 0.28);
-        color: #ffd5bd;
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+      .intel-grid {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
       }
 
-      .vision-meta {
-        margin-top: 0.7rem;
+      .intel-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        background: #111b29d9;
+        padding: var(--space-3);
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+
+      .intel-card h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .intel-card p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 0.93rem;
+        flex: 1;
+      }
+
+      .status-strip {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        background: #111c2ad1;
+        padding: var(--space-4);
+      }
+
+      .status-line {
         display: grid;
+        gap: 0.5rem;
+      }
+
+      .status-item {
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 0.35rem;
+        border-top: 1px solid #a8bfd236;
+        padding-top: 0.5rem;
       }
 
-      .vision-meta span {
-        font-size: 0.82rem;
-        color: #d8a88d;
+      .status-item:first-child { border-top: 0; padding-top: 0; }
+      .status-label {
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.67rem;
       }
 
-      .system-flow {
-        margin-top: 1rem;
+      .outcome-grid {
         display: grid;
-        gap: 0.6rem;
+        gap: var(--space-2);
       }
 
-      .system-node {
-        border: 1px solid rgba(255, 158, 94, 0.26);
-        border-radius: 10px;
-        background: rgba(30, 16, 26, 0.74);
-        padding: 0.55rem 0.7rem;
-        font-size: 0.85rem;
-        color: #ffd7bf;
+      .outcome {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-xs);
+        background: #131f2ddc;
+        padding: 0.7rem 0.85rem;
       }
 
-      .system-arrow {
-        color: #d99469;
-        font-size: 0.8rem;
+      .outcome strong {
+        display: block;
+        font-family: var(--serif);
+        margin-bottom: 0.22rem;
+      }
+
+      .final-band {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-md);
+        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
+        padding: var(--space-4);
+        box-shadow: var(--shadow-soft);
       }
 
       .site-footer {
-        margin-top: var(--space-6);
-        border-top: 1px solid rgba(226, 156, 112, 0.25);
+        margin-top: var(--space-7);
+        border-top: 1px solid var(--border-soft);
         padding-top: var(--space-3);
-        color: #bf8567;
+        color: var(--text-muted);
+        font-size: 0.88rem;
       }
 
-      @media (min-width: 930px) {
-        .hero-grid {
-          grid-template-columns: 1.12fr 0.88fr;
-          align-items: center;
-        }
-
-        .split {
-          grid-template-columns: 1fr 1fr;
-        }
+      @media (min-width: 910px) {
+        .header-row { grid-template-columns: auto 1fr; }
+        .hero { grid-template-columns: 1.25fr 0.75fr; }
+        .system-layout { grid-template-columns: 1.1fr 0.9fr; }
+        .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
+        .status-item:first-child { border-left: 0; padding-left: 0; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        * { transition: none !important; scroll-behavior: auto !important; }
+        * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
     </style>
   </head>
@@ -423,14 +493,14 @@
     <a class="skip-link" href="#main-content" data-i18n="skip">Skip to main content</a>
 
     <header class="site-header">
-      <div class="container header-inner">
-        <p class="brand">Aconcagua: Stone Sentinel</p>
-        <div class="top-actions">
+      <div class="shell header-row">
+        <p class="brand">Aconcagua: Stone Sentinel<small data-i18n="brandSub">Public mountain systems project</small></p>
+        <div class="header-controls">
           <nav class="nav" aria-label="Primary navigation">
             <a href="#vision" data-i18n="navVision">Vision</a>
             <a href="#system" data-i18n="navSystem">System</a>
             <a href="#status" data-i18n="navStatus">Status</a>
-            <a href="#outcomes" data-i18n="navOutcomes">Outcomes</a>
+            <a href="#intel" data-i18n="navIntel">Materials</a>
           </nav>
           <div class="lang-switch" role="group" aria-label="Language selector">
             <button class="lang-btn" type="button" data-lang="en" aria-pressed="true">EN</button>
@@ -440,345 +510,288 @@
       </div>
     </header>
 
-    <main id="main-content" class="container">
+    <main id="main-content" class="shell">
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow" data-i18n="eyebrow">Narrative + systems + real mountain framing</p>
-        <div class="hero-grid">
-          <div>
-            <h1 id="hero-title" data-i18n="heroTitle">A game about limits, environmental reading, and pressure-driven decisions.</h1>
-            <p class="lead" data-i18n="heroLead">
-              Aconcagua: Stone Sentinel is a contemplative systemic experience. You are not meant to
-              dominate the mountain, but to interpret signals, manage risk, and decide when turning
-              back is the strongest move.
-            </p>
-            <div class="actions" role="group" aria-label="Main actions">
-              <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play web prototype v1.4.5</a>
-              <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
-              <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">Open repository</a>
-            </div>
-            <p class="meta-line" data-i18n="metaLine">Canonical entry route: / · Active prototype: web-v1.</p>
-            <p class="status"><span class="status-dot" aria-hidden="true"></span><span data-i18n="statusLine">Public playtesting-ready and external-collaboration friendly.</span></p>
+        <article class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
+          <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
+          <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
+          <div class="hero-meta">
+            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
+            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
           </div>
-          <figure class="hero-media">
-            <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel cover art" loading="lazy" data-i18n-attr="heroImageAlt:alt" />
-          </figure>
-        </div>
+          <div class="hero-cta" role="group" aria-label="Main actions">
+            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
+            <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
+          </div>
+        </article>
+
+        <figure class="hero-art">
+          <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
+        </figure>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
-        <h2 id="vision-title" data-i18n="visionTitle">Why this project matters</h2>
-        <p class="section-intro" data-i18n="visionIntro">
-          The project combines documentary mountain framing, narrative design, and systemic gameplay.
-          It privileges observation, judgment, and consequences over speed fantasy.
-        </p>
-        <div class="cards">
-          <article class="card">
-            <p class="vision-pill" data-i18n="pillar1Tag">Environmental authority</p>
-            <h3 data-i18n="pillar1Title">The mountain governs</h3>
-            <p data-i18n="pillar1Body">Altitude, weather, and terrain are active systems shaping every turn.</p>
-            <div class="vision-meta">
-              <span data-i18n="pillar1Meta1">Route logic changes with weather shifts.</span>
-              <span data-i18n="pillar1Meta2">Pressure escalates through accumulation, not spectacle.</span>
-            </div>
-          </article>
-          <article class="card">
-            <p class="vision-pill" data-i18n="pillar2Tag">Perception layer</p>
-            <h3 data-i18n="pillar2Title">Partial information</h3>
-            <p data-i18n="pillar2Body">Players act through uncertain signals, confidence ranges, and imperfect perception.</p>
-            <div class="vision-meta">
-              <span data-i18n="pillar2Meta1">Confidence can drop before visible collapse.</span>
-              <span data-i18n="pillar2Meta2">Timing quality matters as much as action choice.</span>
-            </div>
-          </article>
-          <article class="card">
-            <p class="vision-pill" data-i18n="pillar3Tag">Outcome ethics</p>
-            <h3 data-i18n="pillar3Title">Failure is meaningful</h3>
-            <p data-i18n="pillar3Body">Retreat, pause, and risk recalibration are valid strategic outcomes.</p>
-            <div class="vision-meta">
-              <span data-i18n="pillar3Meta1">Safe return has explicit narrative weight.</span>
-              <span data-i18n="pillar3Meta2">The system rewards judgment, not recklessness.</span>
-            </div>
-          </article>
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="visionKicker">Design premise</p>
+          <h2 id="vision-title" data-i18n="visionTitle">A systemic mountain experience where lucidity matters more than bravado.</h2>
+          <p class="section-intro" data-i18n="visionIntro">This project translates geophysical pressure, partial perception, and ethical decision-making into playable form. The website mirrors that rhythm: less noise, more signal, and clear pathways for deeper exploration.</p>
         </div>
+        <article class="manifest">
+          <div class="manifest-grid">
+            <div class="manifest-item">
+              <h3 data-i18n="pillar1Title">Environmental authority</h3>
+              <p data-i18n="pillar1Body">Altitude, weather, route timing, and fatigue accumulation drive the run. The mountain sets the terms.</p>
+            </div>
+            <div class="manifest-item">
+              <h3 data-i18n="pillar2Title">Partial information</h3>
+              <p data-i18n="pillar2Body">Signals are interpreted through confidence ranges, not omniscient readouts. Perception can drift before collapse appears.</p>
+            </div>
+            <div class="manifest-item">
+              <h3 data-i18n="pillar3Title">Plural outcomes</h3>
+              <p data-i18n="pillar3Body">Success is not only summit. Strategic retreat and safe return are meaningful endings with narrative and systemic weight.</p>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section id="system" class="section" aria-labelledby="system-title">
-        <h2 id="system-title" data-i18n="systemTitle">System model and product architecture</h2>
-        <p class="section-intro" data-i18n="systemIntro">
-          Web-v1 is built around an EP/BT turn-resolution model with data contracts for characters,
-          scenarios, actions, and outcomes, aligned across runtime and repository documentation.
-        </p>
-        <div class="system-flow" aria-label="System flow visualization">
-          <div class="system-node" data-i18n="flow1">Action + resource spend</div>
-          <div class="system-arrow">↓</div>
-          <div class="system-node" data-i18n="flow2">Environmental Pressure ↔ Body Tolerance</div>
-          <div class="system-arrow">↓</div>
-          <div class="system-node" data-i18n="flow3">Perceived signal + confidence + trend</div>
-          <div class="system-arrow">↓</div>
-          <div class="system-node" data-i18n="flow4">Outcome classification + persistent run state</div>
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="systemKicker">Architecture signal</p>
+          <h2 id="system-title" data-i18n="systemTitle">Built as a coherent EP/BT model, not as cosmetic mountain flavor.</h2>
+          <p class="section-intro" data-i18n="systemIntro">Web-v1 uses a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs are aligned to keep public claims honest.</p>
         </div>
-        <div class="split">
-          <article class="card">
-            <h3 data-i18n="pipelineTitle">Core turn pipeline</h3>
-            <ul class="list">
-              <li data-i18n="pipeline1">Player action + time/resource spend.</li>
-              <li data-i18n="pipeline2">Environmental Pressure vs Body Tolerance.</li>
-              <li data-i18n="pipeline3">Perceived signal, confidence, and trend.</li>
-              <li data-i18n="pipeline4">Outcome resolution and state update.</li>
-            </ul>
+        <div class="system-layout">
+          <article class="flow" aria-label="System flow visualization">
+            <div class="flow-line">
+              <div class="flow-node" data-i18n="flow1">Action + time/resource spend</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node" data-i18n="flow2">Environmental Pressure ↔ Body Tolerance</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node" data-i18n="flow3">Perceived signal + confidence + trend</div>
+              <div class="flow-arrow">↓</div>
+              <div class="flow-node" data-i18n="flow4">Outcome classification + persistent run state</div>
+            </div>
           </article>
-          <article class="card">
-            <h3 data-i18n="archTitle">Runtime truth map</h3>
-            <ul class="list">
-              <li data-i18n="arch1">Active prototype: prototype/web-v1.</li>
-              <li data-i18n="arch2">Frozen compatibility artifact: prototype/mra-v0.</li>
-              <li data-i18n="arch3">Bilingual EN/ES UX + contract tests.</li>
-              <li data-i18n="arch4">Deterministic regression and parity coverage.</li>
-            </ul>
-          </article>
+          <div class="stack">
+            <article class="panel">
+              <h3 data-i18n="runtimeTitle">Runtime truth map</h3>
+              <ul>
+                <li data-i18n="runtime1">Active prototype: <code>prototype/web-v1</code></li>
+                <li data-i18n="runtime2">Compatibility artifact: <code>prototype/mra-v0</code></li>
+                <li data-i18n="runtime3">Canonical outcomes and contracts in <code>data/*.json</code></li>
+              </ul>
+            </article>
+            <article class="panel">
+              <h3 data-i18n="audienceTitle">Who this site serves</h3>
+              <ul>
+                <li data-i18n="aud1">Players seeking atmospheric systemic play.</li>
+                <li data-i18n="aud2">Press, curators, and festival evaluators.</li>
+                <li data-i18n="aud3">Artists, developers, and cultural collaborators.</li>
+              </ul>
+            </article>
+          </div>
         </div>
       </section>
 
-
-      <section class="section" aria-labelledby="docs-title">
-        <h2 id="docs-title" data-i18n="docsTitle">Project intelligence hub</h2>
-        <p class="section-intro" data-i18n="docsIntro">
-          These visual summary cards map directly to repository markdown sources. Use them to track
-          strategy, progress, and contact pathways without digging through the full tree first.
-        </p>
-        <div class="cards">
-          <article class="card">
-            <h3 data-i18n="docsCard1Title">Whitepaper</h3>
-            <p data-i18n="docsCard1Body">Vision frame, non-negotiable design principles, and project intent (v0.1 living public document).</p>
-            <div class="actions">
-              <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="docsCard1Cta">Open whitepaper</a>
-            </div>
+      <section id="intel" class="section" aria-labelledby="intel-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="intelKicker">Project intelligence</p>
+          <h2 id="intel-title" data-i18n="intelTitle">Core materials for understanding direction, scope, and credibility.</h2>
+          <p class="section-intro" data-i18n="intelIntro">Use this hub to read the conceptual frame, track roadmap progress, and access governance/public-contact channels from one place.</p>
+        </div>
+        <div class="intel-grid">
+          <article class="intel-card">
+            <h3 data-i18n="intel1Title">Whitepaper</h3>
+            <p data-i18n="intel1Body">Long-form project vision, conceptual commitments, and mountain-first positioning.</p>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="intel1Cta">Open whitepaper</a>
           </article>
-          <article class="card">
-            <h3 data-i18n="docsCard2Title">Public roadmap</h3>
-            <p data-i18n="docsCard2Body">Stage matrix and implementation evidence. Current active stage: Stage 6 (Integrated Prototype, in progress).</p>
-            <div class="actions">
-              <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-i18n="docsCard2Cta">Open roadmap</a>
-            </div>
+          <article class="intel-card">
+            <h3 data-i18n="intel2Title">Public roadmap</h3>
+            <p data-i18n="intel2Body">Stage-by-stage implementation map and current execution status.</p>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-i18n="intel2Cta">Open roadmap</a>
           </article>
-          <article class="card">
-            <h3 data-i18n="docsCardReadmeTitle">Main README</h3>
-            <p data-i18n="docsCardReadmeBody">Canonical public overview: project vision, active prototype scope, governance links, and routing/deploy references.</p>
-            <div class="actions">
-              <a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-i18n="docsCardReadmeCta">Open README</a>
-            </div>
+          <article class="intel-card">
+            <h3 data-i18n="intel3Title">Repository + README</h3>
+            <p data-i18n="intel3Body">Technical source, governance policy links, and canonical route/deploy references.</p>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-i18n="intel3Cta">Open README</a>
           </article>
-          <article class="card">
-            <h3 data-i18n="docsCard3Title">Official channels</h3>
-            <p data-i18n="docsCard3Body">Follow updates on Instagram, review source on GitHub, or contact the project directly by official email.</p>
-            <div class="actions">
-              <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="docsCard3CtaRepo">Open GitHub</a>
-              <a class="btn btn-secondary" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noreferrer noopener" data-i18n="docsCard3CtaIg">Open Instagram</a>
-              <a class="btn btn-secondary" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="docsCard3CtaMail">Send email</a>
+          <article class="intel-card">
+            <h3 data-i18n="intel4Title">Official channels</h3>
+            <p data-i18n="intel4Body">Follow updates on Instagram or contact the project team directly for collaboration and press.</p>
+            <div class="hero-cta">
+              <a class="btn btn-secondary" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="intel4Ig">Instagram</a>
+              <a class="btn btn-secondary" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="intel4Mail">Email</a>
             </div>
           </article>
         </div>
       </section>
 
       <section id="status" class="section" aria-labelledby="status-title">
-        <h2 id="status-title" data-i18n="statusTitle">Public status and progression flow</h2>
-        <p class="section-intro" data-i18n="statusIntro">
-          Current public release is v1.4.5. The main playable loop is live for external review:
-          welcome/title → setup → onboarding → game → outcomes/debrief.
-        </p>
-        <ol class="timeline">
-          <li data-i18n="statusItem1"><strong>Entry:</strong> landing page at / with context + fast path to prototype.</li>
-          <li data-i18n="statusItem2"><strong>Playable scope:</strong> web-v1 is the active vertical slice.</li>
-          <li data-i18n="statusItem3"><strong>Forward path:</strong> Part 2 remains a gated narrative bridge.</li>
-        </ol>
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="statusKicker">Public readiness</p>
+          <h2 id="status-title" data-i18n="statusTitle">Current state: playable, auditable, and open to external review.</h2>
+        </div>
+
+        <article class="status-strip">
+          <div class="status-line">
+            <div class="status-item">
+              <span class="status-label" data-i18n="statusLabel1">Playable flow</span>
+              <span data-i18n="statusValue1">title → setup → onboarding → game → outcomes/debrief</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label" data-i18n="statusLabel2">Current release</span>
+              <span data-i18n="statusValue2">v1.4.5 · public web prototype</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label" data-i18n="statusLabel3">Part 2 scope</span>
+              <span data-i18n="statusValue3">Narrative bridge currently gated by summit-safe-return progression.</span>
+            </div>
+          </div>
+        </article>
       </section>
 
-      <section id="outcomes" class="section" aria-labelledby="outcomes-title">
-        <h2 id="outcomes-title" data-i18n="outcomesTitle">Canonical outcome framing</h2>
-        <p class="section-intro" data-i18n="outcomesIntro">
-          Success is not binary: the system classifies results based on progression, safety,
-          timing windows, and resource integrity.
-        </p>
-        <div class="cards">
-          <article class="card"><h3>Summit and Safe Return</h3><p data-i18n="outcome1">Summit plus safe park exit.</p></article>
-          <article class="card"><h3>High Point Return</h3><p data-i18n="outcome2">Highest viable altitude reached without final summit closure.</p></article>
-          <article class="card"><h3>Strategic Retreat / Rescue</h3><p data-i18n="outcome3">Risk-managed retreat or rescue under critical states.</p></article>
-          <article class="card"><h3>Collapse / Permit / Window</h3><p data-i18n="outcome4">Failure classes tied to exposure, permit limits, and expedition window closure.</p></article>
+      <section class="section" aria-labelledby="outcomes-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="outcomesKicker">Outcome ethics</p>
+          <h2 id="outcomes-title" data-i18n="outcomesTitle">Canonical outcomes center consequence, timing, and safe return.</h2>
+        </div>
+        <div class="outcome-grid">
+          <article class="outcome"><strong>Summit and Safe Return</strong><span data-i18n="outcome1">Summit plus explicit safe park exit.</span></article>
+          <article class="outcome"><strong>High Point Return</strong><span data-i18n="outcome2">Strong ascent with disciplined retreat before irreversible failure.</span></article>
+          <article class="outcome"><strong>Strategic Retreat / Rescue</strong><span data-i18n="outcome3">Risk-managed withdrawal or rescue when body-state thresholds break.</span></article>
+          <article class="outcome"><strong>Collapse / Permit / Window</strong><span data-i18n="outcome4">Failure classes tied to exposure, permit exhaustion, or expedition-window closure.</span></article>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="cta-title">
-        <h2 id="cta-title" data-i18n="finalTitle">Enter the prototype</h2>
-        <p class="section-intro" data-i18n="finalIntro">
-          Experience one run first, then review debrief outputs and the documentation stack for the
-          full design and systems context.
-        </p>
-        <div class="actions">
-          <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalCtaPrimary">Start expedition</a>
-          <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-i18n="finalCtaTruth">Open repo truth</a>
-                  </div>
-      </section>
-
-      <section class="section" aria-labelledby="community-title">
-        <h2 id="community-title" data-i18n="communityTitle">Follow updates and contact the team</h2>
-        <p class="section-intro" data-i18n="communityIntro">
-          For the latest project updates, follow us on Instagram. For collaborations, press, or direct
-          contact, send us an email.
-        </p>
-        <div class="actions">
-          <a class="btn btn-secondary" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noreferrer noopener" data-i18n="communityInstagram">Follow on Instagram</a>
-          <a class="btn btn-secondary" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="communityEmail">Contact via email</a>
-        </div>
+      <section class="section" aria-labelledby="final-title">
+        <article class="final-band">
+          <div class="section-head">
+            <p class="section-kicker" data-i18n="finalKicker">Primary call to action</p>
+            <h2 id="final-title" data-i18n="finalTitle">Enter one expedition run. Then inspect the model and debrief trace.</h2>
+            <p class="section-intro" data-i18n="finalIntro">The fastest way to understand the project is to play, then read the resulting signals against documentation.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalPlay">Start expedition</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-i18n="finalTruth">Open repo truth</a>
+          </div>
+        </article>
       </section>
 
       <footer class="site-footer">
-        <p data-i18n="footerLine">
-          Aconcagua: Stone Sentinel · Narrative-systemic indie project · Official contact:
-          <a href="mailto:aconcaguastonesentinel@gmail.com">aconcaguastonesentinel@gmail.com</a>
-        </p>
+        <p data-i18n="footerLine">Aconcagua: Stone Sentinel · Indie narrative-systemic project · Official contact: <a href="mailto:aconcaguastonesentinel@gmail.com">aconcaguastonesentinel@gmail.com</a></p>
       </footer>
     </main>
 
     <script>
       const TRANSLATIONS = {
         en: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Narrative systemic mountain experience',
-          pageDescription: 'Official landing page for Aconcagua: Stone Sentinel. Discover the vision, system model, and play the web v1.4.5 prototype.',
+          pageTitle: 'Aconcagua: Stone Sentinel — Mountain-first narrative systems project',
+          pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
-          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navOutcomes: 'Outcomes',
-          eyebrow: 'Narrative + systems + real mountain framing',
-          heroTitle: 'A game about limits, environmental reading, and pressure-driven decisions.',
-          heroLead: 'Aconcagua: Stone Sentinel is a contemplative systemic experience. You are not meant to dominate the mountain, but to interpret signals, manage risk, and decide when turning back is the strongest move.',
-          ctaPlay: 'Play web prototype v1.4.5', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'Open repository',
-          metaLine: 'Canonical entry route: / · Active prototype: web-v1.',
-          statusLine: 'Public playtesting-ready and external-collaboration friendly.',
-          heroImageAlt: 'Aconcagua: Stone Sentinel cover art',
-          visionTitle: 'Why this project matters',
-          visionIntro: 'The project combines documentary mountain framing, narrative design, and systemic gameplay. It privileges observation, judgment, and consequences over speed fantasy.',
-          pillar1Tag: 'Environmental authority',
-          pillar1Title: 'The mountain governs', pillar1Body: 'Altitude, weather, and terrain are active systems shaping every turn.',
-          pillar1Meta1: 'Route logic changes with weather shifts.',
-          pillar1Meta2: 'Pressure escalates through accumulation, not spectacle.',
-          pillar2Tag: 'Perception layer',
-          pillar2Title: 'Partial information', pillar2Body: 'Players act through uncertain signals, confidence ranges, and imperfect perception.',
-          pillar2Meta1: 'Confidence can drop before visible collapse.',
-          pillar2Meta2: 'Timing quality matters as much as action choice.',
-          pillar3Tag: 'Outcome ethics',
-          pillar3Title: 'Failure is meaningful', pillar3Body: 'Retreat, pause, and risk recalibration are valid strategic outcomes.',
-          pillar3Meta1: 'Safe return has explicit narrative weight.',
-          pillar3Meta2: 'The system rewards judgment, not recklessness.',
-          systemTitle: 'System model and product architecture',
-          flow1: 'Action + resource spend',
+          brandSub: 'Public mountain systems project',
+          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
+          eyebrow: 'Mountain-first narrative systems',
+          heroTitle: 'The mountain is the main character. Your decisions are a negotiation with limits.',
+          heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
+          heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
+          heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
+          ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
+          heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
+          visionKicker: 'Design premise',
+          visionTitle: 'A systemic mountain experience where lucidity matters more than bravado.',
+          visionIntro: 'This project translates geophysical pressure, partial perception, and ethical decision-making into playable form. The website mirrors that rhythm: less noise, more signal, and clear pathways for deeper exploration.',
+          pillar1Title: 'Environmental authority',
+          pillar1Body: 'Altitude, weather, route timing, and fatigue accumulation drive the run. The mountain sets the terms.',
+          pillar2Title: 'Partial information',
+          pillar2Body: 'Signals are interpreted through confidence ranges, not omniscient readouts. Perception can drift before collapse appears.',
+          pillar3Title: 'Plural outcomes',
+          pillar3Body: 'Success is not only summit. Strategic retreat and safe return are meaningful endings with narrative and systemic weight.',
+          systemKicker: 'Architecture signal',
+          systemTitle: 'Built as a coherent EP/BT model, not as cosmetic mountain flavor.',
+          systemIntro: 'Web-v1 uses a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs are aligned to keep public claims honest.',
+          flow1: 'Action + time/resource spend',
           flow2: 'Environmental Pressure ↔ Body Tolerance',
           flow3: 'Perceived signal + confidence + trend',
           flow4: 'Outcome classification + persistent run state',
-          systemIntro: 'Web-v1 is built around an EP/BT turn-resolution model with data contracts for characters, scenarios, actions, and outcomes, aligned across runtime and repository documentation.',
-          pipelineTitle: 'Core turn pipeline',
-          pipeline1: 'Player action + time/resource spend.', pipeline2: 'Environmental Pressure vs Body Tolerance.', pipeline3: 'Perceived signal, confidence, and trend.', pipeline4: 'Outcome resolution and state update.',
-          archTitle: 'Runtime truth map',
-          arch1: 'Active prototype: prototype/web-v1.', arch2: 'Frozen compatibility artifact: prototype/mra-v0.', arch3: 'Bilingual EN/ES UX + contract tests.', arch4: 'Deterministic regression and parity coverage.',
-          docsTitle: 'Project intelligence hub',
-          docsIntro: 'These visual summary cards map directly to repository markdown sources. Use them to track strategy, progress, and contact pathways without digging through the full tree first.',
-          docsCard1Title: 'Whitepaper',
-          docsCard1Body: 'Vision frame, non-negotiable design principles, and project intent (v0.1 living public document).',
-          docsCard1Cta: 'Open whitepaper',
-          docsCard2Title: 'Public roadmap',
-          docsCard2Body: 'Stage matrix and implementation evidence. Current active stage: Stage 6 (Integrated Prototype, in progress).',
-          docsCard2Cta: 'Open roadmap',
-          docsCardReadmeTitle: 'Main README',
-          docsCardReadmeBody: 'Canonical public overview: project vision, active prototype scope, governance links, and routing/deploy references.',
-          docsCardReadmeCta: 'Open README',
-          docsCard3Title: 'Official channels',
-          docsCard3Body: 'Follow updates on Instagram, review source on GitHub, or contact the project directly by official email.',
-          docsCard3CtaRepo: 'Open GitHub',
-          docsCard3CtaIg: 'Open Instagram',
-          docsCard3CtaMail: 'Send email',
-          statusTitle: 'Public status and progression flow',
-          statusIntro: 'Current public release is v1.4.5. The main playable loop is live for external review: welcome/title → setup → onboarding → game → outcomes/debrief.',
-          statusItem1: '<strong>Entry:</strong> landing page at / with context + fast path to prototype.',
-          statusItem2: '<strong>Playable scope:</strong> web-v1 is the active vertical slice.',
-          statusItem3: '<strong>Forward path:</strong> Part 2 remains a gated narrative bridge.',
-          outcomesTitle: 'Canonical outcome framing',
-          outcomesIntro: 'Success is not binary: the system classifies results based on progression, safety, timing windows, and resource integrity.',
-          outcome1: 'Summit plus safe park exit.', outcome2: 'Highest viable altitude reached without final summit closure.',
-          outcome3: 'Risk-managed retreat or rescue under critical states.', outcome4: 'Failure classes tied to exposure, permit limits, and expedition window closure.',
-          finalTitle: 'Enter the prototype',
-          finalIntro: 'Experience one run first, then review debrief outputs and the documentation stack for the full design and systems context.',
-          finalCtaPrimary: 'Start expedition', finalCtaTruth: 'Open repo truth',
-          communityTitle: 'Follow updates and contact the team',
-          communityIntro: 'For the latest project updates, follow us on Instagram. For collaborations, press, or direct contact, send us an email.',
-          communityInstagram: 'Follow on Instagram',
-          communityEmail: 'Contact via email',
-          footerLine: 'Aconcagua: Stone Sentinel · Narrative-systemic indie project · Official contact:'
+          runtimeTitle: 'Runtime truth map',
+          runtime1: 'Active prototype: prototype/web-v1', runtime2: 'Compatibility artifact: prototype/mra-v0', runtime3: 'Canonical outcomes and contracts in data/*.json',
+          audienceTitle: 'Who this site serves',
+          aud1: 'Players seeking atmospheric systemic play.', aud2: 'Press, curators, and festival evaluators.', aud3: 'Artists, developers, and cultural collaborators.',
+          intelKicker: 'Project intelligence',
+          intelTitle: 'Core materials for understanding direction, scope, and credibility.',
+          intelIntro: 'Use this hub to read the conceptual frame, track roadmap progress, and access governance/public-contact channels from one place.',
+          intel1Title: 'Whitepaper', intel1Body: 'Long-form project vision, conceptual commitments, and mountain-first positioning.', intel1Cta: 'Open whitepaper',
+          intel2Title: 'Public roadmap', intel2Body: 'Stage-by-stage implementation map and current execution status.', intel2Cta: 'Open roadmap',
+          intel3Title: 'Repository + README', intel3Body: 'Technical source, governance policy links, and canonical route/deploy references.', intel3Cta: 'Open README',
+          intel4Title: 'Official channels', intel4Body: 'Follow updates on Instagram or contact the project team directly for collaboration and press.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          statusKicker: 'Public readiness',
+          statusTitle: 'Current state: playable, auditable, and open to external review.',
+          statusLabel1: 'Playable flow', statusValue1: 'title → setup → onboarding → game → outcomes/debrief',
+          statusLabel2: 'Current release', statusValue2: 'v1.4.5 · public web prototype',
+          statusLabel3: 'Part 2 scope', statusValue3: 'Narrative bridge currently gated by summit-safe-return progression.',
+          outcomesKicker: 'Outcome ethics',
+          outcomesTitle: 'Canonical outcomes center consequence, timing, and safe return.',
+          outcome1: 'Summit plus explicit safe park exit.', outcome2: 'Strong ascent with disciplined retreat before irreversible failure.', outcome3: 'Risk-managed withdrawal or rescue when body-state thresholds break.', outcome4: 'Failure classes tied to exposure, permit exhaustion, or expedition-window closure.',
+          finalKicker: 'Primary call to action',
+          finalTitle: 'Enter one expedition run. Then inspect the model and debrief trace.',
+          finalIntro: 'The fastest way to understand the project is to play, then read the resulting signals against documentation.',
+          finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
+          footerLine: 'Aconcagua: Stone Sentinel · Indie narrative-systemic project · Official contact:'
         },
         es: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Experiencia narrativa sistémica de montaña',
-          pageDescription: 'Landing oficial de Aconcagua: Stone Sentinel. Conocé la visión, el modelo sistémico y jugá el prototipo web v1.4.5.',
+          pageTitle: 'Aconcagua: Stone Sentinel — Proyecto narrativo sistémico mountain-first',
+          pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
-          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navOutcomes: 'Outcomes',
-          eyebrow: 'Narrativa + sistemas + montaña real',
-          heroTitle: 'Un juego sobre límites, lectura del entorno y decisiones bajo presión.',
-          heroLead: 'Aconcagua: Stone Sentinel es una experiencia contemplativa y sistémica. No se trata de dominar la montaña, sino de interpretar señales, gestionar riesgo y decidir cuándo volver es la mejor jugada.',
-          ctaPlay: 'Jugar prototipo web v1.4.5', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Abrir repositorio',
-          metaLine: 'Ruta canónica de entrada: / · Prototipo activo: web-v1.',
-          statusLine: 'Listo para playtesting público y colaboración externa.',
-          heroImageAlt: 'Arte de portada de Aconcagua: Stone Sentinel',
-          visionTitle: 'Por qué este proyecto importa',
-          visionIntro: 'El proyecto combina enfoque documental de montaña, diseño narrativo y gameplay sistémico. Prioriza observación, criterio y consecuencias por sobre fantasías de velocidad.',
-          pillar1Tag: 'Autoridad ambiental',
-          pillar1Title: 'La montaña gobierna', pillar1Body: 'Altitud, clima y terreno son sistemas activos que moldean cada turno.',
-          pillar1Meta1: 'La lógica de ruta cambia con variaciones meteorológicas.',
-          pillar1Meta2: 'La presión crece por acumulación, no por espectáculo.',
-          pillar2Tag: 'Capa perceptiva',
-          pillar2Title: 'Información parcial', pillar2Body: 'Se decide con señales inciertas, rangos de confianza y percepción imperfecta.',
-          pillar2Meta1: 'La confianza puede caer antes del colapso visible.',
-          pillar2Meta2: 'La calidad del timing importa tanto como la acción.',
-          pillar3Tag: 'Ética de outcomes',
-          pillar3Title: 'Fallar también enseña', pillar3Body: 'Retirada, pausa y recalibración de riesgo son outcomes estratégicos válidos.',
-          pillar3Meta1: 'El retorno seguro tiene peso narrativo explícito.',
-          pillar3Meta2: 'El sistema premia criterio, no imprudencia.',
-          systemTitle: 'Modelo sistémico y arquitectura de producto',
-          flow1: 'Acción + gasto de recursos',
+          brandSub: 'Proyecto público de sistemas de montaña',
+          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
+          eyebrow: 'Sistemas narrativos centrados en montaña',
+          heroTitle: 'La montaña es el personaje principal. Tus decisiones negocian con los límites.',
+          heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
+          heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
+          heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
+          ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
+          heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
+          visionKicker: 'Premisa de diseño',
+          visionTitle: 'Una experiencia sistémica de montaña donde la lucidez importa más que la bravura.',
+          visionIntro: 'El proyecto traduce presión geofísica, percepción parcial y decisiones éticas a forma jugable. El sitio refleja ese ritmo: menos ruido, más señal y rutas claras para profundizar.',
+          pillar1Title: 'Autoridad ambiental',
+          pillar1Body: 'Altitud, clima, timing de ruta y acumulación de fatiga gobiernan la corrida. La montaña fija los términos.',
+          pillar2Title: 'Información parcial',
+          pillar2Body: 'Las señales se interpretan por rangos de confianza, no por lecturas omniscientes. La percepción puede degradarse antes del colapso visible.',
+          pillar3Title: 'Outcomes plurales',
+          pillar3Body: 'El éxito no es sólo cumbre. La retirada estratégica y el retorno seguro tienen peso narrativo y sistémico real.',
+          systemKicker: 'Señal de arquitectura',
+          systemTitle: 'Construido como modelo EP/BT coherente, no como estética de montaña superficial.',
+          systemIntro: 'Web-v1 usa un resolvedor por turnos donde Presión Ambiental y Tolerancia Corporal interactúan con capas de confianza y tendencia. Contratos, tests y docs quedan alineados para sostener credibilidad pública.',
+          flow1: 'Acción + gasto de tiempo/recursos',
           flow2: 'Presión Ambiental ↔ Tolerancia Corporal',
           flow3: 'Señal percibida + confianza + tendencia',
           flow4: 'Clasificación de outcome + estado persistente de corrida',
-          systemIntro: 'Web-v1 está construido sobre un modelo de resolución por turnos EP/BT con contratos de datos para personajes, escenarios, acciones y outcomes, alineado entre runtime y documentación.',
-          pipelineTitle: 'Pipeline central por turno',
-          pipeline1: 'Acción del jugador + gasto de tiempo/recursos.', pipeline2: 'Presión ambiental vs tolerancia corporal.', pipeline3: 'Señal percibida, confianza y tendencia.', pipeline4: 'Resolución de outcome y actualización de estado.',
-          archTitle: 'Mapa de verdad runtime',
-          arch1: 'Prototipo activo: prototype/web-v1.', arch2: 'Artefacto congelado: prototype/mra-v0.', arch3: 'UX bilingüe EN/ES + tests de contrato.', arch4: 'Cobertura determinística de regresión y paridad.',
-          docsTitle: 'Centro documental del proyecto',
-          docsIntro: 'Estas tarjetas resumen se basan directamente en markdowns del repositorio. Sirven para seguir estrategia, progreso y canales de contacto sin recorrer toda la estructura primero.',
-          docsCard1Title: 'Whitepaper',
-          docsCard1Body: 'Marco de visión, principios no negociables y propósito del proyecto (documento público vivo v0.1).',
-          docsCard1Cta: 'Abrir whitepaper',
-          docsCard2Title: 'Roadmap público',
-          docsCard2Body: 'Matriz de etapas con evidencia de implementación. Etapa activa actual: Stage 6 (Integrated Prototype, en progreso).',
-          docsCard2Cta: 'Abrir roadmap',
-          docsCardReadmeTitle: 'README principal',
-          docsCardReadmeBody: 'Resumen público canónico: visión del proyecto, alcance del prototipo activo, enlaces de gobernanza y referencias de ruteo/deploy.',
-          docsCardReadmeCta: 'Abrir README',
-          docsCard3Title: 'Canales oficiales',
-          docsCard3Body: 'Seguí novedades en Instagram, revisá el código en GitHub o escribí al mail oficial del proyecto.',
-          docsCard3CtaRepo: 'Abrir GitHub',
-          docsCard3CtaIg: 'Abrir Instagram',
-          docsCard3CtaMail: 'Enviar mail',
-          statusTitle: 'Estado público y flujo de progresión',
-          statusIntro: 'La release pública actual es v1.4.5. El loop jugable principal está disponible para revisión externa: bienvenida/título → setup → onboarding → juego → outcomes/debrief.',
-          statusItem1: '<strong>Entrada:</strong> landing en / con contexto + acceso rápido al prototipo.',
-          statusItem2: '<strong>Alcance jugable:</strong> web-v1 es el vertical slice activo.',
-          statusItem3: '<strong>Continuidad:</strong> Parte 2 sigue como puente narrativo gateado.',
-          outcomesTitle: 'Marco de outcomes canónicos',
-          outcomesIntro: 'El éxito no es binario: el sistema clasifica resultados según progresión, seguridad, ventanas de tiempo e integridad de recursos.',
-          outcome1: 'Cumbre más salida segura del parque.', outcome2: 'Máxima altitud viable sin cierre final de cumbre.',
-          outcome3: 'Retirada o rescate bajo estados críticos.', outcome4: 'Clases de falla ligadas a exposición, límite de permiso y cierre de ventana.',
-          finalTitle: 'Entrá al prototipo',
-          finalIntro: 'Viví una corrida primero y luego revisá el debrief y la documentación para entender el sistema completo.',
-          finalCtaPrimary: 'Iniciar expedición', finalCtaTruth: 'Abrir repo truth',
-          communityTitle: 'Seguí las novedades y contactá al equipo',
-          communityIntro: 'Para conocer las últimas novedades del proyecto, seguinos en Instagram. Para colaboraciones, prensa o contacto directo, escribinos por mail.',
-          communityInstagram: 'Seguir en Instagram',
-          communityEmail: 'Contactar por mail',
+          runtimeTitle: 'Mapa de verdad runtime',
+          runtime1: 'Prototipo activo: prototype/web-v1', runtime2: 'Artefacto de compatibilidad: prototype/mra-v0', runtime3: 'Outcomes y contratos canónicos en data/*.json',
+          audienceTitle: 'A quién sirve este sitio',
+          aud1: 'Jugadores que buscan atmósfera y sistemas.', aud2: 'Prensa, curadores y evaluadores de festivales.', aud3: 'Artistas, desarrolladores y colaboradores culturales.',
+          intelKicker: 'Inteligencia del proyecto',
+          intelTitle: 'Materiales clave para entender dirección, alcance y credibilidad.',
+          intelIntro: 'Usá este hub para leer el marco conceptual, seguir el roadmap y acceder a canales públicos de gobernanza/contacto.',
+          intel1Title: 'Whitepaper', intel1Body: 'Visión extendida del proyecto, compromisos conceptuales y posicionamiento mountain-first.', intel1Cta: 'Abrir whitepaper',
+          intel2Title: 'Roadmap público', intel2Body: 'Mapa de implementación por etapas y estado actual de ejecución.', intel2Cta: 'Abrir roadmap',
+          intel3Title: 'Repositorio + README', intel3Body: 'Código fuente, enlaces de gobernanza y referencias canónicas de rutas/deploy.', intel3Cta: 'Abrir README',
+          intel4Title: 'Canales oficiales', intel4Body: 'Seguí novedades en Instagram o contactá directamente al equipo para colaboración y prensa.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          statusKicker: 'Preparación pública',
+          statusTitle: 'Estado actual: jugable, auditable y abierto a revisión externa.',
+          statusLabel1: 'Flujo jugable', statusValue1: 'título → setup → onboarding → juego → outcomes/debrief',
+          statusLabel2: 'Release actual', statusValue2: 'v1.4.5 · prototipo web público',
+          statusLabel3: 'Alcance Parte 2', statusValue3: 'Puente narrativo hoy gateado por progresión de cumbre + retorno seguro.',
+          outcomesKicker: 'Ética de outcomes',
+          outcomesTitle: 'Los outcomes canónicos priorizan consecuencia, timing y retorno seguro.',
+          outcome1: 'Cumbre con salida segura explícita del parque.', outcome2: 'Ascenso fuerte con retirada disciplinada antes de falla irreversible.', outcome3: 'Retirada o rescate bajo ruptura de umbrales corporales.', outcome4: 'Clases de falla ligadas a exposición, agotamiento de permiso o cierre de ventana.',
+          finalKicker: 'Llamado principal',
+          finalTitle: 'Entrá a una corrida. Luego inspeccioná el modelo y su traza de debrief.',
+          finalIntro: 'La forma más rápida de entender el proyecto es jugar y luego leer las señales junto a la documentación.',
+          finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
           footerLine: 'Aconcagua: Stone Sentinel · Proyecto indie narrativo-sistémico · Contacto oficial:'
         }
       };
@@ -789,22 +802,17 @@
         const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
         document.documentElement.lang = lang;
         document.title = t.pageTitle;
-        const meta = document.querySelector('meta[name="description"]');
-        if (meta) meta.setAttribute('content', t.pageDescription);
+        const desc = document.querySelector('meta[name="description"]');
+        if (desc) desc.setAttribute('content', t.pageDescription);
 
         document.querySelectorAll('[data-i18n]').forEach((el) => {
           const key = el.getAttribute('data-i18n');
-          const value = t[key];
-          if (typeof value === 'string') {
-            if (value.includes('<strong>')) el.innerHTML = value;
-            else el.textContent = value;
-          }
+          if (typeof t[key] === 'string') el.textContent = t[key];
         });
 
         document.querySelectorAll('[data-i18n-attr]').forEach((el) => {
           const [key, attr] = el.getAttribute('data-i18n-attr').split(':');
-          const value = t[key];
-          if (value && attr) el.setAttribute(attr, value);
+          if (typeof t[key] === 'string') el.setAttribute(attr, t[key]);
         });
 
         document.querySelectorAll('.lang-btn').forEach((btn) => {
@@ -817,8 +825,8 @@
 
       function initLanguageSwitcher() {
         const saved = localStorage.getItem(STORAGE_KEY);
-        const browser = navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en';
-        const initial = saved && TRANSLATIONS[saved] ? saved : browser;
+        const fallback = navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en';
+        const initial = saved && TRANSLATIONS[saved] ? saved : fallback;
         applyLanguage(initial);
 
         document.querySelectorAll('.lang-btn').forEach((btn) => {

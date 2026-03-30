@@ -10,6 +10,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added a new public-web redesign audit snapshot at `meta/ui-ux-redesign-audit.md` focused on clarity, hierarchy, tone, and public-perception gaps for the root landing experience.
+- Added a formal redesign direction brief at `meta/design-direction.md` defining the mountain-first editorial concept, UX/visual principles, responsive logic, and accessibility criteria.
+- Added a redesign delivery log at `meta/redesign-changelog.md` documenting implemented changes, rationale, expected impact, and deferred follow-ups.
 - Added a new public root landing page at `/index.html` with a modern hero-first layout, concise project pillars, and a privileged primary CTA to launch the active `web-v1` prototype (`/prototype/web-v1/index.html`).
 - Added a dedicated landing “community” section with direct Instagram follow CTA and official mail contact CTA so visitors can track updates and reach the team without leaving `/`.
 - Added landing documentation-visualization cards sourced from repository markdown references (whitepaper + public roadmap) and a dedicated official-channels card (GitHub + official email).
@@ -19,6 +22,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
+- Rebuilt `index.html` into a stronger mountain-first editorial presentation with asymmetric hero composition, refined mineral palette, constrained motion, and clearer progression from concept to system evidence and primary CTA.
+- Reworked landing bilingual copy and section IA to better serve first-time external audiences (players, collaborators, press, curators) while preserving direct links to prototype, roadmap, whitepaper, README, and official channels.
+- Updated `docs/design-system.md` to document the current root-landing tokens, typography stack, component patterns, responsive behavior, and accessibility/motion guidance.
+- Extended the redesign language into `prototype/web-v1` visual shell by refreshing core theme tokens, setup-screen atmospheric framing, and button/control contrast hierarchy for stronger landing-to-prototype continuity.
 - Changed root-route documentation in `README.md`, `README.es.md`, and `docs/deploy-routing.md` to describe `/` as a canonical landing surface (instead of an automatic redirect), while preserving direct routes to `web-v1` and the archived `mra-v0` viewer.
 - Fixed landing hero artwork presentation by preserving original image aspect ratio (`object-fit: contain` + auto height) to avoid readability loss from aggressive cropping.
 - Redesigned root `index.html` into a full premium landing architecture (sticky nav, editorial/product section flow, system/outcomes/status modules, stronger CTA hierarchy, and accessibility/responsive refinements) while preserving direct entry to `prototype/web-v1/index.html`.
