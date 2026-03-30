@@ -18,6 +18,7 @@
 8. Added markdown-driven documentation visualization cards (whitepaper + roadmap) plus explicit official channels (GitHub + email).
 9. Expanded documentation hub with a README card and added Instagram inside official channels alongside GitHub and email.
 10. Adjusted hero image treatment to preserve original aspect ratio and prevent illegible crop framing.
+11. Upgraded Vision/System section visualizations (context tags, meta signals, and a compact EP/BT flow strip) and removed archived-viewer CTA from landing action clusters to keep onboarding focused.
 
 ## Why
 

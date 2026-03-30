@@ -252,3 +252,5 @@ In addition to the changelog:
 - Hero artwork readability is safer when landing images keep original aspect ratio by default (`contain` + auto height); forcing fixed 16:9 crops can destroy key visual information on already-composed illustrations.
 
 - Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
+
+- Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.

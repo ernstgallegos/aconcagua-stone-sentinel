@@ -350,6 +350,52 @@
         padding: var(--space-3);
       }
 
+
+      .vision-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.55rem;
+        padding: 0.26rem 0.58rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 158, 94, 0.28);
+        color: #ffd5bd;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .vision-meta {
+        margin-top: 0.7rem;
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      .vision-meta span {
+        font-size: 0.82rem;
+        color: #d8a88d;
+      }
+
+      .system-flow {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      .system-node {
+        border: 1px solid rgba(255, 158, 94, 0.26);
+        border-radius: 10px;
+        background: rgba(30, 16, 26, 0.74);
+        padding: 0.55rem 0.7rem;
+        font-size: 0.85rem;
+        color: #ffd7bf;
+      }
+
+      .system-arrow {
+        color: #d99469;
+        font-size: 0.8rem;
+      }
+
       .site-footer {
         margin-top: var(--space-6);
         border-top: 1px solid rgba(226, 156, 112, 0.25);
@@ -427,16 +473,31 @@
         </p>
         <div class="cards">
           <article class="card">
+            <p class="vision-pill" data-i18n="pillar1Tag">Environmental authority</p>
             <h3 data-i18n="pillar1Title">The mountain governs</h3>
             <p data-i18n="pillar1Body">Altitude, weather, and terrain are active systems shaping every turn.</p>
+            <div class="vision-meta">
+              <span data-i18n="pillar1Meta1">Route logic changes with weather shifts.</span>
+              <span data-i18n="pillar1Meta2">Pressure escalates through accumulation, not spectacle.</span>
+            </div>
           </article>
           <article class="card">
+            <p class="vision-pill" data-i18n="pillar2Tag">Perception layer</p>
             <h3 data-i18n="pillar2Title">Partial information</h3>
             <p data-i18n="pillar2Body">Players act through uncertain signals, confidence ranges, and imperfect perception.</p>
+            <div class="vision-meta">
+              <span data-i18n="pillar2Meta1">Confidence can drop before visible collapse.</span>
+              <span data-i18n="pillar2Meta2">Timing quality matters as much as action choice.</span>
+            </div>
           </article>
           <article class="card">
+            <p class="vision-pill" data-i18n="pillar3Tag">Outcome ethics</p>
             <h3 data-i18n="pillar3Title">Failure is meaningful</h3>
             <p data-i18n="pillar3Body">Retreat, pause, and risk recalibration are valid strategic outcomes.</p>
+            <div class="vision-meta">
+              <span data-i18n="pillar3Meta1">Safe return has explicit narrative weight.</span>
+              <span data-i18n="pillar3Meta2">The system rewards judgment, not recklessness.</span>
+            </div>
           </article>
         </div>
       </section>
@@ -447,6 +508,15 @@
           Web-v1 is built around an EP/BT turn-resolution model with data contracts for characters,
           scenarios, actions, and outcomes, aligned across runtime and repository documentation.
         </p>
+        <div class="system-flow" aria-label="System flow visualization">
+          <div class="system-node" data-i18n="flow1">Action + resource spend</div>
+          <div class="system-arrow">↓</div>
+          <div class="system-node" data-i18n="flow2">Environmental Pressure ↔ Body Tolerance</div>
+          <div class="system-arrow">↓</div>
+          <div class="system-node" data-i18n="flow3">Perceived signal + confidence + trend</div>
+          <div class="system-arrow">↓</div>
+          <div class="system-node" data-i18n="flow4">Outcome classification + persistent run state</div>
+        </div>
         <div class="split">
           <article class="card">
             <h3 data-i18n="pipelineTitle">Core turn pipeline</h3>
@@ -546,8 +616,7 @@
         <div class="actions">
           <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalCtaPrimary">Start expedition</a>
           <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-i18n="finalCtaTruth">Open repo truth</a>
-          <a class="btn btn-secondary" href="/prototype/mra-v0/viewer/index.html" data-i18n="finalCtaLegacy">Open archived viewer</a>
-        </div>
+                  </div>
       </section>
 
       <section class="section" aria-labelledby="community-title">
@@ -586,10 +655,23 @@
           heroImageAlt: 'Aconcagua: Stone Sentinel cover art',
           visionTitle: 'Why this project matters',
           visionIntro: 'The project combines documentary mountain framing, narrative design, and systemic gameplay. It privileges observation, judgment, and consequences over speed fantasy.',
+          pillar1Tag: 'Environmental authority',
           pillar1Title: 'The mountain governs', pillar1Body: 'Altitude, weather, and terrain are active systems shaping every turn.',
+          pillar1Meta1: 'Route logic changes with weather shifts.',
+          pillar1Meta2: 'Pressure escalates through accumulation, not spectacle.',
+          pillar2Tag: 'Perception layer',
           pillar2Title: 'Partial information', pillar2Body: 'Players act through uncertain signals, confidence ranges, and imperfect perception.',
+          pillar2Meta1: 'Confidence can drop before visible collapse.',
+          pillar2Meta2: 'Timing quality matters as much as action choice.',
+          pillar3Tag: 'Outcome ethics',
           pillar3Title: 'Failure is meaningful', pillar3Body: 'Retreat, pause, and risk recalibration are valid strategic outcomes.',
+          pillar3Meta1: 'Safe return has explicit narrative weight.',
+          pillar3Meta2: 'The system rewards judgment, not recklessness.',
           systemTitle: 'System model and product architecture',
+          flow1: 'Action + resource spend',
+          flow2: 'Environmental Pressure ↔ Body Tolerance',
+          flow3: 'Perceived signal + confidence + trend',
+          flow4: 'Outcome classification + persistent run state',
           systemIntro: 'Web-v1 is built around an EP/BT turn-resolution model with data contracts for characters, scenarios, actions, and outcomes, aligned across runtime and repository documentation.',
           pipelineTitle: 'Core turn pipeline',
           pipeline1: 'Player action + time/resource spend.', pipeline2: 'Environmental Pressure vs Body Tolerance.', pipeline3: 'Perceived signal, confidence, and trend.', pipeline4: 'Outcome resolution and state update.',
@@ -622,7 +704,7 @@
           outcome3: 'Risk-managed retreat or rescue under critical states.', outcome4: 'Failure classes tied to exposure, permit limits, and expedition window closure.',
           finalTitle: 'Enter the prototype',
           finalIntro: 'Experience one run first, then review debrief outputs and the documentation stack for the full design and systems context.',
-          finalCtaPrimary: 'Start expedition', finalCtaTruth: 'Open repo truth', finalCtaLegacy: 'Open archived viewer',
+          finalCtaPrimary: 'Start expedition', finalCtaTruth: 'Open repo truth',
           communityTitle: 'Follow updates and contact the team',
           communityIntro: 'For the latest project updates, follow us on Instagram. For collaborations, press, or direct contact, send us an email.',
           communityInstagram: 'Follow on Instagram',
@@ -643,10 +725,23 @@
           heroImageAlt: 'Arte de portada de Aconcagua: Stone Sentinel',
           visionTitle: 'Por qué este proyecto importa',
           visionIntro: 'El proyecto combina enfoque documental de montaña, diseño narrativo y gameplay sistémico. Prioriza observación, criterio y consecuencias por sobre fantasías de velocidad.',
+          pillar1Tag: 'Autoridad ambiental',
           pillar1Title: 'La montaña gobierna', pillar1Body: 'Altitud, clima y terreno son sistemas activos que moldean cada turno.',
+          pillar1Meta1: 'La lógica de ruta cambia con variaciones meteorológicas.',
+          pillar1Meta2: 'La presión crece por acumulación, no por espectáculo.',
+          pillar2Tag: 'Capa perceptiva',
           pillar2Title: 'Información parcial', pillar2Body: 'Se decide con señales inciertas, rangos de confianza y percepción imperfecta.',
+          pillar2Meta1: 'La confianza puede caer antes del colapso visible.',
+          pillar2Meta2: 'La calidad del timing importa tanto como la acción.',
+          pillar3Tag: 'Ética de outcomes',
           pillar3Title: 'Fallar también enseña', pillar3Body: 'Retirada, pausa y recalibración de riesgo son outcomes estratégicos válidos.',
+          pillar3Meta1: 'El retorno seguro tiene peso narrativo explícito.',
+          pillar3Meta2: 'El sistema premia criterio, no imprudencia.',
           systemTitle: 'Modelo sistémico y arquitectura de producto',
+          flow1: 'Acción + gasto de recursos',
+          flow2: 'Presión Ambiental ↔ Tolerancia Corporal',
+          flow3: 'Señal percibida + confianza + tendencia',
+          flow4: 'Clasificación de outcome + estado persistente de corrida',
           systemIntro: 'Web-v1 está construido sobre un modelo de resolución por turnos EP/BT con contratos de datos para personajes, escenarios, acciones y outcomes, alineado entre runtime y documentación.',
           pipelineTitle: 'Pipeline central por turno',
           pipeline1: 'Acción del jugador + gasto de tiempo/recursos.', pipeline2: 'Presión ambiental vs tolerancia corporal.', pipeline3: 'Señal percibida, confianza y tendencia.', pipeline4: 'Resolución de outcome y actualización de estado.',
@@ -679,7 +774,7 @@
           outcome3: 'Retirada o rescate bajo estados críticos.', outcome4: 'Clases de falla ligadas a exposición, límite de permiso y cierre de ventana.',
           finalTitle: 'Entrá al prototipo',
           finalIntro: 'Viví una corrida primero y luego revisá el debrief y la documentación para entender el sistema completo.',
-          finalCtaPrimary: 'Iniciar expedición', finalCtaTruth: 'Abrir repo truth', finalCtaLegacy: 'Abrir visor histórico',
+          finalCtaPrimary: 'Iniciar expedición', finalCtaTruth: 'Abrir repo truth',
           communityTitle: 'Seguí las novedades y contactá al equipo',
           communityIntro: 'Para conocer las últimas novedades del proyecto, seguinos en Instagram. Para colaboraciones, prensa o contacto directo, escribinos por mail.',
           communityInstagram: 'Seguir en Instagram',

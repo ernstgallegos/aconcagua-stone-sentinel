@@ -22,6 +22,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Changed root-route documentation in `README.md`, `README.es.md`, and `docs/deploy-routing.md` to describe `/` as a canonical landing surface (instead of an automatic redirect), while preserving direct routes to `web-v1` and the archived `mra-v0` viewer.
 - Fixed landing hero artwork presentation by preserving original image aspect ratio (`object-fit: contain` + auto height) to avoid readability loss from aggressive cropping.
 - Redesigned root `index.html` into a full premium landing architecture (sticky nav, editorial/product section flow, system/outcomes/status modules, stronger CTA hierarchy, and accessibility/responsive refinements) while preserving direct entry to `prototype/web-v1/index.html`.
+- Improved landing section visualizations for `Vision` and `System` by adding richer semantic card metadata and an explicit EP/BT flow strip, increasing scanability without introducing heavy motion or extra dependencies.
+- Removed the archived `prototype/mra-v0/viewer` CTA from landing primary action areas so root onboarding now prioritizes active prototype + docs/channels only.
 - Updated landing visual tokens to align with the active web-v1 sunset palette, improving cross-surface brand coherence between `/` and `prototype/web-v1`.
 - Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
 
