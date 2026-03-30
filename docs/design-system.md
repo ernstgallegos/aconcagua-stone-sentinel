@@ -23,13 +23,14 @@ This document defines the visual/interaction system for the root public site (`i
 
 ### 2.2 Typography tokens
 - Primary serif (brand/editorial): `"Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif`
-- Secondary sans (UI/action): `"Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif`
+- Primary sans (UX/UI): `"Montserrat", "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif`
+- Reading sans (long-form support): `"Inter", "Montserrat", "Plus Jakarta Sans", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif`
 - Supporting mono (telemetry/system): `"IBM Plex Mono", "SFMono-Regular", Menlo, Monaco, "Roboto Mono", monospace`
 
 **Role model (recommended):**
-- `--font-brand`: Playfair Display (hero title, section titles, key narrative quotes).
-- `--font-ui`: Plus Jakarta Sans (navigation, buttons, chips, labels, dense UI copy).
-- `--font-reading`: Inter or Jakarta (body paragraphs; Inter preferred for long-form density).
+- `--font-brand`: Playfair Display (hero title, section titles, narrative highlights).
+- `--font-ui`: Montserrat (navigation, buttons, labels, chips, dense interaction copy).
+- `--font-reading`: Inter (long-form explanatory paragraphs; optional, can collapse to `--font-ui`).
 - `--font-data`: IBM Plex Mono (stats, watch, telemetry, technical metadata).
 
 ### 2.3 Radius tokens

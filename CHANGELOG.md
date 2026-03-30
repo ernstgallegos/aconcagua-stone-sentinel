@@ -23,6 +23,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Refined typography-system guidance to incorporate `Montserrat` as the primary UX/UI sans companion to `Playfair Display`, with updated role tokens in both `docs/design-system.md` and `docs/es/sistema-tipografico-playfair.md`.
 - Updated `docs/design-system.md` typography guidance to center the public visual hierarchy around `Playfair Display` with explicit subordinate roles for UI sans (`Plus Jakarta Sans`) and telemetry mono (`IBM Plex Mono`).
 - Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
 - Rebuilt `index.html` into a stronger mountain-first editorial presentation with asymmetric hero composition, refined mineral palette, constrained motion, and clearer progression from concept to system evidence and primary CTA.

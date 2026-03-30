@@ -1,107 +1,99 @@
-# Sistema tipográfico recomendado (eje en **Playfair Display**)
+# Sistema tipográfico recomendado (eje en **Playfair Display** + **Montserrat**)
 
-## 1) Contexto auditado (estado actual del repo)
+## 1) Lectura crítica del estado actual
 
-En el estado actual:
+Hoy el proyecto tiene dos superficies con criterios tipográficos distintos:
 
-- `prototype/web-v1` usa principalmente:
-  - `--heading: Plus Jakarta Sans`
-  - `--serif: Lora`
-  - `--mono: IBM Plex Mono`. 
-- La landing raíz (`/index.html`) usa una serif de sistema (`Iowan/Palatino`) y sans (`Inter`) sin una familia principal única compartida con `web-v1`.
+- `prototype/web-v1` prioriza `Plus Jakarta Sans` + `Lora` + `IBM Plex Mono`.
+- La landing raíz usa serif/sans de sistema (`Iowan/Palatino` + `Inter`).
 
-Resultado: existe buena legibilidad funcional, pero falta **coherencia tipográfica transversal** entre landing, UI jugable y capas narrativas.
+Esto produce buena legibilidad local, pero poca continuidad de marca entre `/` y `web-v1`.
 
-## 2) Decisión guía
+## 2) Propuesta repensada (con Montserrat)
 
-Adoptar **Playfair Display** como familia principal de marca/editorial y organizar un sistema subordinado de tres capas:
+Tomar **Playfair Display** como familia principal de identidad y sumar **Montserrat** como familia operativa universal de UX/UI.
 
-1. **Marca / narrativa de alto impacto** → `Playfair Display`.
-2. **Interfaz operativa** → `Plus Jakarta Sans` (o `Inter` como fallback de lectura extensa).
-3. **Datos/telemetría/sistema** → `IBM Plex Mono`.
+Arquitectura final propuesta:
 
-## 3) Arquitectura tipográfica propuesta por uso
+1. **Brand / Editorial:** `Playfair Display`
+2. **UI / Producto:** `Montserrat`
+3. **Lectura larga de soporte:** `Inter` (opcional, como capa secundaria)
+4. **Datos / Telemetría:** `IBM Plex Mono`
 
-### A. Brand & Editorial (primaria)
-**Familia:** `Playfair Display`
+> Regla práctica: Playfair define tono y jerarquía; Montserrat sostiene flujo de interacción.
 
-Usar en:
-- H1 hero (landing y pantallas clave de entrada).
-- Títulos de sección editorial (manifest/system/outcomes).
-- Títulos de cierre narrativo y frases de tono (“summit/debrief highlights”).
+## 3) Roles por tipo de contenido
 
-Razonamiento:
-- Refuerza tono alpino-editorial premium.
-- Mejora diferenciación jerárquica frente a UI operativa.
+### A) Jerarquía editorial (primaria)
+**Fuente:** `Playfair Display`
 
-### B. UI operativa (subordinada 1)
-**Familia:** `Plus Jakarta Sans`
+Aplicar a:
+- Hero H1.
+- H2 de secciones narrativas (Vision, System, Outcomes).
+- Titulares de cierre/debrief y citas de alto peso dramático.
 
-Usar en:
-- Navegación, botones, chips, tabs, labels de formularios.
-- Textos de instrucciones cortas y microcopy de interacción.
-- Listados y módulos de lectura rápida dentro del juego.
+### B) UX/UI operativa (subordinada principal)
+**Fuente:** `Montserrat`
 
-Razonamiento:
-- Excelente legibilidad en tamaños bajos/medios.
-- Encaja bien con interfaces densas y estados frecuentes.
+Aplicar a:
+- Navegación principal y secundaria.
+- Botones, chips, tabs, pills, labels de formularios.
+- Microcopy de estado/acción (feedback inmediato, hints, toggles).
+- Cuerpo corto/medio dentro de pantallas interactivas.
 
-### C. Cuerpo de lectura larga (subordinada 2)
-**Familia:** `Inter` (opcional según superficie)
+### C) Lectura larga (subordinada secundaria)
+**Fuente:** `Inter` (opcional)
 
-Usar en:
-- Párrafos largos de documentación y landing.
-- Bloques explicativos donde prima velocidad de lectura sobre tono.
+Aplicar a:
+- Párrafos extensos de documentación o bloques explicativos largos de landing.
+- Texto donde prima velocidad de lectura sobre carácter editorial.
 
-Razonamiento:
-- Inter suele rendir mejor en párrafos largos y UI híbrida.
-- Puede convivir con Jakarta si se quiere simplificar a 2 familias sans.
+> Si se quiere máxima simplicidad, se puede unificar lectura larga en Montserrat y mantener sólo 3 familias totales.
 
-### D. Sistema y datos (subordinada 3)
-**Familia:** `IBM Plex Mono`
+### D) Señal técnica / datos
+**Fuente:** `IBM Plex Mono`
 
-Usar en:
-- Watch/status, métricas EP/BT, tiempo, permit, logs, semillas, signatures.
-- Badges técnicos y etiquetas de estado compactas.
+Aplicar a:
+- Watch/status, métricas EP/BT, tiempo, permit days, logs, seed/run signature.
+- Metadatos técnicos y estados numéricos compactos.
 
-Razonamiento:
-- Señala semánticamente “dato técnico”.
-- Aumenta escaneabilidad de números y columnas.
-
-## 4) Contrato mínimo de tokens (sugerido)
+## 4) Contrato de tokens recomendado
 
 ```css
 :root {
   --font-brand: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  --font-ui: "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
-  --font-reading: "Inter", "Plus Jakarta Sans", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-ui: "Montserrat", "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-reading: "Inter", "Montserrat", "Plus Jakarta Sans", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
   --font-data: "IBM Plex Mono", "SFMono-Regular", Menlo, Monaco, "Roboto Mono", monospace;
 }
 ```
 
-## 5) Mapa de aplicación rápida (qué usar en cada cosa)
+## 5) Mapeo rápido por uso
 
 - **H1/H2 editoriales:** `--font-brand`
-- **CTAs/botones/nav:** `--font-ui`
-- **Body copy corto/medio:** `--font-ui`
-- **Body copy largo (landing/docs):** `--font-reading`
-- **KPIs/watch/logs/metadatos técnicos:** `--font-data`
-- **Citas narrativas destacadas:** `--font-brand` en itálica moderada
+- **Navegación y CTAs:** `--font-ui`
+- **Body de interfaz (corto/medio):** `--font-ui`
+- **Body largo (landing/docs):** `--font-reading`
+- **KPIs/watch/logs y telemetría:** `--font-data`
 
-## 6) Guardrails para no perder consistencia
+## 6) Guardrails de consistencia
 
-- Evitar más de **4 familias activas** en runtime.
-- No usar `Playfair` en labels de alta frecuencia (fatiga visual en UI densa).
-- Mantener monoespaciada sólo para señal técnica/datos (no para párrafos narrativos).
-- Definir escalas y pesos por rol (no por componente aislado) para evitar deriva.
+- Evitar usar Playfair en controles de alta frecuencia (botones, chips, tablas densas).
+- Mantener Montserrat como primera opción de interfaz para consistencia transversal.
+- Reservar monoespaciada sólo para señal técnica.
+- Limitar pesos activos por familia para reducir ruido visual:
+  - Playfair: 500–700
+  - Montserrat: 400–700
+  - Inter: 400–500
+  - Plex Mono: 400–500
 
-## 7) Secuencia de adopción recomendada
+## 7) Plan de adopción sugerido
 
-1. **Fase 1 (tokens):** introducir `--font-brand/ui/reading/data` y mapear alias existentes.
-2. **Fase 2 (landing):** mover H1/H2 y quotes clave a `Playfair`.
-3. **Fase 3 (web-v1):** usar `Playfair` en títulos narrativos/debrief; mantener UI densa en Jakarta/mono.
-4. **Fase 4 (QA visual):** revisar contraste, tamaños mínimos y clipping en mobile.
+1. **Fase 1:** declarar tokens `brand/ui/reading/data` con Montserrat como `--font-ui`.
+2. **Fase 2:** migrar nav, botones y labels de landing + `web-v1` a Montserrat.
+3. **Fase 3:** mantener Playfair en títulos editoriales y beats narrativos clave.
+4. **Fase 4:** QA visual en móvil/desktop (legibilidad en tamaños pequeños, clipping, contraste).
 
 ---
 
-Este enfoque mantiene el tono premium que buscas con Playfair, sin sacrificar legibilidad operativa ni claridad sistémica durante la toma de decisiones en juego.
+Con esta combinación, el proyecto conserva una voz editorial fuerte (Playfair) y gana una capa UX/UI más limpia, consistente y moderna gracias a Montserrat.
