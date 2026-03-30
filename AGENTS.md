@@ -244,3 +244,5 @@ In addition to the changelog:
 - Landing localization is safest when English is the default public copy and Spanish is delivered through a visible EN/ES switch that also updates metadata (`title`, description, key alt text), preventing mixed-language first impressions.
 
 - Public landing conversion improves when update-follow and contact actions are explicit (Instagram + official email) in a dedicated section instead of being implied only in footer/legal copy.
+
+- Public landing clarity increases when whitepaper and roadmap are surfaced as visual summary cards (not only links), and official channels always include both GitHub and project email as explicit actions.

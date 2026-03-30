@@ -14,6 +14,7 @@
    - document title + meta description + key alt text.
 5. Kept premium modular layout and improved consistency between landing and prototype.
 6. Added a dedicated community/contact block with direct Instagram follow and email contact CTAs.
+7. Added markdown-driven documentation visualization cards (whitepaper + roadmap) plus explicit official channels (GitHub + email).
 
 ## Why
 

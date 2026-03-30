@@ -31,6 +31,7 @@
 - Hero suite: `.hero`, `.hero-grid`, `.eyebrow`, `.lead`, `.hero-media`
 - CTA system: `.btn`, `.btn-primary`, `.btn-secondary`
 - Content modules: `.section`, `.cards`, `.card`, `.split`, `.list`, `.timeline`
+- Documentation visualization cards: whitepaper, roadmap, and official channels as first-class card variants.
 - Status indicator: `.status`, `.status-dot`
 
 ## 3) Interaction rules

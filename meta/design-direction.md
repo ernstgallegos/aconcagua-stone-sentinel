@@ -18,6 +18,7 @@ La landing debe sentirse como extensión natural del prototipo activo: misma fam
 2. Selector de idioma EN/ES visible y persistente.
 3. CTA primaria inequívoca: jugar web-v1.
 4. Secciones narrativas modulares y escaneables.
+5. Incluir una sección de visualización documental que destaque whitepaper + roadmap y canales oficiales explícitos (GitHub + email).
 
 ## Sistema tipográfico
 

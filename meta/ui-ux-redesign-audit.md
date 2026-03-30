@@ -14,6 +14,9 @@
 4. **Necesidad de i18n utilitario en UI estática**
    - Se requería traducción de navegación, hero, módulos de sistema/estado/outcomes y metadatos (title/description), no solo copy parcial.
 
+5. **Documentación poco visualizada en landing**
+   - La visibilidad documental era baja: whitepaper/roadmap estaban linkeados pero no aparecían como bloques visuales fáciles de escanear.
+
 ## Hipótesis de posicionamiento
 
 La landing debe comunicar una identidad **premium, coherente con web-v1, internacional por defecto y bilingüe sin fricción**, preservando tono autoral de montaña + sistemas.
