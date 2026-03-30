@@ -10,6 +10,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `meta/audit-remediation-2026-03-30.md` as a release-hardening matrix mapping audit findings to `FIXED`, `ALREADY CORRECT`, `NOT REPRODUCED`, or `INTENTIONALLY DEFERRED` with command/test evidence links.
+- Added `docs/context-events-guide.md` documenting the canonical context-event contract (`data/context_events.json` + engine/runtime ownership boundaries).
+- Added `docs/TROUBLESHOOTING.md` with operational diagnostics for startup, deep-links, overlays, and local validation gates.
+- Added `prototype/web-v1/tests/engine/rng-hardening.test.js` to lock deterministic behavior and invalid-seed sanitation for `mulberry32()`.
 - Added `docs/es/sistema-tipografico-playfair.md` with a full typography audit/proposal for role-based usage (brand, UI, reading, and data) across landing and `web-v1`.
 - Added a new public-web redesign audit snapshot at `meta/ui-ux-redesign-audit.md` focused on clarity, hierarchy, tone, and public-perception gaps for the root landing experience.
 - Added a formal redesign direction brief at `meta/design-direction.md` defining the mountain-first editorial concept, UX/visual principles, responsive logic, and accessibility criteria.
@@ -23,6 +27,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Updated `CONTRIBUTING.md` with an explicit visual-asset contribution checklist (path mapping, fallback requirement, screenshot evidence, and doc sync expectations).
+- Updated `docs/technical-debt-register.md` with a tracked debt item for missing externally referenced audit artifacts, so release closure cannot silently omit absent source reports.
 - Refined typography-system guidance to incorporate `Montserrat` as the primary UX/UI sans companion to `Playfair Display`, with updated role tokens in both `docs/design-system.md` and `docs/es/sistema-tipografico-playfair.md`.
 - Updated `docs/design-system.md` typography guidance to center the public visual hierarchy around `Playfair Display` with explicit subordinate roles for UI sans (`Plus Jakarta Sans`) and telemetry mono (`IBM Plex Mono`).
 - Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
@@ -93,6 +99,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Hardened global modal behavior in `prototype/web-v1/ui/helpers/accessibility.js` and `prototype/web-v1/ui/screens.js` by adding body scroll-lock state, overlay-dismiss wiring on backdrop clicks, and automatic transient overlay cleanup during screen transitions.
 
 ### Fixed
+- Fixed setup-carousel first-impression loading by eagerly rendering the active portrait (`loading=\"eager\"`, high fetch priority) and preloading critical character assets before setup interaction.
+- Fixed deep-link invalid-parameter handling so unsupported `character`/`scenario` hashes now surface a categorized blocking diagnostic (`invalid deep-link`) instead of silent no-op behavior.
+- Fixed in-progress run abandonment risk by adding explicit confirmation before returning to setup from active gameplay contexts.
+- Fixed overlay keyboard-close consistency by applying `Escape` close behavior to onboarding/help/watch/field-log overlays in the global handler path.
+- Fixed startup diagnostics taxonomy with explicit `invalid deep-link` localized messaging in `startup-ui`.
+- Fixed RNG robustness by sanitizing non-numeric `mulberry32` seeds through deterministic hashing fallback, preventing `NaN`/unstable runtime output.
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
 - Fixed the Part 2 `future_cta` collaboration action to reliably open the official project contact (`aconcaguastonesentinel@gmail.com`) via `mailto:` from the final screen CTA.
 - Fixed startup/fatal diagnostics copy in `prototype/web-v1/ui/helpers/startup-ui.js` to emit localized English/Spanish messaging (including categorized blocking-error summaries and details) based on active language selection.

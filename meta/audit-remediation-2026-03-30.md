@@ -1,0 +1,17 @@
+# Audit Remediation Matrix — 2026-03-30
+
+This matrix consolidates remediation work for two requested audit inputs.
+
+> Note: the repository currently contains `meta/ui-ux-redesign-audit.md`, but the files requested by exact name (`AUDITORIA_ACONCAGUA_COMPLETA_2026-03-30.md` and `Adutoria_aconcagua_2.md`) were not found in this branch during discovery (`rg --files | rg -i 'auditor|adut|audit'`).
+
+| Source | Finding summary | Status | Verification | Files touched | Test/evidence | Resolution note |
+|---|---|---|---|---|---|---|
+| Prompted audit #1 (`AUDITORIA_ACONCAGUA_COMPLETA_2026-03-30.md`) | Audit file missing in repo | INTENTIONALLY DEFERRED | Searched repository by exact + fuzzy names; only `meta/ui-ux-redesign-audit.md` exists | `docs/technical-debt-register.md` | Command evidence in final report | Deferred as input artifact gap; added explicit debt item to avoid silent closure |
+| Prompted audit #2 (`Adutoria_aconcagua_2.md`) | Audit file missing in repo | INTENTIONALLY DEFERRED | Same discovery pass as above | `docs/technical-debt-register.md` | Command evidence in final report | Same as above |
+| `meta/ui-ux-redesign-audit.md` | First setup character image could appear late / look broken | FIXED | Setup card images switched to eager/high-priority + startup preloads top portraits | `prototype/web-v1/ui/screens.js` | `npm test` | Reduces false “broken” perception on initial setup load |
+| `meta/ui-ux-redesign-audit.md` + runtime QA findings | Invalid deep-links could fail silently | FIXED | `handleDeepLink()` now raises categorized blocking diagnostic for invalid character/scenario hashes | `prototype/web-v1/ui/screens.js`, `prototype/web-v1/ui/helpers/startup-ui.js` | `npm test` (`startup-ui` unit coverage) | Invalid URL inputs now fail explicitly with controlled fatal diagnostics |
+| runtime QA findings | Leaving an in-progress run could happen without explicit confirmation | FIXED | Added guard + confirmation before setup-return actions when a run is active | `prototype/web-v1/ui/screens.js` | `npm test` | Prevents accidental silent loss of active run progress |
+| runtime QA findings | Escape behavior inconsistent across overlays/modals | FIXED | Unified global `Escape` close coverage for onboarding/help/watch/field-log + intro/tutorial | `prototype/web-v1/ui/screens.js` | `npm test` + manual code inspection | Reduces “UI is stuck” perception bugs |
+| runtime QA findings | RNG `mulberry32` unsafe with invalid/non-numeric seeds | FIXED | Added seed sanitation + deterministic string hashing fallback | `prototype/web-v1/engine/turn-resolution.js` | `prototype/web-v1/tests/engine/rng-hardening.test.js` | Prevents NaN-driven randomness regressions from malformed seeds |
+| runtime QA findings | Startup error categorization lacked invalid deep-link class | FIXED | Added `invalid deep-link` category localization in startup diagnostics helper | `prototype/web-v1/ui/helpers/startup-ui.js`, `prototype/web-v1/tests/unit/startup-ui.test.js` | `npm test` | Tightens observable error taxonomy for support/debug |
+| documentation parity | Context-event and troubleshooting docs were missing | FIXED | Added concrete docs for context event contract and operational troubleshooting | `docs/context-events-guide.md`, `docs/TROUBLESHOOTING.md` | file-level evidence + final report | Improves maintainability and public hardening transparency |

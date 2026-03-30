@@ -168,6 +168,8 @@ This repository includes one canonical public entry point and one archived viewe
 
 For deploy/local routing details (including Vercel settings and CORS), use the single canonical reference:
 - [`docs/deploy-routing.md`](./docs/deploy-routing.md)
+- [`docs/TROUBLESHOOTING.md`](./docs/TROUBLESHOOTING.md) for startup/runtime diagnostics and common operator recovery steps.
+- [`docs/context-events-guide.md`](./docs/context-events-guide.md) for the context-event contract and engine authority boundaries.
 
 ### Bundled runs currently committed (archived viewer)
 

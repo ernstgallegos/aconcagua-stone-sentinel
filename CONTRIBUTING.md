@@ -130,6 +130,15 @@ Python tests, Python lint, JSON validation, web-v1 contract tests, and a headles
 - Changes to the `art/` directory
 - Alterations to existing scenario seeds or `max_turns`
 
+## Visual asset contribution guide
+
+When proposing visual asset changes (`art/`, portraits, cover, atmospheric backgrounds):
+
+1. Provide exact filenames and the runtime paths that reference them.
+2. Confirm fallback behavior for missing images (or add one in the same PR).
+3. Include at least one screenshot for any visible web-v1/front-page impact.
+4. Update docs that mention the affected asset contract (`README*`, `art/*README*`, or feature docs).
+
 ---
 
 ## Version bump and lockfile sync

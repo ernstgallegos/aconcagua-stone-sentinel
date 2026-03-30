@@ -48,3 +48,14 @@ test('formatBlockingError falls back to generic copy for unknown categories', ()
   assert.match(result.summary, /initialization failed before gameplay could start/i);
   assert.match(result.detail, /Category: custom failure/);
 });
+
+test('formatBlockingError maps invalid deep-link category to explicit guidance', () => {
+  global.localStorage = makeStorage('en');
+  const result = formatBlockingError({
+    category: 'invalid deep-link',
+    file: 'url hash',
+    detail: 'character=unknown',
+  });
+  assert.match(result.summary, /deep-link parameters are invalid/i);
+  assert.match(result.detail, /Source: url hash/);
+});

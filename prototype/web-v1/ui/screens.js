@@ -24,7 +24,9 @@ function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
   updateUIState(G, { modelReady: false });
   const rendered = renderBlockingError(errorMessage);
-  console.error(rendered.detail);
+  if (typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname)) {
+    console.warn(rendered.detail);
+  }
   setStartupState('error', uiText('Model unavailable. Review blocking diagnostics.', 'Modelo no disponible. Revisa el diagnóstico bloqueante.'));
   showScreen('fatal-error');
 }
@@ -1449,7 +1451,7 @@ function renderCarousel(type) {
     if (item._random) {
       const imgPath = '../../art/characters/random.png';
       cardEl.innerHTML = `
-        <img class="carousel-card-portrait" src="${imgPath}" alt="${t('ui.randomCharacter')}" loading="lazy" />
+        <img class="carousel-card-portrait" src="${imgPath}" alt="${t('ui.randomCharacter')}" loading="eager" fetchpriority="high" />
         <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
         <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: Variable</div>
@@ -1459,7 +1461,7 @@ function renderCarousel(type) {
       const safeIdx = Number(idx);
       const imgPath = getCharacterImagePath(item.id);
       const imgHtml = imgPath
-        ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" />`
+        ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="eager" fetchpriority="high" />`
         : '';
       cardEl.innerHTML = `
         ${imgHtml}
@@ -1543,7 +1545,18 @@ function toggleCarouselInfo(type, idx) {
   infoEl.classList.add('visible');
 }
 
+function preloadCriticalPortraits() {
+  const candidates = [getCharacterImagePath('random'), ...getCharacters().map((c) => getCharacterImagePath(c.id))]
+    .filter(Boolean);
+  for (const src of candidates.slice(0, 3)) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = src;
+  }
+}
+
 function buildExpeditionSetupCarousels() {
+  preloadCriticalPortraits();
   // Clamp character/scenario indices in case data isn't loaded yet
   const charItems = getCarouselItems('character');
   if (CAROUSEL_STATE.character.index >= charItems.length) CAROUSEL_STATE.character.index = 0;
@@ -2048,7 +2061,20 @@ function closeOnboardingModal() {
   if (modal) { modal.classList.remove('visible'); modal.setAttribute('aria-hidden', 'true'); }
 }
 
+function hasRunInProgress() {
+  return G.screen === 'game' && Array.isArray(G.turnLog) && G.turnLog.length > 0 && G.finalOutcome === 'Strategic Retreat';
+}
+
+function confirmAbandonRun() {
+  if (!hasRunInProgress()) return true;
+  return confirm(uiText(
+    'Leave this expedition and lose current progress? Debrief and run log remain available once the run ends.',
+    '¿Salir de esta expedición y perder el progreso actual? El debrief y el registro quedan disponibles al cerrar la partida.'
+  ));
+}
+
 function abandonOnboarding() {
+  if (!confirmAbandonRun()) return;
   closeOnboardingModal();
   showScreen('expedition-setup');
 }
@@ -3950,6 +3976,7 @@ function replayNewSeed() {
   startGame();
 }
 function goChooseScenario() {
+  if (!confirmAbandonRun()) return;
   showScreen('expedition-setup');
 }
 
@@ -4095,8 +4122,12 @@ if (fieldLogOverlay) {
 }
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
+    closeOnboardingModal();
     closeIntroModal();
     closeTutorialModal();
+    closeGameHelp();
+    closeWatchDetail();
+    closeFieldLog();
   }
 });
 
@@ -4335,7 +4366,17 @@ function handleDeepLink() {
   if (screenId === 'game') {
     const char = _resolveCharacter(params.character);
     const scenario = _resolveScenario(params.scenario);
-    if (!char || !scenario) { return; } // stay on title
+    if (!char || !scenario) {
+      setModelLoadError({
+        category: 'invalid deep-link',
+        file: 'url hash',
+        detail: uiText(
+          `Unsupported deep-link parameters. character=${params.character ?? 'missing'}, scenario=${params.scenario ?? 'missing'}.`,
+          `Parámetros de deep-link no soportados. character=${params.character ?? 'falta'}, scenario=${params.scenario ?? 'falta'}.`
+        ),
+      });
+      return;
+    }
     G.character = char;
     G.scenario = scenario;
     const seeds = scenario.seeds || [];
@@ -4352,7 +4393,17 @@ function handleDeepLink() {
   if (screenId === 'onboarding') {
     const char = _resolveCharacter(params.character);
     const scenario = _resolveScenario(params.scenario);
-    if (!char || !scenario) { showScreen('expedition-setup'); return; }
+    if (!char || !scenario) {
+      setModelLoadError({
+        category: 'invalid deep-link',
+        file: 'url hash',
+        detail: uiText(
+          'Onboarding deep-link requires valid character and scenario IDs.',
+          'El deep-link de onboarding requiere IDs válidos de personaje y escenario.'
+        ),
+      });
+      return;
+    }
     G.character = char;
     G.scenario = scenario;
     const seeds = scenario.seeds || [];

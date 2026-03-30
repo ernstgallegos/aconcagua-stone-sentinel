@@ -1,5 +1,11 @@
 export function mulberry32(seed) {
-  let s = seed >>> 0;
+  const numericSeed = Number(seed);
+  const safeSeed = Number.isFinite(numericSeed)
+    ? numericSeed
+    : String(seed ?? '')
+      .split('')
+      .reduce((acc, ch) => ((acc * 31) + ch.charCodeAt(0)) >>> 0, 0x9e3779b9);
+  let s = safeSeed >>> 0;
   return function() {
     s = (s + 0x6D2B79F5) >>> 0;
     let t = Math.imul(s ^ (s >>> 15), 1 | s);

@@ -173,6 +173,8 @@ Este repositorio incluye una entrada pública canónica y un visor histórico ar
 
 Para detalles de ruteo/deploy (preview local, Vercel y CORS), usar la referencia canónica única:
 - [`docs/deploy-routing.md`](./docs/deploy-routing.md)
+- [`docs/TROUBLESHOOTING.md`](./docs/TROUBLESHOOTING.md) para diagnóstico operativo de startup/runtime.
+- [`docs/context-events-guide.md`](./docs/context-events-guide.md) para el contrato de eventos de contexto y límites de autoridad del engine.
 
 ### Corridas bundled incluidas en el visor archivado
 

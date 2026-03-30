@@ -78,6 +78,7 @@ export function formatBlockingError(payload) {
     'invalid shape': text('Required file was loaded but failed contract shape checks.', 'El archivo requerido cargó, pero falló las validaciones de contrato de forma.'),
     'load failure': text('A required data file failed to load.', 'Falló la carga de un archivo de datos requerido.'),
     'post-load validation failure': text('Files loaded, but cross-file validation failed.', 'Los archivos cargaron, pero falló la validación cruzada.'),
+    'invalid deep-link': text('The provided deep-link parameters are invalid for this build.', 'Los parámetros de deep-link provistos son inválidos para esta compilación.'),
   };
 
   return {
