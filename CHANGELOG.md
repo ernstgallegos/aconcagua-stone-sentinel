@@ -22,6 +22,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
 - Rebuilt `index.html` into a stronger mountain-first editorial presentation with asymmetric hero composition, refined mineral palette, constrained motion, and clearer progression from concept to system evidence and primary CTA.
 - Reworked landing bilingual copy and section IA to better serve first-time external audiences (players, collaborators, press, curators) while preserving direct links to prototype, roadmap, whitepaper, README, and official channels.
 - Updated `docs/design-system.md` to document the current root-landing tokens, typography stack, component patterns, responsive behavior, and accessibility/motion guidance.
