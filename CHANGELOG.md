@@ -9,7 +9,23 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-- No unreleased changes.
+### Added
+- Added a new public root landing page at `/index.html` with a modern hero-first layout, concise project pillars, and a privileged primary CTA to launch the active `web-v1` prototype (`/prototype/web-v1/index.html`).
+- Added a dedicated landing “community” section with direct Instagram follow CTA and official mail contact CTA so visitors can track updates and reach the team without leaving `/`.
+- Added landing documentation-visualization cards sourced from repository markdown references (whitepaper + public roadmap) and a dedicated official-channels card (GitHub + official email).
+- Expanded landing documentation hub with a dedicated README card and expanded official-channels actions (GitHub + Instagram + official email) for complete public-navigation and contact visibility.
+- Added `md-viewer.html` as a styled markdown reader for landing-published docs (whitepaper, public roadmap, and repo-truth), so those documents open with enriched project-consistent presentation instead of raw markdown rendering.
+- Added flagship redesign documentation deliverables for the public web surface: `meta/ui-ux-redesign-audit.md`, `meta/design-direction.md`, `docs/design-system.md`, and `meta/redesign-changelog.md`.
+- Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
+
+### Changed
+- Changed root-route documentation in `README.md`, `README.es.md`, and `docs/deploy-routing.md` to describe `/` as a canonical landing surface (instead of an automatic redirect), while preserving direct routes to `web-v1` and the archived `mra-v0` viewer.
+- Fixed landing hero artwork presentation by preserving original image aspect ratio (`object-fit: contain` + auto height) to avoid readability loss from aggressive cropping.
+- Redesigned root `index.html` into a full premium landing architecture (sticky nav, editorial/product section flow, system/outcomes/status modules, stronger CTA hierarchy, and accessibility/responsive refinements) while preserving direct entry to `prototype/web-v1/index.html`.
+- Improved landing section visualizations for `Vision` and `System` by adding richer semantic card metadata and an explicit EP/BT flow strip, increasing scanability without introducing heavy motion or extra dependencies.
+- Removed the archived `prototype/mra-v0/viewer` CTA from landing primary action areas so root onboarding now prioritizes active prototype + docs/channels only.
+- Updated landing visual tokens to align with the active web-v1 sunset palette, improving cross-surface brand coherence between `/` and `prototype/web-v1`.
+- Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
 
 ## [1.4.5] — 2026-03
 

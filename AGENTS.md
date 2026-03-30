@@ -229,8 +229,28 @@ In addition to the changelog:
 - Canonical character coherence is safest when `docs/es/Personajes_v_3.md` remains the source-of-truth and every English mirror/data-facing profile (`docs/en/characters_v_3_en.md`, `data/characters.json`, character-event narrative copy) is synced in the same commit to prevent roster drift (e.g., stray character swaps or profession/age mismatches).
 - Part 2 pre-threshold narrative rewrites are safer when represented as a single data contract (`id/eyebrow/title/body/variant/animationPreset/visualMode/navButtons`) rendered by one UI path; this preserves pacing controls (paragraph spacing, titleless beats, variable CTA counts) without duplicating static HTML cards.
 - When reducing narrative duration, prefer proportional compression per screen (not removing whole beats): keep canonical logistics anchors and closing cadence lines, then trim interior exposition so pacing drops without flattening tone.
-- Root-route clarity improves public onboarding when `/` is treated as a strict redirect shell to `prototype/web-v1/index.html`, while legacy replay tooling is explicitly archived under `prototype/mra-v0/viewer/` instead of competing at repository root.
+- Root-route clarity improves public onboarding when `/` explicitly presents the current public entry strategy (landing page with privileged web-v1 CTA) while legacy replay tooling remains archived under `prototype/mra-v0/viewer/` instead of competing at repository root.
 - Route/deploy documentation drift decreases when one canonical document owns local-preview, Vercel, and CORS instructions (`docs/deploy-routing.md`) and README variants only keep short pointers.
 - Intro/support UX in `web-v1` is clearer when prototype-info modal includes explicit “sharing helps the project” copy, one-click social intent links, and a canonical Instagram CTA; keep these links language-aware and generated from the active runtime URL to avoid stale hardcoded share targets.
 - Release-note hygiene stays cleaner when a patch is declared final (e.g., `v1.4.5`): move all pending `[Unreleased]` bullets into that version block and leave `[Unreleased]` explicitly empty to avoid mixed-status histories.
 - Final-screen collaboration CTAs in Part 2 are more reliable when each external destination (email/Instagram) uses its own explicit action handler and localized nav label instead of overloading one generic contact path.
+
+- Root-entry presentation is cleaner for public onboarding when `/index.html` acts as a lightweight landing page with one privileged “play web-v1” CTA and secondary links to repo/whitepaper, instead of forcing an immediate redirect before context is shown.
+
+- When root UX changes from redirect-shell to landing, `vercel.json` must drop any `/` redirect to `prototype/web-v1/index.html`; otherwise production deploys bypass the landing despite local static previews looking correct.
+
+- Public landing redesigns are more reliable when they are delivered as a full package (audit + direction + design-system doc + implementation changelog) so UX intent, visual system rules, and shipped behavior stay synchronized.
+
+- Landing localization is safest when English is the default public copy and Spanish is delivered through a visible EN/ES switch that also updates metadata (`title`, description, key alt text), preventing mixed-language first impressions.
+
+- Public landing conversion improves when update-follow and contact actions are explicit (Instagram + official email) in a dedicated section instead of being implied only in footer/legal copy.
+
+- Public landing clarity increases when whitepaper and roadmap are surfaced as visual summary cards (not only links), and official channels always include both GitHub and project email as explicit actions.
+
+- Public markdown documents linked from landing are more credible when they open inside a styled viewer constrained to approved sources, avoiding raw markdown UX drift and preserving brand consistency.
+
+- Hero artwork readability is safer when landing images keep original aspect ratio by default (`contain` + auto height); forcing fixed 16:9 crops can destroy key visual information on already-composed illustrations.
+
+- Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
+
+- Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.
