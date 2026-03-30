@@ -236,3 +236,5 @@ In addition to the changelog:
 - Final-screen collaboration CTAs in Part 2 are more reliable when each external destination (email/Instagram) uses its own explicit action handler and localized nav label instead of overloading one generic contact path.
 
 - Root-entry presentation is cleaner for public onboarding when `/index.html` acts as a lightweight landing page with one privileged “play web-v1” CTA and secondary links to repo/whitepaper, instead of forcing an immediate redirect before context is shown.
+
+- When root UX changes from redirect-shell to landing, `vercel.json` must drop any `/` redirect to `prototype/web-v1/index.html`; otherwise production deploys bypass the landing despite local static previews looking correct.

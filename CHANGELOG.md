@@ -14,6 +14,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 - Changed root-route documentation in `README.md`, `README.es.md`, and `docs/deploy-routing.md` to describe `/` as a canonical landing surface (instead of an automatic redirect), while preserving direct routes to `web-v1` and the archived `mra-v0` viewer.
+- Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
 
 ## [1.4.5] — 2026-03
 
