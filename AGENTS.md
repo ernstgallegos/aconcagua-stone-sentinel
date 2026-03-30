@@ -240,3 +240,5 @@ In addition to the changelog:
 - When root UX changes from redirect-shell to landing, `vercel.json` must drop any `/` redirect to `prototype/web-v1/index.html`; otherwise production deploys bypass the landing despite local static previews looking correct.
 
 - Public landing redesigns are more reliable when they are delivered as a full package (audit + direction + design-system doc + implementation changelog) so UX intent, visual system rules, and shipped behavior stay synchronized.
+
+- Landing localization is safest when English is the default public copy and Spanish is delivered through a visible EN/ES switch that also updates metadata (`title`, description, key alt text), preventing mixed-language first impressions.

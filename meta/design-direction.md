@@ -1,74 +1,75 @@
-# Design Direction — Aconcagua: Stone Sentinel (Public Landing)
+# Design Direction — Landing v2 (EN default + ES switch)
 
-## Concept
+## Concepto rector
 
-**"Mountain authority, editorial clarity, product-grade trust."**
+**"One brand, two languages, one clear path to play."**
 
-The landing combines cinematic restraint with systemic rigor: atmospheric but never ornamental, clear but never generic.
+La landing debe sentirse como extensión natural del prototipo activo: misma familia cromática emocional (sunset), misma seriedad sistémica, onboarding más global.
 
-## Visual tone
+## Tono visual
 
-- Premium, sober, and contemporary.
-- Dark alpine base with warm mineral highlights.
-- Low-noise surfaces, meaningful depth, high legibility.
+- Premium sobrio, cálido y nocturno.
+- Contraste controlado con acentos ochre/ice del sistema web-v1.
+- Profundidad por capas ligeras, sin efectos ruidosos.
 
-## UX principles
+## Principios UX
 
-1. Immediate value proposition clarity.
-2. Strong CTA priority: play prototype first.
-3. Progressive disclosure from vision → system → status → outcomes.
-4. Fast scan paths for newcomers and depth paths for technical audiences.
+1. EN como idioma inicial para alcance internacional.
+2. Selector de idioma EN/ES visible y persistente.
+3. CTA primaria inequívoca: jugar web-v1.
+4. Secciones narrativas modulares y escaneables.
 
-## Typography system
+## Sistema tipográfico
 
-- Base family: Inter / IBM Plex Sans fallback stack.
-- Hierarchy:
-  - Hero title: high-impact display scale.
-  - Section titles: strong editorial headings.
-  - Body copy: compact readable rhythm.
-  - Microcopy/navigation: reduced scale, high contrast.
+- Sans contemporánea (`Plus Jakarta Sans` fallback stack) para lectura clara.
+- Escala jerárquica marcada en hero y secciones.
+- Microcopy en caps/letter spacing para navegación y señales.
 
-## Spacing system
+## Sistema de espaciado
 
-- Tokenized scale (`--space-1` to `--space-6`) to enforce rhythm.
-- Vertical cadence optimized for reading blocks and card groups.
-- Distinct section breaks to maintain scanability.
+- Escala tokenizada (`--space-1` a `--space-6`).
+- Ritmo vertical alto entre bloques editoriales.
+- Densidad controlada en mobile.
 
-## Color system
+## Sistema de color
 
-- Background: deep blue-black layers.
-- Surface: translucent dark panels with warm border accents.
-- Accent: ochre/gold for premium wayfinding and primary actions.
-- Status: green for readiness/active-state signaling.
+Alineado con palette sunset de web-v1:
+- `--bg #251420`
+- `--surface #331b2c`
+- `--surface2 #422139`
+- `--border #684056`
+- `--ochre #ff9e5e`
+- `--ice #ffc89a`
+- `--text #f3d4bf`
+- `--muted #c58f79`
 
-## Imagery and illustration usage
+## Uso de imágenes
 
-- Cover artwork used as contextual hero media.
-- Images support storytelling hierarchy and avoid decorative overload.
-- Border treatment and radius aligned to card system.
+- Cover art del proyecto como soporte hero principal.
+- Encuadre 16:9 con borde tonal coherente.
 
-## Motion rules
+## Motion
 
-- Subtle hover elevation and focus transitions.
-- No heavy animation loops.
-- `prefers-reduced-motion` respected globally.
+- Hover/focus sobrios.
+- Sin animaciones ornamentales pesadas.
+- `prefers-reduced-motion` respetado globalmente.
 
-## Layout rules
+## Layout
 
-- Max container width with responsive modular grid.
-- Sticky lightweight header for quick section navigation.
-- Hero split layout on desktop, stacked narrative on small screens.
+- Header sticky con nav + switch de idioma.
+- Hero split responsive.
+- Secciones modulares: vision → system → status → outcomes → final CTA.
 
-## Responsive rules
+## Responsive
 
-- Mobile-first spacing and stacked sections.
-- Desktop split only when content density benefits readability.
-- Button groups and cards wrap naturally.
+- Mobile-first.
+- Split layout a partir de desktop amplio.
+- CTAs wrap sin pérdida de legibilidad.
 
-## Accessibility criteria
+## Accesibilidad
 
-- Semantic landmarks (`header`, `main`, `section`, `nav`, `footer`).
-- Skip link for keyboard-first navigation.
-- Focus-visible states for controls.
-- Contrast-conscious palette and readable body sizes.
-- Heading hierarchy structured for assistive technologies.
+- Skip link.
+- Focus visible consistente.
+- Landmarks semánticos.
+- Botones de idioma con `aria-pressed`.
+- Traducción de atributos clave (`alt`) y metadatos.

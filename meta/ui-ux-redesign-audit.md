@@ -1,50 +1,41 @@
-# UI/UX Redesign Audit — Root Public Web Surface
+# UI/UX Redesign Audit — Public Landing (Revision)
 
-## Current-state diagnosis
+## Diagnóstico actualizado
 
-1. **Positioning clarity gap**
-   - The previous root experience offered limited narrative depth and weak information architecture for first-time visitors.
-   - The project's strategic value (systemic simulation + narrative intent + documentary tone) was underrepresented above the fold.
+1. **Desalineación visual con el producto principal**
+   - La landing no reflejaba suficientemente la paleta del prototipo web-v1 (tema sunset), debilitando coherencia de marca entre entrada pública y experiencia jugable.
 
-2. **Content density imbalance**
-   - Key public-facing truths (active prototype, canonical outcomes, public status, flow) existed in docs but were not sufficiently surfaced in the landing experience.
+2. **Idioma por defecto no orientado a público global**
+   - La experiencia anterior era ES-first sin selector de idioma visible, aumentando fricción para audiencias internacionales y prensa externa.
 
-3. **Design-system immaturity at root layer**
-   - Visual language had partial consistency but lacked a documented token/component framework specific to the landing.
+3. **Narrativa y jerarquía mejorables**
+   - Había estructura sólida, pero faltaba un patrón explícito EN-default + switch instantáneo para señal de producto “public-ready”.
 
-4. **Trust and scanability opportunities**
-   - Stakeholder-facing signals (what this is, why it matters, what to do next) needed stronger hierarchy and clearer narrative progression.
+4. **Necesidad de i18n utilitario en UI estática**
+   - Se requería traducción de navegación, hero, módulos de sistema/estado/outcomes y metadatos (title/description), no solo copy parcial.
 
-## Positioning hypothesis
+## Hipótesis de posicionamiento
 
-Aconcagua: Stone Sentinel should present as a **serious, design-led indie project** at the intersection of:
-- systemic decision gameplay,
-- documentary mountain framing,
-- public-playtest-ready product discipline.
+La landing debe comunicar una identidad **premium, coherente con web-v1, internacional por defecto y bilingüe sin fricción**, preservando tono autoral de montaña + sistemas.
 
-## Opportunities detected
+## Oportunidades
 
-- Build a premium, editorial + product hybrid landing structure.
-- Surface canonical project truths directly in UI (active prototype, route map, outcomes, status).
-- Increase perceived quality with coherent visual system tokens and reusable component patterns.
-- Improve external onboarding for press, collaborators, and evaluators through clearer CTA choreography.
+- Alinear color tokens a la base sunset del prototipo.
+- Convertir landing a EN-default con selector EN/ES persistente.
+- Mantener semántica, accesibilidad y ritmo editorial sin recargar UI.
 
-## Redesign guiding principles
+## Principios rectores
 
-1. **Clarity first, character second**: communicate core proposition in <10 seconds.
-2. **System over collage**: enforce reusable layout/component/tokens logic.
-3. **Calm premium aesthetics**: controlled contrast, deliberate spacing, restrained motion.
-4. **Actionable narrative**: every section answers “what / why / next step”.
-5. **Public-readiness by default**: align UI message with docs/repo truth.
+1. **Coherencia de marca inter-superficie** (landing ↔ prototipo).
+2. **Internacionalización práctica** (EN por defecto + ES inmediato).
+3. **Escaneabilidad premium** con jerarquía y CTA claras.
+4. **Accesibilidad y performance first** en una página estática.
 
-## Strategic decisions taken
+## Decisiones estratégicas
 
-- Keep current static architecture (no full-stack migration) to minimize delivery risk and preserve deployment simplicity.
-- Execute a complete flagship redesign at root `index.html` with:
-  - stronger content model,
-  - improved semantics/accessibility,
-  - documented design-system artifacts.
-- Create dedicated redesign documentation set:
-  - `meta/design-direction.md`
-  - `docs/design-system.md`
-  - `meta/redesign-changelog.md`
+- Rehacer la landing sobre tokens inspirados en `prototype/web-v1/css/themes.css` (sunset).
+- Implementar i18n client-side liviano con:
+  - diccionario EN/ES,
+  - persistencia localStorage,
+  - traducción de texto + atributos + metadatos.
+- Mantener IA modular (vision/system/status/outcomes) y CTA principal hacia web-v1.

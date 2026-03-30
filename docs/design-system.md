@@ -1,69 +1,60 @@
-# Design System (Landing Public Surface)
+# Design System — Public Landing (Sunset-aligned)
 
 ## 1) Tokens
 
-### Color tokens
-- `--bg`, `--bg-soft`: atmospheric background layers.
-- `--surface`, `--surface-strong`: panel surfaces.
-- `--surface-border`: card/panel border consistency.
-- `--text`, `--muted`: primary and secondary text.
-- `--accent`, `--accent-strong`: CTA and emphasis.
-- `--ok`: positive operational signals.
+### Color tokens (aligned with web-v1 sunset)
+- `--bg: #251420`
+- `--surface: #331b2c`
+- `--surface2: #422139`
+- `--border: #684056`
+- `--stone: #d3a48d`
+- `--ochre: #ff9e5e`
+- `--ochre-dim: #ca6f3f`
+- `--ice: #ffc89a`
+- `--ice-dim: #c78461`
+- `--white: #ffe3d1`
+- `--safety: #8dc47e`
+- `--text: #f3d4bf`
+- `--muted: #c58f79`
+- `--accent: #ff9e5e`
 
-### Radius tokens
-- `--radius-sm`, `--radius-md`, `--radius-lg`.
+### Layout/shape tokens
+- Radius: `--radius-sm`, `--radius-md`, `--radius-lg`
+- Spacing: `--space-1` … `--space-6`
+- Elevation: `--shadow`
 
-### Spacing tokens
-- `--space-1 ... --space-6` (micro → section spacing).
+## 2) Core components
 
-### Elevation token
-- `--shadow-md`: primary panel elevation.
+- Header shell: `.site-header`, `.header-inner`
+- Primary nav pills: `.nav a`
+- Language switcher: `.lang-switch`, `.lang-btn`
+- Hero suite: `.hero`, `.hero-grid`, `.eyebrow`, `.lead`, `.hero-media`
+- CTA system: `.btn`, `.btn-primary`, `.btn-secondary`
+- Content modules: `.section`, `.cards`, `.card`, `.split`, `.list`, `.timeline`
+- Status indicator: `.status`, `.status-dot`
 
-## 2) Layout primitives
+## 3) Interaction rules
 
-- `.page`: central max-width container.
-- `.section`: vertical rhythm block.
-- `.grid`: responsive card grid (`auto-fit/minmax`).
-- `.split`: two-column adaptive section layout.
+- Primary hover motion: subtle upward transform.
+- Keyboard focus: explicit high-contrast outline.
+- Language buttons: toggle state via `aria-pressed`.
+- Reduced motion: transition suppression under user preference.
 
-## 3) Components
+## 4) Bilingual content system
 
-### Header / Navigation
-- `.site-header`, `.site-header-inner`, `.nav`.
-- Sticky lightweight navigation for section anchors.
+- `data-i18n` for text nodes.
+- `data-i18n-attr` for translatable attributes.
+- Dictionary-driven EN/ES switch with localStorage persistence.
+- Document `lang`, `<title>`, and meta description updated per language.
 
-### Hero block
-- `.hero`, `.hero-layout`, `.hero-media`, `.eyebrow`, `h1`, `.hero-lead`.
-- Combines proposition, CTA stack, and contextual image.
-
-### Buttons
-- `.btn` base.
-- `.btn-primary` (main action).
-- `.btn-secondary` (supporting actions).
-
-### Cards
-- `.card` with heading/body pairing.
-- Used across pillars, system, outcomes.
-
-### Informational patterns
-- `.kpi` readiness indicator.
-- `.timeline` for project-state sequencing.
-- `.outcome-list` for concise taxonomy presentation.
-
-## 4) Interaction patterns
-
-- Hover: small Y-translation on CTAs.
-- Focus-visible: high-contrast outline.
-- Reduced motion support via `prefers-reduced-motion`.
-
-## 5) Usage rules
+## 5) Usage guidance
 
 ### Do
-- Keep CTA hierarchy explicit (1 primary + limited secondary).
-- Preserve section order: vision → system → status → outcomes.
-- Reuse tokens/components before introducing ad-hoc values.
+- Keep EN as default and ES as one-click alternative.
+- Preserve section order for narrative clarity.
+- Reuse existing token scale for all new blocks.
 
 ### Don’t
-- Do not add decorative motion without UX purpose.
-- Do not break typographic hierarchy with arbitrary font sizes.
-- Do not bypass token system with hardcoded one-off styling unless justified.
+- Introduce ad-hoc colors outside sunset-aligned system.
+- Add decorative animations without UX purpose.
+- Fragment translation logic across multiple scripts.

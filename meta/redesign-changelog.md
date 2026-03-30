@@ -1,31 +1,32 @@
-# Redesign Changelog — Public Landing Flagship Refresh
-
-## Scope
-- Surface redesigned: repository root `index.html` (canonical public landing route `/`).
+# Redesign Changelog — Landing Iteration (Color + Bilingual)
 
 ## What changed
-1. **Information architecture**
-   - Expanded from a short hero to a structured narrative: vision, system, status, outcomes, and final CTA.
-2. **Visual system**
-   - Introduced coherent tokenized styling (color, spacing, radius, elevation).
-3. **Componentization (CSS/HTML pattern-level)**
-   - Standardized reusable primitives for nav, hero, cards, buttons, grid/split layouts, timeline, and taxonomy lists.
-4. **Accessibility and UX polish**
-   - Added skip link, focus-visible states, semantic landmarks, and reduced-motion handling.
-5. **Content strategy**
-   - Incorporated canonical project truths from repository docs into public-facing messaging.
+
+1. Rebuilt landing visual system to align with `web-v1` sunset palette.
+2. Switched default language to English for international-first onboarding.
+3. Added EN/ES language switcher with persistent preference.
+4. Implemented runtime i18n for:
+   - navigation,
+   - hero,
+   - all major sections,
+   - CTA labels,
+   - footer,
+   - document title + meta description + key alt text.
+5. Kept premium modular layout and improved consistency between landing and prototype.
 
 ## Why
-- Increase perceived professionalism and trust for external audiences.
-- Improve first-session comprehension and reduce onboarding friction.
-- Align runtime entry experience with project maturity and documentation depth.
+
+- Improve brand coherence between entry experience and active product.
+- Reduce friction for global audiences while preserving full Spanish access.
+- Increase professionalism and external presentation readiness.
 
 ## Expected impact
-- Stronger first impression and clearer conversion toward prototype play.
-- Better comprehension for collaborators, press, and stakeholders.
-- Greater consistency between visual presentation and systemic design narrative.
 
-## Remaining debt / next iterations
-- Add dedicated EN version of the landing (currently ES-led copy).
-- Add visual regression/smoke check specifically for root landing route.
-- Consider extracting root landing CSS into dedicated modular stylesheet if root surface expands further.
+- Stronger perceived product integrity.
+- Better first-run comprehension across EN/ES audiences.
+- More confident handoff from landing to playable prototype.
+
+## Pending debt
+
+- Optional: add automated DOM-level i18n smoke assertions for root landing.
+- Optional: mirrored long-form EN/ES landing docs snapshot in `docs/`.
