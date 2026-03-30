@@ -31,14 +31,15 @@
 - Hero suite: `.hero`, `.hero-grid`, `.eyebrow`, `.lead`, `.hero-media`
 - CTA system: `.btn`, `.btn-primary`, `.btn-secondary`
 - Content modules: `.section`, `.cards`, `.card`, `.split`, `.list`, `.timeline`
-- Documentation visualization cards: whitepaper, roadmap, and official channels as first-class card variants.
+- Documentation visualization cards: whitepaper, roadmap, README, and official channels as first-class card variants.
 - Status indicator: `.status`, `.status-dot`
 
 
 ## Markdown viewer
 
 - `md-viewer.html` provides enriched rendering for key public markdown docs linked from landing cards.
-- Allowed sources are intentionally constrained to canonical public docs (`project-whitepaper`, `public-roadmap`, `repo-truth`).
+- Official channels include explicit GitHub, Instagram, and email actions.
+- Allowed sources are intentionally constrained to canonical public docs (`project-whitepaper`, `public-roadmap`, `repo-truth`, `README`).
 
 ## 3) Interaction rules
 

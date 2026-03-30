@@ -13,6 +13,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added a new public root landing page at `/index.html` with a modern hero-first layout, concise project pillars, and a privileged primary CTA to launch the active `web-v1` prototype (`/prototype/web-v1/index.html`).
 - Added a dedicated landing “community” section with direct Instagram follow CTA and official mail contact CTA so visitors can track updates and reach the team without leaving `/`.
 - Added landing documentation-visualization cards sourced from repository markdown references (whitepaper + public roadmap) and a dedicated official-channels card (GitHub + official email).
+- Expanded landing documentation hub with a dedicated README card and expanded official-channels actions (GitHub + Instagram + official email) for complete public-navigation and contact visibility.
 - Added `md-viewer.html` as a styled markdown reader for landing-published docs (whitepaper, public roadmap, and repo-truth), so those documents open with enriched project-consistent presentation instead of raw markdown rendering.
 - Added flagship redesign documentation deliverables for the public web surface: `meta/ui-ux-redesign-audit.md`, `meta/design-direction.md`, `docs/design-system.md`, and `meta/redesign-changelog.md`.
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.

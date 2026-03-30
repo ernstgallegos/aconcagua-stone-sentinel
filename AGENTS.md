@@ -250,3 +250,5 @@ In addition to the changelog:
 - Public markdown documents linked from landing are more credible when they open inside a styled viewer constrained to approved sources, avoiding raw markdown UX drift and preserving brand consistency.
 
 - Hero artwork readability is safer when landing images keep original aspect ratio by default (`contain` + auto height); forcing fixed 16:9 crops can destroy key visual information on already-composed illustrations.
+
+- Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
