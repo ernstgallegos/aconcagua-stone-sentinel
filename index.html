@@ -3,226 +3,459 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aconcagua: Stone Sentinel — Landing oficial</title>
+    <title>Aconcagua: Stone Sentinel — Expedición sistémica narrativa</title>
     <meta
       name="description"
-      content="Landing oficial de Aconcagua: Stone Sentinel. Explora la visión del proyecto y juega ahora el prototipo web app v1.4.5."
+      content="Landing oficial de Aconcagua: Stone Sentinel. Conocé la visión, el sistema de juego y accedé al prototipo web v1.4.5."
     />
     <style>
       :root {
         color-scheme: dark;
         --bg: #070b10;
-        --panel: rgba(20, 28, 37, 0.75);
-        --panel-border: rgba(214, 171, 110, 0.24);
-        --text: #e9edf1;
-        --muted: #b8c2cc;
+        --bg-soft: #0c131b;
+        --surface: rgba(14, 21, 29, 0.82);
+        --surface-strong: rgba(16, 25, 34, 0.95);
+        --surface-border: rgba(214, 171, 110, 0.22);
+        --text: #ecf2f8;
+        --muted: #b5c1cc;
         --accent: #d6ab6e;
-        --accent-strong: #f4c98c;
-        --ok: #85d0ae;
+        --accent-strong: #f6ce95;
+        --ok: #7cd7a6;
+        --radius-sm: 0.85rem;
+        --radius-md: 1.1rem;
+        --radius-lg: 1.8rem;
+        --shadow-md: 0 16px 34px rgba(0, 0, 0, 0.35);
+        --space-1: 0.35rem;
+        --space-2: 0.65rem;
+        --space-3: 1rem;
+        --space-4: 1.5rem;
+        --space-5: 2.25rem;
+        --space-6: 3.5rem;
       }
 
       * { box-sizing: border-box; }
 
+      html:focus-within { scroll-behavior: smooth; }
+
       body {
         margin: 0;
-        font-family: "Inter", "IBM Plex Sans", system-ui, -apple-system, sans-serif;
-        background:
-          radial-gradient(circle at 15% 20%, rgba(96, 132, 179, 0.18), transparent 34%),
-          radial-gradient(circle at 85% 8%, rgba(214, 171, 110, 0.2), transparent 26%),
-          linear-gradient(180deg, #0b1118 0%, var(--bg) 55%);
+        font-family: "Inter", "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
         color: var(--text);
+        background:
+          radial-gradient(circle at 15% 6%, rgba(214, 171, 110, 0.18), transparent 26%),
+          radial-gradient(circle at 82% 2%, rgba(97, 134, 181, 0.18), transparent 24%),
+          linear-gradient(180deg, #0a121a 0%, var(--bg) 40%, #05090d 100%);
         min-height: 100vh;
+        line-height: 1.5;
       }
 
-      .shell {
-        width: min(1080px, 92vw);
+      img { max-width: 100%; display: block; border-radius: var(--radius-md); }
+
+      a { color: var(--accent-strong); text-decoration: none; }
+
+      a:hover { text-decoration: underline; }
+
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 1rem;
+        z-index: 100;
+        padding: 0.65rem 0.9rem;
+        background: #f5f7fa;
+        color: #111;
+        border-radius: var(--radius-sm);
+      }
+
+      .skip-link:focus { top: 1rem; }
+
+      .page {
+        width: min(1120px, 92vw);
         margin: 0 auto;
-        padding: 2.2rem 0 3.6rem;
+        padding-bottom: var(--space-6);
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(8px);
+        background: rgba(8, 13, 18, 0.65);
+        border-bottom: 1px solid rgba(197, 169, 127, 0.18);
+      }
+
+      .site-header-inner {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        padding: 0.85rem 0;
+      }
+
+      .brand {
+        font-size: 0.93rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #f0e1c4;
+        font-weight: 700;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--space-2);
+      }
+
+      .nav a {
+        color: var(--muted);
+        font-size: 0.87rem;
+        padding: 0.3rem 0.55rem;
+        border-radius: 999px;
+      }
+
+      .nav a:hover,
+      .nav a:focus-visible {
+        color: var(--text);
+        background: rgba(214, 171, 110, 0.12);
+        text-decoration: none;
+        outline: none;
       }
 
       .hero {
+        margin-top: var(--space-5);
         display: grid;
-        gap: 1.3rem;
-        padding: 2rem;
-        border: 1px solid var(--panel-border);
-        border-radius: 24px;
-        background: linear-gradient(160deg, rgba(22, 31, 40, 0.92), var(--panel));
-        backdrop-filter: blur(3px);
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+        gap: var(--space-4);
+        padding: clamp(1.2rem, 3vw, 2.2rem);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--surface-border);
+        background: linear-gradient(150deg, rgba(14, 20, 28, 0.94), rgba(15, 23, 33, 0.77));
+        box-shadow: var(--shadow-md);
       }
 
       .eyebrow {
         margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 0.72rem;
         color: var(--accent);
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
         font-weight: 700;
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(2rem, 6vw, 3.3rem);
-        line-height: 1.05;
+        font-size: clamp(2rem, 5.4vw, 4rem);
+        line-height: 1.04;
+        max-width: 15ch;
       }
 
-      .lead {
+      .hero-lead {
         margin: 0;
         color: var(--muted);
-        max-width: 68ch;
-        line-height: 1.6;
+        max-width: 66ch;
+        font-size: clamp(1rem, 1.2vw, 1.15rem);
       }
 
-      .hero-actions {
+      .hero-layout {
+        display: grid;
+        gap: var(--space-4);
+      }
+
+      .hero-media {
+        border-radius: var(--radius-md);
+        overflow: clip;
+        border: 1px solid rgba(202, 172, 131, 0.3);
+      }
+
+      .hero-media img { aspect-ratio: 16 / 9; object-fit: cover; }
+
+      .actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
+        gap: var(--space-2);
       }
 
       .btn {
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 0.75rem 1.1rem;
+        font-weight: 700;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.45rem;
-        text-decoration: none;
-        border-radius: 999px;
-        padding: 0.72rem 1.15rem;
-        font-weight: 700;
-        border: 1px solid transparent;
-        transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+        transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
       }
 
-      .btn:hover,
       .btn:focus-visible {
-        transform: translateY(-1px);
+        outline: 2px solid #f0dbc0;
+        outline-offset: 2px;
       }
+
+      .btn:hover { transform: translateY(-1px); text-decoration: none; }
 
       .btn-primary {
-        background: linear-gradient(120deg, var(--accent) 0%, var(--accent-strong) 100%);
-        color: #1d2228;
+        color: #15181d;
+        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
       }
 
       .btn-secondary {
         color: var(--text);
-        background: rgba(12, 17, 24, 0.56);
-        border-color: rgba(214, 171, 110, 0.35);
+        background: rgba(11, 17, 24, 0.65);
+        border-color: rgba(214, 171, 110, 0.36);
       }
 
-      .meta {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
+      .micro {
+        margin: 0;
+        color: #9db0c3;
+        font-size: 0.9rem;
+      }
+
+      .section {
+        margin-top: var(--space-6);
+      }
+
+      .section h2 {
+        margin: 0 0 var(--space-2);
+        font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      }
+
+      .section p.section-intro {
+        margin: 0;
         color: var(--muted);
-        font-size: 0.92rem;
-      }
-
-      .dot {
-        color: rgba(214, 171, 110, 0.7);
+        max-width: 68ch;
       }
 
       .grid {
-        margin-top: 1rem;
+        margin-top: var(--space-4);
         display: grid;
-        gap: 0.85rem;
+        gap: var(--space-3);
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       }
 
       .card {
-        background: rgba(15, 22, 30, 0.72);
-        border: 1px solid rgba(194, 165, 126, 0.21);
-        border-radius: 16px;
-        padding: 1rem;
+        padding: var(--space-3);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(203, 172, 129, 0.2);
+        background: var(--surface);
       }
 
-      .card h2 {
-        margin: 0 0 0.45rem;
-        font-size: 1.02rem;
-      }
+      .card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
 
-      .card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.5;
-        font-size: 0.95rem;
-      }
+      .card p { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-      .status-line {
-        margin-top: 1rem;
-        display: inline-flex;
+      .kpi {
+        display: flex;
+        gap: var(--space-2);
         align-items: center;
-        gap: 0.5rem;
-        color: #dce7f1;
+        color: #d8e2eb;
         font-size: 0.92rem;
       }
 
-      .status-dot {
-        width: 0.58rem;
-        height: 0.58rem;
+      .kpi-dot {
+        width: 0.6rem;
+        height: 0.6rem;
         border-radius: 999px;
         background: var(--ok);
-        box-shadow: 0 0 0 0.24rem rgba(133, 208, 174, 0.16);
+        box-shadow: 0 0 0 0.22rem rgba(124, 215, 166, 0.16);
       }
 
-      footer {
-        margin-top: 1.6rem;
-        color: #95a3b1;
-        font-size: 0.9rem;
+      .split {
+        margin-top: var(--space-4);
+        display: grid;
+        gap: var(--space-3);
       }
 
-      footer a {
-        color: var(--accent-strong);
+      .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .timeline li {
+        padding: var(--space-3);
+        border-left: 3px solid rgba(214, 171, 110, 0.8);
+        background: var(--surface-strong);
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      }
+
+      .outcome-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .outcome-list li {
+        background: rgba(11, 17, 24, 0.68);
+        border: 1px solid rgba(194, 169, 132, 0.2);
+        border-radius: var(--radius-sm);
+        padding: 0.7rem 0.85rem;
+        color: var(--muted);
+      }
+
+      .site-footer {
+        margin-top: var(--space-6);
+        padding-top: var(--space-3);
+        border-top: 1px solid rgba(182, 158, 122, 0.25);
+        color: #8f9fb0;
+      }
+
+      @media (min-width: 900px) {
+        .hero-layout {
+          grid-template-columns: 1.1fr 0.9fr;
+          align-items: center;
+        }
+
+        .split {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; scroll-behavior: auto !important; }
       }
     </style>
   </head>
   <body>
-    <main class="shell">
-      <section class="hero" aria-labelledby="landing-title">
-        <p class="eyebrow">Indie narrative-systemic project</p>
-        <h1 id="landing-title">Aconcagua: Stone Sentinel</h1>
-        <p class="lead">
-          Una experiencia de montaña narrativa y sistémica sobre riesgo, percepción y decisiones
-          bajo presión. Esta landing concentra la entrada pública del proyecto y prioriza el
-          acceso inmediato a la demo jugable.
+    <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
+
+    <header class="site-header">
+      <div class="site-header-inner">
+        <p class="brand">Aconcagua: Stone Sentinel</p>
+        <nav class="nav" aria-label="Navegación principal">
+          <a href="#vision">Visión</a>
+          <a href="#sistema">Sistema</a>
+          <a href="#estado">Estado</a>
+          <a href="#outcomes">Outcomes</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido" class="page">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Narrativa + sistemas + montaña real</p>
+        <div class="hero-layout">
+          <div>
+            <h1 id="hero-title">Un juego sobre límites, lectura del entorno y decisiones bajo presión.</h1>
+            <p class="hero-lead">
+              <em>Aconcagua: Stone Sentinel</em> propone una experiencia contemplativa y exigente:
+              no se trata de “conquistar” la montaña, sino de interpretar señales, gestionar riesgo
+              y decidir hasta dónde avanzar.
+            </p>
+            <div class="actions" role="group" aria-label="Acciones principales">
+              <a class="btn btn-primary" href="/prototype/web-v1/index.html">Jugar prototipo web v1.4.5</a>
+              <a class="btn btn-secondary" href="/meta/project-whitepaper.md">Leer whitepaper</a>
+              <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel">Ver repositorio</a>
+            </div>
+            <p class="micro">Entrada pública canónica: <strong>/</strong> · Prototipo activo: <strong>web-v1</strong>.</p>
+            <p class="kpi"><span class="kpi-dot" aria-hidden="true"></span>Listo para playtesting público y colaboración externa.</p>
+          </div>
+          <figure class="hero-media">
+            <img src="/art/cover/cover-concept-1.png" alt="Arte de portada del proyecto Aconcagua: Stone Sentinel" loading="lazy" />
+          </figure>
+        </div>
+      </section>
+
+      <section id="vision" class="section" aria-labelledby="vision-title">
+        <h2 id="vision-title">Por qué este proyecto importa</h2>
+        <p class="section-intro">
+          Combina enfoque documental, diseño sistémico y narrativa de decisión para construir una
+          experiencia de montaña que prioriza observación, criterio y consecuencias, en lugar de
+          power-fantasy o acción impulsiva.
         </p>
-
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/prototype/web-v1/index.html">▶ Jugar prototipo web app v1.4.5</a>
-          <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel">Repositorio</a>
-          <a class="btn btn-secondary" href="/meta/project-whitepaper.md">Whitepaper</a>
-        </div>
-
-        <p class="status-line"><span class="status-dot" aria-hidden="true"></span>Prototipo público activo: web-v1</p>
-
-        <div class="meta">
-          <span>Single player</span>
-          <span class="dot">•</span>
-          <span>Datos + narrativa</span>
-          <span class="dot">•</span>
-          <span>EN / ES</span>
-          <span class="dot">•</span>
-          <span>Indie en desarrollo</span>
-        </div>
-
-        <div class="grid" aria-label="Pilares rápidos del proyecto">
+        <div class="grid">
           <article class="card">
-            <h2>La montaña manda</h2>
-            <p>La altitud, clima y terreno condicionan cada turno. No hay fantasía de poder.</p>
+            <h3>La montaña manda</h3>
+            <p>Altitud, clima y terreno son sistemas activos que condicionan cada acción.</p>
           </article>
           <article class="card">
-            <h2>Información parcial</h2>
-            <p>Decisiones con señales incompletas: leer contexto importa más que “acertar” una fórmula.</p>
+            <h3>Información parcial</h3>
+            <p>El jugador decide con señales limitadas y confianza variable: no hay certeza absoluta.</p>
           </article>
           <article class="card">
-            <h2>Fracasar también es avanzar</h2>
-            <p>Volver, detenerse o retirarse son outcomes válidos y con peso narrativo.</p>
+            <h3>Fracasar también enseña</h3>
+            <p>Detenerse, retirarse o reconfigurar estrategia son desenlaces válidos y significativos.</p>
           </article>
         </div>
       </section>
 
-      <footer>
+      <section id="sistema" class="section" aria-labelledby="sistema-title">
+        <h2 id="sistema-title">Sistema de juego y propuesta técnica</h2>
+        <p class="section-intro">
+          El prototipo web v1 utiliza un engine de resolución por turnos (EP/BT) con datos externos
+          para personajes, acciones, escenarios y outcomes, manteniendo consistencia entre diseño,
+          runtime y documentación pública.
+        </p>
+        <div class="split">
+          <article class="card">
+            <h3>Pipeline central</h3>
+            <ul class="outcome-list">
+              <li>Acción del jugador + recursos/tiempo.</li>
+              <li>Presión ambiental y tolerancia corporal.</li>
+              <li>Percepción (señal + confianza + tendencia).</li>
+              <li>Resolución de outcome y actualización de estado.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Arquitectura viva</h3>
+            <ul class="outcome-list">
+              <li>Prototipo activo: <code>prototype/web-v1</code>.</li>
+              <li>Artefacto histórico congelado: <code>prototype/mra-v0</code>.</li>
+              <li>Bilingüe EN/ES con validaciones automatizadas.</li>
+              <li>Contratos de datos y suites de regresión en CI.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="estado" class="section" aria-labelledby="estado-title">
+        <h2 id="estado-title">Estado del proyecto (ruta pública)</h2>
+        <p class="section-intro">
+          La release pública actual es v1.4.5. El flujo principal ya está completo para sesiones de
+          evaluación externa: portada → setup → onboarding → juego → outcomes/debrief.
+        </p>
+        <ol class="timeline" aria-label="Ruta de producto visible">
+          <li><strong>Entrada pública:</strong> landing en <code>/</code> con contexto y acceso directo al prototipo.</li>
+          <li><strong>Experiencia activa:</strong> web-v1 como vertical slice jugable y medible.</li>
+          <li><strong>Continuidad:</strong> Parte 2 permanece como puente narrativo gateado (preview).</li>
+        </ol>
+      </section>
+
+      <section id="outcomes" class="section" aria-labelledby="outcomes-title">
+        <h2 id="outcomes-title">Outcomes canónicos</h2>
+        <p class="section-intro">
+          El sistema no fuerza “éxito único”: evalúa desempeño, seguridad, tiempo y recursos para
+          clasificar resultados con consecuencias claras y trazables.
+        </p>
+        <div class="grid">
+          <article class="card"><h3>Summit and Safe Return</h3><p>Cumbre + salida segura del parque.</p></article>
+          <article class="card"><h3>High Point Return</h3><p>Máxima cota alcanzada sin cumbre final.</p></article>
+          <article class="card"><h3>Strategic Retreat / Rescue</h3><p>Retirada estratégica o rescate según estado.</p></article>
+          <article class="card"><h3>Collapse / Permit / Window</h3><p>Colapsos, vencimientos o ventana cerrada por riesgo acumulado.</p></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="cta-title">
+        <h2 id="cta-title">Entrá al prototipo</h2>
+        <p class="section-intro">
+          Si querés entender el proyecto en profundidad, empezá por una corrida real en el prototipo
+          y después revisá el debrief + documentación técnica.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/prototype/web-v1/index.html">Iniciar expedición</a>
+          <a class="btn btn-secondary" href="/docs/repo-truth.md">Ver repo truth</a>
+          <a class="btn btn-secondary" href="/prototype/mra-v0/viewer/index.html">Abrir visor histórico</a>
+        </div>
+      </section>
+
+      <footer class="site-footer">
         <p>
-          ¿Buscas el visor histórico del primer prototipo? Disponible en
-          <a href="/prototype/mra-v0/viewer/index.html">prototype/mra-v0/viewer/index.html</a>.
+          Aconcagua: Stone Sentinel · Proyecto indie narrativo-sistémico · Contacto oficial:
+          <a href="mailto:aconcaguastonesentinel@gmail.com">aconcaguastonesentinel@gmail.com</a>
         </p>
       </footer>
     </main>
