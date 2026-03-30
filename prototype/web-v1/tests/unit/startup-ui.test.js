@@ -59,3 +59,14 @@ test('formatBlockingError maps invalid deep-link category to explicit guidance',
   assert.match(result.summary, /deep-link parameters are invalid/i);
   assert.match(result.detail, /Source: url hash/);
 });
+
+test('formatBlockingError maps timeout category to explicit guidance', () => {
+  global.localStorage = makeStorage('en');
+  const result = formatBlockingError({
+    category: 'timeout',
+    file: '../../data/stage_modifiers.json',
+    detail: 'Timed out after 10000ms',
+  });
+  assert.match(result.summary, /request timed out/i);
+  assert.match(result.detail, /Category: timeout/);
+});

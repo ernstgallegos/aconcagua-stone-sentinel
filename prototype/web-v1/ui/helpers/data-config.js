@@ -114,11 +114,16 @@ export function createDefaultDataConfig() {
 
 export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
   const files = Object.entries(FILE_PATH_BY_KEY);
+  const LOAD_TIMEOUT_MS = 10000;
 
   const config = createDefaultDataConfig();
   for (const [key, path] of files) {
+    let timeoutId = null;
     try {
-      const response = await fetchImpl(path, { cache: 'no-store' });
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      timeoutId = setTimeout(() => controller?.abort(), LOAD_TIMEOUT_MS);
+      const response = await fetchImpl(path, { cache: 'no-store', ...(controller ? { signal: controller.signal } : {}) });
+      clearTimeout(timeoutId);
       if (!response.ok) {
         const kind = response.status === 404 ? 'missing file' : 'http failure';
         throw new Error(`[${kind}] ${path} (status ${response.status})`);
@@ -132,6 +137,15 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
       validateDataConfigShape(key, data);
       config[key] = data;
     } catch (error) {
+      if (error?.name === 'AbortError') {
+        onError?.({
+          category: 'timeout',
+          file: path,
+          detail: `Timed out after ${LOAD_TIMEOUT_MS}ms while fetching ${path}`,
+          message: `Blocking timeout while loading ${path}`,
+        });
+        return null;
+      }
       if (REQUIRED_CONFIG_FILES.has(key)) {
         const missingFile = /^\[missing file\]/i.test(error.message);
         const httpFailure = /^\[http failure\]/i.test(error.message);
@@ -154,6 +168,8 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
         });
         return null;
       }
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
     }
   }
 

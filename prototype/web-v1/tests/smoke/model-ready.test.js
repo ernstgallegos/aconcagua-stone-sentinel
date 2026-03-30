@@ -109,3 +109,20 @@ test('data loader classifies invalid shape as blocking shape failure', async () 
   assert.equal(errors[0].category, 'invalid shape');
   assert.match(errors[0].file, /characters\.json/);
 });
+
+test('data loader classifies request timeout as blocking timeout failure', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async () => {
+      const err = new Error('aborted');
+      err.name = 'AbortError';
+      throw err;
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'timeout');
+  assert.match(errors[0].detail, /Timed out after/i);
+});

@@ -1008,6 +1008,10 @@ function advanceFromTitle(event) {
     event.stopPropagation();
   }
   if (!G.modelReady) {
+    if (DATA_CONFIG_ERROR) {
+      showScreen('fatal-error');
+      return;
+    }
     setStartupState('error', uiText('Model is still loading or blocked.', 'El modelo todavía está cargando o está bloqueado.'));
     return;
   }
