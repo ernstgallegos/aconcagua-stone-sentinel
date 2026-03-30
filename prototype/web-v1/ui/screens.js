@@ -1111,7 +1111,7 @@ function applyStaticTranslations() {
   const bilingualTextMap = [
     ['.title-info-trigger', 'ⓘ Info', 'ⓘ Info'],
     ['#startup-status-line[data-state="loading"]', 'Preparing mountain model…', 'Preparando modelo de montaña…'],
-    ['#startup-status-line[data-state="ready"]', 'Model ready. Begin when prepared.', 'Modelo listo. Comienza cuando estés preparado.'],
+    ['#startup-status-line[data-state="ready"]', 'Model ready. Click/tap to begin.', 'Modelo listo. Haz clic/toca para comenzar.'],
     ['#blocking-error-title', 'Blocking data error', 'Error bloqueante de datos'],
     ['#blocking-error-summary', 'The simulation model could not be initialized. Gameplay is disabled until data files are fixed.', 'No se pudo inicializar el modelo de simulación. La partida queda deshabilitada hasta corregir los archivos de datos.'],
     ['#field-log-overlay .field-log-title', 'Field Log', 'Bitácora de campo'],

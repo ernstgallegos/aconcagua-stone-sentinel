@@ -7,61 +7,105 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg: #251420;
-        --surface: #331b2c;
-        --surface2: #422139;
-        --border: #684056;
-        --ochre: #ff9e5e;
-        --ice: #ffc89a;
-        --text: #f3d4bf;
-        --muted: #c58f79;
+        --bg-0: #0b0f14;
+        --bg-1: #101723;
+        --bg-2: #172130;
+        --surface-0: #111a27cc;
+        --surface-1: #172335d9;
+        --surface-2: #213348e6;
+        --border-soft: #93a8bc3d;
+        --border-strong: #d7e6f252;
+        --text-main: #e8eff7;
+        --text-dim: #adbbc9;
+        --text-muted: #8b9aab;
+        --accent-ice: #d6eef9;
+        --accent-mineral: #9bb9ce;
+        --accent-amber: #d9b996;
+        --radius-sm: 14px;
+        --radius-md: 22px;
+        --shadow-soft: 0 16px 48px #05080d66;
+        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-        background: radial-gradient(circle at 14% 0%, rgba(255,158,94,.18), transparent 32%), linear-gradient(180deg, #20131b 0%, #130b13 100%);
-        color: var(--text);
+        font-family: var(--sans);
+        line-height: 1.5;
+        color: var(--text-main);
+        background:
+          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
+          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+        min-height: 100vh;
       }
-      .shell { width: min(980px, 92vw); margin: 0 auto; padding: 1.2rem 0 3rem; }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        opacity: 0.18;
+        pointer-events: none;
+        background-image:
+          linear-gradient(#ffffff04 1px, transparent 1px),
+          linear-gradient(90deg, #ffffff04 1px, transparent 1px);
+        background-size: 34px 34px;
+      }
+      .shell { width: min(1220px, 92vw); margin: 0 auto; padding: 1.2rem 0 3rem; }
       .topbar {
-        position: sticky; top: 0; z-index: 10;
+        position: sticky; top: .8rem; z-index: 10;
         display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; justify-content: space-between;
-        padding: .75rem; border: 1px solid rgba(255,158,94,.28); border-radius: 14px;
-        background: rgba(34, 18, 29, .84); backdrop-filter: blur(8px);
+        padding: .85rem; border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+        background: #0f1621c2; backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-soft);
       }
-      .actions { display:flex; gap:.5rem; flex-wrap: wrap; }
+      .actions { display:flex; gap:.5rem; flex-wrap: wrap; align-items: center; }
       .btn {
-        border:1px solid rgba(255,158,94,.35); color:var(--text); background:rgba(30,15,25,.7);
-        border-radius:999px; padding:.5rem .8rem; text-decoration:none; font-weight:600; font-size:.85rem;
+        border:1px solid var(--border-soft); color:var(--text-main); background: var(--surface-0);
+        border-radius:999px; padding:.5rem .8rem; text-decoration:none; font-weight:700; font-size:.85rem;
       }
-      .btn:hover { text-decoration:none; background: rgba(46,24,38,.85); }
-      .title { font-size: .92rem; color: var(--muted); margin: 0; }
+      .btn:hover { text-decoration:none; transform: translateY(-1px); }
+      .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
+      .title-wrap { display: grid; gap: .2rem; }
+      .title-kicker { margin: 0; color: var(--accent-mineral); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; }
+      .title { font-size: .92rem; color: var(--text-dim); margin: 0; }
+      .lang-switch { display: inline-flex; gap: 0.2rem; border: 1px solid var(--border-soft); border-radius: 999px; padding: 0.2rem; background: #0e151f99; }
+      .lang-btn { border: 0; border-radius: 999px; background: transparent; color: var(--text-dim); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.32rem 0.54rem; cursor: pointer; }
+      .lang-btn[aria-pressed='true'] { color: #081019; background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber)); }
+      .lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }
       article {
         margin-top: 1rem;
         padding: clamp(1rem,2vw,2rem);
-        background: rgba(41, 22, 35, .75);
-        border: 1px solid rgba(255, 158, 94, .24);
-        border-radius: 18px;
+        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-soft);
       }
-      h1,h2,h3,h4 { color: #ffe2ce; line-height: 1.2; }
-      p, li { color: var(--text); }
-      a { color: var(--ice); }
-      pre { background: #1b0f17; padding: .8rem; border-radius: 10px; overflow: auto; border:1px solid rgba(255,158,94,.2); }
+      h1,h2,h3,h4 { color: var(--text-main); line-height: 1.2; font-family: var(--serif); }
+      p, li { color: var(--text-main); }
+      a { color: var(--accent-ice); }
+      pre { background: #1b2636; padding: .8rem; border-radius: 10px; overflow: auto; border:1px solid var(--border-soft); }
       code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-      blockquote { margin: 1rem 0; padding: .6rem .9rem; border-left: 3px solid var(--ochre); background: rgba(26,14,22,.6); }
-      hr { border: 0; border-top: 1px solid rgba(255,158,94,.25); margin: 1.2rem 0; }
+      blockquote { margin: 1rem 0; padding: .6rem .9rem; border-left: 3px solid var(--accent-amber); background: #0d152190; color: var(--text-dim); }
+      hr { border: 0; border-top: 1px solid var(--border-soft); margin: 1.2rem 0; }
       table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .92rem; }
-      th, td { border: 1px solid rgba(255,158,94,.25); padding: .5rem; text-align: left; vertical-align: top; }
-      th { background: rgba(255,158,94,.14); }
-      .error { color: #ffd3bd; background: rgba(134, 49, 49, .25); padding: .8rem; border-radius: 10px; }
+      th, td { border: 1px solid var(--border-soft); padding: .5rem; text-align: left; vertical-align: top; }
+      th { background: #1a2b3f; color: var(--text-main); }
+      .error { color: #ffe4ce; background: #7a243040; border: 1px solid #d0737f80; padding: .8rem; border-radius: 10px; }
     </style>
   </head>
   <body>
     <div class="shell">
       <header class="topbar">
-        <p class="title" id="doc-title">Loading document…</p>
+        <div class="title-wrap">
+          <p class="title-kicker" id="viewer-kicker">Document viewer</p>
+          <p class="title" id="doc-title">Loading document…</p>
+        </div>
         <div class="actions">
+          <div class="lang-switch" role="group" aria-label="Language selector">
+            <button class="lang-btn" type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button class="lang-btn" type="button" data-lang="es" aria-pressed="false">ES</button>
+          </div>
           <a class="btn" href="/" id="back-link">← Back to landing</a>
           <a class="btn" href="#" target="_blank" rel="noreferrer noopener" id="raw-link">Open raw Markdown</a>
         </div>
@@ -82,6 +126,61 @@
       const contentEl = document.getElementById('content');
       const titleEl = document.getElementById('doc-title');
       const rawLinkEl = document.getElementById('raw-link');
+      const backLinkEl = document.getElementById('back-link');
+      const viewerKickerEl = document.getElementById('viewer-kicker');
+
+      const LANGUAGE_KEY = 'aconcagua_language_v1';
+      const TRANSLATIONS = {
+        en: {
+          kicker: 'Document viewer',
+          back: '← Back to landing',
+          raw: 'Open raw Markdown',
+          loading: 'Loading document…',
+          unsupportedTitle: 'Unsupported document',
+          unsupportedBody: 'This document is not available in the styled viewer.',
+          loadError: 'Unable to load document',
+        },
+        es: {
+          kicker: 'Lector de documentos',
+          back: '← Volver al inicio',
+          raw: 'Abrir Markdown en bruto',
+          loading: 'Cargando documento…',
+          unsupportedTitle: 'Documento no disponible',
+          unsupportedBody: 'Este documento no está disponible en el visor estilizado.',
+          loadError: 'No se pudo cargar el documento',
+        },
+      };
+      let CURRENT_LANG = 'en';
+
+      function t(key) {
+        return TRANSLATIONS[CURRENT_LANG]?.[key] || TRANSLATIONS.en[key] || key;
+      }
+
+      function applyLanguage(lang) {
+        CURRENT_LANG = TRANSLATIONS[lang] ? lang : 'en';
+        document.documentElement.lang = CURRENT_LANG;
+        if (viewerKickerEl) viewerKickerEl.textContent = t('kicker');
+        if (backLinkEl) backLinkEl.textContent = t('back');
+        if (rawLinkEl) rawLinkEl.textContent = t('raw');
+        if (titleEl && titleEl.dataset.loading === 'true') titleEl.textContent = t('loading');
+        try { localStorage.setItem(LANGUAGE_KEY, CURRENT_LANG); } catch (_) {}
+        document.querySelectorAll('.lang-btn').forEach((btn) => {
+          btn.setAttribute('aria-pressed', btn.dataset.lang === CURRENT_LANG ? 'true' : 'false');
+        });
+      }
+
+      function initLanguage() {
+        let initial = 'en';
+        try {
+          const saved = localStorage.getItem(LANGUAGE_KEY);
+          const fallback = navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en';
+          initial = TRANSLATIONS[saved] ? saved : fallback;
+        } catch (_) {}
+        applyLanguage(initial);
+        document.querySelectorAll('.lang-btn').forEach((btn) => {
+          btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+        });
+      }
 
       function escapeHtml(s) {
         return s.replace(/[&<>"']/g, (ch) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
@@ -197,12 +296,16 @@
       }
 
       async function init() {
+        titleEl.dataset.loading = 'true';
+        titleEl.textContent = t('loading');
         if (!allowed.has(file)) {
-          titleEl.textContent = 'Unsupported document';
-          contentEl.innerHTML = '<p class="error">This document is not available in the styled viewer.</p>';
+          titleEl.dataset.loading = 'false';
+          titleEl.textContent = t('unsupportedTitle');
+          contentEl.innerHTML = `<p class="error">${escapeHtml(t('unsupportedBody'))}</p>`;
           return;
         }
 
+        titleEl.dataset.loading = 'false';
         titleEl.textContent = file;
         rawLinkEl.href = file;
 
@@ -212,10 +315,11 @@
           const md = await res.text();
           contentEl.innerHTML = markdownToHtml(md);
         } catch (err) {
-          contentEl.innerHTML = `<p class="error">Unable to load document (${escapeHtml(String(err.message || err))}).</p>`;
+          contentEl.innerHTML = `<p class="error">${escapeHtml(t('loadError'))} (${escapeHtml(String(err.message || err))}).</p>`;
         }
       }
 
+      initLanguage();
       init();
     </script>
   </body>
