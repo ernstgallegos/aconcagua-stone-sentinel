@@ -82,6 +82,21 @@ Portable validation command:
 python3 prototype/mra-v0/validate_all_scenarios.py
 ```
 
+## Visual asset contribution guardrails
+
+When touching files under `art/` or changing portrait/cover references in `prototype/web-v1`:
+
+1. Keep filenames stable when possible (runtime mapping depends on canonical IDs).
+2. If a filename must change, update the corresponding runtime mapping and tests in the same PR.
+3. Run:
+   ```bash
+   npm test
+   ```
+   and verify `prototype/web-v1/tests/contracts/assets-contracts.test.js` passes.
+4. For visible UI changes, include an updated screenshot artifact in the PR/final report.
+
+Do not ship visual-asset reference changes without matching contract-test evidence.
+
 ## Serverless API CORS configuration
 
 The API (`api/run.js`) supports `ALLOWED_ORIGINS` as a comma-separated list of exact origin matches.
