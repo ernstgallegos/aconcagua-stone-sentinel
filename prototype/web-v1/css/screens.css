@@ -54,7 +54,7 @@
   pointer-events: none;
   background:
     radial-gradient(circle at 50% 24%, rgba(185, 211, 230, 0.16), transparent 54%),
-    linear-gradient(180deg, rgba(9, 14, 21, 0.14), rgba(9, 14, 21, 0.64));
+    linear-gradient(180deg, rgba(6, 10, 15, 0.26), rgba(6, 10, 15, 0.78));
 }
 
 .title-shell {
@@ -75,6 +75,37 @@
   max-width: none;
   justify-content: flex-end;
   padding: 2rem 1.5rem 2.2rem;
+}
+
+
+.title-identity {
+  margin-top: auto;
+  margin-bottom: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.35rem;
+  border-left: 2px solid color-mix(in srgb, var(--ochre) 82%, transparent);
+  background: linear-gradient(100deg, rgba(7, 11, 16, 0.62), rgba(7, 11, 16, 0.2));
+  text-align: left;
+  width: min(100%, 32rem);
+  animation: title-rise 0.8s ease-out both;
+}
+
+.title-brand {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 5vw, 2.75rem);
+  line-height: 1.02;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+.title-context {
+  margin: 0.45rem 0 0;
+  font-family: var(--heading);
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ice) 56%, var(--white) 44%);
 }
 
 .title-screen-advance {
@@ -114,7 +145,7 @@
   padding: 0.75rem 1rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--white) 26%, transparent);
-  background: rgba(9, 14, 21, 0.42);
+  background: rgba(9, 14, 21, 0.28);
   backdrop-filter: blur(8px);
   box-shadow: 0 24px 44px rgba(3, 6, 10, 0.36);
 }
@@ -125,7 +156,7 @@
 }
 
 .startup-status-line {
-  margin: 0.35rem auto 0;
+  margin: 0.2rem auto 0;
   width: min(100%, 32rem);
   text-align: center;
   font-family: var(--heading);

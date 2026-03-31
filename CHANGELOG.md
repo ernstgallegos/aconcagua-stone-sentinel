@@ -16,6 +16,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
+- Redesigned the public landing hero and web-v1 title presentation into a brand-led full-bleed composition with reduced first-viewport clutter, updated typography (Playfair Display + Montserrat), and intentional motion hierarchy across both entry surfaces.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.

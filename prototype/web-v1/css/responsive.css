@@ -26,6 +26,8 @@
   .title-tagline { font-size: 0.875rem; }
   .title-shell { padding: 2rem 1rem; }
   .title-shell-minimal { padding: 1.5rem 1rem; }
+  .title-identity { margin-bottom: 0.7rem; padding: 0.7rem 0.85rem; }
+  .title-context { font-size: 0.68rem; letter-spacing: 0.13em; }
   .title-top-controls { top: 0.75rem; left: 0.75rem; right: 0.75rem; }
   .title-utility-cluster { gap: 0.35rem; }
   .title-screen-advance { width: 100%; padding-left: 0; padding-right: 0; }

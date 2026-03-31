@@ -10,9 +10,12 @@
     />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        color-scheme: dark;
+        color-scheme: only dark;
         --bg-0: #0b0f14;
         --bg-1: #101723;
         --bg-2: #172130;
@@ -45,8 +48,8 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Playfair Display", Georgia, serif;
+        --sans: "Montserrat", "Avenir Next", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -192,17 +195,45 @@
       main { padding: var(--space-5) 0 var(--space-7); }
 
       .hero {
-        display: grid;
-        gap: var(--space-4);
-        align-items: end;
+        position: relative;
+        min-height: min(92vh, 860px);
+        margin-top: var(--space-3);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-strong);
+        background: #0a121c;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url('/art/cover/cover-concept-1.png');
+        background-size: cover;
+        background-position: center center;
+        transform: scale(1.02);
+        animation: hero-drift 18s ease-in-out infinite alternate;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(108deg, rgba(6, 10, 15, 0.9) 4%, rgba(6, 10, 15, 0.52) 52%, rgba(6, 10, 15, 0.74) 100%),
+          radial-gradient(circle at 78% 22%, rgba(214, 238, 249, 0.17), transparent 36%);
       }
 
       .hero-copy {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
-        box-shadow: var(--shadow-strong);
-        padding: clamp(1.2rem, 3.5vw, 2.7rem);
+        position: relative;
+        z-index: 1;
+        min-height: inherit;
+        max-width: 64ch;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: clamp(1.2rem, 4vw, 3rem);
       }
 
       .eyebrow {
@@ -221,7 +252,7 @@
         letter-spacing: 0.01em;
         line-height: 1.03;
         font-size: clamp(2.1rem, 6.5vw, 4.8rem);
-        max-width: 14ch;
+        max-width: 11ch;
       }
 
       .hero-lead {
@@ -231,12 +262,13 @@
         font-size: clamp(1rem, 1.9vw, 1.15rem);
       }
 
-      .hero-meta {
-        margin-top: var(--space-3);
-        display: grid;
-        gap: 0.35rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
+      .brand-title {
+        margin: 0.2rem 0 0;
+        font-family: var(--serif);
+        font-size: clamp(2.2rem, 8vw, 5.7rem);
+        line-height: 0.95;
+        letter-spacing: 0.01em;
+        text-wrap: balance;
       }
 
       .hero-cta {
@@ -271,18 +303,9 @@
         background: #101a27d0;
       }
 
-      .hero-art {
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-soft);
-        overflow: hidden;
-        background: #111926;
-        box-shadow: var(--shadow-soft);
-      }
-      .hero-art img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        filter: saturate(0.93) contrast(1.03);
+      @keyframes hero-drift {
+        from { transform: scale(1.02) translate3d(0,0,0); }
+        to { transform: scale(1.08) translate3d(-1.2%, -1.2%, 0); }
       }
 
       .section {
@@ -519,7 +542,6 @@
 
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
-        .hero { grid-template-columns: 1.25fr 0.75fr; }
         .system-layout { grid-template-columns: 1.1fr 0.9fr; }
         .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
@@ -529,6 +551,7 @@
 
       @media (prefers-reduced-motion: reduce) {
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
+        .hero::before { animation: none !important; }
       }
     </style>
   </head>
@@ -557,22 +580,15 @@
       <section class="hero" aria-labelledby="hero-title">
         <article class="hero-copy">
           <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
+          <p class="brand-title">Aconcagua: Stone Sentinel</p>
           <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
-          </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
             <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
             <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
           </div>
         </article>
-
-        <figure class="hero-art">
-          <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
-        </figure>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
