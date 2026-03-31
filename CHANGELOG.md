@@ -19,6 +19,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
+- Reworked the public landing first viewport into a full-bleed cinematic hero composition with stronger brand-first hierarchy, simplified CTA budget, custom font pairing (`Prata` + `Manrope`), and deliberate motion layers for image presence and staged text reveal.
+- Refined the `web-v1` welcome screen composition so brand, title, and supporting line read as one hero plane above the mountain artwork, while preserving the existing start flow and startup readiness messaging.
 
 ### Fixed
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.

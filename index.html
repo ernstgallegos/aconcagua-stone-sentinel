@@ -8,6 +8,9 @@
       name="description"
       content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Prata&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
     <style>
@@ -45,8 +48,8 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Prata", Georgia, serif;
+        --sans: "Manrope", "Nunito Sans", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -530,6 +533,126 @@
       @media (prefers-reduced-motion: reduce) {
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
+
+      /* 2026 front-end makeover: cinematic composition-first landing */
+      .shell {
+        width: min(1160px, 92vw);
+      }
+
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto;
+        border-bottom: 1px solid #cfdfec24;
+        background: linear-gradient(180deg, #081018cc, #0810188f);
+      }
+
+      .header-row {
+        grid-template-columns: 1fr auto;
+        padding: 1rem 0;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      main {
+        width: 100%;
+        max-width: none;
+        padding: 0 0 var(--space-7);
+      }
+
+      .hero {
+        width: 100vw;
+        margin-left: 50%;
+        transform: translateX(-50%);
+        min-height: 100svh;
+        padding: clamp(5.5rem, 9vw, 7rem) 0 clamp(2.5rem, 6vw, 4rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: end;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-copy {
+        width: min(1160px, 92vw);
+        margin: 0 auto;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        z-index: 3;
+        padding: 0;
+      }
+
+      .hero-art {
+        position: absolute;
+        inset: 0;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .hero-art::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(1200px 420px at 22% 90%, #07101900, #071019e6),
+          linear-gradient(180deg, #07101973 4%, #071019cf 72%, #071019 100%);
+      }
+
+      .hero-art img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: hero-breathe 16s ease-in-out infinite alternate;
+      }
+
+      .eyebrow {
+        color: #d8c4a4;
+        font-size: 0.78rem;
+      }
+
+      h1 {
+        max-width: 11ch;
+        font-size: clamp(2.4rem, 7vw, 5.6rem);
+        text-wrap: balance;
+        animation: hero-rise 900ms ease-out both;
+      }
+
+      .hero-lead {
+        max-width: 48ch;
+        color: #d7e3ef;
+        animation: hero-rise 1100ms ease-out both;
+      }
+
+      .hero-meta {
+        display: none;
+      }
+
+      .hero-cta {
+        animation: hero-rise 1250ms ease-out both;
+      }
+
+      .hero-cta .btn {
+        padding: 0.85rem 1.22rem;
+      }
+
+      .section {
+        width: min(1160px, 92vw);
+        margin-inline: auto;
+      }
+
+      @keyframes hero-rise {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes hero-breathe {
+        from { transform: scale(1) translateY(0); }
+        to { transform: scale(1.03) translateY(-1.2%); }
+      }
     </style>
   </head>
   <body>
@@ -559,14 +682,9 @@
           <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
           <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
-          </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
             <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
-            <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
           </div>
         </article>
 
