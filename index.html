@@ -531,6 +531,40 @@
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
     </style>
+  
+    <style>
+      /* aggressive redesign override */
+      :root {
+        --bg-0:#05050b;--bg-1:#0b0d1f;--bg-2:#131734;--surface-0:#121530d4;--surface-1:#171c3be6;--surface-2:#1c224be8;
+        --border-soft:#9aa6ff6b;--border-strong:#dbe1ff88;--text-main:#f2f4ff;--text-dim:#c6cbff;--text-muted:#98a0da;
+        --accent-ice:#7df9ff;--accent-mineral:#aeb6ff;--accent-amber:#ff5d99;--accent-critical:#ffd1ea;
+        --radius-xs:6px;--radius-sm:10px;--radius-md:14px;--radius-lg:18px;
+      }
+      body{background:radial-gradient(1200px 500px at 90% -5%,#7df9ff2c,transparent 58%),radial-gradient(900px 440px at 5% 4%,#ff5d9926,transparent 52%),linear-gradient(180deg,var(--bg-2),var(--bg-0));}
+
+      .hero{position:relative;min-height:calc(100dvh - 5rem);display:flex;align-items:flex-end;isolation:isolate;overflow:hidden;}
+      .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(180deg,rgba(8,10,28,.18),rgba(8,10,28,.8)),url('/art/cover/cover-concept-1.png');background-size:cover;background-position:center;z-index:-2;}
+      .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(1000px 520px at 10% 10%,rgba(255,104,86,.28),transparent 56%);z-index:-1;}
+      .hero-copy{max-width:min(760px,92vw);background:none!important;border:0!important;box-shadow:none!important;padding:0 0 3.2rem 0;animation:heroRise .7s cubic-bezier(.22,.61,.36,1) both;}
+      .hero-brand{margin:0 0 .9rem;font-family:var(--serif);font-size:clamp(2rem,8vw,5rem);line-height:.95;letter-spacing:.01em;text-wrap:balance;}
+      #hero-title{max-width:20ch;font-size:clamp(1.1rem,2.6vw,1.6rem);line-height:1.2;margin:0 0 .9rem;font-weight:600;}
+      .hero-lead{max-width:52ch;font-size:clamp(1rem,1.7vw,1.15rem);line-height:1.65;color:var(--text-main);}
+      .hero-cta{margin-top:1.2rem}
+      .hero-cta .btn{min-height:44px;}
+      .hero-meta,.hero-art,.eyebrow{display:none!important;}
+      @keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes ctaPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+      .hero-cta .btn-primary{animation:ctaPulse 4s ease-in-out infinite;}
+      .site-header,.topbar{background:#0d1028d6;border-color:var(--border-soft);backdrop-filter:blur(14px);}
+      .hero-copy,article,.card,.panel,.link-card{background:linear-gradient(165deg,#1b1f45e0,#0f1230e8);border-color:var(--border-soft);box-shadow:0 20px 48px #01020acc;}
+      .btn,.btn-primary,.lang-btn[aria-pressed='true']{border-radius:8px;}
+      .btn-primary,.cta-primary,.lang-btn[aria-pressed='true']{background:linear-gradient(120deg,#7df9ff,#8f97ff 42%,#ff5d99);color:#070910;}
+      .nav a:hover,.nav a:focus-visible,.btn:hover{background:#7df9ff20;border-color:#7df9ff;text-decoration:none;}
+      :where(a,button,input,select,textarea):focus-visible{outline:3px solid #7df9ff;outline-offset:2px;}
+      @media (max-width: 767px){.shell{width:min(100%,94vw);} main{padding-top:2rem;}}
+      @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
+    </style>
+
   </head>
   <body>
     <a class="skip-link" href="#main-content" data-i18n="skip">Skip to main content</a>
@@ -556,23 +590,14 @@
     <main id="main-content" class="shell">
       <section class="hero" aria-labelledby="hero-title">
         <article class="hero-copy">
-          <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
-          <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
-          <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
-          </div>
+          <p class="hero-brand" data-i18n="heroBrand">Aconcagua: Stone Sentinel</p>
+          <h1 id="hero-title" data-i18n="heroTitle">A mountain-first narrative expedition about judgment under pressure.</h1>
+          <p class="hero-lead" data-i18n="heroLead">Read weak signals, protect your team, and decide when to advance, wait, or return. Summit matters, but lucidity and safe return define mastery.</p>
           <div class="hero-cta" role="group" aria-label="Main actions">
-            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
-            <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
+            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Enter web prototype</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read design whitepaper</a>
           </div>
         </article>
-
-        <figure class="hero-art">
-          <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
-        </figure>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
@@ -759,13 +784,11 @@
           pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
           brandSub: 'Public mountain systems project',
+          heroBrand: 'Aconcagua: Stone Sentinel',
           navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
-          eyebrow: 'Mountain-first narrative systems',
-          heroTitle: 'The mountain is the main character. Your decisions are a negotiation with limits.',
-          heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
-          heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
-          heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
-          ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
+          heroTitle: 'A mountain-first narrative expedition about judgment under pressure.',
+          heroLead: 'Read weak signals, protect your team, and decide when to advance, wait, or return. Summit matters, but lucidity and safe return define mastery.',
+          ctaPlay: 'Enter web prototype', ctaWhitepaper: 'Read design whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
           visionKicker: 'Design premise',
           visionTitle: 'A systemic mountain experience where lucidity matters more than bravado.',
@@ -824,13 +847,11 @@
           pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
           brandSub: 'Proyecto público de sistemas de montaña',
+          heroBrand: 'Aconcagua: Stone Sentinel',
           navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
-          eyebrow: 'Sistemas narrativos centrados en montaña',
-          heroTitle: 'La montaña es el personaje principal. Tus decisiones negocian con los límites.',
-          heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
-          heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
-          heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
-          ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
+          heroTitle: 'Una expedición narrativa centrada en montaña y criterio bajo presión.',
+          heroLead: 'Interpreta señales débiles, protege a tu equipo y decide cuándo avanzar, esperar o regresar. La cumbre importa, pero la lucidez y el retorno seguro definen la maestría.',
+          ctaPlay: 'Entrar al prototipo web', ctaWhitepaper: 'Leer whitepaper de diseño', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
           visionKicker: 'Premisa de diseño',
           visionTitle: 'Una experiencia sistémica de montaña donde la lucidez importa más que la bravura.',

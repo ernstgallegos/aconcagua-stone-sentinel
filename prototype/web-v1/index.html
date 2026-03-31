@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="./css/animations.css"/>
 <link rel="stylesheet" href="./css/themes.css"/>
 <link rel="stylesheet" href="./css/responsive.css"/>
+<link rel="stylesheet" href="./css/redesign-aggressive.css"/>
 </head>
 <body>
 
@@ -37,6 +38,12 @@
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
+    <div class="title-brand-composition" aria-label="Project introduction">
+      <p class="title-eyebrow">Aconcagua: Stone Sentinel</p>
+      <h1 class="title-headline">Mountain-first narrative expedition</h1>
+      <p class="title-sub">Interpret pressure. Preserve lucidity. Return with intent.</p>
+      <p class="title-tagline">Current flow: welcome → setup → onboarding → game → outcomes.</p>
+    </div>
     <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
     </button>
     <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Preparing mountain model…</p>
@@ -196,8 +203,8 @@
 
   <!-- Mobile bottom-sheet trigger bar (kept for mobile compat) -->
   <div class="game-mobile-bar" aria-label="Open status panels" role="toolbar">
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">⌚ Watch</button>
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">Watch</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">Route</button>
   </div>
 </section>
 
@@ -304,7 +311,7 @@
 <div id="bottom-sheet-watch" class="bottom-sheet" role="dialog" aria-modal="true" aria-label="Watch panel">
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
-    <span>⌚ Watch</span>
+    <span>Watch</span>
     <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-watch')" aria-label="Close Watch panel" style="float:right">✕</button>
   </div>
   <div class="bottom-sheet-watch-body">
