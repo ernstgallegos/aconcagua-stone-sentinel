@@ -132,3 +132,14 @@ button:hover { background: var(--ochre); color: var(--bg); }
 .flag-high-risk  { background: rgba(143,78,68,0.2);  color: #c4796e; border-color: rgba(143,78,68,0.35); }
 .flag-exposure   { background: rgba(175,139,88,0.15); color: #c9a96a; border-color: rgba(175,139,88,0.3); }
 .flag-default    { background: rgba(147,161,169,0.1); color: var(--stone); }
+
+
+/* Aggressive redesign archived viewer */
+:root {
+  --bg:#060713;--surface:#121632;--surface2:#1a2148;--border:#7e88ff;--stone:#b9bfff;--ochre:#7df9ff;--text:#eef1ff;--text-dim:#adb5ed;--white:#ffffff;--warn:#ff5d99;--ok:#45e6aa;
+}
+body{background:radial-gradient(900px 420px at 90% -10%,#7df9ff20,transparent 60%),radial-gradient(800px 360px at -10% 10%,#ff5d991c,transparent 62%),var(--bg);}
+.panel,.metric{border-radius:10px;background:linear-gradient(165deg,#181d42,#10132d);box-shadow:0 14px 36px rgba(0,0,0,.4);}
+button{border-radius:8px;background:linear-gradient(120deg,#7df9ff,#8f97ff,#ff5d99);color:#070910;border:1px solid #7df9ff;font-weight:600;}
+button:hover{filter:brightness(1.06);}
+:where(button,input,select,a):focus-visible{outline:3px solid var(--ochre);outline-offset:2px;}

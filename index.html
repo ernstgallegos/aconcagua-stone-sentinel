@@ -10,6 +10,9 @@
     />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
@@ -531,6 +534,40 @@
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
     </style>
+  
+    <style>
+      /* aggressive redesign override */
+      :root {
+        --bg-0:#05050b;--bg-1:#0b0d1f;--bg-2:#131734;--surface-0:#121530d4;--surface-1:#171c3be6;--surface-2:#1c224be8;
+        --border-soft:#9aa6ff6b;--border-strong:#dbe1ff88;--text-main:#f2f4ff;--text-dim:#c6cbff;--text-muted:#98a0da;
+        --accent-ice:#7df9ff;--accent-mineral:#aeb6ff;--accent-amber:#ff5d99;--accent-critical:#ffd1ea;
+        --radius-xs:6px;--radius-sm:10px;--radius-md:14px;--radius-lg:18px;
+      }
+      body{background:radial-gradient(1200px 500px at 90% -5%,#7df9ff2c,transparent 58%),radial-gradient(900px 440px at 5% 4%,#ff5d9926,transparent 52%),linear-gradient(180deg,var(--bg-2),var(--bg-0));}
+      .site-header,.topbar{background:#0d1028d6;border-color:var(--border-soft);backdrop-filter:blur(14px);}
+      .hero-copy,article,.card,.panel,.link-card{background:linear-gradient(165deg,#1b1f45e0,#0f1230e8);border-color:var(--border-soft);box-shadow:0 20px 48px #01020acc;}
+      .btn,.btn-primary,.lang-btn[aria-pressed='true']{border-radius:8px;}
+      .btn-primary,.cta-primary,.lang-btn[aria-pressed='true']{background:linear-gradient(120deg,#7df9ff,#8f97ff 42%,#ff5d99);color:#070910;}
+      .nav a:hover,.nav a:focus-visible,.btn:hover{background:#7df9ff20;border-color:#7df9ff;text-decoration:none;}
+      :where(a,button,input,select,textarea):focus-visible{outline:3px solid #7df9ff;outline-offset:2px;}
+      @media (max-width: 767px){.shell{width:min(100%,94vw);} main{padding-top:2rem;}}
+      @keyframes heroDrift{0%{transform:scale(1.04) translateY(0);}50%{transform:scale(1.08) translateY(-1.2%);}100%{transform:scale(1.04) translateY(0);}}
+      @keyframes heroRise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+      @keyframes ctaBreath{0%,100%{box-shadow:0 0 0 rgba(125,249,255,0);}50%{box-shadow:0 12px 28px rgba(125,249,255,.24);}}
+      .hero-fullbleed{position:relative;min-height:calc(100dvh - 72px);display:flex;align-items:flex-end;overflow:hidden;margin-inline:calc(50% - 50vw);padding:0 4vw 6vh;}
+      .hero-fullbleed::before{content:"";position:absolute;inset:0;background:url('/art/cover/cover-concept-1.png') center/cover no-repeat;animation:heroDrift 22s ease-in-out infinite;}
+      .hero-fullbleed::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,10,25,.1),rgba(8,10,25,.78));}
+      .hero-copy-immersive{position:relative;z-index:2;max-width:min(760px,92vw);border:0;background:none!important;box-shadow:none!important;padding:0;animation:heroRise .75s ease-out both;}
+      .hero-brand{font-size:clamp(2.2rem,8vw,5rem);line-height:1.02;max-width:13ch;text-wrap:balance;}
+      .hero-lead{max-width:46ch;font-size:clamp(1rem,2vw,1.2rem);}
+      .hero-cta{margin-top:1.4rem;gap:.75rem;}
+      .hero-cta .btn-primary{animation:ctaBreath 2.8s ease-in-out infinite;}
+      .manifest-item,.intel-card,.outcome,.panel,.status-strip,.final-band{background:none!important;border:0!important;box-shadow:none!important;padding-inline:0;}
+      .section{padding-top:4rem;}
+      @media (max-width: 767px){.shell{width:min(100%,94vw);} main{padding-top:1.2rem;} .hero-fullbleed{padding:0 1rem 4.4rem;min-height:74dvh;}}
+      @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
+    </style>
+
   </head>
   <body>
     <a class="skip-link" href="#main-content" data-i18n="skip">Skip to main content</a>
@@ -554,25 +591,16 @@
     </header>
 
     <main id="main-content" class="shell">
-      <section class="hero" aria-labelledby="hero-title">
-        <article class="hero-copy">
+      <section class="hero hero-fullbleed" aria-labelledby="hero-title">
+        <article class="hero-copy hero-copy-immersive">
           <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
-          <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
-          <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
-          </div>
+          <h1 id="hero-title" class="hero-brand" data-i18n="heroTitle">Aconcagua: Stone Sentinel</h1>
+          <p class="hero-lead" data-i18n="heroLead">A mountain-first narrative experience about uncertainty, judgment, and safe return under pressure.</p>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
             <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
-            <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
           </div>
         </article>
-
-        <figure class="hero-art">
-          <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
-        </figure>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
@@ -761,8 +789,8 @@
           brandSub: 'Public mountain systems project',
           navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
           eyebrow: 'Mountain-first narrative systems',
-          heroTitle: 'The mountain is the main character. Your decisions are a negotiation with limits.',
-          heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
+          heroTitle: 'Aconcagua: Stone Sentinel',
+          heroLead: 'A mountain-first narrative experience about uncertainty, judgment, and safe return under pressure.',
           heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
@@ -826,8 +854,8 @@
           brandSub: 'Proyecto público de sistemas de montaña',
           navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
           eyebrow: 'Sistemas narrativos centrados en montaña',
-          heroTitle: 'La montaña es el personaje principal. Tus decisiones negocian con los límites.',
-          heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
+          heroTitle: 'Aconcagua: Stone Sentinel',
+          heroLead: 'Una experiencia narrativa centrada en montaña sobre incertidumbre, criterio y retorno seguro bajo presión.',
           heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',

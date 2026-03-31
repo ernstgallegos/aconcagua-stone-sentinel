@@ -1096,6 +1096,8 @@ function applyStaticTranslations() {
 
   const bilingualTextMap = [
     ['.title-info-trigger', 'ⓘ Info', 'ⓘ Info'],
+    ['.title-cta-label', 'Begin Expedition', 'Iniciar expedición'],
+    ['#screen-title .title-sub', 'One ascent. One judgment line. Return alive.', 'Un ascenso. Una línea de criterio. Regresa con vida.'],
     ['#startup-status-line[data-state="loading"]', 'Preparing mountain model…', 'Preparando modelo de montaña…'],
     ['#startup-status-line[data-state="ready"]', 'Model ready. Click/tap to begin.', 'Modelo listo. Haz clic/toca para comenzar.'],
     ['#blocking-error-title', 'Blocking data error', 'Error bloqueante de datos'],

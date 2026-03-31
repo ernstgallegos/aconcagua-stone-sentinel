@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="./css/animations.css"/>
 <link rel="stylesheet" href="./css/themes.css"/>
 <link rel="stylesheet" href="./css/responsive.css"/>
+<link rel="stylesheet" href="./css/redesign-aggressive.css"/>
 </head>
 <body>
 
@@ -37,7 +38,13 @@
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
+    <div class="title-brand-block" aria-live="polite">
+      <p class="title-kicker">Mountain-first narrative systems</p>
+      <h1 class="title-brand">Aconcagua: Stone Sentinel</h1>
+      <p class="title-sub">One ascent. One judgment line. Return alive.</p>
+    </div>
     <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
+      <span class="title-cta-label">Begin Expedition</span>
     </button>
     <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Preparing mountain model…</p>
   </div>
