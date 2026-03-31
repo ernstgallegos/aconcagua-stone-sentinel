@@ -15,6 +15,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Refined color direction from prior cyber palette into an editorial alpine system (better readability/contrast balance, reduced visual fatigue, clearer first-viewport hierarchy, and integrated landing↔prototype narrative entry).
 - Reworked information hierarchy and first-viewport composition across landing + web-v1 integration so brand signal is primary, hero content is reduced to one core message + CTA set, and full-bleed mountain imagery anchors both entry surfaces with intentional motion and accessibility-safe focus/motion fallbacks.
 - Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.

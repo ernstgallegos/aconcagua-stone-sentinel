@@ -136,11 +136,11 @@ button:hover { background: var(--ochre); color: var(--bg); }
 
 /* Aggressive redesign archived viewer */
 :root {
-  --bg:#f3efe6;--surface:#fffdf5;--surface2:#edf2f6;--border:#2f5d7a;--stone:#2c4b62;--ochre:#0c6a87;--text:#13283a;--text-dim:#4f6779;--white:#10263a;--warn:#b6502c;--ok:#2a7a5b;
+  --bg:#f1ece1;--surface:#fffaf0;--surface2:#eaf0f4;--border:#2f5a74;--stone:#2d4b61;--ochre:#0f637e;--text:#13293b;--text-dim:#526c7d;--white:#11283a;--warn:#b04d2a;--ok:#2b755a;
 }
-body{background:linear-gradient(180deg,#e7eef4,#f6f2e7);} 
+body{background:linear-gradient(180deg,#e4ebef,#f4eee2);} 
 .panel,.metric{border-radius:10px;background:linear-gradient(165deg,#fffdf4,#edf2f6);box-shadow:0 10px 22px rgba(20,48,71,.12);} 
-button{border-radius:6px;background:linear-gradient(120deg,#0c6a87,#1f4f68 58%,#c87424);color:#fff;border:1px solid #0c6a87;font-weight:600;}
+button{border-radius:6px;background:linear-gradient(120deg,#0f637e,#1f4960 58%,#b96a1f);color:#fff;border:1px solid #0f637e;font-weight:600;}
 button:hover{filter:brightness(1.04);} 
 :where(button,input,select,a):focus-visible{outline:3px solid var(--ochre);outline-offset:2px;}
 
