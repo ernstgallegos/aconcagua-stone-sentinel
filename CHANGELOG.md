@@ -10,11 +10,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL (landing, web-v1 shell, and Part 2 deep-link documentation markers).
 - Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
@@ -45,6 +47,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -121,6 +124,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.3] — 2026-03
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Added a deterministic regression layer for web-v1 with golden scenario structural assertions and outcome-derivation tests covering park-exit outcomes, permit expiry, and summit-window closure (`prototype/web-v1/tests/engine/golden-scenarios.test.js`, `prototype/web-v1/tests/engine/outcome-derivation.test.js`).
 - Added lightweight modular helpers under `prototype/web-v1/ui/helpers/` for help-overlay content, debrief/run-signature analysis, run-log serialization, accessibility focus handling, and seed-driven event logic.
@@ -130,6 +134,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added accessibility smoke coverage for modal focus helpers and run-log export contract coverage for `run_log.json` summary structure (`prototype/web-v1/tests/accessibility-smoke.test.js`, `prototype/web-v1/tests/model-contract.runlog.test.js`).
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -170,6 +175,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.2] — 2026-03
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -191,6 +197,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Light, auto, and dark override theme CSS rules removed from `themes.css`; only sunset palette rules remain.
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Hash-based deep-link support for `prototype/web-v1`: every screen can now be opened directly via `index.html#<screenId>[&param=value…]`. Added `parseDeepLinkHash()`, `handleDeepLink()`, `bootstrapMockDebrief()`, and `buildMockTurnLog()` in `prototype/web-v1/ui/screens.js`. `showScreen()` now syncs the URL hash on each navigation, making every screen shareable. Part 2 screens accept `&force=1` to bypass the summit-achieved gate during evaluation.
 - `docs/deep-links.web-v1.md`: bilingual (EN + ES) reference document listing all 14 screen deep-link URLs, supported parameters (`character`, `scenario`, `seed`, `outcome`, `force`), character/scenario IDs, outcome values, and a maintenance note for keeping the list in sync with `index.html`.
@@ -208,6 +215,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Character portraits in carousel cards (`screen-expedition-setup`, `screen-part2-character`) were cropped on desktop because `max-height: 220px` with `object-fit: cover` cut the bottom of 1024×1024 images. Replaced with `aspect-ratio: 1 / 1` so the container stays square and the full image is visible on all viewport sizes (`prototype/web-v1/css/components.css`).
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -221,6 +229,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `new-mechanics.test.js` Part 2 bridge test to check for `id="part2-carousel-card-character"` / `id="part2-carousel-card-route"` instead of the removed grid IDs.
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Game screen redesign: new single-column layout replacing the two-column `game-layout-redesign` grid.
   - `.situation-bar`: persistent top bar with character portrait (32 px circle, border encodes body state), position+altitude, day/time, turn counter, and trend glyph.
@@ -260,6 +269,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -452,6 +462,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -527,6 +538,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated implementation-plan phase labels in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` from “next sprint” to “in progress” to match real execution status.
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - `prototype/web-v1/tests/turn-behavior.test.js`: new test `sleep never advances or retreats the player position` verifying that sleep action forces Hold outcome in evaluateOutcome (gameplay-fix-v4, regression coverage for Bug A1).
 - Timing pressure FAQ entry added to `prototype/web-v1` onboarding: explains that advancing after 15:00 at high altitude significantly increases environmental pressure and that planning around 06:00 departures from high camps is essential.
@@ -558,6 +570,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.0] — 2026-03
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Six fully differentiated characters replacing the previous three: Francisco Aguirre,
   Laura Kim, Erik Lundvall, Daniela De Rossi, Blake Harris, and Irina Orlova.
@@ -571,6 +584,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `difficultyLabel` rendered in character selection cards for all six characters.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -588,6 +602,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.3.0] — 2026-03
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - `devlog/005-prototype-architecture.md` as a formal decision record separating the frozen Python MRA (`prototype/mra-v0`) from the active web prototype (`prototype/web-v1`).
 - `.env.example` documenting runtime environment variables for `api/run.js`.
@@ -600,6 +615,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Informational Python linting step (ruff) in CI.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -623,6 +639,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.2.0] — 2026-02 (retroactive)
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Environmental Pressure / Body Tolerance / Pressure Delta turn pipeline in `prototype/web-v1/index.html`.
 - `docs/simulation_engine.md` (initial engine spec publication for web prototype systemic rules).
@@ -630,6 +647,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Turn debrief export to `run_log.json` from the web prototype.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -640,6 +658,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.1.0] — 2026-01 (retroactive)
 
 ### Added
+- Added a fully redesigned, self-contained `game.html` prototype shell with atmospheric UI (body-state bars, field log animation, environment confidence panel, and debrief instrumentation) while preserving a 12-turn EP/BT decision loop.
 - Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Root `package.json` with Node 18+ test script (`npm test`).
 - `requirements-dev.txt` for Python development/testing dependencies.
@@ -648,6 +667,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Additional bundled run artifacts (`late-push`, `weather-window`) and expanded Python test coverage.
 
 ### Changed
+- Replaced root `index.html` with a cinematic, bilingual (EN/ES) landing redesign using the new mountain palette, Cormorant/IBM Plex typography split, staged hero reveal, architecture signal section, and outcome ethics panels.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.

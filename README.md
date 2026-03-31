@@ -162,8 +162,9 @@ Public repository scope is explicit:
 
 This repository includes one canonical public entry point and one archived viewer:
 
-- **Canonical index (`/`)**: now serves the public project landing page with a primary CTA to `prototype/web-v1/index.html`.
-- **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics.
+- **Canonical index (`/`)**: now serves the public cinematic landing page with bilingual EN/ES switching and direct CTAs to play/read materials.
+- **Standalone redesign prototype (`/game.html`)**: self-contained atmospheric game UI mock/prototype aligned to the current public visual direction.
+- **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics and full canonical systems.
 - **Archived MRA v0 viewer (`prototype/mra-v0/viewer/index.html`)**: legacy replay interface for bundled Python prototype runs.
 
 For deploy/local routing details (including Vercel settings and CORS), use the single canonical reference:

@@ -253,6 +253,8 @@ In addition to the changelog:
 
 - Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
 
+- Large one-shot visual redesigns are safer as self-contained entry documents (`index.html`, `game.html`) when they avoid touching canonical `prototype/web-v1` engine modules; this keeps public styling iteration fast while preserving regression-tested gameplay code.
+
 - Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.
 
 - Audit-remediation closures are easier to defend when each external finding is mapped to a repo-traceable matrix (`FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED`) and paired with at least one automated guard where practical (e.g., asset contract tests, RNG input validation tests).
