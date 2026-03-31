@@ -136,10 +136,11 @@ button:hover { background: var(--ochre); color: var(--bg); }
 
 /* Aggressive redesign archived viewer */
 :root {
-  --bg:#060713;--surface:#121632;--surface2:#1a2148;--border:#7e88ff;--stone:#b9bfff;--ochre:#7df9ff;--text:#eef1ff;--text-dim:#adb5ed;--white:#ffffff;--warn:#ff5d99;--ok:#45e6aa;
+  --bg:#f3efe6;--surface:#fffdf5;--surface2:#edf2f6;--border:#2f5d7a;--stone:#2c4b62;--ochre:#0c6a87;--text:#13283a;--text-dim:#4f6779;--white:#10263a;--warn:#b6502c;--ok:#2a7a5b;
 }
-body{background:radial-gradient(900px 420px at 90% -10%,#7df9ff20,transparent 60%),radial-gradient(800px 360px at -10% 10%,#ff5d991c,transparent 62%),var(--bg);}
-.panel,.metric{border-radius:10px;background:linear-gradient(165deg,#181d42,#10132d);box-shadow:0 14px 36px rgba(0,0,0,.4);}
-button{border-radius:8px;background:linear-gradient(120deg,#7df9ff,#8f97ff,#ff5d99);color:#070910;border:1px solid #7df9ff;font-weight:600;}
-button:hover{filter:brightness(1.06);}
+body{background:linear-gradient(180deg,#e7eef4,#f6f2e7);} 
+.panel,.metric{border-radius:10px;background:linear-gradient(165deg,#fffdf4,#edf2f6);box-shadow:0 10px 22px rgba(20,48,71,.12);} 
+button{border-radius:6px;background:linear-gradient(120deg,#0c6a87,#1f4f68 58%,#c87424);color:#fff;border:1px solid #0c6a87;font-weight:600;}
+button:hover{filter:brightness(1.04);} 
 :where(button,input,select,a):focus-visible{outline:3px solid var(--ochre);outline-offset:2px;}
+
