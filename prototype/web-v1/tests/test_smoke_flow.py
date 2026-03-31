@@ -68,7 +68,7 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         assert page.locator('#theme-select').count() == 0
         page.click('.title-info-trigger')
         page.wait_for_function("() => document.getElementById('intro-modal')?.classList.contains('visible')")
-        page.click('#intro-modal .btn-ghost')
+        page.keyboard.press('Escape')
         page.wait_for_function("() => !document.getElementById('intro-modal')?.classList.contains('visible')")
 
         reach_expedition_setup(page)
@@ -83,10 +83,26 @@ def test_canonical_flow_and_part2_unlock_gate_smoke():
         assert len(onboard_text) > 0
         page.click('#onboarding-tutorial-btn')
         page.wait_for_function("() => document.getElementById('tutorial-modal')?.classList.contains('visible')")
-        page.click('#tutorial-modal .btn-ghost')
+        page.keyboard.press('Escape')
         page.wait_for_function("() => !document.getElementById('tutorial-modal')?.classList.contains('visible')")
-        page.click('#onboarding-understood-btn')
+        page.keyboard.press('Escape')
         page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
+        page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
+
+        page.click('#game-help-trigger')
+        page.wait_for_function("() => document.getElementById('game-help-overlay')?.classList.contains('open')")
+        page.keyboard.press('Escape')
+        page.wait_for_function("() => !document.getElementById('game-help-overlay')?.classList.contains('open')")
+
+        page.click('#watch-band')
+        page.wait_for_function("() => document.getElementById('watch-detail-overlay')?.classList.contains('open')")
+        page.keyboard.press('Escape')
+        page.wait_for_function("() => !document.getElementById('watch-detail-overlay')?.classList.contains('open')")
+
+        page.click('.field-log-trigger')
+        page.wait_for_function("() => document.getElementById('field-log-overlay')?.classList.contains('open')")
+        page.keyboard.press('Escape')
+        page.wait_for_function("() => !document.getElementById('field-log-overlay')?.classList.contains('open')")
 
         page.evaluate("() => window.showScreen('part2-character')")
         page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-debrief'")

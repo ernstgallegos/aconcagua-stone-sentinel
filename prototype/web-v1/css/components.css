@@ -1416,6 +1416,8 @@
   width: min(860px, 100%);
   max-height: min(88vh, 980px);
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border);
   background: var(--surface);
   padding: 1.2rem;
@@ -1614,14 +1616,73 @@
 /* ── Character portrait in carousel card ── */
 /* Images are 1024×1024 squares; aspect-ratio: 1/1 keeps the box square so
    object-fit: cover fills it exactly — no cropping on any viewport size. */
+.carousel-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface2) 72%, transparent);
+}
+
+.carousel-media-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg,
+    color-mix(in srgb, var(--surface2) 75%, transparent) 8%,
+    color-mix(in srgb, var(--stone) 20%, var(--surface2)) 18%,
+    color-mix(in srgb, var(--surface2) 75%, transparent) 33%
+  );
+  background-size: 220% 100%;
+  animation: carousel-skeleton 1.25s ease-in-out infinite;
+}
+
 .carousel-card-portrait {
   display: block;
   width: 100%;
+  height: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: center top;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transition: opacity var(--dur-normal) ease;
+}
+
+.carousel-media.is-ready .carousel-card-portrait {
+  opacity: 1;
+}
+
+.carousel-media.is-ready .carousel-media-skeleton {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel-media-fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: color-mix(in srgb, var(--surface2) 90%, transparent);
+}
+
+.carousel-media.is-error .carousel-media-skeleton {
+  display: none;
+}
+
+.carousel-media.is-error .carousel-media-fallback {
+  display: flex;
+}
+
+@keyframes carousel-skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 
 .carousel-arrow {
@@ -1890,7 +1951,12 @@
   font-style: italic;
   color: var(--text);
   font-size: clamp(0.9375rem, 2.2vh, 1.075rem);
-  line-height: 1.8;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  max-width: 62ch;
+  width: 100%;
+  margin: 0 auto;
+  text-wrap: pretty;
 }
 
 .mountain-main .ambient-signal {
@@ -2083,6 +2149,8 @@ body.modal-open {
 
 .watch-detail-dialog {
   background: var(--surface);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border-top: 1px solid var(--border);
   border-radius: 8px 8px 0 0;
   width: 100%;
@@ -2188,6 +2256,8 @@ body.modal-open {
 
 .field-log-dialog {
   background: var(--surface);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border-top: 1px solid var(--border);
   border-radius: 8px 8px 0 0;
   width: 100%;
@@ -2255,6 +2325,8 @@ body.modal-open {
 
 .game-help-dialog {
   width: min(760px, 100%);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   max-height: min(86vh, 760px);
   overflow: auto;
   border: 1px solid color-mix(in srgb, var(--ice) 45%, var(--border));

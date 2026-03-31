@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Added startup-copy unit coverage in `prototype/web-v1/tests/unit/startup-ui.test.js` to lock the updated ready-state CTA text in both English and Spanish.
 - Added `meta/audit-remediation-2026-03-30.md`, a traceable remediation matrix mapping relevant findings from both 2026-03-30 audits to `FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED` outcomes with evidence.
 - Added `docs/TROUBLESHOOTING.md` with startup/data-contract/asset/deep-link/operator checks for public web-v1 incidents.
@@ -29,6 +30,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - Reworked the landing footer into a three-block structure (project status, official contact channels, legal/governance links) and added explicit Argentina-origin messaging (`Made in Argentina` / `Hecho en Argentina`) to clarify project provenance.
 - Changed the shared language-preference storage key on the root landing page to `aconcagua_language_v1` so landing, markdown viewer, and `prototype/web-v1` use one persistent cross-surface language state.
 - Redesigned `md-viewer.html` to use the same visual token family and interaction language as the main landing (header, buttons, surfaces, typography, and focus behavior), keeping markdown-reading routes stylistically consistent with the public site shell.
@@ -51,6 +55,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - Fixed markdown-viewer media rendering so Markdown image syntax (`![alt](path)`) now renders as styled images with repository-relative URL resolution, restoring README/linked-doc visual assets inside `md-viewer.html`.
 - Fixed web-v1 startup ready-state copy to show `Click/tap to begin.` (`Haz clic/toca para comenzar.`) instead of the previous wording.
 - Fixed RNG input hardening in `prototype/web-v1/engine/turn-resolution.js` by rejecting non-finite seeds in `mulberry32`, preventing invalid deep-link seed values from silently producing unstable random streams.
@@ -58,6 +64,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.5] — 2026-03
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Added one-click social-share actions in the intro modal (`X`, `Facebook`, `LinkedIn`, `WhatsApp`, and copy-link) plus direct Instagram profile access so players can actively amplify project visibility from the web prototype entry flow.
 - Added a dedicated `Follow on Instagram` CTA on the Part 2 final (`future_cta`) screen, linking directly to the canonical project profile so support/follow actions are available from the closing narrative step.
 - Added `docs/deploy-routing.md` as the single canonical source for local preview routes, Vercel routing behavior, and API CORS deployment notes (EN/ES in one document).
@@ -75,6 +82,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - Consolidated duplicated deploy/routing instructions out of `README.md` and `README.es.md`, leaving those files with concise route summaries that now point to the canonical deploy-routing reference.
 - Changed repository root `index.html` to a direct web-v1 entry shell (meta/JS redirect + fallback links), making the active prototype the explicit default in static and deployed contexts.
 - Changed EN/ES README route documentation to simplify onboarding around one canonical entry point (`/`) plus one explicit archived MRA v0 viewer route.
@@ -110,6 +120,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Hardened global modal behavior in `prototype/web-v1/ui/helpers/accessibility.js` and `prototype/web-v1/ui/screens.js` by adding body scroll-lock state, overlay-dismiss wiring on backdrop clicks, and automatic transient overlay cleanup during screen transitions.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - Fixed terminal-outcome resolution in `prototype/web-v1/engine/turn-resolution.js` so `Collapse (Exposure)` and `Resource Exhaustion` are now reachable canonical outcomes with explicit precedence.
 - Fixed the Part 2 `future_cta` collaboration action to reliably open the official project contact (`aconcaguastonesentinel@gmail.com`) via `mailto:` from the final screen CTA.
 - Fixed startup/fatal diagnostics copy in `prototype/web-v1/ui/helpers/startup-ui.js` to emit localized English/Spanish messaging (including categorized blocking-error summaries and details) based on active language selection.
@@ -146,6 +158,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.3] — 2026-03
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Added a deterministic regression layer for web-v1 with golden scenario structural assertions and outcome-derivation tests covering park-exit outcomes, permit expiry, and summit-window closure (`prototype/web-v1/tests/engine/golden-scenarios.test.js`, `prototype/web-v1/tests/engine/outcome-derivation.test.js`).
 - Added lightweight modular helpers under `prototype/web-v1/ui/helpers/` for help-overlay content, debrief/run-signature analysis, run-log serialization, accessibility focus handling, and seed-driven event logic.
 - Added a seed-driven dynamic environment event layer (calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening) integrated into the canonical resolver weather stage with subtle watch cues (`prototype/web-v1/ui/screens.js`, `prototype/web-v1/engine/turn-resolution.js`, `prototype/web-v1/ui/helpers/events.js`).
@@ -154,12 +167,17 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added accessibility smoke coverage for modal focus helpers and run-log export contract coverage for `run_log.json` summary structure (`prototype/web-v1/tests/accessibility-smoke.test.js`, `prototype/web-v1/tests/model-contract.runlog.test.js`).
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - Expanded in-game help overlay content to explain pressure labels, trend categories, confidence semantics, retreat legitimacy, and "How to read this game" guidance without exposing raw system truth (`prototype/web-v1/ui/helpers/help-overlay-content.js`, `prototype/web-v1/ui/screens.js`).
 - Enriched run-log turn entries with stage/node metadata, warning-state/context-event telemetry, and kept exports backward-compatible via additive fields.
 - Improved keyboard/readability support with stronger focus-visible states, reduced-motion hardening, and reusable focus-return modal helpers (`prototype/web-v1/css/components.css`, `prototype/web-v1/ui/helpers/accessibility.js`).
 - Added contributor-friendly validation scripts `test:webv1` and `test:full` in `package.json`.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - Ensured context events are tracked in telemetry (`lastTurnRecord.contextEvent`) without introducing duplicate resolver branches.
 
 ### Security
@@ -189,6 +207,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.2] — 2026-03
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - Public-facing prototype version was consolidated as `v1.4.2` across runtime metadata and intro/tutorial UI labels (`package.json`, `package-lock.json`, `prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`).
 - Tutorial flow text now reflects the active navigation (`title → expedition-setup`) and no longer claims title-level visual mode/difficulty selection (`prototype/web-v1/index.html`, `prototype/web-v1/ui/screens.js`).
 - Readme status references now point to the current `1.4.2` release block instead of `[Unreleased]` to avoid mixed-state guidance (`README.md`, `README.es.md`).
@@ -207,11 +228,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Light, auto, and dark override theme CSS rules removed from `themes.css`; only sunset palette rules remain.
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Hash-based deep-link support for `prototype/web-v1`: every screen can now be opened directly via `index.html#<screenId>[&param=value…]`. Added `parseDeepLinkHash()`, `handleDeepLink()`, `bootstrapMockDebrief()`, and `buildMockTurnLog()` in `prototype/web-v1/ui/screens.js`. `showScreen()` now syncs the URL hash on each navigation, making every screen shareable. Part 2 screens accept `&force=1` to bypass the summit-achieved gate during evaluation.
 - `docs/deep-links.web-v1.md`: bilingual (EN + ES) reference document listing all 14 screen deep-link URLs, supported parameters (`character`, `scenario`, `seed`, `outcome`, `force`), character/scenario IDs, outcome values, and a maintenance note for keeping the list in sync with `index.html`.
 - README.md and README.es.md: added "Deep-link URLs" subsection with format description, copy-pasteable examples, and a link to the full reference document.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - Replaced the intro modal repository CTA URL in `prototype/web-v1/index.html` from a generic GitHub search query to the canonical repository link (`https://github.com/ernstgallegos/aconcagua-stone-sentinel`).
 - **Critical bug:** restored missing `const mkEntry = (turn, decision, posIdx, trend, flags) => ({` line in `buildMockTurnLog()` in `prototype/web-v1/ui/screens.js`. The missing line caused a syntax error that prevented the ES module from loading entirely, so `window.advanceFromTitle` was never assigned and the welcome screen click/tap handler was broken on all devices.
 - Removed "Click or tap anywhere to continue" legend (`#title-advance-hint` span) from the welcome screen in `prototype/web-v1/index.html`. Removed corresponding `titleAdvanceHint` i18n keys (EN/ES) from `screens.js` and cleaned up all references in `renderIntroContent()` and `applyStaticTranslations()`.
@@ -221,6 +245,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Character portraits in carousel cards (`screen-expedition-setup`, `screen-part2-character`) were cropped on desktop because `max-height: 220px` with `object-fit: cover` cut the bottom of 1024×1024 images. Replaced with `aspect-ratio: 1 / 1` so the container stays square and the full image is visible on all viewport sizes (`prototype/web-v1/css/components.css`).
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `screen-part2-character` (Part 2 character and route selection) now uses the same carousel structure and visual treatment as `screen-expedition-setup`: blurred concept-art background (`concept-curated-4.webp`), carousel tracks with arrows and position dots, character portrait images, and collapsible info panel (`prototype/web-v1/index.html`, `prototype/web-v1/css/screens.css`, `prototype/web-v1/ui/screens.js`).
 - Part 2 carousel starts at Francisco + Guided Ascent (the only unlocked pair), so the confirm button is immediately enabled — matching Part 1 expedition-setup behavior. Navigating to a locked character or route disables it.
 - Locked Part 2 options render with dashed border and `🔒 LOCKED FOR NOW` / `🔒 Coming later` pill on the carousel card, same `.part2-lock-pill` style as before.
@@ -231,6 +258,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `new-mechanics.test.js` Part 2 bridge test to check for `id="part2-carousel-card-character"` / `id="part2-carousel-card-route"` instead of the removed grid IDs.
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Game screen redesign: new single-column layout replacing the two-column `game-layout-redesign` grid.
   - `.situation-bar`: persistent top bar with character portrait (32 px circle, border encodes body state), position+altitude, day/time, turn counter, and trend glyph.
   - `.mountain-view`: dominant zone with compact route strip (small dots only, no labels) + narrative area in serif italic font + "View field log" link.
@@ -269,6 +297,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `css/layout.css`: replaced two-column game grid with single-column flex stack; `watch-status-layout` / `watch-core-column` / `watch-status-column` retained for watch detail overlay.
 - `css/components.css`: added `.situation-portrait`, `.watch-band`, `.watch-cell`, `.watch-cell-bar`, `.signal-line`, `.watch-detail-overlay`, `.field-log-overlay` styles.
 - `css/screens.css`: replaced old watch panel padding overrides with new game screen structure overrides.
@@ -337,6 +368,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed the one-use `Focus pause` control from `prototype/web-v1/index.html` / `prototype/web-v1/ui/screens.js`, its telemetry defaults in `prototype/web-v1/state/game-state.js`, the unused `gracePauseMs` character data in `data/characters.json`, and the outdated mention in `prototype/web-v1/README.md`.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - Difficulty selector invisible after PR #104 redesign: removed `display: none` from `.title-difficulty-grid` in `css/components.css`; `renderDifficultySelector()` already generates the correct `.difficulty-pill-row`/`.difficulty-pill` markup inside that container (Bug 1).
 - Character grid empty on first load: added `loadDataConfig()` call in the INIT section of `ui/screens.js`; the function was defined but never invoked, leaving `DATA_CONFIG.characters` as `[]` and the character/scenario grids unpopulated (Bug 2).
 - `prototype/web-v1/css/screens.css`: corrected background-image relative paths from `../../art/` to `../../../art/` (resolves from `css/` directory, not `index.html` location) — fixes invisible background images on `#screen-title`, `#screen-character::before`, `#screen-scenario::before`, `#screen-expedition-setup::before`, and `.debrief-hero` on all platforms.
@@ -363,6 +396,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.1] — 2026-03
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - `prototype/web-v1/engine/turn-resolution.js`: `sleep` action no longer advances the player's position. `evaluateOutcome` now forces `outcome = 'Hold'` for sleep, matching the design intent that sleep is recovery-in-place at a camp (gameplay-fix-v4, Bug A1).
 - `prototype/web-v1/engine/turn-resolution.js`: `collapseChance` multiplier reduced from `× 2` to `× 1.2`. The previous value caused 62% collapse probability on weather spikes (ws=3 at high altitude), making summit statistically impossible under normal mountain variability. At maximum effective pressure (eff=52), collapse chance is now 15.4% for advance — significant but survivable (gameplay-fix-v4, Bug A2).
 - `prototype/web-v1/ui/screens.js`: Part 2 unlock now persists across sessions and difficulty levels via `SUMMIT_ACHIEVED_KEY` in localStorage. Previously, `G.finalOutcome` reset on each `startRun()` call, locking Part 2 after any replay or page reload (gameplay-fix-v4, Bug A4).
@@ -454,6 +489,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `data/action_modifiers.json`: `advance.collapse` adjusted from `-45` to `-50`; `advance_slowly.collapse` from `-50` to `-55`. With the new `× 1.2` collapse multiplier, these values maintain meaningful collapse risk at extreme pressure while allowing normal expedition progress under standard conditions (gameplay-fix-v4, balance A3).
 - `data/environmental_pressure_config.json`: `summitLateStart` changed from 1200 (20:00) to 1020 (17:00), restoring summit-day timing tension. A 06:00 departure from Cólera with standard advance reaches summit at 13:20 — within the window. Advance-slowly from 06:00 would exceed the cutoff, enforcing the real mountaineering rule of committing to pace on summit day (gameplay-fix-v4, Bug A5).
 - `docs/en/consolidated-design-v1.4.md` §6.3: win-rate targets updated to post-recalibration values (Summit 20–35% for standard/real-mountain difficulty).
@@ -526,6 +564,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated implementation-plan phase labels in `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` from “next sprint” to “in progress” to match real execution status.
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - `prototype/web-v1/tests/turn-behavior.test.js`: new test `sleep never advances or retreats the player position` verifying that sleep action forces Hold outcome in evaluateOutcome (gameplay-fix-v4, regression coverage for Bug A1).
 - Timing pressure FAQ entry added to `prototype/web-v1` onboarding: explains that advancing after 15:00 at high altitude significantly increases environmental pressure and that planning around 06:00 departures from high camps is essential.
 - Added a title-screen difficulty selector with five tiers (Very Easy to Very Hard) for `prototype/web-v1`, plus a full onboarding tutorial/FAQ modal before the expedition begins.
@@ -556,6 +595,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.0] — 2026-03
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Six fully differentiated characters replacing the previous three: Francisco Aguirre,
   Laura Kim, Erik Lundvall, Daniela De Rossi, Blake Harris, and Irina Orlova.
   Each has a complete biographical and mechanical profile in `data/characters.json`.
@@ -568,6 +608,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `difficultyLabel` rendered in character selection cards for all six characters.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - Screen flow simplified: `screen-mode` removed. Flow is now
   splash → title → character → scenario → onboarding → game.
 - `confirmCharacter()` now calls `buildScenarioGrid()` and navigates directly to scenario.
@@ -582,6 +625,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.3.0] — 2026-03
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - `devlog/005-prototype-architecture.md` as a formal decision record separating the frozen Python MRA (`prototype/mra-v0`) from the active web prototype (`prototype/web-v1`).
 - `.env.example` documenting runtime environment variables for `api/run.js`.
 - `docs/architecture.md` as the canonical architecture map for the active prototype.
@@ -593,6 +637,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Informational Python linting step (ruff) in CI.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `README.md` and `prototype/mra-v0/README.md` to clearly separate canonical active prototype vs frozen reference artifact.
 - `docs/simulation_engine.md` aligned to v1.3 behavior.
 - Route model expanded to 15 named nodes in `data/nodes.json`.
@@ -604,6 +651,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `package.json` version set to `1.3.0`.
 
 ### Fixed
+- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
+- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
 - `prototype/mra-v0/simulator.py` now raises `ValueError` for invalid position updates (no silent fallback).
 - Cautious-policy magic numbers replaced with named constants.
 - API fallback allowlist path logs an explicit warning when `ALLOWED_ORIGINS` is not configured.
@@ -611,12 +660,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.2.0] — 2026-02 (retroactive)
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Environmental Pressure / Body Tolerance / Pressure Delta turn pipeline in `prototype/web-v1/index.html`.
 - `docs/simulation_engine.md` (initial engine spec publication for web prototype systemic rules).
 - Data-driven simulation configuration in `/data` (`nodes`, pressure config, action modifiers, stage modifiers).
 - Turn debrief export to `run_log.json` from the web prototype.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `prototype/web-v1/README.md` updated to describe runtime data sources and mechanics.
 - Web-v1 contract tests expanded in `prototype/web-v1/tests/new-mechanics.test.js` for the new engine behavior.
 - UX onboarding and control flow refined in the web prototype (begin flow, splash behavior, and instrumentation).
@@ -624,6 +677,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.1.0] — 2026-01 (retroactive)
 
 ### Added
+- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
 - Root `package.json` with Node 18+ test script (`npm test`).
 - `requirements-dev.txt` for Python development/testing dependencies.
 - Scenario JSON schema at `prototype/mra-v0/scenarios/scenario.schema.json`.
@@ -631,6 +685,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Additional bundled run artifacts (`late-push`, `weather-window`) and expanded Python test coverage.
 
 ### Changed
+- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
+- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
+- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
 - `prototype/mra-v0/simulator.py` refactored (`apply_decision()` helper decomposition) without changing expected behavior.
 - `prototype/mra-v0/run_all.py` now continues after per-run failures and exits non-zero when any run fails.
 - JS tests migrated to Node built-in test runner.

@@ -38,7 +38,7 @@ All simulation tuning is loaded from `/data`:
 
 - `prototype/web-v1/`: **active canonical prototype** (v1.4 public state, phased progress).
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
-- `index.html` at repo root: replay/viewer surface only.
+- `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
 
 ## v1.4.5 additions
