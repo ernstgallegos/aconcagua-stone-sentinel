@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aconcagua: Stone Sentinel — Expedition Run</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--color-bg:#0a0c10;--color-surface:#111620;--color-border:#1e2535;--color-muted:#3a4560;--color-text:#c8d4e8;--color-heading:#eef2f8;--color-accent:#d4500a;--color-signal:#7ab8d4;--color-success:#4a9e7a;--color-danger:#b03030;--color-warning:#c4882a}
+    *{box-sizing:border-box}body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:'IBM Plex Mono',monospace}
+    .screen{min-height:100vh;padding:1rem;background:radial-gradient(circle at 50% 95%,#362516 0,#0d1119 45%,#090b0f 88%)}
+    .cover{position:fixed;inset:0;background:url('https://aconcagua-stone-sentinel.vercel.app/art/cover/cover-concept-1.png') center/cover no-repeat;opacity:.12;pointer-events:none}
+    .panel{max-width:1100px;margin:0 auto;border:1px solid var(--color-border);background:#0d121be6;padding:1rem}
+    h1,h2{font-family:'Cormorant Garamond',serif;color:var(--color-heading);font-weight:300}
+    .setup{text-align:center;padding-top:20vh}.pick{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center}.pick button,.act{background:#0f1520;border:1px solid var(--color-border);color:var(--color-text);padding:.75rem 1rem;cursor:pointer;font-family:inherit;position:relative;overflow:hidden}
+    .act:hover,.pick button:hover{border-left-color:var(--color-accent);background:#121a28}.act::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--color-accent);transform:translateX(-100%);transition:transform .25s}.act:hover::after{transform:translateX(0)}
+    .game{display:none;padding-top:4rem}
+    .header{position:fixed;left:0;right:0;top:0;background:#0a0c10d9;border-bottom:1px solid var(--color-border);padding:.6rem 1rem;z-index:5}
+    .progress{position:fixed;top:0;left:0;height:2px;background:var(--color-signal);transition:width .5s}
+    .layout{display:grid;grid-template-columns:300px 1fr;gap:1rem}
+    .box{border:1px solid var(--color-border);background:var(--color-surface);padding:.8rem}.lbl{color:var(--color-signal);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+    .metric{margin:.6rem 0}.bar{height:8px;background:var(--color-border)}.bar>div{height:100%;transition:width .6s ease,background .6s}
+    .log{max-height:360px;overflow:auto;scroll-behavior:smooth}.entry{border-top:1px solid #1f2838;padding:.55rem 0;animation:slide .26s ease}.entry small{color:var(--color-muted)}
+    .env{margin-top:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+    .decisions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin-top:.8rem}.descend{border-color:#2e634d}
+    .cost{position:absolute;right:.4rem;top:.3rem;color:var(--color-muted);font-size:.64rem}
+    .out{display:none;margin-top:1rem;padding:1rem;border:1px solid var(--color-border)}
+    .flash{animation:flash .2s 2}
+    @media (max-width:800px){.layout{grid-template-columns:1fr}.log{max-height:220px}}
+    @keyframes slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}} @keyframes flash{50%{border-color:var(--color-danger)}}
+  </style>
+</head>
+<body>
+  <div class="cover"></div>
+  <div id="setup" class="screen setup">
+    <div class="panel">
+      <h1>Aconcagua: Stone Sentinel</h1>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-style:italic">“The mountain doesn't ask if you're ready. The mountain rules.”</p>
+      <h2>Choose Character</h2><div class="pick" id="chars"></div>
+      <h2>Choose Scenario</h2><div class="pick" id="scens"></div>
+      <button id="start" class="act" aria-label="Start expedition">BEGIN RUN</button>
+    </div>
+  </div>
+
+  <div class="header">TURN <span id="turn">1</span> / 12 · Day <span id="day">1</span> · <span id="time">06:00</span> · v1.4.5</div>
+  <div id="p" class="progress"></div>
+
+  <div id="game" class="screen game">
+    <div class="panel">
+      <div class="layout">
+        <aside class="box" id="body"><div class="lbl">BODY STATE</div>
+          <div class="metric">Capacity<div class="bar"><div id="cap"></div></div></div>
+          <div class="metric">Fatigue<div class="bar"><div id="fat"></div></div></div>
+          <div class="metric">Exposure<div class="bar"><div id="exp"></div></div></div>
+          <div class="metric">Acclimatization<div class="bar"><div id="acc"></div></div></div>
+        </aside>
+        <section class="box"><div class="lbl">FIELD LOG</div><div id="log" class="log" aria-live="polite"></div></section>
+      </div>
+      <section class="box env"><div>Weather<br><strong id="weather"></strong> <span id="wc"></span></div><div>Visibility<br><strong id="vis"></strong> <span id="vc"></span></div><div>Terrain<br><strong id="terr"></strong> <span id="tc"></span></div></section>
+      <section class="decisions" role="group" aria-label="Decision buttons">
+        <button class="act" data-a="advance">ADVANCE <span class="cost">FE ↑</span></button>
+        <button class="act" data-a="wait">WAIT <span class="cost">FE ±</span></button>
+        <button class="act" data-a="observe">OBSERVE <span class="cost">SIG +</span></button>
+        <button class="act" data-a="sleep">SLEEP <span class="cost">REC</span></button>
+        <button class="act descend" data-a="descend">DESCEND <span class="cost">SAFE</span></button>
+      </section>
+      <section id="out" class="out"></section>
+    </div>
+  </div>
+
+<script>
+const chars=['Lucía','Matías','Daniela','Camila']; const scens=['Normal Route','Storm Front','Thin Window'];
+const charsEl=document.getElementById('chars'), scensEl=document.getElementById('scens');
+chars.forEach(c=>charsEl.insertAdjacentHTML('beforeend',`<button>${c}</button>`)); scens.forEach(s=>scensEl.insertAdjacentHTML('beforeend',`<button>${s}</button>`));
+let pickChar=chars[0],pickScen=scens[0];
+charsEl.onclick=e=>{if(e.target.tagName==='BUTTON') pickChar=e.target.textContent}; scensEl.onclick=e=>{if(e.target.tagName==='BUTTON') pickScen=e.target.textContent};
+const G={turn:1,max:12,day:1,min:360,position:0,capacity:82,fatigue:18,exposure:12,acclimatization:22,signal:62,finished:false,hasSummited:false,highest:0};
+const envPool={weather:['Calm','Wind','Spindrift','Storm'],visibility:['Clear','Broken','Low'],terrain:['Firm','Mixed','Unstable']};
+function stamp(){return `${String(Math.floor(G.min/60)).padStart(2,'0')}:${String(G.min%60).padStart(2,'0')}`}
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+function env(){return {w:rand(envPool.weather),v:rand(envPool.visibility),t:rand(envPool.terrain),c:Math.floor(10+Math.random()*30)}}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
+function styleBar(el,v,inv=false){el.style.width=`${clamp(v,0,100)}%`;const x=inv?100-v:v;el.style.background=x<34?'var(--color-success)':x<66?'var(--color-warning)':'var(--color-danger)'}
+function log(msg){const d=document.createElement('div');d.className='entry';d.innerHTML=`<small>${stamp()}</small><div>${msg}</div>`;logEl.prepend(d)}
+function update(){turn.textContent=G.turn;day.textContent=G.day;time.textContent=stamp();p.style.width=`${(G.turn-1)/(G.max)*100}%`;styleBar(cap,G.capacity,true);styleBar(fat,G.fatigue);styleBar(exp,G.exposure);styleBar(acc,G.acclimatization,true)}
+function end(outcome,color){G.finished=true;const o=document.getElementById('out');o.style.display='block';o.style.borderColor=color;o.innerHTML=`<h2 style="margin:0;color:${color}">${outcome}</h2><pre>>_ debrief\ncharacter: ${pickChar}\nscenario: ${pickScen}\nhighest_pos: ${G.highest}\nfinal_capacity: ${Math.round(G.capacity)}\nfinal_fatigue: ${Math.round(G.fatigue)}\nfinal_exposure: ${Math.round(G.exposure)}\noutcome: ${outcome}</pre>`; if(color==='var(--color-danger)') document.getElementById('body').classList.add('flash')}
+function resolve(action){if(G.finished) return; const E=env(); weather.textContent=E.w;vis.textContent=E.v;terr.textContent=E.t;wc.textContent=`±${E.c}%`;vc.textContent=`±${E.c-3}%`;tc.textContent=`±${E.c+2}%`;
+ const epBase={advance:18,wait:7,observe:9,sleep:4,descend:10}[action]; const bt=(G.capacity+G.acclimatization-G.fatigue-G.exposure)*0.8; const ep=epBase+(E.w==='Storm'?10:E.w==='Wind'?5:0)+(E.t==='Unstable'?7:2);
+ let delta=ep-bt/10; if(action==='sleep'){G.fatigue-=12;G.exposure-=8;delta=0}else if(action==='observe'){G.signal=clamp(G.signal+7,20,95)} else if(action==='advance'){G.position++;G.highest=Math.max(G.highest,G.position)} else if(action==='descend'){G.position=Math.max(0,G.position-1)}
+ G.fatigue=clamp(G.fatigue+Math.max(2,delta*0.4),0,100); G.exposure=clamp(G.exposure+Math.max(1,delta*0.35),0,100); G.capacity=clamp(G.capacity-(ep*0.08)+(action==='sleep'?8:0),0,100); G.acclimatization=clamp(G.acclimatization+(action==='sleep'?2: action==='advance'?-1:0),0,100);
+ const perceived=Math.round(ep*(100-E.c)/100 + bt*(E.c/100)); log(`${action.toUpperCase()} · EP ${ep.toFixed(1)} ↔ BT ${bt.toFixed(1)} · signal ${perceived}`);
+ if(G.position>=7) G.hasSummited=true;
+ if(G.exposure>92||G.capacity<8){end('Collapse / Rescue','var(--color-danger)')} else if(G.turn===G.max){ if(G.hasSummited&&G.position===0) end('Summit and Safe Return','var(--color-success)'); else if(G.highest>=7) end('High Point Return','var(--color-signal)'); else end('Strategic Retreat','var(--color-warning)') }
+ G.turn++; G.min+=90; if(G.min>=1440){G.day++; G.min-=1440;} update();
+}
+start.onclick=()=>{setup.style.display='none';game.style.display='block';update();log(`Run initialized for ${pickChar} / ${pickScen}.`) }
+document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>resolve(b.dataset.a));
+</script>
+</body>
+</html>
