@@ -490,7 +490,6 @@ const I18N = {
       titleSelectScenario: 'Select Scenario',
       depart: 'Depart',
       back: 'Back',
-      understoodBegin: 'Understood. Begin.',
       decision: 'Decision',
       advance: 'Advance',
       advanceSlow: 'Advance Slowly',
@@ -582,7 +581,6 @@ const I18N = {
       titleSelectScenario: 'Selecciona escenario',
       depart: 'Partir',
       back: 'Atrás',
-      understoodBegin: 'Entendido. Comenzar.',
       decision: 'Decisión',
       advance: 'Avanzar',
       advanceSlow: 'Avance lento',
@@ -952,12 +950,11 @@ function setLanguage(lang) {
   const safe = VALID_LANGUAGES.has(lang) ? lang : 'en';
   CURRENT_LANGUAGE = safe;
   document.documentElement.setAttribute('lang', safe);
-  const select = document.getElementById('language-select');
-  if (select && select.value !== safe) select.value = safe;
-  const langLabel = document.querySelector('.lang-switcher label');
-  if (langLabel) langLabel.textContent = t('ui.language');
-  const languageSelect = document.getElementById('language-select');
-  if (languageSelect) languageSelect.setAttribute('aria-label', t('ui.language'));
+  document.querySelectorAll('.lang-btn[data-lang]').forEach((btn) => {
+    btn.setAttribute('aria-pressed', btn.getAttribute('data-lang') === safe ? 'true' : 'false');
+  });
+  const langSwitch = document.querySelector('.lang-switch');
+  if (langSwitch) langSwitch.setAttribute('aria-label', t('ui.language'));
   applyStaticTranslations();
   renderDifficultySelector();
   renderIntroContent();
@@ -1070,7 +1067,6 @@ function getRandomScenarioConfig() {
 
 function applyStaticTranslations() {
   const map = [
-    ['.lang-switcher label', 'ui.language'],
     ['#onboarding-understood-btn', 'ui.beginExpedition'],
     ['.decision-label', 'ui.decision'],
     ['#btn-advance .btn-decision-main span:first-child', 'ui.advance'],

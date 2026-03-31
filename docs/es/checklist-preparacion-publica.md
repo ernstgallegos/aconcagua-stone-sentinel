@@ -22,9 +22,11 @@ for p in pathlib.Path('.').rglob('*.json'):
     json.loads(p.read_text(encoding='utf-8'))
 print('all-json-ok')
 PY
+npm run smoke:release
 ```
 
 - [ ] Todas las puertas pasan localmente.
+- [ ] `npm run smoke:release` pasó contra la URL canónica desplegada (o contra una URL candidata de release explicitada).
 - [ ] Cualquier check omitido incluye razón explícita en notas del PR.
 - [ ] El PR/reporte final incluye los comandos exactos ejecutados para cada puerta validada.
 

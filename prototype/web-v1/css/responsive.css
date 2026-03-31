@@ -44,8 +44,9 @@
 
   .tutorial-meta { grid-template-columns: 1fr; }
 
-  .theme-switcher,
-  .lang-switcher { font-size: 0.75rem; padding: 0.3rem 0.38rem; }
+  .theme-switcher { font-size: 0.75rem; padding: 0.3rem 0.38rem; }
+  .lang-switch { padding: 0.16rem; }
+  .lang-btn { font-size: 0.7rem; padding: 0.28rem 0.5rem; }
 
   /* Bottom-sheets on mobile */
   .bottom-sheet { display: block; }
@@ -239,4 +240,3 @@
     object-position: center center;
   }
 }
-

@@ -52,6 +52,11 @@ npm test
 npm run typecheck
 ```
 
+**Release deploy smoke check (canonical Vercel URL by default):**
+```bash
+npm run smoke:release
+```
+
 **Headless browser smoke test (requires Playwright browser install):**
 ```bash
 python -m pip install -r requirements-dev.txt
@@ -186,7 +191,7 @@ When a PR changes implementation status, flow wiring, or release phase labels, v
 Every release-facing or public-readiness PR must:
 
 - include completed checklist evidence from `docs/en/public-readiness-checklist.md` (or Spanish counterpart),
-- include command output evidence for `npm run typecheck`, `npm test`, and `pytest prototype/mra-v0/test_simulator.py -v` (or clearly justify why a gate is not applicable),
+- include command output evidence for `npm run typecheck`, `npm test`, `pytest prototype/mra-v0/test_simulator.py -v`, and `npm run smoke:release` (or clearly justify why a gate is not applicable),
 - keep `CHANGELOG.md` synchronized with the exact governance/docs/process changes shipped.
 
 ## Commit Message Format

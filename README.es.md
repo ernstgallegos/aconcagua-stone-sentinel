@@ -212,13 +212,13 @@ La pantalla inicial ahora es deliberadamente minimalista: mantiene la cover como
 
 La pantalla `expedition setup` presenta dos carruseles: personaje y escenario. Cada escenario incluye sus propios modificadores de dificultad, por lo que el escenario seleccionado determina la presión ambiental, la recuperación, la economía de recursos, el margen de permiso y las ventanas de decisión — incluyendo los perfiles temporales de cada personaje y las acciones de recuperación.
 
-La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo antes de `Understood. Begin.`, con explicación del bucle de partida, sistemas ocultos, referencia de acciones, comportamiento de la dificultad y preguntas frecuentes de reglas.
+La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo antes del CTA principal `Iniciar expedición`, con explicación del bucle de partida, sistemas ocultos, referencia de acciones, comportamiento de la dificultad y preguntas frecuentes de reglas.
 
 La selección de personaje ahora incluye una opción `Random Character` que elige automáticamente uno de los seis perfiles disponibles al confirmar la expedición.
 
 Estado de Parte 2 (v1.4):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 
 Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
 
@@ -240,7 +240,7 @@ Ejemplos:
 #part2-character&force=1
 ```
 
-Tabla completa con las 14 pantallas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+Tabla completa con todas las pantallas activas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
 
 ## Estructura del repositorio
  

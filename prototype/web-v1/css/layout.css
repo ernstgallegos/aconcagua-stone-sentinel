@@ -207,6 +207,40 @@
   backdrop-filter: blur(8px);
 }
 
+.lang-switch {
+  display: inline-flex;
+  gap: 0.2rem;
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.lang-btn {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.54rem;
+  cursor: pointer;
+}
+
+.lang-btn[aria-pressed='true'] {
+  color: #081019;
+  background: linear-gradient(120deg, #d6eef9, #d9b996);
+}
+
+.lang-btn:focus-visible {
+  outline: 2px solid #d6eef9;
+  outline-offset: 1px;
+}
+
 .theme-select {
   background: color-mix(in srgb, var(--surface2) 90%, transparent);
   color: var(--text-soft);
