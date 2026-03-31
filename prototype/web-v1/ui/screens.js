@@ -6,6 +6,8 @@ import { buildHelpSections } from './helpers/help-overlay-content.js';
 import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature, buildSignalInterpretationHint } from './helpers/debrief.js';
 import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper, buildTurnLogEntry } from './helpers/run-log.js';
 import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
+import { buildManagedPortrait, hydrateManagedPortraits, preloadImages } from './helpers/carousel-media.js';
+import { openTutorialStyleModal, closeTutorialStyleModal, bindBackdropClose } from './helpers/modal-controller.js';
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
@@ -931,31 +933,19 @@ function initDifficulty() {
 }
 
 function openIntroModal() {
-  const modal = document.getElementById('intro-modal');
-  if (!modal) return;
-  modal.classList.add('visible');
-  modal.setAttribute('aria-hidden', 'false');
+  openTutorialStyleModal({ modalId: 'intro-modal', triggerId: 'title-info-trigger' });
 }
 
 function closeIntroModal() {
-  const modal = document.getElementById('intro-modal');
-  if (!modal) return;
-  modal.classList.remove('visible');
-  modal.setAttribute('aria-hidden', 'true');
+  closeTutorialStyleModal({ modalId: 'intro-modal', fallbackTriggerId: 'title-info-trigger' });
 }
 
 function openTutorialModal() {
-  const modal = document.getElementById('tutorial-modal');
-  if (!modal) return;
-  modal.classList.add('visible');
-  modal.setAttribute('aria-hidden', 'false');
+  openTutorialStyleModal({ modalId: 'tutorial-modal', triggerId: 'onboarding-tutorial-btn' });
 }
 
 function closeTutorialModal() {
-  const modal = document.getElementById('tutorial-modal');
-  if (!modal) return;
-  modal.classList.remove('visible');
-  modal.setAttribute('aria-hidden', 'true');
+  closeTutorialStyleModal({ modalId: 'tutorial-modal', fallbackTriggerId: 'onboarding-tutorial-btn' });
 }
 
 function setLanguage(lang) {
@@ -1201,19 +1191,13 @@ function applyStaticTranslations() {
 // Decision 14: exit animation duration
 const SCREEN_EXIT_DURATION_MS = 150;
 function dismissTransientUi() {
-  const overlayIds = ['game-help-overlay', 'watch-detail-overlay', 'field-log-overlay'];
-  overlayIds.forEach((id) => {
-    const overlay = document.getElementById(id);
-    if (!overlay) return;
-    overlay.classList.remove('open');
-    overlay.setAttribute('aria-hidden', 'true');
-  });
-  ['watch-detail-backdrop', 'field-log-backdrop', 'bottom-sheet-backdrop'].forEach((id) => {
-    document.getElementById(id)?.classList.remove('visible');
-  });
-  document.querySelectorAll('.bottom-sheet.open').forEach((sheet) => {
-    sheet.classList.remove('open');
-  });
+  closeIntroModal();
+  closeTutorialModal();
+  closeOnboardingModal();
+  closeGameHelp();
+  closeWatchDetail();
+  closeFieldLog();
+  closeAllBottomSheets();
 }
 
 function showScreen(id) {
@@ -1462,7 +1446,12 @@ function renderCarousel(type) {
     if (item._random) {
       const imgPath = '../../art/characters/random.png';
       cardEl.innerHTML = `
-        <img class="carousel-card-portrait" src="${imgPath}" alt="${t('ui.randomCharacter')}" loading="lazy" />
+        ${buildManagedPortrait({
+          src: imgPath,
+          alt: t('ui.randomCharacter'),
+          eager: idx === 0,
+          fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
+        })}
         <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
         <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: Variable</div>
@@ -1472,7 +1461,12 @@ function renderCarousel(type) {
       const safeIdx = Number(idx);
       const imgPath = getCharacterImagePath(item.id);
       const imgHtml = imgPath
-        ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" />`
+        ? buildManagedPortrait({
+            src: imgPath,
+            alt: c.name,
+            eager: idx === 0,
+            fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
+          })
         : '';
       cardEl.innerHTML = `
         ${imgHtml}
@@ -1484,6 +1478,7 @@ function renderCarousel(type) {
       const infoBtn = cardEl.querySelector('.carousel-info-btn');
       if (infoBtn) infoBtn.onclick = () => toggleCarouselInfo('character', safeIdx);
     }
+    hydrateManagedPortraits(cardEl);
     // Hide info panel when card changes
     const infoEl = document.getElementById('carousel-info-panel-character');
     if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
@@ -1557,6 +1552,10 @@ function toggleCarouselInfo(type, idx) {
 }
 
 function buildExpeditionSetupCarousels() {
+  preloadImages((DATA_CONFIG.characters || [])
+    .map((character) => getCharacterImagePath(character.id))
+    .filter(Boolean));
+
   // Clamp character/scenario indices in case data isn't loaded yet
   const charItems = getCarouselItems('character');
   if (CAROUSEL_STATE.character.index >= charItems.length) CAROUSEL_STATE.character.index = 0;
@@ -1690,7 +1689,13 @@ function renderPart2Carousel(type) {
     const safeIdx = idx;
     const imgPath = getCharacterImagePath(item.id, { part2: true });
     const imgHtml = imgPath
-      ? `<img class="carousel-card-portrait" src="${imgPath}" alt="${c.name}" loading="lazy" onerror="this.onerror=null;this.src='${getCharacterImagePath(item.id)}';" />`
+      ? buildManagedPortrait({
+          src: imgPath,
+          alt: c.name,
+          fallbackSrc: getCharacterImagePath(item.id),
+          eager: idx === 0,
+          fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
+        })
       : '';
     // Apply locked style on the card element itself (matches .carousel-card.part2-locked in CSS)
     cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
@@ -1704,6 +1709,7 @@ function renderPart2Carousel(type) {
     `;
     const infoBtn = cardEl.querySelector('.carousel-info-btn');
     if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('character', safeIdx);
+    hydrateManagedPortraits(cardEl);
   } else if (type === 'route') {
     const safeIdx = idx; // capture for onclick closure (mirrors renderCarousel pattern)
     cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
@@ -1781,6 +1787,9 @@ function togglePart2CarouselInfo(type, idx) {
 }
 
 function buildPart2SetupScreen() {
+  preloadImages((DATA_CONFIG.characters || [])
+    .map((character) => getCharacterImagePath(character.id, { part2: true }) || getCharacterImagePath(character.id))
+    .filter(Boolean));
   // Initialize Part 2 carousels: start at Francisco (only selectable character)
   // and guided-normal-route (only selectable route), matching expedition-setup
   // behaviour where the default item is immediately confirmable.
@@ -2052,13 +2061,11 @@ function showOnboarding(mode) {
   if (titleEl) titleEl.textContent =
     `${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
   startGame();
-  const modal = document.getElementById('onboarding-modal');
-  if (modal) { modal.classList.add('visible'); modal.setAttribute('aria-hidden', 'false'); }
+  openTutorialStyleModal({ modalId: 'onboarding-modal', triggerId: 'btn-begin-expedition' });
 }
 
 function closeOnboardingModal() {
-  const modal = document.getElementById('onboarding-modal');
-  if (modal) { modal.classList.remove('visible'); modal.setAttribute('aria-hidden', 'true'); }
+  closeTutorialStyleModal({ modalId: 'onboarding-modal', fallbackTriggerId: 'btn-begin-expedition' });
 }
 
 function abandonOnboarding() {
@@ -4080,37 +4087,45 @@ loadDataConfig()
     });
   });
 
-const introModal = document.getElementById('intro-modal');
-if (introModal) {
-  introModal.addEventListener('click', (event) => { if (event.target === introModal) closeIntroModal(); });
-}
-const tutorialModal = document.getElementById('tutorial-modal');
-if (tutorialModal) {
-  tutorialModal.addEventListener('click', (event) => { if (event.target === tutorialModal) closeTutorialModal(); });
-}
-const gameHelpOverlay = document.getElementById('game-help-overlay');
-if (gameHelpOverlay) {
-  gameHelpOverlay.addEventListener('click', (event) => {
-    if (event.target === gameHelpOverlay) closeGameHelp();
+bindBackdropClose({ modalId: 'intro-modal', close: closeIntroModal });
+bindBackdropClose({ modalId: 'tutorial-modal', close: closeTutorialModal });
+bindBackdropClose({ modalId: 'onboarding-modal', close: closeOnboardingModal });
+
+[['game-help-overlay', closeGameHelp], ['watch-detail-overlay', closeWatchDetail], ['field-log-overlay', closeFieldLog]].forEach(([overlayId, close]) => {
+  const overlay = document.getElementById(overlayId);
+  if (!overlay) return;
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) close();
   });
+});
+
+function closeAllBottomSheets() {
+  document.querySelectorAll('.bottom-sheet').forEach((sheet) => sheet.classList.remove('open'));
+  document.getElementById('bottom-sheet-backdrop')?.classList.remove('visible');
+  document.body.classList.remove('modal-open');
 }
-const watchDetailOverlay = document.getElementById('watch-detail-overlay');
-if (watchDetailOverlay) {
-  watchDetailOverlay.addEventListener('click', (event) => {
-    if (event.target === watchDetailOverlay) closeWatchDetail();
-  });
+
+function isBottomSheetOpen() {
+  return !!document.querySelector('.bottom-sheet.open');
 }
-const fieldLogOverlay = document.getElementById('field-log-overlay');
-if (fieldLogOverlay) {
-  fieldLogOverlay.addEventListener('click', (event) => {
-    if (event.target === fieldLogOverlay) closeFieldLog();
-  });
-}
+
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') {
-    closeIntroModal();
-    closeTutorialModal();
-  }
+  if (event.key !== 'Escape') return;
+
+  const openTutorial = document.getElementById('tutorial-modal')?.classList.contains('visible');
+  const openOnboarding = document.getElementById('onboarding-modal')?.classList.contains('visible');
+  const openIntro = document.getElementById('intro-modal')?.classList.contains('visible');
+  const helpOpen = document.getElementById('game-help-overlay')?.classList.contains('open');
+  const watchOpen = document.getElementById('watch-detail-overlay')?.classList.contains('open');
+  const fieldOpen = document.getElementById('field-log-overlay')?.classList.contains('open');
+
+  if (openTutorial) closeTutorialModal();
+  else if (openOnboarding) closeOnboardingModal();
+  else if (openIntro) closeIntroModal();
+  else if (helpOpen) closeGameHelp();
+  else if (watchOpen) closeWatchDetail();
+  else if (fieldOpen) closeFieldLog();
+  else if (isBottomSheetOpen()) closeAllBottomSheets();
 });
 
 /* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
@@ -4430,35 +4445,22 @@ window.CAROUSEL_STATE = CAROUSEL_STATE;
 window.openBottomSheet = function openBottomSheet(sheetId) {
   const sheet = document.getElementById(sheetId);
   const backdrop = document.getElementById('bottom-sheet-backdrop');
-  if (sheet) sheet.classList.add('open');
+  if (sheet) {
+    closeAllBottomSheets();
+    sheet.classList.add('open');
+  }
   if (backdrop) backdrop.classList.add('visible');
+  if (isBottomSheetOpen()) document.body.classList.add('modal-open');
 };
 window.closeBottomSheet = function closeBottomSheet(sheetId) {
   const sheet = document.getElementById(sheetId);
-  const backdrop = document.getElementById('bottom-sheet-backdrop');
   if (sheet) sheet.classList.remove('open');
-  if (backdrop) backdrop.classList.remove('visible');
+  if (!isBottomSheetOpen()) closeAllBottomSheets();
 };
-/* Backdrop click closes all bottom-sheets */
+
 document.addEventListener('DOMContentLoaded', () => {
   const backdrop = document.getElementById('bottom-sheet-backdrop');
-  if (backdrop) {
-    backdrop.addEventListener('click', () => {
-      document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('open'));
-      backdrop.classList.remove('visible');
-    });
-  }
-
-  document.addEventListener('keydown', (event) => {
-    const helpOpen = document.getElementById('game-help-overlay')?.classList.contains('open');
-    const watchOpen = document.getElementById('watch-detail-overlay')?.classList.contains('open');
-    const fieldOpen = document.getElementById('field-log-overlay')?.classList.contains('open');
-    if (event.key === 'Escape') {
-      if (helpOpen) closeGameHelp();
-      else if (watchOpen) closeWatchDetail();
-      else if (fieldOpen) closeFieldLog();
-    }
-  });
+  if (backdrop) backdrop.addEventListener('click', closeAllBottomSheets);
 });
 
 

@@ -59,6 +59,29 @@
   .situation-portrait { width: 24px; height: 24px; }
   .situation-bar { padding: 0.35rem 0.65rem; gap: 0.5rem; }
   .situation-datetime { display: none; } /* compressed: day shown via turn */
+
+
+  .mountain-main {
+    padding: 0.65rem 0.65rem 0.85rem;
+    gap: 0.62rem;
+  }
+
+  .mountain-main .narrative-text {
+    font-size: 0.95rem;
+    line-height: 1.92;
+    max-width: 34ch;
+  }
+
+  .ambient-signal {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .onboard-intro,
+  .tutorial-dialog li,
+  .tutorial-faq-item p {
+    line-height: 1.75;
+  }
 }
 
 /* ══════════════════════════════════════

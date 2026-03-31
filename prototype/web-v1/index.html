@@ -21,7 +21,7 @@
 <body>
 
 <div class="title-top-controls" aria-label="Welcome screen controls">
-  <button class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
+  <button id="title-info-trigger" class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
 
   <div class="title-utility-cluster">
     <div class="lang-switcher" aria-label="Language switcher">
@@ -206,7 +206,7 @@
 
 
 <!-- IN-GAME HELP OVERLAY -->
-<div id="game-help-overlay" class="game-help-overlay" role="dialog" aria-modal="true" aria-label="Pressure and trend help" aria-hidden="true">
+<div id="game-help-overlay" class="game-help-overlay" role="dialog" aria-modal="true" aria-labelledby="game-help-title" aria-describedby="game-help-subtitle" aria-hidden="true">
   <div class="game-help-dialog" tabindex="-1">
     <div class="watch-detail-header">
       <div class="watch-detail-identity">
@@ -220,7 +220,7 @@
 </div>
 
 <!-- WATCH DETAIL OVERLAY — full detail on demand (tap watch band) -->
-<div id="watch-detail-overlay" class="watch-detail-overlay" role="dialog" aria-modal="true" aria-label="Watch detail" aria-hidden="true">
+<div id="watch-detail-overlay" class="watch-detail-overlay" role="dialog" aria-modal="true" aria-labelledby="watch-detail-name" aria-describedby="watch-detail-difficulty" aria-hidden="true">
   <div class="watch-detail-dialog" tabindex="-1">
     <div class="watch-detail-header">
       <img class="permit-photo" id="permit-photo" src="" alt="" aria-hidden="true" />
@@ -286,7 +286,7 @@
 <div class="watch-detail-backdrop" id="watch-detail-backdrop" aria-hidden="true" onclick="closeWatchDetail()"></div>
 
 <!-- FIELD LOG OVERLAY — field log accessible via link -->
-<div id="field-log-overlay" class="field-log-overlay" role="dialog" aria-modal="true" aria-label="Field log" aria-hidden="true">
+<div id="field-log-overlay" class="field-log-overlay" role="dialog" aria-modal="true" aria-labelledby="field-log-title" aria-hidden="true">
   <div class="field-log-dialog" tabindex="-1">
     <div class="field-log-header">
       <span class="field-log-title">Field Log</span>
