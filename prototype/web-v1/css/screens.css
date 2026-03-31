@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #060b11;
+  background: radial-gradient(circle at 18% -10%, #1a314d 0%, transparent 52%), #060b11;
 }
 
 /* Decision 2: portrait uses cover; landscape switches to contain in responsive rules */
@@ -53,8 +53,9 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 24%, rgba(185, 211, 230, 0.16), transparent 54%),
-    linear-gradient(180deg, rgba(9, 14, 21, 0.14), rgba(9, 14, 21, 0.64));
+    radial-gradient(circle at 20% 8%, rgba(121, 230, 255, 0.22), transparent 48%),
+    radial-gradient(circle at 82% 10%, rgba(255, 193, 110, 0.2), transparent 44%),
+    linear-gradient(180deg, rgba(4, 8, 14, 0.22), rgba(4, 8, 14, 0.76));
 }
 
 .title-shell {
@@ -114,9 +115,9 @@
   padding: 0.75rem 1rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--white) 26%, transparent);
-  background: rgba(9, 14, 21, 0.42);
+  background: rgba(6, 13, 21, 0.58);
   backdrop-filter: blur(8px);
-  box-shadow: 0 24px 44px rgba(3, 6, 10, 0.36);
+  box-shadow: 0 26px 50px rgba(3, 10, 18, 0.58);
 }
 
 .title-screen-advance span::before {

@@ -1,30 +1,26 @@
 /* ═══════════════════════════════════════════
-   THEMES — Sunset (fixed palette)
+   THEMES — Alpine Cyber (default) + Sunset Rift
    ═══════════════════════════════════════════ */
 
-/* ══════════════════════════════════════
-   SUNSET THEME
-   ══════════════════════════════════════ */
-
 body[data-theme='sunset'] {
-  --bg:        #101924;
-  --surface:   #182433;
-  --surface2:  #223247;
-  --border:    #50667d;
-  --stone:     #c1b19f;
-  --ochre:     #d6b287;
-  --ochre-dim: #9a7852;
-  --ice:       #c2d9ea;
-  --ice-dim:   #7f9db8;
-  --white:     #eef4fa;
-  --red:       #cd7668;
-  --red-dim:   #904b41;
-  --safety:    #8fb79a;
-  --text:      #dce6ef;
-  --text-dim:  #9ab0c2;
-  --text-soft: #b1c1cf;
-  --muted:     #9ab0c2;
-  --accent:    #d6b287;
+  --bg: #120d18;
+  --surface: #21162a;
+  --surface2: #2e1f3c;
+  --border: #735287;
+  --stone: #f0dac5;
+  --ochre: #ff9f68;
+  --ochre-dim: #a46343;
+  --ice: #9ce8ff;
+  --ice-dim: #67abc4;
+  --white: #fff4eb;
+  --red: #ff6d77;
+  --red-dim: #8d4450;
+  --safety: #7de2ac;
+  --text: #ffeede;
+  --text-dim: #f1c8b5;
+  --text-soft: #f7d7c5;
+  --muted: #d2a89a;
+  --accent: #ff9f68;
 }
 
 body[data-theme='sunset'] .decision-microcopy,
@@ -32,11 +28,18 @@ body[data-theme='sunset'] .context-sub,
 body[data-theme='sunset'] .watch-section-label,
 body[data-theme='sunset'] .context-widget-label,
 body[data-theme='sunset'] .decision-keyhint {
-  color: #f1c7aa;
+  color: color-mix(in srgb, var(--accent) 72%, white);
 }
 
 body[data-theme='sunset'] #screen-title::before {
   background:
-    radial-gradient(circle at 52% 26%, rgba(214, 178, 135, 0.16), transparent 56%),
-    linear-gradient(180deg, rgba(7, 13, 20, 0.1), rgba(7, 13, 20, 0.62));
+    radial-gradient(circle at 50% 20%, rgba(255, 150, 104, 0.32), transparent 58%),
+    linear-gradient(180deg, rgba(8, 4, 10, 0.14), rgba(8, 4, 10, 0.74));
+}
+
+body[data-theme='alpine-cyber'] {
+  --bg: #070d16;
+  --surface: #121b27;
+  --surface2: #1a2738;
+  --border: #4a617d;
 }

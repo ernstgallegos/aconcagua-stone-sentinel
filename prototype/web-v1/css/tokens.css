@@ -1,57 +1,83 @@
 /* ═══════════════════════════════════════════
-   TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
+   TOKENS — Rediseño agresivo "alpine-cyber" (2026-03)
+   Sistema semántico para todo web-v1 (light/dark-ready via themes.css)
    ═══════════════════════════════════════════ */
 
-/* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
-   Usage: these are documentation tokens; actual @media queries live in responsive.css
-   --bp-sm:  480px
-   --bp-md:  768px
-   --bp-lg:  1024px
-   --bp-xl:  1280px
-*/
-
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  color-scheme: dark;
 
-  /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
-  --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  /* Semantic color tokens */
+  --color-primary: #79e6ff;
+  --color-primary-hover: #a6f0ff;
+  --color-primary-fg: #061019;
+  --color-secondary: #9d8cff;
+  --color-accent: #ffc16e;
+  --color-surface: #121b27;
+  --color-surface-elevated: #1a2738;
+  --color-border: #4a617d;
+  --color-border-subtle: #31465f;
+  --color-text: #eef7ff;
+  --color-text-secondary: #b8c8db;
+  --color-text-disabled: #6f8096;
+  --color-error: #ff7b72;
+  --color-warning: #ffb86a;
+  --color-success: #6bddaa;
+  --color-info: #79e6ff;
 
-  /* ── Spacing scale ── */
-  --space-xs:  0.25rem;
-  --space-sm:  0.5rem;
-  --space-md:  1rem;
-  --space-lg:  1.5rem;
-  --space-xl:  2rem;
+  /* Legacy aliases (compatibilidad con estilos existentes) */
+  --bg: #070d16;
+  --surface: var(--color-surface);
+  --surface2: var(--color-surface-elevated);
+  --border: var(--color-border);
+  --stone: #dfd2c7;
+  --ochre: var(--color-accent);
+  --ochre-dim: #af8555;
+  --ice: var(--color-primary);
+  --ice-dim: #6ab7ca;
+  --white: var(--color-text);
+  --red: var(--color-error);
+  --red-dim: #8f4b45;
+  --safety: var(--color-success);
+  --text: var(--color-text);
+  --text-dim: var(--color-text-secondary);
+  --text-soft: #cbd7e6;
+  --muted: #8ea3ba;
+  --accent: var(--color-accent);
+
+  /* Typography */
+  --heading: 'Space Grotesk', 'Inter', 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  /* Font scale */
+  --font-12: 0.75rem;
+  --font-14: 0.875rem;
+  --font-16: 1rem;
+  --font-18: 1.125rem;
+  --font-24: 1.5rem;
+  --font-32: 2rem;
+  --font-48: 3rem;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
   --space-2xl: 3rem;
 
-  /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  /* Radius (more aggressive corners) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
 
-  /* ── Transition speeds ── */
-  --dur-fast:   0.15s;
+  /* Motion */
+  --dur-fast: 0.12s;
   --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-slow: 0.3s;
+
+  /* Elevation */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 12px 24px rgba(2, 10, 20, 0.42);
+  --shadow-lg: 0 22px 44px rgba(0, 8, 18, 0.52);
 }

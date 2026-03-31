@@ -17,10 +17,12 @@
   font-weight: 700;
   letter-spacing: 0.17em;
   text-transform: uppercase;
-  background: linear-gradient(120deg, color-mix(in srgb, var(--ice) 90%, white), color-mix(in srgb, var(--ochre) 78%, white));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ice) 86%, white), color-mix(in srgb, var(--ochre) 80%, #ffd7aa));
   border: 1px solid color-mix(in srgb, var(--white) 36%, transparent);
   color: #0a121c;
-  padding: 0.82rem 2.3rem;
+  padding: 0.9rem 2.4rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
   transition:
     background var(--dur-normal),
@@ -30,12 +32,13 @@
 }
 
 .btn-primary:hover {
-  filter: brightness(1.04);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--ice) 28%, transparent);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--ice) 36%, transparent);
+  transform: translateY(-2px) skewX(-1deg);
 }
 
 .btn-primary:active {
-  transform: scale(0.96);
+  transform: scale(0.97) translateY(1px);
 }
 
 /* Ripple effect (Decision 16) */
@@ -63,8 +66,8 @@
   font-size: 0.82rem;          /* Decision 9: 14px minimum for buttons */
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  background: color-mix(in srgb, var(--surface2) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
   color: var(--text-soft);
   padding: 0.62rem 1.35rem;
   cursor: pointer;
@@ -76,9 +79,10 @@
 }
 
 .btn-ghost:hover {
-  border-color: color-mix(in srgb, var(--ice) 65%, transparent);
+  border-color: color-mix(in srgb, var(--ice) 88%, transparent);
   color: var(--white);
-  background: color-mix(in srgb, var(--ice) 10%, transparent);
+  background: color-mix(in srgb, var(--ice) 18%, transparent);
+  transform: translateY(-1px);
 }
 
 .btn-ghost:active {
@@ -237,9 +241,11 @@
 }
 
 .char-card {
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 2px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--surface) 96%, transparent), color-mix(in srgb, var(--surface2) 92%, transparent));
   padding: 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition:
     border-color var(--dur-normal),
@@ -249,14 +255,16 @@
 }
 
 .char-card:hover {
-  border-color: var(--stone);
-  background: var(--surface2);
-  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--ice) 64%, var(--stone));
+  background: color-mix(in srgb, var(--surface2) 96%, var(--ice));
+  transform: translateY(-2px) rotate(-0.15deg);
+  box-shadow: var(--shadow-md);
 }
 
 .char-card.selected {
   border-color: var(--ochre);
-  background: var(--surface2);
+  background: color-mix(in srgb, var(--surface2) 88%, var(--ochre) 12%);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ochre) 36%, transparent), var(--shadow-md);
 }
 
 .char-card.selected::before {
