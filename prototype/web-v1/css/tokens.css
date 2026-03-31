@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
+   Unified landing + web-v1 mountain editorial system (v1.4.6-dev)
    ═══════════════════════════════════════════ */
 
 /* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
@@ -12,31 +12,31 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
+  /* ── Color palette: cold-mineral dusk ── */
+  --bg:        #070c14;
+  --surface:   #111b2a;
+  --surface2:  #1a2a3d;
+  --border:    #3d5268;
+  --stone:     #c5b6a4;
+  --ochre:     #d9b996;
+  --ochre-dim: #9d7b59;
+  --ice:       #d0e4f4;
+  --ice-dim:   #7f9db6;
   --white:     #eef3f8;
-  --red:       #c96f63;
+  --red:       #cb7466;
   --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --safety:    #8fb89b;
+  --text:      #d9e4ef;
+  --text-dim:  #98adbf;
+  --text-soft: #b2c1d0;
+  --muted:     #98adbf;
+  --accent:    #d9b996;
 
   /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  --heading: 'Montserrat', 'Avenir Next', sans-serif;
   --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --serif:   'Playfair Display', Georgia, serif;
+  --sans:    'Montserrat', system-ui, sans-serif;
 
   /* ── Spacing scale ── */
   --space-xs:  0.25rem;
