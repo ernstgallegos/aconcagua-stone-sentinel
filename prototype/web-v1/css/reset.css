@@ -15,9 +15,10 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 82% -10%, color-mix(in srgb, var(--ice) 14%, transparent), transparent 46%),
-    radial-gradient(circle at 14% -8%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 84%, #05080f) 0%, var(--bg) 58%, #080f18 100%);
+    radial-gradient(circle at 78% -12%, color-mix(in srgb, var(--color-primary) 26%, transparent), transparent 44%),
+    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 38%),
+    radial-gradient(circle at 52% 120%, color-mix(in srgb, var(--color-secondary) 20%, transparent), transparent 52%),
+    linear-gradient(170deg, #04060d 0%, var(--bg) 42%, #070a16 100%);
   color: var(--text);
   font-family: var(--serif);
   min-height: 100vh;

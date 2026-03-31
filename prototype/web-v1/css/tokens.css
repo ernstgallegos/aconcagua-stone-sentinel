@@ -1,57 +1,72 @@
-/* ═══════════════════════════════════════════
-   TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
-   ═══════════════════════════════════════════ */
-
-/* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
-   Usage: these are documentation tokens; actual @media queries live in responsive.css
-   --bp-sm:  480px
-   --bp-md:  768px
-   --bp-lg:  1024px
-   --bp-xl:  1280px
-*/
-
+/* Aggressive v1.4.6 UI refresh — immersive entertainment system tokens. */
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  color-scheme: dark;
 
-  /* ── Typography ── */
+  /* Semantic colors */
+  --color-bg: #05070f;
+  --color-surface: #0c1326;
+  --color-surface-elevated: #131d37;
+  --color-border: #33415f;
+  --color-border-subtle: #202b44;
+  --color-text: #f5f7ff;
+  --color-text-secondary: #b7c0df;
+  --color-text-disabled: #6f7898;
+  --color-primary: #a855f7;
+  --color-primary-hover: #c084fc;
+  --color-primary-fg: #ffffff;
+  --color-secondary: #06b6d4;
+  --color-accent: #ec4899;
+  --color-success: #34d399;
+  --color-warning: #f59e0b;
+  --color-error: #f87171;
+  --color-info: #38bdf8;
+
+  /* Backward-compatible aliases for existing modules */
+  --bg: var(--color-bg);
+  --surface: var(--color-surface);
+  --surface2: var(--color-surface-elevated);
+  --border: var(--color-border);
+  --text: var(--color-text);
+  --text-dim: var(--color-text-secondary);
+  --text-soft: var(--color-text-secondary);
+  --white: #ffffff;
+  --stone: #d6d8ff;
+  --ochre: var(--color-primary);
+  --ochre-dim: #9f67cb;
+  --ice: var(--color-secondary);
+  --ice-dim: #67d4ea;
+  --red: var(--color-error);
+  --red-dim: #c15f5f;
+  --safety: var(--color-success);
+  --muted: var(--color-text-disabled);
+  --accent: var(--color-accent);
+
+  /* Typography */
   --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
-  --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
 
-  /* ── Spacing scale ── */
-  --space-xs:  0.25rem;
-  --space-sm:  0.5rem;
-  --space-md:  1rem;
-  --space-lg:  1.5rem;
-  --space-xl:  2rem;
+  /* 4/8 spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
   --space-2xl: 3rem;
 
-  /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  /* Effects */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --blur-sm: 8px;
+  --blur-md: 14px;
+  --elevation-sm: 0 6px 16px rgba(8, 10, 20, 0.45);
+  --elevation-md: 0 12px 28px rgba(5, 8, 18, 0.62);
+  --elevation-lg: 0 24px 48px rgba(4, 6, 15, 0.82);
 
-  /* ── Transition speeds ── */
-  --dur-fast:   0.15s;
+  /* Motion */
+  --dur-fast: 0.12s;
   --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-slow: 0.3s;
 }

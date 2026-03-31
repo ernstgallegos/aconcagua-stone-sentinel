@@ -1830,7 +1830,7 @@
   align-items: center;
   gap: 0.65rem;
   padding: 0.45rem 0.85rem;
-  background: var(--surface);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface) 86%, #130a2d), color-mix(in srgb, var(--surface2) 84%, #101f3e));
   border-bottom: 1px solid var(--border);
   font-family: var(--mono);
   font-size: 0.75rem;
@@ -1987,7 +1987,7 @@
 
 /* ── Watch Band ── */
 .watch-band {
-  background: var(--surface);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface) 90%, #150f34), color-mix(in srgb, var(--surface2) 88%, #0f2340));
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -1995,7 +1995,7 @@
 }
 
 .watch-band:hover {
-  background: color-mix(in srgb, var(--surface) 85%, var(--surface2));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface2) 95%, #1c1250), color-mix(in srgb, var(--surface2) 85%, #142e57));
   cursor: pointer;
 }
 

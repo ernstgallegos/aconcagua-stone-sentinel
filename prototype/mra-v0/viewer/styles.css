@@ -1,17 +1,17 @@
 :root {
   color-scheme: dark;
-  --bg:        #0a0d10;
-  --surface:   #10161b;
-  --surface2:  #172129;
-  --border:    #2b3943;
-  --stone:     #93a1a9;
-  --ochre:     #af8b58;
-  --text:      #c2c8cb;
-  --text-dim:  #76848c;
-  --white:     #d9d7d2;
-  --red-dim:   #8f4e44;
-  --warn:      #af8b58;
-  --ok:        #4a7c59;
+  --bg:        #05070f;
+  --surface:   #0d1429;
+  --surface2:  #111d38;
+  --border:    #32406a;
+  --stone:     #cfd6ff;
+  --ochre:     #a855f7;
+  --text:      #eef2ff;
+  --text-dim:  #a4afd3;
+  --white:     #ffffff;
+  --red-dim:   #d96578;
+  --warn:      #f59e0b;
+  --ok:        #34d399;
   --mono: 'IBM Plex Mono', monospace;
 }
 
@@ -78,15 +78,19 @@ button {
   padding: 0.52rem 1.4rem;
   cursor: pointer;
   background: transparent;
-  border: 1px solid var(--ochre);
-  color: var(--ochre);
+  border: 1px solid color-mix(in srgb, var(--ochre) 75%, #ffffff22);
+  color: var(--white);
+  background: color-mix(in srgb, var(--ochre) 22%, transparent);
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   transition: background 0.18s, color 0.18s;
 }
-button:hover { background: var(--ochre); color: var(--bg); }
+button:hover {
+  background: linear-gradient(120deg, color-mix(in srgb, var(--ochre) 85%, #fff), #5ee7ff);
+  color: #080c17;
+}
 
 .controls-actions { display: flex; gap: 0.85rem; align-items: center; margin-top: 0.75rem; }
 #status { color: var(--text-dim); margin: 0; font-size: 0.78rem; }
