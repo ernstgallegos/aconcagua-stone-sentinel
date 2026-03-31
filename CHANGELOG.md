@@ -19,6 +19,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
+- Reworked the public landing first viewport to prioritize playable entry and project status signal using a new “project pulse” block (playable flow, current release, Part 2 scope) before secondary materials.
+- Updated landing visual system typography and atmosphere to a coordinated editorial alpine stack (`Fraunces`, `Space Grotesk`, `IBM Plex Mono`) with stronger hierarchy and non-generic contrast treatment.
+- Synchronized `prototype/web-v1` title/setup typography tokens and CTA shell styling with the landing direction so cross-surface transition feels intentional instead of theme-fragmented.
 
 ### Fixed
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.

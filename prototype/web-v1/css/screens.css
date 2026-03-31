@@ -53,8 +53,9 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 24%, rgba(185, 211, 230, 0.16), transparent 54%),
-    linear-gradient(180deg, rgba(9, 14, 21, 0.14), rgba(9, 14, 21, 0.64));
+    radial-gradient(circle at 52% 20%, rgba(198, 224, 242, 0.22), transparent 52%),
+    radial-gradient(circle at 14% 85%, rgba(216, 174, 124, 0.16), transparent 48%),
+    linear-gradient(180deg, rgba(9, 14, 21, 0.12), rgba(9, 14, 21, 0.68));
 }
 
 .title-shell {
@@ -74,7 +75,7 @@
   width: 100%;
   max-width: none;
   justify-content: flex-end;
-  padding: 2rem 1.5rem 2.2rem;
+  padding: 2rem 1.5rem 2.4rem;
 }
 
 .title-screen-advance {
@@ -86,9 +87,9 @@
   color: var(--white);
   cursor: pointer;
   padding: 1.25rem 1rem;
-  font-family: var(--heading);
-  font-size: 0.74rem;
-  letter-spacing: 0.2em;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   border-radius: 999px;
   transition: opacity var(--dur-normal), transform var(--dur-fast), color var(--dur-normal);
@@ -113,10 +114,10 @@
   gap: 0.45rem;
   padding: 0.75rem 1rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--white) 26%, transparent);
-  background: rgba(9, 14, 21, 0.42);
+  border: 1px solid color-mix(in srgb, var(--white) 42%, transparent);
+  background: linear-gradient(115deg, rgba(10, 17, 26, 0.72), rgba(22, 36, 52, 0.72));
   backdrop-filter: blur(8px);
-  box-shadow: 0 24px 44px rgba(3, 6, 10, 0.36);
+  box-shadow: 0 24px 44px rgba(3, 6, 10, 0.42);
 }
 
 .title-screen-advance span::before {
@@ -128,9 +129,9 @@
   margin: 0.35rem auto 0;
   width: min(100%, 32rem);
   text-align: center;
-  font-family: var(--heading);
+  font-family: var(--mono);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: color-mix(in srgb, var(--text-soft) 74%, var(--white) 26%);
 }
 
@@ -320,16 +321,16 @@
 }
 
 .expedition-setup-shell {
-  max-width: 620px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-  border-radius: 20px;
-  background: linear-gradient(170deg, color-mix(in srgb, var(--surface2) 82%, #0b121d), color-mix(in srgb, var(--surface) 90%, #0b121d));
-  box-shadow: 0 30px 70px rgba(5, 9, 14, 0.45);
-  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border-radius: 24px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--surface2) 80%, #09111a), color-mix(in srgb, var(--surface) 92%, #09111a));
+  box-shadow: 0 34px 80px rgba(5, 9, 14, 0.54);
+  padding: clamp(1rem, 2.2vw, 1.65rem);
 }
 
 .intro-links-section {

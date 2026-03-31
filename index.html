@@ -10,24 +10,27 @@
     />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
-        --accent-critical: #f2d4af;
+        --bg-0: #070b12;
+        --bg-1: #0c1520;
+        --bg-2: #152132;
+        --surface-0: #0f1a29db;
+        --surface-1: #16273ada;
+        --surface-2: #24374fd9;
+        --border-soft: #9cb1c434;
+        --border-strong: #d9e6f160;
+        --text-main: #edf3f8;
+        --text-dim: #b8c5d2;
+        --text-muted: #8fa1b2;
+        --accent-ice: #c7e4f6;
+        --accent-mineral: #8facc4;
+        --accent-amber: #d6b084;
+        --accent-critical: #f3cb9f;
 
         --radius-xs: 10px;
         --radius-sm: 14px;
@@ -45,8 +48,9 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Fraunces", "Iowan Old Style", serif;
+        --sans: "Space Grotesk", "Avenir Next", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
       }
 
       * { box-sizing: border-box; }
@@ -58,8 +62,8 @@
         color: var(--text-main);
         line-height: 1.5;
         background:
-          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+          radial-gradient(1300px 560px at 84% -10%, #b8d8f12a, transparent 58%),
+          radial-gradient(860px 500px at 14% -5%, #d7ac7a24, transparent 50%),
           linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
         min-height: 100vh;
       }
@@ -200,7 +204,7 @@
       .hero-copy {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        background: linear-gradient(160deg, #16263be8 0%, #101824ee 70%);
         box-shadow: var(--shadow-strong);
         padding: clamp(1.2rem, 3.5vw, 2.7rem);
       }
@@ -238,6 +242,28 @@
         color: var(--text-muted);
         font-size: 0.9rem;
       }
+
+      .hero-pulse {
+        margin-top: var(--space-3);
+        padding: 0.8rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-soft);
+        background: linear-gradient(110deg, #111f30cf, #152b42b3);
+        display: grid;
+        gap: 0.5rem;
+      }
+      .hero-pulse-item {
+        display: grid;
+        gap: 0.22rem;
+      }
+      .hero-pulse-label {
+        font-family: var(--mono);
+        text-transform: uppercase;
+        font-size: 0.64rem;
+        letter-spacing: 0.14em;
+        color: var(--accent-mineral);
+      }
+      .hero-pulse-value { font-size: 0.88rem; color: var(--text-dim); }
 
       .hero-cta {
         margin-top: var(--space-4);
@@ -299,6 +325,7 @@
       .section-kicker {
         margin: 0;
         color: var(--accent-mineral);
+        font-family: var(--mono);
         text-transform: uppercase;
         letter-spacing: 0.14em;
         font-size: 0.72rem;
@@ -308,7 +335,7 @@
       .section h2 {
         margin: 0;
         font-family: var(--serif);
-        font-size: clamp(1.55rem, 3.8vw, 2.7rem);
+        font-size: clamp(1.75rem, 3.8vw, 2.9rem);
         line-height: 1.08;
       }
 
@@ -418,7 +445,7 @@
       .status-strip {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: #111c2ad1;
+        background: linear-gradient(160deg, #0f1b2ad9, #132338e6);
         padding: var(--space-4);
       }
 
@@ -562,6 +589,20 @@
           <div class="hero-meta">
             <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
             <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
+          </div>
+          <div class="hero-pulse" aria-label="Current project pulse">
+            <div class="hero-pulse-item">
+              <span class="hero-pulse-label" data-i18n="pulseLabel1">Playable flow</span>
+              <span class="hero-pulse-value" data-i18n="pulseValue1">title → setup → onboarding → game → outcomes/debrief</span>
+            </div>
+            <div class="hero-pulse-item">
+              <span class="hero-pulse-label" data-i18n="pulseLabel2">Current release</span>
+              <span class="hero-pulse-value" data-i18n="pulseValue2">v1.4.5 · public web prototype</span>
+            </div>
+            <div class="hero-pulse-item">
+              <span class="hero-pulse-label" data-i18n="pulseLabel3">Part 2 scope</span>
+              <span class="hero-pulse-value" data-i18n="pulseValue3">Narrative bridge currently gated by summit-safe-return progression.</span>
+            </div>
           </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
@@ -765,6 +806,9 @@
           heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
           heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
+          pulseLabel1: 'Playable flow', pulseValue1: 'title → setup → onboarding → game → outcomes/debrief',
+          pulseLabel2: 'Current release', pulseValue2: 'v1.4.5 · public web prototype',
+          pulseLabel3: 'Part 2 scope', pulseValue3: 'Narrative bridge currently gated by summit-safe-return progression.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
           visionKicker: 'Design premise',
@@ -830,6 +874,9 @@
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
           heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
+          pulseLabel1: 'Flujo jugable', pulseValue1: 'título → setup → onboarding → juego → outcomes/debrief',
+          pulseLabel2: 'Release actual', pulseValue2: 'v1.4.5 · prototipo web público',
+          pulseLabel3: 'Alcance Parte 2', pulseValue3: 'Puente narrativo hoy gateado por progresión de cumbre + retorno seguro.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
           visionKicker: 'Premisa de diseño',

@@ -170,6 +170,7 @@ Este repositorio incluye una entrada pública canónica y un visor histórico ar
 - `/` — índice canónico que ahora sirve la landing pública del proyecto con CTA principal a `prototype/web-v1/index.html`
 - `prototype/web-v1/index.html` — **prototype web-v1** interactivo con mecánicas extendidas
 - `prototype/mra-v0/viewer/index.html` — visor archivado para reproducir corridas del prototipo Python
+- La landing y el title/setup de web-v1 ahora comparten una dirección visual “editorial alpina” coordinada (Fraunces + Space Grotesk + IBM Plex Mono), con priorización del primer viewport enfocada en entrada jugable + pulso actual del proyecto.
 
 Para detalles de ruteo/deploy (preview local, Vercel y CORS), usar la referencia canónica única:
 - [`docs/deploy-routing.md`](./docs/deploy-routing.md)

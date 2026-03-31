@@ -13,16 +13,16 @@
 
 :root {
   /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
+  --bg:        #080f1a;
+  --surface:   #132031;
+  --surface2:  #1e3045;
+  --border:    #41556a;
+  --stone:     #c6b4a2;
+  --ochre:     #d8ae7c;
+  --ochre-dim: #9f7548;
+  --ice:       #c6e0f2;
+  --ice-dim:   #7293ad;
+  --white:     #f2f6fa;
   --red:       #c96f63;
   --red-dim:   #8d473f;
   --safety:    #89b492;
@@ -33,10 +33,10 @@
   --accent:    #d2b48d;
 
   /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  --heading: 'Space Grotesk', 'Avenir Next', sans-serif;
   --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --serif:   'Fraunces', 'Iowan Old Style', serif;
+  --sans:    'Space Grotesk', system-ui, sans-serif;
 
   /* ── Spacing scale ── */
   --space-xs:  0.25rem;
