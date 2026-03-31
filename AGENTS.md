@@ -254,6 +254,7 @@ In addition to the changelog:
 - Documentation hubs are strongest when README is surfaced alongside whitepaper/roadmap and official channels list all three direct actions (GitHub, Instagram, email) in one place.
 
 - Landing focus remains cleaner when archived tooling links are de-emphasized from primary CTA clusters, while Vision/System sections communicate mechanics through compact visualized signals (tags + flow strips) instead of plain text-only cards.
+- Front-page makeover passes are safer when the first viewport is treated as one cinematic composition (brand + single headline + short support + CTA group) and all secondary proof content is moved below the fold to prevent dashboard-like drift.
 
 - Audit-remediation closures are easier to defend when each external finding is mapped to a repo-traceable matrix (`FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED`) and paired with at least one automated guard where practical (e.g., asset contract tests, RNG input validation tests).
 - Runtime diagnostics in `web-v1` should prefer environment-gated debug logging over unconditional production `console.error` calls; keep player-facing failures in localized startup/fatal UI while preserving localhost troubleshooting visibility.
