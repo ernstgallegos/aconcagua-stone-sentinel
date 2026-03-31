@@ -213,8 +213,8 @@
 
 .screen-header h2 {
   font-family: var(--heading); /* Decision 8 */
-  font-size: clamp(1.125rem, 2.5vw, 1.5rem); /* Decision 9: 18px mobile min */
-  letter-spacing: 0.15em;
+  font-size: clamp(1.2rem, 2.6vw, 1.68rem);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 0.5rem;
@@ -1331,20 +1331,25 @@
 
 .nav-back {
   font-family: var(--heading); /* Decision 8 */
-  font-size: 0.8125rem;
+  font-size: 0.74rem;
   color: var(--text-dim);
-  background: none;
-  border: none;
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
+  border-radius: 999px;
   cursor: pointer;
-  padding: 0.5rem 0;
+  padding: 0.45rem 0.85rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  transition: color var(--dur-fast);
-  margin-bottom: 1.5rem;
+  transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
+  margin-bottom: 1.15rem;
   align-self: flex-start;
 }
 
-.nav-back:hover { color: var(--stone); }
+.nav-back:hover {
+  color: var(--white);
+  border-color: color-mix(in srgb, var(--ice) 56%, transparent);
+  background: color-mix(in srgb, var(--ice) 12%, transparent);
+}
 .nav-back::before { content: '← '; }
 
 .run-number-badge {
@@ -1577,17 +1582,21 @@
 .carousel-card {
   flex: 1;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  background:
+    linear-gradient(170deg, color-mix(in srgb, var(--surface) 70%, transparent), color-mix(in srgb, var(--surface2) 72%, transparent));
   padding: 1rem 1.25rem;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  transition: border-color var(--dur-normal);
+  border-radius: 14px;
+  transition: border-color var(--dur-normal), transform var(--dur-fast), box-shadow var(--dur-normal);
 }
 
 .carousel-card:hover {
-  border-color: color-mix(in srgb, var(--ochre) 50%, transparent);
+  border-color: color-mix(in srgb, var(--ochre) 56%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(3, 7, 12, 0.4);
 }
 
 .carousel-card-name {
@@ -1780,7 +1789,8 @@
   padding: 0.875rem 1rem;
   border: 1px solid var(--border);
   border-top: none;
-  background: color-mix(in srgb, var(--surface) 40%, transparent);
+  border-radius: 0 0 14px 14px;
+  background: color-mix(in srgb, var(--surface2) 80%, transparent);
 }
 
 .carousel-info-bio {
@@ -1809,8 +1819,10 @@
   flex-direction: column;
   gap: 0.75rem;
   align-items: center;
-  margin-top: 0.5rem;
-  padding-bottom: 2rem;
+  margin-top: 0.8rem;
+  padding-top: 0.45rem;
+  padding-bottom: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
 }
 
 .expedition-setup-actions .btn-primary,

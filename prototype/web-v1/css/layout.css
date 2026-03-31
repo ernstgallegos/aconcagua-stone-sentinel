@@ -181,6 +181,11 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
+  pointer-events: none;
+}
+
+.title-top-controls > * {
+  pointer-events: auto;
 }
 
 .title-utility-cluster {
@@ -213,8 +218,9 @@
   border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   border-radius: 999px;
   padding: 0.2rem;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  background: color-mix(in srgb, var(--surface2) 70%, transparent);
   backdrop-filter: blur(8px);
+  box-shadow: 0 12px 26px rgba(3, 6, 10, 0.34);
 }
 
 .lang-btn {

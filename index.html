@@ -10,24 +10,27 @@
     />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
-        --accent-critical: #f2d4af;
+        --bg-0: #07090e;
+        --bg-1: #0d121b;
+        --bg-2: #121d2b;
+        --surface-0: #111a26d6;
+        --surface-1: #131f30e8;
+        --surface-2: #1b2c40eb;
+        --border-soft: #9fb2c82e;
+        --border-strong: #d9e7f357;
+        --text-main: #e7edf7;
+        --text-dim: #b6c2d1;
+        --text-muted: #8593a5;
+        --accent-ice: #caedf8;
+        --accent-mineral: #90b6c8;
+        --accent-amber: #dbb98f;
+        --accent-critical: #f6d3a2;
 
         --radius-xs: 10px;
         --radius-sm: 14px;
@@ -45,8 +48,8 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
       }
 
       * { box-sizing: border-box; }
@@ -54,12 +57,12 @@
 
       body {
         margin: 0;
-        font-family: var(--sans);
+        font-family: var(--display);
         color: var(--text-main);
         line-height: 1.5;
         background:
-          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+          radial-gradient(1180px 560px at 78% -8%, #9ec0dd1f, transparent 58%),
+          radial-gradient(920px 460px at 14% -8%, #dbb98f1c, transparent 52%),
           linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
         min-height: 100vh;
       }
@@ -116,15 +119,16 @@
 
       .brand {
         margin: 0;
-        font-family: var(--serif);
-        font-size: 1rem;
-        letter-spacing: 0.03em;
+        font-family: var(--mono);
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
 
       .brand small {
         display: block;
         color: var(--text-muted);
-        font-family: var(--sans);
+        font-family: var(--display);
         font-size: 0.7rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -194,34 +198,46 @@
       .hero {
         display: grid;
         gap: var(--space-4);
-        align-items: end;
+        align-items: stretch;
       }
 
       .hero-copy {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        background: linear-gradient(162deg, #152338eb 0%, #0f1724f5 64%);
         box-shadow: var(--shadow-strong);
         padding: clamp(1.2rem, 3.5vw, 2.7rem);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-copy::after {
+        content: "";
+        position: absolute;
+        width: min(460px, 52%);
+        height: 150%;
+        right: -10%;
+        top: -30%;
+        background: radial-gradient(circle, #d9b99621 0%, transparent 60%);
+        pointer-events: none;
       }
 
       .eyebrow {
         margin: 0;
         color: var(--accent-mineral);
-        font-size: 0.74rem;
+        font-size: 0.67rem;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
+        letter-spacing: 0.2em;
         font-weight: 700;
       }
 
       h1 {
         margin: 0.55rem 0 0;
-        font-family: var(--serif);
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        line-height: 1.03;
-        font-size: clamp(2.1rem, 6.5vw, 4.8rem);
-        max-width: 14ch;
+        font-family: var(--display);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 0.95;
+        font-size: clamp(2.2rem, 7vw, 5.1rem);
+        max-width: 12ch;
       }
 
       .hero-lead {
@@ -236,7 +252,8 @@
         display: grid;
         gap: 0.35rem;
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.83rem;
+        font-family: var(--mono);
       }
 
       .hero-cta {
@@ -307,9 +324,10 @@
 
       .section h2 {
         margin: 0;
-        font-family: var(--serif);
+        font-family: var(--display);
         font-size: clamp(1.55rem, 3.8vw, 2.7rem);
         line-height: 1.08;
+        letter-spacing: -0.01em;
       }
 
       .section-intro {
@@ -457,7 +475,7 @@
 
       .outcome strong {
         display: block;
-        font-family: var(--serif);
+        font-family: var(--display);
         margin-bottom: 0.22rem;
       }
 
@@ -519,7 +537,8 @@
 
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
-        .hero { grid-template-columns: 1.25fr 0.75fr; }
+        .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.58fr); }
+        .hero-copy { grid-row: span 2; }
         .system-layout { grid-template-columns: 1.1fr 0.9fr; }
         .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
@@ -569,6 +588,21 @@
             <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
           </div>
         </article>
+
+        <aside class="hero-signal-rail" aria-label="Signal priorities">
+          <div class="hero-signal">
+            <p class="hero-signal-label" data-i18n="signal1Label">What to do first</p>
+            <p data-i18n="signal1Body">Play one run before reading docs. The design reveals itself through pressure, timing, and safe-return tradeoffs.</p>
+          </div>
+          <div class="hero-signal">
+            <p class="hero-signal-label" data-i18n="signal2Label">What to evaluate</p>
+            <p data-i18n="signal2Body">Observe how the watch, trend, and permit stack turn uncertainty into practical decision framing.</p>
+          </div>
+          <div class="hero-signal">
+            <p class="hero-signal-label" data-i18n="signal3Label">Who should use this site</p>
+            <p data-i18n="signal3Body">Players, curators, and collaborators who care about mountain-authentic systems and cultural game direction.</p>
+          </div>
+        </aside>
 
         <figure class="hero-art">
           <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
@@ -765,6 +799,12 @@
           heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
           heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
+          signal1Label: 'What to do first',
+          signal1Body: 'Play one run before reading docs. The design reveals itself through pressure, timing, and safe-return tradeoffs.',
+          signal2Label: 'What to evaluate',
+          signal2Body: 'Observe how the watch, trend, and permit stack turn uncertainty into practical decision framing.',
+          signal3Label: 'Who should use this site',
+          signal3Body: 'Players, curators, and collaborators who care about mountain-authentic systems and cultural game direction.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
           visionKicker: 'Design premise',
@@ -830,6 +870,12 @@
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
           heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
+          signal1Label: 'Qué hacer primero',
+          signal1Body: 'Jugá una corrida antes de leer docs. El diseño se entiende en la tensión entre presión, timing y retorno seguro.',
+          signal2Label: 'Qué evaluar',
+          signal2Body: 'Observá cómo reloj, tendencia y permiso convierten incertidumbre en un marco de decisión concreto.',
+          signal3Label: 'Para quién es este sitio',
+          signal3Body: 'Jugadores, curadores y colaboradores que valoran sistemas auténticos de montaña y dirección cultural del juego.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
           visionKicker: 'Premisa de diseño',
@@ -928,3 +974,32 @@
     </script>
   </body>
 </html>
+      .hero-signal-rail {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        background: linear-gradient(176deg, #142133de 0%, #0d1624f0 100%);
+        padding: var(--space-4);
+        display: grid;
+        gap: 0.9rem;
+      }
+      .hero-signal {
+        border-top: 1px solid #b8cad92e;
+        padding-top: 0.9rem;
+      }
+      .hero-signal:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+      .hero-signal-label {
+        margin: 0;
+        font-family: var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.66rem;
+        color: var(--accent-mineral);
+      }
+      .hero-signal p {
+        margin: 0.35rem 0 0;
+        color: var(--text-dim);
+        font-size: 0.9rem;
+      }

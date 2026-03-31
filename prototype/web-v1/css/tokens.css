@@ -33,10 +33,10 @@
   --accent:    #d2b48d;
 
   /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  --heading: 'Space Grotesk', 'Avenir Next', sans-serif;
   --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --serif:   'Space Grotesk', Georgia, serif;
+  --sans:    'Space Grotesk', system-ui, sans-serif;
 
   /* ── Spacing scale ── */
   --space-xs:  0.25rem;
