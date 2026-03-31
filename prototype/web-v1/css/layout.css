@@ -183,6 +183,25 @@
   gap: 0.75rem;
 }
 
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 0.75rem;
+  z-index: 1200;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  color: #0b1320;
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 0.9rem;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
 .title-utility-cluster {
   display: inline-flex;
   align-items: center;

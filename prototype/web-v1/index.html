@@ -21,9 +21,10 @@
 <link rel="stylesheet" href="./css/responsive.css"/>
 </head>
 <body>
+<a class="skip-link" href="#screen-game">Skip to game content</a>
 
 <div class="title-top-controls" aria-label="Welcome screen controls">
-  <button id="title-info-trigger" class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
+  <button id="title-info-trigger" class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">Info</button>
 
   <div class="title-utility-cluster">
     <div class="lang-switch" role="group" aria-label="Language selector">
@@ -64,11 +65,11 @@
     <div class="carousel-section" role="group" aria-labelledby="carousel-label-character">
       <div class="carousel-label" id="carousel-label-character">Character</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="carousel-arrow-character-prev" onclick="carouselPrev('character')" aria-label="Previous character">◀</button>
+        <button class="carousel-arrow" id="carousel-arrow-character-prev" onclick="carouselPrev('character')" aria-label="Previous character">Prev</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="carousel-card-character"></div>
         </div>
-        <button class="carousel-arrow" id="carousel-arrow-character-next" onclick="carouselNext('character')" aria-label="Next character">▶</button>
+        <button class="carousel-arrow" id="carousel-arrow-character-next" onclick="carouselNext('character')" aria-label="Next character">Next</button>
       </div>
       <div class="carousel-dots" id="carousel-dots-character" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="carousel-info-panel-character"></div>
@@ -78,11 +79,11 @@
     <div class="carousel-section" role="group" aria-labelledby="carousel-label-scenario">
       <div class="carousel-label" id="carousel-label-scenario">Scenario</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="carousel-arrow-scenario-prev" onclick="carouselPrev('scenario')" aria-label="Previous scenario">◀</button>
+        <button class="carousel-arrow" id="carousel-arrow-scenario-prev" onclick="carouselPrev('scenario')" aria-label="Previous scenario">Prev</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="carousel-card-scenario"></div>
         </div>
-        <button class="carousel-arrow" id="carousel-arrow-scenario-next" onclick="carouselNext('scenario')" aria-label="Next scenario">▶</button>
+        <button class="carousel-arrow" id="carousel-arrow-scenario-next" onclick="carouselNext('scenario')" aria-label="Next scenario">Next</button>
       </div>
       <div class="carousel-dots" id="carousel-dots-scenario" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="carousel-info-panel-scenario"></div>
@@ -196,8 +197,8 @@
 
   <!-- Mobile bottom-sheet trigger bar (kept for mobile compat) -->
   <div class="game-mobile-bar" aria-label="Open status panels" role="toolbar">
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">⌚ Watch</button>
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">Watch</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">Route</button>
   </div>
 </section>
 
@@ -211,7 +212,7 @@
         <div class="watch-detail-name" id="game-help-title">Pressure and Trend Guide</div>
         <div class="watch-detail-difficulty" id="game-help-subtitle">Read mountain pressure labels and trend categories before committing movement.</div>
       </div>
-      <button class="btn-link watch-detail-close" type="button" id="game-help-close-btn" onclick="closeGameHelp()" aria-label="Close help">✕</button>
+      <button class="btn-link watch-detail-close" type="button" id="game-help-close-btn" onclick="closeGameHelp()" aria-label="Close help">Close</button>
     </div>
     <div id="game-help-content"></div>
   </div>
@@ -226,7 +227,7 @@
         <div class="watch-detail-name" id="watch-detail-name">—</div>
         <div class="watch-detail-difficulty" id="watch-detail-difficulty"></div>
       </div>
-      <button class="btn-link watch-detail-close" type="button" onclick="closeWatchDetail()" aria-label="Close watch detail">✕</button>
+      <button class="btn-link watch-detail-close" type="button" onclick="closeWatchDetail()" aria-label="Close watch detail">Close</button>
     </div>
     <!-- Preserved class names for test compatibility and JS population -->
     <div class="watch-status-layout">
@@ -288,7 +289,7 @@
   <div class="field-log-dialog" tabindex="-1">
     <div class="field-log-header">
       <span class="field-log-title">Field Log</span>
-      <button class="btn-link" type="button" onclick="closeFieldLog()" aria-label="Close field log">✕</button>
+      <button class="btn-link" type="button" onclick="closeFieldLog()" aria-label="Close field log">Close</button>
     </div>
     <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
       <div class="log-empty">No entries yet.</div>
@@ -304,8 +305,8 @@
 <div id="bottom-sheet-watch" class="bottom-sheet" role="dialog" aria-modal="true" aria-label="Watch panel">
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
-    <span>⌚ Watch</span>
-    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-watch')" aria-label="Close Watch panel" style="float:right">✕</button>
+    <span>Watch</span>
+    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-watch')" aria-label="Close Watch panel" style="float:right">Close</button>
   </div>
   <div class="bottom-sheet-watch-body">
     <div id="bs-watch-turn" class="watch-turn" style="margin-bottom:0.5rem;"></div>
@@ -343,8 +344,8 @@
 <div id="bottom-sheet-route" class="bottom-sheet" role="dialog" aria-modal="true" aria-label="Route panel">
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
-    <span>🏔 Route Track</span>
-    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-route')" aria-label="Close Route panel" style="float:right">✕</button>
+    <span>Route Track</span>
+    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-route')" aria-label="Close Route panel" style="float:right">Close</button>
   </div>
   <ul class="position-list" id="bs-position-list" aria-label="Route positions (bottom-sheet)"></ul>
 </div>
@@ -354,7 +355,7 @@
 <section id="screen-debrief" class="screen" aria-label="Expedition debrief">
   <!-- Section 1: Emotional result hero (Decision 18) -->
   <div id="debrief-hero" class="debrief-hero" aria-live="polite">
-    <div class="debrief-hero-icon" aria-hidden="true">🏔</div>
+    <div class="debrief-hero-icon" aria-hidden="true">AS</div>
     <div class="debrief-outcome-headline" id="debrief-outcome-headline">—</div>
     <div class="debrief-key-stats" id="debrief-hero-stats">—</div>
   </div>
@@ -461,11 +462,11 @@
     <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-character">
       <div class="carousel-label" id="part2-carousel-label-character">Character</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="part2-carousel-arrow-character-prev" onclick="part2CarouselPrev('character')" aria-label="Previous character">◀</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-prev" onclick="part2CarouselPrev('character')" aria-label="Previous character">Prev</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="part2-carousel-card-character"></div>
         </div>
-        <button class="carousel-arrow" id="part2-carousel-arrow-character-next" onclick="part2CarouselNext('character')" aria-label="Next character">▶</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-next" onclick="part2CarouselNext('character')" aria-label="Next character">Next</button>
       </div>
       <div class="carousel-dots" id="part2-carousel-dots-character" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="part2-carousel-info-character"></div>
@@ -475,11 +476,11 @@
     <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-route">
       <div class="carousel-label" id="part2-carousel-label-route">Route</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="part2-carousel-arrow-route-prev" onclick="part2CarouselPrev('route')" aria-label="Previous route">◀</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-prev" onclick="part2CarouselPrev('route')" aria-label="Previous route">Prev</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="part2-carousel-card-route"></div>
         </div>
-        <button class="carousel-arrow" id="part2-carousel-arrow-route-next" onclick="part2CarouselNext('route')" aria-label="Next route">▶</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-next" onclick="part2CarouselNext('route')" aria-label="Next route">Next</button>
       </div>
       <div class="carousel-dots" id="part2-carousel-dots-route" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="part2-carousel-info-route"></div>

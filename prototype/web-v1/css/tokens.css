@@ -12,25 +12,43 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
+  /* ── Semantic colors ── */
+  --color-primary: #a855f7;
+  --color-primary-hover: #9333ea;
+  --color-primary-fg: #0d0f16;
+  --color-secondary: #7dd3fc;
+  --color-accent: #f59e0b;
+  --color-surface: #141f2d;
+  --color-surface-elevated: #1d2b3d;
+  --color-border: #3a4d60;
+  --color-border-subtle: #2a3a4a;
+  --color-text: #e6edf7;
+  --color-text-secondary: #a7b5c7;
+  --color-text-disabled: #7b8998;
+  --color-error: #e57373;
+  --color-warning: #f6c363;
+  --color-success: #89b492;
+  --color-info: #7dd3fc;
+
+  /* Legacy aliases for runtime compatibility */
+  --bg: #0b121d;
+  --surface: var(--color-surface);
+  --surface2: var(--color-surface-elevated);
+  --border: var(--color-border);
+  --stone: #b9ac9e;
+  --ochre: #d2b48d;
   --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --ice: #b9d3e6;
+  --ice-dim: #6f90a9;
+  --white: #eef3f8;
+  --red: var(--color-error);
+  --red-dim: #8d473f;
+  --safety: var(--color-success);
+  --text: var(--color-text);
+  --text-dim: var(--color-text-secondary);
+  --text-soft: #bec9d8;
+  --muted: var(--color-text-secondary);
+  --accent: var(--color-accent);
 
   /* ── Typography ── */
   --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
@@ -39,16 +57,18 @@
   --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
 
   /* ── Spacing scale ── */
-  --space-xs:  0.25rem;
-  --space-sm:  0.5rem;
-  --space-md:  1rem;
-  --space-lg:  1.5rem;
-  --space-xl:  2rem;
-  --space-2xl: 3rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 3rem;
 
   /* ── Border radius ── */
   --radius-sm: 8px;
-  --radius-md: 14px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;

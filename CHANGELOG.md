@@ -19,10 +19,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
+- Refreshed public visual styling across landing-adjacent surfaces and archived viewer UI (`index.html`, `md-viewer.html`, `prototype/mra-v0/viewer/styles.css`) with updated dark palette contrast, stronger 44px touch targets, and reduced-motion-safe transitions.
+- Retuned web-v1 design tokens and button/overlay typography in `prototype/web-v1/css/{tokens,components,layout,screens}.css` to enforce semantic color tokens, stronger focus rings, and clearer debrief/icon hierarchy.
 
 ### Fixed
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.
 - Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
+- Replaced emoji-based UI affordances in `prototype/web-v1/index.html` (info/close/arrows/watch/route/debrief icon) with text-first controls and added a keyboard-visible skip link for direct game-region access.
 
 ## [1.4.5] — 2026-03
 
