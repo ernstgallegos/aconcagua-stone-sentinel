@@ -123,3 +123,14 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* 2026-03 makeover motion pass */
+@keyframes titleReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titleCtaPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}

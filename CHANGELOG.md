@@ -15,6 +15,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Redesigned the public landing hero into a full-bleed brand-first composition with cinematic typography, reduced first-view clutter, and atmospheric motion tuned for desktop/mobile parity.
+- Refreshed `web-v1` welcome/title presentation with explicit project identity copy, updated alpine palette tokens, and intentional motion hierarchy (brand reveal + CTA pulse) while preserving existing flow hooks.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
