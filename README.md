@@ -204,13 +204,13 @@ The welcome screen is now intentionally minimal: the cover art remains dominant,
 
 The expedition-setup screen presents two carousels: character and scenario. Each scenario embeds its own difficulty modifiers, so the selected scenario determines pressure, recovery, resource economy, permit slack, and decision-window leniency for the run — including character-specific timer profiles and signed recovery actions.
 
-The onboarding screen now includes a full tutorial/FAQ entry point before `Understood. Begin.`, covering the run loop, hidden systems, action reference, difficulty behavior, and common rules questions.
+The onboarding screen now includes a full tutorial/FAQ entry point before the primary `Begin Expedition` CTA, covering the run loop, hidden systems, action reference, difficulty behavior, and common rules questions.
 
 Character selection now includes a `Random Character` option that auto-picks one of the six available profiles when you confirm the expedition.
 
 Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
 
-`part2-character → part2-hotel → part2-intro → part2-guides → part2-transfer → part2-closure`
+`part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 
 Unlock is exclusive to `Summit and Safe Return`.
 
@@ -234,7 +234,7 @@ Examples:
 #part2-character&force=1
 ```
 
-Full table with all 14 screens, parameter reference, character/scenario/outcome IDs, and copy-pasteable links: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
+Full table with all active screens, parameter reference, character/scenario/outcome IDs, and copy-pasteable links: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
 
 
 ## Consolidated design v1.4 (planning)

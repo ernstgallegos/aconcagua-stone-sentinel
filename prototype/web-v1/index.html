@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aconcagua: Stone Sentinel</title>
+<link rel="icon" type="image/svg+xml" href="../../art/brand/favicon-aconcagua.svg"/>
+<link rel="apple-touch-icon" href="../../art/brand/favicon-aconcagua.svg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <!-- Decision 8: Plus Jakarta Sans for UI/Headlines -->
@@ -24,13 +26,9 @@
   <button id="title-info-trigger" class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
 
   <div class="title-utility-cluster">
-    <div class="lang-switcher" aria-label="Language switcher">
-      <label for="language-select" class="sr-only">Language</label>
-      <span class="switcher-icon" aria-hidden="true">文</span>
-      <select id="language-select" class="theme-select theme-select-minimal" onchange="setLanguage(this.value)">
-        <option value="en">EN</option>
-        <option value="es">ES</option>
-      </select>
+    <div class="lang-switch" role="group" aria-label="Language selector">
+      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" onclick="setLanguage('en')">EN</button>
+      <button class="lang-btn" type="button" data-lang="es" aria-pressed="false" onclick="setLanguage('es')">ES</button>
     </div>
   </div>
 </div>

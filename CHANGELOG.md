@@ -10,56 +10,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
-- Added `prototype/web-v1/ui/helpers/carousel-media.js` plus unit coverage to standardize carousel portrait preload/skeleton/fallback states and reduce setup-card flicker on slow loads.
-- Added startup-copy unit coverage in `prototype/web-v1/tests/unit/startup-ui.test.js` to lock the updated ready-state CTA text in both English and Spanish.
-- Added `meta/audit-remediation-2026-03-30.md`, a traceable remediation matrix mapping relevant findings from both 2026-03-30 audits to `FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED` outcomes with evidence.
-- Added `docs/TROUBLESHOOTING.md` with startup/data-contract/asset/deep-link/operator checks for public web-v1 incidents.
-- Added `docs/context-events-guide.md` documenting canonical context-event ownership, contract shape, and regression checks.
-- Added `prototype/web-v1/tests/contracts/assets-contracts.test.js` to enforce critical visual asset existence and portrait parity with `data/characters.json`.
-- Added `prototype/web-v1/tests/engine/rng-seed-validation.test.js` to lock finite-seed validation behavior in `mulberry32`.
-- Added `docs/es/sistema-tipografico-playfair.md` with a full typography audit/proposal for role-based usage (brand, UI, reading, and data) across landing and `web-v1`.
-- Added a new public-web redesign audit snapshot at `meta/ui-ux-redesign-audit.md` focused on clarity, hierarchy, tone, and public-perception gaps for the root landing experience.
-- Added a formal redesign direction brief at `meta/design-direction.md` defining the mountain-first editorial concept, UX/visual principles, responsive logic, and accessibility criteria.
-- Added a redesign delivery log at `meta/redesign-changelog.md` documenting implemented changes, rationale, expected impact, and deferred follow-ups.
-- Added a new public root landing page at `/index.html` with a modern hero-first layout, concise project pillars, and a privileged primary CTA to launch the active `web-v1` prototype (`/prototype/web-v1/index.html`).
-- Added a dedicated landing “community” section with direct Instagram follow CTA and official mail contact CTA so visitors can track updates and reach the team without leaving `/`.
-- Added landing documentation-visualization cards sourced from repository markdown references (whitepaper + public roadmap) and a dedicated official-channels card (GitHub + official email).
-- Expanded landing documentation hub with a dedicated README card and expanded official-channels actions (GitHub + Instagram + official email) for complete public-navigation and contact visibility.
-- Added `md-viewer.html` as a styled markdown reader for landing-published docs (whitepaper, public roadmap, and repo-truth), so those documents open with enriched project-consistent presentation instead of raw markdown rendering.
-- Added flagship redesign documentation deliverables for the public web surface: `meta/ui-ux-redesign-audit.md`, `meta/design-direction.md`, `docs/design-system.md`, and `meta/redesign-changelog.md`.
-- Added bilingual landing runtime support (EN default + ES switch) at root with localStorage preference persistence and translated metadata/alt attributes for accessibility and SEO consistency.
+- Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL (landing, web-v1 shell, and Part 2 deep-link documentation markers).
+- Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
+- Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
-- Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
-- Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
-- Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
-- Reworked the landing footer into a three-block structure (project status, official contact channels, legal/governance links) and added explicit Argentina-origin messaging (`Made in Argentina` / `Hecho en Argentina`) to clarify project provenance.
-- Changed the shared language-preference storage key on the root landing page to `aconcagua_language_v1` so landing, markdown viewer, and `prototype/web-v1` use one persistent cross-surface language state.
-- Redesigned `md-viewer.html` to use the same visual token family and interaction language as the main landing (header, buttons, surfaces, typography, and focus behavior), keeping markdown-reading routes stylistically consistent with the public site shell.
-- Added language persistence and EN/ES switcher controls to `md-viewer.html`, reusing the same global language key as landing/web-v1.
-- Updated `prototype/web-v1/ui/screens.js` runtime diagnostics to avoid unconditional production `console.error` noise by routing startup/unknown-screen/invalid-seed reports through a localhost-only debug helper.
-- Hardened deep-link seed parsing in `prototype/web-v1/ui/screens.js` so invalid `seed` params are ignored in favor of safe scenario/default seeds.
-- Refined typography-system guidance to incorporate `Montserrat` as the primary UX/UI sans companion to `Playfair Display`, with updated role tokens in both `docs/design-system.md` and `docs/es/sistema-tipografico-playfair.md`.
-- Updated `docs/design-system.md` typography guidance to center the public visual hierarchy around `Playfair Display` with explicit subordinate roles for UI sans (`Plus Jakarta Sans`) and telemetry mono (`IBM Plex Mono`).
-- Updated root landing public copy to refer to the playable surface as the “current web prototype” (EN/ES) instead of “web-v1 prototype” in user-facing CTA/metadata language.
-- Rebuilt `index.html` into a stronger mountain-first editorial presentation with asymmetric hero composition, refined mineral palette, constrained motion, and clearer progression from concept to system evidence and primary CTA.
-- Reworked landing bilingual copy and section IA to better serve first-time external audiences (players, collaborators, press, curators) while preserving direct links to prototype, roadmap, whitepaper, README, and official channels.
-- Updated `docs/design-system.md` to document the current root-landing tokens, typography stack, component patterns, responsive behavior, and accessibility/motion guidance.
-- Extended the redesign language into `prototype/web-v1` visual shell by refreshing core theme tokens, setup-screen atmospheric framing, and button/control contrast hierarchy for stronger landing-to-prototype continuity.
-- Changed root-route documentation in `README.md`, `README.es.md`, and `docs/deploy-routing.md` to describe `/` as a canonical landing surface (instead of an automatic redirect), while preserving direct routes to `web-v1` and the archived `mra-v0` viewer.
-- Fixed landing hero artwork presentation by preserving original image aspect ratio (`object-fit: contain` + auto height) to avoid readability loss from aggressive cropping.
-- Redesigned root `index.html` into a full premium landing architecture (sticky nav, editorial/product section flow, system/outcomes/status modules, stronger CTA hierarchy, and accessibility/responsive refinements) while preserving direct entry to `prototype/web-v1/index.html`.
-- Improved landing section visualizations for `Vision` and `System` by adding richer semantic card metadata and an explicit EP/BT flow strip, increasing scanability without introducing heavy motion or extra dependencies.
-- Removed the archived `prototype/mra-v0/viewer` CTA from landing primary action areas so root onboarding now prioritizes active prototype + docs/channels only.
-- Updated landing visual tokens to align with the active web-v1 sunset palette, improving cross-surface brand coherence between `/` and `prototype/web-v1`.
-- Updated `vercel.json` routing so `/` no longer 301-redirects to `prototype/web-v1/index.html`, allowing Vercel deployments to serve the new root landing page directly while keeping normalization redirects for `/prototype/web-v1` and `/prototype/mra-v0/viewer`.
+- Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
+- Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
+- Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
+- Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
 
 ### Fixed
-- Fixed setup/Part-2 carousel portrait rendering to avoid blank-image flashes by reserving media space, using loading skeletons, fading in loaded assets, and showing localized fallback copy on image failure.
-- Fixed architecture-doc route drift by aligning `docs/architecture.md` root-entry statement with the current landing-first repository behavior.
-- Fixed markdown-viewer media rendering so Markdown image syntax (`![alt](path)`) now renders as styled images with repository-relative URL resolution, restoring README/linked-doc visual assets inside `md-viewer.html`.
-- Fixed web-v1 startup ready-state copy to show `Click/tap to begin.` (`Haz clic/toca para comenzar.`) instead of the previous wording.
-- Fixed RNG input hardening in `prototype/web-v1/engine/turn-resolution.js` by rejecting non-finite seeds in `mulberry32`, preventing invalid deep-link seed values from silently producing unstable random streams.
+- Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.
+- Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
 
 ## [1.4.5] — 2026-03
 

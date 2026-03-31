@@ -22,9 +22,11 @@ for p in pathlib.Path('.').rglob('*.json'):
     json.loads(p.read_text(encoding='utf-8'))
 print('all-json-ok')
 PY
+npm run smoke:release
 ```
 
 - [ ] All gates pass locally.
+- [ ] `npm run smoke:release` passed against the canonical deployed URL (or an explicit release candidate URL).
 - [ ] Any skipped check includes an explicit reason in PR notes.
 - [ ] PR/final report includes the exact commands executed for each completed gate.
 
