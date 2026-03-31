@@ -10,23 +10,26 @@
     />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
+        --bg-0: #070b11;
+        --bg-1: #0d1622;
+        --bg-2: #132335;
+        --surface-0: #0f1a27d1;
+        --surface-1: #152334e8;
+        --surface-2: #1a2e43eb;
+        --border-soft: #adc1d638;
+        --border-strong: #dce8f264;
+        --text-main: #ebf3fb;
+        --text-dim: #b3c3d3;
+        --text-muted: #8ca0b4;
+        --accent-ice: #d9edf8;
+        --accent-mineral: #9db9d0;
+        --accent-amber: #ddb996;
         --accent-critical: #f2d4af;
 
         --radius-xs: 10px;
@@ -45,8 +48,9 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Fraunces", "Iowan Old Style", serif;
+        --sans: "Space Grotesk", "Avenir Next", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
       }
 
       * { box-sizing: border-box; }
@@ -58,8 +62,8 @@
         color: var(--text-main);
         line-height: 1.5;
         background:
-          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+          radial-gradient(1400px 700px at 86% -10%, #b9d0e333, transparent 58%),
+          radial-gradient(930px 520px at 8% -4%, #d9b99624, transparent 52%),
           linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
         min-height: 100vh;
       }
@@ -176,8 +180,9 @@
         border-radius: 999px;
         background: transparent;
         color: var(--text-dim);
-        font-size: 0.72rem;
+        font-size: 0.67rem;
         font-weight: 700;
+        font-family: var(--mono);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 0.32rem 0.54rem;
@@ -193,16 +198,28 @@
 
       .hero {
         display: grid;
-        gap: var(--space-4);
-        align-items: end;
+        gap: var(--space-3);
+        align-items: stretch;
       }
 
       .hero-copy {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        background: linear-gradient(160deg, #152337f4 0%, #0f1a2bf2 74%);
         box-shadow: var(--shadow-strong);
         padding: clamp(1.2rem, 3.5vw, 2.7rem);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-copy::after {
+        content: "";
+        position: absolute;
+        inset: auto -10% -30% auto;
+        width: 55%;
+        height: 60%;
+        background: radial-gradient(circle, #d9b99626 0%, transparent 72%);
+        pointer-events: none;
       }
 
       .eyebrow {
@@ -217,11 +234,11 @@
       h1 {
         margin: 0.55rem 0 0;
         font-family: var(--serif);
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.01em;
-        line-height: 1.03;
+        line-height: 1;
         font-size: clamp(2.1rem, 6.5vw, 4.8rem);
-        max-width: 14ch;
+        max-width: 12ch;
       }
 
       .hero-lead {
@@ -236,7 +253,9 @@
         display: grid;
         gap: 0.35rem;
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        font-family: var(--mono);
+        letter-spacing: 0.03em;
       }
 
       .hero-cta {
@@ -251,7 +270,9 @@
         border-radius: 999px;
         padding: 0.72rem 1.08rem;
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -275,7 +296,7 @@
         border-radius: var(--radius-md);
         border: 1px solid var(--border-soft);
         overflow: hidden;
-        background: #111926;
+        background: #0e1722;
         box-shadow: var(--shadow-soft);
       }
       .hero-art img {
@@ -283,6 +304,15 @@
         height: auto;
         object-fit: contain;
         filter: saturate(0.93) contrast(1.03);
+      }
+      .hero-art figcaption {
+        padding: 0.65rem 0.9rem;
+        border-top: 1px solid var(--border-soft);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--text-muted);
       }
 
       .section {
@@ -301,8 +331,9 @@
         color: var(--accent-mineral);
         text-transform: uppercase;
         letter-spacing: 0.14em;
-        font-size: 0.72rem;
+        font-size: 0.67rem;
         font-weight: 700;
+        font-family: var(--mono);
       }
 
       .section h2 {
@@ -321,7 +352,7 @@
       .manifest {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: linear-gradient(170deg, #162336de 0%, #0f1723d9 100%);
+        background: linear-gradient(170deg, #17263ae8 0%, #101a29e8 100%);
         padding: var(--space-4);
       }
 
@@ -347,7 +378,7 @@
       .flow {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: #132031d1;
+        background: #132334e0;
         padding: var(--space-4);
       }
 
@@ -360,7 +391,7 @@
         border: 1px solid #c7d9ea3b;
         border-radius: var(--radius-sm);
         padding: 0.65rem 0.8rem;
-        background: #1a2a3fd9;
+        background: #1c2f45de;
         color: #dce7f2;
         font-size: 0.93rem;
       }
@@ -379,7 +410,7 @@
       .panel {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-sm);
-        background: #131f2fd9;
+        background: #132235e0;
         padding: var(--space-3);
       }
 
@@ -396,7 +427,7 @@
       .intel-card {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-sm);
-        background: #111b29d9;
+        background: #111d2ce3;
         padding: var(--space-3);
         display: flex;
         flex-direction: column;
@@ -418,7 +449,7 @@
       .status-strip {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: #111c2ad1;
+        background: #112031df;
         padding: var(--space-4);
       }
 
@@ -464,7 +495,7 @@
       .final-band {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
+        background: linear-gradient(145deg, #1b2e45e6, #111d2cec 72%);
         padding: var(--space-4);
         box-shadow: var(--shadow-soft);
       }
@@ -519,7 +550,7 @@
 
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
-        .hero { grid-template-columns: 1.25fr 0.75fr; }
+        .hero { grid-template-columns: 1.2fr 0.8fr; }
         .system-layout { grid-template-columns: 1.1fr 0.9fr; }
         .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
@@ -572,6 +603,7 @@
 
         <figure class="hero-art">
           <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
+          <figcaption data-i18n="heroArtCaption">Field image · South Face atmospheric plate</figcaption>
         </figure>
       </section>
 
@@ -765,6 +797,7 @@
           heroLead: 'Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.',
           heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
+          heroArtCaption: 'Field image · South Face atmospheric plate',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
           visionKicker: 'Design premise',
@@ -830,6 +863,7 @@
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones irreversibles. La cumbre es una posibilidad entre múltiples resultados válidos. El retorno seguro, el timing y el criterio son valores centrales.',
           heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
+          heroArtCaption: 'Imagen de campo · placa atmosférica de la Cara Sur',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
           visionKicker: 'Premisa de diseño',

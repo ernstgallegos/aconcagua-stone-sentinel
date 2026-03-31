@@ -173,14 +173,14 @@
 /* ── Welcome top controls — fixed overlays ── */
 .title-top-controls {
   position: fixed;
-  top: 1rem;
+  top: 0.85rem;
   left: 1rem;
   right: 1rem;
   z-index: 1000;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .title-utility-cluster {
@@ -213,7 +213,7 @@
   border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   border-radius: 999px;
   padding: 0.2rem;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
   backdrop-filter: blur(8px);
 }
 
@@ -223,7 +223,7 @@
   background: transparent;
   color: var(--text-soft);
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -233,7 +233,7 @@
 
 .lang-btn[aria-pressed='true'] {
   color: #081019;
-  background: linear-gradient(120deg, #d6eef9, #d9b996);
+  background: linear-gradient(120deg, var(--ice), var(--ochre));
 }
 
 .lang-btn:focus-visible {
