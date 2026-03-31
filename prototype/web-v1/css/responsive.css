@@ -22,14 +22,16 @@
   }
 
   .title-main { font-size: 1.75rem; }
+  .title-brand { font-size: clamp(2rem, 11vw, 2.7rem); }
   .title-divider { margin: 1.25rem auto; }
   .title-tagline { font-size: 0.875rem; }
   .title-shell { padding: 2rem 1rem; }
-  .title-shell-minimal { padding: 1.5rem 1rem; }
+  .title-shell-minimal { padding: 1.5rem 1rem; text-align: center; align-items: center; }
   .title-top-controls { top: 0.75rem; left: 0.75rem; right: 0.75rem; }
   .title-utility-cluster { gap: 0.35rem; }
   .title-screen-advance { width: 100%; padding-left: 0; padding-right: 0; }
   .title-screen-advance span { width: 100%; }
+  .startup-status-line { text-align: center; }
 
   .char-grid { grid-template-columns: 1fr; }
   .scenario-grid { grid-template-columns: 1fr; }
