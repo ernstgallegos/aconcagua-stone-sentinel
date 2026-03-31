@@ -2421,3 +2421,86 @@ button:focus-visible,
     scroll-behavior: auto !important;
   }
 }
+
+/* ══════════════════════════════════════
+   AGGRESSIVE REDESIGN OVERRIDES (v1.4.6)
+   Keeps HTML/JS contracts stable while overhauling visual system.
+   ══════════════════════════════════════ */
+
+.btn-primary,
+.btn-ghost,
+.btn-decision,
+.btn-link,
+.theme-select,
+.lang-btn {
+  min-height: 44px;
+}
+
+.btn-primary {
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--ochre), var(--ice));
+  box-shadow: var(--fx-glow-strong);
+  letter-spacing: 0.12em;
+}
+
+.btn-ghost,
+.btn-decision {
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface2) 78%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.btn-decision:hover:not(:disabled),
+.btn-ghost:hover {
+  box-shadow: var(--fx-glow-soft);
+  transform: translateY(-1px);
+}
+
+.char-card,
+.scenario-card,
+.carousel-card,
+.panel-shell,
+.telemetry-card,
+.permit-widget,
+.watch-detail-card,
+.context-widget,
+.signal-line,
+.debrief-hero,
+.debrief-panel,
+.title-info-modal {
+  border-radius: 16px;
+  border-color: color-mix(in srgb, var(--border) 88%, transparent);
+  background:
+    linear-gradient(140deg,
+      color-mix(in srgb, var(--surface2) 92%, transparent),
+      color-mix(in srgb, var(--surface) 98%, transparent));
+  box-shadow: var(--fx-glow-soft);
+}
+
+.screen-header h2,
+.game-title,
+.debrief-outcome,
+.title-logo,
+.onboarding-title {
+  font-family: var(--heading);
+  letter-spacing: 0.08em;
+}
+
+.screen-header p,
+.narrative-text,
+.debrief-summary,
+.context-widget-note {
+  color: var(--text-dim);
+}
+
+.route-dot.active,
+.route-node.active,
+.permit-risk-chip.warning,
+.status-chip.warning {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ochre) 32%, transparent);
+}
+
+:where(button, [role='button'], a, select, input, textarea):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ochre) 72%, white);
+  outline-offset: 2px;
+}

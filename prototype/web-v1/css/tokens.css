@@ -1,57 +1,53 @@
 /* ═══════════════════════════════════════════
    TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
+   Aggressive "summit neon" redesign (v1.4.6 WIP)
    ═══════════════════════════════════════════ */
 
-/* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
-   Usage: these are documentation tokens; actual @media queries live in responsive.css
-   --bp-sm:  480px
-   --bp-md:  768px
-   --bp-lg:  1024px
-   --bp-xl:  1280px
-*/
-
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  color-scheme: dark;
 
-  /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
-  --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  /* Semantic palette */
+  --bg: #06070c;
+  --surface: #101426;
+  --surface2: #1a2040;
+  --border: #4b63a8;
+  --stone: #e5ebff;
+  --ochre: #9bf6ff;
+  --ochre-dim: #5eb2c2;
+  --ice: #b0b7ff;
+  --ice-dim: #7e89d4;
+  --white: #f8fbff;
+  --red: #ff6b9f;
+  --red-dim: #b94876;
+  --safety: #6ef3ba;
+  --text: #e5e9ff;
+  --text-dim: #b0b9e9;
+  --text-soft: #98a2d7;
+  --muted: #8c97cc;
+  --accent: #9bf6ff;
 
-  /* ── Spacing scale ── */
-  --space-xs:  0.25rem;
-  --space-sm:  0.5rem;
-  --space-md:  1rem;
-  --space-lg:  1.5rem;
-  --space-xl:  2rem;
+  /* Typography */
+  --heading: 'Space Grotesk', 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Spacing scale (4/8 rhythm) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
   --space-2xl: 3rem;
 
-  /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-
-  /* ── Transition speeds ── */
-  --dur-fast:   0.15s;
+  /* Radius + motion */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --dur-fast: 0.12s;
   --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-slow: 0.3s;
+
+  /* Elevated surfaces */
+  --fx-glow-soft: 0 0 0 1px color-mix(in srgb, var(--ice) 45%, transparent), 0 14px 36px color-mix(in srgb, var(--ice) 20%, transparent);
+  --fx-glow-strong: 0 0 0 1px color-mix(in srgb, var(--ochre) 55%, transparent), 0 20px 54px color-mix(in srgb, var(--ochre) 30%, transparent);
 }

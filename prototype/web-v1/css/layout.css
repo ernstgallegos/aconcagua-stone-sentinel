@@ -277,3 +277,28 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* Aggressive redesign: cinematic shell + neon top controls */
+body {
+  background:
+    radial-gradient(1200px 700px at 10% -10%, rgba(90, 120, 255, 0.18), transparent 55%),
+    radial-gradient(1100px 680px at 90% -15%, rgba(120, 255, 255, 0.12), transparent 55%),
+    linear-gradient(180deg, #05070f 0%, #0a1022 46%, #070b15 100%);
+}
+
+.title-top-controls {
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.mountain-main {
+  border-left: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface2) 28%, transparent), transparent 42%);
+}
+
+.watch-band {
+  border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+}

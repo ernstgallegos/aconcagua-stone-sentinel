@@ -1014,3 +1014,36 @@
 .part2-feedback-cta a {
   color: var(--ice);
 }
+
+/* Aggressive redesign: stronger cinematic contrast across screens */
+#screen-title,
+#screen-expedition-setup,
+#screen-part2-character,
+#screen-debrief,
+#screen-summit-success {
+  position: relative;
+  isolation: isolate;
+}
+
+#screen-title::after,
+#screen-expedition-setup::after,
+#screen-part2-character::after,
+#screen-debrief::after,
+#screen-summit-success::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 360px at 50% -5%, color-mix(in srgb, var(--ice) 20%, transparent), transparent 62%),
+    radial-gradient(700px 300px at 15% 100%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.title-screen-advance,
+.title-info-trigger {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+  background: color-mix(in srgb, var(--surface2) 72%, transparent);
+  backdrop-filter: blur(10px);
+}

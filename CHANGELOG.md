@@ -19,6 +19,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
+- Redesigned the public landing and full `web-v1` visual system with a high-contrast neon-cinematic direction (new semantic palette, typography pairing, elevated glow tokens, and unified panel/button treatments) while preserving existing runtime/navigation contracts.
 
 ### Fixed
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.

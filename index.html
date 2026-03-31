@@ -13,21 +13,21 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
+        --bg-0: #06070d;
+        --bg-1: #0b132a;
+        --bg-2: #131e3f;
+        --surface-0: #0f1631d9;
+        --surface-1: #1a2550db;
+        --surface-2: #25336ce6;
+        --border-soft: #83a4ff5e;
+        --border-strong: #b8cbff82;
         --text-main: #e8eff7;
         --text-dim: #adbbc9;
         --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
-        --accent-critical: #f2d4af;
+        --accent-ice: #9bf6ff;
+        --accent-mineral: #bac9ff;
+        --accent-amber: #b4b9ff;
+        --accent-critical: #ff7ca8;
 
         --radius-xs: 10px;
         --radius-sm: 14px;
@@ -60,7 +60,8 @@
         background:
           radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
           radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 46%, var(--bg-0) 100%);
+        overflow-x: hidden;
         min-height: 100vh;
       }
 
@@ -103,8 +104,8 @@
         top: 0;
         z-index: 50;
         border-bottom: 1px solid var(--border-soft);
-        background: #0f1621c2;
-        backdrop-filter: blur(10px);
+        background: #101733d1;
+        backdrop-filter: blur(14px);
       }
 
       .header-row {
@@ -257,7 +258,7 @@
         justify-content: center;
         transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
       }
-      .btn:hover { transform: translateY(-1px); text-decoration: none; }
+      .btn:hover { transform: translateY(-2px); text-decoration: none; box-shadow: 0 16px 36px #84a7ff55; }
       .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
 
       .btn-primary {
