@@ -15,6 +15,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Reframed landing and web-v1 first-view experiences around a single brand-first composition with full-bleed mountain imagery, reduced hero clutter, and explicit narrative-first CTAs to better communicate project intent before system details.
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
@@ -45,6 +47,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `prototype/web-v1/tests/unit/accessibility-modal.test.js` to pin modal lock/focus-return behavior for the shared accessibility helper and prevent regressions in dialog open/close state handling.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -130,6 +133,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added accessibility smoke coverage for modal focus helpers and run-log export contract coverage for `run_log.json` summary structure (`prototype/web-v1/tests/accessibility-smoke.test.js`, `prototype/web-v1/tests/model-contract.runlog.test.js`).
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -170,6 +174,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [1.4.2] — 2026-03
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -208,6 +213,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Character portraits in carousel cards (`screen-expedition-setup`, `screen-part2-character`) were cropped on desktop because `max-height: 220px` with `object-fit: cover` cut the bottom of 1024×1024 images. Replaced with `aspect-ratio: 1 / 1` so the container stays square and the full image is visible on all viewport sizes (`prototype/web-v1/css/components.css`).
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -260,6 +266,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `deriveDifficultyFromScenario()` helper in `prototype/web-v1/ui/screens.js` that derives `CURRENT_DIFFICULTY_ID` from the active scenario's difficulty string for legacy compatibility.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -452,6 +459,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Expanded Section 6.3 in `docs/es/diseno-consolidado-v1.4.md` with calibrated win-rate distribution and active configuration values in Spanish.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -571,6 +579,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - `difficultyLabel` rendered in character selection cards for all six characters.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -600,6 +609,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Informational Python linting step (ruff) in CI.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -630,6 +640,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Turn debrief export to `run_log.json` from the web prototype.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.
@@ -648,6 +659,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Additional bundled run artifacts (`late-push`, `weather-window`) and expanded Python test coverage.
 
 ### Changed
+- Aggressively redesigned all public UI surfaces (landing page, styled markdown viewer, archived MRA viewer, and full web-v1 prototype) with a unified cyber-alpine visual system, stronger focus/contrast states, and mobile-safe responsive overrides via new `prototype/web-v1/css/redesign-aggressive.css` plus per-entrypoint style updates.
 - Changed web-v1 modal orchestration to route intro/tutorial/onboarding through shared focus-trap helpers and one Escape/backdrop-close path, including consistent bottom-sheet scroll locking/unlocking.
 - Changed mobile narrative presentation in `prototype/web-v1/css/components.css` and `prototype/web-v1/css/responsive.css` to reduce text density with tighter line-width limits, improved spacing, and gentler small-screen typography.
 - Changed `prototype/web-v1/ui/screens.js` to delegate modal/backdrop wiring to `ui/helpers/modal-controller.js`, reducing monolithic UI responsibility without altering public flow.

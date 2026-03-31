@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="./css/animations.css"/>
 <link rel="stylesheet" href="./css/themes.css"/>
 <link rel="stylesheet" href="./css/responsive.css"/>
+<link rel="stylesheet" href="./css/redesign-aggressive.css"/>
 </head>
 <body>
 
@@ -37,7 +38,12 @@
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
+    <div class="title-brand-lockup">
+      <p id="title-brand-name" class="title-brand-name">Aconcagua: Stone Sentinel</p>
+      <p id="title-brand-sub" class="title-brand-sub">A mountain-first expedition prototype about pressure, judgment, and safe return.</p>
+    </div>
     <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
+      <span id="title-screen-advance-label">Begin expedition</span>
     </button>
     <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Preparing mountain model…</p>
   </div>
@@ -196,8 +202,8 @@
 
   <!-- Mobile bottom-sheet trigger bar (kept for mobile compat) -->
   <div class="game-mobile-bar" aria-label="Open status panels" role="toolbar">
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">⌚ Watch</button>
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">Watch</button>
+    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">Route</button>
   </div>
 </section>
 
