@@ -8,6 +8,9 @@
       name="description"
       content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
     <style>
@@ -45,8 +48,8 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Cinzel", "Times New Roman", serif;
+        --sans: "Manrope", "Avenir Next", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -530,6 +533,161 @@
       @media (prefers-reduced-motion: reduce) {
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
+
+      /* ── 2026 makeover pass: single-composition hero + reduced-card editorial flow ── */
+      body {
+        background:
+          linear-gradient(180deg, #05080d 0%, #0b121b 58%, #0a1118 100%);
+      }
+
+      .site-header {
+        border-bottom: 1px solid #d7e6f21f;
+        background: #070d1494;
+      }
+
+      .hero {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        min-height: min(100svh, 880px);
+        grid-template-columns: 1fr;
+        align-items: end;
+        gap: 0;
+        padding: clamp(5rem, 7.5vw, 8rem) clamp(1.15rem, 5vw, 4rem) clamp(2rem, 5vw, 3.5rem);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(102deg, #05080ef7 8%, #05080da8 44%, #05080d36 72%),
+          linear-gradient(180deg, #05080d26 0%, #05080ddd 85%);
+        z-index: 1;
+      }
+
+      .hero-copy,
+      .hero-art {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-copy {
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 44rem;
+        animation: hero-rise 700ms ease-out both;
+      }
+
+      .hero-brand {
+        margin: 0;
+        font-family: var(--serif);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: clamp(2.05rem, 6vw, 4.6rem);
+        line-height: 0.98;
+      }
+
+      .eyebrow { margin-top: 0.8rem; }
+      h1 { margin-top: 0.9rem; font-size: clamp(1.1rem, 2.1vw, 1.55rem); max-width: 28ch; font-family: var(--sans); font-weight: 600; line-height: 1.35; }
+      .hero-lead { margin-top: 0.9rem; max-width: 58ch; }
+      .hero-meta { display: none; }
+
+      .hero-cta { animation: hero-rise 1000ms ease-out both; }
+
+      .hero-art {
+        position: absolute;
+        inset: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .hero-art img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        filter: saturate(1.05) contrast(1.03);
+        animation: summit-drift 18s ease-in-out infinite alternate;
+      }
+
+      .section {
+        margin-top: clamp(3.2rem, 6vw, 5.5rem);
+        gap: 0.75rem;
+      }
+
+      .manifest,
+      .flow,
+      .panel,
+      .intel-card,
+      .status-strip,
+      .outcome,
+      .final-band {
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .manifest-item,
+      .flow-node {
+        border: 0;
+        background: none;
+        padding-left: 0;
+      }
+
+      .flow-node { font-family: var(--mono); letter-spacing: 0.04em; color: var(--accent-ice); }
+      .flow-arrow { opacity: 0.65; }
+
+      .intel-grid {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+      }
+
+      .intel-card {
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .btn {
+        border-radius: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-size: 0.78rem;
+      }
+
+      .btn-primary {
+        background: #d9b996;
+      }
+
+      .status-line {
+        gap: 0.85rem;
+      }
+
+      .status-item {
+        border-top: 1px solid #d7e6f22a;
+      }
+
+      @keyframes hero-rise {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes summit-drift {
+        from { transform: scale(1.01) translate3d(0, 0, 0); }
+        to { transform: scale(1.08) translate3d(-1.2%, -0.9%, 0); }
+      }
+
+      @media (min-width: 910px) {
+        .header-row { grid-template-columns: 1fr auto; }
+        .hero { padding-left: clamp(2.5rem, 7vw, 8rem); padding-right: clamp(2.5rem, 7vw, 8rem); }
+        .intel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
     </style>
   </head>
   <body>
@@ -556,13 +714,10 @@
     <main id="main-content" class="shell">
       <section class="hero" aria-labelledby="hero-title">
         <article class="hero-copy">
+          <p class="hero-brand">Aconcagua: Stone Sentinel</p>
           <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
           <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
-          </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
             <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
