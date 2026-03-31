@@ -10,11 +10,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added a fully self-contained redesigned landing implementation at `/index.html` with bilingual EN/ES hero/navigation CTA switching, atmospheric motion sequencing, and a mountain-first visual system using Cormorant Garamond + IBM Plex Mono.
+- Added `/game.html` as a standalone redesigned playable expedition prototype (inline CSS/JS) that preserves a 12-turn EP/BT-style loop with setup, onboarding, body-state telemetry, field log animation, decision actions, and outcome/debrief rendering.
 - Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL (landing, web-v1 shell, and Part 2 deep-link documentation markers).
 - Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Changed the root public landing information architecture to full-screen editorial sections (hero, premise, system signal, status, outcomes, final CTA) and linked the redesigned run entry (`/game.html`) alongside the canonical `prototype/web-v1` entry.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.

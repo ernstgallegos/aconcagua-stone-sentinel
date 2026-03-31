@@ -168,6 +168,7 @@ Se incorporó un paquete documental de diseño/planificación v1.4 para alinear 
 Este repositorio incluye una entrada pública canónica y un visor histórico archivado:
 
 - `/` — índice canónico que ahora sirve la landing pública del proyecto con CTA principal a `prototype/web-v1/index.html`
+- `/game.html` — corrida rediseñada autocontenida para explorar una UI atmosférica manteniendo un bucle jugable sistémico de 12 turnos.
 - `prototype/web-v1/index.html` — **prototype web-v1** interactivo con mecánicas extendidas
 - `prototype/mra-v0/viewer/index.html` — visor archivado para reproducir corridas del prototipo Python
 

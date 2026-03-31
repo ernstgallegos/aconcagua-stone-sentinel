@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Aconcagua: Stone Sentinel — Redesign Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{color-scheme:dark;--color-bg:#0a0c10;--color-surface:#111620;--color-border:#1e2535;--color-muted:#3a4560;--color-text:#c8d4e8;--color-heading:#eef2f8;--color-accent:#d4500a;--color-accent-dim:#8a3008;--color-signal:#7ab8d4;--color-success:#4a9e7a;--color-danger:#b03030;--color-warning:#c4882a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(800px 500px at 50% 110%,#5f3a1c1c,transparent 60%),var(--color-bg);color:var(--color-text);font-family:'Cormorant Garamond',serif}
+.hidden{display:none!important}.mono{font-family:'IBM Plex Mono',monospace}
+.screen{min-height:100vh;padding:1rem}.cover{background:linear-gradient(160deg,#0a0c10dd,#0a0c10f2),url('https://aconcagua-stone-sentinel.vercel.app/art/cover/cover-concept-1.png') center/cover no-repeat;display:grid;place-items:center;text-align:center}
+.setup-wrap{max-width:760px;padding:1.4rem;border:1px solid var(--color-border);background:#0f1520da}.setup-wrap h1{font:300 clamp(2.4rem,7vw,4rem)/1 'Cormorant Garamond';color:var(--color-heading);margin:.2rem 0}
+.prompt{font:300 clamp(1.4rem,4vw,2.1rem)/1.1 'Cormorant Garamond';margin:1rem 0 1.3rem}.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.6rem}
+.btn{position:relative;border:1px solid var(--color-border);color:var(--color-text);background:#0e141f;padding:.8rem .75rem;font-family:'IBM Plex Mono';text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;cursor:pointer}
+.btn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:.25s}.btn::after{content:'';position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--color-accent);transition:.25s}
+.btn:hover::before,.btn:focus-visible::before{background:var(--color-accent)}.btn:hover::after,.btn:focus-visible::after{right:0}.btn.primary{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+.quote{font:italic 300 clamp(1.6rem,5vw,2.5rem)/1.15 'Cormorant Garamond';max-width:30ch;margin-inline:auto}
+#game{padding-top:0}.progress{height:2px;background:var(--color-border)}.progress>span{display:block;height:100%;width:0;background:var(--color-signal);transition:.45s}
+.topbar{position:sticky;top:0;z-index:20;background:#0b1018f2;border-bottom:1px solid var(--color-border);padding:.6rem 1rem;font-family:'IBM Plex Mono';font-size:.72rem;letter-spacing:.08em;display:flex;justify-content:space-between;gap:.8rem}
+.layout{padding:1rem;display:grid;gap:.8rem;grid-template-columns:280px 1fr}.panel{border:1px solid var(--color-border);background:var(--color-surface);padding:.75rem}.panel-title{font-family:'IBM Plex Mono';font-size:.68rem;letter-spacing:.12em;color:var(--color-signal);margin:0 0 .6rem}
+.meter{margin-bottom:.55rem}.meter .row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono';font-size:.68rem}.track{height:8px;background:var(--color-border);margin-top:.25rem}.fill{height:100%;width:0;transition:width .6s ease, background .6s}
+#body.flash{box-shadow:0 0 0 2px var(--color-danger) inset;animation:flash .3s ease 2}@keyframes flash{50%{box-shadow:0 0 0 2px #f55 inset}}
+.log{max-height:300px;overflow:auto;display:flex;flex-direction:column-reverse;gap:.4rem;scroll-behavior:smooth}.entry{border-top:1px solid #1f2a3d;padding-top:.4rem;animation:slide .36s ease}@keyframes slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.entry .ts{font:500 .65rem 'IBM Plex Mono';color:var(--color-muted)}
+.env-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}.env-chip{border:1px solid var(--color-border);padding:.55rem;background:#0d131c}.k{font:500 .64rem 'IBM Plex Mono';color:var(--color-muted)}.v{font:500 .82rem 'IBM Plex Mono';color:var(--color-signal)}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.55rem}.action{min-height:64px;text-align:left}.tag{position:absolute;top:7px;right:8px;font:.6rem 'IBM Plex Mono';color:var(--color-muted)}
+.action.descend{border-color:#2b694f}
+#outcome{margin-top:.6rem}.outbox{border-left:4px solid var(--color-warning);padding:.8rem;background:#0f1520}.outbox h2{margin:0 0 .45rem;font:300 2rem 'Cormorant Garamond'}
+.table{font:.68rem 'IBM Plex Mono';white-space:pre-wrap;color:var(--color-signal);background:#0d1117;border:1px solid #223147;padding:.7rem}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.log{max-height:210px}}
+</style>
+</head>
+<body>
+<section id="setup" class="screen cover"><div class="setup-wrap"><p class="mono">ACONCAGUA: STONE SENTINEL · v1.4.5</p><h1>The mountain is the main character.</h1><p class="prompt">Select a character</p><div class="choice-grid" id="char-grid"></div><p class="prompt">Select scenario</p><div class="choice-grid" id="scenario-grid"></div><button class="btn primary" id="to-onboarding">continue</button></div></section>
+<section id="onboarding" class="screen cover hidden"><div class="setup-wrap"><p class="quote">“The mountain doesn't ask if you're ready. The mountain rules.”</p><button class="btn primary" id="start-run">begin expedition</button></div></section>
+<section id="game" class="screen hidden" aria-live="polite">
+<div class="progress"><span id="turn-progress"></span></div>
+<header class="topbar" role="banner"><div class="mono">TURN <span id="turn"></span> / 12 · Day <span id="day"></span> · <span id="time"></span></div><div class="mono">ACONCAGUA: STONE SENTINEL · REDESIGN VIEW</div></header>
+<div class="layout">
+<aside class="panel" id="body"><h3 class="panel-title">BODY STATE</h3>
+<div id="meters"></div></aside>
+<section class="panel"><h3 class="panel-title">FIELD LOG</h3><div class="log" id="log"></div></section>
+</div>
+<section class="panel"><h3 class="panel-title">ENVIRONMENT</h3><div class="env-row" id="env"></div></section>
+<section class="panel"><h3 class="panel-title">DECISION</h3><div class="actions" id="actions" role="group" aria-label="Decision actions"></div></section>
+<section id="outcome" class="hidden" class="panel"></section>
+</section>
+<script>
+const characters=[{id:'francisco',name:'Francisco',bt:58},{id:'lucia',name:'Lucia',bt:61},{id:'daniela',name:'Daniela',bt:55},{id:'martin',name:'Martin',bt:63}];
+const scenarios=[{id:'normal',name:'Normal Route',weatherBias:0},{id:'wind',name:'Wind Corridor',weatherBias:10},{id:'white',name:'Whiteout Pocket',weatherBias:14}];
+const actions=[{id:'advance',label:'ADVANCE',tag:'FE ↑',progress:1,costF:12,costE:10,time:120},{id:'push',label:'PUSH',tag:'FE ↑↑',progress:1,costF:19,costE:16,time:90},{id:'wait',label:'WAIT',tag:'REC',progress:0,costF:-6,costE:-3,time:60},{id:'observe',label:'OBSERVE',tag:'SIG+',progress:0,costF:3,costE:1,time:45},{id:'descend',label:'DESCEND',tag:'SAFE',progress:-1,costF:7,costE:4,time:85,descend:true}];
+const positions=['Horcones','Confluencia','Plaza de Mulas','Nido de Cóndores','Cólera','Summit'];
+const G={turn:1,maxTurns:12,day:1,minutes:360,pos:0,high:0,capacity:100,fatigue:18,exposure:12,accl:25,ended:false,hasSummited:false,character:null,scenario:null,log:[]};
+
+const q=(s)=>document.querySelector(s); const qq=(s)=>document.querySelectorAll(s);
+function renderSetup(){
+  q('#char-grid').innerHTML=characters.map(c=>`<button class="btn" data-char="${c.id}">${c.name}</button>`).join('');
+  q('#scenario-grid').innerHTML=scenarios.map(s=>`<button class="btn" data-scenario="${s.id}">${s.name}</button>`).join('');
+  q('#char-grid').onclick=(e)=>{const b=e.target.closest('button');if(!b)return;G.character=characters.find(x=>x.id===b.dataset.char);qq('#char-grid .btn').forEach(x=>x.style.borderColor='var(--color-border)');b.style.borderColor='var(--color-signal)';};
+  q('#scenario-grid').onclick=(e)=>{const b=e.target.closest('button');if(!b)return;G.scenario=scenarios.find(x=>x.id===b.dataset.scenario);qq('#scenario-grid .btn').forEach(x=>x.style.borderColor='var(--color-border)');b.style.borderColor='var(--color-signal)';};
+}
+function advanceScreen(a,b){q(a).classList.add('hidden');q(b).classList.remove('hidden');}
+q('#to-onboarding').onclick=()=>{if(!G.character||!G.scenario)return alert('Select character and scenario');advanceScreen('#setup','#onboarding');};
+q('#start-run').onclick=()=>{advanceScreen('#onboarding','#game');addLog('Run initialized. Instruments online.');render();};
+
+function env(){
+  const w=Math.min(100,20+G.turn*5+G.scenario.weatherBias+Math.floor(Math.random()*25));
+  const v=Math.max(15,85-w+Math.floor(Math.random()*12));
+  const t=Math.min(100,18+G.pos*15+Math.floor(Math.random()*18));
+  return {weather:w,visibility:v,terrain:t};
+}
+function evaluate(action,e){
+  const ep=Math.round(e.weather*0.45 + e.terrain*0.34 + (100-e.visibility)*0.21 + G.exposure*0.18 + G.fatigue*0.16);
+  const bt=Math.round((G.character.bt + G.accl*0.42 + G.capacity*0.2) - (G.fatigue*0.52 + G.exposure*0.61));
+  const delta=bt-ep;
+  const successP=Math.max(5,Math.min(95,52 + delta));
+  const collapseP=Math.max(0,Math.min(60,Math.round((ep-bt+12)*1.2)));
+  const roll=Math.random()*100;
+  let outcome='Strategic Retreat';
+  if(action.id==='wait' || action.id==='observe') outcome='Hold';
+  else if(roll < collapseP) outcome='Collapse / Permit / Window';
+  else if(roll < successP) outcome=action.id==='descend'?'Hold':'Progress';
+  else outcome='Hold';
+  return {ep,bt,delta,successP,collapseP,outcome};
+}
+function doAction(id){
+  if(G.ended) return;
+  const action=actions.find(a=>a.id===id); const e=env(); const ev=evaluate(action,e);
+  G.minutes += action.time; if(G.minutes>=1440){G.day++;G.minutes%=1440;}
+  G.fatigue=Math.max(0,Math.min(100,G.fatigue+action.costF + Math.round((e.weather-40)/18)));
+  G.exposure=Math.max(0,Math.min(100,G.exposure+action.costE + Math.round((e.weather-48)/22)));
+  G.capacity=Math.max(0,Math.min(100,G.capacity - Math.max(0,Math.round((e.weather-55)/18)) + (action.id==='wait'?4:0)));
+  G.accl=Math.max(0,Math.min(100,G.accl + (action.id==='wait'?2: action.id==='advance'?1:0) - (action.id==='push'?2:0)));
+
+  if(ev.outcome==='Progress' && action.progress>0 && G.pos<positions.length-1) G.pos++;
+  if(action.id==='descend' && G.pos>0) G.pos--;
+  G.high=Math.max(G.high,G.pos); if(G.pos===positions.length-1) G.hasSummited=true;
+
+  const signal=`W:${e.weather}±${Math.floor(Math.random()*8+4)} V:${e.visibility}±${Math.floor(Math.random()*9+3)} T:${e.terrain}±${Math.floor(Math.random()*8+2)}`;
+  addLog(`${action.label} · EP ${ev.ep} vs BT ${ev.bt} (${ev.delta>=0?'+':''}${ev.delta}) · ${signal} · ${ev.outcome}`);
+
+  if(ev.outcome==='Collapse / Permit / Window' || G.capacity<=0 || G.exposure>=98 || G.fatigue>=99){endRun('Collapse / Permit / Window',ev,'danger');return;}
+  if(G.turn>=G.maxTurns){
+    if(G.hasSummited && G.pos===0) endRun('Summit and Safe Return',ev,'success');
+    else if(G.high>=4) endRun('High Point Return',ev,'signal');
+    else endRun('Strategic Retreat / Rescue',ev,'warning');
+    return;
+  }
+  G.turn++;
+  if(G.hasSummited && G.pos===0){endRun('Summit and Safe Return',ev,'success');return;}
+  render(e,ev);
+}
+function endRun(label,ev,tone){
+  G.ended=true; q('#actions').innerHTML=''; q('#body').classList.add('flash');
+  const color=tone==='success'?'var(--color-success)': tone==='danger'?'var(--color-danger)': tone==='signal'?'var(--color-signal)':'var(--color-warning)';
+  q('#outcome').classList.remove('hidden');
+  q('#outcome').innerHTML=`<div class="outbox" style="border-left-color:${color}"><h2 style="color:${color}">${label}</h2><p>Highest point: ${positions[G.high]} · Final position: ${positions[G.pos]}.</p><div class="table">turn=${G.turn}\nday=${G.day}\ntime=${clock()}\nfatigue=${G.fatigue}\nexposure=${G.exposure}\ncapacity=${G.capacity}\nacclimatization=${G.accl}\nEP=${ev?.ep ?? '-'} BT=${ev?.bt ?? '-'} delta=${ev?.delta ?? '-'}</div><br/><a href="/game.html" class="btn primary">restart run</a></div>`;
+}
+function clock(){const h=Math.floor(G.minutes/60).toString().padStart(2,'0');const m=(G.minutes%60).toString().padStart(2,'0');return `${h}:${m}`;}
+function addLog(text){G.log.unshift({t:clock(),text});q('#log').innerHTML=G.log.slice(0,40).map(e=>`<article class="entry"><div class="ts mono">${e.t}</div><div>${e.text}</div></article>`).join('');}
+function meterColor(v,type){if(type==='capacity'){return v>55?'var(--color-success)':v>30?'var(--color-warning)':'var(--color-danger)';}
+return v<45?'var(--color-success)':v<72?'var(--color-warning)':'var(--color-danger)';}
+function render(e=env(),ev=null){
+  q('#turn').textContent=G.turn; q('#day').textContent=G.day; q('#time').textContent=clock(); q('#turn-progress').style.width=`${(G.turn/G.maxTurns)*100}%`;
+  const stats=[['CAPACITY',G.capacity,'capacity'],['FATIGUE',G.fatigue,'fatigue'],['EXPOSURE',G.exposure,'exposure'],['ACCLIMATIZATION',G.accl,'accl']];
+  q('#meters').innerHTML=stats.map(([k,v,t])=>`<div class="meter"><div class="row"><span>${k}</span><span>${v}</span></div><div class="track"><div class="fill" style="width:${v}%;background:${meterColor(v,t)}"></div></div></div>`).join('');
+  q('#env').innerHTML=`<article class="env-chip"><div class="k">WEATHER</div><div class="v">${e.weather} ± ${Math.floor(Math.random()*8+3)}%</div></article><article class="env-chip"><div class="k">VISIBILITY</div><div class="v">${e.visibility} ± ${Math.floor(Math.random()*7+3)}%</div></article><article class="env-chip"><div class="k">TERRAIN</div><div class="v">${e.terrain} ± ${Math.floor(Math.random()*8+2)}%</div></article>`;
+  q('#actions').innerHTML=actions.map(a=>`<button class="btn action ${a.descend?'descend':''}" data-action="${a.id}" aria-label="${a.label}"><span>${a.label}</span><span class="tag">${a.tag}</span></button>`).join('');
+  q('#actions').onclick=(evn)=>{const b=evn.target.closest('button[data-action]');if(!b)return;doAction(b.dataset.action);};
+}
+renderSetup();
+</script>
+</body>
+</html>
