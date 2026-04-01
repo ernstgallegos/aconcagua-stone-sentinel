@@ -8,8 +8,11 @@
       name="description"
       content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
-    <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
-    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/jpeg" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.jpg" />
     <style>
       :root {
         color-scheme: dark;
@@ -45,8 +48,13 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --font-brand: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+        --font-ui: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --font-reading: "Inter", "Montserrat", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --font-data: "IBM Plex Mono", "SFMono-Regular", Menlo, Monaco, "Roboto Mono", monospace;
+
+        --serif: var(--font-brand);
+        --sans: var(--font-ui);
       }
 
       * { box-sizing: border-box; }
@@ -54,7 +62,7 @@
 
       body {
         margin: 0;
-        font-family: var(--sans);
+        font-family: var(--font-reading);
         color: var(--text-main);
         line-height: 1.5;
         background:
@@ -150,6 +158,7 @@
         padding: 0.35rem 0.66rem;
         color: var(--text-dim);
         font-size: 0.78rem;
+        font-family: var(--font-ui);
         text-transform: uppercase;
         letter-spacing: 0.08em;
       }
@@ -251,6 +260,7 @@
         border-radius: 999px;
         padding: 0.72rem 1.08rem;
         font-weight: 700;
+        font-family: var(--font-ui);
         font-size: 0.9rem;
         display: inline-flex;
         align-items: center;

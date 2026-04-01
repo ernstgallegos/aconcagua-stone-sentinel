@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added an integrated typography-system rollout centered on `Playfair Display` with `Montserrat` as primary UI family (plus `Inter` reading and `IBM Plex Mono` telemetry) across landing, markdown viewer, web-v1, and archived MRA viewer surfaces.
 - Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions, with explicit `SKILL.md` target mapping and restart guidance.
 - Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest to operationalize the notebook-based frontend aesthetics prompting workflow (`docs/ai/skills/prompting_for_frontend_aesthetics.ipynb`).
 - Added canonical AI documentation hub under `docs/ai/` with machine-readable manifest (`docs/ai/manifest.json`), skills infrastructure scaffolding, and three initial documented skills (`release-readiness-skill`, `web-v1-regression-skill`, `docs-sync-skill`).
@@ -18,6 +19,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Changed public HTML entrypoints to use `art/brand/favicon-aconcagua.jpg` as the canonical favicon/touch icon and synchronized font loading contracts with the new brand-first typography stack.
 - Updated `AGENTS.md`, `README.md`, `README.es.md`, and `CONTRIBUTING.md` to reference `docs/ai/README.md` as the canonical AI/agent operations hub while preserving compatibility with existing readiness checklist paths.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.

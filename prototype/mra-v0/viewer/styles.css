@@ -12,6 +12,9 @@
   --red-dim:   #8f4e44;
   --warn:      #af8b58;
   --ok:        #4a7c59;
+  --font-brand: 'Playfair Display', Georgia, serif;
+  --font-ui: 'Montserrat', 'Inter', system-ui, sans-serif;
+  --font-reading: 'Inter', 'Montserrat', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', monospace;
 }
 
@@ -21,13 +24,14 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--font-reading);
   font-size: 14px;
 }
 
 .app-shell { max-width: 1080px; margin: 0 auto; padding: 2rem 1rem 3rem; }
 
 .hero h1 {
+  font-family: var(--font-brand);
   margin: 0.2rem 0 0.6rem;
   color: var(--white);
   font-weight: 300;
@@ -35,6 +39,7 @@ body {
   font-size: 1.5rem;
 }
 .kicker {
+  font-family: var(--font-ui);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ochre);
@@ -57,6 +62,7 @@ body {
 }
 
 label {
+  font-family: var(--font-ui);
   display: grid;
   gap: 0.3rem;
   font-size: 0.72rem;
@@ -66,21 +72,22 @@ label {
 }
 
 input, select {
+  font-family: var(--font-ui);
   padding: 0.5rem 0.65rem;
   background: var(--surface2);
   border: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--mono);
   font-size: 0.82rem;
 }
 
 button {
+  font-family: var(--font-ui);
+  font-weight: 600;
   padding: 0.52rem 1.4rem;
   cursor: pointer;
   background: transparent;
   border: 1px solid var(--ochre);
   color: var(--ochre);
-  font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -104,6 +111,7 @@ button:hover { background: var(--ochre); color: var(--bg); }
 }
 .metric p { margin: 0; }
 .metric .label {
+  font-family: var(--font-ui);
   color: var(--text-dim);
   font-size: 0.68rem;
   text-transform: uppercase;

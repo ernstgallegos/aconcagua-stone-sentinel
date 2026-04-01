@@ -97,3 +97,14 @@ Aplicar a:
 ---
 
 Con esta combinación, el proyecto conserva una voz editorial fuerte (Playfair) y gana una capa UX/UI más limpia, consistente y moderna gracias a Montserrat.
+
+
+## 8) Implementación aplicada (abril 2026)
+
+Se aplicó este sistema en las superficies públicas clave del repositorio:
+
+- `/index.html` (landing): `Playfair Display` para jerarquía editorial y `Montserrat` para navegación/CTA; `Inter` para lectura continua.
+- `prototype/web-v1`: tokens tipográficos actualizados para usar Playfair como eje de títulos, Montserrat como UI operativa y `IBM Plex Mono` para telemetría.
+- `md-viewer.html` y `prototype/mra-v0/viewer`: alineados al mismo contrato para evitar saltos de identidad entre páginas.
+
+Además, el favicon público se migró al recurso de marca JPG (`art/brand/favicon-aconcagua.jpg`) en todos los entrypoints HTML activos.
