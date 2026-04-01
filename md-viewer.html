@@ -15,23 +15,23 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
+        --bg-0: #070b11;
+        --bg-1: #0f1826;
+        --bg-2: #1a293d;
+        --surface-0: #101a29d9;
+        --surface-1: #1a2940e0;
+        --surface-2: #263a54eb;
+        --border-soft: #9fb6cc47;
+        --border-strong: #dfedf86b;
+        --text-main: #edf3fb;
+        --text-dim: #b6c6d6;
+        --text-muted: #97a9bc;
+        --accent-ice: #d7efff;
+        --accent-mineral: #9fbad4;
+        --accent-amber: #ddbf98;
         --radius-sm: 14px;
         --radius-md: 22px;
-        --shadow-soft: 0 16px 48px #05080d66;
+        --shadow-soft: 0 18px 56px #04080f7a;
         --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
         --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
         --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
@@ -40,12 +40,13 @@
       body {
         margin: 0;
         font-family: var(--sans);
-        line-height: 1.5;
+        line-height: 1.62;
         color: var(--text-main);
         background:
-          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+          radial-gradient(1200px 560px at 84% -12%, #cde3f433, transparent 57%),
+          radial-gradient(860px 460px at 10% -8%, #ddbf9830, transparent 54%),
+          radial-gradient(640px 320px at 52% 118%, #8ea9c71a, transparent 70%),
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 44%, var(--bg-0) 100%);
         min-height: 100vh;
       }
       body::before {
@@ -65,7 +66,7 @@
         position: sticky; top: .8rem; z-index: 10;
         display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; justify-content: space-between;
         padding: .85rem; border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
-        background: #0f1621c2; backdrop-filter: blur(10px);
+        background: linear-gradient(180deg, #0d1522e8, #0a111bd9); backdrop-filter: blur(12px);
         box-shadow: var(--shadow-soft);
       }
       .actions { display:flex; gap:.5rem; flex-wrap: wrap; align-items: center; }
@@ -86,13 +87,13 @@
       article {
         margin-top: 1rem;
         padding: clamp(1rem,2vw,2rem);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        background: linear-gradient(160deg, #162538f2 0%, #101a2af0 62%, #0f1724f5 100%);
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-soft);
       }
       h1,h2,h3,h4 { color: var(--text-main); line-height: 1.2; font-family: var(--serif); }
-      p, li { color: var(--text-main); }
+      p, li { color: var(--text-main); max-width: 74ch; }
       a { color: var(--accent-ice); }
       pre { background: #1b2636; padding: .8rem; border-radius: 10px; overflow: auto; border:1px solid var(--border-soft); }
       code { font-family: var(--mono); }
