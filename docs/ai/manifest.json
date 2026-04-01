@@ -89,6 +89,14 @@
       "load_priority": 8,
       "path": "docs/ai/skills/docs-sync-skill.md",
       "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skill-prompting-frontend-aesthetics",
+      "type": "skill",
+      "language": "en",
+      "load_priority": 8,
+      "path": "docs/ai/skills/prompting-for-frontend-aesthetics-skill.md",
+      "last_updated": "2026-04-01"
     }
   ]
 }
