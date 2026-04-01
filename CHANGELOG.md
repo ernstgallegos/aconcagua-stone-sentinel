@@ -18,6 +18,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Redesigned the public visual language with a new shared `public/styles/global-aesthetic.css` theme layer and applied it across the landing (`/`), markdown viewer (`/md-viewer.html`), and archived MRA viewer shell for consistent palette, glass surfaces, and interaction states.
+- Refreshed archived MRA viewer presentation (`prototype/mra-v0/viewer/styles.css`) to match the current public editorial aesthetic while preserving legacy replay behavior and controls.
+- Recalibrated `prototype/web-v1/css/tokens.css` core palette and radius tokens so the active playable prototype aligns with the updated public-site visual system.
 - Rewrote high-visibility public copy across landing translations, README EN/ES intros, and in-game help guidance to improve clarity, tone, and bilingual consistency for public-facing communication.
 - Expanded the public-copy rewrite pass across README EN/ES core narrative sections, landing architecture/materials language, and Spanish in-game help microcopy to improve voice consistency and player readability.
 - Updated `AGENTS.md`, `README.md`, `README.es.md`, and `CONTRIBUTING.md` to reference `docs/ai/README.md` as the canonical AI/agent operations hub while preserving compatibility with existing readiness checklist paths.

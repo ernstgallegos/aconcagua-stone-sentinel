@@ -13,23 +13,23 @@
 
 :root {
   /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
+  --bg:        #08101b;
+  --surface:   #132032;
+  --surface2:  #1f3249;
+  --border:    #90a9c33d;
+  --stone:     #c0cedb;
+  --ochre:     #dfbf96;
+  --ochre-dim: #9a7d5f;
+  --ice:       #d6eefe;
+  --ice-dim:   #7f9bb4;
+  --white:     #f4f8fd;
+  --red:       #cc7a69;
+  --red-dim:   #945046;
+  --safety:    #90bba2;
+  --text:      #e8eff7;
+  --text-dim:  #afbfce;
+  --text-soft: #bfccd9;
+  --muted:     #a4b4c4;
   --accent:    #d2b48d;
 
   /* ── Typography ── */
@@ -50,8 +50,8 @@
   --space-2xl: 3rem;
 
   /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;
