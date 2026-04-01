@@ -1,7 +1,7 @@
 # Design System — Public Web Surface (`/`)
 
 ## 1) Scope
-This document defines the visual/interaction system for the root public site (`index.html`) and the shared tonal extension applied to `prototype/web-v1` shell theming.
+This document defines the visual/interaction system for the root public site (`index.html`), `md-viewer.html`, `prototype/mra-v0/viewer/`, and the shared tonal extension applied to `prototype/web-v1` shell theming.
 
 ## 2) Design tokens
 
@@ -103,7 +103,11 @@ This document defines the visual/interaction system for the root public site (`i
 - Language switch reflects state with `aria-pressed`.
 - Text/background combinations selected for high contrast in dark mode.
 
-## 11) Prototype extension notes (`prototype/web-v1`)
+## 11) Cross-surface coherence notes
+- `index.html`, `md-viewer.html`, and `prototype/mra-v0/viewer/styles.css` share one alpine-night token family (mineral blues + restrained amber highlights) so public touchpoints feel like one product ecosystem.
+- Legacy/archived interfaces should stay visually subordinate but brand-aligned: same typography stack, softer contrast hierarchy, and consistent pill/button/focus language.
+
+## 12) Prototype extension notes (`prototype/web-v1`)
 - Token refresh keeps the same mountain-first palette family (cold mineral base + restrained amber/ice accents).
 - Welcome/setup surfaces use layered overlays instead of flat dark fills to preserve atmospheric continuity.
 - Primary actions remain high-contrast and calm; secondary/decision controls reduce visual noise while preserving affordance.

@@ -10,6 +10,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added `docs/ai/skills/frontend-aesthetics-redesign-notes.md` documenting the exact prompt blocks (`BASE_SYSTEM_PROMPT`, `DISTILLED_AESTHETICS_PROMPT`, `TYPOGRAPHY_PROMPT`) used for the cross-surface redesign execution evidence.
 - Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions, with explicit `SKILL.md` target mapping and restart guidance.
 - Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest to operationalize the notebook-based frontend aesthetics prompting workflow (`docs/ai/skills/prompting_for_frontend_aesthetics.ipynb`).
 - Added canonical AI documentation hub under `docs/ai/` with machine-readable manifest (`docs/ai/manifest.json`), skills infrastructure scaffolding, and three initial documented skills (`release-readiness-skill`, `web-v1-regression-skill`, `docs-sync-skill`).
@@ -18,6 +19,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Refreshed `prototype/mra-v0/viewer/styles.css` with a modernized alpine-night visual system (glass surfaces, shared token family, clearer hierarchy, accessible focus states) so the archived viewer remains brand-coherent with current public surfaces.
+- Tuned `prototype/web-v1/css/tokens.css` base palette/radii to align web-v1 with the same cross-surface aesthetic language used by landing and document viewer entry points.
+- Updated `md-viewer.html` token values and article readability constraints to keep markdown documents visually consistent with landing/prototype surfaces.
+- Expanded `docs/design-system.md` scope and coherence notes to explicitly cover `index.html`, `md-viewer.html`, and `prototype/mra-v0/viewer/` as one integrated public design system.
 - Rewrote high-visibility public copy across landing translations, README EN/ES intros, and in-game help guidance to improve clarity, tone, and bilingual consistency for public-facing communication.
 - Expanded the public-copy rewrite pass across README EN/ES core narrative sections, landing architecture/materials language, and Spanish in-game help microcopy to improve voice consistency and player readability.
 - Updated `AGENTS.md`, `README.md`, `README.es.md`, and `CONTRIBUTING.md` to reference `docs/ai/README.md` as the canonical AI/agent operations hub while preserving compatibility with existing readiness checklist paths.

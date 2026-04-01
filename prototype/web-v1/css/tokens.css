@@ -13,23 +13,23 @@
 
 :root {
   /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
+  --bg:        #081320;
+  --surface:   #122233;
+  --surface2:  #1a3045;
+  --border:    #45607a;
+  --stone:     #c2b3a4;
+  --ochre:     #debb92;
+  --ochre-dim: #a2805e;
+  --ice:       #c8dff0;
+  --ice-dim:   #7d9db8;
+  --white:     #f1f5fa;
   --red:       #c96f63;
   --red-dim:   #8d473f;
   --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
+  --text:      #dde6ef;
+  --text-dim:  #9caec1;
+  --text-soft: #b4c2d0;
+  --muted:     #9caec1;
   --accent:    #d2b48d;
 
   /* ── Typography ── */
@@ -50,8 +50,8 @@
   --space-2xl: 3rem;
 
   /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;
