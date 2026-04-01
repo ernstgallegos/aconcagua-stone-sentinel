@@ -23,6 +23,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
 - Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
+- Refreshed typography across landing, markdown viewer, `prototype/web-v1`, and archived MRA viewer around a unified role system: `Playfair Display` for editorial/hero hierarchy, `Montserrat` for UI and reading body text, and `IBM Plex Mono` for telemetry/label semantics.
+- Replaced all public entry-point favicons to use `art/brand/favicon-aconcagua.jpg` for browser and touch-icon references.
 
 ### Fixed
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.
