@@ -18,6 +18,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Refined the cross-surface typography system around `Playfair Display` (brand/editorial), `Montserrat` (UI/reading), and `IBM Plex Mono` (data), applying the role-based token contract to landing (`/`), markdown viewer, `prototype/web-v1`, and `prototype/mra-v0/viewer`.
 - Updated `AGENTS.md`, `README.md`, `README.es.md`, and `CONTRIBUTING.md` to reference `docs/ai/README.md` as the canonical AI/agent operations hub while preserving compatibility with existing readiness checklist paths.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
@@ -25,6 +26,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
 
 ### Fixed
+- Replaced public HTML entrypoint favicon links (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to use `art/brand/favicon-aconcagua.jpg` as the canonical icon asset.
 - Fixed changelog release hygiene by removing duplicated historical release bullets from `[Unreleased]` and limiting the section to true post-v1.4.5 work.
 - Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
 

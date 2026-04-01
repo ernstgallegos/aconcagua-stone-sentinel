@@ -33,10 +33,16 @@
   --accent:    #d2b48d;
 
   /* ── Typography ── */
-  --heading: 'Plus Jakarta Sans', 'Avenir Next', sans-serif;
-  --mono:    'IBM Plex Mono', monospace;
-  --serif:   'Lora', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-brand: 'Playfair Display', 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Times New Roman', serif;
+  --font-ui:    'Montserrat', 'Avenir Next', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-reading:'Montserrat', 'Inter', 'Avenir Next', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-data:  'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, monospace;
+
+  --heading: var(--font-ui);
+  --mono:    var(--font-data);
+  --serif:   var(--font-brand);
+  --sans:    var(--font-reading);
+  --body:    var(--font-reading);
 
   /* ── Spacing scale ── */
   --space-xs:  0.25rem;

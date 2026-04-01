@@ -266,6 +266,8 @@ In addition to the changelog:
 - Cross-surface language UX is safest when landing, markdown viewer, and `web-v1` reuse one shared localStorage language key (`aconcagua_language_v1`); splitting keys creates subtle “language reset” friction that feels like a bug.
 - Public markdown reader routes should inherit the same visual token system as `/` (surfaces, borders, typography, focus patterns) so document deep-links feel like the same product, not a detached microsite.
 
+- Cross-surface typography updates are safest when the same role-based font tokens (`brand/ui/reading/data`) are applied in landing, markdown viewer, web-v1, and archived viewers in one commit; partial adoption causes immediate brand drift.
+
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.

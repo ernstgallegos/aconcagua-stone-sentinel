@@ -12,7 +12,10 @@
   --red-dim:   #8f4e44;
   --warn:      #af8b58;
   --ok:        #4a7c59;
-  --mono: 'IBM Plex Mono', monospace;
+  --font-brand: 'Playfair Display', 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Times New Roman', serif;
+  --font-ui: 'Montserrat', 'Avenir Next', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-data: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, monospace;
+  --mono: var(--font-data);
 }
 
 * { box-sizing: border-box; }
@@ -21,13 +24,14 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--font-ui);
   font-size: 14px;
 }
 
 .app-shell { max-width: 1080px; margin: 0 auto; padding: 2rem 1rem 3rem; }
 
 .hero h1 {
+  font-family: var(--font-brand);
   margin: 0.2rem 0 0.6rem;
   color: var(--white);
   font-weight: 300;
@@ -35,13 +39,14 @@ body {
   font-size: 1.5rem;
 }
 .kicker {
+  font-family: var(--font-ui);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ochre);
   margin: 0;
   font-size: 0.68rem;
 }
-.lead { color: var(--text-dim); max-width: 75ch; font-size: 0.84rem; line-height: 1.6; }
+.lead { color: var(--text-dim); max-width: 75ch; font-size: 0.84rem; line-height: 1.6; font-family: var(--font-ui); }
 
 .panel {
   background: var(--surface);
@@ -70,7 +75,7 @@ input, select {
   background: var(--surface2);
   border: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--font-ui);
   font-size: 0.82rem;
 }
 
@@ -80,7 +85,7 @@ button {
   background: transparent;
   border: 1px solid var(--ochre);
   color: var(--ochre);
-  font-family: var(--mono);
+  font-family: var(--font-ui);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
