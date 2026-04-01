@@ -28,3 +28,18 @@ Use [`templates/SKILL.template.md`](./templates/SKILL.template.md) as the mandat
 - Read [`catalog.md`](./catalog.md) for available skills.
 - Review [`quality-gates.md`](./quality-gates.md) before proposing changes.
 - Follow [`contributing-skills.md`](./contributing-skills.md) for review and acceptance requirements.
+
+## Installing repository-local skills into Codex
+
+When working in web Codex sessions, `$CODEX_HOME/skills` can reset between sessions depending on the runtime container lifecycle.
+
+Use the repository helper script to reinstall a local skill definition into the active Codex profile:
+
+```bash
+./scripts/install-local-skill.sh docs/ai/skills/prompting-for-frontend-aesthetics-skill.md prompting-for-frontend-aesthetics
+```
+
+Notes:
+- This writes the skill to `$CODEX_HOME/skills/<name>/SKILL.md` (or `~/.codex/skills` if `CODEX_HOME` is unset).
+- Re-run after starting a fresh web Codex session when the environment is ephemeral.
+- Restart the Codex session after installation so the new skill is discovered.
