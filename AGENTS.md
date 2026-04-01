@@ -8,6 +8,12 @@ This file is aligned with the AGENTS.md interoperability convention from https:/
 
 - Applies to the entire repository tree rooted at this directory.
 
+## Canonical AI docs hub
+
+- Canonical AI/agent operations hub: [`docs/ai/README.md`](docs/ai/README.md).
+- Machine-readable canonical map: [`docs/ai/manifest.json`](docs/ai/manifest.json).
+- This root file remains the required interoperability entry point for agent tooling.
+
 ## Instruction priority
 
 When instructions conflict, use this precedence order:
@@ -267,3 +273,5 @@ In addition to the changelog:
 - For mountain-first UX/UI coherence, pairing `Playfair Display` (editorial hierarchy) with `Montserrat` (operational UI text) yields cleaner cross-surface consistency than mixing multiple sans primaries; keep `IBM Plex Mono` reserved for telemetry/data semantics.
 - Carousel image stability in setup screens improves when portraits are rendered through a shared media wrapper (`loading` skeleton + reserved aspect ratio + explicit fallback state) and critical character portraits are preloaded before first carousel paint.
 - Overlay reliability is stronger when intro/tutorial/onboarding and in-game dialogs share one modal-controller path (focus trap, Escape priority, backdrop close, and body scroll-lock release), rather than ad hoc per-modal listeners.
+
+- AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.

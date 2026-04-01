@@ -79,6 +79,7 @@ Observation, pauses, and environmental awareness are not interruptions but core 
 
 To keep this repository ready for public review, use the following baseline governance docs before opening release-oriented PRs:
 
+- [`docs/ai/README.md`](./docs/ai/README.md) — canonical AI/agent operations hub and skill documentation map.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — contribution boundaries, validation commands, and CI gates.
 - [`SECURITY.md`](./SECURITY.md) — private vulnerability reporting and response targets.
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — community behavior expectations.

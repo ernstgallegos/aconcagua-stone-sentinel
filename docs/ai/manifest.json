@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "description": "Canonical AI/agent documentation manifest for repository tooling.",
+  "documents": [
+    {
+      "id": "agents-entrypoint",
+      "type": "policy",
+      "language": "en",
+      "load_priority": 1,
+      "path": "AGENTS.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "ai-hub",
+      "type": "reference",
+      "language": "en",
+      "load_priority": 2,
+      "path": "docs/ai/README.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "public-readiness-en",
+      "type": "checklist",
+      "language": "en",
+      "load_priority": 3,
+      "path": "docs/en/public-readiness-checklist.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "public-readiness-es",
+      "type": "checklist",
+      "language": "es",
+      "load_priority": 3,
+      "path": "docs/es/checklist-preparacion-publica.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skills-readme",
+      "type": "reference",
+      "language": "en",
+      "load_priority": 4,
+      "path": "docs/ai/skills/README.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skills-catalog",
+      "type": "reference",
+      "language": "en",
+      "load_priority": 5,
+      "path": "docs/ai/skills/catalog.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skills-quality-gates",
+      "type": "policy",
+      "language": "en",
+      "load_priority": 6,
+      "path": "docs/ai/skills/quality-gates.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skills-contributing",
+      "type": "policy",
+      "language": "en",
+      "load_priority": 7,
+      "path": "docs/ai/skills/contributing-skills.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skill-release-readiness",
+      "type": "skill",
+      "language": "en",
+      "load_priority": 8,
+      "path": "docs/ai/skills/release-readiness-skill.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skill-web-v1-regression",
+      "type": "skill",
+      "language": "en",
+      "load_priority": 8,
+      "path": "docs/ai/skills/web-v1-regression-skill.md",
+      "last_updated": "2026-04-01"
+    },
+    {
+      "id": "skill-docs-sync",
+      "type": "skill",
+      "language": "en",
+      "load_priority": 8,
+      "path": "docs/ai/skills/docs-sync-skill.md",
+      "last_updated": "2026-04-01"
+    }
+  ]
+}
