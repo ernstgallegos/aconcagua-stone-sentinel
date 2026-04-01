@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
+   Alpine editorial palette refresh (v1.4.6 public UX cohesion pass)
    ═══════════════════════════════════════════ */
 
 /* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
@@ -12,25 +12,25 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  /* ── Color palette: alpine twilight ── */
+  --bg:        #080d15;
+  --surface:   #101c2c;
+  --surface2:  #182b40;
+  --border:    #3e536a;
+  --stone:     #c2b19f;
+  --ochre:     #e0be94;
+  --ochre-dim: #a07f5a;
+  --ice:       #d4efff;
+  --ice-dim:   #81a5c2;
+  --white:     #eef4fb;
+  --red:       #d48479;
+  --red-dim:   #9a554e;
+  --safety:    #94c19f;
+  --text:      #e6eef8;
+  --text-dim:  #bfd0e1;
+  --text-soft: #a8bacd;
+  --muted:     #9aafc3;
+  --accent:    #e0be94;
 
   /* ── Typography ── */
   --brand:   'Playfair Display', 'Lora', Georgia, serif;
@@ -52,6 +52,11 @@
   /* ── Border radius ── */
   --radius-sm: 8px;
   --radius-md: 14px;
+  --radius-lg: 22px;
+
+  /* ── Shadows ── */
+  --shadow-soft: 0 12px 34px rgba(1, 7, 15, 0.35);
+  --shadow-strong: 0 26px 70px rgba(1, 5, 12, 0.6);
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;

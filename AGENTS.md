@@ -276,3 +276,4 @@ In addition to the changelog:
 - Overlay reliability is stronger when intro/tutorial/onboarding and in-game dialogs share one modal-controller path (focus trap, Escape priority, backdrop close, and body scroll-lock release), rather than ad hoc per-modal listeners.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
+- Cross-surface public redesigns remain coherent when one alpine token family (background gradients, card surfaces, accent hierarchy, and typography roles) is reused across landing, markdown viewer, archived MRA viewer, and `web-v1` token roots; this keeps prototype transitions feeling intentional instead of stitched.

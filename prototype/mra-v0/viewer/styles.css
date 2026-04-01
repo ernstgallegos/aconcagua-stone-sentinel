@@ -1,30 +1,35 @@
 :root {
   color-scheme: dark;
-  --bg:        #0a0d10;
-  --surface:   #10161b;
-  --surface2:  #172129;
-  --border:    #2b3943;
-  --stone:     #93a1a9;
-  --ochre:     #af8b58;
-  --text:      #c2c8cb;
-  --text-dim:  #76848c;
-  --white:     #d9d7d2;
-  --red-dim:   #8f4e44;
-  --warn:      #af8b58;
-  --ok:        #4a7c59;
+  --bg:        #080d15;
+  --surface:   #101c2c;
+  --surface2:  #182b40;
+  --border:    #3e536a;
+  --stone:     #c2b19f;
+  --ochre:     #e0be94;
+  --text:      #e6eef8;
+  --text-dim:  #bfd0e1;
+  --white:     #eef4fb;
+  --red-dim:   #9a554e;
+  --warn:      #e0be94;
+  --ok:        #94c19f;
   --display: 'Playfair Display', Georgia, serif;
   --ui: 'Montserrat', 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
+  --radius: 14px;
+  --shadow: 0 18px 48px rgba(1, 7, 15, 0.4);
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--text);
   font-family: var(--ui);
   font-size: 14px;
+  background:
+    radial-gradient(1100px 520px at 86% -8%, #9dc8f02d, transparent 58%),
+    radial-gradient(900px 460px at 10% -6%, #e0be9426, transparent 52%),
+    linear-gradient(180deg, #1a2a40 0%, #0f1a2a 48%, #080d15 100%);
 }
 
 .app-shell { max-width: 1080px; margin: 0 auto; padding: 2rem 1rem 3rem; }
@@ -34,8 +39,8 @@ body {
   color: var(--white);
   font-family: var(--display);
   font-weight: 600;
-  letter-spacing: 0.04em;
-  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  font-size: 1.6rem;
 }
 .kicker {
   font-family: var(--mono);
@@ -45,7 +50,7 @@ body {
   margin: 0;
   font-size: 0.68rem;
 }
-.lead { color: var(--text-dim); max-width: 75ch; font-size: 0.84rem; line-height: 1.6; }
+.lead { color: var(--text-dim); max-width: 75ch; font-size: 0.86rem; line-height: 1.6; }
 
 .panel h2 {
   font-family: var(--display);
@@ -54,10 +59,12 @@ body {
 }
 
 .panel {
-  background: var(--surface);
+  background: linear-gradient(165deg, #17283df2 0%, #0f1a2df2 72%);
   border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem;
   margin-top: 1rem;
+  box-shadow: var(--shadow);
 }
 
 .form-grid {
@@ -77,27 +84,29 @@ label {
 }
 
 input, select {
-  padding: 0.5rem 0.65rem;
+  padding: 0.56rem 0.65rem;
   background: var(--surface2);
   border: 1px solid var(--border);
+  border-radius: 10px;
   color: var(--text);
   font-family: var(--ui);
   font-size: 0.82rem;
 }
 
 button {
-  padding: 0.52rem 1.4rem;
+  padding: 0.56rem 1.4rem;
   cursor: pointer;
   background: transparent;
   border: 1px solid var(--ochre);
+  border-radius: 999px;
   color: var(--ochre);
   font-family: var(--ui);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background 0.18s, color 0.18s;
+  transition: background 0.18s, color 0.18s, transform .18s;
 }
-button:hover { background: var(--ochre); color: var(--bg); }
+button:hover { background: var(--ochre); color: var(--bg); transform: translateY(-1px); }
 
 .controls-actions { display: flex; gap: 0.85rem; align-items: center; margin-top: 0.75rem; }
 #status { color: var(--text-dim); margin: 0; font-size: 0.78rem; }
@@ -109,8 +118,9 @@ button:hover { background: var(--ochre); color: var(--bg); }
 }
 
 .metric {
-  background: var(--surface2);
+  background: #122134cc;
   border: 1px solid var(--border);
+  border-radius: 10px;
   padding: 0.65rem;
 }
 .metric p { margin: 0; }
@@ -141,7 +151,8 @@ button:hover { background: var(--ochre); color: var(--bg); }
   padding: 0.1rem 0.38rem;
   font-size: 0.68rem;
   border: 1px solid var(--border);
+  border-radius: 999px;
 }
-.flag-high-risk  { background: rgba(143,78,68,0.2);  color: #c4796e; border-color: rgba(143,78,68,0.35); }
-.flag-exposure   { background: rgba(175,139,88,0.15); color: #c9a96a; border-color: rgba(175,139,88,0.3); }
-.flag-default    { background: rgba(147,161,169,0.1); color: var(--stone); }
+.flag-high-risk  { background: rgba(154,85,78,0.24);  color: #e2a8a1; border-color: rgba(154,85,78,0.48); }
+.flag-exposure   { background: rgba(224,190,148,0.18); color: #f0cfab; border-color: rgba(224,190,148,0.42); }
+.flag-default    { background: rgba(194,177,159,0.12); color: var(--stone); }
