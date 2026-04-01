@@ -1,31 +1,31 @@
 export function buildHelpSections(uiText, t) {
   const pressureRows = [
-    [uiText('Low', 'Baja'), uiText('Broad tactical margin. Keep rhythm but monitor hydration and time.', 'Margen táctico amplio. Mantén el ritmo, pero vigila hidratación y tiempo.')],
-    [uiText('Manageable', 'Manejable'), uiText('Progress is viable if body trend remains stable and confidence is not collapsing.', 'El progreso es viable si la tendencia corporal se mantiene estable y la confianza no cae.')],
-    [uiText('Severe', 'Severa'), uiText('Narrow margin. Prefer slower pushes and pre-plan retreat windows.', 'Margen estrecho. Prioriza avances lentos y planifica ventanas de retirada.')],
-    [uiText('Very Severe', 'Muy severa'), uiText('High attrition risk. Advance only with strong body state and clean signal.', 'Riesgo alto de desgaste. Avanza solo con estado corporal fuerte y señal clara.')],
-    [uiText('Extreme', 'Extrema'), uiText('System is near refusal. Preservation and descent logic should dominate.', 'El sistema está cerca de la negativa. Deben dominar la preservación y la lógica de descenso.')],
+    [uiText('Low', 'Baja'), uiText('Wide tactical air. Move with confidence, but keep one eye on water and the clock.', 'Tenés margen táctico amplio. Avanzá con confianza, pero no sueltes el reloj ni la hidratación.')],
+    [uiText('Manageable', 'Manejable'), uiText('You can still push if your body trend stays tidy and confidence doesn’t wobble.', 'Podés empujar todavía si la tendencia corporal se mantiene prolija y la confianza no tambalea.')],
+    [uiText('Severe', 'Severa'), uiText('Margin gets tight here. Slow down, map a retreat window before you need it.', 'Acá el margen se afina. Bajá un cambio y dejá planificada la retirada antes de necesitarla.')],
+    [uiText('Very Severe', 'Muy severa'), uiText('Attrition risk spikes. Advance only when body state is solid and the signal feels clean.', 'El riesgo de desgaste se dispara. Avanzá solo con estado corporal sólido y señal limpia.')],
+    [uiText('Extreme', 'Extrema'), uiText('The system is close to saying ‘no’. Preservation and descent logic should take over.', 'El sistema está al borde del “no”. Acá manda preservar y pensar en descenso.')],
   ];
 
   const trendRows = [
-    [uiText('Easing', 'Mejorando'), uiText('Pressure is relaxing. Confirm with confidence before committing long pushes.', 'La presión afloja. Confírmalo con confianza antes de comprometer empujes largos.')],
-    [uiText('Steady', 'Estable'), uiText('Conditions are persistent. Keep economy discipline and avoid overconfidence.', 'Las condiciones persisten. Mantén disciplina económica y evita el exceso de confianza.')],
-    [uiText('Worsening', 'Empeorando'), uiText('Risk is rising. Reduce aggressiveness and protect descent options.', 'El riesgo está subiendo. Reduce agresividad y protege opciones de descenso.')],
-    [uiText('Worsening fast', 'Empeorando rápido'), uiText('Rapid instability. Prioritize survival margin over altitude gain.', 'Inestabilidad rápida. Prioriza el margen de supervivencia por encima de ganar altura.')],
-    [uiText('Uncertain', 'Incierta'), uiText('Signal quality is degraded. Prefer robust actions with lower exposure cost.', 'La calidad de señal está degradada. Prefiere acciones robustas con menor costo de exposición.')],
+    [uiText('Easing', 'Mejorando'), uiText('Pressure is easing off. Confirm the read, then commit to longer pushes.', 'La presión afloja. Confirmá lectura y recién ahí comprometé avances largos.')],
+    [uiText('Steady', 'Estable'), uiText('Conditions are sticky. Stay disciplined with resources and don’t get cocky.', 'Las condiciones vienen pegajosas. Cuidá recursos y no te agrandes.')],
+    [uiText('Worsening', 'Empeorando'), uiText('Risk is climbing. Trim aggression and protect descent options.', 'El riesgo viene subiendo. Bajá agresividad y protegé opciones de descenso.')],
+    [uiText('Worsening fast', 'Empeorando rápido'), uiText('Instability is accelerating. Trade altitude for survival margin, no heroics.', 'La inestabilidad acelera. Cambiá altura por margen de supervivencia, sin heroísmos.')],
+    [uiText('Uncertain', 'Incierta'), uiText('Signal quality is muddy. Favor robust, low-exposure actions.', 'La señal está turbia. Priorizá acciones robustas y de baja exposición.')],
   ];
 
   const confidenceRows = [
-    [uiText('High confidence', 'Alta confianza'), uiText('Your reading is coherent, not infallible. Keep validating trend against body drift.', 'Tu lectura es coherente, no infalible. Sigue validando la tendencia con la deriva corporal.')],
-    [uiText('Medium confidence', 'Confianza media'), uiText('Signals are usable with caution. Avoid chaining high-cost actions.', 'Las señales son útiles con cautela. Evita encadenar acciones de alto costo.')],
-    [uiText('Low confidence', 'Baja confianza'), uiText('Interpretation range is wide. Favor robust options and retreat-ready pacing.', 'El rango de interpretación es amplio. Prioriza opciones robustas y ritmo listo para retirada.')],
+    [uiText('High confidence', 'Alta confianza'), uiText('Your read is coherent, not magic. Keep checking trend against body drift.', 'Tu lectura está bien, pero no es magia. Seguí chequeando tendencia contra deriva corporal.')],
+    [uiText('Medium confidence', 'Confianza media'), uiText('Signals are usable—carefully. Avoid chaining expensive actions back to back.', 'Las señales sirven, con cuidado. Evitá encadenar acciones caras una tras otra.')],
+    [uiText('Low confidence', 'Baja confianza'), uiText('Interpretation range is wide. Pick robust options and keep retreat pacing ready.', 'El rango de interpretación se abre mucho. Elegí opciones robustas y ritmo listo para retirada.')],
   ];
 
   const readGameBullets = [
     uiText('Read trend before impulse.', 'Lee la tendencia antes del impulso.'),
-    uiText('Body drift matters more than one good turn.', 'La deriva corporal importa más que un buen turno.'),
-    uiText('Time windows are part of the mountain.', 'Las ventanas de tiempo son parte de la montaña.'),
-    uiText('The summit only counts if you return safely.', 'La cumbre solo cuenta si regresas con seguridad.'),
+    uiText('Body drift matters more than one lucky turn.', 'La deriva corporal importa más que un buen turno.'),
+    uiText('Time windows are part of the mountain, period.', 'Las ventanas de tiempo son parte de la montaña.'),
+    uiText('Summit only counts if you make it back safely.', 'La cumbre solo cuenta si regresas con seguridad.'),
   ];
 
   const buildChips = (rows) => rows.map(([label, text]) => `<div class="help-chip"><strong>${label}</strong><small>${text}</small></div>`).join('');
@@ -43,8 +43,8 @@ export function buildHelpSections(uiText, t) {
     <section>
       <h4>${uiText('Confidence and signal quality', 'Confianza y calidad de señal')}</h4>
       <div class="game-help-grid">${buildChips(confidenceRows)}</div>
-      <p class="help-note">${uiText('Good weather can still be dangerous when your body is drifting, time is late, or confidence is degraded.', 'El buen clima puede seguir siendo peligroso cuando tu cuerpo deriva, el horario es tarde o la confianza está degradada.')}</p>
-      <p class="help-note">${uiText('Retreat is a strategic success when it preserves safe return margin.', 'La retirada es un éxito estratégico cuando preserva margen de regreso seguro.')}</p>
+      <p class="help-note">${uiText('Even pretty weather can bite when your body drifts, the hour runs late, or confidence drops.', 'Incluso con clima lindo podés meterte en problema si tu cuerpo deriva, se hace tarde o cae la confianza.')}</p>
+      <p class="help-note">${uiText('Retreat is a strategic win when it protects your margin to come back safe.', 'Retirarte también es victoria estratégica cuando preserva tu margen para volver seguro.')}</p>
     </section>
     <section>
       <h4>${uiText('How to read this game', 'Cómo leer este juego')}</h4>

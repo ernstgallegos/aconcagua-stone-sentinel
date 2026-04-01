@@ -1,8 +1,8 @@
 # Aconcagua: Stone Sentinel
 
-**Un videojuego indie narrativo–sistémico sobre los límites, el entorno y la decisión de continuar.**
+**Un proyecto indie narrativo-sistémico sobre incertidumbre, consecuencias y esa decisión incómoda de seguir —o pegar la vuelta a tiempo.**
 
-*Aconcagua: Stone Sentinel* es un videojuego indie single-player inspirado en el ascenso real al Cerro Aconcagua. Propone una experiencia lenta, deliberada y basada en sistemas, en la que el jugador no conquista la montaña, sino que aprende a leerla, adaptarse a ella y decidir cuándo avanzar deja de ser la mejor opción.
+*Aconcagua: Stone Sentinel* es un videojuego indie single-player inspirado en el ascenso real al Cerro Aconcagua. La propuesta es lenta, deliberada y mecánicamente honesta: acá no “ganás” la montaña, aprendés a interpretarla, a negociar con ella y a aceptar que, a veces, retirarse también es jugar bien.
 
 ## Referencias visuales
 
@@ -38,17 +38,17 @@ Es el mejor punto de entrada para entender qué tipo de juego estamos construyen
 
 ## Pitch en una frase
 
-Un videojuego narrativo y sistémico que recrea el ascenso al Aconcagua mediante mecánicas basadas en el realismo, donde el jugador gestiona cuerpo, clima y entorno para decidir hasta dónde continuar.
+Un juego narrativo-sistémico que recrea el ascenso al Aconcagua con mecánicas centradas en realismo, donde el jugador administra cuerpo, clima y presión del entorno para decidir hasta dónde conviene llegar.
 
 ---
 
 ## Idea central
 
-La montaña es el sistema central y la máxima autoridad.
+La montaña es el sistema principal y la autoridad final.
 
-La geografía, la altitud, el clima y los límites físicos condicionan activamente cada decisión. El progreso no surge de subir de nivel ni de adquirir atributos abstractos, sino de aprender a interpretar señales, gestionar el riesgo y reconocer límites.
+La geografía, la altitud, el clima y los límites fisiológicos condicionan cada turno. El progreso no aparece por subir un árbol de niveles ni por inflar estadísticas abstractas: aparece cuando leés señales débiles, gestionás riesgo acumulado y reconocés límites antes de que te pasen factura.
 
-La incertidumbre, la información parcial y las consecuencias irreversibles son elementos centrales de la experiencia.
+La incertidumbre, la información parcial y las consecuencias irreversibles no son decoración narrativa: son el núcleo jugable.
 
 ---
 
@@ -59,16 +59,16 @@ _Aconcagua: Stone Sentinel_ está concebido como una experiencia sistémica.
 El clima, el terreno, el equipo y el estado físico y mental del jugador interactúan mediante bucles de retroalimentación que modelan el riesgo, la adaptación y la toma de decisiones.
 
 ### 1. La montaña gobierna
-La altitud, el terreno y el clima son sistemas activos que condicionan cada acción. El diseño del juego se adapta a la geografía real, no a un diseño de niveles abstracto.
+Altitud, terreno y clima funcionan como reglas activas. Cada acción queda condicionada por lugar y horario; el diseño prioriza geografía real por encima de coreografías de nivel abstractas.
 
 ### 2. Información parcial
-El jugador accede a datos fisiológicos y ambientales a través de una interfaz diegética y limitada (un dispositivo tipo reloj). La certeza nunca es absoluta.
+El jugador accede a señales fisiológicas y ambientales mediante una interfaz diegética limitada (dispositivo tipo reloj). La certeza siempre es provisoria.
 
 ### 3. Aprender haciendo
-No existen niveles ni atributos de personaje. La progresión surge de la observación, la experiencia y la toma de decisiones informadas bajo condiciones cambiantes.
+No hay niveles RPG para grindear ni atributos milagrosos para desbloquear. La progresión surge de observar, recordar patrones y decidir bien bajo condiciones inestables.
 
 ### 4. Contemplación activa
-La observación, las pausas y la atención al entorno no son interrupciones, sino mecánicas centrales. El silencio, la escala y el tiempo son elementos significativos del diseño.
+La observación, las pausas y la lectura del entorno son mecánicas, no interrupciones. El silencio, la escala, el ritmo y el reloj también pesan en el diseño.
 
 ---
 

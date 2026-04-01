@@ -1,8 +1,8 @@
 # Aconcagua: Stone Sentinel
 
-**A narrative–systemic indie game about limits, environment, and the decision to continue.**
+**An indie narrative-systems project about uncertainty, consequence, and the uncomfortable decision to keep going—or turn back in time.**
 
-*Aconcagua: Stone Sentinel* is an indie, single-player game inspired by the real ascent of Mount Aconcagua. It proposes a slow, deliberate, and systems-driven experience in which the player does not conquer the mountain, but learns to read it, adapt to it, and decide when advancing is no longer the right choice.
+*Aconcagua: Stone Sentinel* is an indie single-player game inspired by the real ascent of Mount Aconcagua. It is intentionally slow, deliberate, and mechanically honest: you do not “defeat” the mountain, you learn to interpret it, negotiate with it, and accept that sometimes wisdom looks a lot like retreat.
 
 Reaching the summit is only one of several valid outcomes.
 
@@ -41,17 +41,17 @@ Start here to understand the vision and design rationale behind *Aconcagua: Ston
 
 ## One-Sentence Pitch
 
-A narrative and systemic indie game that recreates the ascent of Aconcagua through realism-driven mechanics, where the player manages body, climate, and environment to decide how far to go.
+A narrative-systems indie game that recreates the Aconcagua ascent through realism-centered mechanics, asking the player to manage body, weather, and terrain pressure before deciding how far is far enough.
 
 ---
 
 ## Core Idea
 
-The mountain is the central system and the highest authority.
+The mountain is the primary system and the final authority.
 
-Geography, altitude, weather, and physical limits actively shape every decision. Progress does not emerge from leveling up or acquiring abstract attributes, but from learning how to interpret signals, manage risk, and recognize boundaries.
+Geography, altitude, weather, and physiological limits actively shape every turn. Progress does not come from leveling trees or abstract stat inflation; it comes from reading weak signals, managing compounding risk, and recognizing hard boundaries before they become non-negotiable.
 
-Uncertainty, partial information, and irreversible consequences are core elements of the experience.
+Uncertainty, partial information, and irreversible consequences are not flavor text here—they are the core play surface.
 
 ---
 
@@ -62,16 +62,16 @@ _Aconcagua: Stone Sentinel_ is designed as a systemic experience.
 Climate, terrain, equipment and the player’s physical and mental condition interact through feedback loops, shaping risk, adaptation and decision-making over time.
 
 ### 1. The Mountain Governs
-Altitude, terrain, and climate are active systems that condition every action. The game design adapts to real geography rather than abstract level design.
+Altitude, terrain, and climate are active rule-makers. Every action is conditioned by place and timing; design follows real geography first, not abstract level choreography.
 
 ### 2. Partial Information
-The player accesses physiological and environmental data through a limited, diegetic interface (a watch-like device). Certainty is never absolute.
+The player reads physiological and environmental clues through a constrained diegetic interface (a watch-like instrument). Certainty is always provisional.
 
 ### 3. Learning by Doing
-There are no levels or character attributes. Progression emerges from observation, experience, and informed decision-making under changing conditions.
+There are no RPG levels to grind and no miracle attributes to unlock. Progression emerges from observation, memory, and repeated decision-making under unstable conditions.
 
 ### 4. Active Contemplation
-Observation, pauses, and environmental awareness are not interruptions but core mechanics. Silence, scale, and time are meaningful design elements.
+Observation, pauses, and environmental awareness are mechanics, not downtime. Silence, scale, pacing, and the clock all carry design weight.
 
 ---
 
