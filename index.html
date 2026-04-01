@@ -8,8 +8,14 @@
       name="description"
       content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
-    <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
-    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="icon" type="image/jpeg" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         color-scheme: dark;
@@ -45,8 +51,9 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+        --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -145,6 +152,7 @@
       }
 
       .nav a {
+        font-family: var(--mono);
         border: 1px solid transparent;
         border-radius: 999px;
         padding: 0.35rem 0.66rem;
@@ -172,6 +180,7 @@
       }
 
       .lang-btn {
+        font-family: var(--mono);
         border: 0;
         border-radius: 999px;
         background: transparent;
@@ -209,6 +218,7 @@
         margin: 0;
         color: var(--accent-mineral);
         font-size: 0.74rem;
+        font-family: var(--mono);
         text-transform: uppercase;
         letter-spacing: 0.15em;
         font-weight: 700;
@@ -247,6 +257,7 @@
       }
 
       .btn {
+        font-family: var(--sans);
         border: 1px solid transparent;
         border-radius: 999px;
         padding: 0.72rem 1.08rem;
@@ -485,6 +496,7 @@
       .footer-block h3 {
         margin: 0 0 0.45rem;
         font-size: 0.74rem;
+        font-family: var(--mono);
         text-transform: uppercase;
         letter-spacing: 0.12em;
         color: var(--accent-mineral);

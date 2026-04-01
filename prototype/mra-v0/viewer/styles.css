@@ -12,6 +12,8 @@
   --red-dim:   #8f4e44;
   --warn:      #af8b58;
   --ok:        #4a7c59;
+  --display: 'Playfair Display', Georgia, serif;
+  --ui: 'Montserrat', 'Segoe UI', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
 }
 
@@ -21,7 +23,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--ui);
   font-size: 14px;
 }
 
@@ -30,11 +32,13 @@ body {
 .hero h1 {
   margin: 0.2rem 0 0.6rem;
   color: var(--white);
-  font-weight: 300;
+  font-family: var(--display);
+  font-weight: 600;
   letter-spacing: 0.04em;
   font-size: 1.5rem;
 }
 .kicker {
+  font-family: var(--mono);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ochre);
@@ -42,6 +46,12 @@ body {
   font-size: 0.68rem;
 }
 .lead { color: var(--text-dim); max-width: 75ch; font-size: 0.84rem; line-height: 1.6; }
+
+.panel h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
 
 .panel {
   background: var(--surface);
@@ -57,6 +67,7 @@ body {
 }
 
 label {
+  font-family: var(--mono);
   display: grid;
   gap: 0.3rem;
   font-size: 0.72rem;
@@ -70,7 +81,7 @@ input, select {
   background: var(--surface2);
   border: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--ui);
   font-size: 0.82rem;
 }
 
@@ -80,7 +91,7 @@ button {
   background: transparent;
   border: 1px solid var(--ochre);
   color: var(--ochre);
-  font-family: var(--mono);
+  font-family: var(--ui);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -111,6 +122,7 @@ button:hover { background: var(--ochre); color: var(--bg); }
 }
 .metric .value {
   margin-top: 0.2rem;
+  font-family: var(--display);
   font-weight: 500;
   color: var(--white);
   font-size: 0.9rem;
@@ -118,10 +130,11 @@ button:hover { background: var(--ochre); color: var(--bg); }
 
 .turn { border-top: 1px solid var(--border); padding: 0.75rem 0; }
 .turn:first-child { border-top: none; padding-top: 0; }
-.turn h3 { margin: 0; font-size: 0.88rem; color: var(--white); font-weight: 500; }
+.turn h3 { margin: 0; font-family: var(--display); font-size: 0.88rem; color: var(--white); font-weight: 500; }
 .turn .meta { margin: 0.2rem 0; color: var(--text-dim); font-size: 0.8rem; }
 
 .flag {
+  font-family: var(--mono);
   display: inline-block;
   margin-right: 0.35rem;
   margin-top: 0.3rem;
