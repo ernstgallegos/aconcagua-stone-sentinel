@@ -275,3 +275,6 @@ In addition to the changelog:
 - Overlay reliability is stronger when intro/tutorial/onboarding and in-game dialogs share one modal-controller path (focus trap, Escape priority, backdrop close, and body scroll-lock release), rather than ad hoc per-modal listeners.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
+
+- Cross-surface typography refactors are more coherent when one tokenized hierarchy is shared (`Playfair Display` for narrative/display, `Montserrat` for controls/meta labels, `Source Sans 3` for body/UI copy, and `IBM Plex Mono` for telemetry/data), then propagated to landing, md-viewer, web-v1, and archived viewer together in one commit.
+- Favicon swaps should target every HTML entry point in the same pass (landing, md-viewer, web-v1, archived viewer) to avoid mixed browser tab icons between routes.

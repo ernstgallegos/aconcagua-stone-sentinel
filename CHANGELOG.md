@@ -18,6 +18,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
 
 ### Changed
+- Reworked the cross-site typography hierarchy to use `Playfair Display` as the primary display face, `Montserrat` as the UI/navigation hierarchy family, `Source Sans 3` for body readability, and `IBM Plex Mono` for telemetry/code surfaces across `/`, `md-viewer`, `prototype/web-v1`, and archived `prototype/mra-v0/viewer`.
+- Replaced SVG favicon references with the canonical JPEG asset `art/brand/favicon-aconcagua.jpg` across all public HTML entry points.
 - Updated `AGENTS.md`, `README.md`, `README.es.md`, and `CONTRIBUTING.md` to reference `docs/ai/README.md` as the canonical AI/agent operations hub while preserving compatibility with existing readiness checklist paths.
 - Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
 - Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.

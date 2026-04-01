@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document Viewer — Aconcagua: Stone Sentinel</title>
-    <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
-    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="icon" type="image/jpeg" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
@@ -26,13 +29,17 @@
         --radius-sm: 14px;
         --radius-md: 22px;
         --shadow-soft: 0 16px 48px #05080d66;
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --display: "Playfair Display", "Times New Roman", serif;
+        --heading: "Montserrat", "Avenir Next", "Segoe UI", sans-serif;
+        --body: "Source Sans 3", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+        --serif: var(--display);
+        --sans: var(--body);
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        font-family: var(--sans);
+        font-family: var(--body);
         line-height: 1.5;
         color: var(--text-main);
         background:
@@ -64,15 +71,15 @@
       .actions { display:flex; gap:.5rem; flex-wrap: wrap; align-items: center; }
       .btn {
         border:1px solid var(--border-soft); color:var(--text-main); background: var(--surface-0);
-        border-radius:999px; padding:.5rem .8rem; text-decoration:none; font-weight:700; font-size:.85rem;
+        border-radius:999px; padding:.5rem .8rem; text-decoration:none; font-family: var(--heading); font-weight:700; font-size:.85rem;
       }
       .btn:hover { text-decoration:none; transform: translateY(-1px); }
       .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
       .title-wrap { display: grid; gap: .2rem; }
-      .title-kicker { margin: 0; color: var(--accent-mineral); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; }
-      .title { font-size: .92rem; color: var(--text-dim); margin: 0; }
+      .title-kicker { margin: 0; color: var(--accent-mineral); font-family: var(--heading); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; }
+      .title { font-family: var(--heading); font-size: .92rem; color: var(--text-dim); margin: 0; }
       .lang-switch { display: inline-flex; gap: 0.2rem; border: 1px solid var(--border-soft); border-radius: 999px; padding: 0.2rem; background: #0e151f99; }
-      .lang-btn { border: 0; border-radius: 999px; background: transparent; color: var(--text-dim); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.32rem 0.54rem; cursor: pointer; }
+      .lang-btn { border: 0; border-radius: 999px; background: transparent; color: var(--text-dim); font-family: var(--heading); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.32rem 0.54rem; cursor: pointer; }
       .lang-btn[aria-pressed='true'] { color: #081019; background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber)); }
       .lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }
       article {
@@ -83,11 +90,11 @@
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-soft);
       }
-      h1,h2,h3,h4 { color: var(--text-main); line-height: 1.2; font-family: var(--serif); }
+      h1,h2,h3,h4 { color: var(--text-main); line-height: 1.2; font-family: var(--display); }
       p, li { color: var(--text-main); }
       a { color: var(--accent-ice); }
       pre { background: #1b2636; padding: .8rem; border-radius: 10px; overflow: auto; border:1px solid var(--border-soft); }
-      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      code { font-family: var(--mono); }
       blockquote { margin: 1rem 0; padding: .6rem .9rem; border-left: 3px solid var(--accent-amber); background: #0d152190; color: var(--text-dim); }
       hr { border: 0; border-top: 1px solid var(--border-soft); margin: 1.2rem 0; }
       table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .92rem; }

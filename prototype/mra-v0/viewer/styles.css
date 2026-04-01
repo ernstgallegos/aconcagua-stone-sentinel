@@ -12,6 +12,9 @@
   --red-dim:   #8f4e44;
   --warn:      #af8b58;
   --ok:        #4a7c59;
+  --display: 'Playfair Display', 'Times New Roman', serif;
+  --heading: 'Montserrat', 'Avenir Next', 'Segoe UI', sans-serif;
+  --body: 'Source Sans 3', 'Inter', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', monospace;
 }
 
@@ -21,7 +24,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--body);
   font-size: 14px;
 }
 
@@ -30,7 +33,8 @@ body {
 .hero h1 {
   margin: 0.2rem 0 0.6rem;
   color: var(--white);
-  font-weight: 300;
+  font-family: var(--display);
+  font-weight: 600;
   letter-spacing: 0.04em;
   font-size: 1.5rem;
 }
@@ -38,6 +42,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ochre);
+  font-family: var(--heading);
   margin: 0;
   font-size: 0.68rem;
 }
@@ -61,6 +66,7 @@ label {
   gap: 0.3rem;
   font-size: 0.72rem;
   color: var(--text-dim);
+  font-family: var(--heading);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -70,7 +76,7 @@ input, select {
   background: var(--surface2);
   border: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--body);
   font-size: 0.82rem;
 }
 
@@ -80,7 +86,7 @@ button {
   background: transparent;
   border: 1px solid var(--ochre);
   color: var(--ochre);
-  font-family: var(--mono);
+  font-family: var(--heading);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -105,6 +111,7 @@ button:hover { background: var(--ochre); color: var(--bg); }
 .metric p { margin: 0; }
 .metric .label {
   color: var(--text-dim);
+  font-family: var(--heading);
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;

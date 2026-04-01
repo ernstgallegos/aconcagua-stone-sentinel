@@ -8,8 +8,11 @@
       name="description"
       content="Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press."
     />
-    <link rel="icon" type="image/svg+xml" href="/art/brand/favicon-aconcagua.svg" />
-    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.svg" />
+    <link rel="icon" type="image/jpeg" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
@@ -45,8 +48,12 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --sans: "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --display: "Playfair Display", "Times New Roman", serif;
+        --heading: "Montserrat", "Avenir Next", "Segoe UI", sans-serif;
+        --body: "Source Sans 3", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+        --serif: var(--display);
+        --sans: var(--body);
       }
 
       * { box-sizing: border-box; }
@@ -54,7 +61,7 @@
 
       body {
         margin: 0;
-        font-family: var(--sans);
+        font-family: var(--body);
         color: var(--text-main);
         line-height: 1.5;
         background:
@@ -116,7 +123,7 @@
 
       .brand {
         margin: 0;
-        font-family: var(--serif);
+        font-family: var(--display);
         font-size: 1rem;
         letter-spacing: 0.03em;
       }
@@ -124,7 +131,7 @@
       .brand small {
         display: block;
         color: var(--text-muted);
-        font-family: var(--sans);
+        font-family: var(--heading);
         font-size: 0.7rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -149,6 +156,7 @@
         border-radius: 999px;
         padding: 0.35rem 0.66rem;
         color: var(--text-dim);
+        font-family: var(--heading);
         font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -176,6 +184,7 @@
         border-radius: 999px;
         background: transparent;
         color: var(--text-dim);
+        font-family: var(--heading);
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -216,7 +225,7 @@
 
       h1 {
         margin: 0.55rem 0 0;
-        font-family: var(--serif);
+        font-family: var(--display);
         font-weight: 600;
         letter-spacing: 0.01em;
         line-height: 1.03;
@@ -301,13 +310,14 @@
         color: var(--accent-mineral);
         text-transform: uppercase;
         letter-spacing: 0.14em;
+        font-family: var(--heading);
         font-size: 0.72rem;
         font-weight: 700;
       }
 
       .section h2 {
         margin: 0;
-        font-family: var(--serif);
+        font-family: var(--display);
         font-size: clamp(1.55rem, 3.8vw, 2.7rem);
         line-height: 1.08;
       }
@@ -457,7 +467,7 @@
 
       .outcome strong {
         display: block;
-        font-family: var(--serif);
+        font-family: var(--display);
         margin-bottom: 0.22rem;
       }
 
