@@ -6,10 +6,12 @@ This is a curated, author-driven repository. External contributions are welcome 
 
 Before proposing public-facing/release hardening changes, complete:
 
+- [`docs/ai/README.md`](./docs/ai/README.md) (canonical AI/agent operations hub)
 - [`docs/en/public-readiness-checklist.md`](./docs/en/public-readiness-checklist.md)
 - [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md)
 
 For AI-assisted contributions, this checklist is mandatory (not advisory). PR descriptions must include explicit command evidence for each executed gate.
+When creating/updating skills, follow [`docs/ai/skills/contributing-skills.md`](./docs/ai/skills/contributing-skills.md).
 
 ---
 
