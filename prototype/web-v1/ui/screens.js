@@ -5,14 +5,12 @@ import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, de
 import { buildHelpSections } from './helpers/help-overlay-content.js';
 import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature, buildSignalInterpretationHint } from './helpers/debrief.js';
 import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper, buildTurnLogEntry } from './helpers/run-log.js';
-import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessibility.js';
 import { buildManagedPortrait, hydrateManagedPortraits, preloadImages } from './helpers/carousel-media.js';
-import { openTutorialStyleModal, closeTutorialStyleModal, bindBackdropClose } from './helpers/modal-controller.js';
+import { openTutorialStyleModal } from './helpers/modal-controller.js';
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
-import { parseDeepLinkHash, syncScreenHash } from './helpers/routing.js';
 import {
   formatMinutes,
   formatTrendArrow,
@@ -20,8 +18,29 @@ import {
   getTimeOfDayBucket,
   getPersistenceTier,
   getOutcomeClass,
-  resolveNavigationTarget,
 } from './helpers/screen-utils.js';
+import {
+  initFlowController,
+  showScreen,
+  advanceFromTitle,
+  openIntroModal,
+  closeIntroModal,
+  openTutorialModal,
+  closeTutorialModal,
+  closeOnboardingModal,
+  abandonOnboarding,
+  openGameHelp,
+  closeGameHelp,
+  openWatchDetail,
+  closeWatchDetail,
+  openFieldLog,
+  closeFieldLog,
+  closeAllBottomSheets,
+  isBottomSheetOpen,
+  openBottomSheet,
+  closeBottomSheet,
+  handleDeepLink,
+} from './flow-controller.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -939,22 +958,6 @@ function initDifficulty() {
   renderTutorialContent();
 }
 
-function openIntroModal() {
-  openTutorialStyleModal({ modalId: 'intro-modal', triggerId: 'title-info-trigger' });
-}
-
-function closeIntroModal() {
-  closeTutorialStyleModal({ modalId: 'intro-modal', fallbackTriggerId: 'title-info-trigger' });
-}
-
-function openTutorialModal() {
-  openTutorialStyleModal({ modalId: 'tutorial-modal', triggerId: 'onboarding-tutorial-btn' });
-}
-
-function closeTutorialModal() {
-  closeTutorialStyleModal({ modalId: 'tutorial-modal', fallbackTriggerId: 'onboarding-tutorial-btn' });
-}
-
 function setLanguage(lang) {
   const safe = VALID_LANGUAGES.has(lang) ? lang : 'en';
   CURRENT_LANGUAGE = safe;
@@ -1007,19 +1010,6 @@ function initWelcomeScreen() {
     if (event.target.closest('button, select, option, a, .tutorial-dialog, .tutorial-backdrop')) return;
     advanceFromTitle(event);
   });
-}
-
-function advanceFromTitle(event) {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  if (!G.modelReady) {
-    setStartupState('error', uiText('Model is still loading or blocked.', 'El modelo todavía está cargando o está bloqueado.'));
-    return;
-  }
-  closeIntroModal();
-  showScreen('expedition-setup');
 }
 
 async function loadDataConfig() {
@@ -1189,89 +1179,10 @@ function applyStaticTranslations() {
 // ════════════════════════════════════════════════
 
 // ════════════════════════════════════════════════
-// NAVIGATION — FIX: single consolidated showScreen
-// (was defined twice: once at line ~900 and once at line ~1820 as a patch)
-// Now handles all responsibilities in one place.
+// NAVIGATION — delegated to ui/flow-controller.js
+// showScreen, dismissTransientUi, and screen exit
+// animation are defined there and imported above.
 // ════════════════════════════════════════════════
-// Decision 14: exit animation duration
-const SCREEN_EXIT_DURATION_MS = 150;
-function dismissTransientUi() {
-  closeIntroModal();
-  closeTutorialModal();
-  closeOnboardingModal();
-  closeGameHelp();
-  closeWatchDetail();
-  closeFieldLog();
-  closeAllBottomSheets();
-}
-
-function showScreen(id) {
-  const part2Screens = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
-  id = resolveNavigationTarget(id, {
-    finalOutcome: G.finalOutcome,
-    hasSummited: hasPreviouslySummited(),
-    part2ScreenIds: part2Screens,
-  });
-
-  updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
-  dismissTransientUi();
-
-  // Hide fixed utility controls during gameplay; restore on other screens
-  const titleControls = document.querySelector('.title-top-controls');
-  if (titleControls) {
-    titleControls.style.display = id === 'game' ? 'none' : '';
-  }
-
-  /* Decision 14: screen exit animation before switching */
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const currentActive = document.querySelector('.screen.active');
-
-  const activateTarget = () => {
-    document.querySelectorAll('.screen').forEach(s => {
-      s.classList.remove('active', 'exiting');
-    });
-    const target = document.getElementById('screen-' + id);
-    if (!target) { reportRuntimeIssue('Unknown screen id', id); return; }
-    target.classList.add('active');
-    window.scrollTo(0, 0);
-
-    if (id === 'part2-character') buildPart2SetupScreen();
-    if (PART2_NARRATIVE_IDS.has(id)) renderPart2NarrativeScreen(id);
-
-    if (id === 'expedition-setup') buildExpeditionSetupCarousels();
-
-    if (id === 'journal') {
-      renderJournal();
-      const backBtn = document.getElementById('journal-back-btn');
-      if (backBtn) {
-        const origin = G.journalReturnScreen || 'debrief';
-        const labels = {
-          debrief: uiText('Debrief', 'Debrief'),
-          title: uiText('Title', 'Título'),
-          game: uiText('Game', 'Juego'),
-        };
-        backBtn.textContent = labels[origin] || origin;
-        backBtn.onclick = () => showScreen(origin);
-      }
-    }
-
-    // Sync URL hash so the current screen is shareable.
-    // Suppressed during deep-link bootstrap to avoid overwriting the incoming URL.
-    if (_suppressHashSync) {
-      _suppressHashSync = false;
-    } else {
-      syncScreenHash(id);
-    }
-  };
-
-  if (reduceMotion || !currentActive || currentActive.id === 'screen-' + id) {
-    activateTarget();
-  } else {
-    /* Apply exit animation */
-    currentActive.classList.add('exiting');
-    setTimeout(activateTarget, SCREEN_EXIT_DURATION_MS);
-  }
-}
 
 // ════════════════════════════════════════════════
 // CHARACTER SELECT
@@ -2068,15 +1979,6 @@ function showOnboarding(mode) {
     `${G.character.name} · ${G.character.role} · ${uiText('Difficulty', 'Dificultad')}: ${difficultyLabel()}`;
   startGame();
   openTutorialStyleModal({ modalId: 'onboarding-modal', triggerId: 'btn-begin-expedition' });
-}
-
-function closeOnboardingModal() {
-  closeTutorialStyleModal({ modalId: 'onboarding-modal', fallbackTriggerId: 'btn-begin-expedition' });
-}
-
-function abandonOnboarding() {
-  closeOnboardingModal();
-  showScreen('expedition-setup');
 }
 
 // ════════════════════════════════════════════════
@@ -4032,8 +3934,61 @@ document.addEventListener('keydown', (event) => {
 });
 
 // ════════════════════════════════════════════════
+// DEEP-LINK RESOLVER HELPERS
+// Used as injected hooks for flow-controller.handleDeepLink().
+// ════════════════════════════════════════════════
+
+/**
+ * Resolve a character param string to a DATA_CONFIG character object.
+ * Falls back to the first available character.
+ */
+function _resolveCharacter(charParam) {
+  const chars = DATA_CONFIG.characters || [];
+  return (charParam && chars.find(c => c.id === charParam)) || chars[0] || null;
+}
+
+/**
+ * Resolve a scenario param string to a configured scenario object.
+ * Falls back to the first predefined scenario.
+ */
+function _resolveScenario(scenParam) {
+  const scenarios = getConfiguredScenarios();
+  return (scenParam && scenarios.find(s => s.id === scenParam)) || scenarios[0] || null;
+}
+
+function resolveSeed(seedParam, scenarioSeeds = []) {
+  if (seedParam != null) {
+    const parsed = Number.parseInt(seedParam, 10);
+    if (Number.isFinite(parsed)) return parsed;
+    reportRuntimeIssue('Ignoring invalid deep-link seed parameter', seedParam);
+  }
+  return scenarioSeeds[Math.floor(Math.random() * scenarioSeeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+}
+
+// ════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════
+initFlowController({
+  part2NarrativeIds:           PART2_NARRATIVE_IDS,
+  summitAchievedKey:           SUMMIT_ACHIEVED_KEY,
+  hasPreviouslySummited,
+  reportRuntimeIssue,
+  uiText,
+  onEnterScreen(id) {
+    if (id === 'part2-character') buildPart2SetupScreen();
+    if (PART2_NARRATIVE_IDS.has(id)) renderPart2NarrativeScreen(id);
+    if (id === 'expedition-setup') buildExpeditionSetupCarousels();
+    if (id === 'journal') renderJournal();
+  },
+  buildGameHelpContent,
+  bootstrapMockDebrief,
+  startGame,
+  showOnboarding,
+  deriveDifficultyFromScenario,
+  resolveCharacter:  _resolveCharacter,
+  resolveScenario:   _resolveScenario,
+  resolveSeed,
+});
 initVisualMode();
 initLanguage();
 initDifficulty();
@@ -4053,47 +4008,6 @@ loadDataConfig()
       message: `Blocking runtime bootstrap failure: ${error?.message || String(error)}`,
     });
   });
-
-bindBackdropClose({ modalId: 'intro-modal', close: closeIntroModal });
-bindBackdropClose({ modalId: 'tutorial-modal', close: closeTutorialModal });
-bindBackdropClose({ modalId: 'onboarding-modal', close: closeOnboardingModal });
-
-[['game-help-overlay', closeGameHelp], ['watch-detail-overlay', closeWatchDetail], ['field-log-overlay', closeFieldLog]].forEach(([overlayId, close]) => {
-  const overlay = document.getElementById(overlayId);
-  if (!overlay) return;
-  overlay.addEventListener('click', (event) => {
-    if (event.target === overlay) close();
-  });
-});
-
-function closeAllBottomSheets() {
-  document.querySelectorAll('.bottom-sheet').forEach((sheet) => sheet.classList.remove('open'));
-  document.getElementById('bottom-sheet-backdrop')?.classList.remove('visible');
-  document.body.classList.remove('modal-open');
-}
-
-function isBottomSheetOpen() {
-  return !!document.querySelector('.bottom-sheet.open');
-}
-
-document.addEventListener('keydown', (event) => {
-  if (event.key !== 'Escape') return;
-
-  const openTutorial = document.getElementById('tutorial-modal')?.classList.contains('visible');
-  const openOnboarding = document.getElementById('onboarding-modal')?.classList.contains('visible');
-  const openIntro = document.getElementById('intro-modal')?.classList.contains('visible');
-  const helpOpen = document.getElementById('game-help-overlay')?.classList.contains('open');
-  const watchOpen = document.getElementById('watch-detail-overlay')?.classList.contains('open');
-  const fieldOpen = document.getElementById('field-log-overlay')?.classList.contains('open');
-
-  if (openTutorial) closeTutorialModal();
-  else if (openOnboarding) closeOnboardingModal();
-  else if (openIntro) closeIntroModal();
-  else if (helpOpen) closeGameHelp();
-  else if (watchOpen) closeWatchDetail();
-  else if (fieldOpen) closeFieldLog();
-  else if (isBottomSheetOpen()) closeAllBottomSheets();
-});
 
 /* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
 function updateDebriefHero(outcome) {
@@ -4137,16 +4051,12 @@ function updateDebriefHero(outcome) {
   setId('dsg-outcome', `${outcome.label || '—'} · ${sc.name || '—'} · Seed ${G.seed || '—'}`);
 }
 
-
 // ════════════════════════════════════════════════
-// DEEP-LINK SUPPORT
-// Hash format: #<screenId>[&key=val[&key=val...]]
-// Supported params: character, scenario, seed, outcome, force
+// DEEP-LINK SUPPORT — delegated to ui/flow-controller.js
+// handleDeepLink() is imported and called from there.
+// bootstrapMockDebrief() remains here as it performs
+// rendering-heavy mock-state setup for the debrief screen.
 // ════════════════════════════════════════════════
-
-/** Flag set to true while handling a deep-link navigation so showScreen()
- *  does not immediately overwrite the incoming hash. Resets inside activateTarget(). */
-let _suppressHashSync = false;
 
 /**
  * Build a minimal plausible turn log for mock debrief display.
@@ -4282,95 +4192,7 @@ function bootstrapMockDebrief(params) {
     try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
   }
 
-  _suppressHashSync = true;
-  showScreen('debrief');
-}
-
-/**
- * Resolve a character param string to a DATA_CONFIG character object.
- * Falls back to the first available character.
- */
-function _resolveCharacter(charParam) {
-  const chars = DATA_CONFIG.characters || [];
-  return (charParam && chars.find(c => c.id === charParam)) || chars[0] || null;
-}
-
-/**
- * Resolve a scenario param string to a configured scenario object.
- * Falls back to the first predefined scenario.
- */
-function _resolveScenario(scenParam) {
-  const scenarios = getConfiguredScenarios();
-  return (scenParam && scenarios.find(s => s.id === scenParam)) || scenarios[0] || null;
-}
-
-function resolveSeed(seedParam, scenarioSeeds = []) {
-  if (seedParam != null) {
-    const parsed = Number.parseInt(seedParam, 10);
-    if (Number.isFinite(parsed)) return parsed;
-    reportRuntimeIssue('Ignoring invalid deep-link seed parameter', seedParam);
-  }
-  return scenarioSeeds[Math.floor(Math.random() * scenarioSeeds.length)] || Math.floor(Math.random() * 9000) + 1000;
-}
-
-/**
- * Handle hash-based deep links after data config is loaded.
- * Called once in the loadDataConfig().then() chain.
- * Reads window.location.hash and navigates / bootstraps state accordingly.
- */
-function handleDeepLink() {
-  const parsed = parseDeepLinkHash();
-  if (!parsed) return;
-
-  const { screenId, params } = parsed;
-
-  // Part 2 screens — bypass gating when &force=1 is present
-  const PART2_SCREEN_IDS = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
-  if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
-    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
-    updateRunState(G, { finalOutcome: 'Summit and Safe Return' });
-    _suppressHashSync = true;
-    showScreen(screenId);
-    return;
-  }
-
-  if (screenId === 'game') {
-    const char = _resolveCharacter(params.character);
-    const scenario = _resolveScenario(params.scenario);
-    if (!char || !scenario) { return; } // stay on title
-    G.character = char;
-    G.scenario = scenario;
-    const seeds = scenario.seeds || [];
-    G.seed = resolveSeed(params.seed, seeds);
-    deriveDifficultyFromScenario();
-    // startGame() calls showScreen('game') internally — suppress hash overwrite
-    _suppressHashSync = true;
-    startGame();
-    return;
-  }
-
-  if (screenId === 'onboarding') {
-    const char = _resolveCharacter(params.character);
-    const scenario = _resolveScenario(params.scenario);
-    if (!char || !scenario) { showScreen('expedition-setup'); return; }
-    G.character = char;
-    G.scenario = scenario;
-    const seeds = scenario.seeds || [];
-    G.seed = resolveSeed(params.seed, seeds);
-    deriveDifficultyFromScenario();
-    _suppressHashSync = true;
-    showOnboarding('predefined');
-    return;
-  }
-
-  if (screenId === 'debrief') {
-    bootstrapMockDebrief(params);
-    return;
-  }
-
-  // All other screens: just navigate directly
-  _suppressHashSync = true;
-  showScreen(screenId);
+  showScreen('debrief', { suppressHash: true });
 }
 
 window.handleDeepLink = handleDeepLink;
@@ -4408,29 +4230,9 @@ window.beginExpedition = beginExpedition;
 window.quickStart = quickStart;
 window.CAROUSEL_STATE = CAROUSEL_STATE;
 
-/* EXPERIMENTAL — Decision 13: Bottom-sheet toggle functions for mobile game screen */
-window.openBottomSheet = function openBottomSheet(sheetId) {
-  const sheet = document.getElementById(sheetId);
-  const backdrop = document.getElementById('bottom-sheet-backdrop');
-  if (sheet) {
-    closeAllBottomSheets();
-    sheet.classList.add('open');
-  }
-  if (backdrop) backdrop.classList.add('visible');
-  if (isBottomSheetOpen()) document.body.classList.add('modal-open');
-};
-window.closeBottomSheet = function closeBottomSheet(sheetId) {
-  const sheet = document.getElementById(sheetId);
-  if (sheet) sheet.classList.remove('open');
-  if (!isBottomSheetOpen()) closeAllBottomSheets();
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-  const backdrop = document.getElementById('bottom-sheet-backdrop');
-  if (backdrop) backdrop.addEventListener('click', closeAllBottomSheets);
-});
-
-
+/* EXPERIMENTAL — Decision 13: Bottom-sheet toggle functions — imported from flow-controller */
+window.openBottomSheet = openBottomSheet;
+window.closeBottomSheet = closeBottomSheet;
 
 function buildGameHelpContent() {
   const host = document.getElementById('game-help-content');
@@ -4440,45 +4242,8 @@ function buildGameHelpContent() {
   host.innerHTML = buildHelpSections(uiText, t);
 }
 
-function openGameHelp() {
-  buildGameHelpContent();
-  const overlay = document.getElementById('game-help-overlay');
-  const dialog = overlay?.querySelector('.game-help-dialog');
-  const trigger = document.getElementById('game-help-trigger');
-  openModalWithFocus({ overlay, dialog, trigger });
-}
-
-function closeGameHelp() {
-  const overlay = document.getElementById('game-help-overlay');
-  closeModalWithFocusReturn({ overlay, fallbackTriggerId: 'game-help-trigger' });
-}
-
-
-/* Watch detail overlay — opened by tapping the watch band */
-function openWatchDetail() {
-  const overlay = document.getElementById('watch-detail-overlay');
-  const dialog = overlay?.querySelector('.watch-detail-dialog');
-  const trigger = document.getElementById('watch-band');
-  openModalWithFocus({ overlay, dialog, trigger });
-}
-function closeWatchDetail() {
-  const overlay = document.getElementById('watch-detail-overlay');
-  closeModalWithFocusReturn({ overlay, fallbackTriggerId: 'watch-band' });
-}
 window.openWatchDetail = openWatchDetail;
 window.closeWatchDetail = closeWatchDetail;
-
-/* Field log overlay — opened via "View field log" link in mountain-main */
-function openFieldLog() {
-  const overlay = document.getElementById('field-log-overlay');
-  const dialog = overlay?.querySelector('.field-log-dialog');
-  const trigger = document.querySelector('.field-log-trigger');
-  openModalWithFocus({ overlay, dialog, trigger });
-}
-function closeFieldLog() {
-  const overlay = document.getElementById('field-log-overlay');
-  closeModalWithFocusReturn({ overlay, fallbackTriggerId: null });
-}
 window.openFieldLog = openFieldLog;
 window.closeFieldLog = closeFieldLog;
 window.openGameHelp = openGameHelp;
