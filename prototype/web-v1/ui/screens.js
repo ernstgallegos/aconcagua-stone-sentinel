@@ -1,4 +1,5 @@
 import { G, updateRunState, updateUIState, recordTelemetry, assertStateShape } from '../state/game-state.js';
+import { createGameLoop } from './game-loop.js';
 import { createTurnEngine, mulberry32, rngChoice, rngInt, rngWeighted, clamp } from '../engine/turn-resolution.js';
 import { calculateEnvironmentalPressureScore, calculateBodyToleranceScore } from '../engine/pressure-model.js';
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
@@ -3440,72 +3441,37 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   applyContextEvents,
 });
 
+// ════════════════════════════════════════════════
+// GAME LOOP — turn orchestration delegated to ui/game-loop.js
+// ════════════════════════════════════════════════
+const _gameLoop = createGameLoop({
+  G,
+  resolveTurn,
+  applyAcclimatizationGain,
+  updateRunState,
+  recordTelemetry,
+  buildTurnLogEntry,
+  computeSignals,
+  calculateEnvironmentalPressure,
+  isCampPosition,
+  assertStateShape,
+  getCurrentStage,
+  formatMinutes,
+  capacityLabel,
+  fatigueLabel,
+  exposureLabel,
+  pressureBandLabel,
+  pressureDeltaLabel,
+  calculateBodyTolerance,
+  renderWatch,
+  renderNarrative,
+  addLogEntry,
+  setDecisionButtonsEnabled,
+  onRunEnded: endRun,
+});
+
 function makeDecision(decision) {
-  setDecisionButtonsEnabled(false);
-  const decisionPanel = document.querySelector('.decision-panel');
-  if (decisionPanel) decisionPanel.classList.add('processing');
-  const s = G.state;
-
-  if (decision === 'sleep' && !isCampPosition(s.position)) {
-    if (decisionPanel) decisionPanel.classList.remove('processing');
-    setDecisionButtonsEnabled(true);
-    return;
-  }
-
-  assertStateShape(G, 'before resolveTurn', { throwOnError: true });
-  const previousPosition = s.position;
-  const turnResult = resolveTurn(s, decision);
-  const resolvedDecision = turnResult.resolvedAction || decision;
-  applyAcclimatizationGain(resolvedDecision);
-  updateRunState(G, { signals: computeSignals() });
-  renderWatch();
-  const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
-
-  const logEntry = buildTurnLogEntry({
-    G,
-    state: s,
-    stage: getCurrentStage(),
-    resolvedDecision,
-    turnResult,
-    narrativeText,
-    formatMinutes,
-    capacityLabel,
-    fatigueLabel,
-    exposureLabel,
-    pressureBandLabel,
-    pressureDeltaLabel,
-    calculateBodyTolerance,
-  });
-  updateRunState(G, {
-    turnLog: [...G.turnLog, logEntry],
-    allFlags: [...G.allFlags, ...turnResult.flags],
-  });
-  addLogEntry(logEntry);
-
-  const exitedPark = previousPosition === 'horcones' && resolvedDecision === 'descend';
-  const PARK_EXIT_OUTCOMES = new Set(['Summit and Safe Return', 'High Point Return', 'Strategic Retreat']);
-  const returnedToHorcones = exitedPark && PARK_EXIT_OUTCOMES.has(turnResult.outcome);
-  const ended = exitedPark || turnResult.outcome !== 'Strategic Retreat';
-
-  if (ended) {
-    updateRunState(G, { finalOutcome: turnResult.outcome });
-    if (decisionPanel) decisionPanel.classList.remove('processing');
-    setTimeout(() => endRun(returnedToHorcones), 800);
-    return;
-  }
-
-  const currentEP = calculateEnvironmentalPressure(G.state).pressureScore;
-  const updatedHistory = [...(G.pressureHistory || []), currentEP].slice(-5);
-  updateRunState(G, { pressureHistory: updatedHistory });
-
-  updateRunState(G, { turn: G.turn + 1 });
-  recordTelemetry(G, { turnDecisionStartedAt: Date.now() });
-  setTimeout(() => {
-    renderWatch();
-    renderNarrative(null, G.signals);
-    setDecisionButtonsEnabled(true);
-    if (decisionPanel) decisionPanel.classList.remove('processing');
-  }, 400);
+  _gameLoop.handleDecision(decision);
 }
 
 // ════════════════════════════════════════════════
