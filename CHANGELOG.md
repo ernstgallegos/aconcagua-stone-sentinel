@@ -43,6 +43,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`, preventing CI failures on runners without ripgrep installed.
 - Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
 
 ## [1.4.5] — 2026-03

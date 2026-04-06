@@ -15,7 +15,7 @@ assert_contains() {
   local file="$1"
   local needle="$2"
   local label="$3"
-  if ! rg -q "$needle" "$file"; then
+  if ! grep -Fq "$needle" "$file"; then
     echo "FAIL: ${label} did not contain expected marker: ${needle}" >&2
     exit 1
   fi
