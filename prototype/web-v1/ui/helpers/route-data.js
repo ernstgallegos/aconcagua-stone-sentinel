@@ -30,3 +30,7 @@ export function getCurrentStage(position, stageByPos) {
 export function isCampPosition(position, campPos) {
   return (campPos || CAMP_POSITIONS).has(position);
 }
+
+export function getCurrentNode(state) {
+  return ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
+}
