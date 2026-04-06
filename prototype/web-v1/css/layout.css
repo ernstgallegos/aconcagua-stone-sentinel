@@ -16,6 +16,7 @@
 
 /* Game screen overrides display to ensure correct layout */
 #screen-game {
+  position: relative;
   display: none;
   flex-direction: column;
   min-height: 100vh;

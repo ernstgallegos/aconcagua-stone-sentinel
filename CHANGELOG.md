@@ -21,6 +21,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Redesigned the public landing page (`/index.html`) with a distinctive expedition-noir visual system (new typography stack, atmospheric gradients, staggered motion, image gallery sections, and bilingual EN/ES copy wiring) while preserving direct CTA access to `prototype/web-v1`.
+- Applied the same visual language to `prototype/web-v1` by replacing global font imports/tokens and refreshing shared background + motion layers (`tokens.css`, `reset.css`, `animations.css`, `themes.css`, and `layout.css`) so core UI components inherit the redesign coherently.
 - Refactored `prototype/web-v1/ui/screens.js` to import and delegate all navigation/modal/flow functions from `ui/flow-controller.js`. Removed `showScreen`, `dismissTransientUi`, all modal functions, overlay functions, bottom-sheet management, `advanceFromTitle`, `handleDeepLink`, `_suppressHashSync`, Escape/backdrop listeners, and `SCREEN_EXIT_DURATION_MS` from `screens.js`. `screens.js` now calls `initFlowController(hooks)` with render callbacks at module init time. `bootstrapMockDebrief` updated to use `showScreen('debrief', { suppressHash: true })` instead of the former private `_suppressHashSync` flag. No behavior change.
 - `showScreen` gains an optional second argument `{ suppressHash: false }` to allow callers to suppress hash-sync for a single call without using the private flag. The `_suppressHashSync` internal flag is consumed and cleared atomically inside `showScreen`.
 
