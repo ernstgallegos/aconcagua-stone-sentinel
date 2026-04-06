@@ -298,6 +298,13 @@
   letter-spacing: 0;
 }
 
+.char-iso {
+  font-family: var(--mono);
+  font-size: 0.75em;
+  letter-spacing: 0.08em;
+  color: var(--stone);
+}
+
 .char-role {
   font-family: var(--mono);
   font-size: 0.75rem;

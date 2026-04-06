@@ -1,11 +1,9 @@
+import { safeGetStorage } from './storage.js';
+
 const LANGUAGE_KEY = 'aconcagua_language_v1';
 
 function getStartupLang() {
-  try {
-    return localStorage.getItem(LANGUAGE_KEY) === 'es' ? 'es' : 'en';
-  } catch (_) {
-    return 'en';
-  }
+  return safeGetStorage(LANGUAGE_KEY) === 'es' ? 'es' : 'en';
 }
 
 function startupText(en, es) {

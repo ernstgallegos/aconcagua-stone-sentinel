@@ -87,6 +87,12 @@ export function validateDataConfigShape(filename, data) {
     data.forEach((item, i) => {
       assertConfigPath(filename, item, 'object', `$[${i}]`);
       assertConfigPath(filename, item?.id, 'string', `$[${i}].id`);
+      if (item?.nationalityCode != null) {
+        assertConfigPath(filename, item.nationalityCode, 'string', `$[${i}].nationalityCode`);
+        if (!/^[A-Z]{2}$/.test(item.nationalityCode)) {
+          throw new Error(`${filename}:$[${i}].nationalityCode expected ISO-3166 alpha-2 uppercase code`);
+        }
+      }
     });
     return;
   }

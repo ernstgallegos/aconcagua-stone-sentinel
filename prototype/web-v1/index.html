@@ -23,12 +23,12 @@
 <body>
 
 <div class="title-top-controls" aria-label="Welcome screen controls">
-  <button id="title-info-trigger" class="title-info-trigger" type="button" onclick="openIntroModal()" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
+  <button id="title-info-trigger" class="title-info-trigger" type="button" data-action="open-intro-modal" aria-label="Open prototype information" title="Open prototype information">ⓘ Info</button>
 
   <div class="title-utility-cluster">
     <div class="lang-switch" role="group" aria-label="Language selector">
-      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" onclick="setLanguage('en')">EN</button>
-      <button class="lang-btn" type="button" data-lang="es" aria-pressed="false" onclick="setLanguage('es')">ES</button>
+      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" data-action="set-language" data-action-arg="en">EN</button>
+      <button class="lang-btn" type="button" data-lang="es" aria-pressed="false" data-action="set-language" data-action-arg="es">ES</button>
     </div>
   </div>
 </div>
@@ -37,7 +37,7 @@
 <section id="screen-title" class="screen active" aria-label="Welcome screen">
   <div class="splash-content" aria-hidden="true"><img class="splash-image" src="../../art/cover/cover-concept-1.png" alt=""/></div>
   <div class="title-shell title-shell-minimal">
-    <button class="title-screen-advance" type="button" onclick="advanceFromTitle(event)" aria-label="Continue to expedition setup">
+    <button class="title-screen-advance" type="button" data-action="advance-from-title" aria-label="Continue to expedition setup">
     </button>
     <p id="startup-status-line" class="startup-status-line" data-state="loading" aria-live="polite">Preparing mountain model…</p>
   </div>
@@ -55,7 +55,7 @@
 <!-- ══════════════════════ EXPEDITION SETUP ══════════════════════ -->
 <section id="screen-expedition-setup" class="screen" aria-label="Expedition setup">
   <div class="expedition-setup-shell">
-    <button class="nav-back" onclick="showScreen('title')" aria-label="Back to title">Title</button>
+    <button class="nav-back" data-action="show-screen" data-action-arg="title" aria-label="Back to title">Title</button>
     <div class="screen-header">
       <h2 id="expedition-setup-title">Prepare Your Expedition</h2>
     </div>
@@ -64,11 +64,11 @@
     <div class="carousel-section" role="group" aria-labelledby="carousel-label-character">
       <div class="carousel-label" id="carousel-label-character">Character</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="carousel-arrow-character-prev" onclick="carouselPrev('character')" aria-label="Previous character">◀</button>
+        <button class="carousel-arrow" id="carousel-arrow-character-prev" data-action="carousel-prev" data-action-arg="character" aria-label="Previous character">◀</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="carousel-card-character"></div>
         </div>
-        <button class="carousel-arrow" id="carousel-arrow-character-next" onclick="carouselNext('character')" aria-label="Next character">▶</button>
+        <button class="carousel-arrow" id="carousel-arrow-character-next" data-action="carousel-next" data-action-arg="character" aria-label="Next character">▶</button>
       </div>
       <div class="carousel-dots" id="carousel-dots-character" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="carousel-info-panel-character"></div>
@@ -78,11 +78,11 @@
     <div class="carousel-section" role="group" aria-labelledby="carousel-label-scenario">
       <div class="carousel-label" id="carousel-label-scenario">Scenario</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="carousel-arrow-scenario-prev" onclick="carouselPrev('scenario')" aria-label="Previous scenario">◀</button>
+        <button class="carousel-arrow" id="carousel-arrow-scenario-prev" data-action="carousel-prev" data-action-arg="scenario" aria-label="Previous scenario">◀</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="carousel-card-scenario"></div>
         </div>
-        <button class="carousel-arrow" id="carousel-arrow-scenario-next" onclick="carouselNext('scenario')" aria-label="Next scenario">▶</button>
+        <button class="carousel-arrow" id="carousel-arrow-scenario-next" data-action="carousel-next" data-action-arg="scenario" aria-label="Next scenario">▶</button>
       </div>
       <div class="carousel-dots" id="carousel-dots-scenario" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="carousel-info-panel-scenario"></div>
@@ -90,8 +90,8 @@
 
     <!-- Action buttons -->
     <div class="expedition-setup-actions">
-      <button class="btn-primary" id="btn-begin-expedition" onclick="beginExpedition()">Begin Expedition</button>
-      <button class="btn-ghost" id="btn-quick-start" onclick="quickStart()">Quick Start (Random)</button>
+      <button class="btn-primary" id="btn-begin-expedition" data-action="begin-expedition">Begin Expedition</button>
+      <button class="btn-ghost" id="btn-quick-start" data-action="quick-start">Quick Start (Random)</button>
     </div>
   </div>
 </section>
@@ -126,14 +126,14 @@
       <div id="ambient-signal" class="ambient-signal" aria-live="polite"></div>
       <div class="narrative-text" id="narrative-text" aria-live="polite">—</div>
       <div class="narrative-passive" id="narrative-passive" style="display:none" aria-live="polite"></div>
-      <button class="btn-link field-log-trigger" type="button" onclick="openFieldLog()" aria-label="View field log" aria-haspopup="dialog">View field log</button>
-      <button class="btn-link game-help-trigger" id="game-help-trigger" type="button" onclick="openGameHelp()" aria-label="Open pressure and trend help" aria-haspopup="dialog">Pressure & Trend Help</button>
+      <button class="btn-link field-log-trigger" type="button" data-action="open-field-log" aria-label="View field log" aria-haspopup="dialog">View field log</button>
+      <button class="btn-link game-help-trigger" id="game-help-trigger" type="button" data-action="open-game-help" aria-label="Open pressure and trend help" aria-haspopup="dialog">Pressure & Trend Help</button>
     </div>
   </div>
 
   <!-- ③ THE WATCH BAND — compact 4-cell horizontal, tap to expand detail -->
   <div class="watch-band" id="watch-band" role="button" tabindex="0"
-       onclick="openWatchDetail()"
+       data-action="open-watch-detail"
        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWatchDetail();}"
        aria-label="Watch status — press Enter or tap for full detail" aria-haspopup="dialog">
     <div class="watch-cell" id="wc-body" aria-label="Body state">
@@ -173,22 +173,22 @@
       </span>
     </div>
     <div class="decision-buttons" role="group" aria-label="Choose your action">
-      <button class="btn-decision btn-advance" id="btn-advance" onclick="makeDecision('advance')" aria-label="Advance">
+      <button class="btn-decision btn-advance" id="btn-advance" data-action="make-decision" data-action-arg="advance" aria-label="Advance">
         <span class="btn-decision-main"><span>Advance</span><span class="decision-keyhint">[1]</span></span>
       </button>
-      <button class="btn-decision btn-advance" id="btn-advance-slow" onclick="makeDecision('advance_slowly')" aria-label="Advance Slowly">
+      <button class="btn-decision btn-advance" id="btn-advance-slow" data-action="make-decision" data-action-arg="advance_slowly" aria-label="Advance Slowly">
         <span class="btn-decision-main"><span>Advance Slowly</span><span class="decision-keyhint">[2]</span></span>
       </button>
-      <button class="btn-decision" id="btn-wait" onclick="makeDecision('wait')" aria-label="Wait">
+      <button class="btn-decision" id="btn-wait" data-action="make-decision" data-action-arg="wait" aria-label="Wait">
         <span class="btn-decision-main"><span>Wait</span><span class="decision-keyhint">[3]</span></span>
       </button>
-      <button class="btn-decision btn-descend" id="btn-descend" onclick="makeDecision('descend')" aria-label="Descend toward Horcones">
+      <button class="btn-decision btn-descend" id="btn-descend" data-action="make-decision" data-action-arg="descend" aria-label="Descend toward Horcones">
         <span class="btn-decision-main"><span>Descend</span><span class="decision-keyhint">[4]</span></span>
       </button>
-      <button class="btn-decision" id="btn-sleep" onclick="makeDecision('sleep')" aria-label="Sleep at camp" disabled>
+      <button class="btn-decision" id="btn-sleep" data-action="make-decision" data-action-arg="sleep" aria-label="Sleep at camp" disabled>
         <span class="btn-decision-main"><span>Sleep</span><span class="decision-keyhint">[5]</span></span>
       </button>
-      <button class="btn-decision" id="btn-shoot-photo" onclick="makeDecision('shoot_photo')" aria-label="Shoot a photo for route reading" style="display:none">
+      <button class="btn-decision" id="btn-shoot-photo" data-action="make-decision" data-action-arg="shoot_photo" aria-label="Shoot a photo for route reading" style="display:none">
         <span class="btn-decision-main"><span>Shoot Photo</span><span class="decision-keyhint">[6]</span></span>
       </button>
     </div>
@@ -196,8 +196,8 @@
 
   <!-- Mobile bottom-sheet trigger bar (kept for mobile compat) -->
   <div class="game-mobile-bar" aria-label="Open status panels" role="toolbar">
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-watch')" aria-haspopup="dialog">⌚ Watch</button>
-    <button class="btn-ghost" onclick="openBottomSheet('bottom-sheet-route')" aria-haspopup="dialog">🏔 Route</button>
+    <button class="btn-ghost" data-action="open-bottom-sheet" data-action-arg="bottom-sheet-watch" aria-haspopup="dialog">⌚ Watch</button>
+    <button class="btn-ghost" data-action="open-bottom-sheet" data-action-arg="bottom-sheet-route" aria-haspopup="dialog">🏔 Route</button>
   </div>
 </section>
 
@@ -211,7 +211,7 @@
         <div class="watch-detail-name" id="game-help-title">Pressure and Trend Guide</div>
         <div class="watch-detail-difficulty" id="game-help-subtitle">Read mountain pressure labels and trend categories before committing movement.</div>
       </div>
-      <button class="btn-link watch-detail-close" type="button" id="game-help-close-btn" onclick="closeGameHelp()" aria-label="Close help">✕</button>
+      <button class="btn-link watch-detail-close" type="button" id="game-help-close-btn" data-action="close-game-help" aria-label="Close help">✕</button>
     </div>
     <div id="game-help-content"></div>
   </div>
@@ -226,7 +226,7 @@
         <div class="watch-detail-name" id="watch-detail-name">—</div>
         <div class="watch-detail-difficulty" id="watch-detail-difficulty"></div>
       </div>
-      <button class="btn-link watch-detail-close" type="button" onclick="closeWatchDetail()" aria-label="Close watch detail">✕</button>
+      <button class="btn-link watch-detail-close" type="button" data-action="close-watch-detail" aria-label="Close watch detail">✕</button>
     </div>
     <!-- Preserved class names for test compatibility and JS population -->
     <div class="watch-status-layout">
@@ -281,21 +281,21 @@
     </div>
   </div>
 </div>
-<div class="watch-detail-backdrop" id="watch-detail-backdrop" aria-hidden="true" onclick="closeWatchDetail()"></div>
+<div class="watch-detail-backdrop" id="watch-detail-backdrop" aria-hidden="true" data-action="close-watch-detail"></div>
 
 <!-- FIELD LOG OVERLAY — field log accessible via link -->
 <div id="field-log-overlay" class="field-log-overlay" role="dialog" aria-modal="true" aria-labelledby="field-log-title" aria-hidden="true">
   <div class="field-log-dialog" tabindex="-1">
     <div class="field-log-header">
       <span class="field-log-title">Field Log</span>
-      <button class="btn-link" type="button" onclick="closeFieldLog()" aria-label="Close field log">✕</button>
+      <button class="btn-link" type="button" data-action="close-field-log" aria-label="Close field log">✕</button>
     </div>
     <div class="log-entries" id="log-entries" aria-live="polite" aria-label="Field log">
       <div class="log-empty">No entries yet.</div>
     </div>
   </div>
 </div>
-<div class="field-log-backdrop" id="field-log-backdrop" aria-hidden="true" onclick="closeFieldLog()"></div>
+<div class="field-log-backdrop" id="field-log-backdrop" aria-hidden="true" data-action="close-field-log"></div>
 
 <!-- EXPERIMENTAL: Bottom-sheet backdrop (Decision 13) -->
 <div id="bottom-sheet-backdrop" class="bottom-sheet-backdrop" aria-hidden="true"></div>
@@ -305,7 +305,7 @@
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
     <span>⌚ Watch</span>
-    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-watch')" aria-label="Close Watch panel" style="float:right">✕</button>
+    <button class="btn-link" data-action="close-bottom-sheet" data-action-arg="bottom-sheet-watch" aria-label="Close Watch panel" style="float:right">✕</button>
   </div>
   <div class="bottom-sheet-watch-body">
     <div id="bs-watch-turn" class="watch-turn" style="margin-bottom:0.5rem;"></div>
@@ -344,7 +344,7 @@
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
     <span>🏔 Route Track</span>
-    <button class="btn-link" onclick="closeBottomSheet('bottom-sheet-route')" aria-label="Close Route panel" style="float:right">✕</button>
+    <button class="btn-link" data-action="close-bottom-sheet" data-action-arg="bottom-sheet-route" aria-label="Close Route panel" style="float:right">✕</button>
   </div>
   <ul class="position-list" id="bs-position-list" aria-label="Route positions (bottom-sheet)"></ul>
 </div>
@@ -414,9 +414,9 @@
       <pre class="run-signature" id="run-signature-content">—</pre>
       <div class="debrief-section-title">Review Turns</div>
       <div class="review-controls">
-        <button class="btn-ghost" type="button" onclick="reviewPrevTurn()" aria-label="Review previous turn">Previous</button>
+        <button class="btn-ghost" type="button" data-action="review-prev-turn" aria-label="Review previous turn">Previous</button>
         <span id="debrief-review-index" aria-live="polite">0 / 0</span>
-        <button class="btn-ghost" type="button" onclick="reviewNextTurn()" aria-label="Review next turn">Next</button>
+        <button class="btn-ghost" type="button" data-action="review-next-turn" aria-label="Review next turn">Next</button>
       </div>
       <pre class="review-content" id="debrief-review-content">No turn records available for this run.</pre>
     </div>
@@ -438,8 +438,8 @@
     <p style="color:var(--text); font-size:0.88rem; line-height:1.7; max-width:480px; margin-bottom:3rem;">
       What comes next puts everything you learned here to a different test. Not a simulation. The real expedition — with the full group, the real terrain, and no guaranteed outcomes. The mountain will decide.
     </p>
-    <button class="btn-primary" onclick="showScreen('part2-character')" style="margin-bottom:1.5rem;">Begin the real expedition</button>
-    <button class="btn-ghost" onclick="showScreen('debrief')">Review this run first</button>
+    <button class="btn-primary" data-action="show-screen" data-action-arg="part2-character" style="margin-bottom:1.5rem;">Begin the real expedition</button>
+    <button class="btn-ghost" data-action="show-screen" data-action-arg="debrief">Review this run first</button>
   </div>
 </section>
 
@@ -451,7 +451,7 @@
      (see css/screens.css). -->
 <section id="screen-part2-character" class="screen" aria-label="Part 2 character and route selection">
   <div class="expedition-setup-shell">
-    <button class="nav-back" onclick="showScreen('summit-success')" aria-label="Back to summit-success">Back</button>
+    <button class="nav-back" data-action="show-screen" data-action-arg="summit-success" aria-label="Back to summit-success">Back</button>
     <div class="screen-header">
       <h2 id="part2-setup-title">The Real Expedition</h2>
       <p id="part2-setup-subtitle">Browse the full Part 2 roster. Only Francisco and the guided Normal Route are unlocked.</p>
@@ -461,11 +461,11 @@
     <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-character">
       <div class="carousel-label" id="part2-carousel-label-character">Character</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="part2-carousel-arrow-character-prev" onclick="part2CarouselPrev('character')" aria-label="Previous character">◀</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-prev" data-action="part2-carousel-prev" data-action-arg="character" aria-label="Previous character">◀</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="part2-carousel-card-character"></div>
         </div>
-        <button class="carousel-arrow" id="part2-carousel-arrow-character-next" onclick="part2CarouselNext('character')" aria-label="Next character">▶</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-character-next" data-action="part2-carousel-next" data-action-arg="character" aria-label="Next character">▶</button>
       </div>
       <div class="carousel-dots" id="part2-carousel-dots-character" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="part2-carousel-info-character"></div>
@@ -475,19 +475,19 @@
     <div class="carousel-section" role="group" aria-labelledby="part2-carousel-label-route">
       <div class="carousel-label" id="part2-carousel-label-route">Route</div>
       <div class="carousel-track">
-        <button class="carousel-arrow" id="part2-carousel-arrow-route-prev" onclick="part2CarouselPrev('route')" aria-label="Previous route">◀</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-prev" data-action="part2-carousel-prev" data-action-arg="route" aria-label="Previous route">◀</button>
         <div class="carousel-card-wrapper">
           <div class="carousel-card" id="part2-carousel-card-route"></div>
         </div>
-        <button class="carousel-arrow" id="part2-carousel-arrow-route-next" onclick="part2CarouselNext('route')" aria-label="Next route">▶</button>
+        <button class="carousel-arrow" id="part2-carousel-arrow-route-next" data-action="part2-carousel-next" data-action-arg="route" aria-label="Next route">▶</button>
       </div>
       <div class="carousel-dots" id="part2-carousel-dots-route" aria-hidden="true"></div>
       <div class="carousel-info-panel" id="part2-carousel-info-route"></div>
     </div>
 
     <div class="expedition-setup-actions">
-      <button class="btn-ghost" onclick="showScreen('debrief')">Return to debrief</button>
-      <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" onclick="confirmPart2Character()">Continue to Mendoza</button>
+      <button class="btn-ghost" data-action="show-screen" data-action-arg="debrief">Return to debrief</button>
+      <button class="btn-primary" id="btn-part2-confirm" disabled aria-disabled="true" data-action="confirm-part2-character">Continue to Mendoza</button>
     </div>
   </div>
 </section>
@@ -528,7 +528,7 @@
     <button class="nav-back" id="journal-back-btn" aria-label="Back to debrief">Debrief</button>
     <div class="journal-header">
       <div class="journal-title">Expedition Journal</div>
-      <button class="btn-ghost" onclick="clearJournal()" aria-label="Clear all journal entries">Clear log</button>
+      <button class="btn-ghost" data-action="clear-journal" aria-label="Clear all journal entries">Clear log</button>
     </div>
     <div class="journal-entries" id="journal-entries"></div>
   </div>
@@ -540,7 +540,7 @@
         <div class="screen-kicker">Prototype Info</div>
         <h3 id="intro-modal-title">About Aconcagua: Stone Sentinel</h3>
       </div>
-      <button class="btn-ghost" onclick="closeIntroModal()" aria-label="Close information">Close</button>
+      <button class="btn-ghost" data-action="close-intro-modal" aria-label="Close information">Close</button>
     </div>
     <section>
       <p id="intro-modal-summary">A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.</p>
@@ -567,7 +567,7 @@
         <a class="btn-ghost intro-link-btn" id="intro-share-facebook" href="#" target="_blank" rel="noreferrer noopener">Share on Facebook</a>
         <a class="btn-ghost intro-link-btn" id="intro-share-linkedin" href="#" target="_blank" rel="noreferrer noopener">Share on LinkedIn</a>
         <a class="btn-ghost intro-link-btn" id="intro-share-whatsapp" href="#" target="_blank" rel="noreferrer noopener">Share on WhatsApp</a>
-        <button class="btn-ghost intro-link-btn" id="intro-share-copy" type="button" onclick="copyProjectShareLink()">Copy project link</button>
+        <button class="btn-ghost intro-link-btn" id="intro-share-copy" type="button" data-action="copy-project-share-link">Copy project link</button>
       </div>
       <div class="intro-link-actions">
         <a class="btn-ghost intro-link-btn" id="intro-repo-link" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" target="_blank" rel="noreferrer noopener">Public repository</a>
@@ -584,7 +584,7 @@
         <div class="screen-kicker">Play Guide</div>
         <h3 id="tutorial-modal-title">Expedition tutorial and rules reference</h3>
       </div>
-      <button class="btn-ghost" onclick="closeTutorialModal()" aria-label="Close tutorial">Close</button>
+      <button class="btn-ghost" data-action="close-tutorial-modal" aria-label="Close tutorial">Close</button>
     </div>
     <section>
       <p id="tutorial-intro">This guide explains the full playable loop, hidden systems, and the most common reasons a run succeeds or collapses.</p>
@@ -680,10 +680,10 @@
       <div class="onboard-note">Start with essentials: trend, body, and permit. Context details unlock after early turns or once risk rises. Your watch carries noise—trust trend over impulse.</div>
     </section>
     <section class="onboarding-cta-section">
-      <button class="btn-primary onboarding-begin-btn" onclick="closeOnboardingModal()" id="onboarding-understood-btn">Begin Expedition</button>
+      <button class="btn-primary onboarding-begin-btn" data-action="close-onboarding-modal" id="onboarding-understood-btn">Begin Expedition</button>
       <div class="onboard-actions">
-        <button class="btn-ghost" onclick="openTutorialModal()" id="onboarding-tutorial-btn">Full Tutorial / FAQ</button>
-        <button class="btn-ghost onboarding-back-link" onclick="abandonOnboarding()" id="onboarding-back-btn">Back to Setup</button>
+        <button class="btn-ghost" data-action="open-tutorial-modal" id="onboarding-tutorial-btn">Full Tutorial / FAQ</button>
+        <button class="btn-ghost onboarding-back-link" data-action="abandon-onboarding" id="onboarding-back-btn">Back to Setup</button>
       </div>
     </section>
   </div>

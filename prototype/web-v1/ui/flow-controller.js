@@ -18,6 +18,7 @@ import { openModalWithFocus, closeModalWithFocusReturn } from './helpers/accessi
 import { openTutorialStyleModal, closeTutorialStyleModal, bindBackdropClose } from './helpers/modal-controller.js';
 import { syncScreenHash, parseDeepLinkHash } from './helpers/routing.js';
 import { resolveNavigationTarget } from './helpers/screen-utils.js';
+import { safeSetStorage } from './helpers/storage.js';
 import { G, updateUIState, updateRunState } from '../state/game-state.js';
 import { setStartupState } from './helpers/startup-ui.js';
 
@@ -361,7 +362,7 @@ export function handleDeepLink() {
   // Part 2 screens — bypass gating when &force=1 is present
   const PART2_SCREEN_IDS = new Set(['part2-character', ..._hooks.part2NarrativeIds]);
   if (PART2_SCREEN_IDS.has(screenId) && params.force === '1') {
-    try { localStorage.setItem(_hooks.summitAchievedKey, '1'); } catch (e) {}
+    safeSetStorage(_hooks.summitAchievedKey, '1');
     updateRunState(G, { finalOutcome: 'Summit and Safe Return' });
     showScreen(screenId, { suppressHash: true });
     return;
