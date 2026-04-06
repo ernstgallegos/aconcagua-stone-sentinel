@@ -128,6 +128,20 @@ export function getOutcomeClass(finalOutcome) {
   return OUTCOME_CLASS_MAP[finalOutcome] || 'outcome-retreat';
 }
 
+// ── Metric display ───────────────────────────────────────────────────────────
+
+/**
+ * Returns a display string for a metric value based on confidence tier.
+ * High confidence shows the actual value; medium shows '?'; low shows '??'.
+ *
+ * @param {number} value
+ * @param {number} confidence - Confidence value (0–100).
+ * @returns {string}
+ */
+export function metricDisplay(value, confidence) {
+  return confidenceTier(confidence) === 'high' ? String(value) : (confidenceTier(confidence) === 'med' ? '?' : '??');
+}
+
 // ── Navigation gate ──────────────────────────────────────────────────────────
 
 /**

@@ -70,6 +70,23 @@ function markState(wrapper, state) {
   wrapper.classList.add(IMAGE_STATE_CLASSES[state] || IMAGE_STATE_CLASSES.loading);
 }
 
+export function getCharacterImagePath(charId, { part2 = false } = {}) {
+  const nameMap = {
+    francisco: 'francisco-aguirre',
+    laura: 'laura-kim',
+    erik: 'erik-lundvall',
+    daniela: 'daniela-de-rossi',
+    blake: 'blake-harris',
+    irina: 'irina-orlova',
+    random: 'random',
+  };
+  const filename = nameMap[charId];
+  if (!filename) return null;
+  return part2
+    ? `../../art/characters/part-2/${filename}.png`
+    : `../../art/characters/${filename}.png`;
+}
+
 export function hydrateManagedPortraits(root) {
   if (!root?.querySelectorAll) return;
   const wrappers = root.querySelectorAll('.carousel-media');
