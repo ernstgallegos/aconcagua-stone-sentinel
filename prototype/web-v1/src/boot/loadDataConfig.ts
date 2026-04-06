@@ -1,24 +1,17 @@
-import { assertDataConfig, type DataConfig } from '../types/data-contracts.js';
+/**
+ * TS-side contract adapter for the data-config loading pipeline.
+ *
+ * Canonical loading path (runtime):
+ *   ui/helpers/data-config.js  →  loadDataConfigFiles()  →  normalizeRouteData()
+ *
+ * This module does NOT duplicate that loading logic. It exports a single
+ * assertion function that can be applied to an already-loaded *and* already-
+ * normalized config object to confirm it satisfies the TypeScript DataConfig
+ * contract.
+ *
+ * Call assertNormalizedDataConfig() AFTER normalizeRouteData() has run.
+ * Passing raw (pre-normalization) data will throw because raw route nodes
+ * carry nodeId, not the normalized id field that RouteNode requires.
+ */
 
-const FILES: Array<[keyof DataConfig, string]> = [
-  ['nodes', '../../data/nodes.json'],
-  ['environmentalPressure', '../../data/environmental_pressure_config.json'],
-  ['actionModifiers', '../../data/action_modifiers.json'],
-  ['stageModifiers', '../../data/stage_modifiers.json'],
-  ['characters', '../../data/characters.json'],
-  ['characterEvents', '../../data/character_events.json'],
-  ['contextEvents', '../../data/context_events.json'],
-  ['outcomes', '../../data/outcomes.json'],
-  ['scenariosWebV1', '../../data/scenarios.web-v1.json'],
-];
-
-export async function loadDataConfig(fetchImpl: typeof fetch): Promise<DataConfig> {
-  const partial: Partial<DataConfig> = {};
-  for (const [key, path] of FILES) {
-    const response = await fetchImpl(path, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
-    partial[key] = await response.json();
-  }
-  assertDataConfig(partial);
-  return partial;
-}
+export { assertDataConfig as assertNormalizedDataConfig, type DataConfig } from '../types/data-contracts.js';

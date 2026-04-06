@@ -11,6 +11,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Added `prototype/web-v1/tests/parity/loader-ts-contract-parity.test.js`: parity test that loads real data files through the JS canonical loader (`loadDataConfigFiles` + `normalizeRouteData`) and verifies the output satisfies the TS-side `DataConfig`/`RouteNode`/`CharacterEvent`/`ContextEvent`/`Character` contract invariants.
 - Rebuilt `CHANGELOG.md` into a clean canonical structure: removed exact-duplicate bullets that had propagated into every version block, merged duplicate section headers within versions, consolidated `(release baseline)` and `#### Additional` subsections in `[1.4.5]` and `[1.4.3]` blocks, and reordered `[1.4.2]` sections to follow Keep a Changelog convention (Added → Changed → Deprecated → Removed → Fixed).
 - Confirmed that `scripts/monte-carlo-web-v1.js` already reads the output version dynamically from `package.json` (no hardcoded version string).
 - Migrated `api/run.js` from CommonJS to native ESM (`import`/`export default`); replaced `fs.readFileSync`/`fs.existsSync` with async `fs/promises` (`readFile`/`access`); preserved all rate-limiting, CORS, and response-shape behavior unchanged.
@@ -25,6 +26,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Refactored `prototype/web-v1/src/boot/loadDataConfig.ts`: removed duplicate file-path list and broken fetch loop; replaced with a thin re-export adapter for `assertDataConfig` (renamed `assertNormalizedDataConfig`) with a docblock that names `ui/helpers/data-config.js` as the canonical loading path.
+- Added JSDoc to `assertDataConfig` in `prototype/web-v1/src/types/data-contracts.ts` clarifying it operates on post-normalized data (after `normalizeRouteData()`).
+- Updated `docs/architecture.md` to name `prototype/web-v1/ui/helpers/data-config.js` as the canonical config-loading module, describe the two-phase `loadDataConfigFiles`/`normalizeRouteData` pipeline, and document the role of the TS-side parity test.
 - Published explicit alias deprecation policy in `prototype/web-v1/ui/helpers/run-log.js`: legacy `EP`/`BT` raw field names in `run_log.json` exports and `lastTurnRecord.pressure` are deprecated since v1.4.5; use `epScore`/`btScore` instead; legacy names will be removed in v1.5.0.
 - Rewrote high-visibility public copy across landing translations, README EN/ES intros, and in-game help guidance to improve clarity, tone, and bilingual consistency for public-facing communication.
 - Expanded the public-copy rewrite pass across README EN/ES core narrative sections, landing architecture/materials language, and Spanish in-game help microcopy to improve voice consistency and player readability.
