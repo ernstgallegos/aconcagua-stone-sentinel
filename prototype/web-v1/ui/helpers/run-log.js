@@ -1,4 +1,19 @@
 // Telemetry ownership: turn-review shape + export contract live here.
+//
+// ── Alias deprecation policy ─────────────────────────────────────────────────
+// The legacy numeric field names `EP` and `BT` (Environmental Pressure and
+// Body Tolerance scores) were introduced in the original index.html run_log
+// export.  Stable cross-run comparison aliases `epScore` and `btScore` were
+// standardised in v1.4.1.  The legacy names are:
+//
+//   @deprecated since v1.4.5  — use `epScore` / `btScore` instead.
+//   @removedIn   v1.5.0       — consumers still reading `EP` / `BT` from
+//                               run_log.json or lastTurnRecord.pressure must
+//                               migrate before the v1.5.0 release.
+//
+// Canonical location of the raw numeric values: lastTurnRecord.pressure
+// (written by engine/turn-resolution.js → resolveTurnWithTrace).
+// ─────────────────────────────────────────────────────────────────────────────
 export function buildTurnLogEntry({
   G,
   state,
