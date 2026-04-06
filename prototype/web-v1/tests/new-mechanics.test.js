@@ -8,9 +8,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const indexPath = path.join(__dirname, '..', 'index.html');
 const uiPath = path.join(__dirname, '..', 'ui', 'screens.js');
+const titleUiPath = path.join(__dirname, '..', 'ui', 'screens', 'title.js');
+const gameUiPath = path.join(__dirname, '..', 'ui', 'screens', 'game.js');
+const debriefUiPath = path.join(__dirname, '..', 'ui', 'screens', 'debrief.js');
+const part2UiPath = path.join(__dirname, '..', 'ui', 'screens', 'part2.js');
 
 const indexSource = fs.readFileSync(indexPath, 'utf8');
-const uiSource = fs.readFileSync(uiPath, 'utf8');
+const uiSource = [
+  fs.readFileSync(uiPath, 'utf8'),
+  fs.readFileSync(titleUiPath, 'utf8'),
+  fs.readFileSync(gameUiPath, 'utf8'),
+  fs.readFileSync(debriefUiPath, 'utf8'),
+  fs.readFileSync(part2UiPath, 'utf8'),
+].join('\n');
 
 function json(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'data', file), 'utf8'));
