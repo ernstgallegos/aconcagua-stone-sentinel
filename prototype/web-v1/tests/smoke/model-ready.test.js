@@ -109,3 +109,102 @@ test('data loader classifies invalid shape as blocking shape failure', async () 
   assert.equal(errors[0].category, 'invalid shape');
   assert.match(errors[0].file, /characters\.json/);
 });
+
+test('shape validator catches malformed second item in characters array', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('characters.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return [{ id: 'francisco' }, { id: 42 }];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /\$\[1\]\.id/);
+});
+
+test('shape validator catches malformed second item in nodes array', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('nodes.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return [{ nodeId: 'horcones' }, { nodeId: null }];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /\$\[1\]\.nodeId/);
+});
+
+test('shape validator catches malformed second item in contextEvents array', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('context_events.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return [
+              { id: 'evt_1', label: 'Wind', category: 'context', trigger: {}, effects: {} },
+              { id: 'evt_2', label: 'Storm', category: 'context', trigger: {}, effects: null },
+            ];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /\$\[1\]\.effects/);
+});
+
+test('shape validator catches malformed third item in characterEvents array', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('character_events.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return [
+              { id: 'ce_1', characterId: 'francisco', category: 'observation', trigger: {}, effects: {}, limits: {} },
+              { id: 'ce_2', characterId: 'laura', category: 'observation', trigger: {}, effects: {}, limits: {} },
+              { id: 'ce_3', characterId: 'irina', category: 'observation', trigger: {}, effects: {}, limits: 'bad' },
+            ];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /\$\[2\]\.limits/);
+});
