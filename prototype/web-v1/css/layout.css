@@ -233,11 +233,11 @@
 
 .lang-btn[aria-pressed='true'] {
   color: #081019;
-  background: linear-gradient(120deg, #d6eef9, #d9b996);
+  background: linear-gradient(120deg, var(--ice), var(--ochre));
 }
 
 .lang-btn:focus-visible {
-  outline: 2px solid #d6eef9;
+  outline: 2px solid var(--ice);
   outline-offset: 1px;
 }
 

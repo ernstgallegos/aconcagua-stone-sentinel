@@ -87,6 +87,20 @@
 
 .pop-in { animation: pop-in 0.2s ease-out; }
 
+#screen-title.active .title-shell,
+#screen-expedition-setup.active .expedition-setup-shell {
+  animation: screen-enter 0.6s cubic-bezier(0.22, 0.9, 0.26, 1) both;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ice) 34%, transparent); }
+  50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--ice) 0%, transparent); }
+}
+
+.btn-primary {
+  animation: pulse-glow 3.8s ease-in-out infinite;
+}
+
 /* ══════════════════════════════════════
    REDUCE MOTION (Decisions 4, 14, 16)
    Respects prefers-reduced-motion
