@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Hardened `validateDataConfigShape()` in `prototype/web-v1/ui/helpers/data-config.js` to validate every element of each supported array (`characterEvents`, `contextEvents`, `nodes`, `characters`) instead of only the first item; error messages now identify the failing array and index (e.g. `$[2].limits`).
+- Added four targeted shape-validation tests in `prototype/web-v1/tests/smoke/model-ready.test.js` covering malformed non-first elements in `characters`, `nodes`, `contextEvents`, and `characterEvents` arrays, asserting that the correct `$[i].field` path appears in the failure diagnostic.
 - Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions, with explicit `SKILL.md` target mapping and restart guidance.
 - Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest to operationalize the notebook-based frontend aesthetics prompting workflow (`docs/ai/skills/prompting_for_frontend_aesthetics.ipynb`).
 - Added canonical AI documentation hub under `docs/ai/` with machine-readable manifest (`docs/ai/manifest.json`), skills infrastructure scaffolding, and three initial documented skills (`release-readiness-skill`, `web-v1-regression-skill`, `docs-sync-skill`).
