@@ -139,7 +139,8 @@ export function getOutcomeClass(finalOutcome) {
  * @returns {string}
  */
 export function metricDisplay(value, confidence) {
-  return confidenceTier(confidence) === 'high' ? String(value) : (confidenceTier(confidence) === 'med' ? '?' : '??');
+  const tier = confidenceTier(confidence);
+  return tier === 'high' ? String(value) : (tier === 'med' ? '?' : '??');
 }
 
 // ── Navigation gate ──────────────────────────────────────────────────────────
