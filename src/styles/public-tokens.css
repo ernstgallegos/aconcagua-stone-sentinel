@@ -1,0 +1,121 @@
+/* ═══════════════════════════════════════════════════════════════════
+   public-tokens.css
+   Shared design tokens and base styles for public-facing surfaces.
+   Consumed by: index.html (landing), md-viewer.html (document viewer).
+   Aligns with the token naming direction in prototype/web-v1/css/tokens.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Background layers ── */
+  --bg-0: #0b0f14;
+  --bg-1: #101723;
+  --bg-2: #172130;
+
+  /* ── Surface layers ── */
+  --surface-0: #111a27cc;
+  --surface-1: #172335d9;
+  --surface-2: #213348e6;
+
+  /* ── Borders ── */
+  --border-soft: #93a8bc3d;
+  --border-strong: #d7e6f252;
+
+  /* ── Text ── */
+  --text-main: #e8eff7;
+  --text-dim: #adbbc9;
+  --text-muted: #8b9aab;
+
+  /* ── Accent palette ── */
+  --accent-ice: #d6eef9;
+  --accent-mineral: #9bb9ce;
+  --accent-amber: #d9b996;
+  --accent-critical: #f2d4af;
+
+  /* ── Border radius ── */
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 30px;
+
+  /* ── Shadows ── */
+  --shadow-soft: 0 16px 48px #05080d66;
+  --shadow-strong: 0 30px 80px #04070ccc;
+
+  /* ── Spacing scale ── */
+  --space-1: 0.35rem;
+  --space-2: 0.65rem;
+  --space-3: 1rem;
+  --space-4: 1.6rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+
+  /* ── Typography stacks ── */
+  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html:focus-within { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text-main);
+  line-height: 1.5;
+  background:
+    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
+    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.18;
+  pointer-events: none;
+  background-image:
+    linear-gradient(#ffffff04 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+a { color: var(--accent-ice); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Language switcher — shared between landing and md-viewer ── */
+.lang-switch {
+  display: inline-flex;
+  gap: 0.2rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: #0e151f99;
+}
+
+.lang-btn {
+  font-family: var(--mono);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.54rem;
+  cursor: pointer;
+}
+
+.lang-btn[aria-pressed='true'] {
+  color: #081019;
+  background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
+}
+
+.lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }
