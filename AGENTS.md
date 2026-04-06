@@ -275,4 +275,6 @@ In addition to the changelog:
 - Carousel image stability in setup screens improves when portraits are rendered through a shared media wrapper (`loading` skeleton + reserved aspect ratio + explicit fallback state) and critical character portraits are preloaded before first carousel paint.
 - Overlay reliability is stronger when intro/tutorial/onboarding and in-game dialogs share one modal-controller path (focus trap, Escape priority, backdrop close, and body scroll-lock release), rather than ad hoc per-modal listeners.
 
+- Cross-surface redesign passes stay coherent when landing-only visual experiments (new typography, atmospheric gradients, staggered reveal motion) are mirrored in `prototype/web-v1` token/animation layers during the same commit; otherwise brand tone diverges exactly at the Play transition.
+
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.

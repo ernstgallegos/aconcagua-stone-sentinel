@@ -87,6 +87,32 @@
 
 .pop-in { animation: pop-in 0.2s ease-out; }
 
+@keyframes polar-shimmer {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+@keyframes breathe-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ice) 0%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--ice) 16%, transparent); }
+}
+
+.title-screen-advance span {
+  background-image:
+    linear-gradient(
+      122deg,
+      color-mix(in srgb, var(--surface) 74%, transparent),
+      color-mix(in srgb, var(--surface2) 58%, var(--ice) 42%),
+      color-mix(in srgb, var(--surface) 76%, transparent)
+    );
+  background-size: 220% 220%;
+  animation: polar-shimmer 5.2s ease-in-out infinite alternate;
+}
+
+.btn-primary {
+  animation: breathe-glow 2.6s ease-in-out infinite;
+}
+
 /* ══════════════════════════════════════
    REDUCE MOTION (Decisions 4, 14, 16)
    Respects prefers-reduced-motion

@@ -13,27 +13,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=Sora:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
-        --accent-critical: #f2d4af;
+        --bg-0: #06090f;
+        --bg-1: #0b1320;
+        --bg-2: #121e31;
+        --surface-0: #0f1a2ccc;
+        --surface-1: #13263ddf;
+        --surface-2: #183450ed;
+        --border-soft: #7cb8d14a;
+        --border-strong: #f0c7895f;
+        --text-main: #ebf4ff;
+        --text-dim: #acc8de;
+        --text-muted: #7f9ab2;
+        --accent-ice: #a6dfff;
+        --accent-mineral: #72c6db;
+        --accent-amber: #ffbc63;
+        --accent-critical: #ffd8a3;
 
         --radius-xs: 10px;
         --radius-sm: 14px;
@@ -51,9 +51,9 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+        --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
         --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-        --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --sans: "Sora", "Avenir Next", "Segoe UI", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -82,6 +82,25 @@
           linear-gradient(#ffffff04 1px, transparent 1px),
           linear-gradient(90deg, #ffffff04 1px, transparent 1px);
         background-size: 34px 34px;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -20% -15%;
+        z-index: -2;
+        pointer-events: none;
+        background:
+          radial-gradient(460px 320px at 14% 32%, #6ecde01c, transparent 72%),
+          radial-gradient(520px 360px at 84% 16%, #ffbc631f, transparent 74%),
+          radial-gradient(620px 500px at 62% 78%, #95d8ff12, transparent 78%);
+        filter: blur(26px);
+        animation: drift-aurora 26s ease-in-out infinite alternate;
+      }
+
+      @keyframes drift-aurora {
+        from { transform: translate3d(-1.2%, -1%, 0) scale(1); }
+        to { transform: translate3d(1.2%, 1.4%, 0) scale(1.04); }
       }
 
       a { color: var(--accent-ice); text-decoration: none; }
@@ -300,6 +319,18 @@
         margin-top: var(--space-7);
         display: grid;
         gap: var(--space-3);
+        animation: reveal-up 620ms cubic-bezier(.19,.8,.3,1) both;
+      }
+
+      .section:nth-of-type(2) { animation-delay: 60ms; }
+      .section:nth-of-type(3) { animation-delay: 120ms; }
+      .section:nth-of-type(4) { animation-delay: 180ms; }
+      .section:nth-of-type(5) { animation-delay: 240ms; }
+      .section:nth-of-type(6) { animation-delay: 300ms; }
+
+      @keyframes reveal-up {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .section-head {
@@ -433,6 +464,39 @@
         padding: var(--space-4);
       }
 
+      .gallery-row {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .gallery-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: #101a2bd9;
+        box-shadow: var(--shadow-soft);
+        transform: perspective(900px) rotateX(0.7deg) rotateY(-0.7deg);
+        transition: transform 220ms ease, border-color 220ms ease;
+      }
+
+      .gallery-card:hover {
+        transform: perspective(900px) rotateX(0deg) rotateY(0deg) translateY(-3px);
+        border-color: var(--border-strong);
+      }
+
+      .gallery-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .gallery-card figcaption {
+        padding: 0.7rem 0.8rem 0.8rem;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+      }
+
       .status-line {
         display: grid;
         gap: 0.5rem;
@@ -554,6 +618,7 @@
           <nav class="nav" aria-label="Primary navigation">
             <a href="#vision" data-i18n="navVision">Vision</a>
             <a href="#system" data-i18n="navSystem">System</a>
+            <a href="#atmosphere" data-i18n="navAtmosphere">Atmosphere</a>
             <a href="#status" data-i18n="navStatus">Status</a>
             <a href="#intel" data-i18n="navIntel">Materials</a>
           </nav>
@@ -683,6 +748,28 @@
         </div>
       </section>
 
+      <section id="atmosphere" class="section" aria-labelledby="atmosphere-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="atmosphereKicker">Visual atmosphere</p>
+          <h2 id="atmosphere-title" data-i18n="atmosphereTitle">Cold light, mineral grain, and route tension define the visual language.</h2>
+          <p class="section-intro" data-i18n="atmosphereIntro">The same aesthetic direction now spans this landing and the playable prototype: sharper contrast, glacial cyan highlights, and amber caution points for decision-critical states.</p>
+        </div>
+        <div class="gallery-row">
+          <figure class="gallery-card">
+            <img src="/art/concept-art/curated/concept-curated-1.png" alt="Route approach atmosphere with layered mountain ridges." data-i18n-attr="galleryAlt1:alt" loading="lazy" />
+            <figcaption data-i18n="galleryCap1">Approach rhythm: terrain scale before commitment.</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="/art/concept-art/curated/concept-curated-4.webp" alt="Expedition team framed by harsh weather gradients." data-i18n-attr="galleryAlt2:alt" loading="lazy" />
+            <figcaption data-i18n="galleryCap2">Exposure pressure: visibility uncertainty and body cost.</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="/art/cover/cover-concept-1.png" alt="Summit-facing composition with dramatic cloud movement." data-i18n-attr="galleryAlt3:alt" loading="lazy" />
+            <figcaption data-i18n="galleryCap3">Outcome ethics: summit ambition balanced by safe return.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section id="status" class="section" aria-labelledby="status-title">
         <div class="section-head">
           <p class="section-kicker" data-i18n="statusKicker">Public readiness</p>
@@ -771,7 +858,7 @@
           pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
           brandSub: 'Public mountain systems project',
-          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
+          navVision: 'Vision', navSystem: 'System', navAtmosphere: 'Atmosphere', navStatus: 'Status', navIntel: 'Materials',
           eyebrow: 'Mountain-first, consequence-forward design',
           heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
           heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
@@ -806,6 +893,15 @@
           intel2Title: 'Public roadmap', intel2Body: 'Stage-by-stage implementation map and current execution status.', intel2Cta: 'Open roadmap',
           intel3Title: 'Repository + README', intel3Body: 'Technical source, governance policy links, and canonical routing/deploy references.', intel3Cta: 'Open README',
           intel4Title: 'Official channels', intel4Body: 'Follow updates on Instagram or contact the project team directly for collaboration and press.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          atmosphereKicker: 'Visual atmosphere',
+          atmosphereTitle: 'Cold light, mineral grain, and route tension define the visual language.',
+          atmosphereIntro: 'The same aesthetic direction now spans this landing and the playable prototype: sharper contrast, glacial cyan highlights, and amber caution points for decision-critical states.',
+          galleryAlt1: 'Route approach atmosphere with layered mountain ridges.',
+          galleryAlt2: 'Expedition team framed by harsh weather gradients.',
+          galleryAlt3: 'Summit-facing composition with dramatic cloud movement.',
+          galleryCap1: 'Approach rhythm: terrain scale before commitment.',
+          galleryCap2: 'Exposure pressure: visibility uncertainty and body cost.',
+          galleryCap3: 'Outcome ethics: summit ambition balanced by safe return.',
           statusKicker: 'Public readiness',
           statusTitle: 'Current state: playable today, auditable in detail, and open to outside review.',
           statusLabel1: 'Playable flow', statusValue1: 'title → setup → onboarding → game → outcomes/debrief',
@@ -836,7 +932,7 @@
           pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
           brandSub: 'Proyecto público de sistemas de montaña',
-          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
+          navVision: 'Visión', navSystem: 'Sistema', navAtmosphere: 'Atmósfera', navStatus: 'Estado', navIntel: 'Materiales',
           eyebrow: 'Diseño mountain-first, con consecuencias reales',
           heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
@@ -871,6 +967,15 @@
           intel2Title: 'Roadmap público', intel2Body: 'Mapa de implementación por etapas y estado actual de ejecución.', intel2Cta: 'Abrir roadmap',
           intel3Title: 'Repositorio + README', intel3Body: 'Código fuente, enlaces de gobernanza y referencias canónicas de ruteo/deploy.', intel3Cta: 'Abrir README',
           intel4Title: 'Canales oficiales', intel4Body: 'Seguí novedades en Instagram o contactá directamente al equipo para colaboración y prensa.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          atmosphereKicker: 'Atmósfera visual',
+          atmosphereTitle: 'Luz fría, grano mineral y tensión de ruta definen el nuevo lenguaje visual.',
+          atmosphereIntro: 'La misma dirección estética ahora cruza esta landing y el prototipo jugable: contraste más decidido, acentos cian glaciar y focos ámbar para estados críticos de decisión.',
+          galleryAlt1: 'Atmósfera de aproximación de ruta con cordones de montaña en capas.',
+          galleryAlt2: 'Equipo de expedición enmarcado por gradientes de clima hostil.',
+          galleryAlt3: 'Composición orientada a cumbre con dramatismo en movimiento de nubes.',
+          galleryCap1: 'Ritmo de aproximación: escala del terreno antes del compromiso.',
+          galleryCap2: 'Presión de exposición: incertidumbre visual y costo corporal.',
+          galleryCap3: 'Ética de outcomes: ambición de cumbre equilibrada con retorno seguro.',
           statusKicker: 'Preparación pública',
           statusTitle: 'Estado actual: jugable ahora, auditable al detalle y abierto a revisión externa.',
           statusLabel1: 'Flujo jugable', statusValue1: 'título → setup → onboarding → juego → outcomes/debrief',

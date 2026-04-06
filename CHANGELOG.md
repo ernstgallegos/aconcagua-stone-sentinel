@@ -53,6 +53,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
 - Refreshed typography across landing, markdown viewer, `prototype/web-v1`, and archived MRA viewer around a unified role system: `Playfair Display` for editorial/hero hierarchy, `Montserrat` for UI and reading body text, and `IBM Plex Mono` for telemetry/label semantics.
 - Replaced all public entry-point favicons to use `art/brand/favicon-aconcagua.jpg` for browser and touch-icon references.
+- Redesigned the public landing (`index.html`) with a new glacial-noir visual direction (Cormorant Garamond + Sora typography, aurora-motion background, staggered section reveals, and a new concept-art atmosphere gallery section) while preserving existing bilingual routing and CTA flows.
+- Updated `prototype/web-v1` visual tokens to match the new cross-surface direction: shared font stack, higher-contrast cyan/amber palette, denser mineral grid background, and animated CTA shimmer/glow states so prototype UI now inherits the same aesthetic language as the main website.
 
 ### Fixed
 

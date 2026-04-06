@@ -7,24 +7,24 @@
    ══════════════════════════════════════ */
 
 body[data-theme='sunset'] {
-  --bg:        #101924;
-  --surface:   #182433;
-  --surface2:  #223247;
-  --border:    #50667d;
-  --stone:     #c1b19f;
-  --ochre:     #d6b287;
-  --ochre-dim: #9a7852;
-  --ice:       #c2d9ea;
-  --ice-dim:   #7f9db8;
-  --white:     #eef4fa;
-  --red:       #cd7668;
-  --red-dim:   #904b41;
-  --safety:    #8fb79a;
-  --text:      #dce6ef;
-  --text-dim:  #9ab0c2;
-  --text-soft: #b1c1cf;
-  --muted:     #9ab0c2;
-  --accent:    #d6b287;
+  --bg:        #08101c;
+  --surface:   #11243a;
+  --surface2:  #1b3a58;
+  --border:    #5786a8;
+  --stone:     #b6c8da;
+  --ochre:     #ffc06d;
+  --ochre-dim: #bc7c30;
+  --ice:       #94deff;
+  --ice-dim:   #5e9dc2;
+  --white:     #f0f8ff;
+  --red:       #da7f70;
+  --red-dim:   #995046;
+  --safety:    #8cc4a2;
+  --text:      #deefff;
+  --text-dim:  #9bb8ce;
+  --text-soft: #b9cee2;
+  --muted:     #9bb8ce;
+  --accent:    #94deff;
 }
 
 body[data-theme='sunset'] .decision-microcopy,

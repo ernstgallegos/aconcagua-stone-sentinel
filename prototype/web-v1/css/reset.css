@@ -15,15 +15,28 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 82% -10%, color-mix(in srgb, var(--ice) 14%, transparent), transparent 46%),
-    radial-gradient(circle at 14% -8%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 84%, #05080f) 0%, var(--bg) 58%, #080f18 100%);
+    radial-gradient(860px 420px at 86% -8%, color-mix(in srgb, var(--ice) 22%, transparent), transparent 58%),
+    radial-gradient(760px 360px at 12% -7%, color-mix(in srgb, var(--ochre) 21%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 82%, #03060d) 0%, var(--bg) 55%, #050b14 100%);
   color: var(--text);
   font-family: var(--body);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ice) 25%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ice) 20%, transparent) 1px, transparent 1px);
+  background-size: 42px 42px;
 }
 
 img, video, canvas, audio, iframe, embed, object {

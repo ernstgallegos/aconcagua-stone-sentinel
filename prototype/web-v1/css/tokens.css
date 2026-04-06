@@ -12,32 +12,32 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  /* ── Color palette: glacial noir ── */
+  --bg:        #070c15;
+  --surface:   #0f1b2e;
+  --surface2:  #17314b;
+  --border:    #4d7ea0;
+  --stone:     #b8c5d6;
+  --ochre:     #ffbc63;
+  --ochre-dim: #c37f2f;
+  --ice:       #8fddff;
+  --ice-dim:   #4f94bb;
+  --white:     #eff7ff;
+  --red:       #de7f71;
+  --red-dim:   #9d4f45;
+  --safety:    #8bc4a3;
+  --text:      #d9ecff;
+  --text-dim:  #93b1c9;
+  --text-soft: #b9cde1;
+  --muted:     #93b1c9;
+  --accent:    #8fddff;
 
   /* ── Typography ── */
-  --brand:   'Playfair Display', 'Lora', Georgia, serif;
+  --brand:   'Cormorant Garamond', 'Lora', Georgia, serif;
   --heading: var(--brand);
   --mono:    'IBM Plex Mono', monospace;
   --serif:   var(--brand);
-  --sans:    'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --sans:    'Sora', 'Plus Jakarta Sans', system-ui, sans-serif;
   --body:    var(--sans);
   --ui:      var(--sans);
 
@@ -55,6 +55,6 @@
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;
-  --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-normal: 0.24s;
+  --dur-slow:   0.36s;
 }
