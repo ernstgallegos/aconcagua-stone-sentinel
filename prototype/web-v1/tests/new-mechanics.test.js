@@ -8,9 +8,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const indexPath = path.join(__dirname, '..', 'index.html');
 const uiPath = path.join(__dirname, '..', 'ui', 'screens.js');
+const difficultyPath = path.join(__dirname, '..', 'ui', 'helpers', 'difficulty.js');
+const part2Path = path.join(__dirname, '..', 'ui', 'screens', 'part2.js');
+const gamePath = path.join(__dirname, '..', 'ui', 'screens', 'game.js');
 
 const indexSource = fs.readFileSync(indexPath, 'utf8');
 const uiSource = fs.readFileSync(uiPath, 'utf8');
+const difficultySource = fs.readFileSync(difficultyPath, 'utf8');
+const part2Source = fs.readFileSync(part2Path, 'utf8');
+const gameSource = fs.readFileSync(gamePath, 'utf8');
 
 function json(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'data', file), 'utf8'));
@@ -41,12 +47,12 @@ test('welcome info modal, difficulty selector, and onboarding tutorial remain vi
   assert.doesNotMatch(indexSource, /class="title-main"/);
   assert.doesNotMatch(indexSource, /id="carousel-card-difficulty"/);
   assert.match(indexSource, /Full Tutorial \/ FAQ/);
-  assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
-  assert.match(uiSource, /id: 'very-easy'/);
-  assert.match(uiSource, /id: 'very-hard'/);
-  assert.match(uiSource, /pressureBias: -14/);
-  assert.match(uiSource, /pressureBias: 16/);
-  assert.match(uiSource, /permitDaysBonus: -2/);
+  assert.match(difficultySource, /const DIFFICULTY_LEVELS = \[/);
+  assert.match(difficultySource, /id: 'very-easy'/);
+  assert.match(difficultySource, /id: 'very-hard'/);
+  assert.match(difficultySource, /pressureBias: -14/);
+  assert.match(difficultySource, /pressureBias: 16/);
+  assert.match(difficultySource, /permitDaysBonus: -2/);
   assert.match(uiSource, /window\.setDifficulty = setDifficulty/);
   assert.match(uiSource, /window\.openIntroModal = openIntroModal/);
   assert.match(uiSource, /window\.openTutorialModal = openTutorialModal/);
@@ -67,11 +73,13 @@ test('data loader treats environmental pressure config as required', () => {
 
 
 test('descend UX copy documents Horcones exit behavior and Daniela guard wiring remains explicit', () => {
+  // Horcones exit copy lives in the onboarding/I18N block still in screens.js
   assert.match(uiSource, /From Horcones, descending again exits the park and ends the expedition\./);
-  assert.match(uiSource, /Summit reached\. No more climbing — start the descent\./);
-  assert.match(uiSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
+  // Game-screen decision copy moved to ui/screens/game.js after extraction
+  assert.match(gameSource, /Summit reached\. No more climbing — start the descent\./);
+  assert.match(gameSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
   assert.match(uiSource, /Only Daniela can use this action\./);
-  assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
+  assert.match(gameSource, /photoBtn\.style\.display = 'none'/);
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
 });
 
@@ -86,9 +94,10 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
   assert.match(indexSource, /id="btn-sleep"[^>]*disabled/);
   assert.doesNotMatch(indexSource, /id="btn-sleep"[^>]*display:none/);
   assert.doesNotMatch(indexSource, /btn-focus-pause/);
-  assert.match(uiSource, /function syncMobileStatusPanels/);
-  assert.match(uiSource, /mobileList\.innerHTML = list\.innerHTML/);
-  assert.match(uiSource, /sleepBtn\.disabled = !sleepAvailable/);
+  // syncMobileStatusPanels and related mobile-sync content moved to ui/screens/game.js
+  assert.match(gameSource, /function syncMobileStatusPanels/);
+  assert.match(gameSource, /mobileList\.innerHTML = list\.innerHTML/);
+  assert.match(gameSource, /sleepBtn\.disabled = !sleepAvailable/);
   assert.doesNotMatch(uiSource, /requestDecisionPause/);
   assert.doesNotMatch(uiSource, /decisionPauseUsed/);
 });
@@ -96,16 +105,18 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
 test('Part 2 bridge keeps the full roster visible while gating the public path', () => {
   assert.match(indexSource, /id="part2-carousel-card-character"/);
   assert.match(indexSource, /id="part2-carousel-card-route"/);
+  // PART2_ROUTE_OPTIONS is still present in screens.js (dead code) and in part2.js
   assert.match(uiSource, /const PART2_ROUTE_OPTIONS = \[/);
   assert.match(uiSource, /id: 'guided-normal-route'/);
   assert.match(uiSource, /id: 'independent-normal-route'/);
-  assert.match(uiSource, /id !== 'francisco'/);
-  assert.match(uiSource, /id !== 'guided-normal-route'/);
-  assert.match(uiSource, /part2-lock-pill/);
+  // Guard logic, lock pill, and Instagram/email CTAs live in part2.js after extraction
+  assert.match(part2Source, /id !== 'francisco'/);
+  assert.match(part2Source, /id !== 'guided-normal-route'/);
+  assert.match(part2Source, /part2-lock-pill/);
   assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
-  assert.match(uiSource, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
-  assert.match(uiSource, /window\.open\('mailto:aconcaguastonesentinel@gmail.com', '_self'\)/);
-  assert.match(uiSource, /window\.open\('https:\/\/www\.instagram\.com\/aconcaguastonesentinel\/', '_blank', 'noopener,noreferrer'\)/);
+  assert.match(part2Source, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
+  assert.match(part2Source, /window\.open\('mailto:aconcaguastonesentinel@gmail.com', '_self'\)/);
+  assert.match(part2Source, /window\.open\('https:\/\/www\.instagram\.com\/aconcaguastonesentinel\/', '_blank', 'noopener,noreferrer'\)/);
 });
 
 

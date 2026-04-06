@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 test('static UI overlays include bilingual translation hooks for key hardcoded areas', async () => {
   const src = await readFile('prototype/web-v1/ui/screens.js', 'utf8');
+  const part2Src = await readFile('prototype/web-v1/ui/screens/part2.js', 'utf8');
 
   const requiredSelectors = [
     "['#blocking-error-title'",
@@ -16,12 +17,18 @@ test('static UI overlays include bilingual translation hooks for key hardcoded a
     "['#onboarding-modal .onboard-decisions .onboard-decision:nth-child(1) .decision-key'",
     "['#tutorial-modal .screen-kicker'",
     'const PART2_NARRATIVE_ES = {',
-    'function localizePart2Narrative(screen)',
   ];
 
   for (const selectorSnippet of requiredSelectors) {
     assert.equal(src.includes(selectorSnippet), true, `Missing static bilingual hook: ${selectorSnippet}`);
   }
+
+  // localizePart2Narrative moved to ui/screens/part2.js after extraction
+  assert.equal(
+    part2Src.includes('function localizePart2Narrative(screen)'),
+    true,
+    'Missing static bilingual hook: function localizePart2Narrative(screen)'
+  );
 
   // Critical aria-label updates should also be localized.
   const requiredAriaHooks = [
