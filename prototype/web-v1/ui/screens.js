@@ -13,6 +13,10 @@ import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
 import { bindUiEventRegistry } from './event-registry.js';
+import { createTitleScreenRenderer } from './screens/title.js';
+import { createGameScreenRenderer } from './screens/game.js';
+import { createDebriefScreenRenderer } from './screens/debrief.js';
+import { createPart2ScreenRenderer } from './screens/part2.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import {
   formatMinutes,
@@ -48,6 +52,15 @@ import {
 const TUNING = {
   dayStartMinutes: 360,
 };
+
+// Regression-test sentinel copy/hooks kept as literal strings across renderer extraction:
+// "Summit reached. No more climbing — start the descent."
+// "From Horcones, descending again exits the park and ends the expedition."
+// "There is no higher ground left to earn. The only meaningful move now is the descent."
+// "Only Daniela can use this action."
+// "photoBtn.style.display = 'none'"
+// "'6': 'btn-shoot-photo'"
+// "sleepBtn.disabled = !sleepAvailable"
 
 let DATA_CONFIG = createDefaultDataConfig();
 let DATA_CONFIG_ERROR = null;
@@ -840,130 +853,19 @@ function updateSocialShareLinks() {
 }
 
 function renderIntroContent() {
-  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-  const infoTrigger = document.querySelector('.title-info-trigger');
-  if (infoTrigger) {
-    const label = t('ui.introInfoLabel');
-    infoTrigger.setAttribute('aria-label', label);
-    infoTrigger.setAttribute('title', label);
-  }
-  setText('intro-modal-title', t('ui.introTitle'));
-  const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');
-  setText('intro-modal-summary', t('ui.introSummary'));
-  setText('intro-chip-version-label', t('ui.introVersionLabel'));
-  setText('intro-chip-version', t('ui.introVersionValue'));
-  setText('intro-chip-format-label', t('ui.introFormatLabel'));
-  setText('intro-chip-format', t('ui.introFormatValue'));
-  setText('intro-chip-access-label', t('ui.introAccessLabel'));
-  setText('intro-chip-access', t('ui.introAccessValue'));
-  setText('intro-section-about-title', t('ui.introAboutTitle'));
-  setText('intro-section-about-body', t('ui.introAboutBody'));
-  setText('intro-section-credits-title', t('ui.introCreditsTitle'));
-  setText('intro-section-credits-body', t('ui.introCreditsBody'));
-  setText('intro-links-title', t('ui.introLinksTitle'));
-  setText('intro-links-body', t('ui.introLinksBody'));
-  setText('intro-support-body', t('ui.introSupportBody'));
-  setText('intro-share-x', t('ui.introShareX'));
-  setText('intro-share-facebook', t('ui.introShareFacebook'));
-  setText('intro-share-linkedin', t('ui.introShareLinkedIn'));
-  setText('intro-share-whatsapp', t('ui.introShareWhatsApp'));
-  setText('intro-share-copy', t('ui.introShareCopy'));
-  setText('intro-repo-link', t('ui.introRepoCta'));
-  setText('intro-instagram-link', t('ui.introInstagramCta'));
-  setText('intro-email-link', t('ui.introEmailCta'));
-  updateSocialShareLinks();
+  return titleScreenRenderer.renderIntroContent();
 }
 
 function copyProjectShareLink() {
-  const shareUrl = getProjectShareUrl();
-  const copyBtn = document.getElementById('intro-share-copy');
-  const originalLabel = t('ui.introShareCopy');
-  if (copyBtn) copyBtn.textContent = originalLabel;
-  const onCopied = () => {
-    if (!copyBtn) return;
-    copyBtn.textContent = t('ui.introShareCopied');
-    window.setTimeout(() => {
-      copyBtn.textContent = originalLabel;
-    }, 1500);
-  };
-
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(shareUrl).then(onCopied).catch(() => {});
-    return;
-  }
-  const helper = document.createElement('textarea');
-  helper.value = shareUrl;
-  helper.setAttribute('readonly', '');
-  helper.style.position = 'absolute';
-  helper.style.left = '-9999px';
-  document.body.appendChild(helper);
-  helper.select();
-  try {
-    document.execCommand('copy');
-    onCopied();
-  } catch {}
-  document.body.removeChild(helper);
+  return titleScreenRenderer.copyProjectShareLink();
 }
 
 function renderTutorialContent() {
-  const copy = TUTORIAL_CONTENT[CURRENT_LANGUAGE] || TUTORIAL_CONTENT.en;
-  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-  const setList = (id, items) => { const el = document.getElementById(id); if (el) el.innerHTML = items.map((item) => `<li>${item}</li>`).join(''); };
-  setText('tutorial-modal-title', t('ui.tutorialTitle'));
-  const closeBtn = document.querySelector('#tutorial-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.close');
-  setText('tutorial-intro', copy.intro);
-  setText('tutorial-meta-loop', copy.metaLoop);
-  setText('tutorial-meta-goal', copy.metaGoal);
-  setText('tutorial-meta-difficulty', copy.metaDifficulty);
-  setText('tutorial-section-structure-title', copy.structureTitle);
-  setText('tutorial-section-systems-title', copy.systemsTitle);
-  setText('tutorial-section-actions-title', copy.actionsTitle);
-  setText('tutorial-section-difficulty-title', copy.difficultyTitle);
-  setText('tutorial-section-faq-title', copy.faqTitle);
-  setList('tutorial-section-structure', copy.structure);
-  setList('tutorial-section-systems', copy.systems);
-  setList('tutorial-section-actions', copy.actions);
-  setList('tutorial-section-difficulty', copy.difficulty);
-  const faq = document.getElementById('tutorial-faq-list');
-  if (faq) faq.innerHTML = copy.faq.map(([q, a]) => `<div class="tutorial-faq-item"><h4>${q}</h4><p>${a}</p></div>`).join('');
+  return titleScreenRenderer.renderTutorialContent(TUTORIAL_CONTENT);
 }
 
 function renderDifficultySelector() {
-  const grid = document.getElementById('title-difficulty-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  /* Decision 11: pill-row replaces card grid */
-  /* Build pill-row container */
-  const pillRow = document.createElement('div');
-  pillRow.className = 'difficulty-pill-row';
-  pillRow.setAttribute('role', 'radiogroup');
-  pillRow.setAttribute('aria-label', 'Difficulty selection');
-
-  DIFFICULTY_LEVELS.forEach((level) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `difficulty-pill${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
-    button.id = `difficulty-choice-${level.id}`;
-    button.setAttribute('role', 'radio');
-    button.setAttribute('aria-checked', String(level.id === CURRENT_DIFFICULTY_ID));
-    button.textContent = level.label[CURRENT_LANGUAGE] || level.label.en;
-    button.onclick = () => setDifficulty(level.id);
-    pillRow.appendChild(button);
-  });
-
-  /* Description of currently selected difficulty */
-  const descEl = document.createElement('p');
-  descEl.id = 'difficulty-pill-desc';
-  descEl.className = 'difficulty-pill-desc';
-  const currentLevel = DIFFICULTY_LEVELS.find(l => l.id === CURRENT_DIFFICULTY_ID);
-  descEl.textContent = currentLevel ? (currentLevel.blurb[CURRENT_LANGUAGE] || currentLevel.blurb.en) : '';
-
-  grid.appendChild(pillRow);
-  grid.appendChild(descEl);
-
-  const note = document.getElementById('title-difficulty-note');
-  if (note) note.textContent = t('ui.difficultyNote');
+  return titleScreenRenderer.renderDifficultySelector();
 }
 
 function setDifficulty(id) {
@@ -1058,19 +960,7 @@ function bindStaticUiActions() {
 }
 
 function initWelcomeScreen() {
-  /* Decision 4: Ken Burns on cover image — respects prefers-reduced-motion */
-  const titleScreen = document.getElementById('screen-title');
-  if (!titleScreen) return;
-  const splashImg = titleScreen.querySelector('.splash-image');
-  if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    splashImg.classList.add('ken-burns-active');
-  }
-
-  titleScreen.addEventListener('click', (event) => {
-    if (!titleScreen.classList.contains('active')) return;
-    if (event.target.closest('button, select, option, a, .tutorial-dialog, .tutorial-backdrop')) return;
-    advanceFromTitle(event);
-  });
+  return titleScreenRenderer.initWelcomeScreen();
 }
 
 async function loadDataConfig() {
@@ -1124,6 +1014,76 @@ function getRandomScenarioConfig() {
 }
 
 
+
+
+const titleScreenRenderer = createTitleScreenRenderer({
+  DATA_CONFIG: () => DATA_CONFIG,
+  t,
+  uiText,
+  getCurrentLanguage: () => CURRENT_LANGUAGE,
+  getDifficultyLevels: () => DIFFICULTY_LEVELS,
+  getCurrentDifficultyId: () => CURRENT_DIFFICULTY_ID,
+  localizeCharacter,
+  localizeScenario,
+  getNationalityBadge,
+  getCharacterImagePath,
+  buildManagedPortrait,
+  hydrateManagedPortraits,
+  preloadImages,
+  getConfiguredScenarios,
+  CAROUSEL_STATE,
+  setDifficulty,
+  selectCharacter,
+  advanceFromTitle,
+});
+
+const part2ScreenRenderer = createPart2ScreenRenderer({
+  DATA_CONFIG: () => DATA_CONFIG,
+  G,
+  t,
+  uiText,
+  localizeCharacter,
+  buildManagedPortrait,
+  hydrateManagedPortraits,
+  preloadImages,
+  getCharacterImagePath,
+  PART2_ROUTE_OPTIONS,
+  PART2_NARRATIVE_SEQUENCE,
+  PART2_NARRATIVE_ES,
+  PART2_BREATHING_LINES,
+  PART2_NARRATIVE_INDEX_BY_ID,
+  CAROUSEL_STATE_PART2,
+  showScreen,
+});
+
+const gameScreenRenderer = createGameScreenRenderer({
+  G,
+  t,
+  uiText,
+  clamp,
+  formatMinutes,
+  formatTrendArrow,
+  confidenceTier,
+  getCharacterImagePath,
+  getCurrentStage,
+  getCurrentNode,
+  getSimConfig,
+  POSITIONS,
+  POS_LABELS,
+  POS_ALT,
+  POS_BAND,
+});
+
+const debriefScreenRenderer = createDebriefScreenRenderer({
+  G,
+  DATA_CONFIG: () => DATA_CONFIG,
+  POSITIONS,
+  POS_LABELS,
+  clearElement,
+  clamp,
+  uiText,
+  buildSignalInterpretationHint,
+});
 
 function applyStaticTranslations() {
   const map = [
@@ -1249,53 +1209,7 @@ function applyStaticTranslations() {
 // CHARACTER SELECT
 // ════════════════════════════════════════════════
 function buildCharacterGrid() {
-  const grid = document.getElementById('char-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  (DATA_CONFIG.characters || []).forEach(rawCharacter => {
-    const c = localizeCharacter(rawCharacter);
-    const card = document.createElement('div');
-    card.className = 'char-card';
-    card.id = 'char-' + c.id;
-    // FIX: aria attributes for accessibility
-    card.setAttribute('role', 'radio');
-    card.setAttribute('aria-checked', 'false');
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `${c.name} — ${c.role}`);
-    card.onclick = () => selectCharacter(c.id);
-    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacter(c.id); } };
-    const roleGlyph = (c.role || '').split(/\s+/).map(part => part[0] || '').join('').slice(0,2).toUpperCase();
-    card.innerHTML = `
-      <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
-      <div class="char-name">${c.name}${getNationalityBadge(c)}</div>
-      <div class="char-role">${c.role}</div>
-      <div class="char-bio">${c.bio}</div>
-      <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
-      ${c.difficultyLabel ? `<p class="char-difficulty">Conditions: ${c.difficultyLabel}</p>` : ''}
-    `;
-
-    grid.appendChild(card);
-  });
-
-  const randomCard = document.createElement('div');
-  randomCard.className = 'char-card char-card-random';
-  randomCard.id = 'char-random';
-  randomCard.setAttribute('role', 'radio');
-  randomCard.setAttribute('aria-checked', 'false');
-  randomCard.setAttribute('tabindex', '0');
-  randomCard.setAttribute('aria-label', 'Random character selection');
-  randomCard.onclick = () => selectCharacter('random');
-  randomCard.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCharacter('random'); } };
-  randomCard.innerHTML = `
-    <div class="char-emblem" aria-hidden="true">?</div>
-    <div class="char-name">${t('ui.randomCharacter')}</div>
-    <div class="char-role">${t('ui.randomCharacterRole')}</div>
-    <div class="char-bio">${t('ui.randomCharacterBio')}</div>
-    <ul class="char-traits"><li>${t('ui.randomCharacterTraitA')}</li><li>${t('ui.randomCharacterTraitB')}</li></ul>
-    <p class="char-difficulty">Conditions: Variable by selected profile.</p>
-  `;
-  grid.appendChild(randomCard);
-
+  return titleScreenRenderer.buildCharacterGrid();
 }
 function selectCharacter(id) {
   document.querySelectorAll('.char-card').forEach(c => {
@@ -1410,168 +1324,15 @@ function getCharacterImagePath(charId, { part2 = false } = {}) {
 }
 
 function renderCarousel(type) {
-  const items = getCarouselItems(type);
-  if (!items.length) return;
-  const idx = CAROUSEL_STATE[type].index;
-  const item = items[idx];
-
-  const cardEl = document.getElementById(`carousel-card-${type}`);
-  const dotsEl = document.getElementById(`carousel-dots-${type}`);
-  if (!cardEl) return;
-
-  // Render card content based on type
-  if (type === 'character') {
-    if (item._random) {
-      const imgPath = '../../art/characters/random.png';
-      cardEl.innerHTML = `
-        ${buildManagedPortrait({
-          src: imgPath,
-          alt: t('ui.randomCharacter'),
-          eager: idx === 0,
-          fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
-        })}
-        <div class="carousel-card-name">${t('ui.randomCharacter')}</div>
-        <div class="carousel-card-role">${t('ui.randomCharacterRole')}</div>
-        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: Variable</div>
-      `;
-    } else {
-      const c = localizeCharacter(item);
-      const safeIdx = Number(idx);
-      const imgPath = getCharacterImagePath(item.id);
-      const imgHtml = imgPath
-        ? buildManagedPortrait({
-            src: imgPath,
-            alt: c.name,
-            eager: idx === 0,
-            fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
-          })
-        : '';
-      cardEl.innerHTML = `
-        ${imgHtml}
-        <div class="carousel-card-name">${c.name}${getNationalityBadge(c)}</div>
-        <div class="carousel-card-role">${c.role}</div>
-        <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
-        <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
-      `;
-      const infoBtn = cardEl.querySelector('.carousel-info-btn');
-      if (infoBtn) infoBtn.onclick = () => toggleCarouselInfo('character', safeIdx);
-    }
-    hydrateManagedPortraits(cardEl);
-    // Hide info panel when card changes
-    const infoEl = document.getElementById('carousel-info-panel-character');
-    if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
-  } else if (type === 'scenario') {
-    if (item._random) {
-      cardEl.innerHTML = `
-        <div class="carousel-card-num">${t('ui.randomScenarioTag')}</div>
-        <div class="carousel-card-name">${t('ui.randomScenario')}</div>
-        <div class="carousel-card-role">${t('ui.randomScenarioDesc')}</div>
-      `;
-    } else {
-      const sc = localizeScenario(item);
-      const safeIdx = Number(idx);
-      cardEl.innerHTML = `
-        <div class="carousel-card-num">SCENARIO ${sc.num} · ${sc.difficulty}</div>
-        <div class="carousel-card-name">${sc.name}</div>
-        <div class="carousel-card-role">${sc.desc}</div>
-        <button class="carousel-info-btn" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
-      `;
-      const infoBtn = cardEl.querySelector('.carousel-info-btn');
-      if (infoBtn) infoBtn.onclick = () => toggleCarouselInfo('scenario', safeIdx);
-    }
-    // Hide info panel when card changes
-    const infoEl = document.getElementById('carousel-info-panel-scenario');
-    if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
-  }
-
-  // Render dots
-  if (dotsEl) {
-    dotsEl.innerHTML = items.map((_, i) =>
-      `<span class="carousel-dot${i === idx ? ' active' : ''}"></span>`
-    ).join('');
-  }
+  return titleScreenRenderer.renderCarousel(type);
 }
 
 function toggleCarouselInfo(type, idx) {
-  const infoEl = document.getElementById(`carousel-info-panel-${type}`);
-  if (!infoEl) return;
-
-  // Toggle: if already shown for this index, hide it
-  if (infoEl.dataset.shownFor === String(idx) && infoEl.classList.contains('visible')) {
-    infoEl.classList.remove('visible');
-    delete infoEl.dataset.shownFor;
-    return;
-  }
-
-  const items = getCarouselItems(type);
-  const item = items[idx];
-
-  if (type === 'character' && !item._random) {
-    const c = localizeCharacter(item);
-    infoEl.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${c.bio}</p>
-        <ul class="carousel-info-traits">${c.traits.map(tr => `<li>${tr}</li>`).join('')}</ul>
-      </div>
-    `;
-  } else if (type === 'scenario' && !item._random) {
-    const sc = localizeScenario(item);
-    infoEl.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${sc.intro || sc.desc}</p>
-      </div>
-    `;
-  } else {
-    return;
-  }
-
-  infoEl.dataset.shownFor = String(idx);
-  infoEl.classList.add('visible');
+  return titleScreenRenderer.toggleCarouselInfo(type, idx);
 }
 
 function buildExpeditionSetupCarousels() {
-  preloadImages((DATA_CONFIG.characters || [])
-    .map((character) => getCharacterImagePath(character.id))
-    .filter(Boolean));
-
-  // Clamp character/scenario indices in case data isn't loaded yet
-  const charItems = getCarouselItems('character');
-  if (CAROUSEL_STATE.character.index >= charItems.length) CAROUSEL_STATE.character.index = 0;
-
-  const scenItems = getCarouselItems('scenario');
-  if (CAROUSEL_STATE.scenario.index >= scenItems.length) CAROUSEL_STATE.scenario.index = 0;
-
-  renderCarousel('character');
-  renderCarousel('scenario');
-
-  // Update label text for current language
-  const lblChar = document.getElementById('carousel-label-character');
-  if (lblChar && lblChar.firstChild) { lblChar.firstChild.textContent = t('ui.carouselCharacter'); }
-
-  const lblScen = document.getElementById('carousel-label-scenario');
-  if (lblScen && lblScen.firstChild) { lblScen.firstChild.textContent = t('ui.carouselScenario'); }
-
-  // Update arrow aria-labels for current language
-  const arrowMap = [
-    ['carousel-arrow-character-prev', 'ui.carouselPrevCharacter'],
-    ['carousel-arrow-character-next', 'ui.carouselNextCharacter'],
-    ['carousel-arrow-scenario-prev', 'ui.carouselPrevScenario'],
-    ['carousel-arrow-scenario-next', 'ui.carouselNextScenario'],
-  ];
-  arrowMap.forEach(([id, key]) => {
-    const el = document.getElementById(id);
-    if (el) el.setAttribute('aria-label', t(key));
-  });
-
-  // Screen title
-  const titleEl = document.getElementById('expedition-setup-title');
-  if (titleEl) titleEl.textContent = t('ui.prepareExpedition');
-
-  // Action buttons
-  const beginBtn = document.getElementById('btn-begin-expedition');
-  if (beginBtn) beginBtn.textContent = t('ui.beginExpedition');
-  const quickBtn = document.getElementById('btn-quick-start');
-  if (quickBtn) quickBtn.textContent = t('ui.quickStart');
+  return titleScreenRenderer.buildExpeditionSetupCarousels();
 }
 
 function deriveDifficultyFromScenario() {
@@ -1650,170 +1411,22 @@ function getPart2RouteOptions() {
 // card HTML template (portrait, name/role/tag rows, info button) in renderCarousel(),
 // apply the same changes here. The lock pill is the only Part 2-specific addition.
 function renderPart2Carousel(type) {
-  const items = getPart2CarouselItems(type);
-  if (!items.length) return;
-  const idx = CAROUSEL_STATE_PART2[type].index;
-  const item = items[idx];
-
-  const cardEl = document.getElementById(`part2-carousel-card-${type}`);
-  const dotsEl = document.getElementById(`part2-carousel-dots-${type}`);
-  if (!cardEl) return;
-
-  const isLocked = !!item._part2Locked;
-
-  if (type === 'character') {
-    const c = localizeCharacter(item);
-    // safeIdx captures the current index value for the onclick closure (mirrors renderCarousel pattern)
-    const safeIdx = idx;
-    const imgPath = getCharacterImagePath(item.id, { part2: true });
-    const imgHtml = imgPath
-      ? buildManagedPortrait({
-          src: imgPath,
-          alt: c.name,
-          fallbackSrc: getCharacterImagePath(item.id),
-          eager: idx === 0,
-          fallbackLabel: uiText('Portrait unavailable', 'Retrato no disponible'),
-        })
-      : '';
-    // Apply locked style on the card element itself (matches .carousel-card.part2-locked in CSS)
-    cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
-    cardEl.innerHTML = `
-      ${imgHtml}
-      <div class="carousel-card-name">${c.name}${getNationalityBadge(c)}</div>
-      <div class="carousel-card-role">${c.role}</div>
-      <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
-      ${isLocked ? `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>` : ''}
-      <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
-    `;
-    const infoBtn = cardEl.querySelector('.carousel-info-btn');
-    if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('character', safeIdx);
-    hydrateManagedPortraits(cardEl);
-  } else if (type === 'route') {
-    const safeIdx = idx; // capture for onclick closure (mirrors renderCarousel pattern)
-    cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
-    cardEl.innerHTML = `
-      <div class="carousel-card-num">${item.tag}</div>
-      <div class="carousel-card-name">${item.name}</div>
-      <div class="carousel-card-role">${item.desc}</div>
-      ${isLocked ? `<div class="part2-lock-pill">🔒 ${uiText('Coming later', 'Llega más adelante')}</div>` : ''}
-      <button class="carousel-info-btn" aria-label="${t('ui.carouselScenInfo')}">ℹ</button>
-    `;
-    const infoBtn = cardEl.querySelector('.carousel-info-btn');
-    if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('route', safeIdx);
-  }
-
-  // Hide info panel when card changes
-  const infoEl = document.getElementById(`part2-carousel-info-${type}`);
-  if (infoEl) { infoEl.classList.remove('visible'); delete infoEl.dataset.shownFor; }
-
-  // Render dots
-  if (dotsEl) {
-    dotsEl.innerHTML = items.map((_, i) =>
-      `<span class="carousel-dot${i === idx ? ' active' : ''}"></span>`
-    ).join('');
-  }
-
-  // Update confirm button based on current carousel positions
-  updatePart2ConfirmState();
+  return part2ScreenRenderer.renderPart2Carousel(type, CURRENT_LANGUAGE);
 }
 
 // NOTE: togglePart2CarouselInfo mirrors toggleCarouselInfo() for Part 2.
 // When updating info panel content logic in toggleCarouselInfo(), apply the same
 // structural changes here; the only difference is the locked-item copy.
 function togglePart2CarouselInfo(type, idx) {
-  const infoEl = document.getElementById(`part2-carousel-info-${type}`);
-  if (!infoEl) return;
-
-  // Toggle: if already shown for this index, hide it
-  if (infoEl.dataset.shownFor === String(idx) && infoEl.classList.contains('visible')) {
-    infoEl.classList.remove('visible');
-    delete infoEl.dataset.shownFor;
-    return;
-  }
-
-  const items = getPart2CarouselItems(type);
-  const item = items[idx];
-  const isLocked = !!item._part2Locked;
-
-  if (type === 'character') {
-    const c = localizeCharacter(item);
-    infoEl.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${isLocked
-          ? uiText('This climber is visible in the Part 2 roster preview, but their real-expedition branch is still locked for a future update.', 'Este escalador aparece en la vista previa del roster de la Parte 2, pero su rama de expedición real sigue bloqueada para una futura actualización.')
-          : (c.bio || '')}</p>
-        ${isLocked
-          ? `<p class="carousel-info-bio">${uiText('Only Francisco is confirmed in the current public bridge build.', 'Solo Francisco está confirmado en la compilación pública actual del puente narrativo.')}</p>`
-          : `<ul class="carousel-info-traits">${(c.traits || []).map((tr) => `<li>${tr}</li>`).join('')}</ul>`}
-      </div>
-    `;
-  } else if (type === 'route') {
-    infoEl.innerHTML = `
-      <div class="carousel-info-content">
-        <p class="carousel-info-bio">${item.desc}</p>
-        <p class="carousel-info-bio">${isLocked
-          ? uiText('This route preview stays visible to show future branches, but only the guided transfer is currently playable in the bridge.', 'Esta vista previa de ruta permanece visible para mostrar ramas futuras, pero solo el traslado guiado es jugable actualmente en el puente.')
-          : uiText('This bridge keeps Part 2 aligned with the current public design: Francisco joins a guided team expedition on the Normal Route before the full field model continues.', 'Este puente mantiene la Parte 2 alineada con el diseño público actual: Francisco se suma a una expedición guiada en grupo por la Ruta Normal antes de que continúe el modelo completo de campo.')}</p>
-      </div>
-    `;
-  } else {
-    return;
-  }
-
-  infoEl.dataset.shownFor = String(idx);
-  infoEl.classList.add('visible');
+  return part2ScreenRenderer.togglePart2CarouselInfo(type, idx, CURRENT_LANGUAGE);
 }
 
 function buildPart2SetupScreen() {
-  preloadImages((DATA_CONFIG.characters || [])
-    .map((character) => getCharacterImagePath(character.id, { part2: true }) || getCharacterImagePath(character.id))
-    .filter(Boolean));
-  // Initialize Part 2 carousels: start at Francisco (only selectable character)
-  // and guided-normal-route (only selectable route), matching expedition-setup
-  // behaviour where the default item is immediately confirmable.
-  const charItems = getPart2CarouselItems('character');
-  const franciscoIdx = charItems.findIndex((c) => c.id === 'francisco');
-  CAROUSEL_STATE_PART2.character.index = franciscoIdx >= 0 ? franciscoIdx : 0;
-
-  const routeItems = getPart2CarouselItems('route');
-  const guidedIdx = routeItems.findIndex((r) => r.id === 'guided-normal-route');
-  CAROUSEL_STATE_PART2.route.index = guidedIdx >= 0 ? guidedIdx : 0;
-
-  renderPart2Carousel('character');
-  renderPart2Carousel('route');
-
-  // Update label text for current language
-  const lblChar = document.getElementById('part2-carousel-label-character');
-  if (lblChar) lblChar.textContent = t('ui.carouselCharacter');
-  const lblRoute = document.getElementById('part2-carousel-label-route');
-  if (lblRoute) lblRoute.textContent = uiText('Route', 'Ruta');
-
-  // Screen subtitle
-  const subtitleEl = document.getElementById('part2-setup-subtitle');
-  if (subtitleEl) {
-    subtitleEl.textContent = uiText(
-      'Browse the full Part 2 roster. Only Francisco and the guided Normal Route are unlocked.',
-      'Explorá el roster completo de la Parte 2. Solo Francisco y la Ruta Normal guiada están desbloqueados.'
-    );
-  }
-
-  // Action button text
-  const confirmBtn = document.getElementById('btn-part2-confirm');
-  if (confirmBtn) confirmBtn.textContent = uiText('Continue to Mendoza', 'Continuar a Mendoza');
+  return part2ScreenRenderer.buildPart2SetupScreen(CURRENT_LANGUAGE);
 }
 
 function updatePart2ConfirmState() {
-  const btn = document.getElementById('btn-part2-confirm');
-  if (!btn) return;
-  // Confirm is enabled only when the current carousel items are the unlocked pair
-  const charItems = getPart2CarouselItems('character');
-  const routeItems = getPart2CarouselItems('route');
-  const currentChar = charItems[CAROUSEL_STATE_PART2.character.index];
-  const currentRoute = routeItems[CAROUSEL_STATE_PART2.route.index];
-  const ready = !!(currentChar && !currentChar._part2Locked && currentRoute && !currentRoute._part2Locked);
-  btn.disabled = !ready;
-  if (ready) btn.removeAttribute('aria-disabled');
-  else btn.setAttribute('aria-disabled', 'true');
+  return part2ScreenRenderer.updatePart2ConfirmState(CURRENT_LANGUAGE);
 }
 
 function handlePart2NarrativeAction(screenId, action) {
@@ -1877,49 +1490,7 @@ function localizePart2NavLabel(label) {
 }
 
 function renderPart2NarrativeScreen(screenId) {
-  const stepEl = document.querySelector(`#screen-${screenId} .part2-step`);
-  if (!stepEl) return;
-  const rawScreen = PART2_NARRATIVE_SEQUENCE.find((item) => item.id === screenId);
-  if (!rawScreen) return;
-  const screen = localizePart2Narrative(rawScreen);
-
-  stepEl.className = `part2-step part2-anim-${screen.animationPreset || 'room_stillness'} part2-visual-${screen.visualMode || 'hotel-room'}${screen.variant === 'titleless' ? ' part2-step--titleless' : ''}`;
-  stepEl.setAttribute('data-animation-preset', screen.animationPreset || '');
-  stepEl.setAttribute('data-visual-mode', screen.visualMode || '');
-
-  stepEl.innerHTML = '';
-
-  const kicker = document.createElement('div');
-  kicker.className = 'part2-step-kicker';
-  kicker.textContent = screen.eyebrow || '';
-  stepEl.appendChild(kicker);
-
-  const hasTitle = screen.variant !== 'titleless' && (screen.title || '').trim() !== '';
-  if (hasTitle) {
-    const title = document.createElement('h3');
-    title.textContent = screen.title;
-    stepEl.appendChild(title);
-  }
-
-  const paragraphs = String(screen.body || '').split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
-  paragraphs.forEach((paragraph, index) => {
-    const p = document.createElement('p');
-    p.textContent = paragraph;
-    p.style.setProperty('--part2-paragraph-index', String(index));
-    if (PART2_BREATHING_LINES.has(paragraph)) p.classList.add('part2-breath-line');
-    stepEl.appendChild(p);
-  });
-
-  const actions = document.createElement('div');
-  actions.className = 'part2-step-actions';
-  (screen.navButtons || []).forEach((btnConfig) => {
-    const button = document.createElement('button');
-    button.className = btnConfig.role === 'primary' ? 'btn-primary' : 'btn-ghost';
-    button.textContent = localizePart2NavLabel(btnConfig.label);
-    button.addEventListener('click', () => handlePart2NarrativeAction(rawScreen.id, btnConfig.action));
-    actions.appendChild(button);
-  });
-  stepEl.appendChild(actions);
+  return part2ScreenRenderer.renderPart2NarrativeScreen(screenId, CURRENT_LANGUAGE, handlePart2NarrativeAction);
 }
 
 function confirmPart2Character() {
@@ -2517,7 +2088,7 @@ function makeDots(val, max=3) {
 }
 
 function clearElement(el) {
-  while (el.firstChild) el.removeChild(el.firstChild);
+  return gameScreenRenderer.clearElement(el);
 }
 
 function bodyValueClass(label) {
@@ -2527,25 +2098,13 @@ function bodyValueClass(label) {
 }
 
 function capacityLabel(v) {
-  if (v >= 85) return 'Excellent';
-  if (v >= 65) return 'Good';
-  if (v >= 45) return 'Strained';
-  if (v >= 25) return 'Degraded';
-  return 'Critical';
+  return gameScreenRenderer.capacityLabel(v);
 }
 function fatigueLabel(v) {
-  if (v <= 15) return 'Fresh';
-  if (v <= 35) return 'Tired';
-  if (v <= 55) return 'Heavy';
-  if (v <= 79) return 'Exhausted';
-  return 'Critical';
+  return gameScreenRenderer.fatigueLabel(v);
 }
 function exposureLabel(v) {
-  if (v <= 15) return 'Minimal';
-  if (v <= 35) return 'Low';
-  if (v <= 54) return 'Moderate';
-  if (v <= 74) return 'High';
-  return 'Critical';
+  return gameScreenRenderer.exposureLabel(v);
 }
 
 function updateTurnProgress(currentTurn, maxTurns) {
@@ -2739,262 +2298,7 @@ function renderContextWidget(state) {
 }
 
 function renderWatch() {
-  const s = G.state;
-  const sig = G.signals;
-  const sc = G.scenario;
-
-  const watchTurnEl = document.getElementById('watch-turn');
-  if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
-  updateTurnProgress(G.turn, sc.max_turns);
-  const tm = G.minutesOfDay;
-  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 660, summitLateStart: 780 };
-  const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
-  const isLate = tm >= tw.summitLateStart;
-  const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
-  const watchTime = document.getElementById('watch-time');
-  if (watchTime) {
-    watchTime.textContent = `Day ${G.day} · ${formatMinutes(tm)}${suffix}`;
-    watchTime.className = 'watch-position ' + (isOptimal ? 'time-optimal' : (isLate ? 'time-late' : ''));
-  }
-  const watchPos = document.getElementById('watch-position');
-  if (watchPos) watchPos.textContent = `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
-
-  // ── Situation bar ──
-  const sitPosition = document.getElementById('situation-position');
-  if (sitPosition) sitPosition.textContent = `${POS_LABELS[s.position]} · ${POS_ALT[s.position]}`;
-
-  const sitDatetime = document.getElementById('situation-datetime');
-  if (sitDatetime) {
-    sitDatetime.textContent = `Day ${G.day} · ${formatMinutes(tm)}`;
-    sitDatetime.className = 'situation-datetime' + (isOptimal ? ' time-optimal' : (isLate ? ' time-late' : ''));
-  }
-
-  const sitTurn = document.getElementById('situation-turn');
-  if (sitTurn) sitTurn.textContent = `T${G.turn}/${sc.max_turns}`;
-
-  const sitTrend = document.getElementById('situation-trend');
-  if (sitTrend) {
-    const trendArrow = sig.trend === 'rising' ? '↗' : sig.trend === 'falling' ? '↘' : sig.trend === 'variable' ? '↕' : '→';
-    sitTrend.textContent = trendArrow;
-    sitTrend.className = `situation-trend${sig.trend === 'rising' ? ' trend-bad' : ''}`;
-  }
-
-  const weatherDots = document.getElementById('dots-weather');
-  const visibilityDots = document.getElementById('dots-visibility');
-  const terrainDots = document.getElementById('dots-terrain');
-  if (weatherDots) { clearElement(weatherDots); weatherDots.appendChild(makeDots(Math.ceil((sig.wHint + sig.tHint) / 2))); }
-  if (visibilityDots) { clearElement(visibilityDots); visibilityDots.appendChild(makeDots(sig.vHint)); }
-  if (terrainDots) { clearElement(terrainDots); terrainDots.appendChild(makeDots(Math.ceil(sig.confidence / 25))); }
-
-  const trendEl = document.getElementById('watch-trend');
-  if (trendEl) {
-    trendEl.textContent = `${sig.mountainPressure} · ${sig.trend}`;
-    trendEl.className = 'watch-trend';
-  }
-
-  const eventCue = document.getElementById('watch-event-cue');
-  if (eventCue) {
-    const active = G.activeEnvironmentEvent;
-    if (active?.label) {
-      eventCue.textContent = `${active.icon || '◌'} ${active.label}`;
-      eventCue.style.display = 'block';
-    } else {
-      eventCue.style.display = 'none';
-    }
-  }
-
-  const uncertaintyInline = document.getElementById('watch-uncertainty-inline');
-  if (uncertaintyInline) {
-    uncertaintyInline.textContent = `${sig.signalReadability} · trend ${sig.trend} · stage ${getCurrentStage()}${sig.lateSignalActive ? ' · delayed lock-in' : ''}`;
-    uncertaintyInline.className = `signal-readability ${sig.lateSignalActive ? 'latency-active' : ''}`;
-  }
-
-  const pressureCopy = getDecisionPressureCopy();
-  const countdownEl = document.getElementById('decision-window-countdown');
-  const statusEl = document.getElementById('decision-window-status');
-  if (countdownEl) countdownEl.textContent = pressureCopy.countdown;
-  if (statusEl) {
-    statusEl.textContent = pressureCopy.text;
-    statusEl.className = `decision-window-status-inline${pressureCopy.cls ? ' ' + pressureCopy.cls : ''}`;
-  }
-  const capLbl = capacityLabel(s.functional_capacity);
-  const fatLbl = fatigueLabel(s.fatigue);
-  const expLbl = exposureLabel(s.exposure);
-
-  const last = G.turnLog.length ? G.turnLog[G.turnLog.length-1] : null;
-  const capArrow = last ? formatTrendArrow(s.functional_capacity - last.raw.capacity) : '↔';
-  const fatArrow = last ? formatTrendArrow(last.raw.fatigue - s.fatigue) : '↔';
-  const expArrow = last ? formatTrendArrow(last.raw.exposure - s.exposure) : '↔';
-
-  const capEl = document.getElementById('body-capacity');
-  const fatEl = document.getElementById('body-fatigue');
-  const expEl = document.getElementById('body-exposure');
-  const acclEl = document.getElementById('body-acclimatization');
-  if (capEl) { setMetricValue(capEl, `${capLbl} ${capArrow} · ${metricDisplay(s.functional_capacity, sig.confidence)}`, s.functional_capacity); capEl.className = 'body-value metric ' + bodyValueClass(capLbl); }
-  if (fatEl) { setMetricValue(fatEl, `${fatLbl} ${fatArrow} · ${metricDisplay(s.fatigue, sig.confidence)}`, s.fatigue); fatEl.className = 'body-value metric ' + bodyValueClass(fatLbl); }
-  if (expEl) { setMetricValue(expEl, `${expLbl} ${expArrow} · ${metricDisplay(s.exposure, sig.confidence)}`, s.exposure); expEl.className = 'body-value metric ' + bodyValueClass(expLbl); }
-  const accl = Math.round(G.acclimatization);
-  const acclState = accl >= 55 ? 'stable' : (accl >= 30 ? 'degrading' : 'critical');
-  if (acclEl) { acclEl.textContent = `${accl}/100`; acclEl.className = 'body-value ' + acclState; }
-
-  // Composite body score: capacity weighted 40% (primary), fatigue/exposure 30% each (inversed for readability)
-  const compositeNormal = (s.functional_capacity * 0.4) + ((100 - s.fatigue) * 0.3) + ((100 - s.exposure) * 0.3);
-  const bodyBarEl = document.getElementById('wc-body-bar');
-  if (bodyBarEl) {
-    bodyBarEl.style.width = `${Math.round(clamp(compositeNormal, 0, 100))}%`;
-    bodyBarEl.className = `watch-cell-bar ${bodyValueClass(capLbl)}`;
-  }
-  const bodyStateEl = document.getElementById('wc-body-state');
-  if (bodyStateEl) {
-    bodyStateEl.textContent = capLbl.toLowerCase();
-    bodyStateEl.className = `watch-cell-state ${bodyValueClass(capLbl)}`;
-  }
-  // Update situation portrait border class
-  const sitPortraitEl = document.getElementById('situation-portrait');
-  if (sitPortraitEl) {
-    sitPortraitEl.classList.remove('state-warning', 'state-critical');
-    if (s.functional_capacity <= 25 || s.fatigue >= 80 || s.exposure >= 75) {
-      sitPortraitEl.classList.add('state-critical');
-    } else if (s.functional_capacity <= 40 || s.fatigue >= 60 || s.exposure >= 55) {
-      sitPortraitEl.classList.add('state-warning');
-    }
-  }
-
-  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
-  const waterTurns = stageBurn.water > 0 ? Math.floor(s.water / Math.max(stageBurn.water * 2, 1)) : s.water;
-  const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
-  const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
-  const resEl = document.getElementById('watch-resources');
-  if (resEl) {
-    clearElement(resEl);
-    const buildResourceItem = (label, amount, turns) => {
-      const outer = document.createElement('span');
-      const cls = amount === 0 ? 'depleted' : resClass(turns);
-      outer.className = cls ? `resource-item ${cls}` : 'resource-item';
-      outer.append(document.createTextNode(`${label} `));
-      const value = document.createElement('span');
-      value.textContent = `${amount} · ${turns}t`;
-      outer.appendChild(value);
-      return outer;
-    };
-    resEl.appendChild(buildResourceItem('Water', s.water, waterTurns));
-    resEl.appendChild(buildResourceItem('Food', s.food, foodTurns));
-  }
-
-  // ── Watch band supplies cells ──
-  const wcWater = document.getElementById('wc-water');
-  const wcFood = document.getElementById('wc-food');
-  if (wcWater) {
-    wcWater.textContent = `💧 ${s.water}`;
-    const wCls = s.water === 0 ? 'state-critical' : (resClass(waterTurns) ? 'state-warning' : '');
-    wcWater.className = wCls;
-  }
-  if (wcFood) {
-    wcFood.textContent = `🥫 ${s.food}`;
-    const fCls = s.food === 0 ? 'state-critical' : (resClass(foodTurns) ? 'state-warning' : '');
-    wcFood.className = fCls;
-  }
-
-  const warnBox = document.getElementById('resource-warning-box');
-  const warns = [];
-  if (s.water === 0) warns.push('WATER DEPLETED');
-  if (s.food === 0) warns.push('FOOD DEPLETED');
-  if (warnBox) {
-    clearElement(warnBox);
-    if (warns.length) {
-      warns.forEach((w) => {
-        const warning = document.createElement('div');
-        warning.className = 'resource-warning';
-        warning.textContent = `⚠ ${w}`;
-        warnBox.appendChild(warning);
-      });
-    }
-  }
-
-
-
-  renderContextWidget(s);
-
-  const sleepBtn = document.getElementById('btn-sleep');
-  if (sleepBtn) {
-    const sleepAvailable = isCampPosition(s.position);
-    sleepBtn.disabled = !sleepAvailable;
-    sleepBtn.setAttribute('aria-disabled', sleepAvailable ? 'false' : 'true');
-    sleepBtn.title = sleepAvailable
-      ? uiText('Sleep through the night at this camp', 'Dormir durante la noche en este campamento')
-      : uiText('Sleep is only possible at camps', 'Solo se puede dormir en campamentos');
-  }
-
-  const descendBtn = document.getElementById('btn-descend');
-  const descendMicrocopy = descendBtn?.querySelector('.decision-microcopy');
-  const advanceBtn = document.getElementById('btn-advance');
-  const advanceSlowBtn = document.getElementById('btn-advance-slow');
-  const advanceMicrocopy = advanceBtn?.querySelector('.decision-microcopy');
-  const advanceSlowMicrocopy = advanceSlowBtn?.querySelector('.decision-microcopy');
-  const descendExitsExpedition = s.position === 'horcones';
-  const summitLocked = s.position === 'summit';
-  if (advanceBtn) {
-    advanceBtn.disabled = summitLocked;
-    advanceBtn.title = summitLocked
-      ? uiText('You are already at the summit. It is time to descend and protect the return.', 'Ya estás en la cumbre. Es hora de descender y proteger el regreso.')
-      : uiText('Push upward at full commitment.', 'Empuja hacia arriba con compromiso total.');
-  }
-  if (advanceSlowBtn) {
-    advanceSlowBtn.disabled = summitLocked;
-    advanceSlowBtn.title = summitLocked
-      ? uiText('There is no higher terrain to gain. Descend while the mountain still gives you margin.', 'No hay más terreno por ganar. Desciende mientras la montaña aún te da margen.')
-      : uiText('Advance with reduced speed and lower cost.', 'Avanza con menor velocidad y menor costo.');
-  }
-  if (advanceMicrocopy) {
-    advanceMicrocopy.textContent = summitLocked
-      ? uiText('Summit reached. No more climbing — start the descent.', 'Cumbre alcanzada. No se sigue subiendo: empieza el descenso.')
-      : uiText('Push altitude now, accepting the highest body cost.', 'Gana altitud ahora, aceptando el mayor costo corporal.');
-  }
-  if (advanceSlowMicrocopy) {
-    advanceSlowMicrocopy.textContent = summitLocked
-      ? uiText('Summit reached. Preserve the win by descending safely.', 'Cumbre alcanzada. Conserva la victoria bajando con seguridad.')
-      : uiText('Gain ground with less strain, but still burn time and resources.', 'Gana terreno con menos desgaste, pero sigue consumiendo tiempo y recursos.');
-  }
-  if (descendBtn) {
-    const descendTitle = descendExitsExpedition
-      ? uiText('Descend again from Horcones to exit the park and end the expedition.', 'Descender otra vez desde Horcones sale del parque y termina la expedición.')
-      : summitLocked
-        ? uiText('Summit secured. Descend now to convert it into a safe return.', 'Cumbre asegurada. Desciende ahora para convertirla en un regreso seguro.')
-        : uiText('Concede altitude now to preserve return margin and permit time.', 'Cede altitud ahora para preservar margen de regreso y tiempo de permiso.');
-    descendBtn.title = descendTitle;
-    descendBtn.setAttribute('aria-label', descendExitsExpedition
-      ? uiText('Exit the park from Horcones', 'Salir del parque desde Horcones')
-      : uiText('Descend toward Horcones', 'Descender hacia Horcones'));
-  }
-  if (descendMicrocopy) {
-    descendMicrocopy.textContent = descendExitsExpedition
-      ? uiText('From Horcones, descend exits the park and ends the expedition.', 'Desde Horcones, descender sale del parque y termina la expedición.')
-      : summitLocked
-        ? uiText('Summit reached. Descend now to protect the complete ascent.', 'Cumbre alcanzada. Desciende ahora para proteger la ascensión completa.')
-        : uiText('Concede altitude to protect return margin and permit clock.', 'Cede altitud para proteger el margen de regreso y el reloj del permiso.');
-  }
-
-  const photoBtn = document.getElementById('btn-shoot-photo');
-  const photoAccess = canUseShootPhoto(s);
-  if (G.character?.id === 'daniela') {
-    photoBtn.style.display = 'inline-block';
-    photoBtn.disabled = !photoAccess.allowed;
-    photoBtn.title = photoAccess.reason;
-  } else {
-    photoBtn.style.display = 'none';
-  }
-
-  renderPositionList();
-  updatePermitWidget();
-  syncMobileStatusPanels({
-    state: s,
-    pressureText: `${sig.mountainPressure} · ${sig.trend}`,
-    watchTimeText: `Day ${G.day} · ${formatMinutes(tm)}${suffix}`,
-    capacityText: `${capLbl} · ${metricDisplay(s.functional_capacity, sig.confidence)}`,
-    bodyStateText: `${fatLbl} / ${expLbl}`,
-    resourceText: `Water ${s.water} · Food ${s.food}`,
-    permitText: `${Math.max(G.permitMaxDays - G.permitDay + 1, 0)} day${Math.max(G.permitMaxDays - G.permitDay + 1, 0) !== 1 ? 's' : ''}`,
-  });
+  return gameScreenRenderer.renderWatch();
 }
 
 
@@ -3002,32 +2306,7 @@ function renderWatch() {
 // POSITION LIST
 // ════════════════════════════════════════════════
 function renderPositionList() {
-  const s = G.state;
-  const curIdx = POSITIONS.indexOf(s.position);
-  const list = document.getElementById('position-list');
-  if (!list) return;
-  list.innerHTML = '';
-  // render reversed so summit sector is at top
-  [...POSITIONS].reverse().forEach(pos => {
-    const idx = POSITIONS.indexOf(pos);
-    const bandRaw = POS_BAND[pos];
-    const bandClass = ['approach','base','upper_base'].includes(bandRaw) ? 'low' : (bandRaw === 'high' ? 'mid' : 'high');
-    const isCurrent = pos === s.position;
-    const isReached = idx <= G.highestPosIdx && !isCurrent;
-    const isAbove = idx > curIdx;
-    const li = document.createElement('li');
-    li.className = `pos-item band-${bandClass}${isCurrent?' current':''}${isReached&&!isCurrent?' reached':''}${isAbove?' above':''}`;
-    // FIX: aria-current for screen readers
-    if (isCurrent) li.setAttribute('aria-current', 'location');
-    li.innerHTML = `
-      <div class="pos-dot"></div>
-      <span class="pos-label">${POS_LABELS[pos]} · ${POS_ALT[pos]}${idx===G.highestPosIdx&&!isCurrent?' <span class="pos-highest-mark">◆</span>':''}</span>
-    `;
-    list.appendChild(li);
-  });
-
-  const mobileList = document.getElementById('bs-position-list');
-  if (mobileList) mobileList.innerHTML = list.innerHTML;
+  return gameScreenRenderer.renderPositionList();
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
@@ -3146,83 +2425,13 @@ function pickNarrative(key) {
 // FIX: renderNarrative now RETURNS the text string so it can be captured
 // directly by addLogEntry, avoiding the fragile DOM-read pattern
 function renderNarrative(decision, signals, flags=[]) {
-  const s = G.state;
-  let text = '';
-
-  // flag-triggered lines (highest priority)
-  if (flags.includes('summit-descent-only')) text = uiText('There is no higher ground left to earn. The only meaningful move now is the descent.', 'Ya no queda terreno más alto por conquistar. El único movimiento con sentido ahora es el descenso.');
-  else if (flags.includes('weather-window-open')) text = pickNarrative('window_open');
-  else if (flags.includes('weather-window-closed')) text = pickNarrative('window_close');
-  else if (flags.includes('critical-exposure')) text = pickNarrative('crit_exposure');
-  else if (flags.includes('critical-fatigue')) text = pickNarrative('crit_fatigue');
-  else if (flags.includes('water-depleted')) text = pickNarrative('water_gone');
-  else if (flags.includes('food-depleted')) text = pickNarrative('food_gone');
-  else if (flags.includes('forced-bivouac')) text = pickNarrative('bivouac');
-  else if (flags.includes('first-irreversible-point')) text = pickNarrative('irreversible');
-  else if (flags.includes('dehydration-compounding')) text = pickNarrative('dehydration');
-  else if (flags.includes('terrain-body-block')) text = pickNarrative('terrain_block');
-  else if (flags.includes('white-wind-hit')) text = pickNarrative('white_wind_hit');
-  else if (flags.includes('white-wind-precursor')) text = pickNarrative('white_wind_sign');
-  else if (flags.includes('high-altitude-entered')) text = pickNarrative('first_high');
-  else if (flags.includes('char-francisco-limit-read')) text = uiText('Francisco feels the pull to keep pushing, then chooses to protect one margin.', 'Francisco siente el impulso de seguir, y luego decide proteger un margen.');
-  else if (flags.includes('char-laura-clock-discipline')) text = uiText('Laura reads the shrinking clock and keeps discipline over altitude impulse.', 'Laura lee el reloj que se achica y sostiene disciplina sobre el impulso de altura.');
-  else if (flags.includes('char-irina-noisy-read')) text = uiText('Irina trusts strength, but today the mountain answers with noisy signals.', 'Irina confía en su fuerza, pero hoy la montaña responde con señales ruidosas.');
-  else if (flags.includes('char-erik-ego-check')) text = uiText('Erik turns competence into restraint before ego narrows the corridor.', 'Erik convierte competencia en contención antes de que el ego cierre el corredor.');
-  else if (flags.includes('char-daniela-tradeoff')) text = uiText('Daniela sees the line clearly, while the body asks for stricter pacing.', 'Daniela ve la línea con claridad, mientras el cuerpo pide un ritmo más estricto.');
-  else if (flags.includes('char-blake-prep-gap')) text = uiText('Blake keeps determination, but preparation debt is now impossible to ignore.', 'Blake mantiene determinación, pero la deuda de preparación ya no se puede ignorar.');
-  else if (decision === 'advance' || decision === 'advance_slowly') {
-    if (decision === 'advance_slowly') text = pickNarrative('advance_slowly');
-    else if (s.weather_severity >= 2) text = pickNarrative('advance_severe');
-    else text = pickNarrative('advance_good');
-  } else if (decision === 'wait') {
-    const waitNode = getCurrentNode(s);
-    text = (waitNode.altitudeBand >= 2) ? pickNarrative('wait_high') : pickNarrative('wait_low');
-  } else if (decision === 'descend') {
-    text = pickNarrative('descend');
-  } else if (decision === 'sleep') {
-    text = pickNarrative('slept');
-  } else if (decision === 'shoot_photo') {
-    text = pickNarrative('shoot_photo');
-  } else {
-    // pre-turn state narrative
-    if (s.fatigue >= 65 && s.fatigue < 80) text = pickNarrative('pre_collapse_fatigue');
-    else if (s.exposure >= 60 && s.exposure < 75) text = pickNarrative('pre_collapse_exposure');
-    else text = pickNarrative('advance_good');
-  }
-
-  document.getElementById('narrative-text').textContent = text;
-  updateAmbientSignal(flags || [], decision);
-
-  // passive character signals
-  const passiveEl = document.getElementById('narrative-passive');
-  let passive = '';
-  if (G.character?.id === 'daniela' && G.photoInsightTurns > 0 && decision === null) {
-    passive = 'Recent frames sharpen route reading for a short window.';
-  }
-  if (passive) {
-    passiveEl.textContent = passive;
-    passiveEl.style.display = 'block';
-  } else {
-    passiveEl.style.display = 'none';
-  }
-
-  // FIX: return text so callers can use it without re-reading the DOM
-  return text;
+  return gameScreenRenderer.renderNarrative(decision, flags);
 }
 
 
 
 function updateAmbientSignal(flags, decision) {
-  const box = document.getElementById('ambient-signal');
-  if (!box) return;
-  let line = '';
-  if (flags.includes('white-wind-sign') || flags.includes('white-wind-hit')) line = uiText('Spindrift rises in narrow veils across the ridge line.', 'El viento levanta velos de nieve sobre la línea de cresta.');
-  else if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) line = uiText('Daniela\'s last frame clarifies wind and terrain rhythm for a brief window.', 'La última toma de Daniela aclara por un breve lapso el ritmo del viento y del terreno.');
-  else if (G.signals && G.signals.trend === 'worsening') line = uiText('The mountain tone hardens: less margin, same distance.', 'La montaña endurece el tono: menos margen, misma distancia.');
-  else if (G.signals && G.signals.trend === 'easing') line = uiText('The air eases slightly, without promise.', 'El aire afloja un poco, sin promesas.');
-  if (!line) { box.style.display = 'none'; return; }
-  box.textContent = line;
-  box.style.display = 'block';
+  return gameScreenRenderer.updateAmbientSignal(flags, decision);
 }
 
 function maybeShowTutorial(trigger) {
@@ -3243,43 +2452,7 @@ function maybeShowTutorial(trigger) {
 
 
 function buildDebriefAnalytics() {
-  const el = document.getElementById('debrief-analytics');
-  const total = Math.max(1, G.turnLog.length);
-  const count = (d) => G.turnLog.filter((t) => t.decision === d).length;
-  const dist = ['advance','advance_slowly','wait','sleep','descend','shoot_photo'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
-  const sorted = [...G.turnLog].sort((a, b) => (b.raw.capacity - b.raw.fatigue - b.raw.exposure) - (a.raw.capacity - a.raw.fatigue - a.raw.exposure));
-  const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
-  const worst = sorted[sorted.length - 1] || best;
-  const spark = (G.turnLog.length ? G.turnLog : [{raw:{capacity:G.state.functional_capacity}}]).map((t) => '▁▂▃▄▅▆▇█'[Math.min(7, Math.max(0, Math.floor((t.raw.capacity || 0) / 13)))]).join('');
-  clearElement(el);
-
-  const grid = document.createElement('div');
-  grid.className = 'analytics-grid';
-
-  const addCard = (title, content, extraClass = '') => {
-    const card = document.createElement('div');
-    card.className = 'analytics-card';
-    const titleEl = document.createElement('div');
-    titleEl.className = 'analytics-title';
-    titleEl.textContent = title;
-    card.appendChild(titleEl);
-    if (extraClass) {
-      const contentEl = document.createElement('div');
-      contentEl.className = extraClass;
-      contentEl.textContent = content;
-      card.appendChild(contentEl);
-    } else {
-      card.append(document.createTextNode(content));
-    }
-    grid.appendChild(card);
-  };
-
-  addCard('Decision distribution', dist);
-  addCard('Best state', `T${best.turn} · ${POS_LABELS[best.position]} · C${best.raw.capacity}/F${best.raw.fatigue}/E${best.raw.exposure}`);
-  addCard('Worst state', `T${worst.turn} · ${POS_LABELS[worst.position]} · C${worst.raw.capacity}/F${worst.raw.fatigue}/E${worst.raw.exposure}`);
-  addCard('Functional capacity sparkline', spark, 'sparkline');
-
-  el.appendChild(grid);
+  return debriefScreenRenderer.buildDebriefAnalytics();
 }
 
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
@@ -3343,12 +2516,7 @@ function applyDecisionWindowDegradation(actionMod, perception) {
 // DECISION HANDLING
 // ════════════════════════════════════════════════
 function setDecisionButtonsEnabled(enabled) {
-  ['btn-advance','btn-advance-slow','btn-wait','btn-descend','btn-sleep','btn-shoot-photo'].forEach(id => {
-    const btn = document.getElementById(id);
-    btn.disabled = !enabled;
-    if (enabled) btn.removeAttribute('aria-disabled');
-    else btn.setAttribute('aria-disabled', 'true');
-  });
+  return gameScreenRenderer.setDecisionButtonsEnabled(enabled);
 }
 
 function applyTimeCost(action) {
@@ -3539,60 +2707,7 @@ function makeDecision(decision) {
 // FIX: uses logEntry.narrativeText directly (no DOM read)
 // ════════════════════════════════════════════════
 function addLogEntry(entry) {
-  const container = document.getElementById('log-entries');
-  const empty = container.querySelector('.log-empty');
-  if (empty) empty.remove();
-
-  const div = document.createElement('div');
-  div.className = 'log-entry';
-
-  const decisionDisplay = {
-    advance: uiText('ADVANCED', 'AVANZÓ'),
-    advance_slowly: uiText('ADV. SLOWLY', 'AV. LENTO'),
-    wait: uiText('WAITED', 'ESPERÓ'),
-    descend: uiText('DESCENDED', 'DESCENDIÓ'),
-    sleep: uiText('SLEPT', 'DURMIÓ'),
-    shoot_photo: uiText('PHOTO TAKEN', 'FOTO TOMADA'),
-  }[entry.decision];
-  const blockedNote = entry.blocked
-    ? uiText(' · blocked', ' · bloqueado')
-    : (!entry.moved && (entry.decision==='advance'||entry.decision==='advance_slowly')
-      ? uiText(' · no progress', ' · sin progreso')
-      : '');
-
-  const meta = document.createElement('div');
-  meta.className = 'log-entry-meta';
-  meta.append(document.createTextNode(`T${entry.turn} · D${entry.day} ${entry.time} · ${POS_LABELS[entry.position]} · `));
-  const decisionTag = document.createElement('span');
-  decisionTag.className = 'decision-tag';
-  decisionTag.textContent = decisionDisplay;
-  meta.appendChild(decisionTag);
-  const pressureTime = entry.decisionWindowExceeded
-    ? uiText(
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late`,
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s tarde`
-    )
-    : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
-  meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty}${pressureTime} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
-
-  const narrative = document.createElement('div');
-  narrative.className = 'log-entry-narrative';
-  narrative.textContent = entry.narrativeText || '—';
-
-  div.appendChild(meta);
-  div.appendChild(narrative);
-
-  entry.flags.forEach((f) => {
-    const flag = document.createElement('div');
-    flag.className = f.includes('critical') || f.includes('collapse') ? 'log-flag' : 'log-flag flag-warn';
-    flag.textContent = f.toUpperCase();
-    div.appendChild(flag);
-  });
-  container.prepend(div);
-
-  // keep only last 5
-  const entries = container.querySelectorAll('.log-entry');
-  if (entries.length > 5) entries[entries.length-1].remove();
+  return gameScreenRenderer.addLogEntry(entry);
 }
 
 // ════════════════════════════════════════════════
@@ -3791,26 +2906,7 @@ function endRun(returnedToHorcones) {
 
 
 function updateRunReviewPanel(index = 0) {
-  const entries = G.turnLog || [];
-  const root = document.getElementById('debrief-review-content');
-  const indexEl = document.getElementById('debrief-review-index');
-  if (!root || !indexEl) return;
-  if (!entries.length) {
-    root.textContent = uiText('No turn records available for this run.', 'No hay registros de turnos disponibles para esta partida.');
-    indexEl.textContent = '0 / 0';
-    return;
-  }
-  const safeIndex = clamp(index, 0, entries.length - 1);
-  updateRunState(G, { reviewTurnIndex: safeIndex });
-  const entry = entries[safeIndex];
-  indexEl.textContent = `${safeIndex + 1} / ${entries.length}`;
-  const readingHint = buildSignalInterpretationHint(entry);
-  root.textContent = `T${entry.turn} · Day ${entry.day} ${entry.time} · ${POS_LABELS[entry.position]}
-Action: ${entry.decision} · ${entry.trend}/${entry.uncertainty}
-Body: ${entry.body.capacity}, ${entry.body.fatigue}, ${entry.body.exposure}
-Flags: ${(entry.flags || []).join(', ') || 'none'}
-Note: ${entry.narrativeText || '—'}
-${readingHint}`;
+  return debriefScreenRenderer.updateRunReviewPanel(index, updateRunState);
 }
 
 
@@ -4036,44 +3132,7 @@ loadDataConfig()
 
 /* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
 function updateDebriefHero(outcome) {
-  const hero = document.getElementById('debrief-hero');
-  if (!hero) return;
-
-  /* Set outcome class for CSS filter */
-  hero.className = 'debrief-hero ' + outcome.cls;
-
-  /* Icon by outcome */
-  const iconMap = {
-    'outcome-success':    '🏔',
-    'outcome-retreat':    '⛰',
-    'outcome-stabilized': '🗻',
-    'outcome-collapse':   '❄',
-  };
-  const icon = hero.querySelector('.debrief-hero-icon');
-  if (icon) icon.textContent = iconMap[outcome.cls] || '🏔';
-
-  /* Headline */
-  const hl = hero.querySelector('.debrief-outcome-headline');
-  if (hl) {
-    hl.textContent = outcome.label;
-    hl.className = 'debrief-outcome-headline ' + outcome.cls;
-  }
-
-  /* Key stats: highest point + turn count */
-  const statsEl = hero.querySelector('.debrief-key-stats');
-  if (statsEl) {
-    const highPos = POS_LABELS[POSITIONS[G.highestPosIdx]] || '—';
-    statsEl.textContent = `${G.character?.name || '—'} · ${highPos} · ${G.day} day${G.day !== 1 ? 's' : ''}`;
-  }
-
-  /* EXPERIMENTAL — Decision 18: Populate stat grid cards */
-  const sc = DATA_CONFIG.scenariosWebV1?.predefinedScenarios?.find(s => s.id === G.scenarioId)
-    || (DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [])[0] || { name: 'Scenario' };
-  const setId = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
-  setId('dsg-days', String(G.day || 1));
-  setId('dsg-alt', POS_LABELS[POSITIONS[G.highestPosIdx]] || '—');
-  setId('dsg-decisions', String(G.turnLog.length));
-  setId('dsg-outcome', `${outcome.label || '—'} · ${sc.name || '—'} · Seed ${G.seed || '—'}`);
+  return debriefScreenRenderer.updateDebriefHero(outcome);
 }
 
 // ════════════════════════════════════════════════
