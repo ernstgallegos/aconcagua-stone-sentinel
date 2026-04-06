@@ -11,6 +11,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Added CI cross-browser smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py` and `.github/workflows/ci.yml` so canonical Playwright smoke now runs on Chromium, Firefox, and WebKit, plus a critical mobile (375x812) viewport path check for title → setup → game/watch interaction.
 - Added `prototype/web-v1/tests/parity/loader-ts-contract-parity.test.js`: parity test that loads real data files through the JS canonical loader (`loadDataConfigFiles` + `normalizeRouteData`) and verifies the output satisfies the TS-side `DataConfig`/`RouteNode`/`CharacterEvent`/`ContextEvent`/`Character` contract invariants.
 - Rebuilt `CHANGELOG.md` into a clean canonical structure: removed exact-duplicate bullets that had propagated into every version block, merged duplicate section headers within versions, consolidated `(release baseline)` and `#### Additional` subsections in `[1.4.5]` and `[1.4.3]` blocks, and reordered `[1.4.2]` sections to follow Keep a Changelog convention (Added → Changed → Deprecated → Removed → Fixed).
 - Confirmed that `scripts/monte-carlo-web-v1.js` already reads the output version dynamically from `package.json` (no hardcoded version string).
@@ -26,6 +27,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Updated GitHub Actions CI gates in `.github/workflows/ci.yml` to include `npm run typecheck`, expanded repository-wide JSON parsing validation, and `npm run smoke:release` as explicit pre-merge checks aligned with the public-readiness checklist.
 - Refactored `prototype/web-v1/src/boot/loadDataConfig.ts`: removed duplicate file-path list and broken fetch loop; replaced with a thin re-export adapter for `assertDataConfig` (renamed `assertNormalizedDataConfig`) with a docblock that names `ui/helpers/data-config.js` as the canonical loading path.
 - Added JSDoc to `assertDataConfig` in `prototype/web-v1/src/types/data-contracts.ts` clarifying it operates on post-normalized data (after `normalizeRouteData()`).
 - Updated `docs/architecture.md` to name `prototype/web-v1/ui/helpers/data-config.js` as the canonical config-loading module, describe the two-phase `loadDataConfigFiles`/`normalizeRouteData` pipeline, and document the role of the TS-side parity test.
@@ -41,6 +43,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed brittle mobile smoke assertion in `prototype/web-v1/tests/test_smoke_flow.py` by validating visible post-onboarding action controls (`#btn-advance`) instead of legacy `#action-grid`, which no longer represents the current game layout.
+- Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`, preventing CI failures on runners without ripgrep installed.
 - Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
 
 ## [1.4.5] — 2026-03
