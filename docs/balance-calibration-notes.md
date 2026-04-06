@@ -1,5 +1,11 @@
 # Balance calibration notes — character parameter pass
 
+## TL;DR — Current calibration status
+
+- **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
+- **Latest clearly documented calibration date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
+- **Active flags:** TODO — no single canonical “active calibration flags” list is explicitly declared in this document/repo section; keep this as a tracked docs TODO rather than inferring from code.
+
 ## Target metric bands (per character)
 
 - Summit and Safe Return: **8%–20%**

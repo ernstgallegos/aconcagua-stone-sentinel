@@ -16,6 +16,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Stabilized `test:webv1` script portability in `package.json` by replacing shell-dependent `find` expansion with a Node-based recursive test-file discovery/exec path compatible across shells/platforms.
+- Updated README EN/ES Part 2 status wording to reflect the current narrative-preview scope (7 playable story screens with Francisco after summit return) while clarifying full expedition mechanics remain deferred.
+- Added `docs/deep-links-summary.md` as a concise contributor quick reference derived from the canonical deep-link reference.
+- Added a `Target Version` column to `docs/technical-debt-register.md` and preserved existing debt semantics with conservative `TBD`/documented-target values.
+- Added explicit deployment documentation for the current in-memory API rate-limit limitation in multi-instance/serverless contexts in `docs/deploy-routing.md`.
+- Added a top-level TL;DR calibration snapshot to `docs/balance-calibration-notes.md`, including target bands, latest clearly documented date, and a TODO marker for unresolved active-flag documentation.
+- Added explicit Monte Carlo caveat notes in README EN/ES to prevent treating headless simulator win rates as human-balance ground truth.
+
 - Updated `index.html` and `md-viewer.html` to load `src/styles/public-tokens.css` (via `<link>`) and `src/i18n/public-lang.js` (via `<script>`). Removed all duplicated inline CSS blocks and simplified `initLanguageSwitcher`/`initLanguage` to delegate to `PublicLang.detectInitialLang` and `PublicLang.wireLangButtons`.
 - Updated `src/interfaces/contactInfo.js` from a comment-only stub to a real ES module export. Now exports `CONTACT_EMAIL`, `INSTAGRAM_URL`, `GITHUB_URL`, and a structured `contactInfo` default export as a canonical contact data contract.
 
@@ -67,6 +75,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Replaced all public entry-point favicons to use `art/brand/favicon-aconcagua.jpg` for browser and touch-icon references.
 
 ### Fixed
+
+- Gated web-v1 runtime/state debug logging so startup/state-shape diagnostics emit only on localhost or when `localStorage` debug flag `aconcagua_debug_mode=1` is set, reducing production console noise without removing local troubleshooting visibility.
 
 - Fixed brittle mobile smoke assertion in `prototype/web-v1/tests/test_smoke_flow.py` by validating visible post-onboarding action controls (`#btn-advance`) instead of legacy `#action-grid`, which no longer represents the current game layout.
 - Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`, preventing CI failures on runners without ripgrep installed.

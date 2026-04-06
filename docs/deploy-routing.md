@@ -33,6 +33,16 @@ In local static mode, archived viewer run files are loaded from `prototype/mra-v
 - Build command: not required.
 - Routing behavior is defined in `vercel.json`.
 
+
+### API rate-limit limitation (current behavior)
+
+`api/run.js` currently uses an in-memory `Map` counter per process instance.
+
+- Single-instance/local preview: limits behave as expected for one process.
+- Multi-instance/serverless deployments: counters are not shared across instances, so limits are **best-effort per instance**, not a global quota.
+
+This limitation is intentionally documented as current state for this release hardening pass; no distributed/persistent backend is implemented in this repository scope.
+
 ### API CORS allowlist (`api/run.js`)
 
 Set `ALLOWED_ORIGINS` as comma-separated exact origins when production domains differ from repository defaults.
@@ -75,6 +85,16 @@ En modo estático local, el visor archivado carga corridas desde `prototype/mra-
 - Framework preset: `Other`.
 - Build command: no requerido.
 - El comportamiento de ruteo está definido en `vercel.json`.
+
+
+### Limitación actual de rate limit en API
+
+`api/run.js` usa hoy un contador en memoria (`Map`) por instancia de proceso.
+
+- Instancia única/preview local: el límite funciona como se espera para ese proceso.
+- Deploy multi-instancia/serverless: los contadores no se comparten entre instancias, por lo que el límite es **best-effort por instancia**, no una cuota global.
+
+Esta limitación queda documentada explícitamente como estado actual en este pass de estabilización; no se implementa backend distribuido/persistente dentro del alcance de este repositorio.
 
 ### Allowlist CORS de la API (`api/run.js`)
 
