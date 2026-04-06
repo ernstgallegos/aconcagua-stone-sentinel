@@ -39,32 +39,37 @@ function assertConfigPath(filename, value, expectedType, path) {
 export function validateDataConfigShape(filename, data) {
   if (filename === 'characterEvents') {
     assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
-    assertConfigPath(filename, data[0]?.characterId, 'string', '$[0].characterId');
-    assertConfigPath(filename, data[0]?.category, 'string', '$[0].category');
-    assertConfigPath(filename, data[0]?.trigger, 'object', '$[0].trigger');
-    assertConfigPath(filename, data[0]?.effects, 'object', '$[0].effects');
-    assertConfigPath(filename, data[0]?.limits, 'object', '$[0].limits');
+    data.forEach((item, i) => {
+      assertConfigPath(filename, item, 'object', `$[${i}]`);
+      assertConfigPath(filename, item?.id, 'string', `$[${i}].id`);
+      assertConfigPath(filename, item?.characterId, 'string', `$[${i}].characterId`);
+      assertConfigPath(filename, item?.category, 'string', `$[${i}].category`);
+      assertConfigPath(filename, item?.trigger, 'object', `$[${i}].trigger`);
+      assertConfigPath(filename, item?.effects, 'object', `$[${i}].effects`);
+      assertConfigPath(filename, item?.limits, 'object', `$[${i}].limits`);
+    });
     return;
   }
 
-
   if (filename === 'contextEvents') {
     assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
-    assertConfigPath(filename, data[0]?.label, 'string', '$[0].label');
-    assertConfigPath(filename, data[0]?.category, 'string', '$[0].category');
-    assertConfigPath(filename, data[0]?.trigger, 'object', '$[0].trigger');
-    assertConfigPath(filename, data[0]?.effects, 'object', '$[0].effects');
+    data.forEach((item, i) => {
+      assertConfigPath(filename, item, 'object', `$[${i}]`);
+      assertConfigPath(filename, item?.id, 'string', `$[${i}].id`);
+      assertConfigPath(filename, item?.label, 'string', `$[${i}].label`);
+      assertConfigPath(filename, item?.category, 'string', `$[${i}].category`);
+      assertConfigPath(filename, item?.trigger, 'object', `$[${i}].trigger`);
+      assertConfigPath(filename, item?.effects, 'object', `$[${i}].effects`);
+    });
     return;
   }
 
   if (filename === 'nodes') {
     assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.nodeId, 'string', '$[0].nodeId');
+    data.forEach((item, i) => {
+      assertConfigPath(filename, item, 'object', `$[${i}]`);
+      assertConfigPath(filename, item?.nodeId, 'string', `$[${i}].nodeId`);
+    });
     return;
   }
   if (filename === 'actionModifiers') {
@@ -79,8 +84,10 @@ export function validateDataConfigShape(filename, data) {
   }
   if (filename === 'characters') {
     assertConfigPath(filename, data, 'array', '$');
-    assertConfigPath(filename, data[0], 'object', '$[0]');
-    assertConfigPath(filename, data[0]?.id, 'string', '$[0].id');
+    data.forEach((item, i) => {
+      assertConfigPath(filename, item, 'object', `$[${i}]`);
+      assertConfigPath(filename, item?.id, 'string', `$[${i}].id`);
+    });
     return;
   }
   if (filename === 'outcomes') {
