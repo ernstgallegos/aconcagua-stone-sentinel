@@ -133,6 +133,29 @@ test('shape validator catches malformed second item in characters array', async 
   assert.match(errors[0].detail, /\$\[1\]\.id/);
 });
 
+test('shape validator rejects invalid nationalityCode format when provided', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('characters.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return [{ id: 'francisco', nationalityCode: 'arg' }];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /nationalityCode/);
+});
+
 test('shape validator catches malformed second item in nodes array', async () => {
   const errors = [];
   const config = await loadDataConfigFiles({

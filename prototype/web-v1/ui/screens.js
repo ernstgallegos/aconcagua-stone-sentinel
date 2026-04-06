@@ -12,6 +12,8 @@ import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, a
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
+import { bindUiEventRegistry } from './event-registry.js';
+import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import {
   formatMinutes,
   formatTrendArrow,
@@ -84,7 +86,7 @@ const DIFFICULTY_STORAGE_KEY = 'aconcagua_difficulty_v1';
 const SUMMIT_ACHIEVED_KEY = 'aconcagua_summit_achieved_v1';
 
 function hasPreviouslySummited() {
-  try { return localStorage.getItem(SUMMIT_ACHIEVED_KEY) === '1'; } catch (e) { return false; }
+  return safeGetStorage(SUMMIT_ACHIEVED_KEY) === '1';
 }
 const DIFFICULTY_LEVELS = [
   {
@@ -776,6 +778,29 @@ function localizeCharacter(character) {
   return { ...character, ...patch };
 }
 
+function deriveIsoFromFlag(flag) {
+  if (typeof flag !== 'string' || !flag.trim()) return '';
+  const points = Array.from(flag).map((ch) => ch.codePointAt(0));
+  if (points.length !== 2) return '';
+  const base = 0x1F1E6;
+  const letters = points.map((cp) => {
+    const idx = cp - base;
+    if (idx < 0 || idx > 25) return '';
+    return String.fromCharCode(65 + idx);
+  });
+  if (letters.some((letter) => !letter)) return '';
+  return letters.join('');
+}
+
+function getNationalityBadge(character) {
+  const isoFromData = String(character?.nationalityCode || '').trim().toUpperCase();
+  const isoFromFlag = deriveIsoFromFlag(character?.flag);
+  const isoCode = isoFromData || isoFromFlag || 'NA';
+  const emoji = typeof character?.flag === 'string' ? character.flag.trim() : '';
+  const emojiHtml = emoji ? ` <span class="char-flag" aria-hidden="true">${emoji}</span>` : '';
+  return `${emojiHtml} <span class="char-iso">(${isoCode})</span>`;
+}
+
 function localizeScenario(scenario) {
   const patch = SCENARIO_I18N[CURRENT_LANGUAGE]?.[scenario.id] || {};
   return { ...scenario, ...patch };
@@ -943,17 +968,15 @@ function renderDifficultySelector() {
 
 function setDifficulty(id) {
   CURRENT_DIFFICULTY_ID = getDifficultyConfig(id).id;
-  try { localStorage.setItem(DIFFICULTY_STORAGE_KEY, CURRENT_DIFFICULTY_ID); } catch {}
+  safeSetStorage(DIFFICULTY_STORAGE_KEY, CURRENT_DIFFICULTY_ID);
   renderDifficultySelector();
   renderIntroContent();
   renderTutorialContent();
 }
 
 function initDifficulty() {
-  try {
-    const stored = localStorage.getItem(DIFFICULTY_STORAGE_KEY);
-    if (stored && DIFFICULTY_LEVELS.some((level) => level.id === stored)) CURRENT_DIFFICULTY_ID = stored;
-  } catch {}
+  const stored = safeGetStorage(DIFFICULTY_STORAGE_KEY);
+  if (stored && DIFFICULTY_LEVELS.some((level) => level.id === stored)) CURRENT_DIFFICULTY_ID = stored;
   renderDifficultySelector();
   renderIntroContent();
   renderTutorialContent();
@@ -972,7 +995,7 @@ function setLanguage(lang) {
   renderDifficultySelector();
   renderIntroContent();
   renderTutorialContent();
-  try { localStorage.setItem(LANGUAGE_KEY, safe); } catch (e) {}
+  safeSetStorage(LANGUAGE_KEY, safe);
   buildCharacterGrid();
   buildScenarioGrid();
   // Rebuild carousels if expedition-setup is active or was already built
@@ -982,10 +1005,8 @@ function setLanguage(lang) {
 
 function initLanguage() {
   let stored = 'en';
-  try {
-    const raw = localStorage.getItem(LANGUAGE_KEY);
-    if (raw && VALID_LANGUAGES.has(raw)) stored = raw;
-  } catch (e) {}
+  const raw = safeGetStorage(LANGUAGE_KEY);
+  if (raw && VALID_LANGUAGES.has(raw)) stored = raw;
   setLanguage(stored);
 }
 
@@ -995,6 +1016,45 @@ function setVisualMode() {
 
 function initVisualMode() {
   setVisualMode('sunset');
+}
+
+function bindStaticUiActions() {
+  bindUiEventRegistry({
+    resolve(action) {
+      switch (action) {
+        case 'open-intro-modal': return () => openIntroModal();
+        case 'close-intro-modal': return () => closeIntroModal();
+        case 'set-language': return (_event, lang) => setLanguage(lang);
+        case 'advance-from-title': return (event) => advanceFromTitle(event);
+        case 'show-screen': return (_event, id) => showScreen(id);
+        case 'carousel-prev': return (_event, type) => carouselPrev(type);
+        case 'carousel-next': return (_event, type) => carouselNext(type);
+        case 'begin-expedition': return () => beginExpedition();
+        case 'quick-start': return () => quickStart();
+        case 'open-field-log': return () => openFieldLog();
+        case 'open-game-help': return () => openGameHelp();
+        case 'open-watch-detail': return () => openWatchDetail();
+        case 'make-decision': return (_event, decision) => makeDecision(decision);
+        case 'open-bottom-sheet': return (_event, id) => openBottomSheet(id);
+        case 'close-game-help': return () => closeGameHelp();
+        case 'close-watch-detail': return () => closeWatchDetail();
+        case 'close-field-log': return () => closeFieldLog();
+        case 'close-bottom-sheet': return (_event, id) => closeBottomSheet(id);
+        case 'review-prev-turn': return () => reviewPrevTurn();
+        case 'review-next-turn': return () => reviewNextTurn();
+        case 'part2-carousel-prev': return (_event, type) => part2CarouselPrev(type);
+        case 'part2-carousel-next': return (_event, type) => part2CarouselNext(type);
+        case 'confirm-part2-character': return () => confirmPart2Character();
+        case 'clear-journal': return () => clearJournal();
+        case 'copy-project-share-link': return () => copyProjectShareLink();
+        case 'close-tutorial-modal': return () => closeTutorialModal();
+        case 'close-onboarding-modal': return () => closeOnboardingModal();
+        case 'open-tutorial-modal': return () => openTutorialModal();
+        case 'abandon-onboarding': return () => abandonOnboarding();
+        default: return null;
+      }
+    },
+  });
 }
 
 function initWelcomeScreen() {
@@ -1207,7 +1267,7 @@ function buildCharacterGrid() {
     const roleGlyph = (c.role || '').split(/\s+/).map(part => part[0] || '').join('').slice(0,2).toUpperCase();
     card.innerHTML = `
       <div class="char-emblem" aria-hidden="true">${(c.name || '?')[0]}${roleGlyph ? '·' + roleGlyph[0] : ''}</div>
-      <div class="char-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
+      <div class="char-name">${c.name}${getNationalityBadge(c)}</div>
       <div class="char-role">${c.role}</div>
       <div class="char-bio">${c.bio}</div>
       <ul class="char-traits">${c.traits.map(t => `<li>${t}</li>`).join('')}</ul>
@@ -1388,7 +1448,7 @@ function renderCarousel(type) {
         : '';
       cardEl.innerHTML = `
         ${imgHtml}
-        <div class="carousel-card-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
+        <div class="carousel-card-name">${c.name}${getNationalityBadge(c)}</div>
         <div class="carousel-card-role">${c.role}</div>
         <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
         <button class="carousel-info-btn" aria-label="${t('ui.carouselCharInfo')}">ℹ</button>
@@ -1619,7 +1679,7 @@ function renderPart2Carousel(type) {
     cardEl.className = `carousel-card${isLocked ? ' part2-locked' : ''}`;
     cardEl.innerHTML = `
       ${imgHtml}
-      <div class="carousel-card-name">${c.name}${c.flag ? ' <span class="char-flag">' + c.flag + '</span>' : ''}</div>
+      <div class="carousel-card-name">${c.name}${getNationalityBadge(c)}</div>
       <div class="carousel-card-role">${c.role}</div>
       <div class="carousel-card-tag">${t('ui.charDifficultyLabel')}: ${c.difficultyLabel}</div>
       ${isLocked ? `<div class="part2-lock-pill">🔒 ${uiText('Locked for now', 'Bloqueado por ahora')}</div>` : ''}
@@ -3631,7 +3691,7 @@ function endRun(returnedToHorcones) {
   // save to journal
   recordTelemetry(G, { runLogRecords: G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label })) });
   const runLogExport = buildRunLogExport();
-  try { localStorage.setItem('run_log.json', JSON.stringify(runLogExport, null, 2)); } catch (e) {}
+  safeSetStorage('run_log.json', JSON.stringify(runLogExport, null, 2));
   saveJournalEntry({
     runNum: G.runNumber,
     scenario: sc.name,
@@ -3722,7 +3782,7 @@ function endRun(returnedToHorcones) {
   });
 
   if (G.finalOutcome === 'Summit and Safe Return') {
-    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
+    safeSetStorage(SUMMIT_ACHIEVED_KEY, '1');
     showScreen('summit-success');
   } else {
     showScreen('debrief');
@@ -3817,29 +3877,27 @@ const JOURNAL_KEY = 'aconcagua_journal_v1';
 
 // FIX: migrate any existing data from old key
 (function migrateJournalKey() {
-  try {
-    const old = localStorage.getItem('ass_journal_v1');
-    if (old && !localStorage.getItem(JOURNAL_KEY)) {
-      localStorage.setItem(JOURNAL_KEY, old);
-      localStorage.removeItem('ass_journal_v1');
-    }
-  } catch(e) {}
+  const old = safeGetStorage('ass_journal_v1');
+  if (old && !safeGetStorage(JOURNAL_KEY)) {
+    safeSetStorage(JOURNAL_KEY, old);
+    safeRemoveStorage('ass_journal_v1');
+  }
 })();
 
 function loadJournal() {
-  try { return JSON.parse(localStorage.getItem(JOURNAL_KEY) || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(safeGetStorage(JOURNAL_KEY) || '[]'); } catch(e) { return []; }
 }
 function saveJournalEntry(entry) {
   try {
     let entries = loadJournal();
     entries.unshift(entry);
     if (entries.length > 50) entries = entries.slice(0, 50);
-    localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries));
+    safeSetStorage(JOURNAL_KEY, JSON.stringify(entries));
   } catch(e) {}
 }
 function clearJournal() {
   if (!confirm(t('ui.clearJournalConfirm'))) return;
-  localStorage.removeItem(JOURNAL_KEY);
+  safeRemoveStorage(JOURNAL_KEY);
   renderJournal();
 }
 function renderJournal() {
@@ -3958,6 +4016,7 @@ initFlowController({
 initVisualMode();
 initLanguage();
 initDifficulty();
+bindStaticUiActions();
 initWelcomeScreen();
 loadDataConfig()
   .then((isReady) => {
@@ -4155,7 +4214,7 @@ function bootstrapMockDebrief(params) {
   }
 
   if (finalOutcome === 'Summit and Safe Return') {
-    try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (e) {}
+    safeSetStorage(SUMMIT_ACHIEVED_KEY, '1');
   }
 
   showScreen('debrief', { suppressHash: true });
