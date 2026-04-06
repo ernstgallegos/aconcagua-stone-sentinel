@@ -8,12 +8,23 @@ from pathlib import Path
 
 sync_api = pytest.importorskip(
     "playwright.sync_api",
-    reason="Install requirements-dev.txt and run `python -m playwright install --with-deps chromium` to enable the browser smoke test.",
+    reason="Install requirements-dev.txt and run `python -m playwright install --with-deps chromium firefox webkit` to enable the browser smoke test.",
 )
 sync_playwright = sync_api.sync_playwright
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+SMOKE_BROWSERS = [
+    browser.strip()
+    for browser in __import__('os').environ.get('SMOKE_BROWSERS', 'chromium').split(',')
+    if browser.strip()
+]
+
+
+def launch_browser(playwright, browser_name: str):
+    browser_type = getattr(playwright, browser_name, None)
+    assert browser_type is not None, f'Unsupported browser target: {browser_name}'
+    return browser_type.launch(headless=True)
 
 
 class QuietStaticHandler(http.server.SimpleHTTPRequestHandler):
@@ -50,9 +61,10 @@ def reach_expedition_setup(page):
     page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-expedition-setup'")
 
 
-def test_canonical_flow_and_part2_unlock_gate_smoke():
+@pytest.mark.parametrize('browser_name', SMOKE_BROWSERS)
+def test_canonical_flow_and_part2_unlock_gate_smoke(browser_name):
     with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = launch_browser(p, browser_name)
         page = browser.new_page()
 
         page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
@@ -197,6 +209,31 @@ def test_post_summit_return_requires_explicit_horcones_exit_smoke():
 
         browser.close()
 
+
+
+@pytest.mark.parametrize('browser_name', ['chromium'])
+def test_critical_mobile_viewport_title_setup_game_smoke(browser_name):
+    with static_server(REPO_ROOT) as base_url, sync_playwright() as p:
+        browser = launch_browser(p, browser_name)
+        page = browser.new_page(viewport={'width': 375, 'height': 812})
+
+        page.goto(f'{base_url}/prototype/web-v1/index.html', wait_until='networkidle')
+
+        assert _active_screen(page) == 'screen-title'
+        reach_expedition_setup(page)
+
+        page.click('#btn-begin-expedition')
+        page.wait_for_function("() => document.querySelector('.screen.active')?.id === 'screen-game'")
+        page.wait_for_function("() => document.getElementById('onboarding-modal')?.classList.contains('visible')")
+        assert page.locator('#action-grid').is_visible()
+        assert page.viewport_size == {'width': 375, 'height': 812}
+
+        page.click('#onboarding-understood-btn')
+        page.wait_for_function("() => !document.getElementById('onboarding-modal')?.classList.contains('visible')")
+        page.click('#watch-band')
+        page.wait_for_function("() => document.getElementById('watch-detail-overlay')?.classList.contains('open')")
+
+        browser.close()
 
 def test_shoot_photo_visibility_stays_daniela_only_smoke():
     with static_server(REPO_ROOT) as base_url, sync_playwright() as p:

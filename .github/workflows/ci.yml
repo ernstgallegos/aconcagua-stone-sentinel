@@ -33,27 +33,29 @@ jobs:
         run: pytest prototype/mra-v0/test_simulator.py -v
 
   json-validation:
-    name: Validate /data JSON files
+    name: Expanded JSON validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
-      - name: Set up Node.js
-        uses: actions/setup-node@v4.2.0
+      - name: Set up Python
+        uses: actions/setup-python@v5.3.0
         with:
-          node-version: "20"
-      - name: Validate data JSON files are well-formed
+          python-version: "3.12"
+      - name: Validate all repository JSON files are well-formed
         run: |
-          for f in data/nodes.json data/environmental_pressure_config.json data/action_modifiers.json data/stage_modifiers.json data/characters.json data/outcomes.json data/scenarios.web-v1.json; do
-            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "OK: $f" || (echo "FAIL: $f" && exit 1)
-          done
-      - name: Validate scenario JSON files
-        run: |
-          for f in prototype/mra-v0/scenarios/*.json; do
-            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "OK: $f" || (echo "FAIL: $f" && exit 1)
-          done
+          python3 - <<'PY'
+          import json
+          import pathlib
+
+          for path in pathlib.Path('.').rglob('*.json'):
+            if '.git' in path.parts or 'node_modules' in path.parts:
+              continue
+            json.loads(path.read_text(encoding='utf-8'))
+          print('all-json-ok')
+          PY
 
   js-contract-tests:
-    name: Web-v1 contract tests
+    name: Web-v1 JS + TS gates
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
@@ -71,11 +73,17 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
+      - name: Run TypeScript typecheck gate
+        run: npm run typecheck
+
       - name: Run web-v1 mechanic tests
         run: npm test
 
+      - name: Run release smoke gate
+        run: npm run smoke:release
+
   web-smoke-test:
-    name: Web-v1 headless smoke test (PR)
+    name: Web-v1 Playwright smoke test (PR)
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -91,8 +99,10 @@ jobs:
       - name: Install Python dev dependencies
         run: pip install -r requirements-dev.txt
 
-      - name: Install Playwright browser
-        run: python -m playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: python -m playwright install --with-deps chromium firefox webkit
 
-      - name: Run canonical flow smoke test
+      - name: Run cross-browser canonical smoke test
         run: pytest prototype/web-v1/tests/test_smoke_flow.py -v
+        env:
+          SMOKE_BROWSERS: chromium,firefox,webkit
