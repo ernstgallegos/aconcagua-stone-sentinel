@@ -13,6 +13,15 @@ import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
 import { parseDeepLinkHash, syncScreenHash } from './helpers/routing.js';
+import {
+  formatMinutes,
+  formatTrendArrow,
+  confidenceTier,
+  getTimeOfDayBucket,
+  getPersistenceTier,
+  getOutcomeClass,
+  resolveNavigationTarget,
+} from './helpers/screen-utils.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -1198,10 +1207,11 @@ function dismissTransientUi() {
 
 function showScreen(id) {
   const part2Screens = new Set(['part2-character', ...PART2_NARRATIVE_IDS]);
-  const canAccessPart2 = G.finalOutcome === 'Summit and Safe Return' || hasPreviouslySummited();
-  if (part2Screens.has(id) && !canAccessPart2) {
-    id = 'debrief';
-  }
+  id = resolveNavigationTarget(id, {
+    finalOutcome: G.finalOutcome,
+    hasSummited: hasPreviouslySummited(),
+    part2ScreenIds: part2Screens,
+  });
 
   updateUIState(G, { journalReturnScreen: G.journalReturnScreen || 'debrief' });
   dismissTransientUi();
@@ -2215,22 +2225,7 @@ function startGame() {
 // SIGNALS / NOISE
 // ════════════════════════════════════════════════
 
-function formatMinutes(minutes) {
-  const m = ((minutes % 1440) + 1440) % 1440;
-  const hh = String(Math.floor(m / 60)).padStart(2, '0');
-  const mm = String(m % 60).padStart(2, '0');
-  return `${hh}:${mm}`;
-}
-function formatTrendArrow(delta) {
-  if (delta > 1) return '↑';
-  if (delta < -1) return '↓';
-  return '↔';
-}
-function confidenceTier(conf) {
-  if (conf >= 70) return 'high';
-  if (conf >= 45) return 'med';
-  return 'low';
-}
+// formatMinutes, formatTrendArrow, confidenceTier imported from ./helpers/screen-utils.js
 function metricDisplay(value, confidence) {
   const spread = Math.round((100 - confidence) / 100 * (getSimConfig().noiseRangeAtZeroConf || 18));
   const lo = clamp(value - spread, 0, 100);
@@ -2241,22 +2236,9 @@ function getCurrentStage() {
   return getStageForPosition(G.state.position);
 }
 
-function getTimeOfDayBucket(minutesOfDay) {
-  if (minutesOfDay < 360) return 'night';
-  if (minutesOfDay < 480) return 'early';
-  if (minutesOfDay < 900) return 'optimal';
-  if (minutesOfDay < 1080) return 'late';
-  if (minutesOfDay < 1320) return 'dusk';
-  return 'night';
-}
+// getTimeOfDayBucket imported from ./helpers/screen-utils.js
 
-function getPersistenceTier(turns) {
-  if (turns >= 8) return 'critical';
-  if (turns >= 6) return 'severe';
-  if (turns >= 4) return 'cumulative';
-  if (turns >= 2) return 'sustained';
-  return 'fresh';
-}
+// getPersistenceTier imported from ./helpers/screen-utils.js
 
 function getSimConfig() {
   return DATA_CONFIG.environmentalPressure?.simulation || {};
@@ -3689,18 +3671,7 @@ function addLogEntry(entry) {
 // END RUN / CLASSIFY
 // ════════════════════════════════════════════════
 function classifyOutcome() {
-  const map = {
-    'Summit and Safe Return': 'outcome-success',
-    'High Point Return': 'outcome-retreat',
-    'Strategic Retreat': 'outcome-retreat',
-    'Rescue': 'outcome-collapse',
-    'Collapse (Fatigue)': 'outcome-collapse',
-    'Collapse (Exposure)': 'outcome-collapse',
-    'Resource Exhaustion': 'outcome-collapse',
-    'Expedition Window Closed': 'outcome-stabilized',
-    'Fatality': 'outcome-collapse',
-  };
-  return { label: G.finalOutcome || 'Strategic Retreat', cls: map[G.finalOutcome] || 'outcome-retreat' };
+  return { label: G.finalOutcome || 'Strategic Retreat', cls: getOutcomeClass(G.finalOutcome) };
 }
 
 function findTurningPoint() {
