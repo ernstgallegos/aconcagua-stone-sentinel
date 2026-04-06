@@ -10,6 +10,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Migrated `api/run.js` from CommonJS to native ESM (`import`/`export default`); replaced `fs.readFileSync`/`fs.existsSync` with async `fs/promises` (`readFile`/`access`); preserved all rate-limiting, CORS, and response-shape behavior unchanged.
+- Added `api/run.test.js` smoke test (6 cases: OPTIONS preflight, missing params, invalid format, 404 unknown run, 200 valid response shape, security headers); wired via new `test:api` npm script included in the default `npm test` run.
 - Hardened `validateDataConfigShape()` in `prototype/web-v1/ui/helpers/data-config.js` to validate every element of each supported array (`characterEvents`, `contextEvents`, `nodes`, `characters`) instead of only the first item; error messages now identify the failing array and index (e.g. `$[2].limits`).
 - Added four targeted shape-validation tests in `prototype/web-v1/tests/smoke/model-ready.test.js` covering malformed non-first elements in `characters`, `nodes`, `contextEvents`, and `characterEvents` arrays, asserting that the correct `$[i].field` path appears in the failure diagnostic.
 - Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions, with explicit `SKILL.md` target mapping and restart guidance.

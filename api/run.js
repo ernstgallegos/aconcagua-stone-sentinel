@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import { readFile, access } from "node:fs/promises";
+import path from "node:path";
 
 const rateWindowMs = Number(process.env.API_RATE_LIMIT_WINDOW_MS || 60_000);
 const rateMaxRequests = Number(process.env.API_RATE_LIMIT_MAX || 30);
@@ -79,7 +79,7 @@ function parseJsonl(content) {
     .map((line) => JSON.parse(line));
 }
 
-module.exports = (req, res) => {
+export default async (req, res) => {
   applySecurityHeaders(req, res);
   if (req.method === "OPTIONS") {
     return res.status(204).end();
@@ -109,7 +109,9 @@ module.exports = (req, res) => {
   const runFile = `${scenario}-seed${seed}-${policy}.jsonl`;
   const fullPath = path.join(process.cwd(), "prototype", "mra-v0", "runs", runFile);
 
-  if (!fs.existsSync(fullPath)) {
+  try {
+    await access(fullPath);
+  } catch {
     return res.status(404).json({
       error: "run not found in bundled samples",
       expected: runFile,
@@ -118,7 +120,8 @@ module.exports = (req, res) => {
 
   let lines;
   try {
-    lines = parseJsonl(fs.readFileSync(fullPath, "utf8"));
+    const content = await readFile(fullPath, "utf8");
+    lines = parseJsonl(content);
   } catch (err) {
     return res.status(500).json({
       error: "run file is malformed or unreadable",
