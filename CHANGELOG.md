@@ -11,6 +11,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Added `prototype/web-v1/ui/helpers/screen-utils.js`: pure utility functions extracted from `screens.js` to enable unit-level characterization testing. Exports: `formatMinutes`, `formatTrendArrow`, `confidenceTier`, `getTimeOfDayBucket`, `getPersistenceTier`, `OUTCOME_CLASS_MAP`, `getOutcomeClass`, and `resolveNavigationTarget` (Part 2 navigation gate).
+- Added `prototype/web-v1/tests/unit/screen-utils.test.js`: 45 characterization tests covering time formatting, trend arrows, confidence tiers, time-of-day buckets, persistence tiers, outcome CSS class mapping, and the Part 2 access gate — protecting these seams before any screens.js extraction work begins.
+- Added `prototype/web-v1/tests/unit/screens-navigation-seams.test.js`: 21 characterization tests covering `syncScreenHash` contract, deep-link hash format for all key screen types (game, debrief, part2, narrative screens, journal, onboarding), and hash round-trip integrity.
+
+### Changed
+
+- Refactored `prototype/web-v1/ui/screens.js` to import pure utility functions (`formatMinutes`, `formatTrendArrow`, `confidenceTier`, `getTimeOfDayBucket`, `getPersistenceTier`, `getOutcomeClass`, `resolveNavigationTarget`) from the new `screen-utils.js` helper, replacing their inline definitions. No behavior changes.
+- `classifyOutcome()` in `screens.js` now delegates CSS class lookup to `getOutcomeClass(G.finalOutcome)` from `screen-utils.js`. No behavior change.
+- `showScreen()` in `screens.js` now delegates Part 2 access gate logic to `resolveNavigationTarget(...)` from `screen-utils.js`. No behavior change.
+
 - Added CI cross-browser smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py` and `.github/workflows/ci.yml` so canonical Playwright smoke now runs on Chromium, Firefox, and WebKit, plus a critical mobile (375x812) viewport path check for title → setup → game/watch interaction.
 - Added `prototype/web-v1/tests/parity/loader-ts-contract-parity.test.js`: parity test that loads real data files through the JS canonical loader (`loadDataConfigFiles` + `normalizeRouteData`) and verifies the output satisfies the TS-side `DataConfig`/`RouteNode`/`CharacterEvent`/`ContextEvent`/`Character` contract invariants.
 - Rebuilt `CHANGELOG.md` into a clean canonical structure: removed exact-duplicate bullets that had propagated into every version block, merged duplicate section headers within versions, consolidated `(release baseline)` and `#### Additional` subsections in `[1.4.5]` and `[1.4.3]` blocks, and reordered `[1.4.2]` sections to follow Keep a Changelog convention (Added → Changed → Deprecated → Removed → Fixed).
