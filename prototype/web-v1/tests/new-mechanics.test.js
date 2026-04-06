@@ -87,7 +87,7 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
   assert.doesNotMatch(indexSource, /id="btn-sleep"[^>]*display:none/);
   assert.doesNotMatch(indexSource, /btn-focus-pause/);
   assert.match(uiSource, /function syncMobileStatusPanels/);
-  assert.match(uiSource, /mobileList\.innerHTML = list\.innerHTML/);
+  assert.match(uiSource, /renderPositionListView\(\{ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT \}\)/);
   assert.match(uiSource, /sleepBtn\.disabled = !sleepAvailable/);
   assert.doesNotMatch(uiSource, /requestDecisionPause/);
   assert.doesNotMatch(uiSource, /decisionPauseUsed/);
