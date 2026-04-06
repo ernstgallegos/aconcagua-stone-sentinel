@@ -19,6 +19,7 @@ import {
   getTimeOfDayBucket,
   getPersistenceTier,
   getOutcomeClass,
+  metricDisplay,
 } from './helpers/screen-utils.js';
 import {
   initFlowController,
@@ -42,6 +43,47 @@ import {
   closeBottomSheet,
   handleDeepLink,
 } from './flow-controller.js';
+
+// ── Extracted renderer modules ──────────────────────────────────────────────
+import {
+  t, uiText, CURRENT_LANGUAGE, setCurrentLanguage,
+  LANGUAGE_KEY, VALID_LANGUAGES, TUTORIAL_CONTENT,
+  localizeCharacter, localizeScenario,
+} from './helpers/i18n.js';
+import {
+  ROUTE_NODES, POSITIONS, POS_LABELS, POS_ALT, POS_BAND,
+  CAMP_POSITIONS, STAGE_BY_POSITION, CANONICAL_OUTCOMES,
+  rebuildRouteData as rebuildRouteDataHelper, getCurrentNode,
+} from './helpers/route-data.js';
+import {
+  DIFFICULTY_LEVELS, CURRENT_DIFFICULTY_ID, DEFAULT_DIFFICULTY_ID,
+  getDifficultyConfig, getDifficultyModifiers, difficultyLabel,
+  setCurrentDifficultyId,
+} from './helpers/difficulty.js';
+import { getCharacterImagePath } from './helpers/carousel-media.js';
+import {
+  renderIntroContent, renderTutorialContent, renderDifficultySelector,
+  updateSocialShareLinks, copyProjectShareLink, getProjectShareUrl,
+  initWelcomeScreen, setDifficulty, initDifficulty,
+} from './screens/title.js';
+import {
+  initGameScreen, makeDots, clearElement, renderWatch, renderContextWidget,
+  renderPositionList, syncMobileStatusPanels, renderNarrative, updateAmbientSignal,
+  addLogEntry, maybeShowTutorial, updatePermitWidget, updateTurnProgress,
+} from './screens/game.js';
+import {
+  classifyOutcome, findTurningPoint, findPrimaryCause, classifyDifficultyResponsibility,
+  buildDebriefAnalytics, updateDebriefHero, updateRunReviewPanel,
+  reviewPrevTurn, reviewNextTurn, copyRunSignature, exportRunLog, buildRunLogExport,
+  buildMockTurnLog,
+} from './screens/debrief.js';
+import {
+  CAROUSEL_STATE_PART2, PART2_NARRATIVE_IDS,
+  part2CarouselPrev, part2CarouselNext, renderPart2Carousel,
+  togglePart2CarouselInfo, buildPart2SetupScreen, updatePart2ConfirmState,
+  handlePart2NarrativeAction, renderPart2NarrativeScreen, confirmPart2Character,
+  getPart2CarouselItems, getPart2RouteOptions, initPart2Screen,
+} from './screens/part2.js';
 
 const TUNING = {
   dayStartMinutes: 360,
@@ -76,67 +118,18 @@ function setModelLoadError(errorMessage) {
 // ════════════════════════════════════════════════
 // VISUAL MODES
 // ════════════════════════════════════════════════
-const LANGUAGE_KEY = 'aconcagua_language_v1';
-const VALID_LANGUAGES = new Set(['en', 'es']);
-let CURRENT_LANGUAGE = 'en';
 
-const DIFFICULTY_STORAGE_KEY = 'aconcagua_difficulty_v1';
 const SUMMIT_ACHIEVED_KEY = 'aconcagua_summit_achieved_v1';
 
-function hasPreviouslySummited() {
-  try { return localStorage.getItem(SUMMIT_ACHIEVED_KEY) === '1'; } catch (e) { return false; }
-}
-const DIFFICULTY_LEVELS = [
-  {
-    id: 'very-easy',
-    label: { en: 'Very Easy', es: 'Muy fácil' },
-    blurb: { en: 'Extra margin for first ascents and system learning.', es: 'Margen extra para primeras ascensiones y aprendizaje del sistema.' },
-    modifiers: { pressureBias: -14, stageWeatherBias: -2, bodyToleranceBonus: 12, acclimatizationBonus: 14, fatigueMultiplier: 0.78, exposureMultiplier: 0.78, resourceEfficiency: 1.25, permitDaysBonus: 4, initialCapacityBonus: 8, initialWaterBonus: 4, initialFoodBonus: 4, decisionWindowMsBonus: 8000 },
-  },
-  {
-    id: 'easy',
-    label: { en: 'Easy', es: 'Fácil' },
-    blurb: { en: 'Gentler attrition, but retreat timing still matters.', es: 'Desgaste más amable, pero el momento de retirada sigue importando.' },
-    modifiers: { pressureBias: -6, stageWeatherBias: -1, bodyToleranceBonus: 5, acclimatizationBonus: 6, fatigueMultiplier: 0.9, exposureMultiplier: 0.9, resourceEfficiency: 1.1, permitDaysBonus: 2, initialCapacityBonus: 3, initialWaterBonus: 2, initialFoodBonus: 2, decisionWindowMsBonus: 3000 },
-  },
-  {
-    id: 'standard',
-    label: { en: 'Standard', es: 'Normal' },
-    blurb: { en: 'Baseline prototype balance.', es: 'Balance base del prototipo.' },
-    modifiers: { pressureBias: 0, stageWeatherBias: 0, bodyToleranceBonus: 0, acclimatizationBonus: 0, fatigueMultiplier: 1, exposureMultiplier: 1, resourceEfficiency: 1, permitDaysBonus: 0, initialCapacityBonus: 0, initialWaterBonus: 0, initialFoodBonus: 0, decisionWindowMsBonus: 0 },
-  },
-  {
-    id: 'hard',
-    label: { en: 'Hard', es: 'Difícil' },
-    blurb: { en: 'Tighter margins and harsher punishment for late pushes.', es: 'Márgenes más ajustados y castigo mayor para los empujes tardíos.' },
-    modifiers: { pressureBias: 8, stageWeatherBias: 1, bodyToleranceBonus: -6, acclimatizationBonus: -6, fatigueMultiplier: 1.12, exposureMultiplier: 1.15, resourceEfficiency: 0.92, permitDaysBonus: -1, initialCapacityBonus: -4, initialWaterBonus: -1, initialFoodBonus: -1, decisionWindowMsBonus: -2000 },
-  },
-  {
-    id: 'very-hard',
-    label: { en: 'Very Hard', es: 'Muy difícil' },
-    blurb: { en: 'Hostile pressure, weaker recovery, and almost no slack.', es: 'Presión hostil, recuperación más débil y casi sin margen.' },
-    modifiers: { pressureBias: 16, stageWeatherBias: 2, bodyToleranceBonus: -12, acclimatizationBonus: -12, fatigueMultiplier: 1.25, exposureMultiplier: 1.3, resourceEfficiency: 0.85, permitDaysBonus: -2, initialCapacityBonus: -8, initialWaterBonus: -2, initialFoodBonus: -2, decisionWindowMsBonus: -5000 },
-  },
-];
 let CURRENT_DIFFICULTY_ID = 'standard';
 
 // ════════════════════════════════════════════════
 // CAROUSEL STATE — Expedition Setup screen
-// ════════════════════════════════════════════════
-const DEFAULT_DIFFICULTY_ID = 'standard';
-const CAROUSEL_STATE = {
+// ════════════════════════════════════════════════const CAROUSEL_STATE = {
   character: { index: 0 },
   scenario: { index: 0 },
 };
 
-// NOTE: CAROUSEL_STATE_PART2 mirrors CAROUSEL_STATE for screen-part2-character.
-// It is kept separate to avoid interfering with Part 1 expedition-setup navigation.
-// The Part 2 carousels are rendered by renderPart2Carousel(), which intentionally
-// mirrors renderCarousel() — keep both in sync when changing card templates.
-const CAROUSEL_STATE_PART2 = {
-  character: { index: 0 },
-  route: { index: 0 },
-};
 
 const PART2_ROUTE_OPTIONS = [
   {

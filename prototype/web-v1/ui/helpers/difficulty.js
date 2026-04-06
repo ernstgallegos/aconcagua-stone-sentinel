@@ -36,6 +36,7 @@ export const DIFFICULTY_LEVELS = [
 
 export let CURRENT_DIFFICULTY_ID = 'standard';
 export const DEFAULT_DIFFICULTY_ID = 'standard';
+export const DIFFICULTY_STORAGE_KEY = 'aconcagua_difficulty_v1';
 
 export function getDifficultyConfig(id = CURRENT_DIFFICULTY_ID) {
   return DIFFICULTY_LEVELS.find((level) => level.id === id) || DIFFICULTY_LEVELS.find(l => l.id === DEFAULT_DIFFICULTY_ID) || DIFFICULTY_LEVELS[0];
