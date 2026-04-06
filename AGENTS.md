@@ -274,5 +274,6 @@ In addition to the changelog:
 - For mountain-first UX/UI coherence, pairing `Playfair Display` (editorial hierarchy) with `Montserrat` (operational UI text) yields cleaner cross-surface consistency than mixing multiple sans primaries; keep `IBM Plex Mono` reserved for telemetry/data semantics.
 - Carousel image stability in setup screens improves when portraits are rendered through a shared media wrapper (`loading` skeleton + reserved aspect ratio + explicit fallback state) and critical character portraits are preloaded before first carousel paint.
 - Overlay reliability is stronger when intro/tutorial/onboarding and in-game dialogs share one modal-controller path (focus trap, Escape priority, backdrop close, and body scroll-lock release), rather than ad hoc per-modal listeners.
+- `screens.js` extraction is safer when renderer moves are validated with characterization regex tests that intentionally track delegation seams (e.g., wrapper calls in `screens.js`) so module moves do not silently break release-guard expectations.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.

@@ -15,6 +15,26 @@ import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import {
+  renderIntroContent as renderIntroContentView,
+  copyProjectShareLink as copyProjectShareLinkView,
+  renderTutorialContent as renderTutorialContentView,
+  renderDifficultySelector as renderDifficultySelectorView,
+  initWelcomeScreen as initWelcomeScreenView,
+} from './screens/title.js';
+import {
+  renderContextWidget as renderContextWidgetView,
+  renderPositionList as renderPositionListView,
+} from './screens/game.js';
+import {
+  classifyOutcome as classifyOutcomeView,
+  buildDebriefAnalytics as buildDebriefAnalyticsView,
+} from './screens/debrief.js';
+import {
+  localizePart2Narrative as localizePart2NarrativeView,
+  localizePart2NavLabel as localizePart2NavLabelView,
+  renderPart2NarrativeScreen as renderPart2NarrativeScreenView,
+} from './screens/part2.js';
+import {
   formatMinutes,
   formatTrendArrow,
   confidenceTier,
@@ -840,130 +860,19 @@ function updateSocialShareLinks() {
 }
 
 function renderIntroContent() {
-  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-  const infoTrigger = document.querySelector('.title-info-trigger');
-  if (infoTrigger) {
-    const label = t('ui.introInfoLabel');
-    infoTrigger.setAttribute('aria-label', label);
-    infoTrigger.setAttribute('title', label);
-  }
-  setText('intro-modal-title', t('ui.introTitle'));
-  const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');
-  setText('intro-modal-summary', t('ui.introSummary'));
-  setText('intro-chip-version-label', t('ui.introVersionLabel'));
-  setText('intro-chip-version', t('ui.introVersionValue'));
-  setText('intro-chip-format-label', t('ui.introFormatLabel'));
-  setText('intro-chip-format', t('ui.introFormatValue'));
-  setText('intro-chip-access-label', t('ui.introAccessLabel'));
-  setText('intro-chip-access', t('ui.introAccessValue'));
-  setText('intro-section-about-title', t('ui.introAboutTitle'));
-  setText('intro-section-about-body', t('ui.introAboutBody'));
-  setText('intro-section-credits-title', t('ui.introCreditsTitle'));
-  setText('intro-section-credits-body', t('ui.introCreditsBody'));
-  setText('intro-links-title', t('ui.introLinksTitle'));
-  setText('intro-links-body', t('ui.introLinksBody'));
-  setText('intro-support-body', t('ui.introSupportBody'));
-  setText('intro-share-x', t('ui.introShareX'));
-  setText('intro-share-facebook', t('ui.introShareFacebook'));
-  setText('intro-share-linkedin', t('ui.introShareLinkedIn'));
-  setText('intro-share-whatsapp', t('ui.introShareWhatsApp'));
-  setText('intro-share-copy', t('ui.introShareCopy'));
-  setText('intro-repo-link', t('ui.introRepoCta'));
-  setText('intro-instagram-link', t('ui.introInstagramCta'));
-  setText('intro-email-link', t('ui.introEmailCta'));
-  updateSocialShareLinks();
+  renderIntroContentView({ t, updateSocialShareLinks });
 }
 
 function copyProjectShareLink() {
-  const shareUrl = getProjectShareUrl();
-  const copyBtn = document.getElementById('intro-share-copy');
-  const originalLabel = t('ui.introShareCopy');
-  if (copyBtn) copyBtn.textContent = originalLabel;
-  const onCopied = () => {
-    if (!copyBtn) return;
-    copyBtn.textContent = t('ui.introShareCopied');
-    window.setTimeout(() => {
-      copyBtn.textContent = originalLabel;
-    }, 1500);
-  };
-
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(shareUrl).then(onCopied).catch(() => {});
-    return;
-  }
-  const helper = document.createElement('textarea');
-  helper.value = shareUrl;
-  helper.setAttribute('readonly', '');
-  helper.style.position = 'absolute';
-  helper.style.left = '-9999px';
-  document.body.appendChild(helper);
-  helper.select();
-  try {
-    document.execCommand('copy');
-    onCopied();
-  } catch {}
-  document.body.removeChild(helper);
+  copyProjectShareLinkView({ getProjectShareUrl, t });
 }
 
 function renderTutorialContent() {
-  const copy = TUTORIAL_CONTENT[CURRENT_LANGUAGE] || TUTORIAL_CONTENT.en;
-  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-  const setList = (id, items) => { const el = document.getElementById(id); if (el) el.innerHTML = items.map((item) => `<li>${item}</li>`).join(''); };
-  setText('tutorial-modal-title', t('ui.tutorialTitle'));
-  const closeBtn = document.querySelector('#tutorial-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.close');
-  setText('tutorial-intro', copy.intro);
-  setText('tutorial-meta-loop', copy.metaLoop);
-  setText('tutorial-meta-goal', copy.metaGoal);
-  setText('tutorial-meta-difficulty', copy.metaDifficulty);
-  setText('tutorial-section-structure-title', copy.structureTitle);
-  setText('tutorial-section-systems-title', copy.systemsTitle);
-  setText('tutorial-section-actions-title', copy.actionsTitle);
-  setText('tutorial-section-difficulty-title', copy.difficultyTitle);
-  setText('tutorial-section-faq-title', copy.faqTitle);
-  setList('tutorial-section-structure', copy.structure);
-  setList('tutorial-section-systems', copy.systems);
-  setList('tutorial-section-actions', copy.actions);
-  setList('tutorial-section-difficulty', copy.difficulty);
-  const faq = document.getElementById('tutorial-faq-list');
-  if (faq) faq.innerHTML = copy.faq.map(([q, a]) => `<div class="tutorial-faq-item"><h4>${q}</h4><p>${a}</p></div>`).join('');
+  renderTutorialContentView({ CURRENT_LANGUAGE, TUTORIAL_CONTENT, t });
 }
 
 function renderDifficultySelector() {
-  const grid = document.getElementById('title-difficulty-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  /* Decision 11: pill-row replaces card grid */
-  /* Build pill-row container */
-  const pillRow = document.createElement('div');
-  pillRow.className = 'difficulty-pill-row';
-  pillRow.setAttribute('role', 'radiogroup');
-  pillRow.setAttribute('aria-label', 'Difficulty selection');
-
-  DIFFICULTY_LEVELS.forEach((level) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `difficulty-pill${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
-    button.id = `difficulty-choice-${level.id}`;
-    button.setAttribute('role', 'radio');
-    button.setAttribute('aria-checked', String(level.id === CURRENT_DIFFICULTY_ID));
-    button.textContent = level.label[CURRENT_LANGUAGE] || level.label.en;
-    button.onclick = () => setDifficulty(level.id);
-    pillRow.appendChild(button);
-  });
-
-  /* Description of currently selected difficulty */
-  const descEl = document.createElement('p');
-  descEl.id = 'difficulty-pill-desc';
-  descEl.className = 'difficulty-pill-desc';
-  const currentLevel = DIFFICULTY_LEVELS.find(l => l.id === CURRENT_DIFFICULTY_ID);
-  descEl.textContent = currentLevel ? (currentLevel.blurb[CURRENT_LANGUAGE] || currentLevel.blurb.en) : '';
-
-  grid.appendChild(pillRow);
-  grid.appendChild(descEl);
-
-  const note = document.getElementById('title-difficulty-note');
-  if (note) note.textContent = t('ui.difficultyNote');
+  renderDifficultySelectorView({ DIFFICULTY_LEVELS, CURRENT_DIFFICULTY_ID, CURRENT_LANGUAGE, setDifficulty, t });
 }
 
 function setDifficulty(id) {
@@ -1058,19 +967,7 @@ function bindStaticUiActions() {
 }
 
 function initWelcomeScreen() {
-  /* Decision 4: Ken Burns on cover image — respects prefers-reduced-motion */
-  const titleScreen = document.getElementById('screen-title');
-  if (!titleScreen) return;
-  const splashImg = titleScreen.querySelector('.splash-image');
-  if (splashImg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    splashImg.classList.add('ken-burns-active');
-  }
-
-  titleScreen.addEventListener('click', (event) => {
-    if (!titleScreen.classList.contains('active')) return;
-    if (event.target.closest('button, select, option, a, .tutorial-dialog, .tutorial-backdrop')) return;
-    advanceFromTitle(event);
-  });
+  initWelcomeScreenView({ advanceFromTitle });
 }
 
 async function loadDataConfig() {
@@ -1852,74 +1749,22 @@ function handlePart2NarrativeAction(screenId, action) {
 }
 
 function localizePart2Narrative(screen) {
-  if (CURRENT_LANGUAGE !== 'es') return screen;
-  const patch = PART2_NARRATIVE_ES[screen.id];
-  if (!patch) return screen;
-  return {
-    ...screen,
-    eyebrow: patch.eyebrow ?? screen.eyebrow,
-    title: patch.title ?? screen.title,
-    body: patch.body ?? screen.body,
-  };
+  return localizePart2NarrativeView({ CURRENT_LANGUAGE, PART2_NARRATIVE_ES, screen });
 }
 
 function localizePart2NavLabel(label) {
-  const map = {
-    'Back to character': uiText('Back to character', 'Volver a personaje'),
-    'Return to debrief': uiText('Return to debrief', 'Volver al debrief'),
-    Continue: uiText('Continue', 'Continuar'),
-    Back: uiText('Back', 'Atrás'),
-    'Contact the creators to collaborate': uiText('Contact the creators to collaborate', 'Contactar a los creadores para colaborar'),
-    'Follow on Instagram': uiText('Follow on Instagram', 'Seguir en Instagram'),
-    'Back to title / replay': uiText('Back to title / replay', 'Volver al título / rejugar'),
-  };
-  return map[label] || label;
+  return localizePart2NavLabelView({ uiText, label });
 }
 
 function renderPart2NarrativeScreen(screenId) {
-  const stepEl = document.querySelector(`#screen-${screenId} .part2-step`);
-  if (!stepEl) return;
-  const rawScreen = PART2_NARRATIVE_SEQUENCE.find((item) => item.id === screenId);
-  if (!rawScreen) return;
-  const screen = localizePart2Narrative(rawScreen);
-
-  stepEl.className = `part2-step part2-anim-${screen.animationPreset || 'room_stillness'} part2-visual-${screen.visualMode || 'hotel-room'}${screen.variant === 'titleless' ? ' part2-step--titleless' : ''}`;
-  stepEl.setAttribute('data-animation-preset', screen.animationPreset || '');
-  stepEl.setAttribute('data-visual-mode', screen.visualMode || '');
-
-  stepEl.innerHTML = '';
-
-  const kicker = document.createElement('div');
-  kicker.className = 'part2-step-kicker';
-  kicker.textContent = screen.eyebrow || '';
-  stepEl.appendChild(kicker);
-
-  const hasTitle = screen.variant !== 'titleless' && (screen.title || '').trim() !== '';
-  if (hasTitle) {
-    const title = document.createElement('h3');
-    title.textContent = screen.title;
-    stepEl.appendChild(title);
-  }
-
-  const paragraphs = String(screen.body || '').split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
-  paragraphs.forEach((paragraph, index) => {
-    const p = document.createElement('p');
-    p.textContent = paragraph;
-    p.style.setProperty('--part2-paragraph-index', String(index));
-    if (PART2_BREATHING_LINES.has(paragraph)) p.classList.add('part2-breath-line');
-    stepEl.appendChild(p);
+  renderPart2NarrativeScreenView({
+    screenId,
+    PART2_NARRATIVE_SEQUENCE,
+    PART2_BREATHING_LINES,
+    localizePart2NarrativeFn: localizePart2Narrative,
+    localizePart2NavLabelFn: localizePart2NavLabel,
+    handlePart2NarrativeAction,
   });
-
-  const actions = document.createElement('div');
-  actions.className = 'part2-step-actions';
-  (screen.navButtons || []).forEach((btnConfig) => {
-    const button = document.createElement('button');
-    button.className = btnConfig.role === 'primary' ? 'btn-primary' : 'btn-ghost';
-    button.textContent = localizePart2NavLabel(btnConfig.label);
-    button.addEventListener('click', () => handlePart2NarrativeAction(rawScreen.id, btnConfig.action));
-    actions.appendChild(button);
-  });
-  stepEl.appendChild(actions);
 }
 
 function confirmPart2Character() {
@@ -2685,57 +2530,7 @@ function getRiskProfile(state) {
 }
 
 function renderContextWidget(state) {
-  const profile = getRiskProfile(state);
-  const chipsEl = document.getElementById('context-indicators');
-  const mainEl = document.getElementById('context-main');
-  const subEl = document.getElementById('context-sub');
-  const primaryEl = document.getElementById('primary-alert');
-  const coachTitleEl = document.getElementById('coach-title');
-  const coachBodyEl = document.getElementById('coach-body');
-  if (!chipsEl || !mainEl || !subEl || !primaryEl || !coachTitleEl || !coachBodyEl) return;
-
-  clearElement(chipsEl);
-  if (!profile.chips.length) {
-    const chip = document.createElement('span');
-    chip.className = 'risk-chip';
-    chip.textContent = 'no secondary alerts';
-    chipsEl.appendChild(chip);
-  } else {
-    profile.chips.forEach(({ label, level }) => {
-      const chip = document.createElement('span');
-      chip.className = `risk-chip ${level}`;
-      chip.textContent = label;
-      chipsEl.appendChild(chip);
-    });
-  }
-
-  primaryEl.className = `primary-alert${profile.primary.level !== 'stable' ? ' ' + profile.primary.level : ''}`;
-  primaryEl.textContent = `Primary alert: ${profile.primary.label}`;
-  mainEl.textContent = profile.main;
-  subEl.textContent = profile.sub;
-  coachTitleEl.textContent = `Onboarding layer · ${profile.layer}`;
-  coachBodyEl.textContent = profile.coach;
-
-  G.onboardingLayer = profile.layer;
-  G.currentPrimaryAlert = profile.primary;
-
-  // Signal line — single sentence visible on main screen
-  const signalEl = document.getElementById('signal-line');
-  if (signalEl) {
-    let signalText, signalClass;
-    if (profile.primary.level === 'critical') {
-      signalText = `${profile.primary.label} — stabilize before advancing.`;
-      signalClass = 'signal-line critical';
-    } else if (profile.primary.level === 'warning') {
-      signalText = `${profile.primary.label} — advance only with disciplined pacing.`;
-      signalClass = 'signal-line warning';
-    } else {
-      signalText = 'System stable — push only if trend and confidence align.';
-      signalClass = 'signal-line';
-    }
-    signalEl.textContent = signalText;
-    signalEl.className = signalClass;
-  }
+  renderContextWidgetView({ state, getRiskProfile, clearElement, G });
 }
 
 function renderWatch() {
@@ -3002,32 +2797,7 @@ function renderWatch() {
 // POSITION LIST
 // ════════════════════════════════════════════════
 function renderPositionList() {
-  const s = G.state;
-  const curIdx = POSITIONS.indexOf(s.position);
-  const list = document.getElementById('position-list');
-  if (!list) return;
-  list.innerHTML = '';
-  // render reversed so summit sector is at top
-  [...POSITIONS].reverse().forEach(pos => {
-    const idx = POSITIONS.indexOf(pos);
-    const bandRaw = POS_BAND[pos];
-    const bandClass = ['approach','base','upper_base'].includes(bandRaw) ? 'low' : (bandRaw === 'high' ? 'mid' : 'high');
-    const isCurrent = pos === s.position;
-    const isReached = idx <= G.highestPosIdx && !isCurrent;
-    const isAbove = idx > curIdx;
-    const li = document.createElement('li');
-    li.className = `pos-item band-${bandClass}${isCurrent?' current':''}${isReached&&!isCurrent?' reached':''}${isAbove?' above':''}`;
-    // FIX: aria-current for screen readers
-    if (isCurrent) li.setAttribute('aria-current', 'location');
-    li.innerHTML = `
-      <div class="pos-dot"></div>
-      <span class="pos-label">${POS_LABELS[pos]} · ${POS_ALT[pos]}${idx===G.highestPosIdx&&!isCurrent?' <span class="pos-highest-mark">◆</span>':''}</span>
-    `;
-    list.appendChild(li);
-  });
-
-  const mobileList = document.getElementById('bs-position-list');
-  if (mobileList) mobileList.innerHTML = list.innerHTML;
+  renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
@@ -3243,43 +3013,7 @@ function maybeShowTutorial(trigger) {
 
 
 function buildDebriefAnalytics() {
-  const el = document.getElementById('debrief-analytics');
-  const total = Math.max(1, G.turnLog.length);
-  const count = (d) => G.turnLog.filter((t) => t.decision === d).length;
-  const dist = ['advance','advance_slowly','wait','sleep','descend','shoot_photo'].map((d) => `${d}:${Math.round((count(d) / total) * 100)}%`).join(' · ');
-  const sorted = [...G.turnLog].sort((a, b) => (b.raw.capacity - b.raw.fatigue - b.raw.exposure) - (a.raw.capacity - a.raw.fatigue - a.raw.exposure));
-  const best = sorted[0] || { turn:1, position:G.state.position, raw:{capacity:G.state.functional_capacity,fatigue:G.state.fatigue,exposure:G.state.exposure} };
-  const worst = sorted[sorted.length - 1] || best;
-  const spark = (G.turnLog.length ? G.turnLog : [{raw:{capacity:G.state.functional_capacity}}]).map((t) => '▁▂▃▄▅▆▇█'[Math.min(7, Math.max(0, Math.floor((t.raw.capacity || 0) / 13)))]).join('');
-  clearElement(el);
-
-  const grid = document.createElement('div');
-  grid.className = 'analytics-grid';
-
-  const addCard = (title, content, extraClass = '') => {
-    const card = document.createElement('div');
-    card.className = 'analytics-card';
-    const titleEl = document.createElement('div');
-    titleEl.className = 'analytics-title';
-    titleEl.textContent = title;
-    card.appendChild(titleEl);
-    if (extraClass) {
-      const contentEl = document.createElement('div');
-      contentEl.className = extraClass;
-      contentEl.textContent = content;
-      card.appendChild(contentEl);
-    } else {
-      card.append(document.createTextNode(content));
-    }
-    grid.appendChild(card);
-  };
-
-  addCard('Decision distribution', dist);
-  addCard('Best state', `T${best.turn} · ${POS_LABELS[best.position]} · C${best.raw.capacity}/F${best.raw.fatigue}/E${best.raw.exposure}`);
-  addCard('Worst state', `T${worst.turn} · ${POS_LABELS[worst.position]} · C${worst.raw.capacity}/F${worst.raw.fatigue}/E${worst.raw.exposure}`);
-  addCard('Functional capacity sparkline', spark, 'sparkline');
-
-  el.appendChild(grid);
+  buildDebriefAnalyticsView({ G, clearElement, POS_LABELS });
 }
 
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
@@ -3599,7 +3333,7 @@ function addLogEntry(entry) {
 // END RUN / CLASSIFY
 // ════════════════════════════════════════════════
 function classifyOutcome() {
-  return { label: G.finalOutcome || 'Strategic Retreat', cls: getOutcomeClass(G.finalOutcome) };
+  return classifyOutcomeView({ G, getOutcomeClass });
 }
 
 function findTurningPoint() {
