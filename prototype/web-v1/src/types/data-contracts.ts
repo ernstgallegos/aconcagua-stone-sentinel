@@ -127,6 +127,14 @@ function assertRouteNodes(nodes: unknown): asserts nodes is RouteNode[] {
   }
 }
 
+/**
+ * Asserts that config satisfies the full DataConfig contract.
+ *
+ * Must be called on *post-normalized* data, i.e. after
+ * normalizeRouteData() from ui/helpers/data-config.js has run.
+ * Raw JSON from loadDataConfigFiles() will fail the nodes check because
+ * raw route-node objects carry nodeId, not the normalized id field.
+ */
 export function assertDataConfig(config: Partial<DataConfig>): asserts config is DataConfig {
   assertRouteNodes(config.nodes);
   assertNonEmptyArray(config.characters, 'characters');

@@ -33,6 +33,22 @@ All simulation tuning is loaded from `/data`:
 - `data/character_events.json`
 - `data/context_events.json`
 - `data/outcomes.json`
+- `data/scenarios.web-v1.json`
+
+## Canonical config-loading module
+
+**`prototype/web-v1/ui/helpers/data-config.js`** is the single authoritative source for loading and normalizing all data config files.
+
+Two-phase pipeline:
+
+1. **`loadDataConfigFiles({ fetchImpl, onError })`** — fetches each JSON file, validates the raw shape via `validateDataConfigShape`, and classifies blocking failures (missing file / HTTP failure / invalid JSON / invalid shape).
+2. **`normalizeRouteData(config)`** — transforms raw route-node objects (`nodeId`, `stageHint`, …) into the canonical `RouteNode` shape (`id`, `stage`, `routeIndex`, …) consumed by the engine and UI.
+
+No other module should duplicate either the file-path list or the normalization transform.
+
+**TypeScript side:** `src/types/data-contracts.ts` declares the `DataConfig` interface and `assertDataConfig()`, which validates the **post-normalization** shape (i.e., after `normalizeRouteData` has run). `src/boot/loadDataConfig.ts` is a thin re-export adapter; it does not contain loading logic.
+
+**Parity test:** `tests/parity/loader-ts-contract-parity.test.js` verifies that the normalized output of the JS loader satisfies every invariant that the TS contracts declare, catching drift between the two sources.
 
 ## Repository prototype status
 
