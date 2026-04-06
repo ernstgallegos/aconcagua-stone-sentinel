@@ -78,6 +78,21 @@ function cloneValue(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function shouldReportStateWarnings() {
+  try {
+    const host = globalThis?.location?.hostname || "";
+    if (host === "localhost" || host === "127.0.0.1") return true;
+  } catch (_) {
+    // Ignore host lookup failures and rely on explicit debug flag fallback.
+  }
+
+  try {
+    return String(globalThis?.localStorage?.getItem?.("aconcagua_debug_mode") || "").toLowerCase() === "1";
+  } catch (_) {
+    return false;
+  }
+}
+
 function createSlices() {
   return {
     runState: cloneValue(RUN_STATE_DEFAULTS),
@@ -158,7 +173,7 @@ export function assertStateShape(state, context, options = {}) {
   if (issues.length) {
     const message = `[state-assert:${context}] ${issues.join('; ')}`;
     if (throwOnError) throw new Error(message);
-    console.warn(message);
+    if (shouldReportStateWarnings()) console.warn(message);
     return false;
   }
   return true;

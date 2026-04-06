@@ -209,13 +209,16 @@ The onboarding screen now includes a full tutorial/FAQ entry point before the pr
 
 Character selection now includes a `Random Character` option that auto-picks one of the six available profiles when you confirm the expedition.
 
-Part 2 remains a gated narrative bridge (not yet playable expedition gameplay):
+Narrative preview: 7 story screens fully playable with Francisco after a summit return. Full Part 2 expedition mechanics deferred.
 
 `part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 
 Unlock is exclusive to `Summit and Safe Return`.
 
 See `docs/simulation_engine.md` and `docs/architecture.md` for full mechanics.
+
+> **Monte Carlo caution:** the headless `reasonablePolicy` simulator is a regression detector, not ground-truth player balance. Use it to catch structural breakage (for example, broad 0% summit outcomes), and rely on human playtest evidence for observed win-rate expectations.
+
 
 ### Deep-link URLs
 

@@ -74,10 +74,18 @@ let DATA_CONFIG_ERROR = null;
 const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
 const DEV_HOSTS = new Set(['localhost', '127.0.0.1']);
 
+function isDebugModeEnabled() {
+  try {
+    return String(globalThis?.localStorage?.getItem?.('aconcagua_debug_mode') || '').toLowerCase() === '1';
+  } catch (_) {
+    return false;
+  }
+}
+
 function reportRuntimeIssue(message, detail = null) {
   try {
     const host = globalThis?.location?.hostname || '';
-    if (!DEV_HOSTS.has(host)) return;
+    if (!DEV_HOSTS.has(host) && !isDebugModeEnabled()) return;
   } catch (_) {
     return;
   }

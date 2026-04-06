@@ -204,6 +204,9 @@ Cambios centrales:
 
 Ver `/docs/simulation_engine.md` para el detalle técnico.
 
+> **Nota sobre Monte Carlo:** el simulador headless con `reasonablePolicy` sirve para detección de regresiones estructurales, no como verdad absoluta del balance jugable humano. Úsalo para detectar bloqueos (por ejemplo, 0% de cumbre generalizado) y complementalo con evidencia de playtesting humano para expectativas de win-rate.
+
+
 
 Flujo visible actual en web-v1:
 
@@ -221,7 +224,9 @@ Estado de Parte 2 (v1.4):
 
 `part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 
-Parte 2 se mantiene como puente narrativo gateado (todavía no jugable como expedición completa); el unlock es exclusivo de `Summit and Safe Return`.
+Vista previa narrativa: 7 pantallas de historia totalmente jugables con Francisco después de un regreso desde cumbre. Las mecánicas completas de expedición de la Parte 2 quedan diferidas.
+
+El unlock sigue siendo exclusivo de `Summit and Safe Return`.
 
 ### Deep-link URLs
 
