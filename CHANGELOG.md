@@ -9,7 +9,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-## [1.4.6] — 2026-04
+### Added
+
+- Extracted `bodyValueClass`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureDeltaLabel`, and `pressureBandLabel` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/helpers/screen-utils.js` as pure, side-effect-free formatting helpers. These are now the single source of truth for body-state and pressure labels across the watch panel, turn log, and debrief analytics.
+- Extracted expedition-journal responsibility from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/journal.js`. The new module owns `JOURNAL_KEY`, `migrateJournalKey`, `loadJournal`, `saveJournalEntry`, `clearJournal`, and `renderJournal`. Storage helpers are imported directly; `t()` is injected as a parameter to keep data-access functions testable in Node.
+- Added 37 new unit tests: 27 in `tests/unit/screen-utils.test.js` (body state and pressure label functions) and 10 in `tests/unit/journal.test.js` (journal data access, entry cap, and migration logic).
+
+### Changed
+
+- `prototype/web-v1/ui/game-loop.js`: imports `formatMinutes`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureBandLabel`, and `pressureDeltaLabel` directly from `screen-utils.js`. Removed 7 entries from the `createGameLoop` factory injection interface; callers no longer need to provide these formatting functions as deps.
+- `prototype/web-v1/ui/screens.js`: replaced inline journal code (~60 lines) with thin wrapper functions delegating to `ui/screens/journal.js`. Delegates `clearJournal` and `renderJournal` to the extracted module, passing `t` and the DOM container at call time.
+
+
 
 
 ### Added

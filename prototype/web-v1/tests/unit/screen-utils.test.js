@@ -27,6 +27,12 @@ import {
   OUTCOME_CLASS_MAP,
   getOutcomeClass,
   resolveNavigationTarget,
+  bodyValueClass,
+  capacityLabel,
+  fatigueLabel,
+  exposureLabel,
+  pressureDeltaLabel,
+  pressureBandLabel,
 } from '../../ui/helpers/screen-utils.js';
 
 // ── formatMinutes ────────────────────────────────────────────────────────────
@@ -287,4 +293,158 @@ test('resolveNavigationTarget: Summit and Safe Return unlocks all Part 2 IDs', (
   for (const id of SAMPLE_PART2_IDS) {
     assert.equal(resolveNavigationTarget(id, opts), id, `Expected ${id} to be accessible`);
   }
+});
+
+// ── bodyValueClass ───────────────────────────────────────────────────────────
+
+test('bodyValueClass: Critical/Exhausted/High labels map to critical', () => {
+  assert.equal(bodyValueClass('Critical'), 'critical');
+  assert.equal(bodyValueClass('Exhausted'), 'critical');
+  assert.equal(bodyValueClass('High'), 'critical');
+});
+
+test('bodyValueClass: Degraded/Heavy/Moderate labels map to degrading', () => {
+  assert.equal(bodyValueClass('Degraded'), 'degrading');
+  assert.equal(bodyValueClass('Heavy'), 'degrading');
+  assert.equal(bodyValueClass('Moderate'), 'degrading');
+});
+
+test('bodyValueClass: other labels map to stable', () => {
+  assert.equal(bodyValueClass('Excellent'), 'stable');
+  assert.equal(bodyValueClass('Good'), 'stable');
+  assert.equal(bodyValueClass('Fresh'), 'stable');
+  assert.equal(bodyValueClass('Minimal'), 'stable');
+});
+
+// ── capacityLabel ────────────────────────────────────────────────────────────
+
+test('capacityLabel: 85–100 is Excellent', () => {
+  assert.equal(capacityLabel(100), 'Excellent');
+  assert.equal(capacityLabel(85), 'Excellent');
+  assert.equal(capacityLabel(86), 'Excellent');
+});
+
+test('capacityLabel: 65–84 is Good', () => {
+  assert.equal(capacityLabel(84), 'Good');
+  assert.equal(capacityLabel(65), 'Good');
+  assert.equal(capacityLabel(70), 'Good');
+});
+
+test('capacityLabel: 45–64 is Strained', () => {
+  assert.equal(capacityLabel(64), 'Strained');
+  assert.equal(capacityLabel(45), 'Strained');
+});
+
+test('capacityLabel: 25–44 is Degraded', () => {
+  assert.equal(capacityLabel(44), 'Degraded');
+  assert.equal(capacityLabel(25), 'Degraded');
+});
+
+test('capacityLabel: below 25 is Critical', () => {
+  assert.equal(capacityLabel(24), 'Critical');
+  assert.equal(capacityLabel(0), 'Critical');
+});
+
+// ── fatigueLabel ─────────────────────────────────────────────────────────────
+
+test('fatigueLabel: 0–15 is Fresh', () => {
+  assert.equal(fatigueLabel(0), 'Fresh');
+  assert.equal(fatigueLabel(15), 'Fresh');
+});
+
+test('fatigueLabel: 16–35 is Tired', () => {
+  assert.equal(fatigueLabel(16), 'Tired');
+  assert.equal(fatigueLabel(35), 'Tired');
+});
+
+test('fatigueLabel: 36–55 is Heavy', () => {
+  assert.equal(fatigueLabel(36), 'Heavy');
+  assert.equal(fatigueLabel(55), 'Heavy');
+});
+
+test('fatigueLabel: 56–79 is Exhausted', () => {
+  assert.equal(fatigueLabel(56), 'Exhausted');
+  assert.equal(fatigueLabel(79), 'Exhausted');
+});
+
+test('fatigueLabel: 80–100 is Critical', () => {
+  assert.equal(fatigueLabel(80), 'Critical');
+  assert.equal(fatigueLabel(100), 'Critical');
+});
+
+// ── exposureLabel ─────────────────────────────────────────────────────────────
+
+test('exposureLabel: 0–15 is Minimal', () => {
+  assert.equal(exposureLabel(0), 'Minimal');
+  assert.equal(exposureLabel(15), 'Minimal');
+});
+
+test('exposureLabel: 16–35 is Low', () => {
+  assert.equal(exposureLabel(16), 'Low');
+  assert.equal(exposureLabel(35), 'Low');
+});
+
+test('exposureLabel: 36–54 is Moderate', () => {
+  assert.equal(exposureLabel(36), 'Moderate');
+  assert.equal(exposureLabel(54), 'Moderate');
+});
+
+test('exposureLabel: 55–74 is High', () => {
+  assert.equal(exposureLabel(55), 'High');
+  assert.equal(exposureLabel(74), 'High');
+});
+
+test('exposureLabel: 75–100 is Critical', () => {
+  assert.equal(exposureLabel(75), 'Critical');
+  assert.equal(exposureLabel(100), 'Critical');
+});
+
+// ── pressureDeltaLabel ────────────────────────────────────────────────────────
+
+test('pressureDeltaLabel: delta ≤ -15 is Favorable conditions', () => {
+  assert.equal(pressureDeltaLabel(-15), 'Favorable conditions');
+  assert.equal(pressureDeltaLabel(-30), 'Favorable conditions');
+});
+
+test('pressureDeltaLabel: -14 to 10 is Demanding conditions', () => {
+  assert.equal(pressureDeltaLabel(-14), 'Demanding conditions');
+  assert.equal(pressureDeltaLabel(0), 'Demanding conditions');
+  assert.equal(pressureDeltaLabel(10), 'Demanding conditions');
+});
+
+test('pressureDeltaLabel: 11 to 30 is Overexertion zone', () => {
+  assert.equal(pressureDeltaLabel(11), 'Overexertion zone');
+  assert.equal(pressureDeltaLabel(30), 'Overexertion zone');
+});
+
+test('pressureDeltaLabel: above 30 is Mountain refusal zone', () => {
+  assert.equal(pressureDeltaLabel(31), 'Mountain refusal zone');
+  assert.equal(pressureDeltaLabel(100), 'Mountain refusal zone');
+});
+
+// ── pressureBandLabel ─────────────────────────────────────────────────────────
+
+test('pressureBandLabel: 0–25 is Low', () => {
+  assert.equal(pressureBandLabel(0), 'Low');
+  assert.equal(pressureBandLabel(25), 'Low');
+});
+
+test('pressureBandLabel: 26–45 is Manageable', () => {
+  assert.equal(pressureBandLabel(26), 'Manageable');
+  assert.equal(pressureBandLabel(45), 'Manageable');
+});
+
+test('pressureBandLabel: 46–65 is Severe', () => {
+  assert.equal(pressureBandLabel(46), 'Severe');
+  assert.equal(pressureBandLabel(65), 'Severe');
+});
+
+test('pressureBandLabel: 66–85 is Very Severe', () => {
+  assert.equal(pressureBandLabel(66), 'Very Severe');
+  assert.equal(pressureBandLabel(85), 'Very Severe');
+});
+
+test('pressureBandLabel: above 85 is Extreme', () => {
+  assert.equal(pressureBandLabel(86), 'Extreme');
+  assert.equal(pressureBandLabel(100), 'Extreme');
 });

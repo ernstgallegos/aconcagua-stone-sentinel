@@ -57,7 +57,24 @@ No other module should duplicate either the file-path list or the normalization 
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
 
-## v1.4.6 additions
+## v1.4.7 additions (second-pass UI modularization)
+
+- Moved 6 pure body-state and pressure label functions from `ui/screens.js` to `ui/helpers/screen-utils.js`:
+  `bodyValueClass`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureDeltaLabel`, `pressureBandLabel`.
+  These functions have zero side-effects and no dependencies; they are the canonical label sources for the watch
+  panel, turn log, and debrief analytics.
+- `ui/game-loop.js` now imports these 6 functions (+ `formatMinutes`) directly from `screen-utils.js` instead of
+  receiving them as injected constructor parameters. This removes 7 entries from the `createGameLoop` factory API,
+  making the dep-injection surface smaller and the module easier to test.
+- Extracted expedition-journal responsibility from `ui/screens.js` to `ui/screens/journal.js`.  The new module
+  owns: `JOURNAL_KEY`, `migrateJournalKey`, `loadJournal`, `saveJournalEntry`, `clearJournal`, `renderJournal`.
+  It imports storage helpers directly; `t()` (i18n) is passed as a parameter so the data-access functions
+  (`loadJournal`, `saveJournalEntry`, `migrateJournalKey`) are exercisable in Node without a browser environment.
+  `screens.js` keeps thin wrapper functions that supply `t` and the DOM container.
+- 37 new unit tests: 27 in `screen-utils.test.js` (covering the 6 label functions) and 10 in `journal.test.js`
+  (covering data-access and migration logic).
+
+
 
 - Extracted debrief analysis functions `findTurningPoint`, `findPrimaryCause`, and `buildReflectionPrompts` from `ui/screens.js` to `ui/screens/debrief.js`. All three are now pure functions that receive deps via a parameter object (`turnLog`, `POS_LABELS`, `finalOutcome`, `characterId`, `lang`). `screens.js` keeps thin wrapper functions that inject runtime state. Covered by 20 unit tests in `tests/unit/debrief-analysis.test.js`.
 - Promoted all accumulated [Unreleased] work to `v1.4.6`: screens partitioning (game-loop, flow-controller, screens/* modules), event-registry, storage safety, API ESM migration, CI hardening, and documentation updates.
