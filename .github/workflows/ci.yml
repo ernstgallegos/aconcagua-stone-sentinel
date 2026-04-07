@@ -37,22 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
-      - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.2.0
         with:
-          python-version: "3.12"
+          node-version: "20"
       - name: Validate all repository JSON files are well-formed
-        run: |
-          python3 - <<'PY'
-          import json
-          import pathlib
-
-          for path in pathlib.Path('.').rglob('*.json'):
-            if '.git' in path.parts or 'node_modules' in path.parts:
-              continue
-            json.loads(path.read_text(encoding='utf-8'))
-          print('all-json-ok')
-          PY
+        run: npm run validate:json
 
   js-contract-tests:
     name: Web-v1 JS + TS gates

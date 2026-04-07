@@ -113,6 +113,7 @@ In addition to the changelog:
   - `pytest prototype/mra-v0/test_simulator.py -v`
   - `npm test`
   - JSON parse checks for all simulation data files.
+- Portability for validation gates is stronger when npm scripts call checked-in Node entry points (`scripts/*.js`) instead of inline shell snippets or Bash-only helpers; this keeps local Windows/macOS/Linux behavior aligned with CI command evidence.
 - For visible front-end changes, take screenshots through browser tooling to confirm real rendered behavior.
 - ES-module screens with inline HTML `onclick` hooks require explicit `window.*` exports for every invoked handler; missing facade assignments can silently break CTA navigation despite rendered buttons.
 - Keep `run_log.json` exports backward-compatible by layering new telemetry as additive fields/aliases and attaching run-level summaries without replacing the per-turn array contract.

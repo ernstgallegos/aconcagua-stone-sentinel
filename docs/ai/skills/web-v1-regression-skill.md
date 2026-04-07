@@ -35,7 +35,7 @@ Detect structural regressions in `prototype/web-v1` flow and contracts before me
 - `prototype/web-v1/tests/`
 - `prototype/web-v1/ui/screens.js`
 - `prototype/web-v1/index.html`
-- `scripts/release-smoke-vercel.sh`
+- `scripts/release-smoke-vercel.js`
 
 ## Suggested owner
 
