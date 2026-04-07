@@ -38,12 +38,26 @@ import {
   renderPart2NarrativeScreen as renderPart2NarrativeScreenView,
 } from './screens/part2.js';
 import {
+  JOURNAL_KEY,
+  migrateJournalKey,
+  loadJournal,
+  saveJournalEntry,
+  clearJournal as clearJournalModule,
+  renderJournal as renderJournalModule,
+} from './screens/journal.js';
+import {
   formatMinutes,
   formatTrendArrow,
   confidenceTier,
   getTimeOfDayBucket,
   getPersistenceTier,
   getOutcomeClass,
+  bodyValueClass,
+  capacityLabel,
+  fatigueLabel,
+  exposureLabel,
+  pressureDeltaLabel,
+  pressureBandLabel,
 } from './helpers/screen-utils.js';
 import {
   initFlowController,
@@ -2191,20 +2205,7 @@ function calculateBodyTolerance(state) {
   });
 }
 
-function pressureDeltaLabel(delta) {
-  if (delta <= -15) return 'Favorable conditions';
-  if (delta <= 10) return 'Demanding conditions';
-  if (delta <= 30) return 'Overexertion zone';
-  return 'Mountain refusal zone';
-}
 
-function pressureBandLabel(score) {
-  if (score <= 25) return 'Low';
-  if (score <= 45) return 'Manageable';
-  if (score <= 65) return 'Severe';
-  if (score <= 85) return 'Very Severe';
-  return 'Extreme';
-}
 
 function spendResourcesForMinutes(minutes, flags) {
   const stage = getCurrentStage();
@@ -2376,33 +2377,7 @@ function clearElement(el) {
   while (el.firstChild) el.removeChild(el.firstChild);
 }
 
-function bodyValueClass(label) {
-  if (['Critical','Exhausted','High'].includes(label)) return 'critical';
-  if (['Degraded','Heavy','Moderate'].includes(label)) return 'degrading';
-  return 'stable';
-}
 
-function capacityLabel(v) {
-  if (v >= 85) return 'Excellent';
-  if (v >= 65) return 'Good';
-  if (v >= 45) return 'Strained';
-  if (v >= 25) return 'Degraded';
-  return 'Critical';
-}
-function fatigueLabel(v) {
-  if (v <= 15) return 'Fresh';
-  if (v <= 35) return 'Tired';
-  if (v <= 55) return 'Heavy';
-  if (v <= 79) return 'Exhausted';
-  return 'Critical';
-}
-function exposureLabel(v) {
-  if (v <= 15) return 'Minimal';
-  if (v <= 35) return 'Low';
-  if (v <= 54) return 'Moderate';
-  if (v <= 74) return 'High';
-  return 'Critical';
-}
 
 function updateTurnProgress(currentTurn, maxTurns) {
   const fill = document.getElementById('turn-progress-fill');
@@ -3261,12 +3236,6 @@ const _gameLoop = createGameLoop({
   isCampPosition,
   assertStateShape,
   getCurrentStage,
-  formatMinutes,
-  capacityLabel,
-  fatigueLabel,
-  exposureLabel,
-  pressureBandLabel,
-  pressureDeltaLabel,
   calculateBodyTolerance,
   renderWatch,
   renderNarrative,
@@ -3551,64 +3520,18 @@ function goChooseScenario() {
 }
 
 // ════════════════════════════════════════════════
-// JOURNAL
-// Uses localStorage; key renamed to avoid ambiguity.
-// FIX: key renamed from 'ass_journal_v1' to 'aconcagua_journal_v1'
+// JOURNAL — delegated to ui/screens/journal.js
 // ════════════════════════════════════════════════
-const JOURNAL_KEY = 'aconcagua_journal_v1';
+// One-time migration from legacy storage key (runs at module init).
+migrateJournalKey();
 
-// FIX: migrate any existing data from old key
-(function migrateJournalKey() {
-  const old = safeGetStorage('ass_journal_v1');
-  if (old && !safeGetStorage(JOURNAL_KEY)) {
-    safeSetStorage(JOURNAL_KEY, old);
-    safeRemoveStorage('ass_journal_v1');
-  }
-})();
-
-function loadJournal() {
-  try { return JSON.parse(safeGetStorage(JOURNAL_KEY) || '[]'); } catch(e) { return []; }
-}
-function saveJournalEntry(entry) {
-  try {
-    let entries = loadJournal();
-    entries.unshift(entry);
-    if (entries.length > 50) entries = entries.slice(0, 50);
-    safeSetStorage(JOURNAL_KEY, JSON.stringify(entries));
-  } catch(e) {}
-}
 function clearJournal() {
-  if (!confirm(t('ui.clearJournalConfirm'))) return;
-  safeRemoveStorage(JOURNAL_KEY);
-  renderJournal();
+  clearJournalModule(t, renderJournal);
 }
+
 function renderJournal() {
-  const entries = loadJournal();
   const container = document.getElementById('journal-entries');
-  clearElement(container);
-  if (!entries.length) {
-    const empty = document.createElement('div');
-    empty.className = 'journal-empty';
-    empty.textContent = t('ui.journalEmpty');
-    container.appendChild(empty);
-    return;
-  }
-  entries.forEach((e, i) => {
-    const div = document.createElement('div');
-    div.className = 'journal-entry';
-
-    const header = document.createElement('div');
-    header.className = 'journal-entry-header';
-    header.textContent = `RUN #${e.runNum || (entries.length - i)} · ${e.scenario} · Seed ${e.seed} · ${e.character}`;
-
-    const detail = document.createElement('div');
-    detail.className = 'journal-entry-detail';
-    detail.textContent = `Outcome: ${e.outcome} · Highest: ${e.highest} · Turns: ${e.turns} · Constraint: ${e.constraint}`;
-
-    div.appendChild(header);
-    div.appendChild(detail);
-    container.appendChild(div);
-  });
+  renderJournalModule({ container, t });
 }
 
 function isTypingTarget(target) {

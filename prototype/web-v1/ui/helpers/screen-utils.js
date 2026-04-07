@@ -128,6 +128,94 @@ export function getOutcomeClass(finalOutcome) {
   return OUTCOME_CLASS_MAP[finalOutcome] || 'outcome-retreat';
 }
 
+// ── Body state labels ────────────────────────────────────────────────────────
+
+/**
+ * Maps a CSS-modifier class based on a body-state label string.
+ * Used by the watch panel to apply color-coding to body metric rows.
+ *
+ * @param {string} label - One of the values produced by capacityLabel / fatigueLabel / exposureLabel.
+ * @returns {'critical'|'degrading'|'stable'}
+ */
+export function bodyValueClass(label) {
+  if (['Critical', 'Exhausted', 'High'].includes(label)) return 'critical';
+  if (['Degraded', 'Heavy', 'Moderate'].includes(label)) return 'degrading';
+  return 'stable';
+}
+
+/**
+ * Human-readable label for a functional-capacity value.
+ *
+ * @param {number} v - Capacity score (0–100).
+ * @returns {'Excellent'|'Good'|'Strained'|'Degraded'|'Critical'}
+ */
+export function capacityLabel(v) {
+  if (v >= 85) return 'Excellent';
+  if (v >= 65) return 'Good';
+  if (v >= 45) return 'Strained';
+  if (v >= 25) return 'Degraded';
+  return 'Critical';
+}
+
+/**
+ * Human-readable label for a fatigue value.
+ *
+ * @param {number} v - Fatigue score (0–100).
+ * @returns {'Fresh'|'Tired'|'Heavy'|'Exhausted'|'Critical'}
+ */
+export function fatigueLabel(v) {
+  if (v <= 15) return 'Fresh';
+  if (v <= 35) return 'Tired';
+  if (v <= 55) return 'Heavy';
+  if (v <= 79) return 'Exhausted';
+  return 'Critical';
+}
+
+/**
+ * Human-readable label for an exposure value.
+ *
+ * @param {number} v - Exposure score (0–100).
+ * @returns {'Minimal'|'Low'|'Moderate'|'High'|'Critical'}
+ */
+export function exposureLabel(v) {
+  if (v <= 15) return 'Minimal';
+  if (v <= 35) return 'Low';
+  if (v <= 54) return 'Moderate';
+  if (v <= 74) return 'High';
+  return 'Critical';
+}
+
+// ── Pressure labels ──────────────────────────────────────────────────────────
+
+/**
+ * Maps a pressure delta (EP minus BT) to a human-readable zone label used by
+ * the watch display and debrief analytics.
+ *
+ * @param {number} delta
+ * @returns {string}
+ */
+export function pressureDeltaLabel(delta) {
+  if (delta <= -15) return 'Favorable conditions';
+  if (delta <= 10) return 'Demanding conditions';
+  if (delta <= 30) return 'Overexertion zone';
+  return 'Mountain refusal zone';
+}
+
+/**
+ * Maps a raw EP pressure score to a named severity band used by the watch
+ * display and turn log.
+ *
+ * @param {number} score
+ * @returns {string}
+ */
+export function pressureBandLabel(score) {
+  if (score <= 25) return 'Low';
+  if (score <= 45) return 'Manageable';
+  if (score <= 65) return 'Severe';
+  if (score <= 85) return 'Very Severe';
+  return 'Extreme';
+}
+
 // ── Navigation gate ──────────────────────────────────────────────────────────
 
 /**

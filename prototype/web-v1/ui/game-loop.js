@@ -12,13 +12,24 @@
 // Deps that are pure engine / state:
 //   G, resolveTurn, applyAcclimatizationGain, updateRunState, recordTelemetry,
 //   buildTurnLogEntry, computeSignals, calculateEnvironmentalPressure,
-//   isCampPosition, assertStateShape, getCurrentStage,
+//   isCampPosition, assertStateShape, getCurrentStage, calculateBodyTolerance
+//
+// Label/format helpers are imported directly from screen-utils.js:
 //   formatMinutes, capacityLabel, fatigueLabel, exposureLabel,
-//   pressureBandLabel, pressureDeltaLabel, calculateBodyTolerance
+//   pressureBandLabel, pressureDeltaLabel
 //
 // Deps that are rendering callbacks (kept in screens.js, injected here):
 //   renderWatch, renderNarrative, addLogEntry, setDecisionButtonsEnabled,
 //   onRunEnded(returnedToHorcones)
+
+import {
+  formatMinutes,
+  capacityLabel,
+  fatigueLabel,
+  exposureLabel,
+  pressureBandLabel,
+  pressureDeltaLabel,
+} from './helpers/screen-utils.js';
 
 const PARK_EXIT_OUTCOMES = new Set([
   'Summit and Safe Return',
@@ -44,12 +55,6 @@ export function createGameLoop({
   isCampPosition,
   assertStateShape,
   getCurrentStage,
-  formatMinutes,
-  capacityLabel,
-  fatigueLabel,
-  exposureLabel,
-  pressureBandLabel,
-  pressureDeltaLabel,
   calculateBodyTolerance,
   // rendering callbacks
   renderWatch,
