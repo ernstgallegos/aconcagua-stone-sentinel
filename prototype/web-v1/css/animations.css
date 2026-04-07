@@ -56,6 +56,11 @@
   }
 }
 
+@keyframes auroraSweep {
+  0%, 100% { transform: translateX(-20%) skewX(-10deg); opacity: 0.22; }
+  50% { transform: translateX(18%) skewX(-10deg); opacity: 0.4; }
+}
+
 /* Applied to the splash image element */
 .splash-image.ken-burns-active {
   animation: ken-burns 20s ease-in-out forwards;

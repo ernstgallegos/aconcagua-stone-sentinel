@@ -882,10 +882,11 @@
 
 .narrative-text {
   font-style: italic;
-  color: var(--text);
+  color: color-mix(in srgb, var(--white) 88%, var(--text) 12%);
   font-size: 0.9375rem;  /* Decision 9 */
   line-height: 1.75;
   min-height: 3rem;
+  text-wrap: pretty;
 }
 
 .narrative-passive {
@@ -903,11 +904,12 @@
   border: 1px solid var(--border);
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--surface) 92%, var(--ice-dim) 8%),
+    color-mix(in srgb, var(--surface) 88%, var(--ice-dim) 12%),
     var(--surface)
   );
   padding: 1rem;
   flex-shrink: 0;
+  box-shadow: 0 -14px 30px rgba(4, 3, 9, 0.32);
 }
 
 .decision-label {
@@ -1830,8 +1832,8 @@
   align-items: center;
   gap: 0.65rem;
   padding: 0.45rem 0.85rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface) 90%, #090910), color-mix(in srgb, var(--surface2) 82%, #090910));
+  border-bottom: 1px solid color-mix(in srgb, var(--ice) 24%, var(--border));
   font-family: var(--mono);
   font-size: 0.75rem;
   flex-shrink: 0;
@@ -1898,7 +1900,9 @@
 
 /* ── Mountain View Narrative Area ── */
 .mountain-view {
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 82% -18%, color-mix(in srgb, var(--ice) 12%, transparent), transparent 56%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 86%, #06050c), var(--bg));
 }
 
 .route-strip .position-list-compact {

@@ -13,27 +13,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..800,0..100,1..10&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         color-scheme: dark;
-        --bg-0: #0b0f14;
-        --bg-1: #101723;
-        --bg-2: #172130;
-        --surface-0: #111a27cc;
-        --surface-1: #172335d9;
-        --surface-2: #213348e6;
-        --border-soft: #93a8bc3d;
-        --border-strong: #d7e6f252;
-        --text-main: #e8eff7;
-        --text-dim: #adbbc9;
-        --text-muted: #8b9aab;
-        --accent-ice: #d6eef9;
-        --accent-mineral: #9bb9ce;
-        --accent-amber: #d9b996;
-        --accent-critical: #f2d4af;
+        --bg-0: #08070e;
+        --bg-1: #120f1d;
+        --bg-2: #1a1430;
+        --surface-0: #1d1632cf;
+        --surface-1: #241c3cd9;
+        --surface-2: #30264be6;
+        --border-soft: #b7a8f03d;
+        --border-strong: #e8defd59;
+        --text-main: #f8f2ff;
+        --text-dim: #cabde4;
+        --text-muted: #9d90bd;
+        --accent-ice: #b7eaf9;
+        --accent-mineral: #b59bd8;
+        --accent-amber: #eeb77d;
+        --accent-critical: #ffd2a1;
 
         --radius-xs: 10px;
         --radius-sm: 14px;
@@ -51,9 +51,9 @@
         --space-6: 4rem;
         --space-7: 6rem;
 
-        --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-        --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+        --serif: "Fraunces", "Iowan Old Style", serif;
+        --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+        --sans: "Syne", "Avenir Next", "Segoe UI", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -65,9 +65,9 @@
         color: var(--text-main);
         line-height: 1.5;
         background:
-          radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-          radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+          radial-gradient(900px 520px at 82% -8%, #ddb6ff2f, transparent 62%),
+          radial-gradient(760px 440px at 10% -4%, #6ce5ff1f, transparent 57%),
+          linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 45%, var(--bg-0) 100%);
         min-height: 100vh;
       }
 
@@ -293,13 +293,15 @@
         width: 100%;
         height: auto;
         object-fit: contain;
-        filter: saturate(0.93) contrast(1.03);
+        filter: saturate(1.03) contrast(1.08);
+        animation: driftingCover 16s ease-in-out infinite;
       }
 
       .section {
         margin-top: var(--space-7);
         display: grid;
         gap: var(--space-3);
+        animation: sectionReveal 0.7s ease both;
       }
 
       .section-head {
@@ -475,9 +477,52 @@
       .final-band {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
+        background: linear-gradient(145deg, #2c214ad9, #19132be8 72%);
         padding: var(--space-4);
         box-shadow: var(--shadow-soft);
+      }
+
+      .visual-reel {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.9rem;
+      }
+
+      .reel-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        background: #171126;
+      }
+
+      .reel-card img {
+        width: 100%;
+        aspect-ratio: 16 / 11;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.01);
+        transition: transform 400ms ease;
+      }
+
+      .reel-card:hover img { transform: scale(1.06); }
+
+      .reel-card figcaption {
+        padding: 0.65rem 0.75rem 0.7rem;
+        color: var(--text-dim);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      @keyframes driftingCover {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-8px) scale(1.02); }
+      }
+
+      @keyframes sectionReveal {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .site-footer {
@@ -717,6 +762,27 @@
           <article class="outcome"><strong>High Point Return</strong><span data-i18n="outcome2">Strong ascent with disciplined retreat before irreversible failure.</span></article>
           <article class="outcome"><strong>Strategic Retreat / Rescue</strong><span data-i18n="outcome3">Risk-managed withdrawal or rescue when body-state thresholds break.</span></article>
           <article class="outcome"><strong>Collapse / Permit / Window</strong><span data-i18n="outcome4">Failure classes tied to exposure, permit exhaustion, or expedition-window closure.</span></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="visual-reel-title">
+        <div class="section-head">
+          <p class="section-kicker">Visual atmosphere</p>
+          <h2 id="visual-reel-title">A visual rhythm that mirrors the climb: cold light, mineral darkness, and pressure.</h2>
+        </div>
+        <div class="visual-reel">
+          <figure class="reel-card">
+            <img src="/art/cover/cover-concept-2.png" alt="Aconcagua cover concept art in cold tones" loading="lazy" />
+            <figcaption>Approach to altitude</figcaption>
+          </figure>
+          <figure class="reel-card">
+            <img src="/art/concept-art/curated/concept-curated-3.webp" alt="Concept artwork showing weather volatility in the route" loading="lazy" />
+            <figcaption>Weather volatility</figcaption>
+          </figure>
+          <figure class="reel-card">
+            <img src="/art/concept-art/curated/concept-curated-1.png" alt="Narrative concept image emphasizing consequence and return" loading="lazy" />
+            <figcaption>Outcome memory</figcaption>
+          </figure>
         </div>
       </section>
 

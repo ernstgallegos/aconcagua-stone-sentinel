@@ -24,6 +24,20 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(transparent 96%, rgba(255, 255, 255, 0.08) 100%),
+    linear-gradient(90deg, transparent 96%, rgba(255, 255, 255, 0.05) 100%);
+  background-size: 34px 34px;
 }
 
 img, video, canvas, audio, iframe, embed, object {
