@@ -1,9 +1,9 @@
 # Architecture — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.5]`](../CHANGELOG.md#145--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.6]`](../CHANGELOG.md#146--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.5** with phased rollout contracts preserved.
+> - Current public build is **v1.4.6** with phased rollout contracts preserved.
 
 Prototype Web v1.4 (public branch state) is the canonical active prototype in this repository, with completed and in-progress items from the v1.4 phase plan.
 
@@ -56,6 +56,11 @@ No other module should duplicate either the file-path list or the normalization 
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
+
+## v1.4.6 additions
+
+- Extracted debrief analysis functions `findTurningPoint`, `findPrimaryCause`, and `buildReflectionPrompts` from `ui/screens.js` to `ui/screens/debrief.js`. All three are now pure functions that receive deps via a parameter object (`turnLog`, `POS_LABELS`, `finalOutcome`, `characterId`, `lang`). `screens.js` keeps thin wrapper functions that inject runtime state. Covered by 20 unit tests in `tests/unit/debrief-analysis.test.js`.
+- Promoted all accumulated [Unreleased] work to `v1.4.6`: screens partitioning (game-loop, flow-controller, screens/* modules), event-registry, storage safety, API ESM migration, CI hardening, and documentation updates.
 
 ## v1.4.5 additions
 
