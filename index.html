@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
@@ -42,7 +42,7 @@
         top: 0;
         z-index: 50;
         border-bottom: 1px solid var(--border-soft);
-        background: #0f1621c2;
+        background: #090812c7;
         backdrop-filter: blur(10px);
       }
 
@@ -110,11 +110,31 @@
         align-items: end;
       }
 
+      @keyframes float-orbit {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-10px) scale(1.01); }
+      }
+
+      @keyframes shimmer-reveal {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      main > .section, .hero-copy, .hero-art {
+        animation: shimmer-reveal 700ms ease both;
+      }
+      main > .section:nth-of-type(2) { animation-delay: 120ms; }
+      main > .section:nth-of-type(3) { animation-delay: 180ms; }
+      main > .section:nth-of-type(4) { animation-delay: 240ms; }
+      main > .section:nth-of-type(5) { animation-delay: 300ms; }
+
       .hero-copy {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
+        background: linear-gradient(148deg, #1b1233f1 0%, #120f24f2 58%, #19102ef0 100%);
         box-shadow: var(--shadow-strong);
+        position: relative;
+        overflow: hidden;
         padding: clamp(1.2rem, 3.5vw, 2.7rem);
       }
 
@@ -143,6 +163,17 @@
         color: var(--text-dim);
         max-width: 58ch;
         font-size: clamp(1rem, 1.9vw, 1.15rem);
+      }
+
+      .hero-copy::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        right: -48px;
+        top: -72px;
+        background: radial-gradient(circle, #85f4ff33, transparent 66%);
+        filter: blur(3px);
       }
 
       .hero-meta {
@@ -190,14 +221,30 @@
         border-radius: var(--radius-md);
         border: 1px solid var(--border-soft);
         overflow: hidden;
-        background: #111926;
+        background: radial-gradient(circle at 20% 0%, #2a1d4d, #130f24 55%, #100d1b 100%);
+        position: relative;
         box-shadow: var(--shadow-soft);
       }
       .hero-art img {
         width: 100%;
         height: auto;
         object-fit: contain;
-        filter: saturate(0.93) contrast(1.03);
+        filter: saturate(1.06) contrast(1.08);
+      }
+
+      .hero-art .hero-image-main {
+        animation: float-orbit 8s ease-in-out infinite;
+      }
+
+      .hero-art .hero-image-alt {
+        position: absolute;
+        right: -6%;
+        bottom: -5%;
+        width: clamp(160px, 30vw, 320px);
+        opacity: 0.54;
+        mix-blend-mode: screen;
+        filter: blur(0.4px) saturate(1.2);
+        pointer-events: none;
       }
 
       .section {
@@ -262,7 +309,7 @@
       .flow {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: #132031d1;
+        background: linear-gradient(150deg, #1d1338de 0%, #18122fd9 100%);
         padding: var(--space-4);
       }
 
@@ -275,7 +322,7 @@
         border: 1px solid #c7d9ea3b;
         border-radius: var(--radius-sm);
         padding: 0.65rem 0.8rem;
-        background: #1a2a3fd9;
+        background: #2b1f4ad9;
         color: #dce7f2;
         font-size: 0.93rem;
       }
@@ -311,7 +358,7 @@
       .intel-card {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-sm);
-        background: #111b29d9;
+        background: linear-gradient(160deg, #1f1438f0, #181029f0);
         padding: var(--space-3);
         display: flex;
         flex-direction: column;
@@ -333,7 +380,7 @@
       .status-strip {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
-        background: #111c2ad1;
+        background: linear-gradient(160deg, #1c1332d8, #140f24de);
         padding: var(--space-4);
       }
 
@@ -366,7 +413,7 @@
       .outcome {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-xs);
-        background: #131f2ddc;
+        background: #1b1430dc;
         padding: 0.7rem 0.85rem;
       }
 
@@ -379,7 +426,7 @@
       .final-band {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
+        background: linear-gradient(145deg, #291c4ae0, #151026ed 72%);
         padding: var(--space-4);
         box-shadow: var(--shadow-soft);
       }
@@ -487,7 +534,8 @@
         </article>
 
         <figure class="hero-art">
-          <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
+          <img class="hero-image-main" src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
+          <img class="hero-image-alt" src="/art/concept-art/curated/concept-curated-3.webp" alt="" aria-hidden="true" loading="lazy" />
         </figure>
       </section>
 

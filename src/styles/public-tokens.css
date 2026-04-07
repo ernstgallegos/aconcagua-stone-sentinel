@@ -9,29 +9,29 @@
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #06070d;
+  --bg-1: #10111b;
+  --bg-2: #191425;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #1a1430cc;
+  --surface-1: #22193ed9;
+  --surface-2: #2f2355e6;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #b8a7d647;
+  --border-strong: #f4d7ae66;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #f3edf8;
+  --text-dim: #c5bad8;
+  --text-muted: #9f90b7;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #85f4ff;
+  --accent-mineral: #d8b4ff;
+  --accent-amber: #ffb86b;
+  --accent-critical: #ffd6a8;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
@@ -53,9 +53,9 @@
   --space-7: 6rem;
 
   /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --serif: "Syne", "Avenir Next", "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+  --sans: "Alegreya Sans", "Trebuchet MS", "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -67,9 +67,10 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1200px 600px at 90% -8%, #85f4ff1f, transparent 57%),
+    radial-gradient(1000px 520px at 8% 0%, #ffb86b24, transparent 54%),
+    radial-gradient(1300px 700px at 50% 120%, #d8b4ff1f, transparent 50%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 45%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -78,12 +79,13 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
+  opacity: 0.22;
   pointer-events: none;
   background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+    linear-gradient(#ffffff05 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff05 1px, transparent 1px),
+    radial-gradient(circle at 20% 20%, #ffffff0a 0 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px, 140px 140px;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }

@@ -13,31 +13,31 @@
 
 :root {
   /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --bg:        #080710;
+  --surface:   #1a1430;
+  --surface2:  #251b45;
+  --border:    #62548a;
+  --stone:     #d5c8bb;
+  --ochre:     #ffb86b;
+  --ochre-dim: #c98a4e;
+  --ice:       #90f7ff;
+  --ice-dim:   #54a8c6;
+  --white:     #f6f1ff;
+  --red:       #ff7d9f;
+  --red-dim:   #a84c69;
+  --safety:    #9de8c5;
+  --text:      #ece2ff;
+  --text-dim:  #b8a8d9;
+  --text-soft: #ccbde7;
+  --muted:     #b8a8d9;
+  --accent:    #ffb86b;
 
   /* ── Typography ── */
-  --brand:   'Playfair Display', 'Lora', Georgia, serif;
+  --brand:   'Syne', 'Avenir Next', 'Segoe UI', sans-serif;
   --heading: var(--brand);
-  --mono:    'IBM Plex Mono', monospace;
+  --mono:    'JetBrains Mono', monospace;
   --serif:   var(--brand);
-  --sans:    'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --sans:    'Alegreya Sans', 'Trebuchet MS', system-ui, sans-serif;
   --body:    var(--sans);
   --ui:      var(--sans);
 
@@ -50,11 +50,11 @@
   --space-2xl: 3rem;
 
   /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;
-  --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-normal: 0.24s;
+  --dur-slow:   0.38s;
 }

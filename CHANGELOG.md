@@ -9,6 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the public landing and web-v1 visual direction around a distinctive neon-alpine art system: new typography stack (`Syne`/`Alegreya Sans`/`JetBrains Mono`), high-contrast aurora palette tokens, layered atmospheric backgrounds, and stronger panel gradients across shared public tokens and prototype theme/tokens CSS.
+- Upgraded front-end motion language with staged reveal animations on landing sections, floating layered hero artwork, and aurora/panel/glow animation choreography in web-v1 title and HUD surfaces to deliver a more polished, identity-rich first impression.
+
+
 ## [1.4.6] — 2026-04
 
 

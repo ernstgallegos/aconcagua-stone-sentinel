@@ -123,3 +123,44 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Distinctive public-aesthetic refresh — aurora micro-motion */
+@keyframes aurora-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes panel-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ice) 20%, transparent); }
+  50% { box-shadow: 0 0 18px 2px color-mix(in srgb, var(--ice) 35%, transparent); }
+}
+
+#screen-title .title-shell {
+  animation: panel-rise 700ms ease-out both;
+}
+
+#screen-title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--ice) 12%, transparent), color-mix(in srgb, var(--ochre) 10%, transparent), color-mix(in srgb, var(--red) 10%, transparent));
+  background-size: 180% 180%;
+  animation: aurora-drift 12s ease-in-out infinite;
+  opacity: 0.55;
+}
+
+.watch-band,
+.decision-panel {
+  animation: panel-rise 520ms ease-out both;
+}
+
+.turn-progress-fill {
+  animation: glow-pulse 2.8s ease-in-out infinite;
+}

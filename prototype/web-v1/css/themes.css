@@ -7,24 +7,24 @@
    ══════════════════════════════════════ */
 
 body[data-theme='sunset'] {
-  --bg:        #101924;
-  --surface:   #182433;
-  --surface2:  #223247;
-  --border:    #50667d;
-  --stone:     #c1b19f;
-  --ochre:     #d6b287;
-  --ochre-dim: #9a7852;
-  --ice:       #c2d9ea;
-  --ice-dim:   #7f9db8;
-  --white:     #eef4fa;
-  --red:       #cd7668;
-  --red-dim:   #904b41;
-  --safety:    #8fb79a;
-  --text:      #dce6ef;
-  --text-dim:  #9ab0c2;
-  --text-soft: #b1c1cf;
-  --muted:     #9ab0c2;
-  --accent:    #d6b287;
+  --bg:        #110c1e;
+  --surface:   #211738;
+  --surface2:  #30214f;
+  --border:    #77649f;
+  --stone:     #d8c8bb;
+  --ochre:     #ffc37d;
+  --ochre-dim: #d29758;
+  --ice:       #9df7ff;
+  --ice-dim:   #62b1cc;
+  --white:     #faf4ff;
+  --red:       #ff89a4;
+  --red-dim:   #ad5572;
+  --safety:    #a2edca;
+  --text:      #f0e7ff;
+  --text-dim:  #c4b6df;
+  --text-soft: #d6caec;
+  --muted:     #c4b6df;
+  --accent:    #ffc37d;
 }
 
 body[data-theme='sunset'] .decision-microcopy,
@@ -37,6 +37,6 @@ body[data-theme='sunset'] .decision-keyhint {
 
 body[data-theme='sunset'] #screen-title::before {
   background:
-    radial-gradient(circle at 52% 26%, rgba(214, 178, 135, 0.16), transparent 56%),
+    radial-gradient(circle at 52% 26%, rgba(255, 184, 107, 0.23), transparent 56%),
     linear-gradient(180deg, rgba(7, 13, 20, 0.1), rgba(7, 13, 20, 0.62));
 }
