@@ -10,6 +10,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ## [Unreleased]
 
 ### Added
+- Added a new standalone `game.html` public artifact with self-contained CSS/JS, mountain-tone visual system, setup/onboarding/game/debrief flow, and a 12-turn EP/BT-inspired run loop for presentation demos.
+
+### Changed
+- Redesigned the root `index.html` landing as a full-screen editorial experience with cold-mineral palette tokens, Cormorant/IBM Plex Mono typography hierarchy, staged reveal motion, architecture signal section, and EN/ES toggle for key hero/navigation/CTA copy.
+- Updated `README.md` and `README.es.md` frontend route summaries so `/` now points to the redesigned landing CTA path (`game.html`) while preserving `prototype/web-v1` as the canonical mechanics surface.
+
+### Added
 - Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL (landing, web-v1 shell, and Part 2 deep-link documentation markers).
 - Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.

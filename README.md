@@ -160,10 +160,11 @@ Public repository scope is explicit:
 
 ## Web frontends and canonical routes
 
-This repository includes one canonical public entry point and one archived viewer:
+This repository includes one canonical public entry point, one visual redesign artifact, and one archived viewer:
 
-- **Canonical index (`/`)**: now serves the public project landing page with a primary CTA to `prototype/web-v1/index.html`.
-- **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics.
+- **Canonical index (`/`)**: now serves the public project landing page with a primary CTA to `game.html` (visual redesign artifact).
+- **Prototype web-v1 (`prototype/web-v1/index.html`)**: canonical mechanics/runtime surface with expanded systems and full test coverage.
+- **Redesign prototype (`game.html`)**: standalone visual reimplementation of a 12-turn run loop for public presentation experiments.
 - **Archived MRA v0 viewer (`prototype/mra-v0/viewer/index.html`)**: legacy replay interface for bundled Python prototype runs.
 
 For deploy/local routing details (including Vercel settings and CORS), use the single canonical reference:

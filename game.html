@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aconcagua: Stone Sentinel · Game Prototype v1.4.5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;600&display=swap');
+:root{--color-bg:#0a0c10;--color-surface:#111620;--color-border:#1e2535;--color-muted:#3a4560;--color-text:#c8d4e8;--color-heading:#eef2f8;--color-accent:#d4500a;--color-accent-dim:#8a3008;--color-signal:#7ab8d4;--color-success:#4a9e7a;--color-danger:#b03030;--color-warning:#c4882a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 80%,#26160f 0%,#111620 32%,#0a0c10 100%);color:var(--color-text);font-family:'IBM Plex Mono',monospace}
+.hidden{display:none!important}.screen{min-height:100vh;padding:1rem}.cover{background:linear-gradient(rgba(10,12,16,.7),rgba(10,12,16,.96)),url('https://aconcagua-stone-sentinel.vercel.app/art/cover/cover-concept-1.png') center/cover no-repeat}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--color-heading);font-weight:300}
+.setup-wrap{max-width:900px;margin:0 auto;padding-top:8vh;text-align:center}.opt{border:1px solid var(--color-border);background:var(--color-surface);padding:.9rem;margin:.6rem 0;cursor:pointer}
+.opt[aria-pressed=true]{border-color:var(--color-accent);box-shadow:0 0 0 1px var(--color-accent) inset}
+.btn{background:transparent;border:1px solid var(--color-border);color:var(--color-text);padding:.75rem 1rem;text-transform:uppercase;letter-spacing:.12em;cursor:pointer}.btn.main{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+.header{position:sticky;top:0;background:rgba(10,12,16,.9);backdrop-filter:blur(6px);border-bottom:1px solid var(--color-border);padding:.7rem 1rem;z-index:20}.progress{height:2px;background:var(--color-border)}.progress>div{height:100%;background:var(--color-signal);transition:width .4s}
+.layout{display:grid;gap:.8rem;padding:.8rem}.panel{border:1px solid var(--color-border);background:var(--color-surface);padding:.8rem}.tag{font-size:.7rem;color:var(--color-signal);letter-spacing:.12em}
+.bars .row{margin:.5rem 0}.bar{height:8px;background:var(--color-border)}.fill{height:100%;transition:width .6s, background .6s}
+.log{max-height:320px;overflow:auto;display:flex;flex-direction:column-reverse;scroll-behavior:smooth}.entry{border-bottom:1px solid #1a2334;padding:.55rem 0;animation:slide .36s ease}.entry small{color:var(--color-muted)}
+@keyframes slide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.env-grid,.actions{display:grid;gap:.6rem}.env{background:#0e121a;border:1px solid var(--color-border);padding:.65rem}.decision{position:relative;text-align:left;transition:.25s;border-left:1px solid var(--color-border)}.decision::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--color-accent);transition:.2s}
+.decision:hover{background:#141c2a;border-left-color:var(--color-accent)}.decision:hover::after{width:100%}.decision .cost{position:absolute;top:.45rem;right:.45rem;color:var(--color-muted);font-size:.67rem}.decision.desc{border-color:#2f5f4a}
+.flash{animation:flash .25s 2}@keyframes flash{50%{box-shadow:0 0 0 2px var(--color-danger) inset}}
+.quote{font-size:clamp(1.8rem,4.8vw,3.2rem);font-style:italic;max-width:16ch;margin:10vh auto 1.2rem}
+.outcome{margin-top:.8rem;padding:.8rem;border:1px solid var(--color-border)}
+.table{width:100%;border-collapse:collapse}.table td{border-bottom:1px solid var(--color-border);padding:.4rem .2rem}
+@media(min-width:900px){.layout{grid-template-columns:1fr 1.6fr;grid-template-areas:'body log' 'env env' 'dec dec' 'out out'}.body{grid-area:body}.field{grid-area:log}.envp{grid-area:env}.decp{grid-area:dec}.outp{grid-area:out}.env-grid{grid-template-columns:repeat(3,1fr)}.actions{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<section id="setup" class="screen cover">
+  <div class="setup-wrap">
+    <h1>Aconcagua: Stone Sentinel</h1>
+    <p>Select profile and scenario.</p>
+    <h3>Character</h3>
+    <button class="opt" data-group="char" data-value="balanced" aria-pressed="true">Francisco Aguirre · Balanced</button>
+    <button class="opt" data-group="char" data-value="cautious">Laura Kim · Cautious</button>
+    <button class="opt" data-group="char" data-value="resilient">Erik Lundvall · Resilient</button>
+    <h3>Scenario</h3>
+    <button class="opt" data-group="scn" data-value="stable" aria-pressed="true">Stable window</button>
+    <button class="opt" data-group="scn" data-value="volatile">Volatile weather</button>
+    <p><button id="toOnboarding" class="btn main" aria-label="Begin setup">Begin expedition</button></p>
+  </div>
+</section>
+
+<section id="onboarding" class="screen cover hidden"><div class="setup-wrap"><p class="quote">“The mountain doesn't ask if you're ready. The mountain rules.”</p><button id="startRun" class="btn main">Start run</button></div></section>
+
+<section id="game" class="screen hidden">
+  <div class="header"><strong>ACONCAGUA: STONE SENTINEL</strong> · <span id="turnLabel">TURN 1 / 12 · Day 1 · 06:00</span> · v1.4.5<div class="progress"><div id="pbar" style="width:8%"></div></div></div>
+  <div class="layout">
+    <aside class="panel body" id="bodyPanel"><div class="tag">BODY STATE</div><div class="bars" id="bars"></div></aside>
+    <section class="panel field"><div class="tag">FIELD LOG</div><div id="log" class="log"></div></section>
+    <section class="panel envp"><div class="tag">ENVIRONMENT</div><div class="env-grid" id="env"></div></section>
+    <section class="panel decp"><div class="tag">DECISIONS</div><div class="actions" id="actions"></div></section>
+    <section class="panel outp"><div class="tag">OUTCOME / DEBRIEF</div><div id="out" class="outcome">Run active.</div></section>
+  </div>
+</section>
+
+<script>
+const S={turn:1,maxTurns:12,day:1,time:360,position:0,highest:0,hasSummited:false,done:false,character:'balanced',scenario:'stable',cap:78,fat:18,exp:16,acc:28,weather:1,vis:1,terrain:1,log:[]};
+const chars={balanced:{cap:78,acc:28},cautious:{cap:74,acc:32},resilient:{cap:84,acc:24}};
+const scenarioScale={stable:.9,volatile:1.25};
+const actions=[{id:'advance',name:'ADVANCE',cost:'FE ↑'},{id:'wait',name:'WAIT',cost:'FE'},{id:'observe',name:'OBSERVE',cost:'C'},{id:'rest',name:'REST',cost:'REC'},{id:'descend',name:'DESCEND',cost:'SAFE',desc:true}];
+
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const g=b.dataset.group;document.querySelectorAll(`.opt[data-group="${g}"]`).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');S[g==='char'?'character':'scenario']=b.dataset.value;});
+
+toOnboarding.onclick=()=>{setup.classList.add('hidden');onboarding.classList.remove('hidden');};
+startRun.onclick=()=>{Object.assign(S,{turn:1,day:1,time:360,position:0,highest:0,hasSummited:false,done:false,weather:1,vis:1,terrain:1,log:[]});S.cap=chars[S.character].cap;S.acc=chars[S.character].acc;S.fat=18;S.exp=16;onboarding.classList.add('hidden');game.classList.remove('hidden');render();addLog('Run initialized. System instruments active.');};
+
+function envShift(){const rng=Math.random;S.weather=Math.max(0,Math.min(3,S.weather+(rng()<.35?1:rng()<.6?-1:0)));S.vis=Math.max(0,Math.min(3,S.vis+(rng()<.33?1:rng()<.58?-1:0)));S.terrain=Math.max(0,Math.min(3,S.terrain+(rng()<.24?1:rng()<.45?-1:0)));}
+function resolve(action){if(S.done)return;envShift();
+  const ep=((S.weather*12)+(S.terrain*10)+(S.vis*8)+(S.position*5))*scenarioScale[S.scenario];
+  const bt=(S.cap*.62)+(S.acc*.55)-(S.fat*.42)-(S.exp*.45);
+  let outcome='Strategic Retreat'; let deltaPos=0;
+  if(action==='advance'){const c=48+(bt-ep)*.55; if(Math.random()*100<c){deltaPos=1; outcome='Progress';} else if(Math.random()<.18){outcome='Stall';} else outcome='Setback'; S.fat+=10; S.exp+=9; S.time+=90;}
+  if(action==='wait'){S.fat+=2;S.exp+=4;S.time+=60;outcome='Hold';}
+  if(action==='observe'){S.fat+=3;S.exp+=3;S.time+=45;outcome='Signal calibration';}
+  if(action==='rest'){S.fat-=10;S.exp-=8;S.acc+=2;S.time+=75;outcome='Recovery hold';}
+  if(action==='descend'){deltaPos=-1;S.fat-=4;S.exp-=4;S.time+=75;outcome='Controlled descent';}
+  if(outcome==='Setback')deltaPos=-1;
+  S.position=Math.max(0,Math.min(6,S.position+deltaPos)); S.highest=Math.max(S.highest,S.position);
+  if(S.position===6)S.hasSummited=true;
+  S.fat=Math.max(0,Math.min(100,S.fat)); S.exp=Math.max(0,Math.min(100,S.exp)); S.acc=Math.max(0,Math.min(100,S.acc));
+  if(S.time>=1440){S.time-=1440;S.day++;}
+  S.turn++; const hh=String(Math.floor(S.time/60)).padStart(2,'0'),mm=String(S.time%60).padStart(2,'0');
+  const perceived=Math.round(Math.max(0,Math.min(100,52+(bt-ep)*.4+(Math.random()*16-8))));
+  addLog(`${hh}:${mm} · ${action.toUpperCase()} · EP ${ep.toFixed(1)} / BT ${bt.toFixed(1)} · Signal ${perceived}% · ${outcome}.`);
+  if(S.exp>86||S.fat>92){end('Collapse / Permit / Window','danger','Body limits exceeded under environmental pressure.');bodyPanel.classList.add('flash');}
+  else if(S.turn>S.maxTurns){
+    if(S.hasSummited&&S.position===0)end('Summit and Safe Return','success','Summit memory preserved and park exit completed.');
+    else if(S.hasSummited||S.highest>=5)end('High Point Return','signal','You read limits and returned from high altitude.');
+    else end('Strategic Retreat / Rescue','warning','Descent preserved continuity under uncertain weather.');
+  } else render();
+}
+function end(title,tone,msg){S.done=true;const map={success:'var(--color-success)',warning:'var(--color-warning)',danger:'var(--color-danger)',signal:'var(--color-signal)'};out.style.borderColor=map[tone];out.innerHTML=`<h2 style="color:${map[tone]}">${title}</h2><p>${msg}</p><table class="table"><tr><td>Turns played</td><td>${S.turn-1}</td></tr><tr><td>Highest position</td><td>${S.highest}/6</td></tr><tr><td>Final Fatigue</td><td>${S.fat}</td></tr><tr><td>Final Exposure</td><td>${S.exp}</td></tr></table><p><a class='btn' href='/index.html'>Back to landing</a> <button class='btn main' onclick='location.reload()'>New run</button></p>`;render();}
+function addLog(t){S.log.unshift(t);log.innerHTML=S.log.map((x,i)=>`<article class='entry'><small>T${Math.max(1,S.turn-1-i)}</small><div>${x}</div></article>`).join('');}
+function colorFor(metric,val){if(metric==='fat'||metric==='exp'){if(val<40)return'var(--color-success)';if(val<70)return'var(--color-warning)';return'var(--color-danger)';} if(val>70)return'var(--color-success)';if(val>45)return'var(--color-warning)';return'var(--color-danger)';}
+function render(){
+  const hh=String(Math.floor(S.time/60)).padStart(2,'0'),mm=String(S.time%60).padStart(2,'0');
+  turnLabel.textContent=`TURN ${Math.min(S.turn,S.maxTurns)} / ${S.maxTurns} · Day ${S.day} · ${hh}:${mm}`; pbar.style.width=`${Math.min(100,(S.turn-1)/S.maxTurns*100)}%`;
+  const m=[['Capacity','cap',S.cap],['Fatigue','fat',S.fat],['Exposure','exp',S.exp],['Acclimatization','acc',S.acc]];
+  bars.innerHTML=m.map(([label,key,val])=>`<div class='row'><div>${label} <span style='color:var(--color-muted)'>${Math.round(val)}</span></div><div class='bar'><div class='fill' style='width:${Math.max(0,Math.min(100,val))}%;background:${colorFor(key,val)}'></div></div></div>`).join('');
+  env.innerHTML=`<div class='env'>Weather<br><strong>${['Calm','Variable','Harsh','Severe'][S.weather]}</strong><br><small>± ${18+S.weather*7}%</small></div><div class='env'>Visibility<br><strong>${['Open','Mixed','Low','Blind'][S.vis]}</strong><br><small>± ${16+S.vis*8}%</small></div><div class='env'>Terrain<br><strong>${['Stable','Loose','Steep','Fractured'][S.terrain]}</strong><br><small>± ${14+S.terrain*8}%</small></div>`;
+  actions.innerHTML=actionsData().map(a=>`<button role='button' aria-label='${a.name}' class='btn decision ${a.desc?'desc':''}' ${S.done?'disabled':''} onclick="resolve('${a.id}')"><span>${a.name}</span><span class='cost'>${a.cost}</span></button>`).join('');
+}
+function actionsData(){return actions;}
+window.resolve=resolve;
+</script>
+</body>
+</html>
