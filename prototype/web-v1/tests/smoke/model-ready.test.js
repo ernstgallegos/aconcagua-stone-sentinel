@@ -250,3 +250,50 @@ test('shape validator catches malformed third item in characterEvents array', as
   assert.equal(errors[0].category, 'invalid shape');
   assert.match(errors[0].detail, /\$\[2\]\.limits/);
 });
+
+test('shape validator catches malformed second item in outcomes array', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('outcomes.json')) {
+        return {
+          ok: true, status: 200,
+          async json() {
+            return ['Strategic Retreat', { bad: true }];
+          },
+        };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /\$\[1\]/);
+});
+
+test('shape validator catches malformed second predefined scenario entry', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('scenarios.web-v1.json')) {
+        const baseline = await fakeFetch(requestPath);
+        const data = await baseline.json();
+        data.predefinedScenarios = [
+          { id: 'scenario-1' },
+          { id: null },
+        ];
+        return { ok: true, status: 200, async json() { return data; } };
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'invalid shape');
+  assert.match(errors[0].detail, /predefinedScenarios\[1\]\.id/);
+});

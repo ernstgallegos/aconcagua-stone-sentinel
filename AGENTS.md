@@ -269,6 +269,7 @@ In addition to the changelog:
 - Public markdown reader routes should inherit the same visual token system as `/` (surfaces, borders, typography, focus patterns) so document deep-links feel like the same product, not a detached microsite.
 
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
+- Testability for legacy inline-heavy UI modules is safer when tiny pure helpers (e.g., nationality/flag fallback formatter) are extracted without behavior changes; this enables deterministic unit coverage while keeping runtime rendering contracts intact.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
 - Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
