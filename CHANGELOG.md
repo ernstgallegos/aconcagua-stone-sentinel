@@ -9,6 +9,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the public landing page visual language with a bolder alpine-night art direction: new typography stack (`Cormorant Garamond` + `Syne`), animated prism sweeps, expanded visual-atlas gallery section, and richer kinetic treatment across hero/cards/CTA surfaces in `index.html` and `src/styles/public-tokens.css`.
+- Applied the same aesthetic system to `prototype/web-v1` so the playable experience now shares the same typography family, accent palette, animated atmospheric background treatment, and watch-band motion polish (`prototype/web-v1/index.html`, `prototype/web-v1/css/tokens.css`, `prototype/web-v1/css/themes.css`, `prototype/web-v1/css/reset.css`, `prototype/web-v1/css/animations.css`, `prototype/web-v1/css/components.css`).
+
 ## [1.4.6] — 2026-04
 
 

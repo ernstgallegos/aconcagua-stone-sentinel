@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=IBM+Plex+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
@@ -308,6 +308,38 @@
         grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
       }
 
+      .gallery-grid {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      }
+
+      .gallery-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        background: #0e1826d9;
+      }
+
+      .gallery-card img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        filter: saturate(1.04) contrast(1.05);
+        transition: transform 700ms ease, filter 700ms ease;
+      }
+
+      .gallery-card:hover img {
+        transform: scale(1.06);
+        filter: saturate(1.14) contrast(1.07);
+      }
+
+      .gallery-card figcaption {
+        padding: 0.7rem 0.8rem;
+        color: var(--text-dim);
+        font-size: 0.84rem;
+      }
+
       .intel-card {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-sm);
@@ -433,6 +465,69 @@
         gap: 0.5rem 1rem;
       }
 
+
+      .hero-copy,
+      .manifest,
+      .flow,
+      .panel,
+      .intel-card,
+      .status-strip,
+      .outcome,
+      .final-band {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .hero-copy::after,
+      .manifest::after,
+      .flow::after,
+      .panel::after,
+      .intel-card::after,
+      .status-strip::after,
+      .outcome::after,
+      .final-band::after {
+        content: "";
+        position: absolute;
+        inset: -40% -80%;
+        background: linear-gradient(120deg, transparent 45%, #9ed4ff1e 50%, transparent 56%);
+        transform: translateX(-38%) rotate(9deg);
+        animation: prism-sweep 12s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .hero-art img {
+        animation: cover-breathe 14s ease-in-out infinite alternate;
+      }
+
+      .hero-cta .btn {
+        box-shadow: 0 0 0 1px #ffffff12 inset, 0 14px 30px #02060f7d;
+      }
+
+      .hero-cta .btn-primary {
+        background: linear-gradient(132deg, #8fd8ff 0%, #f2ba79 100%);
+      }
+
+      .section-kicker {
+        color: #f2ba79;
+      }
+
+      .flow-node {
+        backdrop-filter: blur(2px);
+      }
+
+      @keyframes prism-sweep {
+        0% { transform: translateX(-45%) rotate(8deg); opacity: 0; }
+        28% { opacity: 1; }
+        100% { transform: translateX(45%) rotate(8deg); opacity: 0; }
+      }
+
+      @keyframes cover-breathe {
+        from { transform: scale(1) translateY(0); filter: saturate(0.98) contrast(1.03); }
+        to { transform: scale(1.035) translateY(-0.7%); filter: saturate(1.08) contrast(1.06); }
+      }
+
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
         .hero { grid-template-columns: 1.25fr 0.75fr; }
@@ -476,7 +571,7 @@
           <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
           <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
+            <span data-i18n="heroMeta1">Public release: v1.4.6 · Active route: welcome → setup → onboarding → game → outcomes.</span>
             <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
           </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
@@ -587,6 +682,27 @@
         </div>
       </section>
 
+      <section id="visual-atlas" class="section" aria-labelledby="atlas-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="atlasKicker">Visual atlas</p>
+          <h2 id="atlas-title" data-i18n="atlasTitle">Art direction anchors: cold minerals, wind-burnt light, and thin-air silence.</h2>
+        </div>
+        <div class="gallery-grid">
+          <figure class="gallery-card">
+            <img src="/art/concept-art/curated/concept-curated-1.webp" alt="Sunrise slopes and route tension in Aconcagua concept art" data-i18n-attr="atlasAlt1:alt" loading="lazy" />
+            <figcaption data-i18n="atlasCap1">Opening pressure: clarity with hidden cost.</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="/art/concept-art/curated/concept-curated-4.webp" alt="High-camp isolation and atmospheric risk in Aconcagua concept art" data-i18n-attr="atlasAlt2:alt" loading="lazy" />
+            <figcaption data-i18n="atlasCap2">High-camp fragility: confidence degrades before collapse.</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="/art/concept-art/curated/concept-curated-7.webp" alt="Descent ethics and safe return in Aconcagua concept art" data-i18n-attr="atlasAlt3:alt" loading="lazy" />
+            <figcaption data-i18n="atlasCap3">Descent ethics: summit means nothing without safe return.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section id="status" class="section" aria-labelledby="status-title">
         <div class="section-head">
           <p class="section-kicker" data-i18n="statusKicker">Public readiness</p>
@@ -601,7 +717,7 @@
             </div>
             <div class="status-item">
               <span class="status-label" data-i18n="statusLabel2">Current release</span>
-              <span data-i18n="statusValue2">v1.4.5 · public web prototype</span>
+              <span data-i18n="statusValue2">v1.4.6 · public web prototype</span>
             </div>
             <div class="status-item">
               <span class="status-label" data-i18n="statusLabel3">Part 2 scope</span>
@@ -642,7 +758,7 @@
         <div class="footer-grid">
           <section class="footer-block" aria-label="Project status and origin">
             <h3 data-i18n="footerProjectTitle">Project</h3>
-            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.</p>
+            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.6 · Mountain-first narrative systems.</p>
           </section>
           <section class="footer-block" aria-label="Official contact channels">
             <h3 data-i18n="footerContactTitle">Contact</h3>
@@ -680,7 +796,7 @@
           eyebrow: 'Mountain-first, consequence-forward design',
           heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
           heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
-          heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
+          heroMeta1: 'Public release: v1.4.6 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
@@ -711,10 +827,18 @@
           intel2Title: 'Public roadmap', intel2Body: 'Stage-by-stage implementation map and current execution status.', intel2Cta: 'Open roadmap',
           intel3Title: 'Repository + README', intel3Body: 'Technical source, governance policy links, and canonical routing/deploy references.', intel3Cta: 'Open README',
           intel4Title: 'Official channels', intel4Body: 'Follow updates on Instagram or contact the project team directly for collaboration and press.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          atlasKicker: 'Visual atlas',
+          atlasTitle: 'Art direction anchors: cold minerals, wind-burnt light, and thin-air silence.',
+          atlasAlt1: 'Sunrise slopes and route tension in Aconcagua concept art',
+          atlasAlt2: 'High-camp isolation and atmospheric risk in Aconcagua concept art',
+          atlasAlt3: 'Descent ethics and safe return in Aconcagua concept art',
+          atlasCap1: 'Opening pressure: clarity with hidden cost.',
+          atlasCap2: 'High-camp fragility: confidence degrades before collapse.',
+          atlasCap3: 'Descent ethics: summit means nothing without safe return.',
           statusKicker: 'Public readiness',
           statusTitle: 'Current state: playable today, auditable in detail, and open to outside review.',
           statusLabel1: 'Playable flow', statusValue1: 'title → setup → onboarding → game → outcomes/debrief',
-          statusLabel2: 'Current release', statusValue2: 'v1.4.5 · public web prototype',
+          statusLabel2: 'Current release', statusValue2: 'v1.4.6 · public web prototype',
           statusLabel3: 'Part 2 scope', statusValue3: 'Narrative bridge currently gated by summit-safe-return progression.',
           outcomesKicker: 'Outcome ethics',
           outcomesTitle: 'Canonical outcomes prioritize consequence, timing, and safe return.',
@@ -724,7 +848,7 @@
           finalIntro: 'The quickest way to understand the project is simple: play one run, then read your signals against the documentation.',
           finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
           footerProjectTitle: 'Project',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.6 · Mountain-first narrative systems.',
           footerContactTitle: 'Contact',
           footerContactEmail: 'Official email',
           footerContactInstagram: 'Instagram',
@@ -745,7 +869,7 @@
           eyebrow: 'Diseño mountain-first, con consecuencias reales',
           heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
-          heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
+          heroMeta1: 'Release pública: v1.4.6 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
@@ -776,10 +900,18 @@
           intel2Title: 'Roadmap público', intel2Body: 'Mapa de implementación por etapas y estado actual de ejecución.', intel2Cta: 'Abrir roadmap',
           intel3Title: 'Repositorio + README', intel3Body: 'Código fuente, enlaces de gobernanza y referencias canónicas de ruteo/deploy.', intel3Cta: 'Abrir README',
           intel4Title: 'Canales oficiales', intel4Body: 'Seguí novedades en Instagram o contactá directamente al equipo para colaboración y prensa.', intel4Ig: 'Instagram', intel4Mail: 'Email',
+          atlasKicker: 'Atlas visual',
+          atlasTitle: 'Anclas de dirección de arte: minerales fríos, luz de viento y silencio de altura.',
+          atlasAlt1: 'Laderas al amanecer y tensión de ruta en arte conceptual de Aconcagua',
+          atlasAlt2: 'Aislamiento en campamento alto y riesgo atmosférico en arte conceptual de Aconcagua',
+          atlasAlt3: 'Ética de descenso y retorno seguro en arte conceptual de Aconcagua',
+          atlasCap1: 'Presión inicial: claridad con costo oculto.',
+          atlasCap2: 'Fragilidad en altura: la confianza cae antes del colapso.',
+          atlasCap3: 'Ética de descenso: la cumbre no vale sin retorno seguro.',
           statusKicker: 'Preparación pública',
           statusTitle: 'Estado actual: jugable ahora, auditable al detalle y abierto a revisión externa.',
           statusLabel1: 'Flujo jugable', statusValue1: 'título → setup → onboarding → juego → outcomes/debrief',
-          statusLabel2: 'Release actual', statusValue2: 'v1.4.5 · prototipo web público',
+          statusLabel2: 'Release actual', statusValue2: 'v1.4.6 · prototipo web público',
           statusLabel3: 'Alcance Parte 2', statusValue3: 'Puente narrativo hoy gateado por progresión de cumbre + retorno seguro.',
           outcomesKicker: 'Ética de outcomes',
           outcomesTitle: 'Los outcomes canónicos priorizan consecuencia, timing y regreso seguro.',
@@ -789,7 +921,7 @@
           finalIntro: 'La forma más rápida de entender el proyecto es simple: jugá una corrida y después leé tus señales junto a la documentación.',
           finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
           footerProjectTitle: 'Proyecto',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.5 · Sistemas narrativos con la montaña como eje.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.6 · Sistemas narrativos con la montaña como eje.',
           footerContactTitle: 'Contacto',
           footerContactEmail: 'Email oficial',
           footerContactInstagram: 'Instagram',

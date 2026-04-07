@@ -24,6 +24,31 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  animation: summit-aurora 18s ease-in-out infinite alternate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ice) 24%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ochre) 18%, transparent) 1px, transparent 1px);
+  background-size: 34px 34px;
+  animation: contour-drift 14s linear infinite;
+}
+
+@keyframes summit-aurora {
+  from { background-position: 0% 0%, 0% 0%, 0% 0%; }
+  to { background-position: 3% -2%, -2% 2%, 0% 0%; }
+}
+
+@keyframes contour-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(34px); }
 }
 
 img, video, canvas, audio, iframe, embed, object {

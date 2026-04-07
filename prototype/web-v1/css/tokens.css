@@ -13,31 +13,31 @@
 
 :root {
   /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --bg:        #060b11;
+  --surface:   #101928;
+  --surface2:  #19273b;
+  --border:    #38536f;
+  --stone:     #c4b39c;
+  --ochre:     #f2ba79;
+  --ochre-dim: #9f7242;
+  --ice:       #8fd7ff;
+  --ice-dim:   #5b8fae;
+  --white:     #eff5fb;
+  --red:       #d16f65;
+  --red-dim:   #924740;
+  --safety:    #83b79e;
+  --text:      #d8e5f2;
+  --text-dim:  #95adc3;
+  --text-soft: #b3c5d8;
+  --muted:     #95adc3;
+  --accent:    #f2ba79;
 
   /* ── Typography ── */
-  --brand:   'Playfair Display', 'Lora', Georgia, serif;
+  --brand:   'Cormorant Garamond', 'Bodoni MT', Didot, serif;
   --heading: var(--brand);
   --mono:    'IBM Plex Mono', monospace;
   --serif:   var(--brand);
-  --sans:    'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --sans:    'Syne', 'Avenir Next', system-ui, sans-serif;
   --body:    var(--sans);
   --ui:      var(--sans);
 

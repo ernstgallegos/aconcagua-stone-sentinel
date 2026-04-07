@@ -87,6 +87,21 @@
 
 .pop-in { animation: pop-in 0.2s ease-out; }
 
+@keyframes spectral-scan {
+  from { transform: translateX(-120%); opacity: 0; }
+  30% { opacity: 0.45; }
+  to { transform: translateX(130%); opacity: 0; }
+}
+
+.watch-band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 38%, color-mix(in srgb, var(--ice) 24%, transparent) 50%, transparent 62%);
+  animation: spectral-scan 8s ease-in-out infinite;
+}
+
 /* ══════════════════════════════════════
    REDUCE MOTION (Decisions 4, 14, 16)
    Respects prefers-reduced-motion
@@ -100,6 +115,10 @@
 
   /* Screen transitions — cut directly */
   .screen.active {
+    animation: none;
+  }
+
+  .watch-band::after {
     animation: none;
   }
 

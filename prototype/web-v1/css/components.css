@@ -1994,6 +1994,8 @@
 
 /* ── Watch Band ── */
 .watch-band {
+  position: relative;
+  overflow: hidden;
   background: var(--surface);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
