@@ -9,10 +9,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.4.6] — 2026-04
+
+
 ### Added
 
 - Added `src/styles/public-tokens.css`: shared design tokens and base styles for public-facing surfaces (landing and md-viewer). Extracts the identical `:root` CSS custom property block (colors, surfaces, borders, typography stacks, spacing scale, radius, shadows), base reset (`*`, `html`, `body`, `body::before`, `a`), and `.lang-switch`/`.lang-btn` component CSS that were duplicated verbatim across `index.html` and `md-viewer.html`. Aligns with the modular CSS direction in `prototype/web-v1/css/`.
 - Added `src/i18n/public-lang.js`: shared i18n bootstrap for public surfaces. Exposes `window.PublicLang` with `LANG_KEY` (the shared `aconcagua_language_v1` localStorage key), `detectInitialLang(translations)` (localStorage read + browser language fallback), and `wireLangButtons(applyFn)` (click listener wiring for `.lang-btn` elements). Removes the duplicated init machinery that was inline in both HTML files.
+- Extracted `findTurningPoint`, `findPrimaryCause`, and `buildReflectionPrompts` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/debrief.js` as pure, testable functions with injected deps (`turnLog`, `POS_LABELS`, `finalOutcome`, `characterId`, `lang`). No gameplay behavior change.
+- Added `prototype/web-v1/tests/unit/debrief-analysis.test.js`: 20 unit tests covering `findTurningPoint` flag priority order (irreversible > critical > weather-window > water-depleted > fallback), EN/ES localization, empty log fallback; `findPrimaryCause` for all 10 canonical outcomes, null/unknown fallback, EN/ES; `buildReflectionPrompts` static/dynamic structure, character-specific prompts, dynamic pool cap at 2.
+
 
 ### Changed
 

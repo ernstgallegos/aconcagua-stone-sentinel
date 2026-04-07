@@ -28,6 +28,9 @@ import {
 import {
   classifyOutcome as classifyOutcomeView,
   buildDebriefAnalytics as buildDebriefAnalyticsView,
+  findTurningPoint as findTurningPointView,
+  findPrimaryCause as findPrimaryCauseView,
+  buildReflectionPrompts as buildReflectionPromptsView,
 } from './screens/debrief.js';
 import {
   localizePart2Narrative as localizePart2NarrativeView,
@@ -523,7 +526,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.5',
+      introVersionValue: 'Prototype · v1.4.6',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -603,7 +606,7 @@ const I18N = {
       introClose: 'Cerrar',
       introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
       introVersionLabel: 'Versión',
-      introVersionValue: 'Prototipo · v1.4.5',
+      introVersionValue: 'Prototipo · v1.4.6',
       introFormatLabel: 'Formato',
       introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
       introAccessLabel: 'Acceso',
@@ -3345,78 +3348,15 @@ function classifyOutcome() {
 }
 
 function findTurningPoint() {
-  const irreversible = G.turnLog.find(e => e.flags.includes('first-irreversible-point'));
-  if (irreversible) return CURRENT_LANGUAGE === 'es' ? `Turno ${irreversible.turn}: se alcanzó el Primer Punto Irreversible en ${POS_LABELS[irreversible.position]}. Los costos de retirada aumentaron desde ese punto.` : `Turn ${irreversible.turn}: First Irreversible Point reached at ${POS_LABELS[irreversible.position]}. Retreat costs increased from this point.`;
-
-  const firstCritical = G.turnLog.find(e => e.flags.some(f => f.includes('critical')));
-  if (firstCritical) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstCritical.turn}: primera bandera crítica (${firstCritical.flags.find(f => f.includes('critical'))}).` : `Turn ${firstCritical.turn}: first critical flag (${firstCritical.flags.find(f => f.includes('critical'))}).`;
-
-  const firstWindowClose = G.turnLog.find(e => e.flags.includes('weather-window-closed'));
-  if (firstWindowClose) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstWindowClose.turn}: se cerró la ventana climática; las condiciones se degradaron después.` : `Turn ${firstWindowClose.turn}: weather window closed; conditions degraded after.`;
-
-  const firstWater0 = G.turnLog.find(e => e.flags.includes('water-depleted'));
-  if (firstWater0) return CURRENT_LANGUAGE === 'es' ? `Turno ${firstWater0.turn}: agua agotada; el riesgo de colapso se aceleró.` : `Turn ${firstWater0.turn}: water depleted; collapse risk accelerated.`;
-
-  return uiText('No single event dominated; the outcome emerged from cumulative micro-decisions.', 'Ningún evento único dominó; el resultado emergió de microdecisiones acumuladas.');
+  return findTurningPointView({ turnLog: G.turnLog, POS_LABELS, lang: CURRENT_LANGUAGE });
 }
 
 function findPrimaryCause() {
-  const reasonByOutcome = {
-    'Rescue': uiText('Main cause: body thresholds crossed outside camp. Actionable next run: call descent one turn earlier once trend worsens with low confidence.', 'Causa principal: se cruzaron umbrales corporales fuera de campamento. Acción para la próxima partida: ordenar descenso un turno antes cuando la tendencia empeore con baja confianza.'),
-    'Collapse (Fatigue)': uiText('Main cause: fatigue debt compounded faster than recovery windows. Actionable next run: rotate advance/slow/wait before entering high-camp segment.', 'Causa principal: la deuda de fatiga se acumuló más rápido que las ventanas de recuperación. Acción para la próxima partida: alternar avanzar/lento/esperar antes de entrar al tramo de campamentos altos.'),
-    'Collapse (Exposure)': uiText('Main cause: exposure accumulated during adverse pressure turns. Actionable next run: avoid chaining aggressive pushes while trend is worsening.', 'Causa principal: la exposición se acumuló durante turnos de presión adversa. Acción para la próxima partida: evitar encadenar empujes agresivos cuando la tendencia empeora.'),
-    'Resource Exhaustion': uiText('Main cause: water/food burn outpaced route progress. Actionable next run: protect resources early and treat warning chips as mandatory replanning moments.', 'Causa principal: el consumo de agua/comida superó el progreso en ruta. Acción para la próxima partida: proteger recursos temprano y tratar los avisos como momentos obligatorios de replanteo.'),
-    'Permit Expired': uiText('Main cause: permit clock overran before safe completion. Actionable next run: tighten tempo on low-risk windows and descend earlier when delays stack.', 'Causa principal: el reloj del permiso venció antes de completar de forma segura. Acción para la próxima partida: acelerar en ventanas de bajo riesgo y descender antes cuando se acumulen demoras.'),
-    'Expedition Window Closed': uiText('Main cause: summit window closed before execution aligned. Actionable next run: convert waiting turns into controlled movement during optimal time blocks.', 'Causa principal: la ventana de cumbre se cerró antes de alinear la ejecución. Acción para la próxima partida: convertir turnos de espera en movimiento controlado durante bloques horarios óptimos.'),
-    'Strategic Retreat': uiText('Main cause: chosen retreat to preserve return safety. Actionable next run: compare retreat trigger turn against body/resource warning onset to calibrate risk timing.', 'Causa principal: retirada elegida para preservar seguridad de retorno. Acción para la próxima partida: comparar el turno de retirada con el inicio de alertas corporales/de recursos para calibrar el timing del riesgo.'),
-    'High Point Return': uiText('Main cause: progress peak reached but return margin remained the priority. Actionable next run: reserve more body capacity before the final push segment.', 'Causa principal: se alcanzó el punto más alto pero el margen de retorno siguió siendo prioridad. Acción para la próxima partida: reservar más capacidad corporal antes del tramo final.'),
-    'Summit and Safe Return': uiText('Main cause: pressure management stayed ahead of cumulative debt. Actionable next run: replicate pacing pattern around warning transitions.', 'Causa principal: la gestión de presión se mantuvo por delante de la deuda acumulada. Acción para la próxima partida: replicar el patrón de ritmo en las transiciones de alerta.'),
-    'Fatality': uiText('Main cause: critical limits were exceeded beyond recoverable range. Actionable next run: treat first critical flag as immediate descend trigger.', 'Causa principal: se superaron límites críticos fuera de rango recuperable. Acción para la próxima partida: tratar la primera bandera crítica como disparador inmediato de descenso.'),
-  };
-  return reasonByOutcome[G.finalOutcome] || uiText('Main cause: cumulative micro-decisions under uncertainty. Actionable next run: review first warning turn and adjust tempo one step earlier.', 'Causa principal: microdecisiones acumuladas bajo incertidumbre. Acción para la próxima partida: revisar el primer turno de alerta y ajustar el ritmo un paso antes.');
+  return findPrimaryCauseView({ finalOutcome: G.finalOutcome, lang: CURRENT_LANGUAGE });
 }
 
-
 function buildReflectionPrompts() {
-  const log = G.turnLog;
-  const staticPrompts = [
-    { text: uiText('Which signal influenced your choices most?', '¿Qué señal influyó más en tus elecciones?'), dynamic:false },
-    { text: uiText('Did waiting feel like strategy or surrender?', '¿Esperar se sintió como estrategia o como rendición?'), dynamic:false },
-    { text: uiText('Did the outcome feel earned, or imposed by the system?', '¿El resultado se sintió ganado o impuesto por el sistema?'), dynamic:false },
-  ];
-  const dynamicPool = [];
-
-  const worseningAdvances = log.filter(e => (e.decision==='advance'||e.decision==='advance_slowly') && e.trend==='worsening').length;
-  if (worseningAdvances >= 3) dynamicPool.push('The trend said worsening on multiple turns you chose to advance. What were you reading instead?');
-  const waitCount = log.filter(e => e.decision==='wait').length;
-  if (waitCount >= 4) dynamicPool.push('You waited more than you moved. Was that reading the system — or avoiding it?');
-  const earlyResource = log.find(e => e.turn < 10 && (e.flags.includes('water-depleted')||e.flags.includes('food-depleted')));
-  if (earlyResource) dynamicPool.push('Resources ran out earlier than expected. When did the math stop being in your favor?');
-  const earlyDescent = log.find(e => e.decision==='descend' && e.turn < 14);
-  if (earlyDescent) dynamicPool.push('You called it early. What signal made that feel like the right moment?');
-  const incap = log.find(e => e.flags.includes('critical-fatigue')||e.flags.includes('critical-exposure'));
-  if (incap) dynamicPool.push(uiText(
-    'The body gave signals before it stopped. At what point did they become hard to ignore?',
-    'El cuerpo dio señales antes de detenerse. ¿En qué punto se volvieron imposibles de ignorar?'
-  ));
-
-  // character-specific
-  const charPrompts = {
-    francisco: 'Endurance kept you moving. Which signals almost got buried under that stamina?',
-    laura: 'Your readings were precise. Did caution help timing, or close a useful window?',
-    erik: 'Experience sharpened execution. When did confidence start filtering risk signals out?',
-    daniela: uiText(
-      'You read the environment early. How often did your body force a different decision?',
-      'Leíste el entorno temprano. ¿Cuántas veces tu cuerpo te obligó a decidir distinto?'
-    ),
-    blake: 'Determination was real. Which turns revealed the gap between intent and preparation?',
-    irina: 'Your baseline was strong. Where did old pattern recognition conflict with present conditions?',
-  };
-  dynamicPool.push(charPrompts[G.character.id] || 'What did the mountain show that your assumptions almost ignored?');
-
-  // pick 2
-  const picked = dynamicPool.slice(0, 2).map(t => ({ text:t, dynamic:true }));
-  return [...staticPrompts, ...picked];
+  return buildReflectionPromptsView({ turnLog: G.turnLog, characterId: G.character.id, lang: CURRENT_LANGUAGE });
 }
 
 function endRun(returnedToHorcones) {
