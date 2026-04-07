@@ -32,7 +32,7 @@ assert_contains "$LANDING_HTML" "prototype/web-v1/index.html" "Landing CTA"
 fetch "/prototype/web-v1/index.html" "$WEBV1_HTML"
 assert_contains "$WEBV1_HTML" "id=\"screen-title\"" "web-v1 title screen"
 assert_contains "$WEBV1_HTML" "id=\"screen-expedition-setup\"" "web-v1 expedition setup screen"
-assert_contains "$WEBV1_HTML" "Prototype · v1.4.5" "web-v1 version chip"
+assert_contains "$WEBV1_HTML" "Prototype · v1.4.6" "web-v1 version chip"
 
 fetch "/docs/deep-links.web-v1.md" "$DEEP_LINKS_MD"
 assert_contains "$DEEP_LINKS_MD" "mendoza_room" "Part 2 deep-link docs"
