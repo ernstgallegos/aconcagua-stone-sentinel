@@ -97,6 +97,14 @@
       "load_priority": 8,
       "path": "docs/ai/skills/prompting-for-frontend-aesthetics-skill.md",
       "last_updated": "2026-04-01"
+    },
+    {
+      "id": "data-contracts-guide",
+      "type": "reference",
+      "language": "en",
+      "load_priority": 9,
+      "path": "docs/data-contracts-guide.md",
+      "last_updated": "2026-04-07"
     }
   ]
 }

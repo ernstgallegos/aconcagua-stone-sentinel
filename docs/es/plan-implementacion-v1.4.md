@@ -1,5 +1,8 @@
 # Plan de Implementación v1.4 (documentación)
 
+> **Documento histórico — plan de implementación v1.4.**  
+> Este documento refleja el backlog por fases tal como fue redactado para v1.4. Las fases 1–3 están completas. Para el límite actual entre live/diferido y el mapa de módulos, ver [`docs/repo-truth.md`](../repo-truth.md) y [`CHANGELOG.md`](../../CHANGELOG.md).
+
 Este documento traduce el diseño consolidado v1.4 en entregables de planificación para ejecución de producto.
 
 ## Alcance

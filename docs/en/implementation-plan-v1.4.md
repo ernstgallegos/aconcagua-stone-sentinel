@@ -1,5 +1,8 @@
 # Implementation Plan v1.4 (documentation)
 
+> **Historical document — v1.4 implementation plan.**  
+> This document reflects the phased backlog as written for v1.4. Phases 1–3 are complete. For the current live/deferred boundary and module map, see [`docs/repo-truth.md`](../repo-truth.md) and [`CHANGELOG.md`](../../CHANGELOG.md).
+
 This document translates consolidated design v1.4 into planning deliverables for product execution.
 
 ## Scope

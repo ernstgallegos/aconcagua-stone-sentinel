@@ -14,6 +14,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Added `docs/data-contracts-guide.md`: plain-language schema reference for `characters.json`, `character_events.json`, `context_events.json`, and `nodes.json`. Documents required fields, accepted values (including ISO 3166-1 alpha-2 format for `nationalityCode`), normalization transforms applied by `normalizeRouteData()`, and common validation error messages produced by `validateDataConfigShape`.
+- Added full screen-ID table to `docs/deep-links-summary.md`: lists all 15 screen IDs (from `prototype/web-v1/index.html`), their descriptions, valid parameters, and gate requirements. Added valid character ID list and URL-encoded outcome value reference.
+
+
+### Added
+
 - Added `src/styles/public-tokens.css`: shared design tokens and base styles for public-facing surfaces (landing and md-viewer). Extracts the identical `:root` CSS custom property block (colors, surfaces, borders, typography stacks, spacing scale, radius, shadows), base reset (`*`, `html`, `body`, `body::before`, `a`), and `.lang-switch`/`.lang-btn` component CSS that were duplicated verbatim across `index.html` and `md-viewer.html`. Aligns with the modular CSS direction in `prototype/web-v1/css/`.
 - Added `src/i18n/public-lang.js`: shared i18n bootstrap for public surfaces. Exposes `window.PublicLang` with `LANG_KEY` (the shared `aconcagua_language_v1` localStorage key), `detectInitialLang(translations)` (localStorage read + browser language fallback), and `wireLangButtons(applyFn)` (click listener wiring for `.lang-btn` elements). Removes the duplicated init machinery that was inline in both HTML files.
 - Extracted `findTurningPoint`, `findPrimaryCause`, and `buildReflectionPrompts` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/debrief.js` as pure, testable functions with injected deps (`turnLog`, `POS_LABELS`, `finalOutcome`, `characterId`, `lang`). No gameplay behavior change.
@@ -29,6 +35,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added explicit deployment documentation for the current in-memory API rate-limit limitation in multi-instance/serverless contexts in `docs/deploy-routing.md`.
 - Added a top-level TL;DR calibration snapshot to `docs/balance-calibration-notes.md`, including target bands, latest clearly documented date, and a TODO marker for unresolved active-flag documentation.
 - Added explicit Monte Carlo caveat notes in README EN/ES to prevent treating headless simulator win rates as human-balance ground truth.
+- Added v1.4.6 historical-document notes at the top of `docs/en/concept-document.md`, `docs/en/consolidated-design-v1.4.md`, `docs/en/implementation-plan-v1.4.md`, and their Spanish mirrors (`docs/es/`) pointing readers to `docs/repo-truth.md` and `CHANGELOG.md` for the current state.
+- Updated `docs/repo-truth.md` last-updated date to April 2026; expanded source-of-truth ownership map with explicit entries for `ui/game-loop.js`, `ui/flow-controller.js`, `ui/screens/debrief.js`, `ui/helpers/screen-utils.js`, `ui/helpers/storage.js`, and `ui/event-registry.js`; added pointer to `docs/data-contracts-guide.md` from the data section.
+- Updated `docs/technical-debt-register.md`: marked `screens.js` orchestration breadth as resolved in v1.4.6 (moved to Resolved table); added two new active debt items — telemetry centralization and residual UI coupling in `screens.js` setup/carousel paths.
+- Updated README EN/ES canonical prototype status sections from v1.4.5 to v1.4.6; added inline descriptions of `ui/game-loop.js`, `ui/flow-controller.js`, `ui/screens/debrief.js`, and `ui/helpers/screen-utils.js` as active architecture components.
 
 - Updated `index.html` and `md-viewer.html` to load `src/styles/public-tokens.css` (via `<link>`) and `src/i18n/public-lang.js` (via `<script>`). Removed all duplicated inline CSS blocks and simplified `initLanguageSwitcher`/`initLanguage` to delegate to `PublicLang.detectInitialLang` and `PublicLang.wireLangButtons`.
 - Updated `src/interfaces/contactInfo.js` from a comment-only stub to a real ES module export. Now exports `CONTACT_EMAIL`, `INSTAGRAM_URL`, `GITHUB_URL`, and a structured `contactInfo` default export as a canonical contact data contract.

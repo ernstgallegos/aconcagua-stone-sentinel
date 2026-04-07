@@ -1,5 +1,9 @@
 # Aconcagua: Stone Sentinel  
 
+> **Documento histórico — línea base de diseño v1.4.**  
+> Este documento refleja la visión fundacional tal como fue escrita antes de v1.4.6. Se conserva como referencia histórica.  
+> Para el estado actual de versión y descripción de módulos, ver [`docs/repo-truth.md`](../repo-truth.md) y [`CHANGELOG.md`](../../CHANGELOG.md).
+
 ## Actualización de referencia (v1.4)
 
 Este documento mantiene la visión fundacional. La consolidación detallada de diseño y planificación de marzo 2026 se documenta en:

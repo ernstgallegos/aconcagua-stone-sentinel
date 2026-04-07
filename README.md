@@ -250,7 +250,7 @@ A v1.4 design/planning documentation package was added to align vision, game str
 - Plan ES: [`/docs/es/plan-implementacion-v1.4.md`](docs/es/plan-implementacion-v1.4.md)
 - Plan EN: [`/docs/en/implementation-plan-v1.4.md`](docs/en/implementation-plan-v1.4.md)
 
-> Note: v1.4 documentation and planning are now partially implemented in the current public prototype. Check the changelog `1.4.5` release block and implementation plan files for latest phase progress.
+> Note: v1.4 documentation and planning are now fully implemented through v1.4.6. For the current state and module map, see `docs/repo-truth.md` and the `[1.4.6]` CHANGELOG block.
 
 
 ## Repository Structure
@@ -298,17 +298,21 @@ aconcaguastonesentinel@gmail.com
 
 
 
-## Prototype canonical status (v1.4.5 public state)
+## Prototype canonical status (v1.4.6 public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.5]`](./CHANGELOG.md#145--2026-03).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.6]`](./CHANGELOG.md).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.5 (public phased rollout)**.
+> - Current public build is **v1.4.6**.
 
-The canonical active prototype is **`prototype/web-v1` (v1.4.5 public state)**.
+The canonical active prototype is **`prototype/web-v1` (v1.4.6 public state)**.
 
-- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.5 phased mechanics currently in public rollout.
+- `prototype/web-v1/`: active systemic prototype, node-to-node route, EP/BT/delta engine, and v1.4.6 modularized mechanics in public rollout.
   - Startup contracts are strict: required model files must load and validate before play; blocking failures are rendered with file/category diagnostics.
+  - Turn orchestration is owned by `ui/game-loop.js` (`createGameLoop(deps)` factory) with injected rendering callbacks.
+  - Screen-flow and modal management are owned by `ui/flow-controller.js` (`initFlowController(hooks)`).
+  - Debrief analytics (`findTurningPoint`, `findPrimaryCause`, `buildReflectionPrompts`) are extracted to `ui/screens/debrief.js` as pure functions.
+  - Utility functions (`formatMinutes`, `confidenceTier`, `resolveNavigationTarget`, etc.) are in `ui/helpers/screen-utils.js`.
 - `prototype/mra-v0/`: frozen historical MRA used for early hypothesis validation.
 - archived MRA v0 viewer (`prototype/mra-v0/viewer`): replay/view layer for bundled runs.
 
