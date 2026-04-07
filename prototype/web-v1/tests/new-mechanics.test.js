@@ -8,9 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const indexPath = path.join(__dirname, '..', 'index.html');
 const uiPath = path.join(__dirname, '..', 'ui', 'screens.js');
+const carouselPath = path.join(__dirname, '..', 'ui', 'helpers', 'carousel.js');
+const narrativePath = path.join(__dirname, '..', 'ui', 'helpers', 'narrative.js');
 
 const indexSource = fs.readFileSync(indexPath, 'utf8');
 const uiSource = fs.readFileSync(uiPath, 'utf8');
+const carouselSource = fs.readFileSync(carouselPath, 'utf8');
+const narrativeSource = fs.readFileSync(narrativePath, 'utf8');
 
 function json(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'data', file), 'utf8'));
@@ -69,7 +73,7 @@ test('data loader treats environmental pressure config as required', () => {
 test('descend UX copy documents Horcones exit behavior and Daniela guard wiring remains explicit', () => {
   assert.match(uiSource, /From Horcones, descending again exits the park and ends the expedition\./);
   assert.match(uiSource, /Summit reached\. No more climbing — start the descent\./);
-  assert.match(uiSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
+  assert.match(narrativeSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
   assert.match(uiSource, /Only Daniela can use this action\./);
   assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
@@ -101,7 +105,7 @@ test('Part 2 bridge keeps the full roster visible while gating the public path',
   assert.match(uiSource, /id: 'independent-normal-route'/);
   assert.match(uiSource, /id !== 'francisco'/);
   assert.match(uiSource, /id !== 'guided-normal-route'/);
-  assert.match(uiSource, /part2-lock-pill/);
+  assert.match(carouselSource, /part2-lock-pill/);
   assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
   assert.match(uiSource, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
   assert.match(uiSource, /window\.open\('mailto:aconcaguastonesentinel@gmail.com', '_self'\)/);
