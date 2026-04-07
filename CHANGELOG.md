@@ -9,6 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the public landing page visual system with a glacial-noir aesthetic: new Fraunces/Manrope/JetBrains Mono typography stack, stronger accent-driven palette tokens, staged reveal animations, and high-contrast atmospheric surfaces in `index.html` and `src/styles/public-tokens.css`.
+- Added a new animated “Visual atmosphere” concept-art atlas section on `/` with four curated project images and EN/ES localized captions to reinforce project identity and avoid generic one-hero layouts.
+- Propagated the same typography/palette direction into the active web prototype (`prototype/web-v1`) by updating font loading plus shared CSS tokens/themes and adding higher-impact atmospheric motion/background treatments for title/game surfaces.
+
 ## [1.4.6] — 2026-04
 
 

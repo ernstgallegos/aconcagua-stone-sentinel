@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
@@ -433,6 +433,104 @@
         gap: 0.5rem 1rem;
       }
 
+
+      .hero,
+      .section,
+      .site-footer {
+        opacity: 0;
+        animation: reveal-up 680ms cubic-bezier(.2,.8,.22,1) forwards;
+      }
+      .hero { animation-delay: 80ms; }
+      .section:nth-of-type(2) { animation-delay: 160ms; }
+      .section:nth-of-type(3) { animation-delay: 230ms; }
+      .section:nth-of-type(4) { animation-delay: 300ms; }
+
+      @keyframes reveal-up {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .site-header::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent-amber), var(--accent-ice), transparent);
+        opacity: 0.75;
+      }
+
+      .hero-copy {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-copy::after {
+        content: '';
+        position: absolute;
+        inset: -30% -20% auto;
+        height: 180px;
+        background: radial-gradient(circle at 50% 50%, #f3b26730, transparent 64%);
+        filter: blur(20px);
+        animation: pulse-drift 8s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes pulse-drift {
+        from { transform: translateX(-6%) translateY(0); opacity: 0.55; }
+        to { transform: translateX(8%) translateY(14%); opacity: 0.9; }
+      }
+
+      .visual-atlas {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        background: linear-gradient(160deg, #12182adf, #0f1324ee 72%);
+        padding: var(--space-4);
+      }
+
+      .atlas-grid {
+        display: grid;
+        gap: 0.9rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .atlas-card {
+        margin: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #d7e5ff2d;
+        background: #090e19;
+        position: relative;
+        min-height: 210px;
+      }
+
+      .atlas-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.92) contrast(1.06);
+        transition: transform 420ms ease, filter 420ms ease;
+      }
+
+      .atlas-card figcaption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0.55rem 0.65rem;
+        font-family: var(--mono);
+        font-size: 0.67rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: linear-gradient(180deg, transparent, #02050ed6);
+      }
+
+      .atlas-card:hover img {
+        transform: scale(1.08);
+        filter: saturate(1.08) contrast(1.08);
+      }
+
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
         .hero { grid-template-columns: 1.25fr 0.75fr; }
@@ -489,6 +587,23 @@
         <figure class="hero-art">
           <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
         </figure>
+      </section>
+
+
+      <section class="section" aria-labelledby="atlas-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="atlasKicker">Visual atmosphere</p>
+          <h2 id="atlas-title" data-i18n="atlasTitle">Cold light, volcanic stone, and thin-air tension in one visual strip.</h2>
+          <p class="section-intro" data-i18n="atlasIntro">A rotating visual atlas sampled from active concept assets used across the project identity and prototype-facing communication.</p>
+        </div>
+        <article class="visual-atlas">
+          <div class="atlas-grid" aria-label="Project concept atlas">
+            <figure class="atlas-card"><img src="/art/cover/cover-concept-2.png" alt="High-altitude concept art with storm light" loading="lazy" /><figcaption data-i18n="atlas1">Stormline ridge</figcaption></figure>
+            <figure class="atlas-card"><img src="/art/concept-art/curated/concept-curated-3.webp" alt="Concept composition showing route and exposure" loading="lazy" /><figcaption data-i18n="atlas2">Exposure corridor</figcaption></figure>
+            <figure class="atlas-card"><img src="/art/concept-art/curated/concept-curated-4.webp" alt="Expedition art with cold tones and altitude scale" loading="lazy" /><figcaption data-i18n="atlas3">Glacial threshold</figcaption></figure>
+            <figure class="atlas-card"><img src="/art/cover/ig/26.png" alt="Social crop of mountain artwork" loading="lazy" /><figcaption data-i18n="atlas4">Summit weather front</figcaption></figure>
+          </div>
+        </article>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
@@ -684,6 +799,13 @@
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
+          atlasKicker: 'Visual atmosphere',
+          atlasTitle: 'Cold light, volcanic stone, and thin-air tension in one visual strip.',
+          atlasIntro: 'A rotating visual atlas sampled from active concept assets used across the project identity and prototype-facing communication.',
+          atlas1: 'Stormline ridge',
+          atlas2: 'Exposure corridor',
+          atlas3: 'Glacial threshold',
+          atlas4: 'Summit weather front',
           visionKicker: 'Design premise',
           visionTitle: 'A systemic mountain experience where clarity beats bravado, every time.',
           visionIntro: 'This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The site follows the same rule: less noise, sharper signal, easier paths for deep reading.',
@@ -749,6 +871,13 @@
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
+          atlasKicker: 'Atmósfera visual',
+          atlasTitle: 'Luz fría, roca volcánica y tensión de altura en una sola franja visual.',
+          atlasIntro: 'Atlas visual rotativo con assets conceptuales activos usados en la identidad del proyecto y su comunicación pública.',
+          atlas1: 'Cresta de tormenta',
+          atlas2: 'Corredor de exposición',
+          atlas3: 'Umbral glaciar',
+          atlas4: 'Frente meteorológico de cumbre',
           visionKicker: 'Premisa de diseño',
           visionTitle: 'Una experiencia sistémica de montaña donde la lucidez pesa más que la bravura.',
           visionIntro: 'El proyecto convierte presión geofísica, percepción parcial y decisiones éticas en algo jugable. El sitio sigue esa misma lógica: menos ruido, más señal, y rutas claras para profundizar.',

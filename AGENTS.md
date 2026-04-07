@@ -277,3 +277,4 @@ In addition to the changelog:
 - `screens.js` extraction is safer when renderer moves are validated with characterization regex tests that intentionally track delegation seams (e.g., wrapper calls in `screens.js`) so module moves do not silently break release-guard expectations.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
+- Cross-surface aesthetic rebuilds stay coherent when landing and `web-v1` share the same token-level typography/palette update in one commit, then layer motion/atmosphere as additive CSS so gameplay logic remains untouched while visual identity shifts dramatically.
