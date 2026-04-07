@@ -227,6 +227,23 @@ test('buildTurnLogEntry: pressure.mountainPressure and deltaLabel are present', 
   assert.equal(entry.pressure.deltaLabel, 'delta-12');
 });
 
+test('buildTurnLogEntry: deprecated top-level EP/BT aliases are not emitted', () => {
+  const entry = buildTurnLogEntry({
+    G: makeG(),
+    state: makeState(),
+    stage: 'APPROACH',
+    resolvedDecision: 'advance',
+    turnResult: makeTurnResult(),
+    narrativeText: '',
+    ...makeFormatters(),
+  });
+
+  assert.equal(Object.prototype.hasOwnProperty.call(entry, 'EP'), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(entry, 'BT'), false);
+  assert.equal(entry.pressure.epScore, 55.2);
+  assert.equal(entry.pressure.btScore, 42.1);
+});
+
 // ─── buildTurnLogEntry: flags defensive copy ──────────────────────────────────
 
 test('buildTurnLogEntry: flags is a new array, not the same reference as turnResult.flags', () => {

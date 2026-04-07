@@ -100,6 +100,9 @@ export function validateDataConfigShape(filename, data) {
   }
   if (filename === 'outcomes') {
     assertConfigPath(filename, data, 'array', '$');
+    data.forEach((item, i) => {
+      assertConfigPath(filename, item, 'string', `$[${i}]`);
+    });
     return;
   }
   if (filename === 'environmentalPressure') {
@@ -110,6 +113,10 @@ export function validateDataConfigShape(filename, data) {
   if (filename === 'scenariosWebV1') {
     assertConfigPath(filename, data, 'object', '$');
     assertConfigPath(filename, data.predefinedScenarios, 'array', '$.predefinedScenarios');
+    data.predefinedScenarios.forEach((item, i) => {
+      assertConfigPath(filename, item, 'object', `$.predefinedScenarios[${i}]`);
+      assertConfigPath(filename, item?.id, 'string', `$.predefinedScenarios[${i}].id`);
+    });
     assertConfigPath(filename, data.randomScenario, 'object', '$.randomScenario');
   }
 }

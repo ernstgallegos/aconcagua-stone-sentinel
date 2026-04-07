@@ -282,6 +282,100 @@ test('handleDeepLink: debrief deep link delegates to bootstrapMockDebrief hook',
   assert.equal(receivedParams?.seed, '42');
 });
 
+test('handleDeepLink: valid game deep link sets character/scenario/seed and starts game', () => {
+  const character = { id: 'francisco' };
+  const scenario = { id: 'normal-route', seeds: [11, 22, 33] };
+  global.document = makeDomStub(['game', 'debrief']).doc;
+  global.window.location.hash = '#game&character=francisco&scenario=normal-route&seed=22';
+
+  let started = false;
+  let derivedDifficulty = false;
+  initFlowController(makeHooks({
+    resolveCharacter: (value) => (value === 'francisco' ? character : null),
+    resolveScenario: (value) => (value === 'normal-route' ? scenario : null),
+    resolveSeed: (seed) => Number(seed),
+    deriveDifficultyFromScenario: () => { derivedDifficulty = true; },
+    startGame: () => { started = true; },
+  }));
+
+  handleDeepLink();
+
+  assert.equal(G.character, character);
+  assert.equal(G.scenario, scenario);
+  assert.equal(G.seed, 22);
+  assert.equal(derivedDifficulty, true);
+  assert.equal(started, true);
+});
+
+test('handleDeepLink: invalid game deep link params fail safely without startGame', () => {
+  global.document = makeDomStub(['title', 'game', 'debrief']).doc;
+  global.window.location.hash = '#game&character=unknown&scenario=invalid';
+  let started = false;
+
+  initFlowController(makeHooks({
+    resolveCharacter: () => null,
+    resolveScenario: () => null,
+    startGame: () => { started = true; },
+  }));
+
+  handleDeepLink();
+  assert.equal(started, false);
+});
+
+test('handleDeepLink: valid onboarding deep link sets state and calls onboarding flow', () => {
+  const character = { id: 'laura' };
+  const scenario = { id: 'wind-window', seeds: [101] };
+  global.document = makeDomStub(['expedition-setup', 'debrief']).doc;
+  global.window.location.hash = '#onboarding&character=laura&scenario=wind-window&seed=101';
+  let onboardingMode = null;
+
+  initFlowController(makeHooks({
+    resolveCharacter: (value) => (value === 'laura' ? character : null),
+    resolveScenario: (value) => (value === 'wind-window' ? scenario : null),
+    resolveSeed: (seed) => Number(seed),
+    deriveDifficultyFromScenario: () => {},
+    showOnboarding: (mode) => { onboardingMode = mode; },
+  }));
+
+  handleDeepLink();
+
+  assert.equal(G.character, character);
+  assert.equal(G.scenario, scenario);
+  assert.equal(G.seed, 101);
+  assert.equal(onboardingMode, 'predefined');
+});
+
+test('handleDeepLink: invalid onboarding deep link redirects to expedition-setup', () => {
+  const entered = [];
+  const { doc } = makeDomStub(['expedition-setup', 'debrief']);
+  global.document = doc;
+  global.window.location.hash = '#onboarding&character=unknown&scenario=invalid';
+
+  initFlowController(makeHooks({
+    onEnterScreen: (id) => entered.push(id),
+    resolveCharacter: () => null,
+    resolveScenario: () => null,
+  }));
+
+  handleDeepLink();
+  assert.ok(entered.includes('expedition-setup'));
+});
+
+test('handleDeepLink: part2 screen without force uses unlock gate and succeeds for previously-summited runs', () => {
+  const entered = [];
+  const { doc } = makeDomStub(['mendoza_room', 'debrief']);
+  global.document = doc;
+  global.window.location.hash = '#mendoza_room';
+  initFlowController(makeHooks({
+    hasPreviouslySummited: () => true,
+    part2NarrativeIds: new Set(['mendoza_room']),
+    onEnterScreen: (id) => entered.push(id),
+  }));
+
+  handleDeepLink();
+  assert.ok(entered.includes('mendoza_room'));
+});
+
 test('handleDeepLink: Part2 force=1 sets localStorage and navigates to Part 2 screen', () => {
   const entered = [];
   const { doc } = makeDomStub(['mendoza_room', 'debrief']);
