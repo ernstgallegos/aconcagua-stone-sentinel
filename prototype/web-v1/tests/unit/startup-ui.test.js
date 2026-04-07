@@ -81,7 +81,7 @@ test('setStartupState ready copy uses updated English CTA text', () => {
   };
   makeDom(statusEl, beginBtn);
   setStartupState('ready');
-  assert.equal(statusEl.textContent, 'Model ready. Click/tap to begin.');
+  assert.equal(statusEl.textContent, 'Model ready.');
   assert.equal(beginBtn.disabled, false);
 });
 
@@ -96,6 +96,6 @@ test('setStartupState ready copy uses updated Spanish CTA text', () => {
   };
   makeDom(statusEl, beginBtn);
   setStartupState('ready');
-  assert.equal(statusEl.textContent, 'Modelo listo. Haz clic/toca para comenzar.');
+  assert.equal(statusEl.textContent, 'Modelo listo.');
   assert.equal(beginBtn.disabled, false);
 });

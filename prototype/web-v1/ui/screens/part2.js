@@ -16,9 +16,9 @@ export function localizePart2NavLabel({ uiText, label }) {
     'Return to debrief': uiText('Return to debrief', 'Volver al debrief'),
     Continue: uiText('Continue', 'Continuar'),
     Back: uiText('Back', 'Atrás'),
-    'Contact the creators to collaborate': uiText('Contact the creators to collaborate', 'Contactar a los creadores para colaborar'),
+    'Get in touch': uiText('Get in touch', 'Ponerse en contacto'),
     'Follow on Instagram': uiText('Follow on Instagram', 'Seguir en Instagram'),
-    'Back to title / replay': uiText('Back to title / replay', 'Volver al título / rejugar'),
+    'Play again': uiText('Play again', 'Jugar de nuevo'),
   };
   return map[label] || label;
 }
