@@ -60,6 +60,17 @@ test('formatBlockingError falls back to generic copy for unknown categories', ()
   assert.match(result.detail, /Category: custom failure/);
 });
 
+test('formatBlockingError recognizes generic load failure category', () => {
+  global.localStorage = makeStorage('en');
+  const result = formatBlockingError({
+    category: 'generic load failure',
+    file: '../../data/stage_modifiers.json',
+    detail: 'TypeError: Failed to fetch',
+  });
+  assert.match(result.summary, /required data file failed to load/i);
+  assert.match(result.detail, /Category: generic load failure/);
+});
+
 test('setStartupState ready copy uses updated English CTA text', () => {
   global.localStorage = makeStorage('en');
   const statusEl = { textContent: '', dataset: {} };

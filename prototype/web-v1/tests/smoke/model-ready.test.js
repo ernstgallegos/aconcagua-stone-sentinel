@@ -110,6 +110,25 @@ test('data loader classifies invalid shape as blocking shape failure', async () 
   assert.match(errors[0].file, /characters\.json/);
 });
 
+test('data loader classifies thrown fetch/network failures as generic load failures', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('stage_modifiers.json')) {
+        throw new TypeError('Failed to fetch');
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'generic load failure');
+  assert.match(errors[0].detail, /Failed to fetch/i);
+  assert.match(errors[0].file, /stage_modifiers\.json/);
+});
+
 test('shape validator catches malformed second item in characters array', async () => {
   const errors = [];
   const config = await loadDataConfigFiles({

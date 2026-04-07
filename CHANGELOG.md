@@ -20,6 +20,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 - `prototype/web-v1/ui/game-loop.js`: imports `formatMinutes`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureBandLabel`, and `pressureDeltaLabel` directly from `screen-utils.js`. Removed 7 entries from the `createGameLoop` factory injection interface; callers no longer need to provide these formatting functions as deps.
 - `prototype/web-v1/ui/screens.js`: replaced inline journal code (~60 lines) with thin wrapper functions delegating to `ui/screens/journal.js`. Delegates `clearJournal` and `renderJournal` to the extracted module, passing `t` and the DOM container at call time.
+- Hardened startup diagnostics in `web-v1` by centralizing runtime category definitions/report formatting in `ui/helpers/runtime-diagnostics.js`, switching load fallback classification to `generic load failure`, and routing startup fatal logs through environment-gated reporting so production consoles stay quiet unless debug mode is enabled.
 
 
 

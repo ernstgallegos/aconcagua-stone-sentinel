@@ -1,4 +1,5 @@
 import { safeGetStorage } from './storage.js';
+import { DIAGNOSTIC_CATEGORIES } from './runtime-diagnostics.js';
 
 const LANGUAGE_KEY = 'aconcagua_language_v1';
 
@@ -70,12 +71,12 @@ export function formatBlockingError(payload) {
   }
 
   const categoryLabels = {
-    'missing file': text('A required data file is missing from the deployed bundle.', 'Falta un archivo de datos requerido en el bundle desplegado.'),
-    'http failure': text('A required data file returned an HTTP error.', 'Un archivo de datos requerido devolvió un error HTTP.'),
-    'invalid json': text('A required data file could not be parsed as JSON.', 'Un archivo de datos requerido no pudo parsearse como JSON.'),
-    'invalid shape': text('Required file was loaded but failed contract shape checks.', 'El archivo requerido cargó, pero falló las validaciones de contrato de forma.'),
-    'load failure': text('A required data file failed to load.', 'Falló la carga de un archivo de datos requerido.'),
-    'post-load validation failure': text('Files loaded, but cross-file validation failed.', 'Los archivos cargaron, pero falló la validación cruzada.'),
+    [DIAGNOSTIC_CATEGORIES.MISSING_FILE]: text('A required data file is missing from the deployed bundle.', 'Falta un archivo de datos requerido en el bundle desplegado.'),
+    [DIAGNOSTIC_CATEGORIES.HTTP_FAILURE]: text('A required data file returned an HTTP error.', 'Un archivo de datos requerido devolvió un error HTTP.'),
+    [DIAGNOSTIC_CATEGORIES.INVALID_JSON]: text('A required data file could not be parsed as JSON.', 'Un archivo de datos requerido no pudo parsearse como JSON.'),
+    [DIAGNOSTIC_CATEGORIES.INVALID_SHAPE]: text('Required file was loaded but failed contract shape checks.', 'El archivo requerido cargó, pero falló las validaciones de contrato de forma.'),
+    [DIAGNOSTIC_CATEGORIES.GENERIC_LOAD_FAILURE]: text('A required data file failed to load.', 'Falló la carga de un archivo de datos requerido.'),
+    [DIAGNOSTIC_CATEGORIES.POST_LOAD_VALIDATION_FAILURE]: text('Files loaded, but cross-file validation failed.', 'Los archivos cargaron, pero falló la validación cruzada.'),
   };
 
   return {
