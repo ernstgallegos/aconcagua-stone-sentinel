@@ -9,6 +9,26 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Extracted carousel rendering and navigation logic from `screens.js` into `ui/helpers/carousel.js`: card HTML builders (`buildCharacterCardHtml`, `buildRandomCharacterCardHtml`, `buildScenarioCardHtml`, `buildRandomScenarioCardHtml`, `buildRouteCardHtml`), dot renderer (`renderCarouselDots`), info-panel toggle (`toggleInfoPanel`, `hideInfoPanel`), character-image path resolution (`getCharacterImagePath`), and navigation index helper (`stepCarouselIndex`). Part 1 and Part 2 carousels now share the same builder functions.
+- Extracted narrative text banks and dispatch logic from `screens.js` into `ui/helpers/narrative.js`: `NARRATIVES` (EN), `NARRATIVES_ES`, `pickNarrative` (pure bank selector with injectable RNG), and `resolveNarrativeText` (pure DOM-free flag-priority dispatcher). The same narrative resolution logic is now independently testable.
+- Added `tests/unit/carousel-narrative.test.js` with 20 unit tests covering `getCharacterImagePath` mapping, `stepCarouselIndex` wrapping, `NARRATIVES` bank integrity, `pickNarrative` language selection and fallback, and `resolveNarrativeText` flag priority and decision dispatch.
+- Added `tests/unit/telemetry-contract.test.js` with 10 contract tests guarding the per-turn telemetry entry shape, body/raw/pressure sub-key sets, summary shape, and export immutability.
+- Added `NARRATIVES_ES` i18n parity item to `docs/technical-debt-register.md` for tracking incomplete Spanish narrative bank coverage.
+- Updated `docs/repo-truth.md` source-of-truth ownership map to include `ui/helpers/carousel.js` and `ui/helpers/narrative.js`.
+
+### Changed
+
+- `screens.js`: replaced ~300 lines of inline carousel rendering, card HTML construction, narrative text banks, `pickNarrative`, and `renderNarrative` logic with thin wrapper delegations to `ui/helpers/carousel.js` and `ui/helpers/narrative.js`. The module now imports card builders, dot renderer, info-panel helpers, and narrative dispatch.
+- Carousel navigation functions (`carouselPrev`, `carouselNext`, `part2CarouselPrev`, `part2CarouselNext`) now use `stepCarouselIndex` from the extracted module instead of inline modular arithmetic.
+- Updated characterization tests in `new-mechanics.test.js` to reference extracted module sources (`carouselSource`, `narrativeSource`) for `part2-lock-pill` and narrative copy assertions.
+
+### Fixed
+
+- Fixed version drift in `docs/simulation_engine.md`: updated canonical status references from v1.4.5 to v1.4.6 to match the current public build.
+- Updated `docs/technical-debt-register.md`: marked "Residual UI coupling in `screens.js`" as resolved (carousel/narrative extraction complete); added new debt item for NARRATIVES_ES i18n parity gap.
+
 ### Changed
 
 - Vibe-clarification pass — atmosphere, microcopy, and visual density (`prototype/web-v1`):
