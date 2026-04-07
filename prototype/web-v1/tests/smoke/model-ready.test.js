@@ -92,6 +92,25 @@ test('data loader classifies non-404 HTTP failures distinctly', async () => {
   assert.match(errors[0].file, /action_modifiers\.json/);
 });
 
+test('data loader classifies unexpected fetch exceptions as generic load failure', async () => {
+  const errors = [];
+  const config = await loadDataConfigFiles({
+    fetchImpl: async (requestPath) => {
+      if (requestPath.includes('nodes.json')) {
+        throw new TypeError('Failed to fetch');
+      }
+      return fakeFetch(requestPath);
+    },
+    onError: (payload) => errors.push(payload),
+  });
+
+  assert.equal(config, null);
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].category, 'generic load failure');
+  assert.match(errors[0].detail, /failed to fetch/i);
+  assert.match(errors[0].file, /nodes\.json/);
+});
+
 test('data loader classifies invalid shape as blocking shape failure', async () => {
   const errors = [];
   const config = await loadDataConfigFiles({

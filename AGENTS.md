@@ -264,6 +264,7 @@ In addition to the changelog:
 
 - Audit-remediation closures are easier to defend when each external finding is mapped to a repo-traceable matrix (`FIXED` / `ALREADY CORRECT` / `NOT REPRODUCED` / `INTENTIONALLY DEFERRED`) and paired with at least one automated guard where practical (e.g., asset contract tests, RNG input validation tests).
 - Runtime diagnostics in `web-v1` should prefer environment-gated debug logging over unconditional production `console.error` calls; keep player-facing failures in localized startup/fatal UI while preserving localhost troubleshooting visibility.
+- Runtime diagnostics stay easier to audit when startup/load categorization and developer-report formatting live in one helper (`ui/helpers/runtime-diagnostics.js`) and loader/UI modules consume shared category constants instead of ad-hoc string parsing.
 - Cross-surface language UX is safest when landing, markdown viewer, and `web-v1` reuse one shared localStorage language key (`aconcagua_language_v1`); splitting keys creates subtle “language reset” friction that feels like a bug.
 - Public markdown reader routes should inherit the same visual token system as `/` (surfaces, borders, typography, focus patterns) so document deep-links feel like the same product, not a detached microsite.
 
