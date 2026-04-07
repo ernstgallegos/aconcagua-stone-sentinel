@@ -46,9 +46,20 @@ Two-phase pipeline:
 
 No other module should duplicate either the file-path list or the normalization transform.
 
-**TypeScript side:** `src/types/data-contracts.ts` declares the `DataConfig` interface and `assertDataConfig()`, which validates the **post-normalization** shape (i.e., after `normalizeRouteData` has run). `src/boot/loadDataConfig.ts` is a thin re-export adapter; it does not contain loading logic.
+**TypeScript side:** `src/types/data-contracts.ts` declares the `DataConfig` interface and `assertDataConfig()`. `src/boot/loadDataConfig.ts` is a thin re-export adapter; it does not contain loading logic.
 
-**Parity test:** `tests/parity/loader-ts-contract-parity.test.js` verifies that the normalized output of the JS loader satisfies every invariant that the TS contracts declare, catching drift between the two sources.
+**Canonical contract decision — runtime normalization is authoritative, TS mirrors it:**
+
+| Layer | Shape | Authoritative source |
+|---|---|---|
+| Raw JSON | `RawRouteNode` (`nodeId`, `stageHint`, …) | `data/nodes.json` |
+| Loaded config | `DataConfig` (`nodes: RawRouteNode[]`, all other files) | `loadDataConfigFiles()` in `data-config.js` |
+| Normalized route | `NormalizedRouteData` (`routeNodes`, `positions`, `labels`, …) | `normalizeRouteData()` in `data-config.js` |
+| TS contract | `DataConfig` + sub-types in `src/types/domain.ts` | mirror of runtime; validated by `assertDataConfig()` |
+
+`DataConfig.nodes` is typed as `RawRouteNode[]` (pre-normalization). Pass the loaded config to `normalizeRouteData()` to obtain the `NormalizedRouteData` shape (`RouteNode[]`, `positions`, etc.) used by the engine and UI.
+
+**Parity test:** `tests/parity/loader-ts-contract-parity.test.js` verifies that both the raw loader output and the normalized output satisfy every invariant that the TS contracts declare, catching drift between the two sources.
 
 ## Repository prototype status
 

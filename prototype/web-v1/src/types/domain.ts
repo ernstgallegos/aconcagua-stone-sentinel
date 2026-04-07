@@ -30,22 +30,88 @@ export type TurnOutcome =
   | 'Retreat'
   | 'Hold';
 
+// ---------------------------------------------------------------------------
+// Character engine sub-types — mirrors data/characters.json engine objects
+// ---------------------------------------------------------------------------
+
+export interface PerceptionGuardrails {
+  minConfidence: number;
+  maxNoise: number;
+  minHintLevel: number;
+  maxTimingActionPenalty: number;
+  maxTimingConfidencePenalty: number;
+  maxTimingNoiseIncrease: number;
+}
+
+export interface PerceptionLatency {
+  baseDelay: number;
+  pressureDeltaStart: number;
+  stageActivation: Record<Stage, number>;
+  timeActivationStart: number;
+  minEarlyHint: number;
+}
+
+export interface CharacterDecisionWindow {
+  baseMs: number;
+  stageModifiersMs: Record<Stage, number>;
+  minFloorMs: number;
+  degradeEveryMs: number;
+}
+
+/** Mirrors the `engine` object inside each entry in data/characters.json. */
 export interface CharacterEngine {
   fatigueResistance: number;
   exposureResistance: number;
   confidenceStability: number;
   riskTolerance: number;
-  recoveryEfficiency?: number;
+  functionalCapacityBonus: number;
+  acclimatizationRate: number;
+  resourceEfficiency: number;
+  perceptionBias: number;
+  perceptionGuardrails: PerceptionGuardrails;
+  perceptionLatency: PerceptionLatency;
+  decisionWindow: CharacterDecisionWindow;
 }
 
 export interface Character {
   id: string;
   name: string;
   role?: string;
+  flag?: string;
+  bio?: string;
+  traits?: unknown;
   difficultyLabel?: string;
   engine: CharacterEngine;
 }
 
+// ---------------------------------------------------------------------------
+// Route nodes — two shapes exist: raw (from JSON) and normalized (post-transform)
+// ---------------------------------------------------------------------------
+
+/**
+ * Raw shape of an entry in data/nodes.json, before normalizeRouteData() runs.
+ * Authoritative source: data/nodes.json + normalizeRouteData() in
+ * ui/helpers/data-config.js.
+ */
+export interface RawRouteNode {
+  nodeId: string;
+  nodeName: string;
+  altitudeMeters: number;
+  altitudeBand: number;
+  terrainLoad: number;
+  weatherBias: number;
+  visibilityBias: number;
+  timeSensitivity: number;
+  isCamp: boolean;
+  /** Canonical stage assignment stored in JSON; normalizeRouteData maps this to RouteNode.stage. */
+  stageHint: Stage;
+  routeIndex: number;
+}
+
+/**
+ * Post-normalization shape of a route node, as produced by normalizeRouteData()
+ * in ui/helpers/data-config.js.  This is what the engine and UI consume at runtime.
+ */
 export interface RouteNode {
   id: string;
   name: string;
@@ -60,11 +126,51 @@ export interface RouteNode {
   routeIndex: number;
 }
 
+/**
+ * Return type of normalizeRouteData() in ui/helpers/data-config.js.
+ * This is the structure the runtime binds to POSITIONS, ROUTE_NODES, etc.
+ */
+export interface NormalizedRouteData {
+  routeNodes: RouteNode[];
+  /** Ordered list of node IDs; index == position in the route. */
+  positions: string[];
+  labels: Record<string, string>;
+  altitudes: Record<string, string>;
+  bands: Record<string, string>;
+  campPositions: Set<string>;
+  stageByPosition: Record<string, Stage>;
+}
+
+// ---------------------------------------------------------------------------
+// Scenario
+// ---------------------------------------------------------------------------
+
+export interface ScenarioInitialState {
+  position: string;
+  altitude_band: string;
+  weather_severity: number;
+  visibility: number;
+  terrain_load: number;
+  functional_capacity: number;
+  fatigue: number;
+  exposure: number;
+  water: number;
+  food: number;
+}
+
 export interface Scenario {
   id: string;
+  /** Zero-padded display number, e.g. "01". */
+  num?: string;
   name: string;
+  desc?: string;
+  intro?: string;
   max_turns: number;
   seeds: number[];
+  difficulty?: string;
+  difficultyModifiers?: Record<string, number>;
+  initial?: ScenarioInitialState;
+  bias?: Record<string, number>;
 }
 
 export interface PressureResult {
@@ -85,8 +191,8 @@ export interface PerceptionResult {
 
 export interface CharacterEventTrigger {
   actions?: Action[];
+  /** Stage membership constraint. Data uses `stages` (plural); `stage` (singular) is not used. */
   stages?: Stage[];
-  stage?: Stage[];
   minTurn?: number;
   minPersistenceTurns?: number;
   minWeatherSeverity?: number;
@@ -124,18 +230,25 @@ export interface ContextEventLimits {
   maxPerRun: number;
 }
 
+/**
+ * An event driven by turn/stage triggers that modifies environment signals.
+ * All runtime instances in data/context_events.json carry trigger, effects,
+ * and limits as required fields; optionality below reflects only rare
+ * programmatic construction paths.
+ */
 export interface ContextEvent {
   id: string;
-  category?: EventCategory;
+  /** Always "context" in data/context_events.json. */
+  category: EventCategory;
   icon?: string;
   label: string;
   stage?: Stage;
-  trigger?: ContextEventTrigger;
-  effects?: ContextEventEffect;
-  limits?: ContextEventLimits;
-  weatherDelta?: number;
-  visibilityDelta?: number;
-  timePenalty?: number;
+  /** Required in data/context_events.json; validated by assertContextEvents(). */
+  trigger: ContextEventTrigger;
+  /** Required in data/context_events.json; validated by assertContextEvents(). */
+  effects: ContextEventEffect;
+  /** Required in data/context_events.json; validated by assertContextEvents(). */
+  limits: ContextEventLimits;
   telemetryTag?: string;
   visibleToPlayer?: boolean;
   hiddenFromPlayer?: boolean;
