@@ -408,9 +408,9 @@ So is the work.`,
     navButtons: [
       { label: 'Back', action: 'back', role: 'secondary' },
       { label: 'Return to debrief', action: 'return_to_debrief', role: 'secondary' },
-      { label: 'Contact the creators to collaborate', action: 'contact_creators', role: 'primary' },
+      { label: 'Get in touch', action: 'contact_creators', role: 'primary' },
       { label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' },
-      { label: 'Back to title / replay', action: 'back_to_title_or_replay', role: 'secondary' },
+      { label: 'Play again', action: 'back_to_title_or_replay', role: 'secondary' },
     ],
   },
 ];
@@ -1054,7 +1054,7 @@ function applyStaticTranslations() {
   const bilingualTextMap = [
     ['.title-info-trigger', 'ⓘ Info', 'ⓘ Info'],
     ['#startup-status-line[data-state="loading"]', 'Preparing mountain model…', 'Preparando modelo de montaña…'],
-    ['#startup-status-line[data-state="ready"]', 'Model ready. Click/tap to begin.', 'Modelo listo. Haz clic/toca para comenzar.'],
+    ['#startup-status-line[data-state="ready"]', 'Model ready.', 'Modelo listo.'],
     ['#blocking-error-title', 'Blocking data error', 'Error bloqueante de datos'],
     ['#blocking-error-summary', 'The simulation model could not be initialized. Gameplay is disabled until data files are fixed.', 'No se pudo inicializar el modelo de simulación. La partida queda deshabilitada hasta corregir los archivos de datos.'],
     ['#field-log-overlay .field-log-title', 'Field Log', 'Bitácora de campo'],
@@ -1066,9 +1066,9 @@ function applyStaticTranslations() {
     ['.game-mobile-bar .btn-ghost:nth-child(1)', '⌚ Watch', '⌚ Reloj'],
     ['.game-mobile-bar .btn-ghost:nth-child(2)', '🏔 Route', '🏔 Ruta'],
     ['#bottom-sheet-route .bottom-sheet-title > span', '🏔 Route Track', '🏔 Ruta'],
-    ['#screen-debrief .debrief-section:nth-of-type(1) .debrief-section-title', 'Run Summary', 'Resumen de partida'],
-    ['#screen-debrief .debrief-section:nth-of-type(2) .debrief-section-title', 'Key Lesson', 'Lección clave'],
-    ['#screen-debrief .debrief-section:nth-of-type(3) .debrief-section-title', 'Structured Debrief', 'Debrief estructurado'],
+    ['#screen-debrief .debrief-section:nth-of-type(1) .debrief-section-title', 'Expedition record', 'Registro de expedición'],
+    ['#screen-debrief .debrief-section:nth-of-type(2) .debrief-section-title', 'What shifted', 'Lo que cambió'],
+    ['#screen-debrief .debrief-section:nth-of-type(3) .debrief-section-title', 'Patterns', 'Patrones'],
     ['#screen-debrief .debrief-section:nth-of-type(4) .debrief-section-title:nth-of-type(1)', 'Run Signature', 'Firma de partida'],
     ['#screen-debrief .debrief-section:nth-of-type(4) .debrief-section-title:nth-of-type(2)', 'Review Turns', 'Revisar turnos'],
     ['#screen-debrief .review-controls .btn-ghost:first-child', 'Previous', 'Anterior'],
@@ -1079,13 +1079,13 @@ function applyStaticTranslations() {
     ['#screen-debrief .debrief-stat-card:nth-child(2) .debrief-stat-card-label', 'Highest Point', 'Punto más alto'],
     ['#screen-debrief .debrief-stat-card:nth-child(3) .debrief-stat-card-label', 'Decisions', 'Decisiones'],
     ['#screen-debrief .debrief-stat-card:nth-child(4) .debrief-stat-card-label', 'Return Status', 'Estado de retorno'],
-    ['#screen-debrief .debrief-cause', 'Primary cause pending run completion.', 'Causa principal pendiente al finalizar la partida.'],
+    ['#screen-debrief .debrief-cause', '—', '—'],
     ['#screen-debrief .debrief-structured-grid > div:nth-child(1) strong', 'Outcome:', 'Resultado:'],
     ['#screen-debrief .debrief-structured-grid > div:nth-child(2) strong', 'Highest point reached:', 'Punto más alto alcanzado:'],
     ['#screen-debrief .debrief-structured-grid > div:nth-child(3) strong', 'Turning point:', 'Punto de inflexión:'],
-    ['#screen-debrief .debrief-structured-grid > div:nth-child(4) strong', 'Primary systemic pressure:', 'Presión sistémica principal:'],
-    ['#screen-debrief .debrief-structured-grid > div:nth-child(5) strong', 'Primary decision pattern:', 'Patrón de decisión principal:'],
-    ['#screen-debrief .debrief-structured-grid > div:nth-child(6) strong', 'Recommendation for next run:', 'Recomendación para la próxima partida:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(4) strong', 'Pressure axis:', 'Eje de presión:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(5) strong', 'Decision pattern:', 'Patrón de decisión:'],
+    ['#screen-debrief .debrief-structured-grid > div:nth-child(6) strong', 'Next attempt:', 'Próximo intento:'],
     ['#screen-summit-success [style*="letter-spacing:0.2em"]', 'SUMMIT AND SAFE RETURN', 'CUMBRE Y REGRESO SEGURO'],
     ['#screen-summit-success h2', 'The summit was reached.<br>The mountain was respected.', 'La cumbre fue alcanzada.<br>La montaña fue respetada.'],
     ['#screen-summit-success p:not(#summit-success-note)', 'What comes next puts everything you learned here to a different test. Not a simulation. The real expedition — with the full group, the real terrain, and no guaranteed outcomes. The mountain will decide.', 'Lo que sigue pone todo lo que aprendiste aquí bajo otra prueba. No una simulación. La expedición real — con el grupo completo, el terreno real y sin resultados garantizados. La montaña decidirá.'],
@@ -3162,8 +3162,8 @@ function classifyDifficultyResponsibility() {
   const systemicShare = systemicTurns / total;
   const decisionShare = decisionErrors / total;
   if (systemicShare >= 0.45 && systemicShare > decisionShare) return { label: 'Systemic pressure dominated', detail: `~${Math.round(systemicShare * 100)}% of turns carried systemic pressure flags.` };
-  if (decisionShare >= 0.3) return { label: 'Decision pattern dominated', detail: `~${Math.round(decisionShare * 100)}% of turns showed high-risk choice patterns.` };
-  return { label: 'Mixed responsibility', detail: 'Pressure and choices interacted without a single dominant source.' };
+  if (decisionShare >= 0.3) return { label: 'Decision pattern shaped outcome', detail: `~${Math.round(decisionShare * 100)}% of turns showed high-risk choice patterns.` };
+  return { label: 'Mixed pressure and choice', detail: 'No single dominant source.' };
 }
 
 
@@ -3363,8 +3363,9 @@ function endRun(returnedToHorcones) {
   const responsibility = classifyDifficultyResponsibility();
   const dominantRiskAxis = computeDominantRiskAxis({ turnLog: G.turnLog, finalOutcome: G.finalOutcome, allFlags: G.allFlags });
   const decisionPattern = computeDecisionPattern(G.turnLog);
-  const recommendation = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
-  document.getElementById('debrief-cause').textContent = recommendation;
+  const primaryCause = findPrimaryCause();
+  const responsibilityNote = `${responsibility.label} — ${responsibility.detail}`;
+  document.getElementById('debrief-cause').textContent = primaryCause;
 
   const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text || '—'; };
   setText('debrief-outcome-detail', outcome.label);
@@ -3372,7 +3373,7 @@ function endRun(returnedToHorcones) {
   setText('debrief-turning-point-detail', findTurningPoint());
   setText('debrief-primary-pressure', dominantRiskAxis);
   setText('debrief-decision-pattern', decisionPattern);
-  setText('debrief-next-run-recommendation', recommendation);
+  setText('debrief-next-run-recommendation', responsibilityNote);
 
   const signature = buildRunSignature({
     characterName: G.character?.name,
@@ -3392,13 +3393,13 @@ function endRun(returnedToHorcones) {
   const debriefActions = document.getElementById('debrief-actions');
   clearElement(debriefActions);
   [
-    { label: 'Same scenario + seed', cls: 'btn-primary', onClick: replaySameSeed },
-    { label: 'Same scenario + new seed', cls: 'btn-ghost', onClick: replayNewSeed },
+    { label: 'Replay this run', cls: 'btn-primary', onClick: replaySameSeed },
+    { label: 'Same scenario, new draw', cls: 'btn-ghost', onClick: replayNewSeed },
     { label: 'Change character', cls: 'btn-ghost', onClick: () => showScreen('expedition-setup') },
     { label: 'Same character, new scenario', cls: 'btn-ghost', onClick: goChooseScenario },
-    { label: 'Review Turns', cls: 'btn-ghost', onClick: () => updateRunReviewPanel(Math.max(0, G.turnLog.length - 1)) },
-    { label: 'Copy Run Signature', cls: 'btn-ghost', onClick: copyRunSignature },
-    { label: 'View Expedition Journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
+    { label: 'Review turns', cls: 'btn-ghost', onClick: () => updateRunReviewPanel(Math.max(0, G.turnLog.length - 1)) },
+    { label: 'Copy run signature', cls: 'btn-ghost', onClick: copyRunSignature },
+    { label: 'Expedition journal', cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
   ].forEach(({ label, cls, onClick }) => {
     const btn = document.createElement('button');
     btn.className = cls;
@@ -3622,15 +3623,9 @@ function updateDebriefHero(outcome) {
   /* Set outcome class for CSS filter */
   hero.className = 'debrief-hero ' + outcome.cls;
 
-  /* Icon by outcome */
-  const iconMap = {
-    'outcome-success':    '🏔',
-    'outcome-retreat':    '⛰',
-    'outcome-stabilized': '🗻',
-    'outcome-collapse':   '❄',
-  };
+  /* Icon by outcome — cleared to preserve emotional weight of outcome class alone */
   const icon = hero.querySelector('.debrief-hero-icon');
-  if (icon) icon.textContent = iconMap[outcome.cls] || '🏔';
+  if (icon) icon.textContent = '';
 
   /* Headline */
   const hl = hero.querySelector('.debrief-outcome-headline');
@@ -3773,8 +3768,7 @@ function bootstrapMockDebrief(params) {
   );
   const causeEl = document.getElementById('debrief-cause');
   if (causeEl) {
-    const responsibility = classifyDifficultyResponsibility();
-    causeEl.textContent = `${findPrimaryCause()} ${responsibility.label}: ${responsibility.detail}`;
+    causeEl.textContent = findPrimaryCause();
   }
   buildDebriefAnalytics();
 
@@ -3783,7 +3777,7 @@ function bootstrapMockDebrief(params) {
     clearElement(debriefActions);
     [
       { label: uiText('Change character', 'Cambiar personaje'), cls: 'btn-primary', onClick: () => showScreen('expedition-setup') },
-      { label: uiText('View Expedition Journal', 'Ver diario de expedición'), cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
+      { label: uiText('Expedition journal', 'Diario de expedición'), cls: 'btn-ghost', onClick: () => openJournalFrom('debrief') },
     ].forEach(({ label, cls, onClick }) => {
       const btn = document.createElement('button');
       btn.className = cls;

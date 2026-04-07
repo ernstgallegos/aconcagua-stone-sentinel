@@ -9,7 +9,20 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-### Added
+### Changed
+
+- Vibe-clarification pass — atmosphere, microcopy, and visual density (`prototype/web-v1`):
+  - Debrief section titles: "Run Summary" → "Expedition record", "Key Lesson" → "What shifted", "Structured Debrief" → "Patterns" (ES mirrors updated). Removes productivity/generic labeling from the post-run screen.
+  - Debrief structured-grid labels: "Primary systemic pressure:" → "Pressure axis:", "Primary decision pattern:" → "Decision pattern:", "Recommendation for next run:" → "Next attempt:". Reduces corporate register in analysis fields.
+  - `findPrimaryCause` in `ui/screens/debrief.js`: removed "Main cause:" and "Actionable next run:" prefixes from all 10 outcome entries and the fallback. Cause text now reads as direct observation rather than productivity-app formatting.
+  - Separated `debrief-cause` (primary observation) from `debrief-next-run-recommendation` ("Next attempt:" field) — they previously shared identical text duplicated across two elements.
+  - `classifyDifficultyResponsibility`: softened label phrasing ("Decision pattern dominated" → "Decision pattern shaped outcome", "Mixed responsibility" → "Mixed pressure and choice").
+  - Suppressed emoji icon in debrief hero (`debrief-hero-icon`) via CSS `display: none` and JS clearing. The outcome class and headline carry the emotional weight without emoji noise.
+  - Added `.debrief-structured-grid` CSS: labels now render as small mono uppercase (`font-weight: 500`, `color: var(--text-dim)`) rather than default `<strong>` weight, reducing visual competition with values.
+  - Debrief action buttons: "Same scenario + seed" → "Replay this run", "Same scenario + new seed" → "Same scenario, new draw", "Review Turns" → "Review turns", "Copy Run Signature" → "Copy run signature", "View Expedition Journal" → "Expedition journal".
+  - Part 2 `future_cta` nav: "Contact the creators to collaborate" → "Get in touch", "Back to title / replay" → "Play again". Removed verbose CTA tone at the end of the narrative sequence.
+  - Startup ready status: "Model ready. Click/tap to begin." → "Model ready." in `startup-ui.js` and `bilingualTextMap`. Removes instructional tone from a moment that already has a dominant CTA.
+  - Updated `debrief-analysis.test.js` and `startup-ui.test.js` to reflect new copy contracts.
 
 - Hardened run-log / telemetry export layer in `prototype/web-v1/ui/helpers/run-log.js`: added JSDoc to `buildTurnLogEntry`, `summarizeRunLog`, and `buildRunLogExport`; added pipeline-position comment block documenting the four-step call chain; added `pressure.epScore` and `pressure.btScore` stable aliases to every turn entry (reading from `G.lastTurnRecord.pressure` written by the engine before the entry builder is called); corrected the deprecation-policy comment to accurately reflect that the old bare `EP`/`BT` top-level keys were not carried forward during v1.4.5 extraction. `summarizeRunLog` JSDoc now explicitly documents the dual-field support for `lateSignalTriggered` / `lateSignalActivation`.
 - Added `prototype/web-v1/tests/unit/run-log.test.js`: 33 unit tests covering `buildTurnLogEntry` required-field presence, `pressure.epScore`/`btScore` population and safe fallback when `G.lastTurnRecord` is absent, flags defensive copy, `contextEvent` source priority, `lateSignalActivation` passthrough; `summarizeRunLog` all four counter behaviors, per-turn critical-flag deduplication, dual `lateSignalTriggered`/`lateSignalActivation` field support; `buildRunLogExport` empty input, single-record, multi-record summary placement, immutability of original records, and complete summary key set.

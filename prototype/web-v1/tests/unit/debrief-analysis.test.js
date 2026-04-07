@@ -114,27 +114,28 @@ test('findPrimaryCause: returns specific EN copy for all canonical outcomes', ()
     'Permit Expired', 'Expedition Window Closed', 'Strategic Retreat',
     'High Point Return', 'Summit and Safe Return', 'Fatality',
   ];
+  const fallbackFragment = 'Cumulative micro-decisions';
   for (const finalOutcome of outcomes) {
     const result = findPrimaryCause({ finalOutcome, lang: 'en' });
     assert.equal(typeof result, 'string', `outcome "${finalOutcome}" should return a string`);
     assert.ok(result.length > 20, `outcome "${finalOutcome}" result is too short: "${result}"`);
-    assert.ok(result.includes('Main cause:'), `outcome "${finalOutcome}" should start with "Main cause:"`);
+    assert.ok(!result.includes(fallbackFragment), `outcome "${finalOutcome}" should return specific copy, not the fallback`);
   }
 });
 
 test('findPrimaryCause: returns ES copy when lang is es', () => {
   const result = findPrimaryCause({ finalOutcome: 'Rescue', lang: 'es' });
-  assert.ok(result.includes('Causa principal:'), `expected ES copy in "${result}"`);
+  assert.ok(result.includes('Los umbrales'), `expected ES copy in "${result}"`);
 });
 
 test('findPrimaryCause: returns generic fallback for unknown outcome', () => {
   const result = findPrimaryCause({ finalOutcome: 'Unknown Outcome', lang: 'en' });
-  assert.ok(result.includes('cumulative micro-decisions'), `expected fallback copy in "${result}"`);
+  assert.ok(result.includes('Cumulative micro-decisions'), `expected fallback copy in "${result}"`);
 });
 
 test('findPrimaryCause: returns generic fallback for null outcome', () => {
   const result = findPrimaryCause({ finalOutcome: null, lang: 'en' });
-  assert.ok(result.includes('cumulative micro-decisions'), `expected fallback copy in "${result}"`);
+  assert.ok(result.includes('Cumulative micro-decisions'), `expected fallback copy in "${result}"`);
 });
 
 // ─── buildReflectionPrompts ───────────────────────────────────────────────────

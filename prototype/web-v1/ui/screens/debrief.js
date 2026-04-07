@@ -68,50 +68,50 @@ export function findPrimaryCause({ finalOutcome, lang }) {
 
   const reasonByOutcome = {
     'Rescue': t(
-      'Main cause: body thresholds crossed outside camp. Actionable next run: call descent one turn earlier once trend worsens with low confidence.',
-      'Causa principal: se cruzaron umbrales corporales fuera de campamento. Acción para la próxima partida: ordenar descenso un turno antes cuando la tendencia empeore con baja confianza.',
+      'Body thresholds crossed outside camp. Descending one turn earlier — when the trend first worsened under low confidence — was where the margin existed.',
+      'Los umbrales corporales se cruzaron fuera del campamento. Descender un turno antes — cuando la tendencia empeoró por primera vez con baja confianza — era donde existía el margen.',
     ),
     'Collapse (Fatigue)': t(
-      'Main cause: fatigue debt compounded faster than recovery windows. Actionable next run: rotate advance/slow/wait before entering high-camp segment.',
-      'Causa principal: la deuda de fatiga se acumuló más rápido que las ventanas de recuperación. Acción para la próxima partida: alternar avanzar/lento/esperar antes de entrar al tramo de campamentos altos.',
+      'Fatigue debt compounded faster than recovery windows could absorb. Rotating advance, slow, and wait before the high-camp segment would have extended the margin.',
+      'La deuda de fatiga se acumuló más rápido de lo que las ventanas de recuperación podían absorber. Alternar avanzar, lento y esperar antes del tramo de campamentos altos habría extendido el margen.',
     ),
     'Collapse (Exposure)': t(
-      'Main cause: exposure accumulated during adverse pressure turns. Actionable next run: avoid chaining aggressive pushes while trend is worsening.',
-      'Causa principal: la exposición se acumuló durante turnos de presión adversa. Acción para la próxima partida: evitar encadenar empujes agresivos cuando la tendencia empeora.',
+      'Exposure accumulated during adverse pressure turns without a recovery interval. Chaining aggressive pushes while the trend was worsening closed the window faster than the body could absorb.',
+      'La exposición se acumuló durante turnos de presión adversa sin intervalo de recuperación. Encadenar empujes agresivos mientras la tendencia empeoraba cerró la ventana más rápido de lo que el cuerpo podía absorber.',
     ),
     'Resource Exhaustion': t(
-      'Main cause: water/food burn outpaced route progress. Actionable next run: protect resources early and treat warning chips as mandatory replanning moments.',
-      'Causa principal: el consumo de agua/comida superó el progreso en ruta. Acción para la próxima partida: proteger recursos temprano y tratar los avisos como momentos obligatorios de replanteo.',
+      'Water and food burn outpaced route progress. The warning signals were available earlier — treating them as mandatory replanning moments would have changed the economy.',
+      'El consumo de agua y comida superó el progreso en ruta. Las señales de alerta estaban disponibles antes — tratarlas como momentos de replanteo obligatorio habría cambiado la economía.',
     ),
     'Permit Expired': t(
-      'Main cause: permit clock overran before safe completion. Actionable next run: tighten tempo on low-risk windows and descend earlier when delays stack.',
-      'Causa principal: el reloj del permiso venció antes de completar de forma segura. Acción para la próxima partida: acelerar en ventanas de bajo riesgo y descender antes cuando se acumulen demoras.',
+      'The permit clock ran out before safe completion. The gap opened gradually through delays that individually seemed manageable.',
+      'El reloj del permiso venció antes de completar de forma segura. La brecha se abrió gradualmente a través de demoras que individualmente parecían manejables.',
     ),
     'Expedition Window Closed': t(
-      'Main cause: summit window closed before execution aligned. Actionable next run: convert waiting turns into controlled movement during optimal time blocks.',
-      'Causa principal: la ventana de cumbre se cerró antes de alinear la ejecución. Acción para la próxima partida: convertir turnos de espera en movimiento controlado durante bloques horarios óptimos.',
+      'The summit window closed before execution could align with it. Converting waiting turns into controlled movement during optimal time blocks was the path that stayed open.',
+      'La ventana de cumbre se cerró antes de que la ejecución pudiera alinearse con ella. Convertir turnos de espera en movimiento controlado durante bloques horarios óptimos era el camino que seguía abierto.',
     ),
     'Strategic Retreat': t(
-      'Main cause: chosen retreat to preserve return safety. Actionable next run: compare retreat trigger turn against body/resource warning onset to calibrate risk timing.',
-      'Causa principal: retirada elegida para preservar seguridad de retorno. Acción para la próxima partida: comparar el turno de retirada con el inicio de alertas corporales/de recursos para calibrar el timing del riesgo.',
+      'Retreat chosen to preserve return safety. Comparing the retreat trigger turn against the onset of body and resource warnings clarifies whether the timing was early, late, or precisely right.',
+      'Retirada elegida para preservar la seguridad de retorno. Comparar el turno de retirada con el inicio de las alertas corporales y de recursos clarifica si el momento fue temprano, tardío o preciso.',
     ),
     'High Point Return': t(
-      'Main cause: progress peak reached but return margin remained the priority. Actionable next run: reserve more body capacity before the final push segment.',
-      'Causa principal: se alcanzó el punto más alto pero el margen de retorno siguió siendo prioridad. Acción para la próxima partida: reservar más capacidad corporal antes del tramo final.',
+      'The progress peak was reached, but return margin remained the decisive constraint. Reserving more body capacity before the final push segment would have changed what was possible above.',
+      'Se alcanzó el punto máximo de progreso, pero el margen de retorno siguió siendo la restricción decisiva. Reservar más capacidad corporal antes del tramo final habría cambiado lo posible por encima.',
     ),
     'Summit and Safe Return': t(
-      'Main cause: pressure management stayed ahead of cumulative debt. Actionable next run: replicate pacing pattern around warning transitions.',
-      'Causa principal: la gestión de presión se mantuvo por delante de la deuda acumulada. Acción para la próxima partida: replicar el patrón de ritmo en las transiciones de alerta.',
+      'Pressure management stayed ahead of cumulative debt across the full arc. The pacing pattern around warning transitions held — that is what made the return possible.',
+      'La gestión de presión se mantuvo por delante de la deuda acumulada a lo largo del arco completo. El patrón de ritmo en las transiciones de alerta se sostuvo — eso es lo que hizo posible el regreso.',
     ),
     'Fatality': t(
-      'Main cause: critical limits were exceeded beyond recoverable range. Actionable next run: treat first critical flag as immediate descend trigger.',
-      'Causa principal: se superaron límites críticos fuera de rango recuperable. Acción para la próxima partida: tratar la primera bandera crítica como disparador inmediato de descenso.',
+      'Critical limits were exceeded beyond recoverable range. The first critical flag was the point where only one decision remained valid.',
+      'Se superaron los límites críticos fuera del rango recuperable. La primera bandera crítica fue el momento en que solo quedaba válida una decisión.',
     ),
   };
 
   return reasonByOutcome[finalOutcome] || t(
-    'Main cause: cumulative micro-decisions under uncertainty. Actionable next run: review first warning turn and adjust tempo one step earlier.',
-    'Causa principal: microdecisiones acumuladas bajo incertidumbre. Acción para la próxima partida: revisar el primer turno de alerta y ajustar el ritmo un paso antes.',
+    'Cumulative micro-decisions under uncertainty shaped the outcome. Reviewing the first warning turn and adjusting tempo one step earlier is where the pattern becomes readable.',
+    'Las microdecisiones acumuladas bajo incertidumbre dieron forma al resultado. Revisar el primer turno de alerta y ajustar el ritmo un paso antes es donde el patrón se vuelve legible.',
   );
 }
 
