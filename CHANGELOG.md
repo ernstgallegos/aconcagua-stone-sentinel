@@ -29,128 +29,88 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed version drift in `docs/simulation_engine.md`: updated canonical status references from v1.4.5 to v1.4.6 to match the current public build.
 - Updated `docs/technical-debt-register.md`: marked "Residual UI coupling in `screens.js`" as resolved (carousel/narrative extraction complete); added new debt item for NARRATIVES_ES i18n parity gap.
 
-### Changed
-
-- Vibe-clarification pass — atmosphere, microcopy, and visual density (`prototype/web-v1`):
-  - Debrief section titles: "Run Summary" → "Expedition record", "Key Lesson" → "What shifted", "Structured Debrief" → "Patterns" (ES mirrors updated). Removes productivity/generic labeling from the post-run screen.
-  - Debrief structured-grid labels: "Primary systemic pressure:" → "Pressure axis:", "Primary decision pattern:" → "Decision pattern:", "Recommendation for next run:" → "Next attempt:". Reduces corporate register in analysis fields.
-  - `findPrimaryCause` in `ui/screens/debrief.js`: removed "Main cause:" and "Actionable next run:" prefixes from all 10 outcome entries and the fallback. Cause text now reads as direct observation rather than productivity-app formatting.
-  - Separated `debrief-cause` (primary observation) from `debrief-next-run-recommendation` ("Next attempt:" field) — they previously shared identical text duplicated across two elements.
-  - `classifyDifficultyResponsibility`: softened label phrasing ("Decision pattern dominated" → "Decision pattern shaped outcome", "Mixed responsibility" → "Mixed pressure and choice").
-  - Suppressed emoji icon in debrief hero (`debrief-hero-icon`) via CSS `display: none` and JS clearing. The outcome class and headline carry the emotional weight without emoji noise.
-  - Added `.debrief-structured-grid` CSS: labels now render as small mono uppercase (`font-weight: 500`, `color: var(--text-dim)`) rather than default `<strong>` weight, reducing visual competition with values.
-  - Debrief action buttons: "Same scenario + seed" → "Replay this run", "Same scenario + new seed" → "Same scenario, new draw", "Review Turns" → "Review turns", "Copy Run Signature" → "Copy run signature", "View Expedition Journal" → "Expedition journal".
-  - Part 2 `future_cta` nav: "Contact the creators to collaborate" → "Get in touch", "Back to title / replay" → "Play again". Removed verbose CTA tone at the end of the narrative sequence.
-  - Startup ready status: "Model ready. Click/tap to begin." → "Model ready." in `startup-ui.js` and `bilingualTextMap`. Removes instructional tone from a moment that already has a dominant CTA.
-  - Updated `debrief-analysis.test.js` and `startup-ui.test.js` to reflect new copy contracts.
-
-- Hardened run-log / telemetry export layer in `prototype/web-v1/ui/helpers/run-log.js`: added JSDoc to `buildTurnLogEntry`, `summarizeRunLog`, and `buildRunLogExport`; added pipeline-position comment block documenting the four-step call chain; added `pressure.epScore` and `pressure.btScore` stable aliases to every turn entry (reading from `G.lastTurnRecord.pressure` written by the engine before the entry builder is called); corrected the deprecation-policy comment to accurately reflect that the old bare `EP`/`BT` top-level keys were not carried forward during v1.4.5 extraction. `summarizeRunLog` JSDoc now explicitly documents the dual-field support for `lateSignalTriggered` / `lateSignalActivation`.
-- Added `prototype/web-v1/tests/unit/run-log.test.js`: 33 unit tests covering `buildTurnLogEntry` required-field presence, `pressure.epScore`/`btScore` population and safe fallback when `G.lastTurnRecord` is absent, flags defensive copy, `contextEvent` source priority, `lateSignalActivation` passthrough; `summarizeRunLog` all four counter behaviors, per-turn critical-flag deduplication, dual `lateSignalTriggered`/`lateSignalActivation` field support; `buildRunLogExport` empty input, single-record, multi-record summary placement, immutability of original records, and complete summary key set.
-- Added focused resilience and deep-link coverage in `prototype/web-v1/tests/unit/storage.test.js` and `prototype/web-v1/tests/unit/flow-controller.test.js` for safe storage success/failure paths, valid/invalid `#game` and `#onboarding` hashes, debrief routing, and Part 2 force/unlock navigation behavior.
-- Added `prototype/web-v1/ui/helpers/nationality.js` plus `prototype/web-v1/tests/unit/nationality.test.js` to lock nationality/flag rendering fallback behavior: ISO code remains visible when emoji parsing fails or is unavailable, with deterministic `NA` fallback.
-- Added shape-validation regression tests in `prototype/web-v1/tests/smoke/model-ready.test.js` for malformed non-first entries in `outcomes` and `scenariosWebV1.predefinedScenarios`.
-
-- Extracted `bodyValueClass`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureDeltaLabel`, and `pressureBandLabel` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/helpers/screen-utils.js` as pure, side-effect-free formatting helpers. These are now the single source of truth for body-state and pressure labels across the watch panel, turn log, and debrief analytics.
-- Extracted expedition-journal responsibility from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/journal.js`. The new module owns `JOURNAL_KEY`, `migrateJournalKey`, `loadJournal`, `saveJournalEntry`, `clearJournal`, and `renderJournal`. Storage helpers are imported directly; `t()` is injected as a parameter to keep data-access functions testable in Node.
-- Added 37 new unit tests: 27 in `tests/unit/screen-utils.test.js` (body state and pressure label functions) and 10 in `tests/unit/journal.test.js` (journal data access, entry cap, and migration logic).
-- Aligned TypeScript contracts to runtime normalization layer to eliminate silent shape drift between `data-config.js` and `src/types/`. Added `RawRouteNode` (pre-normalization node shape: `nodeId`/`stageHint`) and `NormalizedRouteData` (return type of `normalizeRouteData()`) to `src/types/domain.ts`. Changed `DataConfig.nodes` from `RouteNode[]` to `RawRouteNode[]` to match the actual config object in use. Expanded `CharacterEngine` with all runtime fields (`functionalCapacityBonus`, `acclimatizationRate`, `resourceEfficiency`, `perceptionBias`, `perceptionGuardrails`, `perceptionLatency`, `decisionWindow`). Added optional fields to `Character` and `Scenario` matching real JSON data. Tightened `ContextEvent.trigger/effects/limits` from optional to required (reflecting actual data contract). Removed spurious `stage?: Stage[]` from `CharacterEventTrigger` (data uses `stages`); fixed the corresponding reference in `src/engine/events/character-events.ts`. Updated `assertDataConfig()` to validate the raw shape (nodeId/stageHint) so it can be applied directly to `loadDataConfigFiles()` output. Expanded parity test with raw-node shape invariants and full `CharacterEngine` field checks. Updated `docs/architecture.md` with an explicit canonical-layer table.
-
-### Changed
-
-- Replaced shell-dependent validation entry points with portable Node scripts: `npm run test:webv1` now calls `scripts/run-webv1-tests.js` (no inline shell eval), `npm run smoke:release` now calls `scripts/release-smoke-vercel.js` (no Bash/curl/grep dependency), and `npm run validate:json` now provides a cross-platform JSON parse gate used by readiness docs and CI.
-- `prototype/web-v1/ui/game-loop.js`: imports `formatMinutes`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureBandLabel`, and `pressureDeltaLabel` directly from `screen-utils.js`. Removed 7 entries from the `createGameLoop` factory injection interface; callers no longer need to provide these formatting functions as deps.
-- `prototype/web-v1/ui/screens.js`: replaced inline journal code (~60 lines) with thin wrapper functions delegating to `ui/screens/journal.js`. Delegates `clearJournal` and `renderJournal` to the extracted module, passing `t` and the DOM container at call time.
-- Expanded `prototype/web-v1/ui/helpers/data-config.js` array-shape guards to validate all `outcomes` entries as strings and all `scenariosWebV1.predefinedScenarios[*].id` values as strings, catching malformed items beyond index 0.
-
-
-
+## [1.4.6] — 2026-04
 
 ### Added
 
 - Added `docs/data-contracts-guide.md`: plain-language schema reference for `characters.json`, `character_events.json`, `context_events.json`, and `nodes.json`. Documents required fields, accepted values (including ISO 3166-1 alpha-2 format for `nationalityCode`), normalization transforms applied by `normalizeRouteData()`, and common validation error messages produced by `validateDataConfigShape`.
 - Added full screen-ID table to `docs/deep-links-summary.md`: lists all 15 screen IDs (from `prototype/web-v1/index.html`), their descriptions, valid parameters, and gate requirements. Added valid character ID list and URL-encoded outcome value reference.
-
-
-### Added
-
 - Added `src/styles/public-tokens.css`: shared design tokens and base styles for public-facing surfaces (landing and md-viewer). Extracts the identical `:root` CSS custom property block (colors, surfaces, borders, typography stacks, spacing scale, radius, shadows), base reset (`*`, `html`, `body`, `body::before`, `a`), and `.lang-switch`/`.lang-btn` component CSS that were duplicated verbatim across `index.html` and `md-viewer.html`. Aligns with the modular CSS direction in `prototype/web-v1/css/`.
 - Added `src/i18n/public-lang.js`: shared i18n bootstrap for public surfaces. Exposes `window.PublicLang` with `LANG_KEY` (the shared `aconcagua_language_v1` localStorage key), `detectInitialLang(translations)` (localStorage read + browser language fallback), and `wireLangButtons(applyFn)` (click listener wiring for `.lang-btn` elements). Removes the duplicated init machinery that was inline in both HTML files.
 - Extracted `findTurningPoint`, `findPrimaryCause`, and `buildReflectionPrompts` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/debrief.js` as pure, testable functions with injected deps (`turnLog`, `POS_LABELS`, `finalOutcome`, `characterId`, `lang`). No gameplay behavior change.
 - Added `prototype/web-v1/tests/unit/debrief-analysis.test.js`: 20 unit tests covering `findTurningPoint` flag priority order (irreversible > critical > weather-window > water-depleted > fallback), EN/ES localization, empty log fallback; `findPrimaryCause` for all 10 canonical outcomes, null/unknown fallback, EN/ES; `buildReflectionPrompts` static/dynamic structure, character-specific prompts, dynamic pool cap at 2.
-
-
-### Changed
-
-- Stabilized `test:webv1` script portability in `package.json` by replacing shell-dependent `find` expansion with a Node-based recursive test-file discovery/exec path compatible across shells/platforms.
-- Updated README EN/ES Part 2 status wording to reflect the current narrative-preview scope (7 playable story screens with Francisco after summit return) while clarifying full expedition mechanics remain deferred.
-- Added `docs/deep-links-summary.md` as a concise contributor quick reference derived from the canonical deep-link reference.
-- Added a `Target Version` column to `docs/technical-debt-register.md` and preserved existing debt semantics with conservative `TBD`/documented-target values.
-- Added explicit deployment documentation for the current in-memory API rate-limit limitation in multi-instance/serverless contexts in `docs/deploy-routing.md`.
-- Added a top-level TL;DR calibration snapshot to `docs/balance-calibration-notes.md`, including target bands, latest clearly documented date, and a TODO marker for unresolved active-flag documentation.
-- Added explicit Monte Carlo caveat notes in README EN/ES to prevent treating headless simulator win rates as human-balance ground truth.
-- Added v1.4.6 historical-document notes at the top of `docs/en/concept-document.md`, `docs/en/consolidated-design-v1.4.md`, `docs/en/implementation-plan-v1.4.md`, and their Spanish mirrors (`docs/es/`) pointing readers to `docs/repo-truth.md` and `CHANGELOG.md` for the current state.
-- Updated `docs/repo-truth.md` last-updated date to April 2026; expanded source-of-truth ownership map with explicit entries for `ui/game-loop.js`, `ui/flow-controller.js`, `ui/screens/debrief.js`, `ui/helpers/screen-utils.js`, `ui/helpers/storage.js`, and `ui/event-registry.js`; added pointer to `docs/data-contracts-guide.md` from the data section.
-- Updated `docs/technical-debt-register.md`: marked `screens.js` orchestration breadth as resolved in v1.4.6 (moved to Resolved table); added two new active debt items — telemetry centralization and residual UI coupling in `screens.js` setup/carousel paths.
-- Updated README EN/ES canonical prototype status sections from v1.4.5 to v1.4.6; added inline descriptions of `ui/game-loop.js`, `ui/flow-controller.js`, `ui/screens/debrief.js`, and `ui/helpers/screen-utils.js` as active architecture components.
-
-- Updated `index.html` and `md-viewer.html` to load `src/styles/public-tokens.css` (via `<link>`) and `src/i18n/public-lang.js` (via `<script>`). Removed all duplicated inline CSS blocks and simplified `initLanguageSwitcher`/`initLanguage` to delegate to `PublicLang.detectInitialLang` and `PublicLang.wireLangButtons`.
-- Updated `src/interfaces/contactInfo.js` from a comment-only stub to a real ES module export. Now exports `CONTACT_EMAIL`, `INSTAGRAM_URL`, `GITHUB_URL`, and a structured `contactInfo` default export as a canonical contact data contract.
-
 - Added `prototype/web-v1/ui/game-loop.js`: extracted turn-resolution orchestration from `screens.js` into a new `createGameLoop(deps)` factory. The factory owns the full `handleDecision(decision)` pipeline — sleep-at-camp guard, `resolveTurn` call, acclimatization gain, state updates, log entry building, park-exit detection, run-end classification, and turn counter increment. Rendering callbacks (`renderWatch`, `renderNarrative`, `addLogEntry`, `setDecisionButtonsEnabled`, `onRunEnded`) are injected as deps, keeping the module independent of DOM specifics. `screens.js` now delegates `makeDecision` entirely to `_gameLoop.handleDecision`. No gameplay behavior change.
 - Added `prototype/web-v1/tests/unit/game-loop.test.js`: 8 focused unit tests covering sleep rejection at non-camp positions, sleep proceeding at camp, turn counter increment, log entry building, terminal-outcome run-end path, park-exit outcome classification (`returnedToHorcones`), summit-success terminal path, and pressure history capping at 5 entries.
-- Added `prototype/web-v1/ui/flow-controller.js`: extracted screen-flow orchestration from `screens.js`. New module owns `showScreen`, `dismissTransientUi`, all modal open/close pairs (`openIntroModal`/`close`, `openTutorialModal`/`close`, `closeOnboardingModal`, `abandonOnboarding`, `openGameHelp`/`close`, `openWatchDetail`/`close`, `openFieldLog`/`close`), bottom-sheet management (`closeAllBottomSheets`, `isBottomSheetOpen`, `openBottomSheet`, `closeBottomSheet`), `advanceFromTitle`, `handleDeepLink`, and all Escape/backdrop event listeners. Initialized via `initFlowController(hooks)` with callbacks injected from `screens.js`. No behavior change.
-- Added `prototype/web-v1/tests/unit/flow-controller.test.js`: 16 characterization tests covering the Part 2 access gate, hash-suppression semantics (default write / suppressHash option / sequential call behavior), `onEnterScreen` hook dispatch, `advanceFromTitle` model-ready guard, `handleDeepLink` routing (empty hash, debrief delegation, Part 2 force-bypass, direct navigate), and bottom-sheet open/close state.
-- Added `prototype/web-v1/ui/helpers/screen-utils.js`: pure utility functions extracted from `screens.js` to enable unit-level characterization testing. Exports: `formatMinutes`, `formatTrendArrow`, `confidenceTier`, `getTimeOfDayBucket`, `getPersistenceTier`, `OUTCOME_CLASS_MAP`, `getOutcomeClass`, and `resolveNavigationTarget` (Part 2 navigation gate).
-- Added `prototype/web-v1/tests/unit/screen-utils.test.js`: 45 characterization tests covering time formatting, trend arrows, confidence tiers, time-of-day buckets, persistence tiers, outcome CSS class mapping, and the Part 2 access gate — protecting these seams before any screens.js extraction work begins.
-- Added `prototype/web-v1/tests/unit/screens-navigation-seams.test.js`: 21 characterization tests covering `syncScreenHash` contract, deep-link hash format for all key screen types (game, debrief, part2, narrative screens, journal, onboarding), and hash round-trip integrity.
-
-### Changed
-
-- Started screen-render extraction in `prototype/web-v1/ui/screens.js` by delegating title, game widget, debrief analytics, and Part 2 narrative rendering into dedicated modules under `prototype/web-v1/ui/screens/` (`title.js`, `game.js`, `debrief.js`, `part2.js`) while keeping `screens.js` as the orchestration entrypoint.
-- Refactored `prototype/web-v1/ui/screens.js` to import and delegate all navigation/modal/flow functions from `ui/flow-controller.js`. Removed `showScreen`, `dismissTransientUi`, all modal functions, overlay functions, bottom-sheet management, `advanceFromTitle`, `handleDeepLink`, `_suppressHashSync`, Escape/backdrop listeners, and `SCREEN_EXIT_DURATION_MS` from `screens.js`. `screens.js` now calls `initFlowController(hooks)` with render callbacks at module init time. `bootstrapMockDebrief` updated to use `showScreen('debrief', { suppressHash: true })` instead of the former private `_suppressHashSync` flag. No behavior change.
-- `showScreen` gains an optional second argument `{ suppressHash: false }` to allow callers to suppress hash-sync for a single call without using the private flag. The `_suppressHashSync` internal flag is consumed and cleared atomically inside `showScreen`.
-- Hardened web-v1 UI wiring by replacing `prototype/web-v1/index.html` inline `onclick` handlers with delegated `data-action` dispatch through `prototype/web-v1/ui/event-registry.js`, preserving existing behavior while centralizing listener registration in `ui/screens.js`.
-- Updated nationality display in web-v1 character cards/carousels to always include a readable ISO fallback label alongside emoji flags (derived from `nationalityCode` when present or from the emoji flag), and added optional `nationalityCode` format validation (`^[A-Z]{2}$`) to `ui/helpers/data-config.js`.
-- Consolidated `localStorage` write/remove safety through new `prototype/web-v1/ui/helpers/storage.js` and migrated UI/flow write paths (`difficulty`, `language`, `summit flag`, `journal`, `run_log.json`, deep-link force bypass) to non-throwing helpers.
-
-- Added CI cross-browser smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py` and `.github/workflows/ci.yml` so canonical Playwright smoke now runs on Chromium, Firefox, and WebKit, plus a critical mobile (375x812) viewport path check for title → setup → game/watch interaction.
-- Added `prototype/web-v1/tests/parity/loader-ts-contract-parity.test.js`: parity test that loads real data files through the JS canonical loader (`loadDataConfigFiles` + `normalizeRouteData`) and verifies the output satisfies the TS-side `DataConfig`/`RouteNode`/`CharacterEvent`/`ContextEvent`/`Character` contract invariants.
-- Rebuilt `CHANGELOG.md` into a clean canonical structure: removed exact-duplicate bullets that had propagated into every version block, merged duplicate section headers within versions, consolidated `(release baseline)` and `#### Additional` subsections in `[1.4.5]` and `[1.4.3]` blocks, and reordered `[1.4.2]` sections to follow Keep a Changelog convention (Added → Changed → Deprecated → Removed → Fixed).
-- Confirmed that `scripts/monte-carlo-web-v1.js` already reads the output version dynamically from `package.json` (no hardcoded version string).
-- Migrated `api/run.js` from CommonJS to native ESM (`import`/`export default`); replaced `fs.readFileSync`/`fs.existsSync` with async `fs/promises` (`readFile`/`access`); preserved all rate-limiting, CORS, and response-shape behavior unchanged.
+- Added `prototype/web-v1/ui/flow-controller.js`: extracted screen-flow orchestration from `screens.js`. New module owns `showScreen`, `dismissTransientUi`, all modal open/close pairs, bottom-sheet management, `advanceFromTitle`, `handleDeepLink`, and all Escape/backdrop event listeners. Initialized via `initFlowController(hooks)` with callbacks injected from `screens.js`. No behavior change.
+- Added `prototype/web-v1/tests/unit/flow-controller.test.js`: 16 characterization tests covering the Part 2 access gate, hash-suppression semantics, `onEnterScreen` hook dispatch, `advanceFromTitle` model-ready guard, `handleDeepLink` routing, and bottom-sheet open/close state.
+- Added `prototype/web-v1/ui/helpers/screen-utils.js`: pure utility functions extracted from `screens.js`. Exports: `formatMinutes`, `formatTrendArrow`, `confidenceTier`, `getTimeOfDayBucket`, `getPersistenceTier`, `OUTCOME_CLASS_MAP`, `getOutcomeClass`, and `resolveNavigationTarget` (Part 2 navigation gate).
+- Added `prototype/web-v1/tests/unit/screen-utils.test.js`: 45 characterization tests covering time formatting, trend arrows, confidence tiers, time-of-day buckets, persistence tiers, outcome CSS class mapping, and the Part 2 access gate.
+- Added `prototype/web-v1/tests/unit/screens-navigation-seams.test.js`: 21 characterization tests covering `syncScreenHash` contract, deep-link hash format for all key screen types, and hash round-trip integrity.
+- Added CI cross-browser smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py` and `.github/workflows/ci.yml` so canonical Playwright smoke now runs on Chromium, Firefox, and WebKit, plus a critical mobile (375x812) viewport path check.
+- Added `prototype/web-v1/tests/parity/loader-ts-contract-parity.test.js`: parity test that loads real data files through the JS canonical loader (`loadDataConfigFiles` + `normalizeRouteData`) and verifies the output satisfies the TS-side contract invariants for `DataConfig`, `RouteNode`, `CharacterEvent`, `ContextEvent`, and `Character`.
 - Added `api/run.test.js` smoke test (6 cases: OPTIONS preflight, missing params, invalid format, 404 unknown run, 200 valid response shape, security headers); wired via new `test:api` npm script included in the default `npm test` run.
-- Hardened `validateDataConfigShape()` in `prototype/web-v1/ui/helpers/data-config.js` to validate every element of each supported array (`characterEvents`, `contextEvents`, `nodes`, `characters`) instead of only the first item; error messages now identify the failing array and index (e.g. `$[2].limits`).
-- Added four targeted shape-validation tests in `prototype/web-v1/tests/smoke/model-ready.test.js` covering malformed non-first elements in `characters`, `nodes`, `contextEvents`, and `characterEvents` arrays, asserting that the correct `$[i].field` path appears in the failure diagnostic.
-- Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions, with explicit `SKILL.md` target mapping and restart guidance.
-- Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest to operationalize the notebook-based frontend aesthetics prompting workflow (`docs/ai/skills/prompting_for_frontend_aesthetics.ipynb`).
-- Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL (landing, web-v1 shell, and Part 2 deep-link documentation markers).
+- Added `prototype/web-v1/tests/unit/run-log.test.js`: 33 unit tests covering `buildTurnLogEntry`, `summarizeRunLog`, and `buildRunLogExport` shape, immutability, and edge cases.
+- Added 37 new unit tests: 27 in `tests/unit/screen-utils.test.js` (body state and pressure label functions) and 10 in `tests/unit/journal.test.js` (journal data access, entry cap, and migration logic).
+- Added `prototype/web-v1/ui/helpers/nationality.js` plus `prototype/web-v1/tests/unit/nationality.test.js` to lock nationality/flag rendering fallback behavior: ISO code remains visible when emoji parsing fails or is unavailable, with deterministic `NA` fallback.
+- Added shape-validation regression tests in `prototype/web-v1/tests/smoke/model-ready.test.js` for malformed non-first entries in `outcomes` and `scenariosWebV1.predefinedScenarios`.
+- Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions.
+- Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest.
+- Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL.
 - Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
-- Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points (`/`, `md-viewer`, `prototype/web-v1`, `prototype/mra-v0/viewer`) to keep PR artifacts binary-free.
+- Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points.
 
 ### Changed
 
-- Updated GitHub Actions CI gates in `.github/workflows/ci.yml` to include `npm run typecheck`, expanded repository-wide JSON parsing validation, and `npm run smoke:release` as explicit pre-merge checks aligned with the public-readiness checklist.
-- Refactored `prototype/web-v1/src/boot/loadDataConfig.ts`: removed duplicate file-path list and broken fetch loop; replaced with a thin re-export adapter for `assertDataConfig` (renamed `assertNormalizedDataConfig`) with a docblock that names `ui/helpers/data-config.js` as the canonical loading path.
-- Added JSDoc to `assertDataConfig` in `prototype/web-v1/src/types/data-contracts.ts` clarifying it operates on post-normalized data (after `normalizeRouteData()`).
-- Updated `docs/architecture.md` to name `prototype/web-v1/ui/helpers/data-config.js` as the canonical config-loading module, describe the two-phase `loadDataConfigFiles`/`normalizeRouteData` pipeline, and document the role of the TS-side parity test.
-- Published explicit alias deprecation policy in `prototype/web-v1/ui/helpers/run-log.js`: legacy `EP`/`BT` raw field names in `run_log.json` exports and `lastTurnRecord.pressure` are deprecated since v1.4.5; use `epScore`/`btScore` instead; legacy names will be removed in v1.5.0.
-- Rewrote high-visibility public copy across landing translations, README EN/ES intros, and in-game help guidance to improve clarity, tone, and bilingual consistency for public-facing communication.
-- Expanded the public-copy rewrite pass across README EN/ES core narrative sections, landing architecture/materials language, and Spanish in-game help microcopy to improve voice consistency and player readability.
-- Updated `README.md` and `README.es.md` Part 2 flow descriptions to match the canonical narrative screen IDs used by web-v1 (`mendoza_room` → `future_cta`) and removed stale “14 screens” wording.
-- Updated onboarding wording in README EN/ES to reflect the active `Begin Expedition`/`Iniciar expedición` CTA.
-- Updated public-readiness checklists (EN/ES) and `CONTRIBUTING.md` so release-facing validation explicitly includes deploy smoke evidence via `npm run smoke:release`.
-- Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1` so EN/ES switching keeps the same pill-button interaction model across public surfaces.
-- Refreshed typography across landing, markdown viewer, `prototype/web-v1`, and archived MRA viewer around a unified role system: `Playfair Display` for editorial/hero hierarchy, `Montserrat` for UI and reading body text, and `IBM Plex Mono` for telemetry/label semantics.
-- Replaced all public entry-point favicons to use `art/brand/favicon-aconcagua.jpg` for browser and touch-icon references.
+- Vibe-clarification pass — atmosphere, microcopy, and visual density (`prototype/web-v1`):
+  - Debrief section titles: "Run Summary" → "Expedition record", "Key Lesson" → "What shifted", "Structured Debrief" → "Patterns" (ES mirrors updated).
+  - Debrief structured-grid labels: "Primary systemic pressure:" → "Pressure axis:", "Primary decision pattern:" → "Decision pattern:", "Recommendation for next run:" → "Next attempt:".
+  - `findPrimaryCause` in `ui/screens/debrief.js`: removed "Main cause:" and "Actionable next run:" prefixes from all 10 outcome entries and the fallback.
+  - Separated `debrief-cause` (primary observation) from `debrief-next-run-recommendation` ("Next attempt:" field).
+  - `classifyDifficultyResponsibility`: softened label phrasing ("Decision pattern dominated" → "Decision pattern shaped outcome", "Mixed responsibility" → "Mixed pressure and choice").
+  - Suppressed emoji icon in debrief hero (`debrief-hero-icon`) via CSS `display: none` and JS clearing.
+  - Added `.debrief-structured-grid` CSS: labels now render as small mono uppercase (`font-weight: 500`, `color: var(--text-dim)`).
+  - Debrief action buttons: "Same scenario + seed" → "Replay this run", "Same scenario + new seed" → "Same scenario, new draw", "Review Turns" → "Review turns", "Copy Run Signature" → "Copy run signature", "View Expedition Journal" → "Expedition journal".
+  - Part 2 `future_cta` nav: "Contact the creators to collaborate" → "Get in touch", "Back to title / replay" → "Play again".
+  - Startup ready status: "Model ready. Click/tap to begin." → "Model ready." in `startup-ui.js` and `bilingualTextMap`.
+  - Updated `debrief-analysis.test.js` and `startup-ui.test.js` to reflect new copy contracts.
+- Hardened run-log / telemetry export layer in `prototype/web-v1/ui/helpers/run-log.js`: added JSDoc, pipeline-position comment block, `pressure.epScore` and `pressure.btScore` stable aliases, corrected deprecation-policy comment, and explicit `summarizeRunLog` JSDoc for dual-field `lateSignalTriggered`/`lateSignalActivation` support.
+- Extracted `bodyValueClass`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureDeltaLabel`, and `pressureBandLabel` from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/helpers/screen-utils.js` as pure, side-effect-free formatting helpers.
+- Extracted expedition-journal responsibility from `prototype/web-v1/ui/screens.js` to `prototype/web-v1/ui/screens/journal.js`. The new module owns `JOURNAL_KEY`, `migrateJournalKey`, `loadJournal`, `saveJournalEntry`, `clearJournal`, and `renderJournal`.
+- Aligned TypeScript contracts to runtime normalization layer: added `RawRouteNode` and `NormalizedRouteData` to `src/types/domain.ts`; changed `DataConfig.nodes` from `RouteNode[]` to `RawRouteNode[]`; expanded `CharacterEngine` with all runtime fields; tightened `ContextEvent` required fields; removed spurious `stage?: Stage[]` from `CharacterEventTrigger`; updated `assertDataConfig()` to validate raw shape; updated `docs/architecture.md` with canonical-layer table.
+- Replaced shell-dependent validation entry points with portable Node scripts: `npm run test:webv1` calls `scripts/run-webv1-tests.js`, `npm run smoke:release` calls `scripts/release-smoke-vercel.js`, and `npm run validate:json` provides a cross-platform JSON parse gate.
+- `prototype/web-v1/ui/game-loop.js`: imports formatting helpers directly from `screen-utils.js`. Removed 7 entries from the `createGameLoop` factory injection interface.
+- `prototype/web-v1/ui/screens.js`: replaced inline journal code (~60 lines) with thin wrapper functions delegating to `ui/screens/journal.js`.
+- Expanded `prototype/web-v1/ui/helpers/data-config.js` array-shape guards to validate all `outcomes` entries as strings and all `scenariosWebV1.predefinedScenarios[*].id` values as strings.
+- Started screen-render extraction in `prototype/web-v1/ui/screens.js` by delegating title, game widget, debrief analytics, and Part 2 narrative rendering into dedicated modules under `prototype/web-v1/ui/screens/`.
+- Refactored `prototype/web-v1/ui/screens.js` to import and delegate all navigation/modal/flow functions from `ui/flow-controller.js`. `screens.js` now calls `initFlowController(hooks)` with render callbacks at module init time. No behavior change.
+- Hardened web-v1 UI wiring by replacing `prototype/web-v1/index.html` inline `onclick` handlers with delegated `data-action` dispatch through `prototype/web-v1/ui/event-registry.js`.
+- Updated nationality display in web-v1 character cards/carousels to always include a readable ISO fallback label alongside emoji flags, and added optional `nationalityCode` format validation to `ui/helpers/data-config.js`.
+- Consolidated `localStorage` write/remove safety through new `prototype/web-v1/ui/helpers/storage.js` and migrated all UI/flow write paths to non-throwing helpers.
+- Rebuilt `CHANGELOG.md` into a clean canonical structure: removed exact-duplicate bullets, merged duplicate section headers within versions, consolidated `(release baseline)` and `#### Additional` subsections.
+- Migrated `api/run.js` from CommonJS to native ESM (`import`/`export default`); replaced `fs.readFileSync`/`fs.existsSync` with async `fs/promises`; preserved all rate-limiting, CORS, and response-shape behavior.
+- Hardened `validateDataConfigShape()` in `prototype/web-v1/ui/helpers/data-config.js` to validate every element of each supported array with indexed error messages (e.g. `$[2].limits`).
+- Stabilized `test:webv1` script portability in `package.json` with Node-based recursive test-file discovery.
+- Updated README EN/ES Part 2 status wording, onboarding CTA text, canonical prototype status sections, and Monte Carlo caveat notes.
+- Added explicit Monte Carlo caveat notes in README EN/ES to prevent treating headless simulator win rates as human-balance ground truth.
+- Updated `docs/repo-truth.md` last-updated date and expanded source-of-truth ownership map with new module entries.
+- Updated `docs/technical-debt-register.md`: marked `screens.js` orchestration breadth as resolved; added telemetry centralization and residual UI coupling debt items.
+- Updated `index.html` and `md-viewer.html` to load shared public CSS/i18n modules; removed duplicated inline CSS blocks.
+- Updated `src/interfaces/contactInfo.js` from a comment-only stub to a real ES module export with `CONTACT_EMAIL`, `INSTAGRAM_URL`, `GITHUB_URL`, and structured `contactInfo`.
+- Updated GitHub Actions CI gates to include `npm run typecheck`, expanded JSON validation, and `npm run smoke:release`.
+- Refactored `prototype/web-v1/src/boot/loadDataConfig.ts` to a thin re-export adapter; updated `docs/architecture.md` with canonical loading path documentation.
+- Published explicit alias deprecation policy in `prototype/web-v1/ui/helpers/run-log.js`: legacy `EP`/`BT` field names deprecated since v1.4.5; removal target v1.5.0.
+- Rewrote high-visibility public copy across landing, README EN/ES, and in-game help guidance for clarity, tone, and bilingual consistency.
+- Unified the language-selector visual component between landing/markdown viewer and `prototype/web-v1`.
+- Refreshed typography with unified role system: `Playfair Display` for editorial hierarchy, `Montserrat` for UI body text, and `IBM Plex Mono` for telemetry/label semantics.
+- Replaced all public entry-point favicons to use `art/brand/favicon-aconcagua.jpg`.
 
 ### Fixed
 
-- Gated web-v1 runtime/state debug logging so startup/state-shape diagnostics emit only on localhost or when `localStorage` debug flag `aconcagua_debug_mode=1` is set, reducing production console noise without removing local troubleshooting visibility.
-- Hardened web-v1 startup diagnostics by centralizing load-error categorization (`missing file`, `http failure`, `invalid json`, `invalid shape`, `post-load validation failure`, `generic load failure`) in `ui/helpers/runtime-diagnostics.js`, wiring standardized developer report formatting into startup/UI logging, and adding targeted tests for generic-fetch failure fallback plus diagnostics helper behavior.
-
-- Fixed brittle mobile smoke assertion in `prototype/web-v1/tests/test_smoke_flow.py` by validating visible post-onboarding action controls (`#btn-advance`) instead of legacy `#action-grid`, which no longer represents the current game layout.
-- Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`, preventing CI failures on runners without ripgrep installed.
-- Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`) that no longer map to live UI selectors.
+- Gated web-v1 runtime/state debug logging so diagnostics emit only on localhost or when `localStorage` debug flag `aconcagua_debug_mode=1` is set.
+- Hardened web-v1 startup diagnostics by centralizing load-error categorization in `ui/helpers/runtime-diagnostics.js` and wiring standardized developer report formatting into startup/UI logging.
+- Fixed brittle mobile smoke assertion in `prototype/web-v1/tests/test_smoke_flow.py` by validating visible post-onboarding action controls (`#btn-advance`) instead of legacy `#action-grid`.
+- Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`.
+- Fixed i18n configuration drift in `prototype/web-v1/ui/screens.js` by removing unused legacy onboarding key copies (`understoodBegin`).
 
 ## [1.4.5] — 2026-03
 
