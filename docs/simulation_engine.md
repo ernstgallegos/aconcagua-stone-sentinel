@@ -100,6 +100,22 @@ If `time > 22:00` and `node.isCamp === false`, bivouac penalties are applied in 
 
 The Monte Carlo harness (`scripts/monte-carlo-web-v1.js`) reads canonical outcomes directly from `data/outcomes.json` so simulation reporting and runtime terminal taxonomy stay synchronized.
 
+## Simulation as regression guard only
+
+> **Important caveat:** Automated / headless Monte Carlo runs are for **regression
+> detection** only.  They are NOT a direct proxy for human summit rates, final
+> balance quality, or production difficulty calibration.
+>
+> The headless AI policy (`reasonablePolicy`) produces 0–4% summit rates against
+> human target bands of 8–20%.  This divergence is expected and documented.
+>
+> Use the Monte Carlo harness to catch structural regressions (a drop to 0% summit
+> across all characters indicates a broken resolver or data contract).  Use human
+> playtesting sessions as the primary calibration reference for difficulty tuning
+> and win-rate bands.
+>
+> See `docs/balance-calibration-notes.md` for current human-reference target bands.
+
 ## Run log contract
 
 `run_log.json` logs per turn from the engine with at least:

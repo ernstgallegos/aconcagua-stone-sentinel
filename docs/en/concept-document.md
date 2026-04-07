@@ -1,5 +1,7 @@
 # Aconcagua: Stone Sentinel  
 
+> **Current status (v1.4.6 — 2026):** This is the foundational concept document. For the current active design and mechanics, see [`consolidated-design-v1.4.md`](./consolidated-design-v1.4.md) and [`implementation-plan-v1.4.md`](./implementation-plan-v1.4.md). The prototype is publicly available at `prototype/web-v1/`.
+
 ## Reference update (v1.4)
 
 This document preserves the foundational vision. The detailed March 2026 consolidated design and planning update is documented in:

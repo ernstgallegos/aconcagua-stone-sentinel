@@ -1,6 +1,22 @@
 # Balance calibration notes — character parameter pass
 
-## TL;DR — Current calibration status
+## ⚠ Simulation caveat (read before interpreting numbers)
+
+**Automated / headless Monte Carlo runs are for regression detection only.**
+They are NOT a direct proxy for human summit rates, final balance quality, or
+production calibration targets.
+
+The headless AI policy (`reasonablePolicy` in `scripts/monte-carlo-web-v1.js`)
+does not model human learning, timing strategy, or qualitative risk reading.
+Typical headless summit rates are 0–4%, vs. 8–20% human target bands.
+
+**Use the Monte Carlo harness to detect structural bugs** (0% summit rate across
+all characters = something is broken).  **Use human playtesting sessions as the
+primary calibration reference** for win-rate bands and difficulty perception.
+
+See also: `docs/simulation_engine.md` § "Simulation as regression guard only".
+
+
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
 - **Latest clearly documented calibration date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).

@@ -62,3 +62,80 @@ test('context event contract is bounded and mountain-first', async () => {
     assert.equal(typeof event.telemetryTag, 'string');
   });
 });
+
+// ── Full-array malformed-element tests (beyond index 0) ───────────────────────
+
+import { validateDataConfigShape } from '../../ui/helpers/data-config.js';
+
+test('validateDataConfigShape: catches malformed characterEvent at index > 0', () => {
+  const valid = {
+    id: 'ev_0',
+    characterId: 'francisco',
+    category: 'observation',
+    trigger: {},
+    effects: {},
+    limits: {},
+  };
+  const malformedAtIndex1 = [
+    valid,
+    { id: 'ev_1', characterId: 'laura' }, // missing category, trigger, effects, limits
+  ];
+
+  assert.throws(
+    () => validateDataConfigShape('characterEvents', malformedAtIndex1),
+    /\$\[1\]/,
+    'should report error at index 1 for missing characterEvent fields'
+  );
+});
+
+test('validateDataConfigShape: catches malformed contextEvent at index > 0', () => {
+  const validContext = {
+    id: 'ctx_0',
+    label: 'Weather shift',
+    category: 'context',
+    trigger: {},
+    effects: {},
+  };
+  const malformedAtIndex2 = [
+    validContext,
+    { id: 'ctx_1', label: 'Fine', category: 'context', trigger: {}, effects: {} },
+    { id: 123 }, // id should be string
+  ];
+
+  assert.throws(
+    () => validateDataConfigShape('contextEvents', malformedAtIndex2),
+    /\$\[2\]/,
+    'should report error at index 2 for wrong type on contextEvent.id'
+  );
+});
+
+test('validateDataConfigShape: catches malformed node at index > 0', () => {
+  const validNode = { nodeId: 'horcones' };
+  const malformedAtIndex1 = [
+    validNode,
+    { nodeId: 42 }, // nodeId should be string
+  ];
+
+  assert.throws(
+    () => validateDataConfigShape('nodes', malformedAtIndex1),
+    /\$\[1\]/,
+    'should report error at index 1 for non-string nodeId'
+  );
+});
+
+test('validateDataConfigShape: passes when all elements in characterEvents array are valid', () => {
+  const events = [
+    { id: 'e1', characterId: 'francisco', category: 'observation', trigger: {}, effects: {}, limits: {} },
+    { id: 'e2', characterId: 'laura', category: 'onset_context', trigger: {}, effects: {}, limits: {} },
+  ];
+  assert.doesNotThrow(() => validateDataConfigShape('characterEvents', events));
+});
+
+test('validateDataConfigShape: passes when all nodes have string nodeId', () => {
+  const nodes = [
+    { nodeId: 'horcones' },
+    { nodeId: 'confluencia' },
+    { nodeId: 'plaza_de_mulas' },
+  ];
+  assert.doesNotThrow(() => validateDataConfigShape('nodes', nodes));
+});

@@ -1,5 +1,7 @@
 # Implementation Plan v1.4 (documentation)
 
+> **Current status (v1.4.6):** Phase 1 is complete. Phase 2 (Part 2 bridge, debrief improvements, mobile HUD polish) was completed through v1.4.5–v1.4.6. This document is a planning artifact; `CHANGELOG.md` is the authoritative record of what shipped.
+
 This document translates consolidated design v1.4 into planning deliverables for product execution.
 
 ## Scope

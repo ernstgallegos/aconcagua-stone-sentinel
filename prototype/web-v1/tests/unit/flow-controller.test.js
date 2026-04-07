@@ -369,3 +369,153 @@ test('closeAllBottomSheets: removes open class from all bottom-sheet elements', 
   assert.equal(backdrop.classList.contains('visible'), false, 'visible must be removed from backdrop');
   assert.equal(global.document.body.classList.contains('modal-open'), false);
 });
+
+// ── Additional deep-link and session-restoration tests ────────────────────────
+
+test('handleDeepLink: game screen with valid character and scenario starts game', () => {
+  const started = [];
+  const { doc } = makeDomStub(['game', 'expedition-setup', 'title']);
+  global.document = doc;
+  global.window.location.hash = '#game&character=francisco&seed=42&scenario=classic';
+
+  const fakeChar = { id: 'francisco', name: 'Francisco' };
+  const fakeScenario = { id: 'classic', name: 'Classic', seeds: [42] };
+
+  initFlowController(makeHooks({
+    resolveCharacter: (id) => id === 'francisco' ? fakeChar : null,
+    resolveScenario: (id) => id === 'classic' ? fakeScenario : null,
+    resolveSeed: () => 42,
+    startGame: () => { started.push(true); },
+  }));
+  handleDeepLink();
+
+  assert.equal(started.length, 1, 'startGame must be called for valid game deep-link');
+  assert.equal(G.character?.id, 'francisco');
+  assert.equal(G.seed, 42);
+});
+
+test('handleDeepLink: game screen with missing character stays on title (no crash)', () => {
+  const started = [];
+  const { doc } = makeDomStub(['game', 'title', 'expedition-setup']);
+  global.document = doc;
+  global.window.location.hash = '#game&character=nonexistent&seed=1';
+
+  initFlowController(makeHooks({
+    resolveCharacter: () => null,
+    resolveScenario: () => ({ id: 'classic', seeds: [1] }),
+    startGame: () => { started.push(true); },
+  }));
+  handleDeepLink();
+
+  assert.equal(started.length, 0, 'startGame must NOT be called when character is missing');
+});
+
+test('handleDeepLink: onboarding screen with valid params calls showOnboarding', () => {
+  const onboardingCalls = [];
+  const { doc } = makeDomStub(['onboarding', 'expedition-setup', 'title']);
+  global.document = doc;
+  global.window.location.hash = '#onboarding&character=laura&scenario=classic';
+
+  const fakeChar = { id: 'laura', name: 'Laura' };
+  const fakeScenario = { id: 'classic', name: 'Classic', seeds: [1] };
+
+  initFlowController(makeHooks({
+    resolveCharacter: (id) => id === 'laura' ? fakeChar : null,
+    resolveScenario: (id) => id === 'classic' ? fakeScenario : null,
+    showOnboarding: (mode) => { onboardingCalls.push(mode); },
+  }));
+  handleDeepLink();
+
+  assert.equal(onboardingCalls.length, 1, 'showOnboarding must be called');
+  assert.equal(onboardingCalls[0], 'predefined');
+});
+
+test('handleDeepLink: onboarding with missing character navigates to expedition-setup', () => {
+  const entered = [];
+  const { doc } = makeDomStub(['onboarding', 'expedition-setup', 'title']);
+  global.document = doc;
+  global.window.location.hash = '#onboarding&character=ghost&scenario=classic';
+
+  initFlowController(makeHooks({
+    resolveCharacter: () => null,
+    resolveScenario: () => ({ id: 'classic', seeds: [1] }),
+    onEnterScreen: (id) => entered.push(id),
+  }));
+  handleDeepLink();
+
+  assert.ok(entered.includes('expedition-setup'), 'must fall back to expedition-setup');
+});
+
+test('handleDeepLink: debrief deep-link calls bootstrapMockDebrief with params', () => {
+  let called = false;
+  let receivedParams = null;
+  const { doc } = makeDomStub(['debrief']);
+  global.document = doc;
+  global.window.location.hash = '#debrief&character=erik&seed=99';
+
+  initFlowController(makeHooks({
+    bootstrapMockDebrief: (params) => { called = true; receivedParams = params; },
+  }));
+  handleDeepLink();
+
+  assert.equal(called, true, 'bootstrapMockDebrief must be called for debrief deep-link');
+  assert.equal(receivedParams?.character, 'erik');
+  assert.equal(receivedParams?.seed, '99');
+});
+
+test('handleDeepLink: empty hash is a no-op (no navigation, no crash)', () => {
+  const entered = [];
+  const { doc } = makeDomStub(['title']);
+  global.document = doc;
+  global.window.location.hash = '';
+
+  initFlowController(makeHooks({
+    onEnterScreen: (id) => entered.push(id),
+  }));
+  handleDeepLink();
+
+  assert.equal(entered.length, 0, 'no navigation should occur for empty hash');
+});
+
+test('handleDeepLink: invalid/unknown screen navigates directly without writing hash', () => {
+  const entered = [];
+  global._lastHash = null;
+  global.history = { replaceState(_, __, url) { global._lastHash = url; } };
+
+  const { doc } = makeDomStub(['weird-screen', 'title']);
+  global.document = doc;
+  global.window.location.hash = '#weird-screen';
+
+  initFlowController(makeHooks({ onEnterScreen: (id) => entered.push(id) }));
+  handleDeepLink();
+
+  assert.ok(entered.includes('weird-screen'), 'unknown screen must still navigate');
+  assert.equal(global._lastHash, null, 'hash must be suppressed for unknown screen deep-link');
+});
+
+test('summit unlock state restoration: hasPreviouslySummited from storage unblocks Part 2', () => {
+  const store = {};
+  global.localStorage = {
+    getItem: (k) => store[k] ?? null,
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; },
+  };
+
+  // Simulate a previous summit stored in localStorage
+  store['aconcagua_summit_test'] = '1';
+
+  const { doc } = makeDomStub(['mendoza_room', 'debrief', 'title']);
+  global.document = doc;
+  global.window.location.hash = '#title';
+
+  const entered = [];
+  initFlowController(makeHooks({
+    hasPreviouslySummited: () => store['aconcagua_summit_test'] === '1',
+    onEnterScreen: (id) => entered.push(id),
+  }));
+
+  // After init with hasPreviouslySummited=true, showScreen for a Part 2 screen should not redirect
+  global.window.location.hash = '#mendoza_room';
+  handleDeepLink();
+  assert.ok(entered.includes('mendoza_room'), 'previously summited user must access Part 2 directly');
+});

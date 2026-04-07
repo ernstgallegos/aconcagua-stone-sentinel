@@ -1,6 +1,6 @@
 # Repository Truth — Canonical Runtime and Documentation Contract
 
-_Last updated: March 27, 2026._
+_Last updated: April 2026 (v1.4.6 hardening pass)._
 
 ## Active prototype
 - **Canonical active prototype:** `prototype/web-v1`.
@@ -46,7 +46,10 @@ Canonical outcomes are defined by `data/outcomes.json` and enforced by the resol
 - `prototype/web-v1/engine/*`: canonical deterministic turn mechanics.
 - `prototype/web-v1/ui/*`: rendering, input wiring, and non-authoritative presentation.
 - `prototype/web-v1/ui/helpers/run-log.js`: run-log serialization/export shape for debrief review and downloadable `run_log.json`.
+- `prototype/web-v1/ui/helpers/runtime-diagnostics.js`: centralized env-gated developer diagnostic logging (added v1.4.6).
 - `docs/repo-truth.md`: canonical repo status baseline; parity-tested.
+- `docs/data-contracts-guide.md`: human-readable contract guide for all `data/*.json` files (added v1.4.6).
+- `docs/deep-links-summary.md`: quick reference for hash-based deep-link navigation (updated v1.4.6).
 - `CHANGELOG.md`: release and unreleased change ledger.
 
 ## Canonical turn authority statement

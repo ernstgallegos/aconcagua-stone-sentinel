@@ -1,3 +1,27 @@
+/**
+ * data-contracts.ts — TypeScript-layer contract for fully-loaded, normalized data.
+ *
+ * ── Layer authority map ───────────────────────────────────────────────────────
+ * Raw JSON (data/*.json)
+ *   └─ authoritative for on-disk shape; validated by validateDataConfigShape()
+ *      in ui/helpers/data-config.js (JS runtime, not TS).
+ *
+ * ui/helpers/data-config.js  →  loadDataConfigFiles() + normalizeRouteData()
+ *   └─ authoritative loading + normalization layer (JS runtime).
+ *      normalizeRouteData() renames nodeId → id and flattens route lookups.
+ *      All shape assertions at this layer use assertConfigPath() (JS asserts).
+ *
+ * src/types/data-contracts.ts  (this file)
+ *   └─ TypeScript structural contract for the *post-normalized* DataConfig.
+ *      assertDataConfig() / assertNormalizedDataConfig() must be called AFTER
+ *      normalizeRouteData() has run; raw data will fail the nodes check because
+ *      raw route-node objects carry nodeId, not the normalized id field.
+ *
+ * src/types/domain.ts
+ *   └─ Primitive domain types (Stage, Action, Character, RouteNode, …).
+ *      Authoritative for named string unions and structural interfaces.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
 import type {
   Character,
   CharacterEvent,

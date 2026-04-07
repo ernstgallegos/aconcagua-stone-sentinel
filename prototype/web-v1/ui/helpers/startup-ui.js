@@ -1,3 +1,5 @@
+// Developer-facing diagnostic logging is handled by runtime-diagnostics.js.
+// This module owns only player-facing blocking-error copy and DOM state.
 import { safeGetStorage } from './storage.js';
 
 const LANGUAGE_KEY = 'aconcagua_language_v1';

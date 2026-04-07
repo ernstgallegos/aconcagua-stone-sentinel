@@ -9,6 +9,31 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added `prototype/web-v1/ui/helpers/runtime-diagnostics.js`: centralized env-gated developer diagnostic logging helper. Exposes `logDiagnostic(category, message, detail)` with six structured categories (`missing-file`, `http-failure`, `invalid-json`, `invalid-shape`, `post-load-failure`, `generic`). Only emits on localhost/debug environments; silent in production. Used by `data-config.js` for per-file and post-load error reporting.
+- Added `docs/data-contracts-guide.md`: human-readable reference guide explaining the contract for all six runtime data files (`data/characters.json`, `data/character_events.json`, `data/context_events.json`, `data/nodes.json`, `data/outcomes.json`, `data/scenarios.web-v1.json`). Covers purpose, required fields, constraints, common mistakes, and validation layer ownership.
+- Added inline ownership and per-turn entry shape documentation to `prototype/web-v1/ui/helpers/run-log.js` block comment. Documents run-summary attachment behavior (final record only), deprecated alias policy (EP/BT → epScore/btScore, removal in v1.5.0), and module boundaries.
+- Added layer-authority map comments to `prototype/web-v1/src/types/data-contracts.ts` documenting which layer (raw JSON → JS loading → TS assertions) is authoritative for each data shape.
+- Added authority/naming-convention header comments to `prototype/web-v1/src/types/domain.ts` clarifying the role of TS types vs. JS behavioral truth.
+- Updated `docs/deep-links-summary.md` with complete param tables, fallback behavior table, and implementation references section (v1.4.6 pass).
+- Added simulation caveat section to `docs/balance-calibration-notes.md` (automated Monte Carlo is for regression detection only; not a proxy for human summit rates).
+- Added "Simulation as regression guard only" section to `docs/simulation_engine.md` with explicit caveat that headless AI policy (0–4% summit rate) should not be used as balance calibration ground truth.
+- Added v1.4.6 hardening-pass status notes and three new debt items to `docs/technical-debt-register.md` (UI/runtime coupling in startup, telemetry schema consolidation, TS adoption boundary).
+- Added current-status notes to `docs/en/concept-document.md`, `docs/en/consolidated-design-v1.4.md`, and `docs/en/implementation-plan-v1.4.md` for v1.4.6 documentation coherence.
+- Added new test: `prototype/web-v1/tests/unit/character-flag-fallback.test.js` (12 tests) covering `getNationalityBadge` and `deriveIsoFromFlag` logic: ISO derivation from emoji, `nationalityCode` precedence, null/empty/invalid-length flag fallback to `NA`, and non-string input handling.
+- Expanded `prototype/web-v1/tests/unit/storage.test.js` with 7 new resilience tests covering successful read/write/remove, non-string return coercion, absence fallback, and multi-operation throw handling.
+- Expanded `prototype/web-v1/tests/unit/flow-controller.test.js` with 8 new deep-link and session-restoration tests: game deep-link with valid/missing character, onboarding deep-link with valid/missing params, debrief deep-link param forwarding, empty hash no-op, unknown screen ID direct navigate, and summit unlock state restoration.
+- Expanded `prototype/web-v1/tests/contracts/data-contracts.test.js` with 5 new full-array validation tests for `validateDataConfigShape`: malformed `characterEvents` beyond index 0, malformed `contextEvents` beyond index 0, malformed `nodes` beyond index 0, and valid-element pass cases.
+- Expanded `prototype/web-v1/tests/model-contract.runlog.test.js` with 12 new run-log contract tests: `buildTurnLogEntry` shape pin, `summarizeRunLog` counter tests (totalTurns, criticalEventCount, decisionWindowExceededCount, lateSignalTriggeredCount, specialActionUsedCount, empty array), `buildRunLogExport` single-record and intermediate-record summary placement.
+
+### Changed
+
+- Updated `prototype/web-v1/ui/helpers/data-config.js` to import and use `runtime-diagnostics.js::logDiagnostic()` for developer-facing error output at per-file failure and post-load validation failure sites.
+- Updated `prototype/web-v1/ui/helpers/startup-ui.js` with reference comment documenting the `runtime-diagnostics.js` separation (developer logging vs. player-facing copy).
+- Updated `README.md` and `README.es.md` to reflect v1.4.6 as the current public version (was v1.4.5 in several section headers and inline references).
+- Updated `docs/repo-truth.md` source-of-truth ownership map to include `runtime-diagnostics.js`, `data-contracts-guide.md`, and updated `deep-links-summary.md`; updated last-updated date to April 2026.
+
 ## [1.4.6] — 2026-04
 
 

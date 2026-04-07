@@ -1,8 +1,10 @@
 # Aconcagua: Stone Sentinel — Consolidated Design Document
 
-**Version:** 1.4  
+**Version:** 1.4 (last updated March 2026; current public release: v1.4.6)
 **Date:** March 2026  
-**Status:** Design and planning reference (documentation alignment)
+**Status:** Active design reference — canonical for Part 1 mechanics, Part 2 bridge preview
+
+> **Current status note (v1.4.6):** This document is current and active. The prototype (`prototype/web-v1/`) implements all Phase 1 mechanics described here. Part 2 remains a preview bridge only. For version history, see `CHANGELOG.md`.
 
 ---
 

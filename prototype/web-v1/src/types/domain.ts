@@ -1,3 +1,23 @@
+/**
+ * domain.ts — Primitive domain types for the Aconcagua: Stone Sentinel engine.
+ *
+ * ── Authority ─────────────────────────────────────────────────────────────────
+ * This file is the canonical source for named string unions and structural
+ * interfaces used across both the TypeScript sidecar (src/) and JS runtime
+ * (engine/, ui/).
+ *
+ * Important: JS runtime files do NOT import from this file at runtime.
+ * These types inform tooling, editor inference, and the TS boot-adapter only.
+ * Behavioral truth lives in the JS engine (engine/turn-resolution.js) and
+ * data files (data/*.json).
+ *
+ * ── Naming conventions ────────────────────────────────────────────────────────
+ * • String-union types (Stage, Action, TurnOutcome, …) mirror valid data values
+ *   exactly; never add a TS-only alias that doesn't appear in data/outcomes.json
+ *   or engine code.
+ * • Interface fields marked optional (?) may be absent in raw JSON; runtime
+ *   code must guard against undefined before use.
+ */
 export type Stage = 'APPROACH' | 'HIGH_CAMP' | 'SUMMIT_DAY';
 
 export type Action = 'advance' | 'advance_slowly' | 'wait' | 'descend' | 'sleep' | 'shoot_photo';

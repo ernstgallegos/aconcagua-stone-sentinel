@@ -1,3 +1,7 @@
+// Developer-facing diagnostic logging (env-gated; silent in production).
+// Player-facing blocking-error copy lives in startup-ui.js.
+import { logDiagnostic } from './runtime-diagnostics.js';
+
 const DEFAULT_CONFIG = Object.freeze({
   nodes: [],
   environmentalPressure: {},
@@ -159,12 +163,20 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
               : invalidJson
                 ? 'invalid json'
                 : 'load failure';
-        onError?.({
+        const diagPayload = {
           category,
           file: path,
           detail: error.message,
           message: `Blocking data ${category} in ${path}: ${error.message}`,
-        });
+        };
+        const diagCategoryMap = {
+          'missing file': 'missing-file',
+          'http failure': 'http-failure',
+          'invalid json': 'invalid-json',
+          'invalid shape': 'invalid-shape',
+        };
+        logDiagnostic(diagCategoryMap[category] || 'generic', diagPayload.message);
+        onError?.(diagPayload);
         return null;
       }
     }
@@ -173,12 +185,14 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
   try {
     validateLoadedDataConfig(config);
   } catch (error) {
-    onError?.({
+    const postLoadPayload = {
       category: 'post-load validation failure',
       file: 'runtime model contract',
       detail: error.message,
       message: `Blocking data contract validation failure: ${error.message}`,
-    });
+    };
+    logDiagnostic('post-load-failure', postLoadPayload.message);
+    onError?.(postLoadPayload);
     return null;
   }
   return config;
