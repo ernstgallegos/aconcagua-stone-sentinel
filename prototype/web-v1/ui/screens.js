@@ -12,6 +12,7 @@ import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, a
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
 import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
+import { reportRuntimeDiagnostic } from './helpers/runtime-diagnostics.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import {
@@ -89,33 +90,29 @@ const TUNING = {
 let DATA_CONFIG = createDefaultDataConfig();
 let DATA_CONFIG_ERROR = null;
 const REQUIRED_CONFIG_FILES = new Set(['nodes', 'environmentalPressure', 'actionModifiers', 'stageModifiers', 'characters', 'characterEvents', 'contextEvents', 'outcomes', 'scenariosWebV1']);
-const DEV_HOSTS = new Set(['localhost', '127.0.0.1']);
-
-function isDebugModeEnabled() {
-  try {
-    return String(globalThis?.localStorage?.getItem?.('aconcagua_debug_mode') || '').toLowerCase() === '1';
-  } catch (_) {
-    return false;
-  }
-}
-
 function reportRuntimeIssue(message, detail = null) {
-  try {
-    const host = globalThis?.location?.hostname || '';
-    if (!DEV_HOSTS.has(host) && !isDebugModeEnabled()) return;
-  } catch (_) {
-    return;
-  }
-
-  if (detail != null) console.error(message, detail);
-  else console.error(message);
+  reportRuntimeDiagnostic(
+    {
+      category: 'runtime issue',
+      file: message,
+      detail: detail == null ? 'No detail provided.' : String(detail),
+    },
+    { context: 'ui', level: 'warn' }
+  );
 }
 
 function setModelLoadError(errorMessage) {
   DATA_CONFIG_ERROR = errorMessage;
   updateUIState(G, { modelReady: false });
   const rendered = renderBlockingError(errorMessage);
-  reportRuntimeIssue('Blocking startup error', rendered.detail);
+  reportRuntimeDiagnostic(
+    {
+      category: errorMessage?.category || 'startup failure',
+      file: errorMessage?.file || 'runtime model contract',
+      detail: rendered.detail,
+    },
+    { context: 'startup', level: 'error' }
+  );
   setStartupState('error', uiText('Model unavailable. Review blocking diagnostics.', 'Modelo no disponible. Revisa el diagnóstico bloqueante.'));
   showScreen('fatal-error');
 }

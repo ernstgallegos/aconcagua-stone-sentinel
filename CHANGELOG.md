@@ -105,6 +105,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Fixed
 
 - Gated web-v1 runtime/state debug logging so startup/state-shape diagnostics emit only on localhost or when `localStorage` debug flag `aconcagua_debug_mode=1` is set, reducing production console noise without removing local troubleshooting visibility.
+- Hardened web-v1 startup diagnostics by centralizing load-error categorization (`missing file`, `http failure`, `invalid json`, `invalid shape`, `post-load validation failure`, `generic load failure`) in `ui/helpers/runtime-diagnostics.js`, wiring standardized developer report formatting into startup/UI logging, and adding targeted tests for generic-fetch failure fallback plus diagnostics helper behavior.
 
 - Fixed brittle mobile smoke assertion in `prototype/web-v1/tests/test_smoke_flow.py` by validating visible post-onboarding action controls (`#btn-advance`) instead of legacy `#action-grid`, which no longer represents the current game layout.
 - Fixed `scripts/release-smoke-vercel.sh` to use POSIX-available `grep -Fq` for marker checks instead of `rg`, preventing CI failures on runners without ripgrep installed.
