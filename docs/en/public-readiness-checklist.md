@@ -16,12 +16,7 @@ Run and record:
 npm run typecheck
 npm test
 pytest prototype/mra-v0/test_simulator.py -v
-python3 - <<'PY'
-import json, pathlib
-for p in pathlib.Path('.').rglob('*.json'):
-    json.loads(p.read_text(encoding='utf-8'))
-print('all-json-ok')
-PY
+npm run validate:json
 npm run smoke:release
 ```
 

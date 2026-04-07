@@ -11,10 +11,11 @@
     "simulate": "node scripts/monte-carlo-web-v1.js",
     "test": "npm run test:api && npm run test:webv1",
     "test:api": "node --test api/run.test.js",
-    "test:webv1": "node -e \"const fs=require('node:fs');const path=require('node:path');const cp=require('node:child_process');const root='prototype/web-v1/tests';const files=[];const walk=(dir)=>{for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,ent.name);if(ent.isDirectory()) walk(full); else if(ent.isFile() && full.endsWith('.test.js')) files.push(full);}};walk(root);files.sort();const result=cp.spawnSync(process.execPath,['--test',...files],{stdio:'inherit'});process.exit(result.status ?? 1);\"",
+    "test:webv1": "node scripts/run-webv1-tests.js",
     "test:full": "npm run typecheck && npm run test:webv1 && pytest prototype/mra-v0/test_simulator.py -v",
-    "smoke:release": "bash scripts/release-smoke-vercel.sh",
+    "smoke:release": "node scripts/release-smoke-vercel.js",
     "typecheck": "tsc --noEmit",
-    "build:ts": "tsc -p tsconfig.json"
+    "build:ts": "tsc -p tsconfig.json",
+    "validate:json": "node scripts/validate-json.js"
   }
 }

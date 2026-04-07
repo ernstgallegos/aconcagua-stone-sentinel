@@ -59,6 +59,8 @@ npm run typecheck
 npm run smoke:release
 ```
 
+Optionally pass a custom URL: `npm run smoke:release -- https://your-preview-url`
+
 **Headless browser smoke test (requires Playwright browser install):**
 ```bash
 python -m pip install -r requirements-dev.txt
@@ -83,10 +85,11 @@ ruff check prototype/mra-v0/ --select=E,F,W --ignore=E501
 
 Scenario JSON files in `prototype/mra-v0/scenarios/` must follow `scenario.schema.json`.
 
-Portable validation command:
+Portable validation commands:
 
 ```bash
 python3 prototype/mra-v0/validate_all_scenarios.py
+npm run validate:json
 ```
 
 ## Visual asset contribution guardrails

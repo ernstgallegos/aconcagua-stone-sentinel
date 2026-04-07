@@ -24,6 +24,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Replaced shell-dependent validation entry points with portable Node scripts: `npm run test:webv1` now calls `scripts/run-webv1-tests.js` (no inline shell eval), `npm run smoke:release` now calls `scripts/release-smoke-vercel.js` (no Bash/curl/grep dependency), and `npm run validate:json` now provides a cross-platform JSON parse gate used by readiness docs and CI.
 - `prototype/web-v1/ui/game-loop.js`: imports `formatMinutes`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureBandLabel`, and `pressureDeltaLabel` directly from `screen-utils.js`. Removed 7 entries from the `createGameLoop` factory injection interface; callers no longer need to provide these formatting functions as deps.
 - `prototype/web-v1/ui/screens.js`: replaced inline journal code (~60 lines) with thin wrapper functions delegating to `ui/screens/journal.js`. Delegates `clearJournal` and `renderJournal` to the extracted module, passing `t` and the DOM container at call time.
 - Expanded `prototype/web-v1/ui/helpers/data-config.js` array-shape guards to validate all `outcomes` entries as strings and all `scenariosWebV1.predefinedScenarios[*].id` values as strings, catching malformed items beyond index 0.
