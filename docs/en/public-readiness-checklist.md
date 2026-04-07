@@ -35,6 +35,8 @@ npm run smoke:release
 - [ ] `CHANGELOG.md` updated (Keep a Changelog structure).
 - [ ] `CONTRIBUTING.md` instructions still match current commands/CI behavior.
 - [ ] `SECURITY.md` and `CODE_OF_CONDUCT.md` links remain reachable from README.
+- [ ] `docs/data-contracts-guide.md` reflects any schema changes to `characters.json`, `character_events.json`, `context_events.json`, or `nodes.json`.
+- [ ] `docs/deep-links-summary.md` screen-ID table matches all `<section id="screen-…">` entries in `prototype/web-v1/index.html`.
 
 ## 4) Front-end verification
 

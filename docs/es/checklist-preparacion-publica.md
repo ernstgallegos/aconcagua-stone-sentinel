@@ -35,6 +35,8 @@ npm run smoke:release
 - [ ] `CHANGELOG.md` actualizado (formato Keep a Changelog).
 - [ ] `CONTRIBUTING.md` sigue reflejando comandos/CI vigentes.
 - [ ] Los enlaces a `SECURITY.md` y `CODE_OF_CONDUCT.md` desde README están vigentes.
+- [ ] `docs/data-contracts-guide.md` refleja cualquier cambio de esquema en `characters.json`, `character_events.json`, `context_events.json` o `nodes.json`.
+- [ ] La tabla de IDs de pantalla en `docs/deep-links-summary.md` coincide con todas las entradas `<section id="screen-…">` de `prototype/web-v1/index.html`.
 
 ## 4) Verificación de front-end
 

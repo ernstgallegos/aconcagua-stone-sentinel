@@ -1,5 +1,9 @@
 # Aconcagua: Stone Sentinel — Consolidated Design Document
 
+> **Historical document — v1.4 design and planning reference.**  
+> This document reflects the consolidated design as written for v1.4. It is preserved for historical reference.  
+> For the current version state and active module contracts, see [`docs/repo-truth.md`](../repo-truth.md) and [`CHANGELOG.md`](../../CHANGELOG.md).
+
 **Version:** 1.4  
 **Date:** March 2026  
 **Status:** Design and planning reference (documentation alignment)

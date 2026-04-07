@@ -1,5 +1,9 @@
 # Aconcagua: Stone Sentinel  
 
+> **Historical document — v1.4 design baseline.**  
+> This document reflects the foundational vision as written before v1.4.6. It is preserved for historical reference.  
+> For the current version state and module overview, see [`docs/repo-truth.md`](../repo-truth.md) and [`CHANGELOG.md`](../../CHANGELOG.md).
+
 ## Reference update (v1.4)
 
 This document preserves the foundational vision. The detailed March 2026 consolidated design and planning update is documented in:

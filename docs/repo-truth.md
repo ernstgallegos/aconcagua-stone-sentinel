@@ -1,6 +1,6 @@
 # Repository Truth — Canonical Runtime and Documentation Contract
 
-_Last updated: March 27, 2026._
+_Last updated: April 2026._
 
 ## Active prototype
 - **Canonical active prototype:** `prototype/web-v1`.
@@ -42,9 +42,15 @@ Canonical outcomes are defined by `data/outcomes.json` and enforced by the resol
 - Any non-canonical progression layer (XP/skill trees remain out-of-scope).
 
 ## Source-of-truth ownership map
-- `data/*.json`: simulation tuning and bounded event contracts (including `data/context_events.json` and `data/character_events.json`).
+- `data/*.json`: simulation tuning and bounded event contracts (including `data/context_events.json` and `data/character_events.json`). See `docs/data-contracts-guide.md` for field schemas and validation error reference.
 - `prototype/web-v1/engine/*`: canonical deterministic turn mechanics.
 - `prototype/web-v1/ui/*`: rendering, input wiring, and non-authoritative presentation.
+  - `ui/game-loop.js`: turn-resolution orchestration factory (`createGameLoop(deps)`). Owns the full `handleDecision` pipeline with injected rendering callbacks.
+  - `ui/flow-controller.js`: screen-flow and modal management (`initFlowController(hooks)`). Owns `showScreen`, all modal open/close pairs, bottom-sheet management, `advanceFromTitle`, `handleDeepLink`, and Escape/backdrop listeners.
+  - `ui/screens/debrief.js`: pure debrief analysis functions (`findTurningPoint`, `findPrimaryCause`, `buildReflectionPrompts`).
+  - `ui/helpers/screen-utils.js`: pure utility functions (`formatMinutes`, `confidenceTier`, `resolveNavigationTarget`, etc.).
+  - `ui/helpers/storage.js`: consolidated `localStorage` write/remove safety helpers.
+  - `ui/event-registry.js`: centralized `data-action` dispatch replacing inline `onclick` handlers.
 - `prototype/web-v1/ui/helpers/run-log.js`: run-log serialization/export shape for debrief review and downloadable `run_log.json`.
 - `docs/repo-truth.md`: canonical repo status baseline; parity-tested.
 - `CHANGELOG.md`: release and unreleased change ledger.
