@@ -9,29 +9,29 @@
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #08070d;
+  --bg-1: #12101a;
+  --bg-2: #1a1824;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #171321d1;
+  --surface-1: #211a2ddc;
+  --surface-2: #2a2238eb;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #e8c49a42;
+  --border-strong: #9ccce859;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #f4efe8;
+  --text-dim: #d5c7b4;
+  --text-muted: #a89d91;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #9fd2ec;
+  --accent-mineral: #7c8fd4;
+  --accent-amber: #f4b46f;
+  --accent-critical: #e97957;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
@@ -53,9 +53,9 @@
   --space-7: 6rem;
 
   /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  --serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
   --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --sans: "Syne", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }

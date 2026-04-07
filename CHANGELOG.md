@@ -9,6 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the public landing (`index.html`) with a stronger cinematic visual language (Fraunces/Syne typography system, copper-obsidian palette, animated atmospheric layers, staggered section reveals, and a new visual gallery section with curated concept art).
+- Updated shared public surface tokens in `src/styles/public-tokens.css` so landing and markdown viewer now inherit the same redesigned typography, contrast profile, and accent palette.
+- Updated `prototype/web-v1` typography and core token palette (`prototype/web-v1/index.html`, `prototype/web-v1/css/tokens.css`) to mirror the new public visual direction across the live game prototype without changing gameplay flow.
+
 ## [1.4.6] — 2026-04
 
 
