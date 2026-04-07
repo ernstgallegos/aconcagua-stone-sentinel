@@ -23,7 +23,7 @@ export function resolveCharacterEvent(
     if (snapshot.uses >= event.limits.maxPerRun) continue;
     if (global.turn - snapshot.lastTurn < event.limits.cooldownTurns) continue;
     if (event.trigger.actions && !event.trigger.actions.includes(action)) continue;
-    if (event.trigger.stage && !event.trigger.stage.includes(stage)) continue;
+    if (event.trigger.stages && !event.trigger.stages.includes(stage)) continue;
     if (event.trigger.minTurn && global.turn < event.trigger.minTurn) continue;
 
     return { event, state, confidenceDelta: event.effects.confidenceDelta ?? 0 };

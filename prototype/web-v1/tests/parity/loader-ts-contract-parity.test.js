@@ -124,10 +124,29 @@ test('normalized config satisfies TS Character contract invariants', async () =>
     assert.ok(ch.id.length > 0);
     assert.equal(typeof ch.name, 'string', `character ${ch.id}: name must be string`);
     assert.equal(typeof ch.engine, 'object', `character ${ch.id}: engine must be an object`);
+    // Core engine fields (present in all 6 characters in data/characters.json)
     assert.equal(typeof ch.engine.fatigueResistance, 'number',
       `character ${ch.id}: engine.fatigueResistance must be number`);
     assert.equal(typeof ch.engine.exposureResistance, 'number',
       `character ${ch.id}: engine.exposureResistance must be number`);
+    assert.equal(typeof ch.engine.confidenceStability, 'number',
+      `character ${ch.id}: engine.confidenceStability must be number`);
+    assert.equal(typeof ch.engine.riskTolerance, 'number',
+      `character ${ch.id}: engine.riskTolerance must be number`);
+    assert.equal(typeof ch.engine.functionalCapacityBonus, 'number',
+      `character ${ch.id}: engine.functionalCapacityBonus must be number`);
+    assert.equal(typeof ch.engine.acclimatizationRate, 'number',
+      `character ${ch.id}: engine.acclimatizationRate must be number`);
+    assert.equal(typeof ch.engine.resourceEfficiency, 'number',
+      `character ${ch.id}: engine.resourceEfficiency must be number`);
+    assert.equal(typeof ch.engine.perceptionBias, 'number',
+      `character ${ch.id}: engine.perceptionBias must be number`);
+    assert.equal(typeof ch.engine.perceptionGuardrails, 'object',
+      `character ${ch.id}: engine.perceptionGuardrails must be an object`);
+    assert.equal(typeof ch.engine.perceptionLatency, 'object',
+      `character ${ch.id}: engine.perceptionLatency must be an object`);
+    assert.equal(typeof ch.engine.decisionWindow, 'object',
+      `character ${ch.id}: engine.decisionWindow must be an object`);
   }
 });
 
@@ -150,6 +169,29 @@ test('validateDataConfigShape accepts each real data file without throwing', asy
       () => validateDataConfigShape(key, data),
       `validateDataConfigShape must accept real ${filePath}`
     );
+  }
+});
+
+test('raw nodes in DataConfig carry nodeId/stageHint shape (pre-normalization)', async () => {
+  const raw = await loadDataConfigFiles({ fetchImpl: fakeFetch, onError: () => {} });
+  assert.ok(raw);
+
+  const validStages = new Set(['APPROACH', 'HIGH_CAMP', 'SUMMIT_DAY']);
+
+  assert.ok(Array.isArray(raw.nodes) && raw.nodes.length > 0,
+    'loadDataConfigFiles must populate config.nodes as a non-empty array');
+
+  for (const node of raw.nodes) {
+    // Raw nodes must carry nodeId/stageHint (pre-normalization shape).
+    // normalizeRouteData() maps these to id/stage in the RouteNode shape.
+    assert.equal(typeof node.nodeId, 'string', `raw node.nodeId must be a string (got ${typeof node.nodeId})`);
+    assert.ok(node.nodeId.length > 0, 'raw node.nodeId must be non-empty');
+    assert.equal(typeof node.routeIndex, 'number', `node ${node.nodeId}: routeIndex must be a number`);
+    assert.ok(validStages.has(node.stageHint),
+      `node ${node.nodeId}: stageHint "${node.stageHint}" must be a valid Stage`);
+    // Sanity: raw nodes must NOT carry a normalized id field
+    assert.equal(node.id, undefined,
+      `node ${node.nodeId}: raw node must not have an "id" field (call normalizeRouteData first)`);
   }
 });
 

@@ -3,7 +3,7 @@ import type {
   CharacterEvent,
   CharacterEventCategory,
   ContextEvent,
-  RouteNode,
+  RawRouteNode,
   Scenario,
   Stage,
   TurnOutcome,
@@ -37,7 +37,9 @@ export interface TimeWindows {
 }
 
 export interface DataConfig {
-  nodes: RouteNode[];
+  /** Raw route nodes from data/nodes.json (nodeId/stageHint shape).
+   *  Pass to normalizeRouteData() to obtain the RouteNode/NormalizedRouteData shape. */
+  nodes: RawRouteNode[];
   environmentalPressure: Record<string, unknown>;
   actionModifiers: Record<string, Record<string, number>>;
   stageModifiers: Record<string, Record<string, number>>;
@@ -48,8 +50,16 @@ export interface DataConfig {
   scenariosWebV1: {
     predefinedScenarios: Scenario[];
     randomScenario: {
-      archetypes: Array<{ name: string; tweak: Record<string, number> }>;
+      num?: string | number;
+      seedRange?: { min: number; max: number };
+      maxTurnsRange?: { min: number; max: number };
+      initialBase?: Record<string, unknown>;
       initialRanges?: Record<string, { min: number; max: number }>;
+      archetypes: Array<{
+        name: string;
+        difficultyModifiers?: Record<string, number>;
+        tweak: Record<string, unknown>;
+      }>;
     };
   };
 }
@@ -116,24 +126,32 @@ function assertContextEvents(events: unknown): asserts events is ContextEvent[] 
   }
 }
 
-function assertRouteNodes(nodes: unknown): asserts nodes is RouteNode[] {
+function assertRouteNodes(nodes: unknown): asserts nodes is RawRouteNode[] {
   assertNonEmptyArray(nodes, 'nodes');
   const validStages = new Set<Stage>(['APPROACH', 'HIGH_CAMP', 'SUMMIT_DAY']);
   for (const node of nodes) {
-    const entry = node as Partial<RouteNode>;
-    if (!entry.id || typeof entry.id !== 'string') throw new Error('nodes[].id must be string');
-    if (typeof entry.routeIndex !== 'number') throw new Error(`node ${entry.id} missing routeIndex`);
-    if (!entry.stage || !validStages.has(entry.stage)) throw new Error(`node ${entry.id} has invalid stage`);
+    // Raw nodes carry nodeId/stageHint; call normalizeRouteData() to obtain
+    // the RouteNode shape (id/stage) consumed by the engine and UI.
+    const entry = node as Partial<RawRouteNode>;
+    if (!entry.nodeId || typeof entry.nodeId !== 'string') {
+      throw new Error('nodes[].nodeId must be a non-empty string');
+    }
+    if (typeof entry.routeIndex !== 'number') {
+      throw new Error(`node ${entry.nodeId} missing routeIndex`);
+    }
+    if (!entry.stageHint || !validStages.has(entry.stageHint)) {
+      throw new Error(`node ${entry.nodeId} has invalid stageHint "${String(entry.stageHint)}"`);
+    }
   }
 }
 
 /**
  * Asserts that config satisfies the full DataConfig contract.
  *
- * Must be called on *post-normalized* data, i.e. after
- * normalizeRouteData() from ui/helpers/data-config.js has run.
- * Raw JSON from loadDataConfigFiles() will fail the nodes check because
- * raw route-node objects carry nodeId, not the normalized id field.
+ * Can be called directly on the output of loadDataConfigFiles() because
+ * DataConfig.nodes is now typed as RawRouteNode[] (the pre-normalization shape).
+ * Pass the config to normalizeRouteData() afterwards to obtain RouteNode[]/
+ * NormalizedRouteData for engine and UI consumption.
  */
 export function assertDataConfig(config: Partial<DataConfig>): asserts config is DataConfig {
   assertRouteNodes(config.nodes);
