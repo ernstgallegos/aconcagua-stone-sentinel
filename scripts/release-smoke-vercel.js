@@ -1,8 +1,16 @@
 #!/usr/bin/env node
 
 import https from 'node:https';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const baseUrl = (process.argv[2] || 'https://aconcagua-stone-sentinel.vercel.app').replace(/\/$/, '');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const packageJsonPath = path.resolve(__dirname, '../package.json');
+const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
+const releaseMarker = `Prototype · v${packageJson.version}`;
 
 function fetchPath(pathname) {
   const url = `${baseUrl}${pathname}`;
@@ -37,7 +45,7 @@ const checks = [
   {
     path: '/prototype/web-v1/index.html',
     label: 'web-v1 shell',
-    markers: ['id="screen-title"', 'id="screen-expedition-setup"', 'Prototype · v1.4.6'],
+    markers: ['id="screen-title"', 'id="screen-expedition-setup"', releaseMarker],
   },
   {
     path: '/docs/deep-links.web-v1.md',
