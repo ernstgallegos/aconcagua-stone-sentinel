@@ -14,12 +14,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added a dual-prototype governance matrix in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
+- Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.
 
 ### Changed
 
 - Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
 - Changed public-readiness checklists (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) to include `npm run test:contracts` and to standardize JSON validation through `npm run validate:json`.
 - Changed `docs/technical-debt-register.md` by closing all five previously active debt items after landing their measurable exit criteria and moving them to the resolved table.
+- Changed `docs/balance-calibration-notes.md` to close the previous active-flags TODO with an explicit canonical state, plus a post-`v1.4.7` documentation consolidation note dated 2026-04-08.
+- Changed `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to reflect current Vercel routing reality (root landing at `/` + prototype-specific redirects), replacing outdated redirect wording.
+- Changed `CONTRIBUTING.md` and public-readiness checklists to include `npm run validate:links` in documented quality gates/evidence expectations.
 
 ### Fixed
 
@@ -28,6 +32,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed parity-test coverage gap in `prototype/web-v1/tests/parity/repo-truth-parity.test.js` by extending the canonical version synchronization assertion to include `README.md`, `README.es.md`, and `docs/simulation_engine.md` with `v${package.version}` as the single source of truth.
 - Fixed release smoke false failures in `scripts/release-smoke-vercel.js` by replacing the hardcoded UI marker (`Prototype · v1.4.6`) with a dynamic marker derived from `package.json` (`Prototype · v${package.version}`).
 - Fixed run-log summary alias drift by removing legacy `lateSignalTriggered` fallback aggregation and keeping canonical `lateSignalActivation` as the only supported late-signal counter input in `prototype/web-v1/ui/helpers/run-log.js`.
+- Fixed a broken relative markdown image link in `temp/AUDITORIA_ACONCAGUA_COMPLETA_2026-03-30.md` by resolving it from `temp/` to repository root assets (`../art/...`).
 
 ## [1.4.7] — 2026-04
 

@@ -272,7 +272,7 @@ function updatePressureHistory(ep) {
 **Inconsistencia:**
 Ambos README muestran referencias visuales con rutas como:
 ```markdown
-![Concepto de portada](art/cover/cover-concept-1.png)
+![Concepto de portada](../art/cover/cover-concept-1.png)
 ```
 
 Estas imágenes no aparecerán en el repositorio tal como está distribuido.

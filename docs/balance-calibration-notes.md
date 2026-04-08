@@ -3,8 +3,11 @@
 ## TL;DR — Current calibration status
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
-- **Latest clearly documented calibration date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
-- **Active flags:** TODO — no single canonical “active calibration flags” list is explicitly declared in this document/repo section; keep this as a tracked docs TODO rather than inferring from code.
+- **Latest calibration evidence run date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
+- **Latest documentation consolidation review:** **2026-04-08** (post-`v1.4.7` docs pass; no new Monte Carlo batch added in this revision).
+- **Active calibration flags (canonical):**
+  - `none` (no currently open balance blockers documented after the post-`v1.4.7` review).
+  - `watch-next-batch`: rerun `npm run simulate` before the next release cut and update this file if any outcome band drifts beyond rollback thresholds.
 
 ## Target metric bands (per character)
 
@@ -64,6 +67,12 @@ Rollback procedure:
 2. Revert the last tuning commit touching pressure/action/character balance knobs.
 3. Re-run the full canonical battery and confirm all characters return to acceptable bands.
 4. Resume tuning with isolated single-axis adjustments (global pressure first, then character perception/risk, then raw capacity as last resort).
+
+## Post-v1.4.7 documentation consolidation (2026-04-08)
+
+- Reviewed this document to close the previous "Active flags: TODO" placeholder.
+- Declared explicit active-flag state (`none` + one monitoring reminder) to keep this file operationally auditable.
+- Kept the latest simulation evidence date as 2026-03-27 because no newer calibrated Monte Carlo report was generated in-repo during this documentation pass.
 
 ## Recalibration pass — structural EP fix (post-simulation audit)
 

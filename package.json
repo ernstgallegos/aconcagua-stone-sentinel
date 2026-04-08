@@ -8,6 +8,7 @@
   },
   "scripts": {
     "check:lock-version": "node scripts/check-lock-version.js",
+    "validate:links": "node scripts/check-markdown-links.js --include-temp",
     "simulate": "node scripts/monte-carlo-web-v1.js",
     "test": "npm run test:api && npm run test:webv1",
     "test:api": "node --test api/run.test.js",

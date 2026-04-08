@@ -90,6 +90,7 @@ Portable validation commands:
 ```bash
 python3 prototype/mra-v0/validate_all_scenarios.py
 npm run validate:json
+npm run validate:links
 ```
 
 ## Visual asset contribution guardrails
@@ -196,7 +197,7 @@ When a PR changes implementation status, flow wiring, or release phase labels, v
 Every release-facing or public-readiness PR must:
 
 - include completed checklist evidence from `docs/en/public-readiness-checklist.md` (or Spanish counterpart),
-- include command output evidence for `npm run typecheck`, `npm test`, `pytest prototype/mra-v0/test_simulator.py -v`, and `npm run smoke:release` (or clearly justify why a gate is not applicable),
+- include command output evidence for `npm run typecheck`, `npm test`, `pytest prototype/mra-v0/test_simulator.py -v`, `npm run validate:links`, and `npm run smoke:release` (or clearly justify why a gate is not applicable),
 - keep `CHANGELOG.md` synchronized with the exact governance/docs/process changes shipped.
 
 ## Commit Message Format

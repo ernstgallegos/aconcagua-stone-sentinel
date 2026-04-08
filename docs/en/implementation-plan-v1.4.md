@@ -92,7 +92,7 @@ Validate systemic stability, public communication, and distribution readiness.
 ### Real progress snapshot
 - ✅ Monte Carlo playtest harness added (`scripts/monte-carlo-web-v1.js`) — headless simulator running all 6 characters × 5 scenarios × 50 seeds each.
 - ✅ Win-rate distribution verification automated with `npm run simulate` — results documented in `docs/playtest-results/monte-carlo-v1.4.5.md`.
-- ✅ Vercel deploy configured (`vercel.json` present with redirect to `prototype/web-v1/index.html`).
+- ✅ Vercel deploy configured (`vercel.json` present with prototype-specific redirects; root `/` now serves the public landing page).
 - 🔲 Public presentation paragraph (pending).
 
 ---
