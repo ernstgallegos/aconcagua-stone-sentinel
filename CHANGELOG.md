@@ -29,6 +29,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed version drift in `docs/simulation_engine.md`: updated canonical status references from v1.4.5 to v1.4.6 to match the current public build.
 - Updated `docs/technical-debt-register.md`: marked "Residual UI coupling in `screens.js`" as resolved (carousel/narrative extraction complete); added new debt item for NARRATIVES_ES i18n parity gap.
 - Fixed web-v1 turn resource economy in `engine/turn-rules.js`: `calculateResourceBurnForMinutes()` now preserves fractional burn (two-decimal precision) instead of rounding half-hour burns to zero, so food/water decrease consistently across turns in low-burn stages and high-efficiency profiles.
+- Fixed web-v1 resource HUD presentation in `ui/screens.js`: watch and mobile status counters now hide decimals while preserving non-zero visibility by displaying rounded-up whole units (`ceil`) until depletion reaches zero.
 
 ## [1.4.6] — 2026-04
 
