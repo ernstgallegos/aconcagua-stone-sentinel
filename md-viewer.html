@@ -84,15 +84,17 @@
 
     <script src="/src/i18n/public-lang.js"></script>
     <script>
-      const allowed = new Set([
-        '/meta/project-whitepaper.md',
-        '/meta/public-roadmap.md',
-        '/docs/repo-truth.md',
-        '/README.md',
-      ]);
+      const DOCUMENTS = {
+        whitepaper: { en: '/meta/project-whitepaper.md', es: '/meta/project-whitepaper.es.md' },
+        roadmap: { en: '/meta/public-roadmap.md', es: '/meta/public-roadmap.es.md' },
+        repoTruth: { en: '/docs/repo-truth.md', es: '/docs/repo-truth.es.md' },
+        readme: { en: '/README.md', es: '/README.es.md' },
+      };
+      const allowed = new Set(Object.values(DOCUMENTS).flatMap((entry) => [entry.en, entry.es]));
 
       const params = new URLSearchParams(window.location.search);
-      const file = params.get('file') || '/meta/project-whitepaper.md';
+      const requestedFile = params.get('file') || '/meta/project-whitepaper.md';
+      let file = requestedFile;
       const contentEl = document.getElementById('content');
       const titleEl = document.getElementById('doc-title');
       const rawLinkEl = document.getElementById('raw-link');
@@ -136,6 +138,20 @@
         document.querySelectorAll('.lang-btn').forEach((btn) => {
           btn.setAttribute('aria-pressed', btn.dataset.lang === CURRENT_LANG ? 'true' : 'false');
         });
+        const equivalent = resolveLocalizedFile(file, CURRENT_LANG);
+        if (equivalent && equivalent !== file) {
+          file = equivalent;
+          params.set('file', file);
+          window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+          init();
+        }
+      }
+
+      function resolveLocalizedFile(path, lang) {
+        for (const entry of Object.values(DOCUMENTS)) {
+          if (entry.en === path || entry.es === path) return entry[lang] || entry.en;
+        }
+        return null;
       }
 
       function initLanguage() {
@@ -290,6 +306,8 @@
       }
 
       async function init() {
+        const localized = resolveLocalizedFile(file, CURRENT_LANG);
+        if (localized) file = localized;
         titleEl.dataset.loading = 'true';
         titleEl.textContent = t('loading');
         if (!allowed.has(file)) {
