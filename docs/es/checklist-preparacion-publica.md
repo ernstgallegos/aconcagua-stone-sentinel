@@ -18,6 +18,7 @@ npm test
 npm run test:contracts
 pytest prototype/mra-v0/test_simulator.py -v
 npm run validate:json
+npm run validate:links
 npm run smoke:release
 ```
 
