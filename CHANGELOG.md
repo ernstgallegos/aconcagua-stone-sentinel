@@ -14,6 +14,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed an obsolete documentation debt entry in `docs/technical-debt-register.md`: removed the active “Narrative bank i18n parity” item after confirming `NARRATIVES` and `NARRATIVES_ES` key coverage is complete, and moved it to the resolved-debt table.
 - Fixed release-version drift in `README.md`, `README.es.md`, and `docs/simulation_engine.md` by aligning all public status references to `v1.4.7` (matching `package.json`, `docs/repo-truth.md`, and UI version labels).
 - Fixed parity-test coverage gap in `prototype/web-v1/tests/parity/repo-truth-parity.test.js` by extending the canonical version synchronization assertion to include `README.md`, `README.es.md`, and `docs/simulation_engine.md` with `v${package.version}` as the single source of truth.
+- Fixed release smoke false failures in `scripts/release-smoke-vercel.js` by replacing the hardcoded UI marker (`Prototype · v1.4.6`) with a dynamic marker derived from `package.json` (`Prototype · v${package.version}`).
 
 ## [1.4.7] — 2026-04
 
