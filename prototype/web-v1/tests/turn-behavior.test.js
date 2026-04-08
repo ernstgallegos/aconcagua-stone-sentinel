@@ -156,7 +156,7 @@ test('park exit still awards summit return when hasSummited is true and highestP
   assert.equal(turn.outcome, 'Summit and Safe Return');
 });
 
-test('decision-window caps and resource rounding floors are deterministic rule contracts', async () => {
+test('decision-window caps and fractional resource burn are deterministic rule contracts', async () => {
   const { applyDecisionWindowDegradationRule, calculateResourceBurnForMinutes } = await loadModule('engine/turn-rules.js');
 
   const degraded = applyDecisionWindowDegradationRule({
@@ -177,7 +177,7 @@ test('decision-window caps and resource rounding floors are deterministic rule c
     burnPerHour: { water: 0.34, food: 0.24 },
     efficiency: 1,
   });
-  assert.deepEqual(burn, { waterBurn: 0, foodBurn: 0 });
+  assert.deepEqual(burn, { waterBurn: 0.17, foodBurn: 0.12 });
 });
 
 
