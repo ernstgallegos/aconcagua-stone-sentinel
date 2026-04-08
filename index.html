@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
@@ -433,6 +433,138 @@
         gap: 0.5rem 1rem;
       }
 
+
+      /* Editorial alpine rebuild */
+      .hero {
+        grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+        gap: clamp(1rem, 4vw, 2.4rem);
+      }
+
+      .hero-copy {
+        position: relative;
+        isolation: isolate;
+        background:
+          linear-gradient(160deg, #0d1118eb 0%, #151d29eb 45%, #101620ea 100%),
+          radial-gradient(circle at 12% 18%, #d59a6840, transparent 45%);
+      }
+
+      .hero-copy::after {
+        content: '';
+        position: absolute;
+        right: 1.2rem;
+        top: 1.1rem;
+        width: 120px;
+        height: 140px;
+        border: 1px solid #d9ad8354;
+        border-radius: 64% 36% 40% 60% / 48% 50% 50% 52%;
+        opacity: 0.44;
+        transform: rotate(13deg);
+        pointer-events: none;
+      }
+
+      .hero-art {
+        align-self: stretch;
+        display: grid;
+        position: relative;
+      }
+
+      .hero-art::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 52%, #0a0f16ba 100%);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .hero-art img {
+        height: 100%;
+        min-height: 420px;
+        object-fit: cover;
+        animation: editorial-pan 17s ease-in-out infinite alternate;
+      }
+
+      .section-head h2,
+      #hero-title {
+        text-wrap: balance;
+      }
+
+      .traverse {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-lg);
+        padding: clamp(1.2rem, 3vw, 2.2rem);
+        background: linear-gradient(130deg, #0f1723f0 0%, #17121fd9 100%);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .traverse-grid {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        margin-top: var(--space-3);
+      }
+
+      .traverse-card {
+        margin: 0;
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        background: #0f1723;
+        transform: translateY(0);
+        transition: transform .32s ease, border-color .32s ease;
+      }
+
+      .traverse-card:hover {
+        transform: translateY(-5px);
+        border-color: #d7b08d80;
+      }
+
+      .traverse-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        filter: saturate(0.94) contrast(1.04);
+      }
+
+      .traverse-card figcaption {
+        padding: 0.8rem 0.85rem 0.95rem;
+      }
+
+      .traverse-card h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 1.06rem;
+      }
+
+      .traverse-card p {
+        margin: .45rem 0 0;
+        color: var(--text-dim);
+        font-size: .9rem;
+      }
+
+      .hero-copy, .manifest, .flow, .panel, .status-strip, .final-band, .intel-card, .outcome, .traverse, .hero-art {
+        opacity: 0;
+        animation: rise-in .8s cubic-bezier(.22,.61,.36,1) forwards;
+      }
+      .hero-art { animation-delay: .08s; }
+      #vision .manifest { animation-delay: .16s; }
+      #traverse .traverse { animation-delay: .2s; }
+      #system .flow { animation-delay: .24s; }
+      #intel .intel-card:nth-child(1) { animation-delay: .28s; }
+      #intel .intel-card:nth-child(2) { animation-delay: .33s; }
+      #intel .intel-card:nth-child(3) { animation-delay: .38s; }
+      #intel .intel-card:nth-child(4) { animation-delay: .43s; }
+
+      @keyframes editorial-pan {
+        from { transform: scale(1.02) translate(0, 0); }
+        to { transform: scale(1.08) translate(-1.6%, -1%); }
+      }
+
+      @keyframes rise-in {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
       @media (min-width: 910px) {
         .header-row { grid-template-columns: auto 1fr; }
         .hero { grid-template-columns: 1.25fr 0.75fr; }
@@ -458,6 +590,7 @@
           <nav class="nav" aria-label="Primary navigation">
             <a href="#vision" data-i18n="navVision">Vision</a>
             <a href="#system" data-i18n="navSystem">System</a>
+            <a href="#traverse" data-i18n="navTraverse">Traverse</a>
             <a href="#status" data-i18n="navStatus">Status</a>
             <a href="#intel" data-i18n="navIntel">Materials</a>
           </nav>
@@ -511,6 +644,31 @@
               <h3 data-i18n="pillar3Title">Plural outcomes</h3>
               <p data-i18n="pillar3Body">Success is not only summit. Strategic retreat and safe return are meaningful endings with narrative and systemic weight.</p>
             </div>
+          </div>
+        </article>
+      </section>
+
+
+      <section id="traverse" class="section" aria-labelledby="traverse-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="traverseKicker">Editorial traverse</p>
+          <h2 id="traverse-title" data-i18n="traverseTitle">A visual weatherline: route memory, cold light, and slow risk.</h2>
+          <p class="section-intro" data-i18n="traverseIntro">These frames anchor the project’s tone: sparse information, vast scale, and warm accents used only when choices become decisive.</p>
+        </div>
+        <article class="traverse">
+          <div class="traverse-grid">
+            <figure class="traverse-card">
+              <img src="/art/concept-art/curated/concept-curated-1.png" alt="Glacial wall and route line under low cloud" data-i18n-attr="traverseAlt1:alt" loading="lazy" />
+              <figcaption><h3 data-i18n="traverseCard1Title">Cold front</h3><p data-i18n="traverseCard1Body">The opening phase: stable rhythm, low visibility drift.</p></figcaption>
+            </figure>
+            <figure class="traverse-card">
+              <img src="/art/concept-art/curated/concept-curated-2.png" alt="Tent camp illuminated against mountain dark" data-i18n-attr="traverseAlt2:alt" loading="lazy" />
+              <figcaption><h3 data-i18n="traverseCard2Title">Camp interval</h3><p data-i18n="traverseCard2Body">Recovery windows are short and never guaranteed.</p></figcaption>
+            </figure>
+            <figure class="traverse-card">
+              <img src="/art/concept-art/curated/concept-curated-3.webp" alt="Summit ridge in amber dusk" data-i18n-attr="traverseAlt3:alt" loading="lazy" />
+              <figcaption><h3 data-i18n="traverseCard3Title">Summit light</h3><p data-i18n="traverseCard3Body">Warmth appears as hierarchy, not decoration.</p></figcaption>
+            </figure>
           </div>
         </article>
       </section>
@@ -676,7 +834,7 @@
           pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
           brandSub: 'Public mountain systems project',
-          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
+          navVision: 'Vision', navSystem: 'System', navTraverse: 'Traverse', navStatus: 'Status', navIntel: 'Materials',
           eyebrow: 'Mountain-first, consequence-forward design',
           heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
           heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
@@ -693,6 +851,18 @@
           pillar2Body: 'Signals are interpreted through confidence ranges, never omniscient dashboards. Perception can drift long before collapse is obvious.',
           pillar3Title: 'Plural outcomes',
           pillar3Body: 'Success is not summit-only. Strategic retreat and safe return are valid endings with real narrative and mechanical weight.',
+          traverseKicker: 'Editorial traverse',
+          traverseTitle: 'A visual weatherline: route memory, cold light, and slow risk.',
+          traverseIntro: 'These frames anchor the project tone: sparse information, vast scale, and warm accents reserved for decisive moments.',
+          traverseCard1Title: 'Cold front',
+          traverseCard1Body: 'The opening phase: stable rhythm, low visibility drift.',
+          traverseCard2Title: 'Camp interval',
+          traverseCard2Body: 'Recovery windows are short and never guaranteed.',
+          traverseCard3Title: 'Summit light',
+          traverseCard3Body: 'Warmth appears as hierarchy, not decoration.',
+          traverseAlt1: 'Glacial wall and route line under low cloud',
+          traverseAlt2: 'Tent camp illuminated against mountain dark',
+          traverseAlt3: 'Summit ridge in amber dusk',
           systemKicker: 'Architecture signal',
           systemTitle: 'Built as a coherent EP/BT model, not mountain-themed decoration.',
           systemIntro: 'Web-v1 runs on a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs stay aligned so public claims remain verifiable.',
@@ -741,7 +911,7 @@
           pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
           brandSub: 'Proyecto público de sistemas de montaña',
-          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
+          navVision: 'Visión', navSystem: 'Sistema', navTraverse: 'Travesía', navStatus: 'Estado', navIntel: 'Materiales',
           eyebrow: 'Diseño mountain-first, con consecuencias reales',
           heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
@@ -758,6 +928,18 @@
           pillar2Body: 'Las señales se leen por rangos de confianza, nunca con tableros omniscientes. La percepción puede degradarse bastante antes del colapso visible.',
           pillar3Title: 'Outcomes plurales',
           pillar3Body: 'El éxito no es solo cumbre. La retirada estratégica y el retorno seguro son finales válidos con peso narrativo y mecánico real.',
+          traverseKicker: 'Travesía editorial',
+          traverseTitle: 'Una línea climática visual: memoria de ruta, luz fría y riesgo lento.',
+          traverseIntro: 'Estas escenas fijan el tono del proyecto: información escasa, escala inmensa y acentos cálidos solo cuando la decisión pesa.',
+          traverseCard1Title: 'Frente frío',
+          traverseCard1Body: 'Fase de apertura: ritmo estable y deriva de visibilidad.',
+          traverseCard2Title: 'Intervalo de campamento',
+          traverseCard2Body: 'Las ventanas de recuperación son breves y nunca seguras.',
+          traverseCard3Title: 'Luz de cumbre',
+          traverseCard3Body: 'El calor aparece como jerarquía, no como decoración.',
+          traverseAlt1: 'Pared glacial y línea de ruta bajo nubosidad baja',
+          traverseAlt2: 'Campamento iluminado contra la montaña oscura',
+          traverseAlt3: 'Arista de cumbre en crepúsculo ámbar',
           systemKicker: 'Señal de arquitectura',
           systemTitle: 'Construido como modelo EP/BT coherente, no como decoración con nieve.',
           systemIntro: 'Web-v1 corre con un resolvedor por turnos donde Presión Ambiental y Tolerancia Corporal interactúan con capas de confianza y tendencia. Contratos, tests y docs se mantienen alineados para que lo público sea verificable.',

@@ -1042,3 +1042,45 @@
 .part2-feedback-cta a {
   color: var(--ice);
 }
+
+/* Editorial atmosphere pass — shared with landing language */
+#screen-title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(216, 165, 118, 0.24), transparent 40%),
+    radial-gradient(circle at 18% 86%, rgba(181, 206, 223, 0.18), transparent 46%);
+  mix-blend-mode: screen;
+  animation: title-weather-drift 16s ease-in-out infinite alternate;
+}
+
+.situation-bar,
+.decision-panel,
+.watch-band,
+.signal-line {
+  background: linear-gradient(140deg,
+    color-mix(in srgb, var(--surface) 94%, transparent),
+    color-mix(in srgb, var(--surface2) 74%, transparent));
+  border-color: color-mix(in srgb, var(--ochre) 22%, var(--border));
+  backdrop-filter: blur(10px);
+}
+
+.narrative-text {
+  background: linear-gradient(170deg,
+    color-mix(in srgb, var(--surface2) 58%, transparent),
+    color-mix(in srgb, var(--surface) 88%, transparent));
+  border: 1px solid color-mix(in srgb, var(--ice) 22%, transparent);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--bg) 58%, transparent);
+}
+
+.carousel-card,
+.carousel-info-panel,
+.blocking-error-box {
+  background: linear-gradient(165deg,
+    color-mix(in srgb, var(--surface2) 72%, transparent),
+    color-mix(in srgb, var(--surface) 92%, transparent));
+  border-color: color-mix(in srgb, var(--stone) 30%, var(--border));
+}

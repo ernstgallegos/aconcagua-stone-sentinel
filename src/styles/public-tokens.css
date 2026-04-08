@@ -9,29 +9,29 @@
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #090b10;
+  --bg-1: #121019;
+  --bg-2: #1a1e2a;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #121723d4;
+  --surface-1: #1a2132dd;
+  --surface-2: #232d43e8;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #b2a69842;
+  --border-strong: #e4c4a463;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #eee9e2;
+  --text-dim: #c1b9af;
+  --text-muted: #8e96a3;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #c8dde9;
+  --accent-mineral: #85a0b2;
+  --accent-amber: #d7a879;
+  --accent-critical: #f4c8a4;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
@@ -53,9 +53,9 @@
   --space-7: 6rem;
 
   /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Garamond, "Times New Roman", serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+  --sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -67,9 +67,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1600px 700px at 84% -6%, #d59a6833, transparent 54%),
+    radial-gradient(1000px 520px at 10% 2%, #9db4c82b, transparent 48%),
+    linear-gradient(170deg, var(--bg-2) 0%, var(--bg-1) 50%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
