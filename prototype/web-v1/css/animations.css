@@ -13,7 +13,7 @@
 @keyframes screen-enter {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(18px) scale(0.99);
   }
   to {
     opacity: 1;
@@ -58,7 +58,7 @@
 
 /* Applied to the splash image element */
 .splash-image.ken-burns-active {
-  animation: ken-burns 20s ease-in-out forwards;
+  animation: ken-burns 24s ease-in-out forwards;
   animation-fill-mode: forwards;
 }
 
@@ -122,4 +122,13 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@keyframes auroraPulse {
+  0% { filter: saturate(0.85) contrast(1.02); }
+  100% { filter: saturate(1.08) contrast(1.08); }
+}
+
+#screen-title .splash-image {
+  animation: auroraPulse 8s ease-in-out infinite alternate;
 }

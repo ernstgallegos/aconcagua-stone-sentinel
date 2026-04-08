@@ -1,49 +1,39 @@
 /* ═══════════════════════════════════════════════════════════════════
    public-tokens.css
    Shared design tokens and base styles for public-facing surfaces.
-   Consumed by: index.html (landing), md-viewer.html (document viewer).
-   Aligns with the token naming direction in prototype/web-v1/css/tokens.css.
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
   color-scheme: dark;
 
-  /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #06080c;
+  --bg-1: #0b1018;
+  --bg-2: #131a26;
 
-  /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #111923d6;
+  --surface-1: #1a2534d6;
+  --surface-2: #233248de;
 
-  /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #9eb6cf42;
+  --border-strong: #e4d2be6e;
 
-  /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #f2f4f6;
+  --text-dim: #c4ccd4;
+  --text-muted: #97a1ac;
 
-  /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #c3d9eb;
+  --accent-mineral: #83a1bb;
+  --accent-amber: #d79b57;
+  --accent-critical: #f7d8ad;
 
-  /* ── Border radius ── */
-  --radius-xs: 10px;
+  --radius-xs: 8px;
   --radius-sm: 14px;
-  --radius-md: 22px;
-  --radius-lg: 30px;
+  --radius-md: 24px;
+  --radius-lg: 34px;
 
-  /* ── Shadows ── */
-  --shadow-soft: 0 16px 48px #05080d66;
-  --shadow-strong: 0 30px 80px #04070ccc;
+  --shadow-soft: 0 18px 70px #01020580;
+  --shadow-strong: 0 42px 140px #020307c7;
 
-  /* ── Spacing scale ── */
   --space-1: 0.35rem;
   --space-2: 0.65rem;
   --space-3: 1rem;
@@ -52,10 +42,9 @@
   --space-6: 4rem;
   --space-7: 6rem;
 
-  /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", serif;
+  --mono: "Fragment Mono", "SFMono-Regular", Menlo, monospace;
+  --sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -67,9 +56,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1400px 720px at 96% -10%, #d79b5724, transparent 55%),
+    radial-gradient(1100px 680px at 8% 6%, #7397b11f, transparent 58%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 38%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -78,18 +67,18 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
   pointer-events: none;
-  background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 10% 15%, #ffffff09, transparent 35%),
+    radial-gradient(circle at 70% 42%, #ffffff05, transparent 42%),
+    linear-gradient(130deg, transparent 0 12%, #ffffff03 12% 13%, transparent 13% 28%, #ffffff03 28% 29%, transparent 29% 100%);
+  mix-blend-mode: screen;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
   display: inline-flex;
   gap: 0.2rem;
