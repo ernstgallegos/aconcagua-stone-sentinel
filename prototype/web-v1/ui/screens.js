@@ -2380,7 +2380,7 @@ function getOnboardingLayer(activeRisks = []) {
 
 function getRiskProfile(state) {
   const permitRemaining = G.permitMaxDays - G.permitDay + 1;
-  const tw = getSimConfig().timeWindows || { summitLateStart: 780 };
+  const tw = getSimConfig().timeWindows || { summitLateStart: 1020 };
   const isLate = G.minutesOfDay >= tw.summitLateStart;
   const waterCritical = state.water === 0;
   const foodCritical = state.food === 0;
@@ -2450,7 +2450,7 @@ function renderWatch() {
   if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
-  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 660, summitLateStart: 780 };
+  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
   const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
   const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
@@ -3016,7 +3016,7 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   computeSignals,
   renderNarrative,
   deriveTerminalOutcome,
-  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 780 },
+  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 1020 },
   updateRunState,
   recordTelemetry,
   assertStateShape,
