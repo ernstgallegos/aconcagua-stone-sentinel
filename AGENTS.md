@@ -285,3 +285,5 @@ In addition to the changelog:
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
 - Debt-register hygiene is more reliable when active debt items are periodically re-validated against source/runtime truth (for example, EN/ES narrative-bank key parity) and moved to the resolved table immediately once the documented exit criterion is met.
+- Debt closure quality for `web-v1` improves when each closed debt item lands with one explicit guard: contract/parity tests for cross-surface policy, helper-level immutability tests for telemetry mutations, and config guardrail tests for EP/resource viability.
+- Cross-prototype drift control is stronger when release checklists include a dedicated `npm run test:contracts` gate and docs include an explicit active-vs-frozen ownership matrix that tests can parse.

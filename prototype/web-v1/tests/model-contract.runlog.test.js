@@ -5,7 +5,7 @@ import { buildRunLogExport } from '../ui/helpers/run-log.js';
 test('run_log export appends runSummary to final record and preserves structure', () => {
   const records = [
     { turn: 1, action: 'advance', flags: [], decisionWindowExceeded: false },
-    { turn: 2, action: 'wait', flags: ['critical-fatigue'], decisionWindowExceeded: true, lateSignalTriggered: true },
+    { turn: 2, action: 'wait', flags: ['critical-fatigue'], decisionWindowExceeded: true, lateSignalActivation: true },
   ];
 
   const exported = buildRunLogExport(records);

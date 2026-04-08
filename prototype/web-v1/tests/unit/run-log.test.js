@@ -1,7 +1,7 @@
 // Unit tests for ui/helpers/run-log.js
 //
 // Covers: buildTurnLogEntry (entry shape, epScore/btScore, defensive copies),
-//         summarizeRunLog (all counters, dual lateSignal field support),
+//         summarizeRunLog (all counters, canonical lateSignalActivation support),
 //         buildRunLogExport (empty, single, multi-record, immutability).
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -376,14 +376,6 @@ test('summarizeRunLog: decisionWindowExceededCount increments when truthy', () =
   assert.equal(summarizeRunLog(records).decisionWindowExceededCount, 2);
 });
 
-test('summarizeRunLog: lateSignalTriggeredCount uses lateSignalTriggered field (legacy)', () => {
-  const records = [
-    { flags: [], decisionWindowExceeded: false, lateSignalTriggered: true },
-    { flags: [], decisionWindowExceeded: false, lateSignalTriggered: false },
-  ];
-  assert.equal(summarizeRunLog(records).lateSignalTriggeredCount, 1);
-});
-
 test('summarizeRunLog: lateSignalTriggeredCount uses lateSignalActivation field (current)', () => {
   const records = [
     { flags: [], decisionWindowExceeded: false, lateSignalActivation: { turn: 2 } },
@@ -392,13 +384,13 @@ test('summarizeRunLog: lateSignalTriggeredCount uses lateSignalActivation field 
   assert.equal(summarizeRunLog(records).lateSignalTriggeredCount, 1);
 });
 
-test('summarizeRunLog: lateSignalTriggeredCount increments when either field is truthy', () => {
+test('summarizeRunLog: lateSignalTriggeredCount ignores removed legacy field and counts canonical field only', () => {
   const records = [
     { flags: [], decisionWindowExceeded: false, lateSignalTriggered: true },
     { flags: [], decisionWindowExceeded: false, lateSignalActivation: { turn: 3 } },
     { flags: [], decisionWindowExceeded: false },
   ];
-  assert.equal(summarizeRunLog(records).lateSignalTriggeredCount, 2);
+  assert.equal(summarizeRunLog(records).lateSignalTriggeredCount, 1);
 });
 
 test('summarizeRunLog: specialActionUsedCount increments when truthy', () => {
@@ -478,7 +470,7 @@ test('buildRunLogExport: runSummary on final record has all expected counter key
 test('buildRunLogExport: summary counts reflect full run, not only the final turn', () => {
   const records = [
     { turn: 1, flags: ['critical-fatigue'], decisionWindowExceeded: true },
-    { turn: 2, flags: [], decisionWindowExceeded: false, lateSignalTriggered: true },
+    { turn: 2, flags: [], decisionWindowExceeded: false, lateSignalActivation: { turn: 2 } },
     { turn: 3, flags: [], decisionWindowExceeded: false },
   ];
   const exported = buildRunLogExport(records);

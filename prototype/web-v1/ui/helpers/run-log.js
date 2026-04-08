@@ -119,9 +119,7 @@ export function buildTurnLogEntry({
  *                                'critical-fatigue', 'critical-exposure',
  *                                or 'fatality-threshold'.
  *   decisionWindowExceededCount — turns where decisionWindowExceeded is truthy.
- *   lateSignalTriggeredCount   — turns where lateSignalTriggered OR
- *                                lateSignalActivation is truthy (dual-field
- *                                support for legacy and current field name).
+ *   lateSignalTriggeredCount   — turns where lateSignalActivation is truthy.
  *   specialActionUsedCount     — turns where specialActionUsed is truthy.
  *
  * @param {object[]} records - Array of turn log entries.
@@ -145,11 +143,23 @@ export function summarizeRunLog(records) {
     );
     if (hasCriticalFlag) summary.criticalEventCount += 1;
     if (entry.decisionWindowExceeded) summary.decisionWindowExceededCount += 1;
-    if (entry.lateSignalTriggered || entry.lateSignalActivation) summary.lateSignalTriggeredCount += 1;
+    if (entry.lateSignalActivation) summary.lateSignalTriggeredCount += 1;
     if (entry.specialActionUsed) summary.specialActionUsedCount += 1;
   });
 
   return summary;
+}
+
+/**
+ * Return a new array with outcome label attached to each run-log entry.
+ * Keeps immutability so callers do not mutate existing telemetry arrays.
+ *
+ * @param {object[]} runLogRecords
+ * @param {string} outcomeLabel
+ * @returns {object[]}
+ */
+export function annotateRunLogOutcome(runLogRecords, outcomeLabel) {
+  return (runLogRecords || []).map((entry) => ({ ...entry, outcome: outcomeLabel }));
 }
 
 /**

@@ -45,6 +45,7 @@ These bands prioritize survivable pacing while keeping meaningful risk and permi
 
 - Primary balance knobs: `data/action_modifiers.json`, `data/stage_modifiers.json`, `data/environmental_pressure_config.json`, `data/characters.json`.
 - Historical summary: `CHANGELOG.md` (Unreleased / Changed).
+- Automated guardrails: `prototype/web-v1/tests/engine/tuning-guardrails.test.js` (EP scale monotonic bounds, fractional burn floors, deterministic summit-return viability).
 
 
 ## Rollback criterion for tuning passes

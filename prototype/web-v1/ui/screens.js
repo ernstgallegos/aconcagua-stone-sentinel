@@ -5,7 +5,12 @@ import { calculateEnvironmentalPressureScore, calculateBodyToleranceScore } from
 import { calculateResourceBurnForMinutes, applyDecisionWindowDegradationRule, deriveTerminalOutcome } from '../engine/turn-rules.js';
 import { buildHelpSections } from './helpers/help-overlay-content.js';
 import { computeDominantRiskAxis, computeDecisionPattern, buildRunSignature, buildSignalInterpretationHint } from './helpers/debrief.js';
-import { buildRunLogExport as buildRunLogExportHelper, summarizeRunLog as summarizeRunLogHelper, buildTurnLogEntry } from './helpers/run-log.js';
+import {
+  buildRunLogExport as buildRunLogExportHelper,
+  summarizeRunLog as summarizeRunLogHelper,
+  buildTurnLogEntry,
+  annotateRunLogOutcome,
+} from './helpers/run-log.js';
 import { buildManagedPortrait, hydrateManagedPortraits, preloadImages } from './helpers/carousel-media.js';
 import {
   getCharacterImagePath,
@@ -3142,7 +3147,7 @@ function endRun(returnedToHorcones) {
   });
 
   // save to journal
-  recordTelemetry(G, { runLogRecords: G.runLogRecords.map((entry) => ({ ...entry, outcome: outcome.label })) });
+  recordTelemetry(G, { runLogRecords: annotateRunLogOutcome(G.runLogRecords, outcome.label) });
   const runLogExport = buildRunLogExport();
   safeSetStorage('run_log.json', JSON.stringify(runLogExport, null, 2));
   saveJournalEntry({

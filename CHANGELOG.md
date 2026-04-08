@@ -9,12 +9,25 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added a dual-prototype governance matrix in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
+- Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
+- Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
+
+### Changed
+
+- Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
+- Changed public-readiness checklists (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) to include `npm run test:contracts` and to standardize JSON validation through `npm run validate:json`.
+- Changed `docs/technical-debt-register.md` by closing all five previously active debt items after landing their measurable exit criteria and moving them to the resolved table.
+
 ### Fixed
 
 - Fixed an obsolete documentation debt entry in `docs/technical-debt-register.md`: removed the active “Narrative bank i18n parity” item after confirming `NARRATIVES` and `NARRATIVES_ES` key coverage is complete, and moved it to the resolved-debt table.
 - Fixed release-version drift in `README.md`, `README.es.md`, and `docs/simulation_engine.md` by aligning all public status references to `v1.4.7` (matching `package.json`, `docs/repo-truth.md`, and UI version labels).
 - Fixed parity-test coverage gap in `prototype/web-v1/tests/parity/repo-truth-parity.test.js` by extending the canonical version synchronization assertion to include `README.md`, `README.es.md`, and `docs/simulation_engine.md` with `v${package.version}` as the single source of truth.
 - Fixed release smoke false failures in `scripts/release-smoke-vercel.js` by replacing the hardcoded UI marker (`Prototype · v1.4.6`) with a dynamic marker derived from `package.json` (`Prototype · v${package.version}`).
+- Fixed run-log summary alias drift by removing legacy `lateSignalTriggered` fallback aggregation and keeping canonical `lateSignalActivation` as the only supported late-signal counter input in `prototype/web-v1/ui/helpers/run-log.js`.
 
 ## [1.4.7] — 2026-04
 
