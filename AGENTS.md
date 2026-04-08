@@ -216,6 +216,7 @@ In addition to the changelog:
 - State-slice whitelist safety (`recordTelemetry`/`updateRunState`) requires adding new keys to `*_STATE_DEFAULTS` in the same commit as new writes; otherwise runtime throws can bypass tests that stub those writers.
 - Resource-economy regressions are easier to catch when burn-rate helpers preserve fractional consumption (or explicit carryover) instead of per-turn integer rounding, which can silently zero out consumption on low-burn half-hour turns.
 - When runtime resources become fractional, HUD counters should present rounded whole units (preferably ceil-until-zero) so players do not see noisy decimals or false-zero values before actual depletion.
+- Version-coherence parity tests should always include all public versioned docs (`README.md`, `README.es.md`, and `docs/simulation_engine.md`) using `v${package.version}` as the canonical source to prevent green CI with stale release copy.
 
 - Safe dynamic-event additions in `web-v1` are least risky when they only adjust existing environment inputs (weather/visibility/time) inside `apply-weather-and-persistence`; keep event planning seed-driven and avoid any parallel outcome resolver.
 - Debrief replay value improved with a compact local "review turns" inspector and copyable run-signature text; preserving this as local/browser-only avoids backend scope creep while still helping playtest analysis.
@@ -283,3 +284,4 @@ In addition to the changelog:
 - Landing/document-viewer bilingual usability is most reliable when doc CTAs are keyed by semantic doc IDs and resolved at runtime by selected language; avoid hardcoded `?file=` links that can drift to English-only targets after language switches.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
+- Debt-register hygiene is more reliable when active debt items are periodically re-validated against source/runtime truth (for example, EN/ES narrative-bank key parity) and moved to the resolved table immediately once the documented exit criterion is met.
