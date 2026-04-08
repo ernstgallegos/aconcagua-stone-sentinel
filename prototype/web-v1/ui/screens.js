@@ -2564,6 +2564,12 @@ function renderWatch() {
   }
 
   const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
+  const displayResourceCount = (value) => {
+    if (!Number.isFinite(value) || value <= 0) return 0;
+    return Math.ceil(value);
+  };
+  const waterDisplay = displayResourceCount(s.water);
+  const foodDisplay = displayResourceCount(s.food);
   const waterTurns = stageBurn.water > 0 ? Math.floor(s.water / Math.max(stageBurn.water * 2, 1)) : s.water;
   const foodTurns = stageBurn.food > 0 ? Math.floor(s.food / Math.max(stageBurn.food * 2, 1)) : s.food;
   const resClass = (n) => n <= 3 ? 'depleted' : (n <= 6 ? 'warning' : '');
@@ -2580,20 +2586,20 @@ function renderWatch() {
       outer.appendChild(value);
       return outer;
     };
-    resEl.appendChild(buildResourceItem('Water', s.water, waterTurns));
-    resEl.appendChild(buildResourceItem('Food', s.food, foodTurns));
+    resEl.appendChild(buildResourceItem('Water', waterDisplay, waterTurns));
+    resEl.appendChild(buildResourceItem('Food', foodDisplay, foodTurns));
   }
 
   // ── Watch band supplies cells ──
   const wcWater = document.getElementById('wc-water');
   const wcFood = document.getElementById('wc-food');
   if (wcWater) {
-    wcWater.textContent = `💧 ${s.water}`;
+    wcWater.textContent = `💧 ${waterDisplay}`;
     const wCls = s.water === 0 ? 'state-critical' : (resClass(waterTurns) ? 'state-warning' : '');
     wcWater.className = wCls;
   }
   if (wcFood) {
-    wcFood.textContent = `🥫 ${s.food}`;
+    wcFood.textContent = `🥫 ${foodDisplay}`;
     const fCls = s.food === 0 ? 'state-critical' : (resClass(foodTurns) ? 'state-warning' : '');
     wcFood.className = fCls;
   }
@@ -2695,7 +2701,7 @@ function renderWatch() {
     watchTimeText: `Day ${G.day} · ${formatMinutes(tm)}${suffix}`,
     capacityText: `${capLbl} · ${metricDisplay(s.functional_capacity, sig.confidence)}`,
     bodyStateText: `${fatLbl} / ${expLbl}`,
-    resourceText: `Water ${s.water} · Food ${s.food}`,
+    resourceText: `Water ${waterDisplay} · Food ${foodDisplay}`,
     permitText: `${Math.max(G.permitMaxDays - G.permitDay + 1, 0)} day${Math.max(G.permitMaxDays - G.permitDay + 1, 0) !== 1 ? 's' : ''}`,
   });
 }

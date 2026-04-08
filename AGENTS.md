@@ -214,6 +214,8 @@ In addition to the changelog:
 - Systemic integrity audits are easier to maintain when `resolveTurn()` emits one structured per-turn telemetry object containing environment, EP/BT/delta, perceived signals, action, and resulting state; acceptance tests can then assert pipeline integrity without scraping UI text.
 - Release/version coherence checks should include simulation tooling and docs metadata (`scripts/monte-carlo-web-v1.js`, `docs/simulation_engine.md`) so hardcoded version strings/report filenames do not drift from `package.json`.
 - State-slice whitelist safety (`recordTelemetry`/`updateRunState`) requires adding new keys to `*_STATE_DEFAULTS` in the same commit as new writes; otherwise runtime throws can bypass tests that stub those writers.
+- Resource-economy regressions are easier to catch when burn-rate helpers preserve fractional consumption (or explicit carryover) instead of per-turn integer rounding, which can silently zero out consumption on low-burn half-hour turns.
+- When runtime resources become fractional, HUD counters should present rounded whole units (preferably ceil-until-zero) so players do not see noisy decimals or false-zero values before actual depletion.
 
 - Safe dynamic-event additions in `web-v1` are least risky when they only adjust existing environment inputs (weather/visibility/time) inside `apply-weather-and-persistence`; keep event planning seed-driven and avoid any parallel outcome resolver.
 - Debrief replay value improved with a compact local "review turns" inspector and copyable run-signature text; preserving this as local/browser-only avoids backend scope creep while still helping playtest analysis.
