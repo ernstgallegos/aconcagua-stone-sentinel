@@ -481,7 +481,7 @@
           </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="ctaWhitepaper">Read whitepaper</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="ctaWhitepaper">Read whitepaper</a>
             <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
           </div>
         </article>
@@ -564,17 +564,17 @@
           <article class="intel-card">
             <h3 data-i18n="intel1Title">Whitepaper</h3>
             <p data-i18n="intel1Body">Long-form project vision, conceptual commitments, and mountain-first positioning.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-i18n="intel1Cta">Open whitepaper</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="intel1Cta">Open whitepaper</a>
           </article>
           <article class="intel-card">
             <h3 data-i18n="intel2Title">Public roadmap</h3>
             <p data-i18n="intel2Body">Stage-by-stage implementation map and current execution status.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-i18n="intel2Cta">Open roadmap</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-doc-link="roadmap" data-i18n="intel2Cta">Open roadmap</a>
           </article>
           <article class="intel-card">
             <h3 data-i18n="intel3Title">Repository + README</h3>
             <p data-i18n="intel3Body">Technical source, governance policy links, and canonical route/deploy references.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-i18n="intel3Cta">Open README</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-doc-link="readme" data-i18n="intel3Cta">Open README</a>
           </article>
           <article class="intel-card">
             <h3 data-i18n="intel4Title">Official channels</h3>
@@ -633,7 +633,7 @@
           </div>
           <div class="hero-cta">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalPlay">Start expedition</a>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-i18n="finalTruth">Open repo truth</a>
+            <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-doc-link="repoTruth" data-i18n="finalTruth">Open repo truth</a>
           </div>
         </article>
       </section>
@@ -804,6 +804,22 @@
       };
 
       const STORAGE_KEY = PublicLang.LANG_KEY;
+      const DOC_LINKS = {
+        whitepaper: { en: '/meta/project-whitepaper.md', es: '/meta/project-whitepaper.es.md' },
+        roadmap: { en: '/meta/public-roadmap.md', es: '/meta/public-roadmap.es.md' },
+        readme: { en: '/README.md', es: '/README.es.md' },
+        repoTruth: { en: '/docs/repo-truth.md', es: '/docs/repo-truth.es.md' }
+      };
+
+      function updateDocLinks(lang) {
+        document.querySelectorAll('[data-doc-link]').forEach((el) => {
+          const key = el.getAttribute('data-doc-link');
+          const entry = DOC_LINKS[key];
+          if (!entry) return;
+          const targetFile = entry[lang] || entry.en;
+          el.setAttribute('href', `/md-viewer.html?file=${encodeURIComponent(targetFile)}`);
+        });
+      }
 
       function applyLanguage(lang) {
         const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
@@ -827,6 +843,7 @@
         });
 
         localStorage.setItem(STORAGE_KEY, lang);
+        updateDocLinks(lang);
       }
 
       function initLanguageSwitcher() {

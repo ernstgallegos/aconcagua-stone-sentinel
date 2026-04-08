@@ -17,12 +17,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `tests/unit/telemetry-contract.test.js` with 10 contract tests guarding the per-turn telemetry entry shape, body/raw/pressure sub-key sets, summary shape, and export immutability.
 - Added `NARRATIVES_ES` i18n parity item to `docs/technical-debt-register.md` for tracking incomplete Spanish narrative bank coverage.
 - Updated `docs/repo-truth.md` source-of-truth ownership map to include `ui/helpers/carousel.js` and `ui/helpers/narrative.js`.
+- Added bilingual markdown targets for landing/document-viewer critical docs: `meta/project-whitepaper.es.md`, `meta/public-roadmap.es.md`, and `docs/repo-truth.es.md`.
 
 ### Changed
 
 - `screens.js`: replaced ~300 lines of inline carousel rendering, card HTML construction, narrative text banks, `pickNarrative`, and `renderNarrative` logic with thin wrapper delegations to `ui/helpers/carousel.js` and `ui/helpers/narrative.js`. The module now imports card builders, dot renderer, info-panel helpers, and narrative dispatch.
 - Carousel navigation functions (`carouselPrev`, `carouselNext`, `part2CarouselPrev`, `part2CarouselNext`) now use `stepCarouselIndex` from the extracted module instead of inline modular arithmetic.
 - Updated characterization tests in `new-mechanics.test.js` to reference extracted module sources (`carouselSource`, `narrativeSource`) for `part2-lock-pill` and narrative copy assertions.
+- Updated landing markdown CTAs (`index.html`) to resolve per-language document targets dynamically via `data-doc-link`, ensuring EN/ES selection always opens the matching language document in `md-viewer`.
+- Updated `md-viewer.html` bilingual routing so language toggles swap to the localized counterpart of the currently viewed document and keep the URL in sync.
 
 ### Fixed
 
