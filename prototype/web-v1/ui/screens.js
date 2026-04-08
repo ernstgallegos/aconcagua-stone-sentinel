@@ -556,7 +556,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.6',
+      introVersionValue: 'Prototype · v1.4.7',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -636,7 +636,7 @@ const I18N = {
       introClose: 'Cerrar',
       introSummary: 'Un prototipo narrativo de decisiones sobre leer la montaña, gestionar la tolerancia corporal y elegir cuándo seguir o retirarse.',
       introVersionLabel: 'Versión',
-      introVersionValue: 'Prototipo · v1.4.6',
+      introVersionValue: 'Prototipo · v1.4.7',
       introFormatLabel: 'Formato',
       introFormatValue: 'Prototipo de expedición de una sola partida con onboarding, bucle jugable de ascenso/descenso y debrief final.',
       introAccessLabel: 'Acceso',
@@ -2380,7 +2380,7 @@ function getOnboardingLayer(activeRisks = []) {
 
 function getRiskProfile(state) {
   const permitRemaining = G.permitMaxDays - G.permitDay + 1;
-  const tw = getSimConfig().timeWindows || { summitLateStart: 780 };
+  const tw = getSimConfig().timeWindows || { summitLateStart: 1020 };
   const isLate = G.minutesOfDay >= tw.summitLateStart;
   const waterCritical = state.water === 0;
   const foodCritical = state.food === 0;
@@ -2450,7 +2450,7 @@ function renderWatch() {
   if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
-  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 660, summitLateStart: 780 };
+  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
   const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
   const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
@@ -3016,7 +3016,7 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   computeSignals,
   renderNarrative,
   deriveTerminalOutcome,
-  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 780 },
+  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 1020 },
   updateRunState,
   recordTelemetry,
   assertStateShape,

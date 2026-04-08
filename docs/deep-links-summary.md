@@ -40,7 +40,7 @@ Compact contributor reference derived from [`docs/deep-links.web-v1.md`](./deep-
 
 - `#title`
 - `#expedition-setup`
-- `#onboarding&character=francisco&scenario=assisted-route&seed=1234`
+- `#onboarding&character=francisco&scenario=assisted-route&seed=1234` _(modal flow entry — opens over `#game`, not a standalone DOM screen)_
 - `#game&character=francisco&scenario=assisted-route&seed=1234`
 - `#debrief&outcome=Strategic%20Retreat`
 - `#summit-success`
@@ -53,8 +53,8 @@ Part 2 screens normally require a prior `Summit and Safe Return`. For evaluation
 
 ## Common parameters
 
-- `character` for `game`, `onboarding`, `debrief`
-- `scenario` for `game`, `onboarding`, `debrief`
+- `character` for `game`, `onboarding` (modal), `debrief`
+- `scenario` for `game`, `onboarding` (modal), `debrief`
 - `seed` for reproducible runs
 - `outcome` for mocked debrief states
 - `force=1` for Part 2 gate bypass during testing

@@ -146,7 +146,7 @@ test('parseDeepLinkHash: journal screen with return origin param', () => {
   assert.equal(result.params.origin, 'debrief');
 });
 
-test('parseDeepLinkHash: onboarding screen deep link', () => {
+test('parseDeepLinkHash: onboarding modal flow entry parses as screenId (not a DOM screen — handled as modal overlay by flow-controller)', () => {
   const result = parseDeepLinkHash('#onboarding&character=erik&scenario=scenario-3&seed=77');
   assert.equal(result.screenId, 'onboarding');
   assert.equal(result.params.character, 'erik');

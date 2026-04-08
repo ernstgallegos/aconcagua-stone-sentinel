@@ -20,6 +20,10 @@ npm run validate:json
 npm run smoke:release
 ```
 
+> **Prerequisites:**
+> - `pytest` requires Python 3 with the packages listed in `requirements-dev.txt` (`pip install -r requirements-dev.txt`). It validates the frozen `mra-v0` simulator only; failure here does not block web-v1 releases but must be documented.
+> - `npm run smoke:release` requires a live network connection and a deployed URL. It cannot be run purely locally. Use a Vercel preview URL or the canonical production URL. Skip with explicit justification if the deployment is not yet available.
+
 - [ ] All gates pass locally.
 - [ ] `npm run smoke:release` passed against the canonical deployed URL (or an explicit release candidate URL).
 - [ ] Any skipped check includes an explicit reason in PR notes.
