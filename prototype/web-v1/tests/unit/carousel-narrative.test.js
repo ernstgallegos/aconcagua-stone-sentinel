@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   getCharacterImagePath,
   stepCarouselIndex,
+  buildCharacterCardHtml,
 } from '../../ui/helpers/carousel.js';
 
 import {
@@ -51,6 +52,44 @@ test('stepCarouselIndex next advances normally', () => {
 
 test('stepCarouselIndex handles zero count', () => {
   assert.equal(stepCarouselIndex(0, 0, 'next'), 0);
+});
+
+test('buildCharacterCardHtml (Part 1) always renders ISO fallback label', () => {
+  const html = buildCharacterCardHtml({
+    character: {
+      id: 'francisco',
+      name: 'Francisco Aguirre',
+      role: 'Guide',
+      difficultyLabel: 'Standard',
+      nationalityCode: 'AR',
+    },
+    imgPath: '../../art/characters/francisco-aguirre.png',
+    eager: true,
+    difficultyLabel: 'Profile',
+    portraitFallback: 'Portrait unavailable',
+    infoAriaLabel: 'Info',
+  });
+  assert.match(html, /char-iso">\((AR)\)<\/span>/);
+});
+
+test('buildCharacterCardHtml (Part 2) keeps ISO fallback label for locked cards', () => {
+  const html = buildCharacterCardHtml({
+    character: {
+      id: 'irina',
+      name: 'Irina Orlova',
+      role: 'Strategist',
+      difficultyLabel: 'Demanding',
+      nationalityCode: 'RU',
+    },
+    imgPath: '../../art/characters/part-2/irina-orlova.png',
+    eager: false,
+    difficultyLabel: 'Profile',
+    portraitFallback: 'Portrait unavailable',
+    infoAriaLabel: 'Info',
+    part2: { locked: true, lockText: 'Locked' },
+  });
+  assert.match(html, /char-iso">\((RU)\)<\/span>/);
+  assert.match(html, /part2-lock-pill/);
 });
 
 // ──────────────────────────────────────────────────────────

@@ -12,6 +12,7 @@
     "test": "npm run test:api && npm run test:webv1",
     "test:api": "node --test api/run.test.js",
     "test:webv1": "node scripts/run-webv1-tests.js",
+    "test:contracts": "node --test prototype/web-v1/tests/model-contract.test.js prototype/web-v1/tests/parity/repo-truth-parity.test.js prototype/web-v1/tests/parity/repo-truth-guarantees.test.js prototype/web-v1/tests/parity/dual-prototype-contract.test.js",
     "test:full": "npm run typecheck && npm run test:webv1 && pytest prototype/mra-v0/test_simulator.py -v",
     "smoke:release": "node scripts/release-smoke-vercel.js",
     "typecheck": "tsc --noEmit",

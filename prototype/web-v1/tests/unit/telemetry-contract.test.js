@@ -14,6 +14,7 @@ import {
   buildTurnLogEntry,
   summarizeRunLog,
   buildRunLogExport,
+  annotateRunLogOutcome,
 } from '../../ui/helpers/run-log.js';
 
 // ──────────────────────────────────────────────────────────
@@ -160,4 +161,16 @@ test('buildRunLogExport does not mutate original entries', () => {
   const origSnapshot = JSON.stringify(original);
   buildRunLogExport([original]);
   assert.equal(JSON.stringify(original), origSnapshot);
+});
+
+test('annotateRunLogOutcome adds outcome immutably across all entries', () => {
+  const first = buildFixtureEntry();
+  const second = buildFixtureEntry();
+  const records = [first, second];
+  const annotated = annotateRunLogOutcome(records, 'Strategic Retreat');
+  assert.equal(annotated.length, 2);
+  assert.equal(annotated[0].outcome, 'Strategic Retreat');
+  assert.equal(annotated[1].outcome, 'Strategic Retreat');
+  assert.equal(records[0].outcome, undefined);
+  assert.equal(records[1].outcome, undefined);
 });
