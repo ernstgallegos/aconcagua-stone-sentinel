@@ -18,6 +18,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Rebuilt the public landing visual language in `index.html` + `src/styles/public-tokens.css` with an editorial-alpine art direction (new Bodoni/Manrope/Azeret typography stack, atmospheric layered backgrounds, asymmetrical hero treatment, animated image motion, and curated concept-art gallery) to replace the previous generic layout cadence.
+- Synced the active web prototype aesthetic baseline by updating shared font imports in `prototype/web-v1/index.html` and retuning `prototype/web-v1/css/tokens.css` + `prototype/web-v1/css/themes.css` to the same volcanic-editorial palette/typography system used on the main website.
+
 - Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
 - Changed public-readiness checklists (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) to include `npm run test:contracts` and to standardize JSON validation through `npm run validate:json`.
 - Changed `docs/technical-debt-register.md` by closing all five previously active debt items after landing their measurable exit criteria and moving them to the resolved table.
