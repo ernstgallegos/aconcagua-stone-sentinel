@@ -123,3 +123,17 @@
     scroll-behavior: auto !important;
   }
 }
+
+@keyframes fog-drift {
+  0% { transform: translateX(-2%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(2%) translateY(-1%); opacity: 0.74; }
+  100% { transform: translateX(-2%) translateY(0); opacity: 0.5; }
+}
+
+@keyframes cinematic-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#screen-title::before { animation: fog-drift 16s ease-in-out infinite; }
+.title-shell { animation: cinematic-rise 900ms cubic-bezier(.22,.84,.32,1) both; }

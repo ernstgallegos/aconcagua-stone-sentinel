@@ -13,439 +13,84 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
     <style>
-
-      .skip-link {
-        position: absolute;
-        top: -100px;
-        left: 12px;
-        z-index: 100;
-        padding: 0.6rem 0.9rem;
-        border-radius: var(--radius-xs);
-        background: #f1f7ff;
-        color: #091019;
-        font-weight: 700;
-      }
-      .skip-link:focus { top: 10px; }
-
-      .shell {
-        width: min(1220px, 92vw);
-        margin: 0 auto;
-      }
-
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        border-bottom: 1px solid var(--border-soft);
-        background: #0f1621c2;
-        backdrop-filter: blur(10px);
-      }
-
-      .header-row {
-        display: grid;
-        gap: 0.8rem;
-        align-items: center;
-        padding: 0.75rem 0;
-      }
-
-      .brand {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: 1rem;
-        letter-spacing: 0.03em;
-      }
-
-      .brand small {
-        display: block;
-        color: var(--text-muted);
-        font-family: var(--sans);
-        font-size: 0.7rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .header-controls {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-2);
-      }
-
-      .nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-      }
-
-      .nav a {
-        font-family: var(--mono);
-        border: 1px solid transparent;
-        border-radius: 999px;
-        padding: 0.35rem 0.66rem;
-        color: var(--text-dim);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-
-      .nav a:hover,
-      .nav a:focus-visible {
-        color: var(--text-main);
-        border-color: var(--border-soft);
-        text-decoration: none;
-        outline: none;
-      }
-
+      :root { --mist: #ffffff14; }
+      .skip-link { position:absolute; top:-100px; left:12px; z-index:100; padding:0.6rem 0.9rem; border-radius:var(--radius-xs); background:#f2ece3; color:#0c0d11; font-weight:700; }
+      .skip-link:focus { top:10px; }
+      .shell { width:min(1240px, 92vw); margin:0 auto; }
+      .site-header { position:sticky; top:0; z-index:50; border-bottom:1px solid var(--border-soft); background:#090d13bd; backdrop-filter:blur(16px); }
+      .header-row { display:grid; gap:0.9rem; align-items:center; padding:0.75rem 0; }
+      .brand { margin:0; font-family:var(--serif); font-size:1.1rem; letter-spacing:0.06em; }
+      .brand small { display:block; color:var(--text-muted); font-family:var(--mono); font-size:0.66rem; letter-spacing:0.16em; text-transform:uppercase; }
+      .header-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--space-2); }
+      .nav { display:flex; flex-wrap:wrap; gap:0.2rem; }
+      .nav a { font-family:var(--mono); border:1px solid transparent; border-radius:999px; padding:0.36rem 0.66rem; color:var(--text-dim); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.1em; }
+      .nav a:hover,.nav a:focus-visible { color:var(--text-main); border-color:var(--border-soft); text-decoration:none; outline:none; }
       main { padding: var(--space-5) 0 var(--space-7); }
 
-      .hero {
-        display: grid;
-        gap: var(--space-4);
-        align-items: end;
-      }
+      .hero { display:grid; gap:var(--space-4); align-items:end; position:relative; isolation:isolate; }
+      .hero::before { content:''; position:absolute; inset:-4rem -2rem -3rem -2rem; z-index:-1; background:radial-gradient(circle at 76% 30%, #b8c7d028, transparent 45%), radial-gradient(circle at 20% 60%, #d79a5530, transparent 40%); filter:blur(22px); }
+      .hero-copy { border:1px solid var(--border-soft); border-radius:var(--radius-lg); background:linear-gradient(160deg, #10161fef 0%, #0c1017ec 70%); box-shadow:var(--shadow-strong); padding:clamp(1.4rem,3.8vw,3rem); animation:float-in 900ms cubic-bezier(.19,.83,.25,1) both; }
+      .eyebrow { margin:0; color:var(--accent-amber); font-size:0.7rem; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.18em; font-weight:700; }
+      h1 { margin:0.55rem 0 0; font-family:var(--serif); font-weight:600; letter-spacing:0.01em; line-height:0.98; font-size:clamp(2.4rem,7.1vw,5.4rem); max-width:13ch; }
+      .hero-lead { margin:1rem 0 0; color:var(--text-dim); max-width:56ch; font-size:clamp(1rem,1.9vw,1.2rem); }
+      .hero-meta { margin-top:var(--space-3); display:grid; gap:0.42rem; color:var(--text-muted); font-size:0.9rem; }
+      .hero-cta { margin-top:var(--space-4); display:flex; flex-wrap:wrap; gap:0.6rem; }
+      .btn { font-family:var(--sans); border:1px solid transparent; border-radius:999px; padding:0.74rem 1.12rem; font-weight:700; font-size:0.86rem; display:inline-flex; align-items:center; justify-content:center; transition:transform 200ms ease,border-color 200ms ease,background-color 200ms ease,box-shadow 220ms ease; }
+      .btn:hover { transform:translateY(-2px); text-decoration:none; }
+      .btn:focus-visible { outline:2px solid var(--accent-ice); outline-offset:2px; }
+      .btn-primary { color:#16120f; background:linear-gradient(130deg, #f0c48f, var(--accent-amber)); box-shadow:0 10px 28px #d79a5540; }
+      .btn-secondary { color:var(--text-main); border-color:var(--border-soft); background:#121925cf; }
 
-      .hero-copy {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
-        box-shadow: var(--shadow-strong);
-        padding: clamp(1.2rem, 3.5vw, 2.7rem);
-      }
+      .hero-art { border-radius:var(--radius-md); border:1px solid var(--border-soft); overflow:hidden; background:#0f151d; box-shadow:var(--shadow-soft); animation:float-in 1100ms 100ms cubic-bezier(.19,.83,.25,1) both; }
+      .hero-art img { width:100%; height:auto; object-fit:contain; filter:saturate(0.85) contrast(1.07); transform:scale(1.02); }
 
-      .eyebrow {
-        margin: 0;
-        color: var(--accent-mineral);
-        font-size: 0.74rem;
-        font-family: var(--mono);
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-weight: 700;
-      }
+      .section { margin-top:var(--space-7); display:grid; gap:var(--space-3); }
+      .section-head { display:grid; gap:0.85rem; }
+      .section-kicker { margin:0; color:var(--accent-amber); text-transform:uppercase; letter-spacing:0.16em; font-size:0.68rem; font-family:var(--mono); font-weight:700; }
+      .section h2 { margin:0; font-family:var(--serif); font-size:clamp(1.8rem,4.5vw,3.1rem); line-height:1.04; }
+      .section-intro { margin:0; color:var(--text-dim); max-width:68ch; }
 
-      h1 {
-        margin: 0.55rem 0 0;
-        font-family: var(--serif);
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        line-height: 1.03;
-        font-size: clamp(2.1rem, 6.5vw, 4.8rem);
-        max-width: 14ch;
-      }
+      .atmosphere-grid { display:grid; gap:0.9rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+      .atmo-card { position:relative; border-radius:var(--radius-sm); overflow:hidden; min-height:220px; border:1px solid var(--border-soft); }
+      .atmo-card img { width:100%; height:100%; object-fit:cover; filter:grayscale(0.25) contrast(1.06) brightness(0.7); transition:transform .9s ease, filter .6s ease; }
+      .atmo-card::after { content:attr(data-label); position:absolute; left:0.75rem; bottom:0.7rem; font-family:var(--mono); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:#f0eee8; padding:0.3rem 0.5rem; background:#080b11b8; border:1px solid #ffffff33; border-radius:999px; }
+      .atmo-card:hover img { transform:scale(1.06); filter:grayscale(0.06) contrast(1.1) brightness(0.82); }
 
-      .hero-lead {
-        margin: 1rem 0 0;
-        color: var(--text-dim);
-        max-width: 58ch;
-        font-size: clamp(1rem, 1.9vw, 1.15rem);
-      }
+      .manifest,.flow,.status-strip,.final-band { border:1px solid var(--border-soft); border-radius:var(--radius-md); background:linear-gradient(165deg, #131b24dd 0%, #0f141cdf 90%); padding:var(--space-4); }
+      .manifest-grid,.flow-line,.stack,.status-line,.outcome-grid,.footer-grid { display:grid; gap:var(--space-2); }
+      .manifest-item { border-left:2px solid #d79a554a; padding-left:0.8rem; }
+      .manifest-item h3,.intel-card h3,.panel h3 { margin:0; }
+      .manifest-item p,.panel ul,.intel-card p,.footer-block p { margin-top:0.4rem; color:var(--text-dim); }
+      .flow-node,.panel,.intel-card,.outcome { border:1px solid #b8c0c92d; border-radius:var(--radius-sm); padding:0.78rem 0.9rem; background:#171f2bd4; }
+      .flow-arrow { color:var(--text-muted); font-size:0.8rem; padding-left:0.25rem; }
+      .intel-grid { display:grid; gap:var(--space-3); grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+      .status-item { display:grid; gap:0.35rem; border-top:1px solid #a6adb633; padding-top:0.5rem; }
+      .status-item:first-child { border-top:0; padding-top:0; }
+      .status-label { color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em; font-size:0.67rem; font-family:var(--mono); }
+      .outcome strong { display:block; font-family:var(--serif); margin-bottom:0.22rem; }
+      .site-footer { margin-top:var(--space-7); border-top:1px solid var(--border-soft); padding-top:var(--space-4); color:var(--text-muted); font-size:0.88rem; }
+      .footer-block h3 { margin:0 0 0.45rem; font-size:0.72rem; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.12em; color:var(--accent-amber); }
+      .footer-links { list-style:none; margin:0; padding:0; display:grid; gap:0.25rem; }
+      .footer-links a { color:var(--accent-ice); }
+      .footer-bottom { margin-top:var(--space-3); border-top:1px solid var(--border-soft); padding-top:0.75rem; display:flex; flex-wrap:wrap; justify-content:space-between; gap:0.5rem 1rem; }
 
-      .hero-meta {
-        margin-top: var(--space-3);
-        display: grid;
-        gap: 0.35rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-      }
-
-      .hero-cta {
-        margin-top: var(--space-4);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.55rem;
-      }
-
-      .btn {
-        font-family: var(--sans);
-        border: 1px solid transparent;
-        border-radius: 999px;
-        padding: 0.72rem 1.08rem;
-        font-weight: 700;
-        font-size: 0.9rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
-      }
-      .btn:hover { transform: translateY(-1px); text-decoration: none; }
-      .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
-
-      .btn-primary {
-        color: #0a1118;
-        background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
-      }
-
-      .btn-secondary {
-        color: var(--text-main);
-        border-color: var(--border-soft);
-        background: #101a27d0;
-      }
-
-      .hero-art {
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-soft);
-        overflow: hidden;
-        background: #111926;
-        box-shadow: var(--shadow-soft);
-      }
-      .hero-art img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        filter: saturate(0.93) contrast(1.03);
-      }
-
-      .section {
-        margin-top: var(--space-7);
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .section-head {
-        display: grid;
-        gap: 0.8rem;
-      }
-
-      .section-kicker {
-        margin: 0;
-        color: var(--accent-mineral);
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 0.72rem;
-        font-weight: 700;
-      }
-
-      .section h2 {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: clamp(1.55rem, 3.8vw, 2.7rem);
-        line-height: 1.08;
-      }
-
-      .section-intro {
-        margin: 0;
-        color: var(--text-dim);
-        max-width: 68ch;
-      }
-
-      .manifest {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: linear-gradient(170deg, #162336de 0%, #0f1723d9 100%);
-        padding: var(--space-4);
-      }
-
-      .manifest-grid {
-        margin-top: var(--space-3);
-        display: grid;
-        gap: 0.9rem;
-      }
-
-      .manifest-item {
-        border-left: 2px solid #bfd3e547;
-        padding-left: 0.8rem;
-      }
-
-      .manifest-item h3 { margin: 0; font-size: 1rem; }
-      .manifest-item p { margin: 0.36rem 0 0; color: var(--text-dim); }
-
-      .system-layout {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .flow {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: #132031d1;
-        padding: var(--space-4);
-      }
-
-      .flow-line {
-        display: grid;
-        gap: 0.55rem;
-      }
-
-      .flow-node {
-        border: 1px solid #c7d9ea3b;
-        border-radius: var(--radius-sm);
-        padding: 0.65rem 0.8rem;
-        background: #1a2a3fd9;
-        color: #dce7f2;
-        font-size: 0.93rem;
-      }
-
-      .flow-arrow {
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        padding-left: 0.25rem;
-      }
-
-      .stack {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .panel {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        background: #131f2fd9;
-        padding: var(--space-3);
-      }
-
-      .panel h3 { margin: 0; font-size: 1rem; }
-      .panel ul { margin: 0.6rem 0 0; padding-left: 1.05rem; color: var(--text-dim); }
-      .panel li + li { margin-top: 0.35rem; }
-
-      .intel-grid {
-        display: grid;
-        gap: var(--space-3);
-        grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
-      }
-
-      .intel-card {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        background: #111b29d9;
-        padding: var(--space-3);
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-      }
-
-      .intel-card h3 {
-        margin: 0;
-        font-size: 1rem;
-      }
-
-      .intel-card p {
-        margin: 0;
-        color: var(--text-dim);
-        font-size: 0.93rem;
-        flex: 1;
-      }
-
-      .status-strip {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: #111c2ad1;
-        padding: var(--space-4);
-      }
-
-      .status-line {
-        display: grid;
-        gap: 0.5rem;
-      }
-
-      .status-item {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.35rem;
-        border-top: 1px solid #a8bfd236;
-        padding-top: 0.5rem;
-      }
-
-      .status-item:first-child { border-top: 0; padding-top: 0; }
-      .status-label {
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 0.67rem;
-      }
-
-      .outcome-grid {
-        display: grid;
-        gap: var(--space-2);
-      }
-
-      .outcome {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-xs);
-        background: #131f2ddc;
-        padding: 0.7rem 0.85rem;
-      }
-
-      .outcome strong {
-        display: block;
-        font-family: var(--serif);
-        margin-bottom: 0.22rem;
-      }
-
-      .final-band {
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
-        padding: var(--space-4);
-        box-shadow: var(--shadow-soft);
-      }
-
-      .site-footer {
-        margin-top: var(--space-7);
-        border-top: 1px solid var(--border-soft);
-        padding-top: var(--space-4);
-        color: var(--text-muted);
-        font-size: 0.88rem;
-      }
-
-      .footer-grid {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .footer-block h3 {
-        margin: 0 0 0.45rem;
-        font-size: 0.74rem;
-        font-family: var(--mono);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: var(--accent-mineral);
-      }
-
-      .footer-block p {
-        margin: 0;
-        color: var(--text-dim);
-      }
-
-      .footer-links {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 0.25rem;
-      }
-
-      .footer-links a {
-        color: var(--accent-ice);
-      }
-
-      .footer-bottom {
-        margin-top: var(--space-3);
-        border-top: 1px solid var(--border-soft);
-        padding-top: 0.75rem;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 0.5rem 1rem;
-      }
+      @keyframes float-in { from { opacity:0; transform:translateY(18px) scale(0.99);} to {opacity:1; transform:translateY(0) scale(1);} }
 
       @media (min-width: 910px) {
-        .header-row { grid-template-columns: auto 1fr; }
-        .hero { grid-template-columns: 1.25fr 0.75fr; }
-        .system-layout { grid-template-columns: 1.1fr 0.9fr; }
-        .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-        .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
-        .status-item:first-child { border-left: 0; padding-left: 0; }
-        .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+        .header-row { grid-template-columns:auto 1fr; }
+        .hero { grid-template-columns:1.15fr 0.85fr; }
+        .system-layout { display:grid; grid-template-columns:1.1fr 0.9fr; gap:var(--space-3); }
+        .status-line { grid-template-columns:repeat(3,1fr); gap:1rem; }
+        .status-item { border-top:0; border-left:1px solid #a6adb633; padding-top:0; padding-left:1rem; }
+        .status-item:first-child { border-left:0; padding-left:0; }
+        .footer-grid { grid-template-columns:1.2fr 1fr 1fr; }
       }
-
-      @media (prefers-reduced-motion: reduce) {
-        * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
-      }
+      @media (prefers-reduced-motion: reduce) { * { transition-duration:0ms!important; animation:none!important; scroll-behavior:auto!important; } }
     </style>
   </head>
   <body>
@@ -457,6 +102,7 @@
         <div class="header-controls">
           <nav class="nav" aria-label="Primary navigation">
             <a href="#vision" data-i18n="navVision">Vision</a>
+            <a href="#atmosphere" data-i18n="navAtmosphere">Atmosphere</a>
             <a href="#system" data-i18n="navSystem">System</a>
             <a href="#status" data-i18n="navStatus">Status</a>
             <a href="#intel" data-i18n="navIntel">Materials</a>
@@ -476,7 +122,7 @@
           <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
           <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.</span>
+            <span data-i18n="heroMeta1">Public release: v1.4.7 · Active route: welcome → setup → onboarding → game → outcomes.</span>
             <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
           </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
@@ -489,6 +135,19 @@
         <figure class="hero-art">
           <img src="/art/cover/cover-concept-1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
         </figure>
+      </section>
+
+      <section id="atmosphere" class="section" aria-labelledby="atmosphere-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="atmoKicker">Mountain atmosphere</p>
+          <h2 id="atmosphere-title" data-i18n="atmoTitle">An editorial mountain moodboard: stone, weather, and human scale.</h2>
+          <p class="section-intro" data-i18n="atmoIntro">This visual cadence mirrors the game tone: slow rhythm, sparse warmth, and pressure always present in the background.</p>
+        </div>
+        <div class="atmosphere-grid">
+          <figure class="atmo-card" data-label="Ridge silence"><img src="/art/concept-art/curated/concept-curated-1.png" alt="Aconcagua ridge atmosphere" loading="lazy" /></figure>
+          <figure class="atmo-card" data-label="Ice light"><img src="/art/concept-art/curated/concept-curated-2.png" alt="Cold mountain light" loading="lazy" /></figure>
+          <figure class="atmo-card" data-label="Summit weather"><img src="/art/concept-art/curated/concept-curated-3.webp" alt="Weather over summit" loading="lazy" /></figure>
+        </div>
       </section>
 
       <section id="vision" class="section" aria-labelledby="vision-title">
@@ -601,7 +260,7 @@
             </div>
             <div class="status-item">
               <span class="status-label" data-i18n="statusLabel2">Current release</span>
-              <span data-i18n="statusValue2">v1.4.5 · public web prototype</span>
+              <span data-i18n="statusValue2">v1.4.7 · public web prototype</span>
             </div>
             <div class="status-item">
               <span class="status-label" data-i18n="statusLabel3">Part 2 scope</span>
@@ -642,7 +301,7 @@
         <div class="footer-grid">
           <section class="footer-block" aria-label="Project status and origin">
             <h3 data-i18n="footerProjectTitle">Project</h3>
-            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.</p>
+            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Mountain-first narrative systems.</p>
           </section>
           <section class="footer-block" aria-label="Official contact channels">
             <h3 data-i18n="footerContactTitle">Contact</h3>
@@ -676,14 +335,17 @@
           pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
           brandSub: 'Public mountain systems project',
-          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
+          navVision: 'Vision', navAtmosphere: 'Atmosphere', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
           eyebrow: 'Mountain-first, consequence-forward design',
           heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
           heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
-          heroMeta1: 'Public release: v1.4.5 · Active route: welcome → setup → onboarding → game → outcomes.',
+          heroMeta1: 'Public release: v1.4.7 · Active route: welcome → setup → onboarding → game → outcomes.',
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Aconcagua: Stone Sentinel atmospheric key art',
+          atmoKicker: 'Mountain atmosphere',
+          atmoTitle: 'An editorial mountain moodboard: stone, weather, and human scale.',
+          atmoIntro: 'This visual cadence mirrors the game tone: slow rhythm, sparse warmth, and pressure always present in the background.',
           visionKicker: 'Design premise',
           visionTitle: 'A systemic mountain experience where clarity beats bravado, every time.',
           visionIntro: 'This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The site follows the same rule: less noise, sharper signal, easier paths for deep reading.',
@@ -714,7 +376,7 @@
           statusKicker: 'Public readiness',
           statusTitle: 'Current state: playable today, auditable in detail, and open to outside review.',
           statusLabel1: 'Playable flow', statusValue1: 'title → setup → onboarding → game → outcomes/debrief',
-          statusLabel2: 'Current release', statusValue2: 'v1.4.5 · public web prototype',
+          statusLabel2: 'Current release', statusValue2: 'v1.4.7 · public web prototype',
           statusLabel3: 'Part 2 scope', statusValue3: 'Narrative bridge currently gated by summit-safe-return progression.',
           outcomesKicker: 'Outcome ethics',
           outcomesTitle: 'Canonical outcomes prioritize consequence, timing, and safe return.',
@@ -724,7 +386,7 @@
           finalIntro: 'The quickest way to understand the project is simple: play one run, then read your signals against the documentation.',
           finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
           footerProjectTitle: 'Project',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.5 · Mountain-first narrative systems.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Mountain-first narrative systems.',
           footerContactTitle: 'Contact',
           footerContactEmail: 'Official email',
           footerContactInstagram: 'Instagram',
@@ -741,14 +403,17 @@
           pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
           brandSub: 'Proyecto público de sistemas de montaña',
-          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
+          navVision: 'Visión', navAtmosphere: 'Atmósfera', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
           eyebrow: 'Diseño mountain-first, con consecuencias reales',
           heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
-          heroMeta1: 'Release pública: v1.4.5 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
+          heroMeta1: 'Release pública: v1.4.7 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Arte atmosférico de Aconcagua: Stone Sentinel',
+          atmoKicker: 'Atmósfera de montaña',
+          atmoTitle: 'Un moodboard editorial de montaña: piedra, clima y escala humana.',
+          atmoIntro: 'Este ritmo visual acompaña el tono del juego: cadencia lenta, calor dosificado y presión siempre de fondo.',
           visionKicker: 'Premisa de diseño',
           visionTitle: 'Una experiencia sistémica de montaña donde la lucidez pesa más que la bravura.',
           visionIntro: 'El proyecto convierte presión geofísica, percepción parcial y decisiones éticas en algo jugable. El sitio sigue esa misma lógica: menos ruido, más señal, y rutas claras para profundizar.',
@@ -779,7 +444,7 @@
           statusKicker: 'Preparación pública',
           statusTitle: 'Estado actual: jugable ahora, auditable al detalle y abierto a revisión externa.',
           statusLabel1: 'Flujo jugable', statusValue1: 'título → setup → onboarding → juego → outcomes/debrief',
-          statusLabel2: 'Release actual', statusValue2: 'v1.4.5 · prototipo web público',
+          statusLabel2: 'Release actual', statusValue2: 'v1.4.7 · prototipo web público',
           statusLabel3: 'Alcance Parte 2', statusValue3: 'Puente narrativo hoy gateado por progresión de cumbre + retorno seguro.',
           outcomesKicker: 'Ética de outcomes',
           outcomesTitle: 'Los outcomes canónicos priorizan consecuencia, timing y regreso seguro.',
@@ -789,7 +454,7 @@
           finalIntro: 'La forma más rápida de entender el proyecto es simple: jugá una corrida y después leé tus señales junto a la documentación.',
           finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
           footerProjectTitle: 'Proyecto',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.5 · Sistemas narrativos con la montaña como eje.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.7 · Sistemas narrativos con la montaña como eje.',
           footerContactTitle: 'Contacto',
           footerContactEmail: 'Email oficial',
           footerContactInstagram: 'Instagram',

@@ -15,9 +15,9 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 82% -10%, color-mix(in srgb, var(--ice) 14%, transparent), transparent 46%),
-    radial-gradient(circle at 14% -8%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 84%, #05080f) 0%, var(--bg) 58%, #080f18 100%);
+    radial-gradient(circle at 84% -6%, color-mix(in srgb, var(--ice) 24%, transparent), transparent 44%),
+    radial-gradient(circle at 16% -2%, color-mix(in srgb, var(--ochre) 24%, transparent), transparent 45%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 82%, #030406) 0%, var(--bg) 54%, #05070a 100%);
   color: var(--text);
   font-family: var(--body);
   min-height: 100vh;
@@ -50,4 +50,16 @@ ul[role='list'], ol[role='list'] {
 /* No element should render text below 12px */
 small, .text-xs {
   font-size: 0.75rem; /* 12px at 16px base */
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  background: linear-gradient(#ffffff07 1px, transparent 1px) 0 0/100% 34px;
+  mix-blend-mode: soft-light;
+  z-index: -1;
 }

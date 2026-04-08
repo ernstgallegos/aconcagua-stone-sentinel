@@ -1,61 +1,45 @@
-/* ═══════════════════════════════════════════════════════════════════
-   public-tokens.css
-   Shared design tokens and base styles for public-facing surfaces.
-   Consumed by: index.html (landing), md-viewer.html (document viewer).
-   Aligns with the token naming direction in prototype/web-v1/css/tokens.css.
-   ═══════════════════════════════════════════════════════════════════ */
-
 :root {
   color-scheme: dark;
 
-  /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #060709;
+  --bg-1: #0f1318;
+  --bg-2: #1a2128;
 
-  /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #10161dcf;
+  --surface-1: #18212bd6;
+  --surface-2: #222e3be6;
 
-  /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #b7c0c933;
+  --border-strong: #d6d7ce6e;
 
-  /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #ecebe6;
+  --text-dim: #c6c6bd;
+  --text-muted: #8f948f;
 
-  /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #a5bdcc;
+  --accent-mineral: #9aa7ad;
+  --accent-amber: #d79a55;
+  --accent-critical: #f1bb7e;
 
-  /* ── Border radius ── */
   --radius-xs: 10px;
-  --radius-sm: 14px;
-  --radius-md: 22px;
-  --radius-lg: 30px;
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 38px;
 
-  /* ── Shadows ── */
-  --shadow-soft: 0 16px 48px #05080d66;
-  --shadow-strong: 0 30px 80px #04070ccc;
+  --shadow-soft: 0 22px 58px #0304057d;
+  --shadow-strong: 0 40px 110px #020203d4;
 
-  /* ── Spacing scale ── */
   --space-1: 0.35rem;
-  --space-2: 0.65rem;
-  --space-3: 1rem;
-  --space-4: 1.6rem;
-  --space-5: 2.5rem;
-  --space-6: 4rem;
-  --space-7: 6rem;
+  --space-2: 0.7rem;
+  --space-3: 1.05rem;
+  --space-4: 1.7rem;
+  --space-5: 2.7rem;
+  --space-6: 4.2rem;
+  --space-7: 6.4rem;
 
-  /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", "Times New Roman", serif;
+  --mono: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+  --sans: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -67,9 +51,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(880px 410px at 10% -5%, #d79a5524, transparent 60%),
+    radial-gradient(1200px 780px at 88% 3%, #9db4c01f, transparent 56%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -78,25 +62,24 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
+  opacity: 0.32;
   pointer-events: none;
-  background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+  background:
+    linear-gradient(120deg, transparent 48%, #ffffff08 49%, transparent 50%) 0 0/40px 40px,
+    linear-gradient(#ffffff06 1px, transparent 1px) 0 0/100% 30px;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
   display: inline-flex;
   gap: 0.2rem;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 0.2rem;
-  background: #0e151f99;
+  background: #0d12198f;
+  backdrop-filter: blur(8px);
 }
 
 .lang-btn {
@@ -114,8 +97,8 @@ a:hover { text-decoration: underline; }
 }
 
 .lang-btn[aria-pressed='true'] {
-  color: #081019;
-  background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
+  color: #101114;
+  background: linear-gradient(130deg, var(--accent-amber), #f0c999);
 }
 
 .lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }

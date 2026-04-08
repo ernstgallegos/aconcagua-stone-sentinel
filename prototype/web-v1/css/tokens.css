@@ -1,47 +1,32 @@
-/* ═══════════════════════════════════════════
-   TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
-   ═══════════════════════════════════════════ */
-
-/* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
-   Usage: these are documentation tokens; actual @media queries live in responsive.css
-   --bp-sm:  480px
-   --bp-md:  768px
-   --bp-lg:  1024px
-   --bp-xl:  1280px
-*/
-
+/* Distinct editorial mountain token refresh */
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --bg:        #07090d;
+  --surface:   #11171f;
+  --surface2:  #1b2531;
+  --border:    #4a5564;
+  --stone:     #cbc6b6;
+  --ochre:     #d89a59;
+  --ochre-dim: #9f6e3d;
+  --ice:       #9fb8ca;
+  --ice-dim:   #738da1;
+  --white:     #efede7;
+  --red:       #c97865;
+  --red-dim:   #8f4f41;
+  --safety:    #8fb49f;
+  --text:      #dddcd5;
+  --text-dim:  #9ea6ab;
+  --text-soft: #bec2c0;
+  --muted:     #9ea6ab;
+  --accent:    #d89a59;
 
-  /* ── Typography ── */
-  --brand:   'Playfair Display', 'Lora', Georgia, serif;
+  --brand:   'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --heading: var(--brand);
-  --mono:    'IBM Plex Mono', monospace;
+  --mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
   --serif:   var(--brand);
-  --sans:    'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --sans:    'Manrope', 'Montserrat', system-ui, sans-serif;
   --body:    var(--sans);
   --ui:      var(--sans);
 
-  /* ── Spacing scale ── */
   --space-xs:  0.25rem;
   --space-sm:  0.5rem;
   --space-md:  1rem;
@@ -49,12 +34,10 @@
   --space-xl:  2rem;
   --space-2xl: 3rem;
 
-  /* ── Border radius ── */
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
 
-  /* ── Transition speeds ── */
-  --dur-fast:   0.15s;
-  --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-fast:   0.16s;
+  --dur-normal: 0.24s;
+  --dur-slow:   0.34s;
 }

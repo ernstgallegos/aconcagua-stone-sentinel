@@ -11,6 +11,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Added a full editorial landing-art direction refresh in `index.html` with asymmetric hero composition, atmospheric image triptych section, cinematic reveal motion, and updated EN/ES copy keys for the new atmosphere navigation/section.
+- Added cross-surface typography migration to `Cormorant Garamond` + `Manrope` + `JetBrains Mono` across public surfaces (`index.html`, `src/styles/public-tokens.css`) and the active prototype entry (`prototype/web-v1/index.html`, `prototype/web-v1/css/tokens.css`).
 - Added a dual-prototype governance matrix in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
@@ -18,6 +20,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Changed global visual tokens for landing and web-v1 (`src/styles/public-tokens.css`, `prototype/web-v1/css/tokens.css`, `prototype/web-v1/css/reset.css`) to a darker geological palette with restrained warm CTA accents and layered atmospheric backgrounds.
+- Changed web-v1 welcome presentation motion by extending `prototype/web-v1/css/animations.css` with cinematic rise/fog drift keyframes to reinforce the new editorial mountain mood at startup.
 - Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
 - Changed public-readiness checklists (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) to include `npm run test:contracts` and to standardize JSON validation through `npm run validate:json`.
 - Changed `docs/technical-debt-register.md` by closing all five previously active debt items after landing their measurable exit criteria and moving them to the resolved table.
