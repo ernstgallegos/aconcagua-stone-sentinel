@@ -3,7 +3,7 @@
 > **Canonical status (source-anchored):**
 > - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.6]`](../CHANGELOG.md#146--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.6** with phased rollout contracts preserved.
+> - Current public build is **v1.4.7** with phased rollout contracts preserved.
 
 Prototype Web v1.4 (public branch state) is the canonical active prototype in this repository, with completed and in-progress items from the v1.4 phase plan.
 
@@ -68,7 +68,16 @@ No other module should duplicate either the file-path list or the normalization 
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
 
-## v1.4.7 additions (second-pass UI modularization)
+## v1.4.7 additions (carousel/narrative extraction, resource economy fix, NARRATIVES_ES parity)
+
+- Extracted carousel rendering and navigation logic from `ui/screens.js` into `ui/helpers/carousel.js`: card HTML builders (`buildCharacterCardHtml`, `buildRandomCharacterCardHtml`, `buildScenarioCardHtml`, `buildRandomScenarioCardHtml`, `buildRouteCardHtml`), dot renderer (`renderCarouselDots`), info-panel helpers (`toggleInfoPanel`, `hideInfoPanel`), character-image path resolver (`getCharacterImagePath`), and navigation index helper (`stepCarouselIndex`). Part 1 and Part 2 carousels share the same builder functions.
+- Extracted narrative text banks and dispatch logic from `ui/screens.js` into `ui/helpers/narrative.js`: `NARRATIVES` (EN, 27 keys), `NARRATIVES_ES` (ES, now fully parity-complete at 27/27 keys), `pickNarrative` (pure bank selector with injectable RNG), and `resolveNarrativeText` (pure DOM-free flag-priority dispatcher). The same narrative resolution logic is independently testable without a browser environment.
+- Fixed `engine/turn-rules.js` resource economy: `calculateResourceBurnForMinutes()` now preserves fractional burn (two-decimal precision) instead of rounding half-hour burns to zero, so food/water decrease consistently across turns in low-burn stages and high-efficiency profiles.
+- Fixed resource HUD presentation in `ui/screens.js`: watch and mobile status counters now display rounded-up whole units (`ceil`) until depletion reaches zero, hiding decimals without false-zero flicker.
+- Fixed `summitLateStart` and `summitOptimalEnd` defensive fallback values in `screens.js` to match `environmental_pressure_config.json` (1020 and 630 respectively); prior fallbacks of 780/660 would have produced incorrect summit timing if the config failed to load past the fatal-error gate.
+- Added 30 new unit tests: 20 in `tests/unit/carousel-narrative.test.js` (carousel helpers, narrative bank integrity, pickNarrative language/fallback, resolveNarrativeText flag priority), 10 in `tests/unit/telemetry-contract.test.js` (per-turn telemetry entry shape and export immutability).
+
+## v1.4.6 additions (second-pass UI modularization)
 
 - Moved 6 pure body-state and pressure label functions from `ui/screens.js` to `ui/helpers/screen-utils.js`:
   `bodyValueClass`, `capacityLabel`, `fatigueLabel`, `exposureLabel`, `pressureDeltaLabel`, `pressureBandLabel`.

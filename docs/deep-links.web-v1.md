@@ -53,7 +53,7 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 |-----------|---------|---------------|
 | `title` | Welcome / cover screen | [`#title`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#title) |
 | `expedition-setup` | Character + scenario selection carousels | [`#expedition-setup`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#expedition-setup) |
-| `onboarding` | Pre-run briefing (requires character + scenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
+| `onboarding` | Pre-run briefing modal flow entry — opens over the game screen (not a standalone DOM screen; requires character + scenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
 | `game` | Main gameplay loop | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
 | `journal` | Expedition journal (cross-run log) | [`#journal`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#journal) |
 | `debrief` | Post-run debrief (mock state, option A) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
@@ -82,7 +82,7 @@ Defaults (no params): random character, first predefined scenario, random seed.
 #game&character=daniela&scenario=false-stability-terrain
 ```
 
-### `#onboarding` — pre-run briefing
+### `#onboarding` — pre-run briefing (modal flow entry, not a DOM screen)
 
 ```
 #onboarding&character=erik&scenario=accumulated-fatigue-trap&seed=5555
@@ -213,7 +213,7 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 |----------------|-----------|-----------------|
 | `title` | Pantalla de bienvenida / portada | [`#title`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#title) |
 | `expedition-setup` | Carruseles de selección de personaje + escenario | [`#expedition-setup`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#expedition-setup) |
-| `onboarding` | Briefing previo a la run (requiere personaje + escenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
+| `onboarding` | Entrada de flujo modal de briefing previo — se abre sobre la pantalla de juego (no es una pantalla DOM independiente; requiere personaje + escenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
 | `game` | Bucle principal de juego | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
 | `journal` | Diario de expedición (log entre runs) | [`#journal`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#journal) |
 | `debrief` | Análisis post-run (estado simulado) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
@@ -242,7 +242,7 @@ Sin parámetros: personaje aleatorio, primer escenario predefinido, semilla alea
 #game&character=daniela&scenario=false-stability-terrain
 ```
 
-### `#onboarding` — briefing previo a la run
+### `#onboarding` — briefing previo a la run (entrada de flujo modal, no pantalla DOM)
 
 ```
 #onboarding&character=erik&scenario=accumulated-fatigue-trap&seed=5555

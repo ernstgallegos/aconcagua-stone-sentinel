@@ -9,6 +9,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.4.7] — 2026-04
+
 ### Added
 
 - Extracted carousel rendering and navigation logic from `screens.js` into `ui/helpers/carousel.js`: card HTML builders (`buildCharacterCardHtml`, `buildRandomCharacterCardHtml`, `buildScenarioCardHtml`, `buildRandomScenarioCardHtml`, `buildRouteCardHtml`), dot renderer (`renderCarouselDots`), info-panel toggle (`toggleInfoPanel`, `hideInfoPanel`), character-image path resolution (`getCharacterImagePath`), and navigation index helper (`stepCarouselIndex`). Part 1 and Part 2 carousels now share the same builder functions.
