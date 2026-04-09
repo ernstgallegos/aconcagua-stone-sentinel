@@ -21,6 +21,8 @@ Files:
 - [`cover-concept-1.png`](./cover/cover-concept-1.png)
 - [`cover-concept-2.png`](./cover/cover-concept-2.png)
 
+**`cover/ig/`** — Extended cover set (13 images, even-numbered sequence `2.png`–`26.png`). Mixed styles: photorealistic with painterly treatment and watercolor illustration. Subject: the mountain as landscape, rarely populated by human figures. Suitable for landing page, public-facing surfaces, and social media.
+
 These images function as **conceptual covers**, not as final key art or in-game representations.  
 They are included to convey mood, scale, and thematic positioning.
 
@@ -36,6 +38,8 @@ Files:
 - [`concept-curated-3.webp`](./concept-art/curated/concept-curated-3.webp)
 - [`concept-curated-4.webp`](./concept-art/curated/concept-curated-4.webp)
 
+**`concept-art/curated/ig/`** — Extended concept set (13 images, odd-numbered sequence `1.png`–`25.png`). Digital illustration / watercolor aesthetic. Subject: the relationship between the human figure and the mountain. Suitable for in-prototype screens, title, and expedition setup.
+
 These images emphasize:
 - The dominance of the mountain over the human figure  
 - Scale and solitude  
@@ -43,6 +47,8 @@ These images emphasize:
 - Ambiguous routes and decision-making without explicit guidance  
 
 They are meant to be read **in dialogue with the Design Pillars and Systems Overview**, not as standalone illustrations.
+
+For detailed per-image visual analysis, palette notes, and recommended use cases, see [`docs/concept-art-catalog.md`](../docs/concept-art-catalog.md).
 
 ---
 

@@ -15,6 +15,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
 - Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.
+- Added `docs/concept-art-catalog.md`: complete visual analysis catalog for the 13 unique scenes across `art/concept-art/curated/ig/` and `art/cover/ig/` (26 images = 13 paired compositions), covering style, subject, mood, palette, design-principle alignment, and recommended use cases per scene. Documents the pairing convention: `art/cover/ig/` carries the "ACONCAGUA: STONE SENTINEL" title overlay (promotional/cover use); `art/concept-art/curated/ig/` contains the same illustrations without text (documentation, web, and flexible marketing use). Updated `art/README.md` to document the `ig/` subdirectories and link to the catalog.
 
 ### Changed
 
