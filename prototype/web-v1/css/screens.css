@@ -46,6 +46,18 @@
   background: #060b11; /* fallback while image loads */
 }
 
+
+
+@keyframes titleMistDrift {
+  0% { transform: translate3d(-1.2%, 0, 0) scale(1); opacity: 0.92; }
+  100% { transform: translate3d(1.8%, -1.5%, 0) scale(1.05); opacity: 1; }
+}
+
+@keyframes titleShellRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 #screen-title::before {
   content: '';
   position: absolute;
@@ -54,7 +66,10 @@
   pointer-events: none;
   background:
     radial-gradient(circle at 50% 24%, rgba(185, 211, 230, 0.16), transparent 54%),
+    radial-gradient(circle at 18% 78%, rgba(210, 180, 141, 0.1), transparent 52%),
     linear-gradient(180deg, rgba(9, 14, 21, 0.14), rgba(9, 14, 21, 0.64));
+  filter: blur(0.5px);
+  animation: titleMistDrift 22s ease-in-out infinite alternate;
 }
 
 .title-shell {
@@ -68,6 +83,7 @@
   justify-content: center;
   position: relative;
   z-index: 2;
+  animation: titleShellRise 780ms ease-out both;
 }
 
 .title-shell-minimal {
