@@ -17,7 +17,7 @@
   font-weight: 700;
   letter-spacing: 0.17em;
   text-transform: uppercase;
-  background: linear-gradient(120deg, color-mix(in srgb, var(--ice) 90%, white), color-mix(in srgb, var(--ochre) 78%, white));
+  background: linear-gradient(120deg, color-mix(in srgb, var(--ice) 94%, white), color-mix(in srgb, var(--ochre) 72%, white));
   border: 1px solid color-mix(in srgb, var(--white) 36%, transparent);
   color: #0a121c;
   padding: 0.82rem 2.3rem;
@@ -64,7 +64,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   background: transparent;
-  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
   color: var(--text-soft);
   padding: 0.62rem 1.35rem;
   cursor: pointer;
@@ -76,9 +76,9 @@
 }
 
 .btn-ghost:hover {
-  border-color: color-mix(in srgb, var(--ice) 65%, transparent);
+  border-color: color-mix(in srgb, var(--ochre) 65%, transparent);
   color: var(--white);
-  background: color-mix(in srgb, var(--ice) 10%, transparent);
+  background: color-mix(in srgb, var(--ochre) 12%, transparent);
 }
 
 .btn-ghost:active {

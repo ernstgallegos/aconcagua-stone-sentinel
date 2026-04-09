@@ -173,7 +173,7 @@
 /* ── Welcome top controls — fixed overlays ── */
 .title-top-controls {
   position: fixed;
-  top: 1rem;
+  top: 0.9rem;
   left: 1rem;
   right: 1rem;
   z-index: 1000;
@@ -213,8 +213,8 @@
   border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
   border-radius: 999px;
   padding: 0.2rem;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 .lang-btn {
@@ -232,8 +232,8 @@
 }
 
 .lang-btn[aria-pressed='true'] {
-  color: #081019;
-  background: linear-gradient(120deg, #d6eef9, #d9b996);
+  color: #09121b;
+  background: linear-gradient(120deg, #dbeaf8, #c99967);
 }
 
 .lang-btn:focus-visible {

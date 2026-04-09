@@ -12,25 +12,25 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
+  /* ── Color palette: editorial alpine night ── */
+  --bg:        #071019;
+  --surface:   #121d2a;
+  --surface2:  #1b2939;
   --border:    #3a4d60;
-  --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
-  --red:       #c96f63;
-  --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --stone:     #baa997;
+  --ochre:     #cb9a67;
+  --ochre-dim: #8c6747;
+  --ice:       #c9deef;
+  --ice-dim:   #7898b2;
+  --white:     #edf3f9;
+  --red:       #ca7064;
+  --red-dim:   #8f4c44;
+  --safety:    #86ae8f;
+  --text:      #dde6ef;
+  --text-dim:  #95a8ba;
+  --text-soft: #b0bfcd;
+  --muted:     #95a8ba;
+  --accent:    #cb9a67;
 
   /* ── Typography ── */
   --brand:   'Playfair Display', 'Lora', Georgia, serif;

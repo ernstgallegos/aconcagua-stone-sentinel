@@ -8,30 +8,30 @@
 :root {
   color-scheme: dark;
 
-  /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  /* ── Background layers (editorial alpine night) ── */
+  --bg-0: #04070b;
+  --bg-1: #0b1118;
+  --bg-2: #151e29;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #0f1722cf;
+  --surface-1: #182433de;
+  --surface-2: #253447eb;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #9db1c42f;
+  --border-strong: #d7e6f24d;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #ebf0f6;
+  --text-dim: #b5c2cf;
+  --text-muted: #92a2b2;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #d7e9f8;
+  --accent-mineral: #95aebf;
+  --accent-amber: #ca9f73;
+  --accent-critical: #f2d8b7;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
@@ -65,11 +65,11 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.62;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1300px 640px at 84% -18%, #b5ccde22, transparent 56%),
+    radial-gradient(1100px 580px at 16% -10%, #ca9f731c, transparent 50%),
+    linear-gradient(180deg, #1a2532 0%, var(--bg-1) 40%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -78,12 +78,18 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
+  opacity: 0.16;
   pointer-events: none;
-  background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+  background:
+    radial-gradient(900px 500px at 75% 8%, #d3e8f00d, transparent 62%),
+    radial-gradient(680px 380px at 22% 28%, #d7aa7f0a, transparent 60%),
+    linear-gradient(#ffffff05 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    42px 42px,
+    42px 42px;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
