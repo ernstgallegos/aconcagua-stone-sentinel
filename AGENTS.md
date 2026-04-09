@@ -284,6 +284,7 @@ In addition to the changelog:
 - Landing/document-viewer bilingual usability is most reliable when doc CTAs are keyed by semantic doc IDs and resolved at runtime by selected language; avoid hardcoded `?file=` links that can drift to English-only targets after language switches.
 
 - AI/process governance stays easier to maintain when canonical agent tooling docs live under `docs/ai/` with a machine-readable `manifest.json`, while root `AGENTS.md` remains the compatibility entry point for tooling that expects it at repository root.
+- Full editorial landing refreshes are safest when implemented through shared token updates first (`src/styles/public-tokens.css` + `prototype/web-v1/css/tokens.css`), then section-level layout restyling in `index.html` so public pages and gameplay UI keep one tonal family without duplicating palette logic.
 - Debt-register hygiene is more reliable when active debt items are periodically re-validated against source/runtime truth (for example, EN/ES narrative-bank key parity) and moved to the resolved table immediately once the documented exit criterion is met.
 - Debt closure quality for `web-v1` improves when each closed debt item lands with one explicit guard: contract/parity tests for cross-surface policy, helper-level immutability tests for telemetry mutations, and config guardrail tests for EP/resource viability.
 - Cross-prototype drift control is stronger when release checklists include a dedicated `npm run test:contracts` gate and docs include an explicit active-vs-frozen ownership matrix that tests can parse.
