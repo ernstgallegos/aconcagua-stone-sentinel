@@ -24,6 +24,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Changed `docs/balance-calibration-notes.md` to close the previous active-flags TODO with an explicit canonical state, plus a post-`v1.4.7` documentation consolidation note dated 2026-04-08.
 - Changed `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to reflect current Vercel routing reality (root landing at `/` + prototype-specific redirects), replacing outdated redirect wording.
 - Changed `CONTRIBUTING.md` and public-readiness checklists to include `npm run validate:links` in documented quality gates/evidence expectations.
+- Changed the public landing (`index.html`) and shared public tokens (`src/styles/public-tokens.css`) to a slower, editorial alpine art direction with asymmetrical hero composition, deeper atmospheric layering, and revised EN/ES copy tone aligned to contemplative mountain-first positioning.
+- Changed web-v1 visual tokens and title/welcome treatment (`prototype/web-v1/css/tokens.css`, `prototype/web-v1/css/screens.css`) to propagate the refreshed editorial palette, restrained contrast hierarchy, and warmer accent discipline into the playable prototype surface.
 
 ### Fixed
 

@@ -1,47 +1,46 @@
 /* ═══════════════════════════════════════════════════════════════════
    public-tokens.css
    Shared design tokens and base styles for public-facing surfaces.
-   Consumed by: index.html (landing), md-viewer.html (document viewer).
-   Aligns with the token naming direction in prototype/web-v1/css/tokens.css.
+   Editorial alpine identity refresh (landing + md-viewer).
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #070c12;
+  --bg-1: #0c141d;
+  --bg-2: #111b27;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #0f1722d4;
+  --surface-1: #141f2de8;
+  --surface-2: #1b2a3ae6;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #8ea4ba3a;
+  --border-strong: #d8c6ad72;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #edf1f6;
+  --text-dim: #adb9c7;
+  --text-muted: #8292a5;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #c8dfef;
+  --accent-mineral: #a7b8ca;
+  --accent-amber: #d1a473;
+  --accent-critical: #f0ccb0;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
   --radius-sm: 14px;
   --radius-md: 22px;
-  --radius-lg: 30px;
+  --radius-lg: 34px;
 
   /* ── Shadows ── */
-  --shadow-soft: 0 16px 48px #05080d66;
-  --shadow-strong: 0 30px 80px #04070ccc;
+  --shadow-soft: 0 18px 54px #02060b70;
+  --shadow-strong: 0 42px 120px #010309d0;
 
   /* ── Spacing scale ── */
   --space-1: 0.35rem;
@@ -67,9 +66,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1200px 540px at 92% -8%, #c8dfef14, transparent 57%),
+    radial-gradient(760px 460px at 4% 0%, #d0a4711a, transparent 58%),
+    linear-gradient(182deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -77,26 +76,26 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1;
-  opacity: 0.18;
+  z-index: -2;
+  opacity: 0.09;
   pointer-events: none;
   background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+    radial-gradient(circle at 20% 22%, #ffffff08 1px, transparent 1px),
+    radial-gradient(circle at 76% 68%, #ffffff0a 1px, transparent 1px),
+    linear-gradient(180deg, transparent 0%, #ffffff03 100%);
+  background-size: 3px 3px, 4px 4px, 100% 100%;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
   display: inline-flex;
   gap: 0.2rem;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 0.2rem;
-  background: #0e151f99;
+  background: #0b121b9f;
 }
 
 .lang-btn {
@@ -114,8 +113,8 @@ a:hover { text-decoration: underline; }
 }
 
 .lang-btn[aria-pressed='true'] {
-  color: #081019;
-  background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
+  color: #12161a;
+  background: linear-gradient(132deg, #ebdbc7, #cd9f6f);
 }
 
 .lang-btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 1px; }

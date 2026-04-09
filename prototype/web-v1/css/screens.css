@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #060b11;
+  background: #040a12;
 }
 
 /* Decision 2: portrait uses cover; landscape switches to contain in responsive rules */
@@ -43,7 +43,7 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  background: #060b11; /* fallback while image loads */
+  background: #040a12; /* fallback while image loads */
 }
 
 #screen-title::before {
@@ -53,8 +53,9 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 24%, rgba(185, 211, 230, 0.16), transparent 54%),
-    linear-gradient(180deg, rgba(9, 14, 21, 0.14), rgba(9, 14, 21, 0.64));
+    radial-gradient(circle at 78% 16%, rgba(197, 220, 237, 0.18), transparent 56%),
+    radial-gradient(circle at 15% 82%, rgba(208, 164, 114, 0.16), transparent 62%),
+    linear-gradient(180deg, rgba(6, 11, 18, 0.26), rgba(6, 11, 18, 0.76));
 }
 
 .title-shell {
@@ -74,7 +75,7 @@
   width: 100%;
   max-width: none;
   justify-content: flex-end;
-  padding: 2rem 1.5rem 2.2rem;
+  padding: 2.1rem 1.4rem 2.4rem;
 }
 
 .title-screen-advance {
@@ -87,8 +88,8 @@
   cursor: pointer;
   padding: 1.25rem 1rem;
   font-family: var(--heading);
-  font-size: 0.74rem;
-  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   border-radius: 999px;
   transition: opacity var(--dur-normal), transform var(--dur-fast), color var(--dur-normal);
@@ -96,7 +97,7 @@
 
 .title-screen-advance:hover,
 .title-screen-advance:focus-visible {
-  color: var(--ochre);
+  color: color-mix(in srgb, var(--ochre) 88%, var(--white) 12%);
   transform: translateY(-1px);
 }
 
@@ -113,15 +114,15 @@
   gap: 0.45rem;
   padding: 0.75rem 1rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--white) 26%, transparent);
-  background: rgba(9, 14, 21, 0.42);
+  border: 1px solid color-mix(in srgb, var(--white) 21%, transparent);
+  background: linear-gradient(145deg, rgba(8, 14, 22, 0.55), rgba(8, 14, 22, 0.2));
   backdrop-filter: blur(8px);
-  box-shadow: 0 24px 44px rgba(3, 6, 10, 0.36);
+  box-shadow: 0 24px 44px rgba(3, 6, 10, 0.42);
 }
 
 .title-screen-advance span::before {
   content: '›';
-  color: var(--ochre);
+  color: color-mix(in srgb, var(--ochre) 88%, var(--white) 12%);
 }
 
 .startup-status-line {
@@ -148,7 +149,7 @@
   min-height: 2rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--white) 24%, transparent);
-  background: rgba(9, 14, 21, 0.26);
+  background: rgba(8, 13, 20, 0.3);
   color: var(--white);
   display: inline-flex;
   align-items: center;
@@ -174,24 +175,24 @@
   font-family: var(--heading); /* Decision 8 */
   font-size: 0.875rem;
   letter-spacing: 0.25em;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
 
 .title-main {
   font-family: var(--heading); /* Decision 8 */
-  font-size: clamp(1.75rem, 5vw, 2.8rem); /* Decision 9: 28px min */
-  font-weight: 700;
+  font-size: clamp(1.92rem, 5.2vw, 3rem); /* editorial emphasis */
+  font-weight: 600;
   color: var(--white);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   line-height: 1.2;
   margin-bottom: 0.5rem;
 }
 
 .title-sub {
-  color: var(--stone);
-  font-size: 1rem;        /* Decision 9: exactly 16px */
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
+  font-size: 0.96rem;
   font-weight: 400;
   letter-spacing: 0.02em;
 }
@@ -206,9 +207,9 @@
 }
 
 .title-tagline {
-  font-style: italic;
-  color: var(--stone);
-  font-size: 0.9375rem;
+  font-style: normal;
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
+  font-size: 0.9rem;
   max-width: 440px;
   line-height: 1.7;
   margin-bottom: 3rem;
@@ -472,7 +473,7 @@
   font-size: 0.875rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border);
@@ -489,7 +490,7 @@
   border-bottom: 1px solid var(--border);
   font-family: var(--mono);
   font-size: 0.875rem;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -588,21 +589,21 @@
 .debrief-outcome-headline {
   font-family: var(--heading); /* Decision 8 */
   font-size: clamp(1.5rem, 5vw, 2.2rem); /* Decision 9: big headline */
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 0.5rem;
 }
 
-.debrief-outcome-headline.outcome-success  { color: var(--ochre); }
+.debrief-outcome-headline.outcome-success  { color: color-mix(in srgb, var(--ochre) 88%, var(--white) 12%); }
 .debrief-outcome-headline.outcome-retreat  { color: var(--ice); }
 .debrief-outcome-headline.outcome-collapse { color: var(--red); }
 
 .debrief-key-stats {
   font-family: var(--mono);
-  font-size: 0.9375rem;
-  color: var(--stone);
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   margin-top: 0.5rem;
   line-height: 1.6;
 }
@@ -633,7 +634,7 @@
 
 .debrief-stat-card-value {
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--white);
   font-family: var(--heading);
   line-height: 1.25;
@@ -652,7 +653,7 @@
   font-size: 0.8125rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   margin-bottom: 0.5rem;
 }
 
@@ -665,12 +666,12 @@
 
 .debrief-outcome-value.outcome-retreat    { color: var(--ice); }
 .debrief-outcome-value.outcome-collapse   { color: var(--red); }
-.debrief-outcome-value.outcome-stabilized { color: var(--stone); }
-.debrief-outcome-value.outcome-success    { color: var(--ochre); }
+.debrief-outcome-value.outcome-stabilized { color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%); }
+.debrief-outcome-value.outcome-success    { color: color-mix(in srgb, var(--ochre) 88%, var(--white) 12%); }
 
 .debrief-retreat-msg {
-  color: var(--stone);
-  font-size: 0.9375rem;
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
+  font-size: 0.9rem;
   margin-top: 0.5rem;
   line-height: 1.65;
 }
@@ -705,15 +706,15 @@
 }
 
 .debrief-turning-point {
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   color: var(--white);
   line-height: 1.6;
 }
 
 .debrief-cause {
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   line-height: 1.65;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   margin-top: 0.5rem;
 }
 
@@ -722,7 +723,7 @@
   gap: 0.55rem;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
 }
 
 .debrief-structured-grid > div {
@@ -764,7 +765,7 @@
 
 .debrief-log-table td {
   padding: 0.3rem 0.5rem;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   border-bottom: 1px solid rgba(42, 43, 48, 0.5);
   vertical-align: top;
 }
@@ -776,9 +777,9 @@
 .reflection-list { list-style: none; }
 
 .reflection-list li {
-  font-style: italic;
-  color: var(--stone);
-  font-size: 0.9375rem;
+  font-style: normal;
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
+  font-size: 0.9rem;
   padding: 0.5rem 0 0.5rem 1rem;
   border-left: 2px solid var(--border);
   margin-bottom: 0.5rem;
@@ -872,7 +873,7 @@
   font-size: 0.8125rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
   margin-bottom: 0.85rem;
 }
 
@@ -994,7 +995,7 @@
   font-size: 0.8125rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--stone);
+  color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%);
 }
 
 .journal-entries { display: flex; flex-direction: column; gap: 0; }
@@ -1008,13 +1009,13 @@
 
 .journal-entry:first-child { border-top: none; }
 .journal-entry-header { color: var(--white); margin-bottom: 0.2rem; }
-.journal-entry-detail { color: var(--stone); line-height: 1.6; }
+.journal-entry-detail { color: color-mix(in srgb, var(--stone) 82%, var(--white) 18%); line-height: 1.6; }
 
 .journal-empty {
   font-family: var(--mono);
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
-  font-style: italic;
+  font-style: normal;
   text-align: center;
   padding: 2rem 0;
 }
