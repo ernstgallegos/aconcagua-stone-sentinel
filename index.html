@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aconcagua: Stone Sentinel — Editorial alpine experience</title>
+    <title>Aconcagua: Stone Sentinel — Liturgy of Exposure</title>
     <meta
       name="description"
-      content="Aconcagua: Stone Sentinel. Enter an editorial high-mountain atmosphere, inspect the EP/BT system, and play the current web prototype."
+      content="Liturgia de la Intemperie: an editorial alpine dossier for Aconcagua: Stone Sentinel. Enter the climate, inspect the system, and play the current prototype."
     />
     <link rel="icon" type="image/jpeg" href="/art/brand/favicon-aconcagua.jpg" />
     <link rel="apple-touch-icon" href="/art/brand/favicon-aconcagua.jpg" />
@@ -21,200 +21,255 @@
       .skip-link { position: absolute; top: -100px; left: 12px; z-index: 100; padding: 0.6rem 0.9rem; border-radius: var(--radius-xs); background: #f1f7ff; color: #091019; font-weight: 700; }
       .skip-link:focus { top: 10px; }
 
-      .shell { width: min(1260px, 92vw); margin: 0 auto; }
-      .site-header { position: sticky; top: 0; z-index: 70; border-bottom: 1px solid var(--border-soft); background: color-mix(in srgb, var(--bg-0) 82%, transparent); backdrop-filter: blur(12px); }
-      .header-row { display: grid; gap: 0.8rem; align-items: center; padding: 0.8rem 0; }
-      .brand { margin: 0; font-family: var(--serif); letter-spacing: 0.04em; font-size: 1rem; }
-      .brand small { display: block; margin-top: 0.12rem; font-family: var(--mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.65rem; }
+      .shell { width: min(1280px, 92vw); margin: 0 auto; }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 80;
+        border-bottom: 1px solid var(--border-soft);
+        background: color-mix(in srgb, var(--bg-0) 82%, transparent);
+        backdrop-filter: blur(14px);
+      }
+
+      .header-row { display: grid; gap: 0.8rem; align-items: center; padding: 0.82rem 0; }
+      .brand { margin: 0; font-family: var(--serif); font-size: 1rem; letter-spacing: 0.04em; }
+      .brand small { display: block; margin-top: 0.12rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); }
       .header-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
-      .nav { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-      .nav a { font-family: var(--mono); color: var(--text-dim); border: 1px solid transparent; border-radius: 999px; padding: 0.35rem 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.74rem; }
+      .nav { display: flex; flex-wrap: wrap; gap: 0.28rem; }
+      .nav a { font-family: var(--mono); font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-dim); border: 1px solid transparent; border-radius: 999px; padding: 0.35rem 0.68rem; }
       .nav a:hover,.nav a:focus-visible { color: var(--text-main); border-color: var(--border-soft); text-decoration: none; }
 
       main { padding: var(--space-5) 0 var(--space-7); display: grid; gap: var(--space-7); }
 
-      .editorial-hero {
+      .liturgy-hero {
         position: relative;
+        min-height: clamp(620px, 92vh, 900px);
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-xl);
-        min-height: clamp(580px, 86vh, 860px);
         overflow: hidden;
-        background:
-          radial-gradient(1200px 540px at 80% 22%, #cfdbe912 0%, transparent 60%),
-          radial-gradient(900px 480px at 12% 88%, #d7a77922 0%, transparent 65%),
-          linear-gradient(145deg, #0d1622f7 0%, #0a1119f2 42%, #070b11f8 100%);
         box-shadow: var(--shadow-strong);
       }
 
-      .editorial-hero::before,
-      .editorial-hero::after {
+      .liturgy-hero::before,
+      .liturgy-hero::after {
         content: "";
         position: absolute;
-        inset: -15% -12%;
+        inset: 0;
         pointer-events: none;
-      }
-
-      .editorial-hero::before {
-        background:
-          radial-gradient(circle at 30% 65%, #ffffff12 0%, transparent 40%),
-          radial-gradient(circle at 64% 22%, #ffffff0f 0%, transparent 36%);
-        filter: blur(20px);
-        animation: driftMist 24s ease-in-out infinite alternate;
-      }
-
-      .editorial-hero::after {
-        background: repeating-linear-gradient(90deg, #ffffff06 0, #ffffff06 1px, transparent 1px, transparent 86px);
-        opacity: 0.35;
-        mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 85%, transparent 100%);
-      }
-
-      .hero-layout {
-        position: relative;
         z-index: 2;
+      }
+
+      .liturgy-hero::before {
+        background:
+          radial-gradient(1200px 700px at 76% 18%, #dce8f019 0%, transparent 60%),
+          radial-gradient(900px 620px at 20% 84%, #b9966a1b 0%, transparent 62%);
+        mix-blend-mode: screen;
+      }
+
+      .liturgy-hero::after {
+        background:
+          linear-gradient(180deg, #0b0f1426 0%, #0b0f1499 58%, #0b0f14eb 100%),
+          repeating-linear-gradient(90deg, #ffffff05 0, #ffffff05 1px, transparent 1px, transparent 92px);
+        opacity: 0.72;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        filter: contrast(1.03) saturate(0.88) brightness(0.72);
+        transform: scale(1.06);
+        animation: slowParallax 18s ease-in-out infinite alternate;
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 3;
         min-height: inherit;
         display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        grid-template-columns: 1.1fr 0.9fr;
       }
 
       .hero-copy {
-        padding: clamp(1.4rem, 4vw, 4rem) clamp(1.1rem, 3.2vw, 3.6rem);
+        padding: clamp(1.1rem, 4vw, 4rem);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 0.95rem;
       }
 
-      .hero-kicker { margin: 0; font-family: var(--mono); letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent-mineral); font-size: 0.7rem; }
-      h1 { margin: 0; font-family: var(--serif); font-size: clamp(2.4rem, 7vw, 6.2rem); line-height: 1.02; max-width: 12ch; }
-      .hero-essay { margin: 0; max-width: 58ch; line-height: 1.82; color: var(--text-dim); font-size: clamp(1rem, 1.85vw, 1.17rem); }
+      .hero-plate {
+        max-width: 62ch;
+        border: 1px solid #dce8f02e;
+        border-radius: var(--radius-lg);
+        background: color-mix(in srgb, var(--surface-0) 86%, transparent);
+        padding: clamp(1rem, 2.4vw, 1.8rem);
+        backdrop-filter: blur(6px);
+      }
 
-      .hero-meta-strip { display: grid; gap: 0.45rem; margin-top: 0.4rem; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); }
+      .hero-kicker { margin: 0; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.7rem; color: var(--accent-mineral); }
+      h1 { margin: 0.7rem 0 0; font-family: var(--serif); font-size: clamp(2.5rem, 7vw, 6.8rem); line-height: 1; max-width: 11ch; }
+      .hero-essay { margin: 1rem 0 0; color: var(--text-dim); line-height: 1.82; font-size: clamp(1rem, 1.9vw, 1.18rem); }
+      .hero-meta { margin-top: 1rem; display: grid; gap: 0.35rem; font-family: var(--mono); font-size: 0.73rem; color: var(--text-muted); }
 
-      .hero-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.8rem; }
-      .btn { border: 1px solid transparent; border-radius: 999px; padding: 0.72rem 1.08rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.85rem; transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+      .hero-cta { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: 0.55rem; }
+      .btn { font-family: var(--sans); border: 1px solid transparent; border-radius: 999px; padding: 0.72rem 1.08rem; font-weight: 700; font-size: 0.84rem; display: inline-flex; align-items: center; justify-content: center; transition: transform 180ms ease, border-color 180ms ease; }
       .btn:hover { transform: translateY(-1px); text-decoration: none; }
       .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
-      .btn-primary { color: #08111b; background: linear-gradient(120deg, #d8e6ed, var(--accent-amber)); }
-      .btn-secondary { color: var(--text-main); border-color: var(--border-soft); background: color-mix(in srgb, var(--surface-0) 84%, transparent); }
+      .btn-primary { color: #0d151f; background: linear-gradient(118deg, var(--accent-ice), var(--accent-amber)); }
+      .btn-secondary { color: var(--text-main); border-color: var(--border-soft); background: color-mix(in srgb, var(--surface-1) 84%, transparent); }
 
-      .hero-visual-wrap {
+      .hero-side {
         position: relative;
         display: flex;
-        align-items: stretch;
+        align-items: flex-start;
         justify-content: flex-end;
-        padding: clamp(1rem, 2.6vw, 2rem);
+        padding: clamp(0.8rem, 2.5vw, 2rem);
       }
 
-      .hero-visual {
-        width: min(100%, 660px);
-        align-self: stretch;
-        border: 1px solid #d6e4ef2f;
-        border-radius: clamp(1.2rem, 2.7vw, 2.2rem);
-        overflow: hidden;
-        box-shadow: 0 36px 96px #010307d6;
-        transform: translateX(8%);
-        transition: transform 280ms ease;
-      }
-
-      .hero-visual img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9) contrast(1.06) brightness(0.84); }
-      .hero-visual:hover { transform: translateX(5%) scale(1.01); }
-
-      .hero-altitude-note {
-        position: absolute;
-        left: clamp(0.7rem, 1.8vw, 1.2rem);
-        top: clamp(1.2rem, 3vw, 2.3rem);
+      .hero-rune {
         writing-mode: vertical-rl;
         transform: rotate(180deg);
         font-family: var(--mono);
-        font-size: 0.63rem;
-        letter-spacing: 0.14em;
         text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.62rem;
         color: var(--text-muted);
+        border: 1px solid #dce8f022;
+        border-radius: 999px;
+        padding: 0.8rem 0.36rem;
+        background: #121a2490;
       }
 
       .section { display: grid; gap: var(--space-3); }
-      .section-head { display: grid; gap: 0.8rem; max-width: 72ch; }
+      .section-head { display: grid; gap: 0.8rem; max-width: 76ch; }
       .section-kicker { margin: 0; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.7rem; color: var(--accent-mineral); }
-      .section h2 { margin: 0; font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3.3rem); line-height: 1.08; }
-      .section-intro { margin: 0; color: var(--text-dim); line-height: 1.75; }
+      .section h2 { margin: 0; font-family: var(--serif); font-size: clamp(1.9rem, 4vw, 3.4rem); line-height: 1.08; }
+      .section-intro { margin: 0; color: var(--text-dim); line-height: 1.74; }
 
-      .cards-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-      .card {
+      .syntax-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .syntax-card {
         position: relative;
-        border: 1px solid var(--border-soft);
-        background: linear-gradient(165deg, #132032da 0%, #0c141fdd 100%);
-        border-radius: var(--radius-md);
-        padding: var(--space-4);
         overflow: hidden;
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        min-height: 420px;
         box-shadow: var(--shadow-soft);
       }
-      .card::before {
-        content: "";
+
+      .syntax-card img {
         position: absolute;
-        inset: -1px;
-        background: radial-gradient(circle at 88% 8%, #ffffff12 0%, transparent 38%);
-        pointer-events: none;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.9) contrast(1.03) brightness(0.75);
       }
 
-      .card h3 { margin: 0; font-size: 1.06rem; }
-      .card p { margin: 0.55rem 0 0; color: var(--text-dim); line-height: 1.7; }
+      .syntax-overlay {
+        position: absolute;
+        inset: 0;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: linear-gradient(180deg, #0b0f1420 0%, #0b0f14d2 72%);
+      }
+      .syntax-overlay h3 { margin: 0; font-size: 1.08rem; }
+      .syntax-overlay p { margin: 0.5rem 0 0; color: var(--text-dim); }
 
-      .pace-grid { display: grid; gap: var(--space-3); grid-template-columns: 0.9fr 1.1fr; }
-      .pace-column { border: 1px solid var(--border-soft); border-radius: var(--radius-md); padding: var(--space-4); background: linear-gradient(172deg, #101b2adf 0%, #0a111be3 100%); }
-      .tempo-line { display: grid; gap: 0.7rem; }
-      .tempo-step { border-left: 2px solid #c2d4e44a; padding-left: 0.85rem; }
-      .tempo-step strong { display: block; font-family: var(--serif); margin-bottom: 0.2rem; }
-      .tempo-step span { color: var(--text-dim); font-size: 0.93rem; }
-
-      .signal-board { display: grid; gap: 0.65rem; }
-      .signal-row { display: grid; gap: 0.22rem; padding: 0.6rem 0.7rem; border: 1px solid #c4d5e631; border-radius: var(--radius-sm); background: #152437ba; }
-      .signal-label { font-family: var(--mono); text-transform: uppercase; font-size: 0.64rem; letter-spacing: 0.12em; color: var(--text-muted); }
-      .signal-value { color: var(--text-main); }
-
-      .route-board {
+      .dossier-layout { display: grid; gap: var(--space-3); grid-template-columns: 1.05fr 0.95fr; }
+      .panel {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
+        background: linear-gradient(165deg, #121a24e3 0%, #0f141de8 100%);
+        box-shadow: var(--shadow-soft);
         padding: var(--space-4);
-        background: linear-gradient(160deg, #122030e0 0%, #0c131edf 100%);
       }
-      .route-strip { display: grid; gap: 0.65rem; }
-      .route-node { border: 1px solid #c0d2e13b; border-radius: var(--radius-sm); padding: 0.7rem 0.85rem; background: #18283ada; }
-      .route-node small { display: block; color: var(--text-muted); margin-bottom: 0.24rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.62rem; }
 
-      .resource-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+      .flow-line { display: grid; gap: 0.62rem; }
+      .flow-node { border: 1px solid #dce8f032; border-radius: var(--radius-sm); background: #1d2b3abf; padding: 0.7rem 0.85rem; }
+      .flow-node small { display: block; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+
+      .metrics { display: grid; gap: 0.65rem; }
+      .metric {
+        border: 1px solid #8fa4b540;
+        border-radius: var(--radius-sm);
+        padding: 0.6rem 0.72rem;
+        background: #192533af;
+      }
+      .metric-label { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.62rem; color: var(--text-muted); }
+      .metric-value { margin-top: 0.25rem; color: var(--text-main); }
+
+      .gallery {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .gallery figure { margin: 0; position: relative; min-height: 250px; overflow: hidden; }
+      .gallery img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9) contrast(1.04) brightness(0.82); transition: transform 360ms ease; }
+      .gallery figure:hover img { transform: scale(1.04); }
+      .gallery figcaption {
+        position: absolute;
+        left: 0.55rem;
+        bottom: 0.55rem;
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        color: var(--text-main);
+        background: #0b0f1492;
+        padding: 0.25rem 0.42rem;
+        border-radius: 999px;
+      }
+
+      .character-strip { display: grid; gap: var(--space-3); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .character-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: linear-gradient(180deg, #111925 0%, #0d131b 100%);
+      }
+      .character-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; filter: saturate(0.9) contrast(1.03); }
+      .character-meta { padding: 0.72rem 0.85rem 0.95rem; }
+      .character-meta h3 { margin: 0; font-size: 1rem; }
+      .character-meta p { margin: 0.32rem 0 0; color: var(--text-dim); font-size: 0.92rem; }
 
       .cta-band {
         border: 1px solid var(--border-strong);
         border-radius: var(--radius-xl);
-        background: linear-gradient(150deg, #17263adf 0%, #0d1520f3 66%);
-        padding: clamp(1.2rem, 3vw, 2.5rem);
-        box-shadow: var(--shadow-soft);
+        background: linear-gradient(140deg, #1c2c3ce3 0%, #111923f0 66%);
+        padding: clamp(1.1rem, 3vw, 2.5rem);
       }
 
       .footer { border-top: 1px solid var(--border-soft); padding-top: var(--space-4); color: var(--text-muted); }
       .footer-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
       .footer h3 { margin: 0 0 0.45rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.7rem; color: var(--accent-mineral); }
       .footer p,.footer ul { margin: 0; color: var(--text-dim); }
-      .footer ul { list-style: none; padding: 0; display: grid; gap: 0.25rem; }
-      .footer-bottom { margin-top: var(--space-3); border-top: 1px solid var(--border-soft); padding-top: 0.75rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; font-size: 0.84rem; }
+      .footer ul { list-style: none; padding: 0; display: grid; gap: 0.24rem; }
+      .footer-bottom { margin-top: var(--space-3); border-top: 1px solid var(--border-soft); padding-top: 0.75rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.45rem; font-size: 0.84rem; }
 
-      .reveal { opacity: 0; transform: translateY(16px); transition: opacity 600ms ease, transform 600ms ease; }
+      .reveal { opacity: 0; transform: translateY(16px); transition: opacity 700ms ease, transform 700ms ease; }
       .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
-      @keyframes driftMist {
-        0% { transform: translate3d(-2%, 0, 0) scale(1); }
-        100% { transform: translate3d(2%, -2%, 0) scale(1.05); }
+      @keyframes slowParallax {
+        0% { transform: scale(1.06) translate3d(0, 0, 0); }
+        100% { transform: scale(1.11) translate3d(-1.4%, -1.6%, 0); }
       }
 
-      @media (max-width: 1080px) {
-        .hero-layout { grid-template-columns: 1fr; }
-        .hero-visual { transform: none; height: min(58vh, 480px); }
-        .hero-visual:hover { transform: none; }
-        .hero-visual-wrap { padding-top: 0; }
-        .pace-grid { grid-template-columns: 1fr; }
+      @media (max-width: 1100px) {
+        .hero-grid, .syntax-grid, .dossier-layout, .character-strip { grid-template-columns: 1fr; }
+        .liturgy-hero { min-height: 720px; }
+        .hero-side { justify-content: flex-start; }
       }
 
-      @media (min-width: 920px) {
+      @media (min-width: 940px) {
         .header-row { grid-template-columns: auto 1fr; }
       }
 
@@ -228,13 +283,13 @@
 
     <header class="site-header">
       <div class="shell header-row">
-        <p class="brand">Aconcagua: Stone Sentinel<small data-i18n="brandSub">Public editorial mountain project</small></p>
+        <p class="brand">Aconcagua: Stone Sentinel<small data-i18n="brandSub">Liturgia de la Intemperie · public build</small></p>
         <div class="header-controls">
           <nav class="nav" aria-label="Primary navigation">
-            <a href="#manifesto" data-i18n="navManifesto">Manifesto</a>
-            <a href="#tempo" data-i18n="navTempo">Tempo</a>
-            <a href="#system" data-i18n="navSystem">System</a>
-            <a href="#resources" data-i18n="navResources">Resources</a>
+            <a href="#syntax" data-i18n="navSyntax">Syntax</a>
+            <a href="#dossier" data-i18n="navDossier">Dossier</a>
+            <a href="#gallery" data-i18n="navGallery">Atmosphere</a>
+            <a href="#play" data-i18n="navPlay">Play</a>
           </nav>
           <div class="lang-switch" role="group" aria-label="Language selector">
             <button class="lang-btn" type="button" data-lang="en" aria-pressed="true">EN</button>
@@ -245,106 +300,114 @@
     </header>
 
     <main id="main-content" class="shell">
-      <section class="editorial-hero reveal" aria-labelledby="hero-title">
-        <div class="hero-layout">
+      <section class="liturgy-hero reveal" aria-labelledby="hero-title">
+        <img class="hero-bg" src="/art/cover/cover-concept-2.png" alt="Aconcagua conceptual cover" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
+        <div class="hero-grid">
           <article class="hero-copy">
-            <p class="hero-kicker" data-i18n="heroKicker">Altitude. Silence. Consequence.</p>
-            <h1 id="hero-title" data-i18n="heroTitle">Enter a mountain climate, not a product page.</h1>
-            <p class="hero-essay" data-i18n="heroEssay">Aconcagua: Stone Sentinel is designed as an editorial alpine artifact: contemplative, procedural, emotionally restrained. You do not conquer this mountain. You negotiate with it through timing, perception, and return discipline.</p>
-            <div class="hero-meta-strip">
-              <span data-i18n="heroMeta1">Public release v1.4.7 · Flow: title → setup → onboarding → game → outcomes.</span>
-              <span data-i18n="heroMeta2">System core: Environmental Pressure × Body Tolerance with confidence and trend layers.</span>
-            </div>
-            <div class="hero-actions" role="group" aria-label="Main actions">
-              <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play the current expedition build</a>
-              <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="ctaWhitepaper">Open whitepaper</a>
-              <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" target="_blank" rel="noopener noreferrer" data-i18n="ctaRepo">View repository</a>
+            <div class="hero-plate">
+              <p class="hero-kicker" data-i18n="heroKicker">Liturgy of Exposure · Umbral Mineral</p>
+              <h1 id="hero-title" data-i18n="heroTitle">The mountain is not background. It is authority.</h1>
+              <p class="hero-essay" data-i18n="heroEssay">This public surface is designed as a dossier before a trailer: less spectacle, more gravity. You enter climate, duration, and uncertainty first—then mechanics, then outcomes.</p>
+              <div class="hero-meta">
+                <span data-i18n="heroMeta1">Public release: v1.4.7 · Flow: title → setup → onboarding → game → outcomes.</span>
+                <span data-i18n="heroMeta2">Core model: Environmental Pressure × Body Tolerance, interpreted through confidence and trend.</span>
+              </div>
+              <div class="hero-cta">
+                <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Enter expedition build</a>
+                <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="ctaWhitepaper">Open whitepaper</a>
+                <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" target="_blank" rel="noopener noreferrer" data-i18n="ctaRepo">Repository</a>
+              </div>
             </div>
           </article>
-
-          <aside class="hero-visual-wrap" aria-hidden="true">
-            <span class="hero-altitude-note" data-i18n="heroAltitude">Andes frontier · Aconcagua massif · atmospheric fiction</span>
-            <figure class="hero-visual" id="hero-visual">
-              <img src="/art/cover/cover-concept-1.png" alt="Aconcagua atmosphere" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
-            </figure>
+          <aside class="hero-side" aria-hidden="true">
+            <span class="hero-rune" data-i18n="heroRune">cover → landscape → body · slow reading interface</span>
           </aside>
         </div>
       </section>
 
-      <section id="manifesto" class="section reveal" aria-labelledby="manifesto-title">
+      <section id="syntax" class="section reveal" aria-labelledby="syntax-title">
         <div class="section-head">
-          <p class="section-kicker" data-i18n="manifestoKicker">Editorial premise</p>
-          <h2 id="manifesto-title" data-i18n="manifestoTitle">Mountain-first fiction with systemic ethics.</h2>
-          <p class="section-intro" data-i18n="manifestoIntro">The interface is intentionally slow and breathable. Each block is written to feel like field notes from altitude, where certainty narrows, weather shifts silently, and safe return is a first-class result.</p>
+          <p class="section-kicker" data-i18n="syntaxKicker">Visual syntax</p>
+          <h2 id="syntax-title" data-i18n="syntaxTitle">Umbral → Paisaje → Cuerpo</h2>
+          <p class="section-intro" data-i18n="syntaxIntro">The repository’s public art grammar is treated as narrative sequence: threshold image, atmospheric doctrine, then human scale for UI consequences.</p>
         </div>
-        <div class="cards-grid">
-          <article class="card"><h3 data-i18n="pillar1Title">Environmental authority</h3><p data-i18n="pillar1Body">Altitude, weather, terrain, and time windows dictate terms. Player agency exists inside constraints.</p></article>
-          <article class="card"><h3 data-i18n="pillar2Title">Partial perception</h3><p data-i18n="pillar2Body">Signals are interpreted through confidence and trend, never omniscient dashboards.</p></article>
-          <article class="card"><h3 data-i18n="pillar3Title">Plural outcomes</h3><p data-i18n="pillar3Body">Summit is one ending. Strategic retreat and safe return carry equal narrative legitimacy.</p></article>
+
+        <div class="syntax-grid">
+          <article class="syntax-card">
+            <img src="/art/cover/cover-concept-1.png" alt="Threshold cover" data-i18n-attr="syntaxAlt1:alt" loading="lazy" />
+            <div class="syntax-overlay"><h3 data-i18n="syntaxCard1Title">Umbral</h3><p data-i18n="syntaxCard1Body">Entry as climate, not promotion. The cover establishes humility before interaction.</p></div>
+          </article>
+          <article class="syntax-card">
+            <img src="/art/concept-art/curated/concept-curated-4.webp" alt="Atmospheric landscape" data-i18n-attr="syntaxAlt2:alt" loading="lazy" />
+            <div class="syntax-overlay"><h3 data-i18n="syntaxCard2Title">Paisaje</h3><p data-i18n="syntaxCard2Body">Scale and solitude remain persistent conditions, not dramatic one-off events.</p></div>
+          </article>
+          <article class="syntax-card">
+            <img src="/art/characters/francisco-aguirre.png" alt="Human scale portrait" data-i18n-attr="syntaxAlt3:alt" loading="lazy" />
+            <div class="syntax-overlay"><h3 data-i18n="syntaxCard3Title">Cuerpo</h3><p data-i18n="syntaxCard3Body">Character is the measure of exposure: body limits translate climate into decision.</p></div>
+          </article>
         </div>
       </section>
 
-      <section id="tempo" class="section reveal" aria-labelledby="tempo-title">
+      <section id="dossier" class="section reveal" aria-labelledby="dossier-title">
         <div class="section-head">
-          <p class="section-kicker" data-i18n="tempoKicker">Traverse rhythm</p>
-          <h2 id="tempo-title" data-i18n="tempoTitle">Designed as progression through air, not as feature checklist.</h2>
+          <p class="section-kicker" data-i18n="dossierKicker">Systemic dossier</p>
+          <h2 id="dossier-title" data-i18n="dossierTitle">A readable hostile system, not a chaos fantasy.</h2>
+          <p class="section-intro" data-i18n="dossierIntro">The mountain remains legible, but never trivial. Signals, trend, and confidence mediate every tactical choice.</p>
         </div>
-        <div class="pace-grid">
-          <article class="pace-column">
-            <div class="tempo-line">
-              <div class="tempo-step"><strong data-i18n="tempoStep1Title">Observe</strong><span data-i18n="tempoStep1Body">Read shifting context before committing effort.</span></div>
-              <div class="tempo-step"><strong data-i18n="tempoStep2Title">Commit</strong><span data-i18n="tempoStep2Body">Spend time and resources; pressure immediately answers.</span></div>
-              <div class="tempo-step"><strong data-i18n="tempoStep3Title">Interpret</strong><span data-i18n="tempoStep3Body">Assess confidence, trend, and body-state drift.</span></div>
-              <div class="tempo-step"><strong data-i18n="tempoStep4Title">Decide again</strong><span data-i18n="tempoStep4Body">Continue, hold, descend, or sleep with consequence memory.</span></div>
+
+        <div class="dossier-layout">
+          <article class="panel">
+            <div class="flow-line">
+              <div class="flow-node"><small data-i18n="flow1Label">Input</small><span data-i18n="flow1">Action + resource/time expenditure</span></div>
+              <div class="flow-node"><small data-i18n="flow2Label">Pressure</small><span data-i18n="flow2">Environmental Pressure versus Body Tolerance</span></div>
+              <div class="flow-node"><small data-i18n="flow3Label">Perception</small><span data-i18n="flow3">Observed signal + confidence + trend persistence</span></div>
+              <div class="flow-node"><small data-i18n="flow4Label">Outcome</small><span data-i18n="flow4">State mutation + debrief-class outcome memory</span></div>
             </div>
           </article>
-          <article class="pace-column signal-board" aria-label="System signal guide">
-            <div class="signal-row"><span class="signal-label" data-i18n="signal1Label">Environmental pressure</span><span class="signal-value" data-i18n="signal1Value">Composed from altitude, weather, terrain and persistence.</span></div>
-            <div class="signal-row"><span class="signal-label" data-i18n="signal2Label">Body tolerance</span><span class="signal-value" data-i18n="signal2Value">Capacity vs fatigue/exposure under current difficulty profile.</span></div>
-            <div class="signal-row"><span class="signal-label" data-i18n="signal3Label">Confidence + trend</span><span class="signal-value" data-i18n="signal3Value">Perceived signal quality that can deteriorate before visible failure.</span></div>
+          <article class="panel metrics" aria-label="Mountain ethics panel">
+            <div class="metric"><span class="metric-label" data-i18n="metric1Label">Ethical premise</span><div class="metric-value" data-i18n="metric1Value">Summit is optional. Safe return is first-class.</div></div>
+            <div class="metric"><span class="metric-label" data-i18n="metric2Label">Atmospheric mode</span><div class="metric-value" data-i18n="metric2Value">Persistent climate over event spectacle.</div></div>
+            <div class="metric"><span class="metric-label" data-i18n="metric3Label">Narrative texture</span><div class="metric-value" data-i18n="metric3Value">Dossier and field-notes cadence over trailer pacing.</div></div>
           </article>
         </div>
       </section>
 
-      <section id="system" class="section reveal" aria-labelledby="system-title">
+      <section id="gallery" class="section reveal" aria-labelledby="gallery-title">
         <div class="section-head">
-          <p class="section-kicker" data-i18n="systemKicker">System atlas</p>
-          <h2 id="system-title" data-i18n="systemTitle">A coherent EP/BT model with auditable contracts.</h2>
-          <p class="section-intro" data-i18n="systemIntro">The public site, docs, tests, and simulator references are synchronized so claims remain verifiable. The flow below mirrors runtime logic rather than marketing abstraction.</p>
+          <p class="section-kicker" data-i18n="galleryKicker">Atmospheric archive</p>
+          <h2 id="gallery-title" data-i18n="galleryTitle">Curated concept art as reading material, not decoration.</h2>
         </div>
 
-        <article class="route-board">
-          <div class="route-strip">
-            <div class="route-node"><small data-i18n="routeNode1Label">Input</small><span data-i18n="routeNode1">Action + time/resource spend</span></div>
-            <div class="route-node"><small data-i18n="routeNode2Label">Resolution</small><span data-i18n="routeNode2">Environmental Pressure ↔ Body Tolerance</span></div>
-            <div class="route-node"><small data-i18n="routeNode3Label">Perception</small><span data-i18n="routeNode3">Observed signal, confidence band, trend</span></div>
-            <div class="route-node"><small data-i18n="routeNode4Label">State memory</small><span data-i18n="routeNode4">Outcome class + persistent run telemetry</span></div>
-          </div>
+        <article class="gallery">
+          <figure><img src="/art/concept-art/curated/concept-curated-1.png" alt="Curated concept panel 1" data-i18n-attr="galleryAlt1:alt" loading="lazy" /><figcaption data-i18n="galleryCap1">Scale & solitude</figcaption></figure>
+          <figure><img src="/art/concept-art/curated/concept-curated-2.png" alt="Curated concept panel 2" data-i18n-attr="galleryAlt2:alt" loading="lazy" /><figcaption data-i18n="galleryCap2">Ambiguous route</figcaption></figure>
+          <figure><img src="/art/concept-art/curated/concept-curated-3.webp" alt="Curated concept panel 3" data-i18n-attr="galleryAlt3:alt" loading="lazy" /><figcaption data-i18n="galleryCap3">Climate persistence</figcaption></figure>
+          <figure><img src="/art/concept-art/curated/concept-curated-4.webp" alt="Curated concept panel 4" data-i18n-attr="galleryAlt4:alt" loading="lazy" /><figcaption data-i18n="galleryCap4">Mountain authority</figcaption></figure>
         </article>
       </section>
 
-      <section id="resources" class="section reveal" aria-labelledby="resources-title">
+      <section class="section reveal" aria-labelledby="character-title">
         <div class="section-head">
-          <p class="section-kicker" data-i18n="resourcesKicker">Evidence and channels</p>
-          <h2 id="resources-title" data-i18n="resourcesTitle">Primary sources for players, press, collaborators, and reviewers.</h2>
+          <p class="section-kicker" data-i18n="characterKicker">Human scale</p>
+          <h2 id="character-title" data-i18n="characterTitle">Bodies are the instrument of risk, not the center of the frame.</h2>
         </div>
-        <div class="resource-grid">
-          <article class="card"><h3 data-i18n="resource1Title">Whitepaper</h3><p data-i18n="resource1Body">Conceptual frame and mountain-first commitments.</p><div class="hero-actions"><a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="resource1Cta">Open whitepaper</a></div></article>
-          <article class="card"><h3 data-i18n="resource2Title">Roadmap</h3><p data-i18n="resource2Body">Public execution phases and implementation status.</p><div class="hero-actions"><a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-doc-link="roadmap" data-i18n="resource2Cta">Open roadmap</a></div></article>
-          <article class="card"><h3 data-i18n="resource3Title">Repository + README</h3><p data-i18n="resource3Body">Codebase, governance, and technical context.</p><div class="hero-actions"><a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-doc-link="readme" data-i18n="resource3Cta">Open README</a></div></article>
-          <article class="card"><h3 data-i18n="resource4Title">Official channels</h3><p data-i18n="resource4Body">Follow the project or contact the team directly.</p><div class="hero-actions"><a class="btn btn-secondary" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="resource4Ig">Instagram</a><a class="btn btn-secondary" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="resource4Mail">Email</a></div></article>
+        <div class="character-strip">
+          <article class="character-card"><img src="/art/characters/laura-kim.png" alt="Laura Kim portrait" data-i18n-attr="charAlt1:alt" loading="lazy" /><div class="character-meta"><h3 data-i18n="charName1">Laura Kim</h3><p data-i18n="charBody1">Operational clarity under pressure.</p></div></article>
+          <article class="character-card"><img src="/art/characters/irina-orlova.png" alt="Irina Orlova portrait" data-i18n-attr="charAlt2:alt" loading="lazy" /><div class="character-meta"><h3 data-i18n="charName2">Irina Orlova</h3><p data-i18n="charBody2">Signal interpretation through volatile weather windows.</p></div></article>
+          <article class="character-card"><img src="/art/characters/daniela-de-rossi.png" alt="Daniela De Rossi portrait" data-i18n-attr="charAlt3:alt" loading="lazy" /><div class="character-meta"><h3 data-i18n="charName3">Daniela De Rossi</h3><p data-i18n="charBody3">Observation discipline where confidence drifts first.</p></div></article>
         </div>
       </section>
 
-      <section class="cta-band reveal" aria-labelledby="final-title">
+      <section id="play" class="cta-band reveal" aria-labelledby="final-title">
         <div class="section-head">
           <p class="section-kicker" data-i18n="finalKicker">Primary action</p>
-          <h2 id="final-title" data-i18n="finalTitle">Run one expedition, then read your debrief like a field report.</h2>
-          <p class="section-intro" data-i18n="finalIntro">The fastest path to understanding this project is play first, analysis second.</p>
+          <h2 id="final-title" data-i18n="finalTitle">Enter one run. Then read outcome as mountain evidence.</h2>
+          <p class="section-intro" data-i18n="finalIntro">This project is best understood in sequence: play, debrief, then document cross-check.</p>
         </div>
-        <div class="hero-actions">
+        <div class="hero-cta">
           <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalPlay">Start expedition</a>
           <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-doc-link="repoTruth" data-i18n="finalTruth">Open repo truth</a>
+          <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-doc-link="roadmap" data-i18n="finalRoadmap">Open roadmap</a>
         </div>
       </section>
 
@@ -352,7 +415,7 @@
         <div class="footer-grid">
           <section>
             <h3 data-i18n="footerProjectTitle">Project</h3>
-            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Editorial mountain systems.</p>
+            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Liturgia de la Intemperie.</p>
           </section>
           <section>
             <h3 data-i18n="footerContactTitle">Contact</h3>
@@ -382,106 +445,102 @@
     <script>
       const TRANSLATIONS = {
         en: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Editorial alpine experience',
-          pageDescription: 'Aconcagua: Stone Sentinel. Enter an editorial high-mountain atmosphere, inspect the EP/BT system, and play the current web prototype.',
+          pageTitle: 'Aconcagua: Stone Sentinel — Liturgy of Exposure',
+          pageDescription: 'Liturgia de la Intemperie: an editorial alpine dossier for Aconcagua: Stone Sentinel. Enter the climate, inspect the system, and play the current prototype.',
           skip: 'Skip to main content',
-          brandSub: 'Public editorial mountain project',
-          navManifesto: 'Manifesto', navTempo: 'Tempo', navSystem: 'System', navResources: 'Resources',
-          heroKicker: 'Altitude. Silence. Consequence.',
-          heroTitle: 'Enter a mountain climate, not a product page.',
-          heroEssay: 'Aconcagua: Stone Sentinel is designed as an editorial alpine artifact: contemplative, procedural, emotionally restrained. You do not conquer this mountain. You negotiate with it through timing, perception, and return discipline.',
-          heroMeta1: 'Public release v1.4.7 · Flow: title → setup → onboarding → game → outcomes.',
-          heroMeta2: 'System core: Environmental Pressure × Body Tolerance with confidence and trend layers.',
-          heroAltitude: 'Andes frontier · Aconcagua massif · atmospheric fiction',
-          heroImageAlt: 'Aconcagua atmospheric key art',
-          ctaPlay: 'Play the current expedition build', ctaWhitepaper: 'Open whitepaper', ctaRepo: 'View repository',
-          manifestoKicker: 'Editorial premise',
-          manifestoTitle: 'Mountain-first fiction with systemic ethics.',
-          manifestoIntro: 'The interface is intentionally slow and breathable. Each block is written to feel like field notes from altitude, where certainty narrows, weather shifts silently, and safe return is a first-class result.',
-          pillar1Title: 'Environmental authority', pillar1Body: 'Altitude, weather, terrain, and time windows dictate terms. Player agency exists inside constraints.',
-          pillar2Title: 'Partial perception', pillar2Body: 'Signals are interpreted through confidence and trend, never omniscient dashboards.',
-          pillar3Title: 'Plural outcomes', pillar3Body: 'Summit is one ending. Strategic retreat and safe return carry equal narrative legitimacy.',
-          tempoKicker: 'Traverse rhythm',
-          tempoTitle: 'Designed as progression through air, not as feature checklist.',
-          tempoStep1Title: 'Observe', tempoStep1Body: 'Read shifting context before committing effort.',
-          tempoStep2Title: 'Commit', tempoStep2Body: 'Spend time and resources; pressure immediately answers.',
-          tempoStep3Title: 'Interpret', tempoStep3Body: 'Assess confidence, trend, and body-state drift.',
-          tempoStep4Title: 'Decide again', tempoStep4Body: 'Continue, hold, descend, or sleep with consequence memory.',
-          signal1Label: 'Environmental pressure', signal1Value: 'Composed from altitude, weather, terrain and persistence.',
-          signal2Label: 'Body tolerance', signal2Value: 'Capacity vs fatigue/exposure under current difficulty profile.',
-          signal3Label: 'Confidence + trend', signal3Value: 'Perceived signal quality that can deteriorate before visible failure.',
-          systemKicker: 'System atlas',
-          systemTitle: 'A coherent EP/BT model with auditable contracts.',
-          systemIntro: 'The public site, docs, tests, and simulator references are synchronized so claims remain verifiable. The flow below mirrors runtime logic rather than marketing abstraction.',
-          routeNode1Label: 'Input', routeNode1: 'Action + time/resource spend',
-          routeNode2Label: 'Resolution', routeNode2: 'Environmental Pressure ↔ Body Tolerance',
-          routeNode3Label: 'Perception', routeNode3: 'Observed signal, confidence band, trend',
-          routeNode4Label: 'State memory', routeNode4: 'Outcome class + persistent run telemetry',
-          resourcesKicker: 'Evidence and channels',
-          resourcesTitle: 'Primary sources for players, press, collaborators, and reviewers.',
-          resource1Title: 'Whitepaper', resource1Body: 'Conceptual frame and mountain-first commitments.', resource1Cta: 'Open whitepaper',
-          resource2Title: 'Roadmap', resource2Body: 'Public execution phases and implementation status.', resource2Cta: 'Open roadmap',
-          resource3Title: 'Repository + README', resource3Body: 'Codebase, governance, and technical context.', resource3Cta: 'Open README',
-          resource4Title: 'Official channels', resource4Body: 'Follow the project or contact the team directly.', resource4Ig: 'Instagram', resource4Mail: 'Email',
+          brandSub: 'Liturgy of Exposure · public build',
+          navSyntax: 'Syntax', navDossier: 'Dossier', navGallery: 'Atmosphere', navPlay: 'Play',
+          heroKicker: 'Liturgy of Exposure · Umbral Mineral',
+          heroTitle: 'The mountain is not background. It is authority.',
+          heroEssay: 'This public surface is designed as a dossier before a trailer: less spectacle, more gravity. You enter climate, duration, and uncertainty first—then mechanics, then outcomes.',
+          heroMeta1: 'Public release: v1.4.7 · Flow: title → setup → onboarding → game → outcomes.',
+          heroMeta2: 'Core model: Environmental Pressure × Body Tolerance, interpreted through confidence and trend.',
+          heroRune: 'cover → landscape → body · slow reading interface',
+          heroImageAlt: 'Aconcagua conceptual cover',
+          ctaPlay: 'Enter expedition build', ctaWhitepaper: 'Open whitepaper', ctaRepo: 'Repository',
+          syntaxKicker: 'Visual syntax', syntaxTitle: 'Umbral → Paisaje → Cuerpo',
+          syntaxIntro: 'The repository’s public art grammar is treated as narrative sequence: threshold image, atmospheric doctrine, then human scale for UI consequences.',
+          syntaxCard1Title: 'Umbral', syntaxCard1Body: 'Entry as climate, not promotion. The cover establishes humility before interaction.',
+          syntaxCard2Title: 'Paisaje', syntaxCard2Body: 'Scale and solitude remain persistent conditions, not dramatic one-off events.',
+          syntaxCard3Title: 'Cuerpo', syntaxCard3Body: 'Character is the measure of exposure: body limits translate climate into decision.',
+          syntaxAlt1: 'Threshold cover image', syntaxAlt2: 'Atmospheric landscape image', syntaxAlt3: 'Human scale portrait image',
+          dossierKicker: 'Systemic dossier',
+          dossierTitle: 'A readable hostile system, not a chaos fantasy.',
+          dossierIntro: 'The mountain remains legible, but never trivial. Signals, trend, and confidence mediate every tactical choice.',
+          flow1Label: 'Input', flow1: 'Action + resource/time expenditure',
+          flow2Label: 'Pressure', flow2: 'Environmental Pressure versus Body Tolerance',
+          flow3Label: 'Perception', flow3: 'Observed signal + confidence + trend persistence',
+          flow4Label: 'Outcome', flow4: 'State mutation + debrief-class outcome memory',
+          metric1Label: 'Ethical premise', metric1Value: 'Summit is optional. Safe return is first-class.',
+          metric2Label: 'Atmospheric mode', metric2Value: 'Persistent climate over event spectacle.',
+          metric3Label: 'Narrative texture', metric3Value: 'Dossier and field-notes cadence over trailer pacing.',
+          galleryKicker: 'Atmospheric archive',
+          galleryTitle: 'Curated concept art as reading material, not decoration.',
+          galleryAlt1: 'Curated concept panel one', galleryAlt2: 'Curated concept panel two', galleryAlt3: 'Curated concept panel three', galleryAlt4: 'Curated concept panel four',
+          galleryCap1: 'Scale & solitude', galleryCap2: 'Ambiguous route', galleryCap3: 'Climate persistence', galleryCap4: 'Mountain authority',
+          characterKicker: 'Human scale',
+          characterTitle: 'Bodies are the instrument of risk, not the center of the frame.',
+          charAlt1: 'Laura Kim portrait', charAlt2: 'Irina Orlova portrait', charAlt3: 'Daniela De Rossi portrait',
+          charName1: 'Laura Kim', charBody1: 'Operational clarity under pressure.',
+          charName2: 'Irina Orlova', charBody2: 'Signal interpretation through volatile weather windows.',
+          charName3: 'Daniela De Rossi', charBody3: 'Observation discipline where confidence drifts first.',
           finalKicker: 'Primary action',
-          finalTitle: 'Run one expedition, then read your debrief like a field report.',
-          finalIntro: 'The fastest path to understanding this project is play first, analysis second.',
-          finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
+          finalTitle: 'Enter one run. Then read outcome as mountain evidence.',
+          finalIntro: 'This project is best understood in sequence: play, debrief, then document cross-check.',
+          finalPlay: 'Start expedition', finalTruth: 'Open repo truth', finalRoadmap: 'Open roadmap',
           footerProjectTitle: 'Project',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Editorial mountain systems.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.7 · Liturgia de la Intemperie.',
           footerContactTitle: 'Contact', footerContactEmail: 'Official email', footerContactInstagram: 'Instagram', footerContactGithub: 'GitHub repository',
           footerLegalTitle: 'Legal & governance', footerLegalLicense: 'License', footerLegalSecurity: 'Security policy', footerLegalConduct: 'Code of conduct',
           footerOrigin: 'Made in Argentina · Argentina-based project.',
           footerCopyright: '© 2026 Aconcagua: Stone Sentinel.'
         },
         es: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Experiencia editorial alpina',
-          pageDescription: 'Aconcagua: Stone Sentinel. Entrá a una atmósfera editorial de alta montaña, inspeccioná el sistema EP/BT y jugá el prototipo web actual.',
+          pageTitle: 'Aconcagua: Stone Sentinel — Liturgia de la Intemperie',
+          pageDescription: 'Liturgia de la Intemperie: dossier editorial alpino para Aconcagua: Stone Sentinel. Entrá al clima, inspeccioná el sistema y jugá el prototipo actual.',
           skip: 'Saltar al contenido principal',
-          brandSub: 'Proyecto público editorial de montaña',
-          navManifesto: 'Manifiesto', navTempo: 'Ritmo', navSystem: 'Sistema', navResources: 'Recursos',
-          heroKicker: 'Altitud. Silencio. Consecuencia.',
-          heroTitle: 'Entrá a un clima de montaña, no a una landing de producto.',
-          heroEssay: 'Aconcagua: Stone Sentinel está pensado como un artefacto editorial alpino: contemplativo, procedural y emocionalmente sobrio. No se conquista esta montaña. Se negocia con timing, percepción y disciplina de retorno.',
-          heroMeta1: 'Release pública v1.4.7 · Flujo: título → setup → onboarding → juego → outcomes.',
-          heroMeta2: 'Núcleo sistémico: Presión Ambiental × Tolerancia Corporal con capas de confianza y tendencia.',
-          heroAltitude: 'Frontera andina · macizo Aconcagua · ficción atmosférica',
-          heroImageAlt: 'Arte atmosférico de Aconcagua',
-          ctaPlay: 'Jugar build de expedición actual', ctaWhitepaper: 'Abrir whitepaper', ctaRepo: 'Ver repositorio',
-          manifestoKicker: 'Premisa editorial',
-          manifestoTitle: 'Ficción mountain-first con ética sistémica.',
-          manifestoIntro: 'La interfaz respira a propósito. Cada bloque funciona como nota de campo en altura, donde la certeza se achica, el clima gira sin aviso y el retorno seguro vale como resultado principal.',
-          pillar1Title: 'Autoridad ambiental', pillar1Body: 'Altitud, clima, terreno y ventanas temporales marcan las reglas. La agencia del jugador existe dentro de límites.',
-          pillar2Title: 'Percepción parcial', pillar2Body: 'Las señales se leen por confianza y tendencia, nunca por tableros omniscientes.',
-          pillar3Title: 'Outcomes plurales', pillar3Body: 'La cumbre es una salida. La retirada estratégica y el retorno seguro tienen la misma legitimidad narrativa.',
-          tempoKicker: 'Ritmo de travesía',
-          tempoTitle: 'Diseñado como progresión en el aire, no como checklist de features.',
-          tempoStep1Title: 'Observar', tempoStep1Body: 'Leer el contexto cambiante antes de comprometer esfuerzo.',
-          tempoStep2Title: 'Comprometer', tempoStep2Body: 'Gastar tiempo y recursos; la presión responde de inmediato.',
-          tempoStep3Title: 'Interpretar', tempoStep3Body: 'Evaluar confianza, tendencia y deriva corporal.',
-          tempoStep4Title: 'Decidir de nuevo', tempoStep4Body: 'Continuar, sostener, descender o dormir con memoria de consecuencias.',
-          signal1Label: 'Presión ambiental', signal1Value: 'Compuesta por altitud, clima, terreno y persistencia.',
-          signal2Label: 'Tolerancia corporal', signal2Value: 'Capacidad frente a fatiga/exposición bajo el perfil de dificultad.',
-          signal3Label: 'Confianza + tendencia', signal3Value: 'Calidad percibida de señal que puede degradarse antes de una falla visible.',
-          systemKicker: 'Atlas sistémico',
-          systemTitle: 'Modelo EP/BT coherente con contratos auditables.',
-          systemIntro: 'Sitio público, docs, tests y referencias de simulación están sincronizados para que los claims sean verificables. El flujo de abajo refleja lógica runtime, no abstracción de marketing.',
-          routeNode1Label: 'Entrada', routeNode1: 'Acción + gasto de tiempo/recursos',
-          routeNode2Label: 'Resolución', routeNode2: 'Presión Ambiental ↔ Tolerancia Corporal',
-          routeNode3Label: 'Percepción', routeNode3: 'Señal observada, banda de confianza, tendencia',
-          routeNode4Label: 'Memoria de estado', routeNode4: 'Clase de outcome + telemetría persistente de corrida',
-          resourcesKicker: 'Evidencia y canales',
-          resourcesTitle: 'Fuentes primarias para jugadores, prensa, colaboradores y reviewers.',
-          resource1Title: 'Whitepaper', resource1Body: 'Marco conceptual y compromisos mountain-first.', resource1Cta: 'Abrir whitepaper',
-          resource2Title: 'Roadmap', resource2Body: 'Fases públicas de ejecución y estado de implementación.', resource2Cta: 'Abrir roadmap',
-          resource3Title: 'Repositorio + README', resource3Body: 'Código, gobernanza y contexto técnico.', resource3Cta: 'Abrir README',
-          resource4Title: 'Canales oficiales', resource4Body: 'Seguí el proyecto o contactá al equipo directamente.', resource4Ig: 'Instagram', resource4Mail: 'Email',
+          brandSub: 'Liturgia de la Intemperie · build público',
+          navSyntax: 'Sintaxis', navDossier: 'Dossier', navGallery: 'Atmósfera', navPlay: 'Jugar',
+          heroKicker: 'Liturgia de la Intemperie · Umbral Mineral',
+          heroTitle: 'La montaña no es fondo. Es autoridad.',
+          heroEssay: 'Esta superficie pública está diseñada como dossier antes que tráiler: menos espectáculo, más gravedad. Primero entrás al clima, la duración y la incertidumbre; después a las mecánicas y outcomes.',
+          heroMeta1: 'Release pública: v1.4.7 · Flujo: título → setup → onboarding → juego → outcomes.',
+          heroMeta2: 'Modelo central: Presión Ambiental × Tolerancia Corporal, interpretado por confianza y tendencia.',
+          heroRune: 'cover → paisaje → cuerpo · interfaz de lectura lenta',
+          heroImageAlt: 'Cover conceptual de Aconcagua',
+          ctaPlay: 'Entrar al build de expedición', ctaWhitepaper: 'Abrir whitepaper', ctaRepo: 'Repositorio',
+          syntaxKicker: 'Sintaxis visual', syntaxTitle: 'Umbral → Paisaje → Cuerpo',
+          syntaxIntro: 'La gramática de arte público del repo se usa como secuencia narrativa: imagen umbral, doctrina atmosférica y luego escala humana para consecuencias de interfaz.',
+          syntaxCard1Title: 'Umbral', syntaxCard1Body: 'Entrada como clima, no como promoción. El cover establece humildad antes de interactuar.',
+          syntaxCard2Title: 'Paisaje', syntaxCard2Body: 'Escala y soledad como condición persistente, no como evento dramático aislado.',
+          syntaxCard3Title: 'Cuerpo', syntaxCard3Body: 'El personaje mide la exposición: límites físicos traducen clima en decisión.',
+          syntaxAlt1: 'Imagen cover de umbral', syntaxAlt2: 'Imagen de paisaje atmosférico', syntaxAlt3: 'Imagen de retrato escala humana',
+          dossierKicker: 'Dossier sistémico',
+          dossierTitle: 'Sistema hostil pero legible, no fantasía caótica.',
+          dossierIntro: 'La montaña sigue siendo legible, pero nunca trivial. Señal, tendencia y confianza median cada decisión táctica.',
+          flow1Label: 'Entrada', flow1: 'Acción + gasto de recursos/tiempo',
+          flow2Label: 'Presión', flow2: 'Presión Ambiental versus Tolerancia Corporal',
+          flow3Label: 'Percepción', flow3: 'Señal observada + confianza + persistencia de tendencia',
+          flow4Label: 'Outcome', flow4: 'Mutación de estado + memoria de outcome para debrief',
+          metric1Label: 'Premisa ética', metric1Value: 'La cumbre es opcional. El retorno seguro es primera clase.',
+          metric2Label: 'Modo atmosférico', metric2Value: 'Clima persistente por encima de espectáculo por evento.',
+          metric3Label: 'Textura narrativa', metric3Value: 'Cadencia de dossier y notas de campo por encima del ritmo tráiler.',
+          galleryKicker: 'Archivo atmosférico',
+          galleryTitle: 'Arte conceptual curado como material de lectura, no decoración.',
+          galleryAlt1: 'Panel conceptual curado uno', galleryAlt2: 'Panel conceptual curado dos', galleryAlt3: 'Panel conceptual curado tres', galleryAlt4: 'Panel conceptual curado cuatro',
+          galleryCap1: 'Escala y soledad', galleryCap2: 'Ruta ambigua', galleryCap3: 'Persistencia climática', galleryCap4: 'Autoridad de montaña',
+          characterKicker: 'Escala humana',
+          characterTitle: 'Los cuerpos son instrumento de riesgo, no centro del encuadre.',
+          charAlt1: 'Retrato de Laura Kim', charAlt2: 'Retrato de Irina Orlova', charAlt3: 'Retrato de Daniela De Rossi',
+          charName1: 'Laura Kim', charBody1: 'Claridad operativa bajo presión.',
+          charName2: 'Irina Orlova', charBody2: 'Interpretación de señal en ventanas climáticas volátiles.',
+          charName3: 'Daniela De Rossi', charBody3: 'Disciplina de observación cuando la confianza deriva primero.',
           finalKicker: 'Acción principal',
-          finalTitle: 'Jugá una expedición y después leé el debrief como reporte de campo.',
-          finalIntro: 'La forma más rápida de entender el proyecto es jugar primero y analizar después.',
-          finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
+          finalTitle: 'Entrá a una corrida. Después leé el outcome como evidencia de montaña.',
+          finalIntro: 'La mejor lectura del proyecto ocurre en secuencia: jugar, debrief, y cruce con documentos.',
+          finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth', finalRoadmap: 'Abrir roadmap',
           footerProjectTitle: 'Proyecto',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.7 · Sistemas editoriales de montaña.',
+          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.7 · Liturgia de la Intemperie.',
           footerContactTitle: 'Contacto', footerContactEmail: 'Email oficial', footerContactInstagram: 'Instagram', footerContactGithub: 'Repositorio en GitHub',
           footerLegalTitle: 'Legal y gobernanza', footerLegalLicense: 'Licencia', footerLegalSecurity: 'Política de seguridad', footerLegalConduct: 'Código de conducta',
           footerOrigin: 'Hecho en Argentina · Proyecto basado en Argentina.',
@@ -549,24 +608,6 @@
         items.forEach((el) => io.observe(el));
       }
 
-      function wireHeroTilt() {
-        const figure = document.getElementById('hero-visual');
-        if (!figure || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-        figure.addEventListener('pointermove', (event) => {
-          const rect = figure.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width;
-          const y = (event.clientY - rect.top) / rect.height;
-          const rx = (0.5 - y) * 4;
-          const ry = (x - 0.5) * 4;
-          figure.style.transform = `translateX(6%) rotateX(${rx}deg) rotateY(${ry}deg)`;
-        });
-
-        figure.addEventListener('pointerleave', () => {
-          figure.style.transform = '';
-        });
-      }
-
       function initLanguageSwitcher() {
         applyLanguage(PublicLang.detectInitialLang(TRANSLATIONS));
         PublicLang.wireLangButtons(applyLanguage);
@@ -574,7 +615,6 @@
 
       initLanguageSwitcher();
       wireReveal();
-      wireHeroTilt();
     </script>
   </body>
 </html>

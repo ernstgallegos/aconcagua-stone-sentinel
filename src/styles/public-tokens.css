@@ -1,49 +1,43 @@
 /* ═══════════════════════════════════════════════════════════════════
    public-tokens.css
-   Shared design tokens and base styles for public-facing surfaces.
-   Consumed by: index.html (landing), md-viewer.html (document viewer).
+   Liturgia de la Intemperie / Umbral Mineral token set
+   Shared by landing + md-viewer
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
   color-scheme: dark;
 
-  /* ── Background layers ── */
-  --bg-0: #070b11;
-  --bg-1: #0d1520;
-  --bg-2: #111c29;
+  /* ── Umbral Mineral palette ── */
+  --bg-0: #0b0f14;      /* Basalto Nocturno */
+  --bg-1: #121a24;      /* Pizarra Fría */
+  --bg-2: #1d2b3a;      /* Azul de Cornisa */
 
-  /* ── Surface layers ── */
-  --surface-0: #0f1926db;
-  --surface-1: #152233e0;
-  --surface-2: #1b2d41eb;
+  --surface-0: #121a24de;
+  --surface-1: #1b2634e3;
+  --surface-2: #24374ce8;
 
-  /* ── Borders ── */
-  --border-soft: #9cb1c53f;
-  --border-strong: #d4e1eb57;
+  --border-soft: #8fa4b53c;   /* Niebla Andina */
+  --border-strong: #dce8f052; /* Hielo Velado */
 
-  /* ── Text ── */
-  --text-main: #e5edf6;
-  --text-dim: #b4c2cf;
-  --text-muted: #8f9fb0;
+  --text-main: #dce8f0;  /* Hielo Velado */
+  --text-dim: #a8bbca;
+  --text-muted: #8fa4b5; /* Niebla Andina */
 
-  /* ── Accent palette ── */
-  --accent-ice: #d5e7ef;
-  --accent-mineral: #9fb8cb;
-  --accent-amber: #cfab84;
-  --accent-critical: #f0caa8;
+  --accent-ice: #dce8f0;
+  --accent-mineral: #8fa4b5;
+  --accent-amber: #b9966a;    /* Ocre de Altura */
+  --accent-copper: #8e6b4c;   /* Cobre Seco */
+  --accent-rose: #c88e86;     /* Rosa de Albor */
 
-  /* ── Border radius ── */
   --radius-xs: 10px;
   --radius-sm: 14px;
   --radius-md: 22px;
-  --radius-lg: 30px;
-  --radius-xl: 42px;
+  --radius-lg: 34px;
+  --radius-xl: 46px;
 
-  /* ── Shadows ── */
-  --shadow-soft: 0 14px 38px #0205098f;
-  --shadow-strong: 0 42px 120px #010307db;
+  --shadow-soft: 0 20px 50px #02060b99;
+  --shadow-strong: 0 52px 130px #000205d9;
 
-  /* ── Spacing scale ── */
   --space-1: 0.35rem;
   --space-2: 0.65rem;
   --space-3: 1rem;
@@ -52,7 +46,6 @@
   --space-6: 4rem;
   --space-7: 6rem;
 
-  /* ── Typography stacks ── */
   --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
   --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
   --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
@@ -67,9 +60,9 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1400px 760px at 86% -8%, #d7e3ed1a, transparent 60%),
-    radial-gradient(980px 520px at 8% -4%, #c092651c, transparent 58%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 46%, var(--bg-0) 100%);
+    radial-gradient(1300px 700px at 84% -8%, #dce8f012 0%, transparent 56%),
+    radial-gradient(920px 500px at 10% 2%, #b9966a1d 0%, transparent 58%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 45%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
@@ -82,31 +75,20 @@ body::before {
   pointer-events: none;
   background-image:
     linear-gradient(#ffffff05 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 44px 44px;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.22;
-  background: radial-gradient(circle at 40% 10%, #ffffff08 0%, transparent 46%);
+    linear-gradient(90deg, #ffffff03 1px, transparent 1px);
+  background-size: 42px 42px;
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
   display: inline-flex;
   gap: 0.2rem;
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 0.2rem;
-  background: #0d151fa8;
+  background: #0f151ea8;
 }
 
 .lang-btn {
@@ -124,7 +106,7 @@ a:hover { text-decoration: underline; }
 }
 
 .lang-btn[aria-pressed='true'] {
-  color: #081019;
+  color: #0a1118;
   background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
 }
 

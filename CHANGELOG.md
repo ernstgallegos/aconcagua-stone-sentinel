@@ -18,6 +18,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Deepened the landing redesign around the `art/` grammar (`cover/` → `concept-art/curated/` → `characters/`) by introducing the “Liturgia de la Intemperie” IA, Umbral Mineral palette tokens, multi-image atmospheric archive sections, and slower dossier-style pacing in `index.html` + shared token files.
 - Reworked `index.html` into a deeper editorial IA with new section ordering (`Manifesto`, `Traverse rhythm`, `System atlas`, `Evidence and channels`), added reveal/motion behaviors (mist drift, scroll reveals, hero tilt), and synchronized bilingual copy for all new content blocks.
 - Rebuilt the public landing visual direction in `index.html` and `src/styles/public-tokens.css` with an editorial alpine art direction (asymmetric atmospheric hero, slower section rhythm, layered geological depth, and restrained warm accents), and propagated the same tone palette into `prototype/web-v1/css/tokens.css` for cross-surface coherence.
 - Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
