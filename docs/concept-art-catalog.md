@@ -13,9 +13,12 @@ All images are **1080 × 1350 px** (4:5 portrait, Instagram ratio).
 
 ### Pairing convention
 
-Each consecutive odd/even pair (`1/2`, `3/4`, `5/6`, … `25/26`) shares the **same composition** with subtle color-grading differences (mean absolute pixel difference of 1–4 values per channel). The collection therefore represents **13 unique scenes**, each presented in two treatment variants.
+Each consecutive odd/even pair (`1/2`, `3/4`, `5/6`, … `25/26`) shares the **same underlying illustration**. The two folders differ in their intended use:
 
-Treatment differences between variants are minimal — typically a slight shift in color temperature or saturation (≤ 2 units per channel average). Both variants of each pair are suitable for the same use cases.
+- **`art/concept-art/curated/ig/`** (odd numbers) — clean illustrations **without any text overlay**. Suitable for documentation, web sections, in-game UI, and flexible marketing use.
+- **`art/cover/ig/`** (even numbers) — the same illustrations **with the title "ACONCAGUA: STONE SENTINEL" overlaid**, originally produced as promotional cover-art plates and Instagram promotional posts.
+
+The collection therefore represents **13 unique scenes**, each available in a text-free version and a titled promotional version.
 
 ---
 
