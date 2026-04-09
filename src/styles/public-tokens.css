@@ -1,61 +1,60 @@
 /* ═══════════════════════════════════════════════════════════════════
    public-tokens.css
    Shared design tokens and base styles for public-facing surfaces.
-   Consumed by: index.html (landing), md-viewer.html (document viewer).
-   Aligns with the token naming direction in prototype/web-v1/css/tokens.css.
+   Editorial alpine visual system refresh (v1.4.7+).
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #060a0f;
+  --bg-1: #0a121b;
+  --bg-2: #121d29;
 
   /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  --surface-0: #0f1925d1;
+  --surface-1: #162334df;
+  --surface-2: #22344be8;
 
   /* ── Borders ── */
-  --border-soft: #93a8bc3d;
-  --border-strong: #d7e6f252;
+  --border-soft: #95afc933;
+  --border-strong: #d4e3f655;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
+  --text-main: #edf3f9;
+  --text-dim: #b6c4d2;
   --text-muted: #8b9aab;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
-  --accent-critical: #f2d4af;
+  --accent-ice: #c8deee;
+  --accent-mineral: #98b5ca;
+  --accent-amber: #d9b58b;
+  --accent-critical: #f0cfa3;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
-  --radius-sm: 14px;
-  --radius-md: 22px;
-  --radius-lg: 30px;
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 36px;
 
   /* ── Shadows ── */
-  --shadow-soft: 0 16px 48px #05080d66;
-  --shadow-strong: 0 30px 80px #04070ccc;
+  --shadow-soft: 0 24px 60px #03070e7a;
+  --shadow-strong: 0 38px 100px #02050bcf;
 
   /* ── Spacing scale ── */
   --space-1: 0.35rem;
   --space-2: 0.65rem;
   --space-3: 1rem;
-  --space-4: 1.6rem;
-  --space-5: 2.5rem;
-  --space-6: 4rem;
-  --space-7: 6rem;
+  --space-4: 1.75rem;
+  --space-5: 3rem;
+  --space-6: 4.8rem;
+  --space-7: 7.2rem;
 
   /* ── Typography stacks ── */
-  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  --serif: "Cormorant Garamond", "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
   --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
-  --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+  --sans: "Inter", "Montserrat", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -65,31 +64,43 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.58;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1080px 620px at 82% -6%, #bfd6ec1c, transparent 60%),
+    radial-gradient(980px 560px at 14% -12%, #d9b58b14, transparent 58%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 36%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
-body::before {
+body::before,
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
   pointer-events: none;
+}
+
+body::before {
+  opacity: 0.28;
   background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+    radial-gradient(circle at 20% 18%, #ffffff0d 0 1px, transparent 2px),
+    radial-gradient(circle at 74% 66%, #ffffff08 0 1px, transparent 2px),
+    radial-gradient(circle at 50% 50%, #00000000 0 100%);
+  background-size: 220px 220px, 300px 300px, auto;
+}
+
+body::after {
+  mix-blend-mode: soft-light;
+  opacity: 0.18;
+  background:
+    linear-gradient(120deg, transparent 0%, #88a9c012 42%, transparent 78%),
+    linear-gradient(180deg, #00000000 0%, #00000026 100%);
 }
 
 a { color: var(--accent-ice); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
   display: inline-flex;
   gap: 0.2rem;

@@ -58,14 +58,14 @@
 }
 
 .title-shell {
-  text-align: center;
-  padding: 3rem 2rem;
+  text-align: left;
+  padding: clamp(2rem, 4vw, 3.4rem) clamp(1.35rem, 5vw, 4.25rem);
   flex: 1;
-  width: min(100%, 760px);
+  width: min(100%, 980px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-end;
   position: relative;
   z-index: 2;
 }
@@ -74,11 +74,11 @@
   width: 100%;
   max-width: none;
   justify-content: flex-end;
-  padding: 2rem 1.5rem 2.2rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.2rem, 5vw, 4rem);
 }
 
 .title-screen-advance {
-  width: min(100%, 32rem);
+  width: min(100%, 27rem);
   margin-top: auto;
   margin-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
   border: none;
@@ -87,8 +87,8 @@
   cursor: pointer;
   padding: 1.25rem 1rem;
   font-family: var(--heading);
-  font-size: 0.74rem;
-  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   border-radius: 999px;
   transition: opacity var(--dur-normal), transform var(--dur-fast), color var(--dur-normal);
@@ -114,7 +114,7 @@
   padding: 0.75rem 1rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--white) 26%, transparent);
-  background: rgba(9, 14, 21, 0.42);
+  background: rgba(9, 14, 21, 0.56);
   backdrop-filter: blur(8px);
   box-shadow: 0 24px 44px rgba(3, 6, 10, 0.36);
 }
@@ -126,8 +126,8 @@
 
 .startup-status-line {
   margin: 0.35rem auto 0;
-  width: min(100%, 32rem);
-  text-align: center;
+  width: min(100%, 27rem);
+  text-align: left;
   font-family: var(--heading);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -172,37 +172,39 @@
 
 .title-eyebrow {
   font-family: var(--heading); /* Decision 8 */
-  font-size: 0.875rem;
-  letter-spacing: 0.25em;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
   color: var(--stone);
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.05rem;
 }
 
 .title-main {
   font-family: var(--heading); /* Decision 8 */
-  font-size: clamp(1.75rem, 5vw, 2.8rem); /* Decision 9: 28px min */
-  font-weight: 700;
+  font-size: clamp(2.1rem, 6vw, 4.2rem);
+  font-weight: 600;
   color: var(--white);
-  letter-spacing: 0.05em;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+  line-height: 0.96;
+  margin-bottom: 0.65rem;
+  max-width: 11ch;
 }
 
 .title-sub {
   color: var(--stone);
-  font-size: 1rem;        /* Decision 9: exactly 16px */
+  font-size: 1rem;
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  max-width: 40ch;
 }
 
 .title-sentinel { color: var(--ice); }
 
 .title-divider {
-  width: 40px;
+  width: 52px;
   height: 1px;
   background: var(--border);
-  margin: 2rem auto;
+  margin: 1.6rem 0;
 }
 
 .title-tagline {
@@ -315,21 +317,21 @@
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(8, 13, 20, 0.35), rgba(8, 13, 20, 0.74)),
-    radial-gradient(circle at 78% 22%, rgba(185, 211, 230, 0.08), transparent 38%);
+    linear-gradient(180deg, rgba(8, 13, 20, 0.32), rgba(8, 13, 20, 0.78)),
+    radial-gradient(circle at 78% 22%, rgba(198, 220, 237, 0.12), transparent 38%);
 }
 
 .expedition-setup-shell {
-  max-width: 620px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-  border-radius: 20px;
-  background: linear-gradient(170deg, color-mix(in srgb, var(--surface2) 82%, #0b121d), color-mix(in srgb, var(--surface) 90%, #0b121d));
-  box-shadow: 0 30px 70px rgba(5, 9, 14, 0.45);
-  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border-radius: 24px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--surface2) 78%, #0b121d), color-mix(in srgb, var(--surface) 93%, #0b121d));
+  box-shadow: 0 34px 78px rgba(5, 9, 14, 0.52);
+  padding: clamp(1rem, 2.3vw, 1.75rem);
 }
 
 .intro-links-section {
