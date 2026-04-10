@@ -3,11 +3,11 @@
 ## TL;DR — Current calibration status
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
-- **Latest calibration evidence run date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
-- **Latest documentation consolidation review:** **2026-04-08** (post-`v1.4.7` docs pass; no new Monte Carlo batch added in this revision).
+- **Latest calibration evidence run date in this file:** **2026-04-10** (Monte Carlo section: “v1.4.7 (2026-04)”, run summary dated 2026-04-10).
+- **Latest documentation consolidation review:** **2026-04-10** (post-audit v1.4.7 docs pass; Monte Carlo batch re-executed and documented).
 - **Active calibration flags (canonical):**
-  - `none` (no currently open balance blockers documented after the post-`v1.4.7` review).
-  - `watch-next-batch`: rerun `npm run simulate` before the next release cut and update this file if any outcome band drifts beyond rollback thresholds.
+  - `none` (no currently open balance blockers documented after the v1.4.7 Monte Carlo run).
+  - `watch-next-batch` flag closed: v1.4.7 run confirmed no regression after modularization changes.
 
 ## Target metric bands (per character)
 
@@ -209,3 +209,70 @@ The simulator should be used to detect **structural regressions** (0% summit rat
 ### All characters within target bands?
 
 No — 25 band violations across 6 characters. All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.5.md` for the full violation table.
+
+---
+
+## Monte Carlo simulator results — v1.4.7 (2026-04)
+
+### Run summary
+
+- **Date:** 2026-04-10
+- **Total runs:** 1,500 (6 characters × 5 scenarios × 50 seeds each)
+- **Script:** `scripts/monte-carlo-web-v1.js`
+- **Engine version:** web-v1 / v1.4.7
+- **Policy:** `reasonablePolicy` (conservative AI agent)
+- **Difficulty:** Standard (neutral modifiers)
+- **Full report:** `docs/playtest-results/monte-carlo-v1.4.7.md`
+
+### Changes since v1.4.5
+
+- Fractional burn rates in `turn-rules.js`
+- Narrative module extraction (`ui/helpers/narrative.js`)
+- Carousel modularization (`ui/helpers/carousel.js`)
+- Character events expanded from 6 → 12 (2 per character)
+- Scenarios 02–04 now have distinct `difficultyModifiers`
+- Balance constants extracted to `engine/balance-config.js`
+- `characterEvent` field added to telemetry
+
+### Per-character summary
+
+| Character | Summit | Retreat | Collapse | Permit |
+|---|---:|---:|---:|---:|
+| Francisco Aguirre | 1.2% | 24.4% | 56.4% | 2.4% |
+| Laura Kim | 1.6% | 22.8% | 53.2% | 10.0% |
+| Erik Lundvall | 1.2% | 20.0% | 57.6% | 6.0% |
+| Daniela De Rossi | 0.0% | 22.0% | 62.8% | 0.0% |
+| Blake Harris | 0.0% | 19.2% | 63.6% | 0.0% |
+| Irina Orlova | 3.6% | 20.0% | 52.4% | 15.6% |
+
+### Comparison vs v1.4.5
+
+| Character | Summit Δ | Retreat Δ | Collapse Δ |
+|---|---:|---:|---:|
+| Francisco | 0.0 pp | −3.6 pp | −0.4 pp |
+| Laura | −2.0 pp | −7.6 pp | −1.6 pp |
+| Erik | −1.2 pp | −10.0 pp | +3.2 pp |
+| Daniela | 0.0 pp | −7.2 pp | 0.0 pp |
+| Blake | 0.0 pp | −13.2 pp | 0.0 pp |
+| Irina | +1.2 pp | −10.4 pp | +0.8 pp |
+
+### Interpretation
+
+Results are broadly consistent with v1.4.5. Summit rates remain in the 0%–3.6% range for the AI policy (target bands are 8%–20% for human players). The AI divergence is expected and documented. Key observations:
+
+1. **No structural regression**: 4 of 6 characters achieve non-zero summit rates.
+2. **Retreat rates decreased** across the board (−3.6 to −13.2 pp), likely due to the differentiated `difficultyModifiers` on scenarios 02–04 adding slight pressure.
+3. **Irina permit rate increased** to 15.6% (from 4.8%), likely due to her `exposureDelta` character event interacting with the differentiated scenario modifiers.
+4. **Daniela and Blake remain at 0% summit** — consistent with v1.4.5; the AI policy's conservative thresholds and their lower acclimatization rates prevent summit attempts.
+
+### Primary use: regression detection
+
+No characters dropped from non-zero to 0% summit rate compared to v1.4.5. The engine is confirmed working after the modularization and balance-config extraction changes.
+
+### All characters within target bands?
+
+No — 27 band violations across 6 characters (vs 25 in v1.4.5). All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.7.md` for the full violation table.
+
+### Calibration flag update
+
+`watch-next-batch` flag **closed**: v1.4.7 Monte Carlo confirms no structural regression after modularization, fractional burn, and balance-config extraction changes.

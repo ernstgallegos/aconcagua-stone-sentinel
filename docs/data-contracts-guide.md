@@ -192,6 +192,121 @@ After loading, `normalizeRouteData()` in `ui/helpers/data-config.js` transforms 
 
 ---
 
+## `data/scenarios.web-v1.json`
+
+Contains predefined scenarios and random-scenario archetype configuration.
+
+### Predefined scenario fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | `string` | Unique scenario identifier. |
+| `num` | `string` | Two-digit display number. |
+| `name` | `string` | Human-readable scenario name. |
+| `desc` | `string` | Short description. |
+| `intro` | `string` | Intro text shown at expedition start. |
+| `max_turns` | `number` | Maximum turns for this scenario. |
+| `seeds` | `number[]` | Array of 10 seed values for deterministic replay. |
+| `difficulty` | `string` | Difficulty tier: `Low`, `Medium`, `Hard`. |
+| `difficultyModifiers` | `object` | Engine modifier block (see below). |
+| `initial` | `object` | Starting state snapshot. |
+
+### Optional / internal fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `_designIntent` | `object` | Design annotations (not consumed by engine). Documents intended scenario behavior variations. Allowed keys: `weather_deterioration`, `terrain_growth`, `fatigue_growth`, `window_turns`, `post_window_deterioration`. These are data-dead fields preserved as design documentation for future implementation consideration. |
+
+### Random scenario archetype `tweak` fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `_acclimatizationBonus` | `number` | Additive acclimatization bonus applied at run start via `startGame()`. Read in `screens.js` during game initialization. If present, combined with `difficultyModifiers.acclimatizationBonus`. |
+| `_designIntent` | `object` | Same design-annotation contract as predefined scenarios. |
+
+Note: `_equinoxTrapTurn` was removed in the current version (previously read but never consumed downstream).
+
+### `difficultyModifiers` block
+
+| Field | Type | Description |
+|---|---|---|
+| `pressureBias` | `number` | Additive EP bias. Positive = harder. |
+| `stageWeatherBias` | `number` | Additive weather severity per stage. |
+| `bodyToleranceBonus` | `number` | Additive BT bonus. Negative = harder. |
+| `acclimatizationBonus` | `number` | Additive acclimatization at run start. |
+| `fatigueMultiplier` | `number` | Multiplier on fatigue accumulation. `> 1` = harder. |
+| `exposureMultiplier` | `number` | Multiplier on exposure accumulation. `> 1` = harder. |
+| `resourceEfficiency` | `number` | Multiplier on resource burn. `< 1` = burns faster. |
+| `permitDaysBonus` | `number` | Additive permit-day bonus. Negative = fewer days. |
+| `initialCapacityBonus` | `number` | Additive starting capacity bonus. |
+| `initialWaterBonus` | `number` | Additive starting water bonus. |
+| `initialFoodBonus` | `number` | Additive starting food bonus. |
+| `decisionWindowMsBonus` | `number` | Additive decision window bonus (ms). |
+
+---
+
+## Designing character events
+
+This section provides guidelines for adding new character events to `data/character_events.json`.
+
+### Event activation flow
+
+1. Each turn, `maybeApplyCharacterEvent()` in `engine/events-core.js` evaluates all events for the active character.
+2. An event fires when **all** trigger conditions match (action, stage, persistence, turn, body-state thresholds).
+3. Cooldown and per-run caps are enforced via `G.characterEventState[event.id].uses` and `.lastUsedTurn`.
+
+### Trigger condition reference
+
+| Trigger field | Type | Description |
+|---|---|---|
+| `actions` | `string[]` | Required action(s) for activation (e.g., `["advance"]`, `["wait"]`). |
+| `stages` | `string[]` | Required stage(s) (e.g., `["SUMMIT_DAY"]`). |
+| `minTurn` | `number` | Minimum turn number. |
+| `minPersistenceTurns` | `number` | Minimum consecutive turns with similar behavior. |
+| `minWeatherSeverity` | `number` | Minimum weather severity threshold. |
+| `maxFunctionalCapacity` | `number` | Maximum functional capacity (fires when body is weak). |
+| `maxWater` | `number` | Maximum water level (fires under resource pressure). |
+
+### Effect constraints
+
+- Effects must only use signed deltas: `fatigueDelta`, `exposureDelta`, `confidenceDelta`.
+- Absolute bounds: `|fatigueDelta| <= 3`, `|exposureDelta| <= 3`, `|confidenceDelta| <= 5`.
+- Events **must never** set terminal outcomes directly.
+- `conditions.mountainAuthority` must always be `"never_bypass_ep_bt"`.
+
+### Cooldown / cap interaction
+
+- `cooldownTurns`: Minimum turns between activations of the same event.
+- `maxPerRun`: Hard cap on total activations per run.
+- `oncePerRun: true`: Shorthand for `maxPerRun: 1`.
+- When `maxPerRun` is reached, the event is permanently disabled for the rest of the run.
+- Cooldown starts counting from the turn the event last fired.
+
+### Category conventions
+
+Categories group events by mechanical role:
+
+| Category | Description |
+|---|---|
+| `onset_context` | Environmental/supply-driven onset events. |
+| `pacing_hesitation` | Over-cautious pacing penalties. |
+| `pressure_interpretation` | Perception/interpretation distortions. |
+| `observation` | Observation-based signal boosts (at body cost). |
+| `body_mind_drift` | Body/mind disconnection events. |
+| `emotional_override` | Emotionally driven physical cost events. |
+| `diagnostic_overcaution` | Over-analysis/over-waiting penalties. |
+| `pattern_lock` | Prior-experience pattern-lock events. |
+| `ego_override` | Ego-driven push penalties. |
+| `physiological_limit` | Body-capacity limitation events. |
+| `psychological_override` | Psychological-drive override events. |
+
+### Telemetry
+
+- Set `telemetryTag` to `char-<characterId>-<slug>` by convention.
+- Character events are recorded in `G.characterEventHistory` (ID list) and exposed in `run_log.json` via the `characterEvent` field on each turn entry.
+
+---
+
 ## Validation command
 
 To verify all data files parse and satisfy shape contracts:

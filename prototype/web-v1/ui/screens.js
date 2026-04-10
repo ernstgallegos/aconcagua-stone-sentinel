@@ -1549,7 +1549,7 @@ function renderPart2Carousel(type) {
       infoAriaLabel: t('ui.carouselCharInfo'),
       part2: {
         locked: isLocked,
-        lockText: uiText('Locked for now', 'Bloqueado por ahora'),
+        lockText: uiText('Preview — locked until future update', 'Vista previa — bloqueado hasta actualización futura'),
         fallbackSrc: getCharacterImagePath(item.id),
       },
     });
@@ -1563,7 +1563,7 @@ function renderPart2Carousel(type) {
       route: item,
       infoAriaLabel: t('ui.carouselScenInfo'),
       locked: isLocked,
-      lockText: uiText('Coming later', 'Llega más adelante'),
+      lockText: uiText('Preview — coming in a future update', 'Vista previa — disponible en futura actualización'),
     });
     const infoBtn = cardEl.querySelector('.carousel-info-btn');
     if (infoBtn) infoBtn.onclick = () => togglePart2CarouselInfo('route', safeIdx);
@@ -1642,8 +1642,8 @@ function buildPart2SetupScreen() {
   const subtitleEl = document.getElementById('part2-setup-subtitle');
   if (subtitleEl) {
     subtitleEl.textContent = uiText(
-      'Browse the full Part 2 roster. Only Francisco and the guided Normal Route are unlocked.',
-      'Explorá el roster completo de la Parte 2. Solo Francisco y la Ruta Normal guiada están desbloqueados.'
+      'Part 2 narrative preview. Only Francisco and the guided Normal Route are playable. Other characters and routes are visible as locked previews for future updates.',
+      'Vista previa narrativa de la Parte 2. Solo Francisco y la Ruta Normal guiada son jugables. Los demás personajes y rutas se muestran como vistas previas bloqueadas para futuras actualizaciones.'
     );
   }
 

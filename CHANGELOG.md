@@ -16,6 +16,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
 - Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.
 - Added `docs/concept-art-catalog.md`: complete visual analysis catalog for the 13 unique scenes across `art/concept-art/curated/ig/` and `art/cover/ig/` (26 images = 13 paired compositions), covering style, subject, mood, palette, design-principle alignment, and recommended use cases per scene. Documents the pairing convention: `art/cover/ig/` carries the "ACONCAGUA: STONE SENTINEL" title overlay (promotional/cover use); `art/concept-art/curated/ig/` contains the same illustrations without text (documentation, web, and flexible marketing use). Updated `art/README.md` to document the `ig/` subdirectories and link to the catalog.
+- Added `nationalityCode` field to all 6 characters in `data/characters.json` (AR, KR, NO, IT, US, RU), eliminating dependency on emoji-flag heuristic extraction.
+- Added `engine/balance-config.js` centralizing magic balance constants (`PROGRESS_BASE`, `COLLAPSE_PRESSURE_SCALER`, `COLLAPSE_CAPACITY_WEIGHT`, `COLLAPSE_MAX`, etc.) previously hardcoded in `turn-resolution.js`.
+- Added 6 new character events to `data/character_events.json` (2 events per character, 12 total), expanding the character event subsystem with distinct trigger conditions and new categories (`emotional_override`, `diagnostic_overcaution`, `pattern_lock`, `ego_override`, `physiological_limit`, `psychological_override`).
+- Added `characterEvent` field to per-turn telemetry in `run-log.js`, making character events visible in structured post-run analysis.
+- Added keyboard activation support (Enter/Space) for `role="button"` elements with `data-action` in `event-registry.js`.
+- Added schema validation tests for scenario `_designIntent` fields and scenario 02–04 `difficultyModifiers` distinctness in `data-contracts.test.js`.
+- Added 5 unit tests for `classifyDifficultyResponsibility()` in `debrief-analysis.test.js`.
+- Added comprehensive character events design guide and scenario contract documentation to `docs/data-contracts-guide.md`.
 
 ### Changed
 
@@ -25,6 +33,17 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Changed `docs/balance-calibration-notes.md` to close the previous active-flags TODO with an explicit canonical state, plus a post-`v1.4.7` documentation consolidation note dated 2026-04-08.
 - Changed `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md` to reflect current Vercel routing reality (root landing at `/` + prototype-specific redirects), replacing outdated redirect wording.
 - Changed `CONTRIBUTING.md` and public-readiness checklists to include `npm run validate:links` in documented quality gates/evidence expectations.
+- Changed `bias` field to `_designIntent` in `data/scenarios.web-v1.json` (predefined and random archetypes) to signal these are design annotations not consumed by the engine.
+- Changed scenarios 02 ("Narrow Weather Window"), 03 ("False Stability Terrain"), and 04 ("Accumulated Fatigue Trap") to have distinct `difficultyModifiers` reflecting their identity (weather/exposure, terrain/fatigue, and resource/fatigue emphasis respectively).
+- Changed Part 2 locked-screen messaging to explicitly communicate preview status with expanded lock text and subtitle explaining the preview boundary.
+- Changed `classifyDifficultyResponsibility()` from an inline function in `screens.js` to a pure, testable export in `ui/screens/debrief.js`.
+- Changed `docs/technical-debt-register.md` version references from premature `v1.4.8 (Unreleased)` to `[Unreleased]`.
+
+### Removed
+
+- Removed dead `_equinoxTrapTurn` read from `screens.js` (value was assigned but never consumed downstream).
+- Removed last inline `onkeydown` handler from `index.html`, replaced by keyboard-aware `data-action` delegation in `event-registry.js`.
+- Removed `EXPERIMENTAL` labels and `Decision N` tracking references from `index.html` (bottom sheets, debrief layout, CSS modules comment).
 
 ### Fixed
 

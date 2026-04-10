@@ -209,3 +209,56 @@ test('buildReflectionPrompts: dynamic pool capped at 2 items', () => {
   const dynamic = result.filter(p => p.dynamic);
   assert.ok(dynamic.length <= 2, `expected max 2 dynamic prompts, got ${dynamic.length}`);
 });
+
+// ─── classifyDifficultyResponsibility ────────────────────────────────────────
+
+import { classifyDifficultyResponsibility } from '../../ui/screens/debrief.js';
+
+test('classifyDifficultyResponsibility: returns mixed for empty turn log', () => {
+  const result = classifyDifficultyResponsibility({ turnLog: [] });
+  assert.equal(result.label, 'Mixed pressure and choice');
+  assert.ok(result.detail.includes('No single dominant source'));
+});
+
+test('classifyDifficultyResponsibility: systemic pressure dominates when >= 45% flags', () => {
+  const turnLog = Array.from({ length: 10 }, (_, i) => makeTurnEntry({
+    turn: i + 1,
+    flags: i < 5 ? ['weather-window-closed'] : [],
+  }));
+  const result = classifyDifficultyResponsibility({ turnLog });
+  assert.equal(result.label, 'Systemic pressure dominated');
+  assert.ok(result.detail.includes('50%'));
+});
+
+test('classifyDifficultyResponsibility: decision pattern when >= 30% high-risk choices', () => {
+  const turnLog = Array.from({ length: 10 }, (_, i) => makeTurnEntry({
+    turn: i + 1,
+    decision: i < 4 ? 'advance' : 'wait',
+    trend: i < 4 ? 'worsening' : 'steady',
+    flags: [],
+  }));
+  const result = classifyDifficultyResponsibility({ turnLog });
+  assert.equal(result.label, 'Decision pattern shaped outcome');
+  assert.ok(result.detail.includes('40%'));
+});
+
+test('classifyDifficultyResponsibility: systemic wins over decision when both high but systemic > decision', () => {
+  const turnLog = Array.from({ length: 10 }, (_, i) => makeTurnEntry({
+    turn: i + 1,
+    decision: i < 3 ? 'advance' : 'wait',
+    trend: i < 3 ? 'worsening' : 'steady',
+    flags: i < 6 ? ['forced-bivouac'] : [],
+  }));
+  const result = classifyDifficultyResponsibility({ turnLog });
+  assert.equal(result.label, 'Systemic pressure dominated');
+});
+
+test('classifyDifficultyResponsibility: mixed when neither threshold reached', () => {
+  const turnLog = Array.from({ length: 10 }, (_, i) => makeTurnEntry({
+    turn: i + 1,
+    decision: 'wait',
+    flags: i < 2 ? ['acclimatization-deficit'] : [],
+  }));
+  const result = classifyDifficultyResponsibility({ turnLog });
+  assert.equal(result.label, 'Mixed pressure and choice');
+});

@@ -68,3 +68,51 @@ test('context event contract is bounded and mountain-first', async () => {
     assert.equal(typeof event.telemetryTag, 'string');
   });
 });
+
+test('scenario _designIntent fields have expected shape and are not consumed by engine', async () => {
+  const scenariosData = JSON.parse(await readFile('data/scenarios.web-v1.json', 'utf8'));
+  const allScenarios = scenariosData.predefinedScenarios || [];
+
+  const allowedDesignIntentKeys = new Set([
+    'weather_deterioration', 'terrain_growth', 'fatigue_growth',
+    'window_turns', 'post_window_deterioration',
+  ]);
+
+  for (const scenario of allScenarios) {
+    if (!scenario._designIntent) continue;
+    const keys = Object.keys(scenario._designIntent);
+    for (const key of keys) {
+      assert.ok(allowedDesignIntentKeys.has(key),
+        `scenario ${scenario.id}: unexpected _designIntent key "${key}"`);
+    }
+  }
+
+  // Verify archetypes too
+  const archetypes = scenariosData.randomScenario?.archetypes || [];
+  for (const arch of archetypes) {
+    const intent = arch.tweak?._designIntent;
+    if (!intent) continue;
+    for (const key of Object.keys(intent)) {
+      assert.ok(allowedDesignIntentKeys.has(key),
+        `archetype ${arch.name}: unexpected _designIntent key "${key}"`);
+    }
+  }
+});
+
+test('scenarios 02–04 have distinct difficultyModifiers', async () => {
+  const scenariosData = JSON.parse(await readFile('data/scenarios.web-v1.json', 'utf8'));
+  const scenarios = scenariosData.predefinedScenarios;
+  const s02 = scenarios.find(s => s.id === 'narrow-weather-window');
+  const s03 = scenarios.find(s => s.id === 'false-stability-terrain');
+  const s04 = scenarios.find(s => s.id === 'accumulated-fatigue-trap');
+
+  assert.ok(s02 && s03 && s04, 'all three scenarios must exist');
+
+  const stringify = (obj) => JSON.stringify(obj);
+  assert.notEqual(stringify(s02.difficultyModifiers), stringify(s03.difficultyModifiers),
+    'scenario 02 and 03 should have different difficultyModifiers');
+  assert.notEqual(stringify(s03.difficultyModifiers), stringify(s04.difficultyModifiers),
+    'scenario 03 and 04 should have different difficultyModifiers');
+  assert.notEqual(stringify(s02.difficultyModifiers), stringify(s04.difficultyModifiers),
+    'scenario 02 and 04 should have different difficultyModifiers');
+});
