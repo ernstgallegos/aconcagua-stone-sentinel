@@ -107,3 +107,21 @@ This document defines the visual/interaction system for the root public site (`i
 - Token refresh keeps the same mountain-first palette family (cold mineral base + restrained amber/ice accents).
 - Welcome/setup surfaces use layered overlays instead of flat dark fills to preserve atmospheric continuity.
 - Primary actions remain high-contrast and calm; secondary/decision controls reduce visual noise while preserving affordance.
+
+## 12) Visual assets — concept art integration
+
+The repository contains 13 curated concept art scenes in `art/concept-art/curated/ig/` (text-free, odd-numbered `1.png`–`25.png`) and matching promotional cover plates with title overlay in `art/cover/ig/` (even-numbered `2.png`–`26.png`). Full catalog with palette notes and recommended use cases: [`docs/concept-art-catalog.md`](concept-art-catalog.md).
+
+**Scene-role pairings (production guidance):**
+
+| Scene | File | Primary role | Palette alignment |
+|---|---|---|---|
+| 1 — Dawn approach | `concept-art/curated/ig/1.png` | Landing page hero, title screen, expedition setup | Rose · lavender · `--accent-amber` |
+| 3 — Group ascent | `concept-art/curated/ig/5.png` | Onboarding, multiplayer framing, expedition context | Blazing amber · dark umber |
+| 4 — High camp at sunset | `concept-art/curated/ig/7.png` | Camp/rest decisions, resource management | Blue-lavender · coral · `--accent-amber` |
+| 5 — Whiteout | `concept-art/curated/ig/9.png` | Extreme weather overlay, high EP state | Near-white · rose tint (text-overlay safe) |
+| 7 — Golden hour | `concept-art/curated/ig/13.png` | Time-pressure moments, window-closing scenarios | Deep amber · `--accent-amber` (all-warm) |
+| 11 — Soft ridge, lavender | `concept-art/curated/ig/21.png` | Debrief/reflection screens, modal backgrounds | Lavender · cream (minimal contrast noise) |
+| 13 — Blue hour | `concept-art/curated/ig/25.png` | Critical-state moments, late-game, permit expiry | Cobalt · `--accent-ice` (inverted hierarchy) |
+
+**Usage rule:** prefer `art/concept-art/curated/ig/` (text-free) for all UI, docs, and web surface uses. Reserve `art/cover/ig/` (title overlay) for promotional/social outputs only.
