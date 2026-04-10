@@ -104,6 +104,7 @@ export function buildTurnLogEntry({
     lateSignalActivation: turnResult.lateSignalEvent,
     warningState: G.currentPrimaryAlert,
     contextEvent: turnResult.contextEvent || G.activeEnvironmentEvent,
+    characterEvent: turnResult.characterEvent || null,
     narrativeText,
   };
 }

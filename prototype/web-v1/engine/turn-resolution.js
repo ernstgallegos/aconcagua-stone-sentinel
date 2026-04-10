@@ -1,3 +1,9 @@
+import {
+  PROGRESS_BASE, PROGRESS_MIN, PROGRESS_MAX,
+  COLLAPSE_PRESSURE_SCALER, COLLAPSE_CAPACITY_WEIGHT, COLLAPSE_MAX,
+  SURVIVAL_MIN, SURVIVAL_MAX,
+} from './balance-config.js';
+
 export function mulberry32(seed) {
   if (typeof seed !== 'number' || !Number.isFinite(seed)) {
     throw new TypeError('mulberry32 requires a finite numeric seed');
@@ -72,9 +78,9 @@ export function createTurnEngine(deps) {
       ? Math.min(pressureDelta, actionMod.pressureDeltaCap)
       : pressureDelta;
 
-    const progressChance = clamp(58 - Math.max(0, effectiveDelta) + actionMod.progress, 4, 92);
-    const collapseChance = clamp(Math.max(0, effectiveDelta) * 1.2 + (100 - state.functional_capacity) * 0.1 + actionMod.collapse, 0, 96);
-    const survivalChance = clamp(100 - collapseChance + actionMod.survival, 4, 98);
+    const progressChance = clamp(PROGRESS_BASE - Math.max(0, effectiveDelta) + actionMod.progress, PROGRESS_MIN, PROGRESS_MAX);
+    const collapseChance = clamp(Math.max(0, effectiveDelta) * COLLAPSE_PRESSURE_SCALER + (100 - state.functional_capacity) * COLLAPSE_CAPACITY_WEIGHT + actionMod.collapse, 0, COLLAPSE_MAX);
+    const survivalChance = clamp(100 - collapseChance + actionMod.survival, SURVIVAL_MIN, SURVIVAL_MAX);
 
     const nodeIndex = POSITIONS.indexOf(state.position);
     const isApproachWait = context.action === 'wait' && (context.altitudeBand ?? 99) <= 1;
@@ -207,6 +213,7 @@ export function createTurnEngine(deps) {
     }
 
     let contextEvent = null;
+    let characterEvent = null;
     if (typeof applyContextEvents === 'function') {
       contextEvent = applyContextEvents({
         state,
@@ -215,6 +222,10 @@ export function createTurnEngine(deps) {
         previousPosition,
         flags,
       });
+      if (contextEvent?._characterEvent) {
+        characterEvent = contextEvent._characterEvent;
+        delete contextEvent._characterEvent;
+      }
       if (contextEvent?.id) flags.push('weather-event-active');
     }
 
@@ -421,7 +432,7 @@ export function createTurnEngine(deps) {
       });
     }
 
-    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, contextEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
+    return { result, outcome, flags, signals, narrative, resolvedAction, timedPerception, photoEffectApplied, lateSignalEvent, contextEvent, characterEvent, decisionWindowEffect: decisionAdjusted.effect, pipelineTrace: trace ? [...trace] : null };
   }
 
   function resolveTurnWithTrace(state, action) {

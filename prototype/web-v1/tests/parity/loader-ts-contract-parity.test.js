@@ -78,6 +78,12 @@ test('normalized config satisfies TS CharacterEvent contract invariants', async 
     'pacing_hesitation',
     'observation',
     'body_mind_drift',
+    'emotional_override',
+    'diagnostic_overcaution',
+    'pattern_lock',
+    'ego_override',
+    'physiological_limit',
+    'psychological_override',
   ]);
 
   assert.ok(Array.isArray(raw.characterEvents) && raw.characterEvents.length > 0);

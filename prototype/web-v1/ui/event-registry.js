@@ -18,15 +18,27 @@ export function bindUiEventRegistry({ resolve }) {
     throw new Error('bindUiEventRegistry requires a resolve(action, target) function');
   }
 
-  document.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-action]');
-    if (!trigger) return;
-
+  function dispatch(event, trigger) {
     const action = trigger.dataset.action;
     const handler = resolve(action, trigger);
     if (typeof handler !== 'function') return;
 
     const args = parseActionArgs(trigger);
     handler(event, ...args);
+  }
+
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-action]');
+    if (!trigger) return;
+    dispatch(event, trigger);
+  });
+
+  // Keyboard activation for role="button" elements with data-action
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    const trigger = event.target.closest('[data-action][role="button"]');
+    if (!trigger) return;
+    event.preventDefault();
+    dispatch(event, trigger);
   });
 }

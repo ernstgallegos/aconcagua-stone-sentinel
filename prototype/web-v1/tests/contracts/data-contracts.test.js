@@ -34,6 +34,12 @@ test('character event contract includes all six active characters', async () => 
     'pacing_hesitation',
     'observation',
     'body_mind_drift',
+    'emotional_override',
+    'diagnostic_overcaution',
+    'pattern_lock',
+    'ego_override',
+    'physiological_limit',
+    'psychological_override',
   ]);
 
   events.forEach((event) => {

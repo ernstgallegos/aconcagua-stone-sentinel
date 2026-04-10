@@ -28,7 +28,7 @@ const CANONICAL_TURN_ENTRY_KEYS = new Set([
   'flags', 'blocked', 'moved',
   'decisionMs', 'decisionWindowExceeded', 'decisionWindowEffect',
   'onboardingLayer', 'primaryAlert', 'lateSignalActivation',
-  'warningState', 'contextEvent', 'narrativeText',
+  'warningState', 'contextEvent', 'characterEvent', 'narrativeText',
 ]);
 
 const CANONICAL_BODY_KEYS = new Set(['capacity', 'fatigue', 'exposure']);

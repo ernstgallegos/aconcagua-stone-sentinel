@@ -46,7 +46,7 @@
         "water": 26,
         "food": 24
       },
-      "bias": {
+      "_designIntent": {
         "weather_deterioration": 0,
         "terrain_growth": 0,
         "fatigue_growth": -1
@@ -74,17 +74,17 @@
       "difficulty": "Medium",
       "difficultyModifiers": {
         "pressureBias": 0,
-        "stageWeatherBias": 0,
+        "stageWeatherBias": 1,
         "bodyToleranceBonus": 0,
         "acclimatizationBonus": 0,
         "fatigueMultiplier": 1,
-        "exposureMultiplier": 1,
+        "exposureMultiplier": 1.08,
         "resourceEfficiency": 1,
         "permitDaysBonus": 0,
         "initialCapacityBonus": 0,
         "initialWaterBonus": 0,
         "initialFoodBonus": 0,
-        "decisionWindowMsBonus": 0
+        "decisionWindowMsBonus": -1000
       },
       "initial": {
         "position": "horcones",
@@ -98,7 +98,7 @@
         "water": 22,
         "food": 20
       },
-      "bias": {
+      "_designIntent": {
         "weather_deterioration": 1,
         "terrain_growth": 0,
         "fatigue_growth": 0
@@ -127,9 +127,9 @@
       "difficultyModifiers": {
         "pressureBias": 0,
         "stageWeatherBias": 0,
-        "bodyToleranceBonus": 0,
+        "bodyToleranceBonus": -3,
         "acclimatizationBonus": 0,
-        "fatigueMultiplier": 1,
+        "fatigueMultiplier": 1.1,
         "exposureMultiplier": 1,
         "resourceEfficiency": 1,
         "permitDaysBonus": 0,
@@ -150,7 +150,7 @@
         "water": 20,
         "food": 18
       },
-      "bias": {
+      "_designIntent": {
         "weather_deterioration": 0,
         "terrain_growth": 1,
         "fatigue_growth": 0
@@ -181,11 +181,11 @@
         "stageWeatherBias": 0,
         "bodyToleranceBonus": 0,
         "acclimatizationBonus": 0,
-        "fatigueMultiplier": 1,
+        "fatigueMultiplier": 1.12,
         "exposureMultiplier": 1,
-        "resourceEfficiency": 1,
+        "resourceEfficiency": 0.95,
         "permitDaysBonus": 0,
-        "initialCapacityBonus": 0,
+        "initialCapacityBonus": -2,
         "initialWaterBonus": 0,
         "initialFoodBonus": 0,
         "decisionWindowMsBonus": 0
@@ -202,7 +202,7 @@
         "water": 22,
         "food": 20
       },
-      "bias": {
+      "_designIntent": {
         "weather_deterioration": 0,
         "terrain_growth": 0,
         "fatigue_growth": 1
@@ -254,7 +254,7 @@
         "water": 22,
         "food": 20
       },
-      "bias": {
+      "_designIntent": {
         "weather_deterioration": -1,
         "terrain_growth": 0,
         "fatigue_growth": 0,
@@ -316,7 +316,7 @@
           "water": 22,
           "food": 20,
           "difficulty": "Hard",
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 1,
             "terrain_growth": 1,
             "fatigue_growth": 1
@@ -347,7 +347,7 @@
           "water": 24,
           "food": 22,
           "difficulty": "Moderate",
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": -1,
             "terrain_growth": 0,
             "fatigue_growth": 0,
@@ -385,7 +385,7 @@
           "food": 18,
           "difficulty": "Moderate",
           "_acclimatizationBonus": 20,
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 1,
             "fatigue_growth": 0
@@ -417,7 +417,7 @@
           "food": 20,
           "difficulty": "Hard",
           "_equinoxTrapTurn": 7,
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 0,
             "fatigue_growth": 1
@@ -448,7 +448,7 @@
           "water": 22,
           "food": 20,
           "difficulty": "Hard",
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 0,
             "fatigue_growth": 0
@@ -479,7 +479,7 @@
           "water": 18,
           "food": 16,
           "difficulty": "Hard",
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 0,
             "fatigue_growth": 1
@@ -511,7 +511,7 @@
           "food": 20,
           "difficulty": "Moderate",
           "_acclimatizationBonus": 32,
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 1,
             "fatigue_growth": 0
@@ -542,7 +542,7 @@
           "water": 22,
           "food": 20,
           "difficulty": "Hard",
-          "bias": {
+          "_designIntent": {
             "weather_deterioration": 1,
             "terrain_growth": 1,
             "fatigue_growth": 1,

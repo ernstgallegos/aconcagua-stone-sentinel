@@ -3,6 +3,28 @@ export function classifyOutcome({ G, getOutcomeClass }) {
 }
 
 /**
+ * Classifies whether the run outcome was primarily shaped by systemic pressure,
+ * player decision patterns, or a mix of both.
+ * Pure analysis function: no DOM access, no global reads.
+ *
+ * @param {object} deps
+ * @param {Array}  deps.turnLog - G.turnLog entries
+ * @returns {{ label: string, detail: string }}
+ */
+export function classifyDifficultyResponsibility({ turnLog }) {
+  const total = Math.max(1, turnLog.length);
+  const systemicFlags = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
+  const systemicTurns = turnLog.filter((t) => t.flags.some((f) => systemicFlags.includes(f))).length;
+  const highRiskAdvances = turnLog.filter((t) => (t.decision === 'advance' || t.decision === 'advance_slowly') && (t.trend === 'worsening' || t.trend === 'worsening fast')).length;
+  const decisionErrors = turnLog.filter((t) => t.flags.includes('critical-fatigue') || t.flags.includes('critical-exposure')).length + highRiskAdvances;
+  const systemicShare = systemicTurns / total;
+  const decisionShare = decisionErrors / total;
+  if (systemicShare >= 0.45 && systemicShare > decisionShare) return { label: 'Systemic pressure dominated', detail: `~${Math.round(systemicShare * 100)}% of turns carried systemic pressure flags.` };
+  if (decisionShare >= 0.3) return { label: 'Decision pattern shaped outcome', detail: `~${Math.round(decisionShare * 100)}% of turns showed high-risk choice patterns.` };
+  return { label: 'Mixed pressure and choice', detail: 'No single dominant source.' };
+}
+
+/**
  * Identifies the single most significant turning point in the run log.
  * Pure analysis function: no DOM access, no global reads.
  *

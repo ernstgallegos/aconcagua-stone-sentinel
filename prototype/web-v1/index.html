@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <!-- Typography system: Playfair Display (editorial hierarchy), Montserrat (UI/body), IBM Plex Mono (telemetry/data) -->
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet"/>
-<!-- Decision 1: CSS modules -->
+<!-- CSS modules -->
 <link rel="stylesheet" href="./css/tokens.css"/>
 <link rel="stylesheet" href="./css/reset.css"/>
 <link rel="stylesheet" href="./css/layout.css"/>
@@ -134,7 +134,6 @@
   <!-- ③ THE WATCH BAND — compact 4-cell horizontal, tap to expand detail -->
   <div class="watch-band" id="watch-band" role="button" tabindex="0"
        data-action="open-watch-detail"
-       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWatchDetail();}"
        aria-label="Watch status — press Enter or tap for full detail" aria-haspopup="dialog">
     <div class="watch-cell" id="wc-body" aria-label="Body state">
       <div class="watch-cell-label">Body</div>
@@ -297,10 +296,10 @@
 </div>
 <div class="field-log-backdrop" id="field-log-backdrop" aria-hidden="true" data-action="close-field-log"></div>
 
-<!-- EXPERIMENTAL: Bottom-sheet backdrop (Decision 13) -->
+<!-- Bottom-sheet backdrop -->
 <div id="bottom-sheet-backdrop" class="bottom-sheet-backdrop" aria-hidden="true"></div>
 
-<!-- EXPERIMENTAL: Watch bottom-sheet (Decision 13) -->
+<!-- Watch bottom-sheet -->
 <div id="bottom-sheet-watch" class="bottom-sheet" role="dialog" aria-modal="true" aria-label="Watch panel">
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
@@ -339,7 +338,7 @@
   </div>
 </div>
 
-<!-- EXPERIMENTAL: Route bottom-sheet (Decision 13) -->
+<!-- Route bottom-sheet -->
 <div id="bottom-sheet-route" class="bottom-sheet" role="dialog" aria-modal="true" aria-label="Route panel">
   <div class="bottom-sheet-handle" aria-hidden="true"></div>
   <div class="bottom-sheet-title">
@@ -350,9 +349,8 @@
 </div>
 
 <!-- ══════════════════════ DEBRIEF ══════════════════════ -->
-<!-- EXPERIMENTAL: 3-section debrief layout (Decision 18) -->
 <section id="screen-debrief" class="screen" aria-label="Expedition debrief">
-  <!-- Section 1: Emotional result hero (Decision 18) -->
+  <!-- Section 1: Emotional result hero -->
   <div id="debrief-hero" class="debrief-hero" aria-live="polite">
     <div class="debrief-hero-icon" aria-hidden="true">🏔</div>
     <div class="debrief-outcome-headline" id="debrief-outcome-headline">—</div>

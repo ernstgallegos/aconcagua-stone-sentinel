@@ -52,6 +52,7 @@ import {
 } from './screens/game.js';
 import {
   classifyOutcome as classifyOutcomeView,
+  classifyDifficultyResponsibility as classifyDifficultyResponsibilityView,
   buildDebriefAnalytics as buildDebriefAnalyticsView,
   findTurningPoint as findTurningPointView,
   findPrimaryCause as findPrimaryCauseView,
@@ -1869,11 +1870,10 @@ function buildRandomScenario() {
       visibility: arch.tweak.visibility, terrain_load: rngInt(rng, terrainRange.min, terrainRange.max), functional_capacity: rngInt(rng, functionalCapacityRange.min, functionalCapacityRange.max),
       fatigue: arch.tweak.fatigue, exposure: arch.tweak.exposure, water: arch.tweak.water, food: arch.tweak.food,
     },
-    bias: arch.tweak.bias,
+    _designIntent: arch.tweak._designIntent || null,
     _randomSeed: rseed,
     _archetype: arch.name,
     _acclimatizationBonus: arch.tweak._acclimatizationBonus || 0,
-    _equinoxTrapTurn: arch.tweak._equinoxTrapTurn || null,
   };
 }
 
@@ -2982,20 +2982,13 @@ function applyContextEvents({ state, action, stage, flags }) {
     });
   }
 
+  // Return context event; attach characterEvent so the pipeline can expose it in telemetry
+  if (eventEffect) eventEffect._characterEvent = charEffect || null;
   return eventEffect;
 }
 
 function classifyDifficultyResponsibility() {
-  const total = Math.max(1, G.turnLog.length);
-  const systemicFlags = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
-  const systemicTurns = G.turnLog.filter((t) => t.flags.some((f) => systemicFlags.includes(f))).length;
-  const highRiskAdvances = G.turnLog.filter((t) => (t.decision === 'advance' || t.decision === 'advance_slowly') && (t.trend === 'worsening' || t.trend === 'worsening fast')).length;
-  const decisionErrors = G.turnLog.filter((t) => t.flags.includes('critical-fatigue') || t.flags.includes('critical-exposure')).length + highRiskAdvances;
-  const systemicShare = systemicTurns / total;
-  const decisionShare = decisionErrors / total;
-  if (systemicShare >= 0.45 && systemicShare > decisionShare) return { label: 'Systemic pressure dominated', detail: `~${Math.round(systemicShare * 100)}% of turns carried systemic pressure flags.` };
-  if (decisionShare >= 0.3) return { label: 'Decision pattern shaped outcome', detail: `~${Math.round(decisionShare * 100)}% of turns showed high-risk choice patterns.` };
-  return { label: 'Mixed pressure and choice', detail: 'No single dominant source.' };
+  return classifyDifficultyResponsibilityView({ turnLog: G.turnLog });
 }
 
 

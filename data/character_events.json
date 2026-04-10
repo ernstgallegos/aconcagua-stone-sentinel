@@ -173,5 +173,197 @@
     "hiddenFromPlayer": false,
     "narrative": "Blake confronts logistics reality: determination without resource discipline raises collapse risk.",
     "notes": "Determination under deficit; logistics pressure stays systemic."
+  },
+  {
+    "id": "francisco-grief-surge",
+    "category": "emotional_override",
+    "characterId": "francisco",
+    "trigger": {
+      "actions": [
+        "advance",
+        "advance_slowly"
+      ],
+      "stages": [
+        "SUMMIT_DAY"
+      ],
+      "minTurn": 12
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 3,
+      "confidenceDelta": -2
+    },
+    "limits": {
+      "oncePerRun": true,
+      "cooldownTurns": 0,
+      "maxPerRun": 1
+    },
+    "telemetryTag": "char-francisco-grief-surge",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Mateo's photo surfaces in the mind. Francisco pushes harder than the body wants, honoring the wrong signal.",
+    "notes": "Emotional override: cost penalty on summit push. One-shot per run."
+  },
+  {
+    "id": "laura-triage-lock",
+    "category": "diagnostic_overcaution",
+    "characterId": "laura",
+    "trigger": {
+      "actions": [
+        "wait"
+      ],
+      "stages": [
+        "HIGH_CAMP",
+        "SUMMIT_DAY"
+      ],
+      "minPersistenceTurns": 2
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 1,
+      "confidenceDelta": -3
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 5,
+      "maxPerRun": 2
+    },
+    "telemetryTag": "char-laura-triage-lock",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Laura's need for certainty delays the window. Diagnostic precision turns into lost tempo.",
+    "notes": "Over-waiting penalty at altitude. Mirrors her character tension."
+  },
+  {
+    "id": "irina-protocol-override",
+    "category": "pattern_lock",
+    "characterId": "irina",
+    "trigger": {
+      "actions": [
+        "advance"
+      ],
+      "stages": [
+        "SUMMIT_DAY"
+      ],
+      "minTurn": 10
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "exposureDelta": 2,
+      "confidenceDelta": 2
+    },
+    "limits": {
+      "oncePerRun": true,
+      "cooldownTurns": 0,
+      "maxPerRun": 1
+    },
+    "telemetryTag": "char-irina-protocol-override",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Irina's old protocols say go. The present mountain may disagree. Confidence rises, but at exposure cost.",
+    "notes": "Pattern-lock risk: prior experience boosts confidence but adds exposure. One-shot."
+  },
+  {
+    "id": "erik-pride-push",
+    "category": "ego_override",
+    "characterId": "erik",
+    "trigger": {
+      "actions": [
+        "advance"
+      ],
+      "stages": [
+        "HIGH_CAMP",
+        "SUMMIT_DAY"
+      ],
+      "minPersistenceTurns": 2
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 2,
+      "exposureDelta": 1
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 4,
+      "maxPerRun": 2
+    },
+    "telemetryTag": "char-erik-pride-push",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Erik pushes through a signal he would have read correctly on someone else. Seven Summits ambition filters the data.",
+    "notes": "Ego-driven sustained push penalty. Consecutive advance at altitude."
+  },
+  {
+    "id": "daniela-altitude-deficit",
+    "category": "physiological_limit",
+    "characterId": "daniela",
+    "trigger": {
+      "actions": [
+        "advance",
+        "advance_slowly"
+      ],
+      "stages": [
+        "HIGH_CAMP",
+        "SUMMIT_DAY"
+      ],
+      "minTurn": 8
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 2,
+      "exposureDelta": 1
+    },
+    "limits": {
+      "oncePerRun": false,
+      "cooldownTurns": 5,
+      "maxPerRun": 2
+    },
+    "telemetryTag": "char-daniela-altitude-deficit",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Daniela reads the terrain clearly, but her body cannot match what her eyes understand. Acclimatization deficit shows.",
+    "notes": "Low acclimatization margin penalty at altitude. Observation does not equal endurance."
+  },
+  {
+    "id": "blake-validation-drive",
+    "category": "psychological_override",
+    "characterId": "blake",
+    "trigger": {
+      "actions": [
+        "advance"
+      ],
+      "stages": [
+        "SUMMIT_DAY"
+      ],
+      "minTurn": 10
+    },
+    "conditions": {
+      "mountainAuthority": "never_bypass_ep_bt"
+    },
+    "effects": {
+      "fatigueDelta": 3,
+      "exposureDelta": 1,
+      "confidenceDelta": 3
+    },
+    "limits": {
+      "oncePerRun": true,
+      "cooldownTurns": 0,
+      "maxPerRun": 1
+    },
+    "telemetryTag": "char-blake-validation-drive",
+    "visibleToPlayer": true,
+    "hiddenFromPlayer": false,
+    "narrative": "Blake's internal narrative says this is the moment. The body says wait. The gap between intent and preparation widens.",
+    "notes": "Validation-driven summit push. High cost, high perceived confidence. One-shot."
   }
 ]

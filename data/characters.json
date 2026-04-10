@@ -3,6 +3,7 @@
     "id": "francisco",
     "name": "Francisco Aguirre",
     "flag": "🇦🇷",
+    "nationalityCode": "AR",
     "role": "Teacher & Amateur Runner",
     "bio": "Argentine, 33. A teacher and endurance runner from Mendoza. He carries Mateo's photo and confuses pushing forward with honoring grief. His strength is persistence; his risk is turning data and effort into mandate.",
     "traits": [
@@ -54,6 +55,7 @@
     "id": "laura",
     "name": "Laura Kim",
     "flag": "🇰🇷",
+    "nationalityCode": "KR",
     "role": "Emergency Physician",
     "bio": "South Korean, 38. Emergency physician with pandemic triage scars. She reads clinical and group signals with uncommon precision, but her pressure-point is delaying action while searching for total certainty.",
     "traits": [
@@ -105,6 +107,7 @@
     "id": "erik",
     "name": "Erik Lundvall",
     "flag": "🇳🇴",
+    "nationalityCode": "NO",
     "role": "Offshore Engineer",
     "bio": "Norwegian, 45. Offshore engineer and experienced mountaineer pursuing the Seven Summits. Technically strong and structured, but vulnerable to ego-filtered risk reading when conditions challenge his self-image.",
     "traits": [
@@ -156,6 +159,7 @@
     "id": "daniela",
     "name": "Daniela De Rossi",
     "flag": "🇮🇹",
+    "nationalityCode": "IT",
     "role": "Photographer & Journalist",
     "bio": "Italian, 26. Photographer-journalist with sharp environmental perception. She spots weather, terrain, and social shifts early, yet her acclimatization is the weakest in the roster: seeing more does not mean enduring more.",
     "traits": [
@@ -207,6 +211,7 @@
     "id": "blake",
     "name": "Blake Harris",
     "flag": "🇺🇸",
+    "nationalityCode": "US",
     "role": "Executive",
     "bio": "American, 58. Senior executive built on visible achievement and external validation. He arrives determined to prove he still can, but the mountain confronts him with vulnerability, logistics limits, and non-negotiable physical truth.",
     "traits": [
@@ -258,6 +263,7 @@
     "id": "irina",
     "name": "Irina Orlova",
     "flag": "🇷🇺",
+    "nationalityCode": "RU",
     "role": "Former Pro Climber",
     "bio": "Russian, 41. Former elite climber returning to high altitude after years away. Her technical memory and economy of movement are elite, but her core challenge is not knowledge—it is avoiding overconfidence from past protocols.",
     "traits": [

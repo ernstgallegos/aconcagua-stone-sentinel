@@ -24,57 +24,66 @@ function baseRunState(characterId) {
   };
 }
 
-test('each active character event has a valid activation path and bounded effects', async () => {
+test('each active character has at least one event with valid activation path and bounded effects', async () => {
   const events = JSON.parse(await readFile('data/character_events.json', 'utf8'));
-  const byCharacter = new Map(events.map((event) => [event.characterId, event]));
+  const byCharacter = new Map();
+  for (const event of events) {
+    if (!byCharacter.has(event.characterId)) byCharacter.set(event.characterId, []);
+    byCharacter.get(event.characterId).push(event);
+  }
 
   const activeCharacters = ['francisco', 'laura', 'irina', 'erik', 'daniela', 'blake'];
   activeCharacters.forEach((id) => assert.ok(byCharacter.has(id), `missing event for ${id}`));
 
   for (const characterId of activeCharacters) {
-    const event = byCharacter.get(characterId);
-    const G = baseRunState(characterId);
-    const state = makeState();
-    const flags = [];
+    const charEvents = byCharacter.get(characterId);
+    assert.ok(charEvents.length >= 2, `${characterId} should have at least 2 events, got ${charEvents.length}`);
 
-    if (event.trigger?.maxFunctionalCapacity != null) {
-      state.functional_capacity = Math.min(state.functional_capacity, event.trigger.maxFunctionalCapacity);
-    }
-    if (event.trigger?.maxWater != null) {
-      state.water = Math.min(state.water, event.trigger.maxWater);
-    }
-    if (event.trigger?.maxFood != null) {
-      state.food = Math.min(state.food, event.trigger.maxFood);
-    }
-    if (event.trigger?.minWeatherSeverity != null) {
-      state.weather_severity = Math.max(state.weather_severity, event.trigger.minWeatherSeverity);
-    }
-    if (event.trigger?.minPersistenceTurns != null) {
-      G.persistenceTurns = Math.max(G.persistenceTurns, event.trigger.minPersistenceTurns);
-    }
-    if (event.trigger?.minTurn != null) {
-      G.turn = Math.max(G.turn, event.trigger.minTurn);
-    }
+    for (const event of charEvents) {
+      const G = baseRunState(characterId);
+      const state = makeState();
+      const flags = [];
 
-    const stage = event.trigger?.stages?.[0] || 'SUMMIT_DAY';
-    const action = event.trigger?.actions?.[0] || 'wait';
+      if (event.trigger?.maxFunctionalCapacity != null) {
+        state.functional_capacity = Math.min(state.functional_capacity, event.trigger.maxFunctionalCapacity);
+      }
+      if (event.trigger?.maxWater != null) {
+        state.water = Math.min(state.water, event.trigger.maxWater);
+      }
+      if (event.trigger?.maxFood != null) {
+        state.food = Math.min(state.food, event.trigger.maxFood);
+      }
+      if (event.trigger?.minWeatherSeverity != null) {
+        state.weather_severity = Math.max(state.weather_severity, event.trigger.minWeatherSeverity);
+      }
+      if (event.trigger?.minPersistenceTurns != null) {
+        G.persistenceTurns = Math.max(G.persistenceTurns, event.trigger.minPersistenceTurns);
+      }
+      if (event.trigger?.minTurn != null) {
+        G.turn = Math.max(G.turn, event.trigger.minTurn);
+      }
 
-    const before = structuredClone(state);
-    const applied = applyCharacterEvent({ G, state, action, stage, flags, characterEvents: events });
+      const stage = event.trigger?.stages?.[0] || 'SUMMIT_DAY';
+      const action = event.trigger?.actions?.[0] || 'wait';
 
-    assert.ok(applied, `expected activation for ${characterId}`);
-    assert.equal(applied.id, event.id);
-    assert.ok(flags.includes(event.telemetryTag), `${characterId} missing telemetry tag`);
-    assert.equal(typeof applied.eventState[event.id]?.uses, 'number');
-    assert.equal(applied.eventState[event.id]?.uses, 1);
+      const before = structuredClone(state);
+      // Pass only this single event so we test it in isolation
+      const applied = applyCharacterEvent({ G, state, action, stage, flags, characterEvents: [event] });
 
-    assert.ok(Math.abs(applied.effects.fatigueDelta || 0) <= 3);
-    assert.ok(Math.abs(applied.effects.exposureDelta || 0) <= 3);
-    assert.ok(Math.abs(applied.effects.confidenceDelta || 0) <= 5);
+      assert.ok(applied, `expected activation for ${characterId}:${event.id}`);
+      assert.equal(applied.id, event.id);
+      assert.ok(flags.includes(event.telemetryTag), `${characterId}:${event.id} missing telemetry tag`);
+      assert.equal(typeof applied.eventState[event.id]?.uses, 'number');
+      assert.equal(applied.eventState[event.id]?.uses, 1);
 
-    assert.equal(state.functional_capacity, before.functional_capacity, 'event should not mutate progression authority');
-    assert.equal(state.position, undefined, 'event should not set route position directly');
-    assert.equal(applied.outcome, undefined, 'event should never assign terminal outcome');
+      assert.ok(Math.abs(applied.effects.fatigueDelta || 0) <= 3, `${event.id}: fatigueDelta out of bounds`);
+      assert.ok(Math.abs(applied.effects.exposureDelta || 0) <= 3, `${event.id}: exposureDelta out of bounds`);
+      assert.ok(Math.abs(applied.effects.confidenceDelta || 0) <= 5, `${event.id}: confidenceDelta out of bounds`);
+
+      assert.equal(state.functional_capacity, before.functional_capacity, 'event should not mutate progression authority');
+      assert.equal(state.position, undefined, 'event should not set route position directly');
+      assert.equal(applied.outcome, undefined, 'event should never assign terminal outcome');
+    }
   }
 });
 
