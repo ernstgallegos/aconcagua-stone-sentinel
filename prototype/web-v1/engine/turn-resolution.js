@@ -215,17 +215,16 @@ export function createTurnEngine(deps) {
     let contextEvent = null;
     let characterEvent = null;
     if (typeof applyContextEvents === 'function') {
-      contextEvent = applyContextEvents({
+      const eventResult = applyContextEvents({
         state,
         action: resolvedAction,
         stage: stageAtTurnStart,
         previousPosition,
         flags,
       });
-      if (contextEvent?._characterEvent) {
-        characterEvent = contextEvent._characterEvent;
-        delete contextEvent._characterEvent;
-      }
+      // applyContextEvents returns { contextEvent, characterEvent }
+      contextEvent = eventResult?.contextEvent ?? null;
+      characterEvent = eventResult?.characterEvent ?? null;
       if (contextEvent?.id) flags.push('weather-event-active');
     }
 

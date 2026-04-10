@@ -2982,9 +2982,8 @@ function applyContextEvents({ state, action, stage, flags }) {
     });
   }
 
-  // Return context event; attach characterEvent so the pipeline can expose it in telemetry
-  if (eventEffect) eventEffect._characterEvent = charEffect || null;
-  return eventEffect;
+  // Return both context event and character event as a structured pair
+  return { contextEvent: eventEffect, characterEvent: charEffect || null };
 }
 
 function classifyDifficultyResponsibility() {

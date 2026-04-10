@@ -35,6 +35,12 @@ test('each active character has at least one event with valid activation path an
   const activeCharacters = ['francisco', 'laura', 'irina', 'erik', 'daniela', 'blake'];
   activeCharacters.forEach((id) => assert.ok(byCharacter.has(id), `missing event for ${id}`));
 
+  // Verify all event IDs are unique within each character
+  for (const [charId, charEvents] of byCharacter) {
+    const ids = charEvents.map((e) => e.id);
+    assert.equal(ids.length, new Set(ids).size, `${charId} has duplicate event IDs: ${ids}`);
+  }
+
   for (const characterId of activeCharacters) {
     const charEvents = byCharacter.get(characterId);
     assert.ok(charEvents.length >= 2, `${characterId} should have at least 2 events, got ${charEvents.length}`);

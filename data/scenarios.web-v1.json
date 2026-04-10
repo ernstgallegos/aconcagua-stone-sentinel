@@ -416,7 +416,6 @@
           "water": 22,
           "food": 20,
           "difficulty": "Hard",
-          "_equinoxTrapTurn": 7,
           "_designIntent": {
             "weather_deterioration": 0,
             "terrain_growth": 0,

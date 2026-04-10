@@ -2,6 +2,9 @@ export function classifyOutcome({ G, getOutcomeClass }) {
   return { label: G.finalOutcome || 'Strategic Retreat', cls: getOutcomeClass(G.finalOutcome) };
 }
 
+/** Flags that indicate systemic mountain pressure (not player choice). */
+const SYSTEMIC_FLAGS = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
+
 /**
  * Classifies whether the run outcome was primarily shaped by systemic pressure,
  * player decision patterns, or a mix of both.
@@ -13,8 +16,7 @@ export function classifyOutcome({ G, getOutcomeClass }) {
  */
 export function classifyDifficultyResponsibility({ turnLog }) {
   const total = Math.max(1, turnLog.length);
-  const systemicFlags = ['late-signal-lock-in', 'forced-bivouac', 'weather-window-closed', 'decision-window-exceeded', 'acclimatization-deficit'];
-  const systemicTurns = turnLog.filter((t) => t.flags.some((f) => systemicFlags.includes(f))).length;
+  const systemicTurns = turnLog.filter((t) => t.flags.some((f) => SYSTEMIC_FLAGS.includes(f))).length;
   const highRiskAdvances = turnLog.filter((t) => (t.decision === 'advance' || t.decision === 'advance_slowly') && (t.trend === 'worsening' || t.trend === 'worsening fast')).length;
   const decisionErrors = turnLog.filter((t) => t.flags.includes('critical-fatigue') || t.flags.includes('critical-exposure')).length + highRiskAdvances;
   const systemicShare = systemicTurns / total;
