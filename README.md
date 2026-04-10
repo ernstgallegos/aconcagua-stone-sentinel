@@ -12,7 +12,7 @@ Repository documentation now includes direct links to current in-repo artwork so
 
 ### Cover concept
 
-![Aconcagua: Stone Sentinel cover concept](art/cover/cover-concept-1.png)
+![Aconcagua: Stone Sentinel — promotional cover art, Scene 1 with title overlay](art/cover/ig/2.png)
 
 ### Character roster preview
 
@@ -22,7 +22,15 @@ Repository documentation now includes direct links to current in-repo artwork so
 
 ### Atmospheric concept art
 
-![Curated mountain concept art](art/concept-art/curated/concept-curated-1.png)
+A selection from the 13-scene curated illustration collection. Full catalog and use-case notes: [`docs/concept-art-catalog.md`](docs/concept-art-catalog.md).
+
+| Scene 1 — Dawn approach | Scene 3 — Group ascent |
+|---|---|
+| ![Lone climber facing Aconcagua at dawn](art/concept-art/curated/ig/1.png) | ![Group ascending steep terrain under alpenglow](art/concept-art/curated/ig/5.png) |
+
+| Scene 7 — Golden hour | Scene 13 — Blue hour |
+|---|---|
+| ![Mountain panorama at golden hour](art/concept-art/curated/ig/13.png) | ![Blue hour snowscape with inverted brightness](art/concept-art/curated/ig/25.png) |
 
 ---
 

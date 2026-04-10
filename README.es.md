@@ -10,7 +10,7 @@ La documentación ahora incorpora enlaces directos al arte disponible dentro del
 
 ### Concepto de portada
 
-![Concepto de portada de Aconcagua: Stone Sentinel](art/cover/cover-concept-1.png)
+![Aconcagua: Stone Sentinel — arte de portada promocional, Escena 1 con overlay de título](art/cover/ig/2.png)
 
 ### Vista rápida del roster de personajes
 
@@ -20,7 +20,15 @@ La documentación ahora incorpora enlaces directos al arte disponible dentro del
 
 ### Concept art atmosférico
 
-![Concept art curado de montaña](art/concept-art/curated/concept-curated-1.png)
+Una selección de la colección de 13 escenas curadas. Catálogo completo con notas de uso: [`docs/concept-art-catalog.md`](docs/concept-art-catalog.md).
+
+| Escena 1 — Ascenso al amanecer | Escena 3 — Ascenso grupal |
+|---|---|
+| ![Escalador solitario frente al Aconcagua al amanecer](art/concept-art/curated/ig/1.png) | ![Grupo ascendiendo terreno empinado bajo alpenglow](art/concept-art/curated/ig/5.png) |
+
+| Escena 7 — Hora dorada | Escena 13 — Hora azul |
+|---|---|
+| ![Panorama de montaña en hora dorada](art/concept-art/curated/ig/13.png) | ![Paisaje nevado en hora azul con brillo invertido](art/concept-art/curated/ig/25.png) |
 
 **Whitepaper del proyecto**  
 Este documento presenta la visión, el enfoque y las decisiones fundacionales de *Aconcagua: Stone Sentinel*.  
