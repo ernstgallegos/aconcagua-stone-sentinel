@@ -12,12 +12,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Fixed
 
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
-
-
+- Fixed version drift in root `index.html` landing page: bumped all six stale `v1.4.5` version strings (EN heroMeta1, statusValue2, footerProjectBody, and their ES mirrors) to `v1.4.8`, aligning the public website with `package.json`, `docs/repo-truth.md`, `prototype/web-v1/index.html`, and all other versioned surfaces.
+- Fixed parity-test coverage gap: extended `prototype/web-v1/tests/parity/repo-truth-parity.test.js` to assert that `index.html` contains the canonical version string derived from `package.json`, preventing future landing-page version drift.
 
 ### Added
-
-- Added a dual-prototype governance matrix in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
+ in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
 - Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.
