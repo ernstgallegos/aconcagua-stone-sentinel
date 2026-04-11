@@ -24,7 +24,7 @@ npm run smoke:release
 
 > **Prerrequisitos:**
 > - `pytest` requiere Python 3 con los paquetes de `requirements-dev.txt` (`pip install -r requirements-dev.txt`). Valida exclusivamente el simulador congelado `mra-v0`; un fallo aquí no bloquea releases de web-v1, pero debe documentarse.
-> - `npm run smoke:release` requiere conexión de red activa y una URL desplegada. No puede ejecutarse solo en local. Usar una URL de preview de Vercel o la URL canónica de producción. Omitir con justificación explícita si el deploy aún no está disponible.
+> - `npm run smoke:release` requiere conexión de red activa y una URL desplegada. No puede ejecutarse solo en local. Usar una URL de preview de Vercel o la URL canónica de producción. Omitir con justificación explícita si el deploy aún no está disponible. En CI, este paso se ejecuta **solo en push a `main`** (no en PRs) para evitar falsos fallos contra una rama no desplegada.
 
 - [ ] Todas las puertas pasan localmente.
 - [ ] `npm run smoke:release` pasó contra la URL canónica desplegada (o contra una URL candidata de release explicitada).

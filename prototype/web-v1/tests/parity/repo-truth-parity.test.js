@@ -9,12 +9,14 @@ test('repo truth, package version, UI version, and versioned docs are synchroniz
   const readme = await readFile('README.md', 'utf8');
   const readmeEs = await readFile('README.es.md', 'utf8');
   const simulationEngineDoc = await readFile('docs/simulation_engine.md', 'utf8');
+  const landingPage = await readFile('index.html', 'utf8');
   const release = `v${pkg.version}`;
   assert.ok(repoTruth.includes(release));
   assert.ok(ui.includes(`Prototype · ${release}`));
   assert.ok(readme.includes(release));
   assert.ok(readmeEs.includes(release));
   assert.ok(simulationEngineDoc.includes(release));
+  assert.ok(landingPage.includes(release), `index.html did not contain ${release}`);
 });
 
 test('repo truth outcome taxonomy matches runtime outcomes data', async () => {

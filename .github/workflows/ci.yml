@@ -70,6 +70,7 @@ jobs:
         run: npm test
 
       - name: Run release smoke gate
+        if: github.event_name == 'push'
         run: npm run smoke:release
 
   web-smoke-test:
