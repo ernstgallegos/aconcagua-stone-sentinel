@@ -1,3 +1,13 @@
+/**
+ * Mulberry32 seeded pseudo-random number generator.
+ *
+ * Returns a function that generates deterministic floats in [0, 1) from the given seed.
+ * Used for all in-game randomness to ensure reproducible runs from a numeric seed.
+ *
+ * @param {number} seed - Integer seed. Must be a finite number.
+ * @returns {() => number} PRNG function.
+ * @throws {TypeError} If seed is not a finite number.
+ */
 export function mulberry32(seed) {
   if (typeof seed !== 'number' || !Number.isFinite(seed)) {
     throw new TypeError('mulberry32 requires a finite numeric seed');
@@ -33,6 +43,16 @@ export const RESOLVE_TURN_PIPELINE = Object.freeze([
   'emit-signals-and-narrative',
 ]);
 
+/**
+ * Creates a turn execution engine with all required dependencies injected.
+ *
+ * The engine is stateful through the injected `G` (global run state) object,
+ * but all side-effects are explicitly delegated to injected callbacks so the
+ * engine itself remains testable without a DOM.
+ *
+ * @param {object} deps - All required dependencies (see RESOLVE_TURN_PIPELINE for processing stages).
+ * @returns {{ resolveTurn: Function }} An object with a `resolveTurn(state, action, options?)` method.
+ */
 export function createTurnEngine(deps) {
   const {
     G,

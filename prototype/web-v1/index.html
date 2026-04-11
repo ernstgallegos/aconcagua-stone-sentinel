@@ -9,7 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <!-- Typography system: Playfair Display (editorial hierarchy), Montserrat (UI/body), IBM Plex Mono (telemetry/data) -->
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet"/>
+<!-- Non-render-blocking font load: preload as style, swap to stylesheet on load -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"/></noscript>
 <!-- Decision 1: CSS modules -->
 <link rel="stylesheet" href="./css/tokens.css"/>
 <link rel="stylesheet" href="./css/reset.css"/>
@@ -134,7 +136,6 @@
   <!-- ③ THE WATCH BAND — compact 4-cell horizontal, tap to expand detail -->
   <div class="watch-band" id="watch-band" role="button" tabindex="0"
        data-action="open-watch-detail"
-       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openWatchDetail();}"
        aria-label="Watch status — press Enter or tap for full detail" aria-haspopup="dialog">
     <div class="watch-cell" id="wc-body" aria-label="Body state">
       <div class="watch-cell-label">Body</div>
@@ -360,14 +361,6 @@
   </div>
 
   <div class="debrief-box">
-    <!-- Legacy outcome display (still updated by JS, used as fallback) -->
-    <div class="debrief-header" style="display:none;" aria-hidden="true">
-      <div class="debrief-outcome-label">Expedition Outcome</div>
-      <div class="debrief-outcome-value" id="debrief-outcome-val" aria-live="polite">—</div>
-      <div class="debrief-retreat-msg" id="debrief-retreat-msg-legacy" style="display:none"></div>
-      <div class="debrief-stats" id="debrief-stats"></div>
-    </div>
-
     <div class="debrief-section">
       <div class="debrief-section-title">Expedition record</div>
       <div class="debrief-stats-grid" id="debrief-stats-grid">
@@ -428,17 +421,17 @@
 
 <!-- ══════════════════════ SUMMIT SUCCESS ══════════════════════ -->
 <section id="screen-summit-success" class="screen" aria-label="Summit achieved">
-  <div style="max-width:600px; width:100%; margin:0 auto; padding:3rem 1.5rem; display:flex; flex-direction:column; align-items:center; text-align:center; flex:1; justify-content:center;">
-    <div style="font-family:var(--mono); font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--ochre); margin-bottom:1.5rem;">SUMMIT AND SAFE RETURN</div>
-    <h2 style="font-family:var(--mono); font-size:clamp(1.4rem,4vw,2rem); font-weight:300; color:var(--white); margin:0 0 1.5rem;">The summit was reached.<br>The mountain was respected.</h2>
-    <div style="width:40px; height:1px; background:var(--border); margin:0 auto 2rem;"></div>
-    <p style="font-style:italic; color:var(--stone); font-size:0.9rem; line-height:1.75; max-width:480px; margin-bottom:2.5rem;" id="summit-success-note">
+  <div class="summit-success-panel">
+    <div class="summit-success-eyebrow">SUMMIT AND SAFE RETURN</div>
+    <h2 class="summit-success-title">The summit was reached.<br>The mountain was respected.</h2>
+    <div class="summit-success-divider"></div>
+    <p class="summit-success-note" id="summit-success-note">
       This result was possible within a simplified simulation — one built on a limited set of parameters, designed to test whether the core systems hold. They do.
     </p>
-    <p style="color:var(--text); font-size:0.88rem; line-height:1.7; max-width:480px; margin-bottom:3rem;">
+    <p class="summit-success-bridge">
       What comes next puts everything you learned here to a different test. Not a simulation. The real expedition — with the full group, the real terrain, and no guaranteed outcomes. The mountain will decide.
     </p>
-    <button class="btn-primary" data-action="show-screen" data-action-arg="part2-character" style="margin-bottom:1.5rem;">Begin the real expedition</button>
+    <button class="btn-primary summit-success-cta" data-action="show-screen" data-action-arg="part2-character">Begin the real expedition</button>
     <button class="btn-ghost" data-action="show-screen" data-action-arg="debrief">Review this run first</button>
   </div>
 </section>

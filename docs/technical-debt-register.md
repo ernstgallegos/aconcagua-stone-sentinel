@@ -14,6 +14,19 @@ For every release PR:
 
 No active debt items are currently registered. Re-open an item only when its measurable exit criterion regresses.
 
+## Intentional deferrals (permanently classified)
+
+These items have been evaluated and intentionally deferred with explicit rationale. They do not count as "open" debt and should not be re-opened as unresolved issues unless the exit criterion is met.
+
+| Item | Rationale | Exit criterion |
+|---|---|---|
+| **Asset bundling / minification** | The prototype is a single-file static HTML app served over Vercel CDN with Brotli compression. The payload is already small (~200 KB uncompressed). Introducing a build pipeline (Vite, Rollup, etc.) would add maintenance complexity that is not justified until a production build target exists. | Revisit when a production release branch is created with a defined deployment pipeline. |
+| **Service Worker / offline support** | The game requires live data fetches from `data/*.json` on startup. A Service Worker would need a cache-management strategy for data versioning. This is appropriate for v2 production but adds operational risk in the current single-file prototype. | Revisit after v2 production architecture is defined. |
+| **Stylelint / HTML validator in CI** | CSS and HTML are tightly coupled with JS in a single-file prototype. Linting HTML from CI requires either a W3C network call or an npm validator dependency. For now, structural HTML invariants are covered by `new-mechanics.test.js` and Playwright smoke tests. | Add `htmlhint` and `stylelint` to devDependencies when the project introduces a formal npm package build. |
+| **`screens.js` further extraction** | The `screens.js` file is reduced to orchestration/wiring as of v1.4.6 (see Resolved items below). Remaining content is wiring glue that cannot be cleanly extracted without a full ES-module rewrite. | Revisit during a full screens modularisation sprint if the file regresses above 3000 lines. |
+| **`window.*` facade deprecation** | The `window.*` facade in `screens.js` (lines 3644–3684) bridges inline HTML `onclick` handlers to ES-module functions. It will be removable once all HTML event handlers are migrated to `[data-action]` delegation via `event-registry.js`. Inline `onkeydown` removed in v1.4.8. | Remove the facade after: (1) all remaining `onclick=` attributes in `index.html` are replaced with `data-action`, (2) `bindUiEventRegistry` handles all interactive element types, (3) a smoke test verifies all CTAs work without `window.*`. |
+| **EN/ES parity for technical-only docs** | Technical implementation docs (`docs/architecture.md`, `docs/simulation_engine.md`, `docs/technical-debt-register.md`, `docs/api-contract.md`, `docs/deploy-routing.md`) are maintained in English only. Spanish documentation (`docs/es/`) covers narrative design, character profiles, and player-facing systems only. Mixed-audience technical docs do not require ES mirrors. | This is a permanent policy, not a debt item. No exit criterion applies. |
+
 ## Resolved debt items
 
 | Debt item | Resolution | Resolved in |

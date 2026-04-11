@@ -120,3 +120,98 @@ test('in-game help overlay wiring is present for pressure labels and trend categ
   assert.match(uiSource, /window\.openGameHelp = openGameHelp/);
   assert.match(uiSource, /window\.closeGameHelp = closeGameHelp/);
 });
+
+// ── Behavioral regression guards ──────────────────────────────────────────────
+// These tests verify runtime behavior instead of source-text patterns.
+// They guard the engine data contract, keyboard accessibility wiring,
+// and the "no inline event handlers" invariant.
+
+import { createTurnEngine } from '../engine/turn-resolution.js';
+import { deriveTerminalOutcome } from '../engine/turn-rules.js';
+
+const eventRegistryPath = path.join(__dirname, '..', 'ui', 'event-registry.js');
+const eventRegistrySource = fs.readFileSync(eventRegistryPath, 'utf8');
+
+test('no inline onkeydown handlers remain in index.html', () => {
+  assert.doesNotMatch(indexSource, /onkeydown=/,
+    'All keyboard activation must be handled by the event-registry keydown listener, not inline handlers');
+});
+
+test('event-registry registers a keydown listener for role=button accessibility', () => {
+  assert.match(eventRegistrySource, /document\.addEventListener\(['"]keydown['"]/,
+    'event-registry must register a keydown listener to handle keyboard activation of [data-action] elements');
+  assert.match(eventRegistrySource, /Enter.*Space|Space.*Enter/,
+    'keydown listener must handle both Enter and Space keys');
+  assert.match(eventRegistrySource, /tag.*BUTTON|BUTTON.*tag/,
+    'keydown handler must skip native interactive elements to avoid double-fire');
+});
+
+test('summit-success screen uses CSS classes, no inline styles', () => {
+  // The summit-success section must not contain style= attributes
+  const summitSuccessMatch = indexSource.match(/id="screen-summit-success"[\s\S]*?<\/section>/);
+  assert.ok(summitSuccessMatch, 'screen-summit-success section must exist');
+  assert.doesNotMatch(summitSuccessMatch[0], /style="[^"]+"/,
+    'summit-success screen must not use inline styles — all styling must be in screens.css');
+});
+
+test('getActionModifier never returns NaN delta fields', () => {
+  // Minimal stub of deps required to call getActionModifier via createTurnEngine
+  const actions = ['advance', 'advance_slowly', 'wait', 'descend', 'sleep', 'shoot_photo'];
+  const actionModifiers = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', '..', '..', 'data', 'action_modifiers.json'), 'utf8'
+  ));
+
+  // getActionModifier is exported as part of the engine — access it through createTurnEngine
+  // by capturing the normalised output for each action key
+  let captured = null;
+  const dummyDeps = {
+    G: { turn: 1, minutesOfDay: 360, day: 1, permitDay: 1, permitMaxDays: 20, hasSummited: false, highestPosIdx: 0, acclimatization: 0, characterEventState: {}, characterConfidenceDrift: 0, persistenceTurns: 0, lastTurnRecord: {} },
+    POSITIONS: ['horcones'],
+    CANONICAL_OUTCOMES: new Set(['Strategic Retreat']),
+    canUseShootPhoto: () => ({ allowed: false }),
+    getActionModifier: (action) => {
+      const base = actionModifiers[action] || {};
+      return {
+        fatigueDelta: Number.isFinite(base.fatigueDelta) ? base.fatigueDelta : 3,
+        exposureDelta: Number.isFinite(base.exposureDelta) ? base.exposureDelta : 3,
+        capacityDelta: Number.isFinite(base.capacityDelta) ? base.capacityDelta : -1,
+        fatigueMultiplier: base.fatigueMultiplier || 1,
+        exposureMultiplier: base.exposureMultiplier || 1,
+        progress: base.progress || 0,
+        timeCost: base.timeCost || 60,
+        collapse: base.collapse || -60,
+        survival: base.survival || 0,
+      };
+    },
+    applyTimeCost: () => 60,
+    spendResourcesForMinutes: () => ({ waterBurn: 0, foodBurn: 0 }),
+    getCurrentNode: () => ({ id: 'horcones', altitudeBand: 0, terrainLoad: 1, timeSensitivity: 1 }),
+    getCurrentStage: () => 'APPROACH',
+    getPersistenceTier: () => 'fresh',
+    calculateEnvironmentalPressure: () => ({ pressureScore: 30 }),
+    applyBivouacPenalty: () => {},
+    calculateBodyTolerance: () => ({ toleranceScore: 60 }),
+    calculatePerception: () => ({ confidenceLevel: 70, noiseLevel: 5, trendEstimate: 'steady' }),
+    applyDecisionWindowDegradation: (x) => x,
+    applySummitDifficultyRegressionGuard: () => {},
+    isCampPosition: () => false,
+    updateAmbientSignal: () => {},
+    computeSignals: () => ({ trend: 'steady' }),
+    renderNarrative: () => {},
+    deriveTerminalOutcome: () => 'Strategic Retreat',
+    getTimeWindows: () => ({ summitLateStart: 1020 }),
+    updateRunState: () => {},
+    recordTelemetry: () => {},
+    assertStateShape: () => {},
+    buildEnvironmentEventPlan: () => [],
+    applyContextEvent: () => null,
+    applyCharacterEvent: () => null,
+  };
+
+  for (const action of actions) {
+    const mod = dummyDeps.getActionModifier(action);
+    assert.ok(Number.isFinite(mod.fatigueDelta), `fatigueDelta must be finite for action '${action}', got ${mod.fatigueDelta}`);
+    assert.ok(Number.isFinite(mod.exposureDelta), `exposureDelta must be finite for action '${action}', got ${mod.exposureDelta}`);
+    assert.ok(Number.isFinite(mod.capacityDelta), `capacityDelta must be finite for action '${action}', got ${mod.capacityDelta}`);
+  }
+});

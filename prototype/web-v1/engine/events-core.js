@@ -1,7 +1,13 @@
 import { clamp } from './turn-resolution.js';
 
-// Engine ownership: this module is the canonical event-effect layer.
-// UI may trigger these helpers but cannot bypass their bounded effects.
+/**
+ * Engine ownership: this module is the canonical event-effect layer.
+ * UI may trigger these helpers but cannot bypass their bounded effects.
+ *
+ * Events are bounded by CHARACTER_EVENT_BOUNDS and CONTEXT_EVENT_BOUNDS to
+ * prevent any single event from dominating gameplay or producing runaway
+ * state changes during normal expedition progression.
+ */
 const CHARACTER_EVENT_BOUNDS = Object.freeze({
   fatigueDelta: { min: -3, max: 3 },
   exposureDelta: { min: -3, max: 3 },
@@ -64,6 +70,15 @@ function normalizeContextArchetype(event) {
   };
 }
 
+/**
+ * Advances the game clock by deltaMinutes, rolling over day boundaries.
+ *
+ * @param {object} params
+ * @param {number} params.minutesOfDay - Current minute of day (0–1439).
+ * @param {number} params.day - Current expedition day.
+ * @param {number} params.deltaMinutes - Minutes to add (positive) or subtract (negative).
+ * @returns {{ minutesOfDay: number, day: number, permitDay: number }} Updated clock state.
+ */
 export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
   let nextMinutes = minutesOfDay + deltaMinutes;
   let nextDay = day;
@@ -80,6 +95,18 @@ export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
   return { minutesOfDay: nextMinutes, day: nextDay, permitDay: nextDay };
 }
 
+/**
+ * Builds a seed-deterministic environment event plan for a run.
+ *
+ * Each context event archetype is offset by `seed % 3` turns to produce
+ * varied but reproducible event schedules across different seeds.
+ *
+ * @param {number} seed - Numeric seed for deterministic offset.
+ * @param {number} [maxTurns=40] - Maximum turns in the run (events beyond this are filtered out).
+ * @param {object[]} [contextEvents] - Context event archetypes from data/context_events.json.
+ *   Falls back to DEFAULT_CONTEXT_EVENT_ARCHETYPES if not provided or empty.
+ * @returns {object[]} Normalised event plan with concrete turn assignments.
+ */
 export function buildEnvironmentEventPlan(seed, maxTurns = 40, contextEvents = DEFAULT_CONTEXT_EVENT_ARCHETYPES) {
   const offset = Number(seed || 0) % 3;
   const archetypes = Array.isArray(contextEvents) && contextEvents.length ? contextEvents : DEFAULT_CONTEXT_EVENT_ARCHETYPES;

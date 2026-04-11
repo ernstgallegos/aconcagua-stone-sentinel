@@ -140,7 +140,7 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
   const config = createDefaultDataConfig();
   for (const [key, path] of files) {
     try {
-      const response = await fetchImpl(path, { cache: 'no-store' });
+      const response = await fetchImpl(path, { cache: 'default' });
       if (!response.ok) {
         const kind = response.status === 404 ? 'missing file' : 'http failure';
         throw new Error(`[${kind}] ${path} (status ${response.status})`);

@@ -72,9 +72,11 @@ jobs:
       - name: Run release smoke gate
         run: npm run smoke:release
 
+      - name: Validate markdown links
+        run: npm run validate:links
+
   web-smoke-test:
-    name: Web-v1 Playwright smoke test (PR)
-    if: github.event_name == 'pull_request'
+    name: Web-v1 Playwright smoke test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2

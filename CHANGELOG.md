@@ -37,6 +37,34 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed run-log summary alias drift by removing legacy `lateSignalTriggered` fallback aggregation and keeping canonical `lateSignalActivation` as the only supported late-signal counter input in `prototype/web-v1/ui/helpers/run-log.js`.
 - Fixed a broken relative markdown image link in `temp/AUDITORIA_ACONCAGUA_COMPLETA_2026-03-30.md` by resolving it from `temp/` to repository root assets (`../art/...`).
 
+### Added (comprehensive audit remediation)
+
+- Added explicit `fatigueDelta`, `exposureDelta`, and `capacityDelta` fields to all six action entries in `data/action_modifiers.json`, eliminating the runtime fallback path in `getActionModifier()` and preventing potential `NaN` propagation into body-state updates.
+- Added keyboard-activation support for `role="button"` elements with `[data-action]` in `ui/event-registry.js` (Enter/Space keydown listener), making all interactive non-button elements fully keyboard-accessible without any inline event handlers.
+- Added `docs/api-contract.md`: canonical contract for the `/api/run` serverless endpoint (request format, query parameters, all response shapes, security headers, rate-limit config, CORS config, and preflight behaviour).
+- Added CSS classes for the summit-success screen in `css/screens.css`, replacing all inline `style=` attributes.
+- Added `tests/parity/balance-calibration-parity.test.js` (3 tests): asserts that numeric character parameters in `docs/balance-calibration-notes.md` match `data/characters.json` for all six characters.
+- Added `tests/smoke/monte-carlo-harness.test.js` (4 tests): validates harness data loading, node-ID normalisation, `createTurnEngine` deps wiring, and a single seeded end-to-end run with a canonical terminal outcome.
+- Added 4 new behavioral regression tests to `tests/new-mechanics.test.js` and 3 new tests to `tests/unit/event-registry.test.js` covering keyboard accessibility, inline-style absence, and finite delta fields.
+- Added JSDoc to all engine core public functions across `turn-resolution.js`, `turn-rules.js`, `pressure-model.js`, and `events-core.js`.
+- Added `validate:links` step to `js-contract-tests` CI job as a blocking gate on every push and PR.
+- Added intentional-deferral and EN/ES parity policy table to `docs/technical-debt-register.md` (asset bundling, service worker, stylelint/HTML validator, `screens.js` extraction, `window.*` facade deprecation, technical-doc language policy).
+
+### Changed (comprehensive audit remediation)
+
+- Changed `ui/event-registry.js` to register a `keydown` listener alongside `click`, handling Enter/Space for non-native interactive elements.
+- Changed `ui/helpers/data-config.js` data-file fetch cache mode from `'no-store'` to `'default'`, enabling browser/CDN caching.
+- Changed Google Fonts loading in `prototype/web-v1/index.html` from render-blocking `<link rel="stylesheet">` to non-blocking `<link rel="preload" as="style" onload>` with `<noscript>` fallback.
+- Changed `.github/workflows/ci.yml` Playwright smoke test to run on push and PR (previously PR-only).
+- Changed `data/scenarios.web-v1.json` to fix duplicate seed `454` in the `weather-window` scenario.
+
+### Fixed (comprehensive audit remediation)
+
+- Removed dead legacy `debrief-header` div from `index.html`.
+- Removed inline `onkeydown` attribute from `#watch-band`; keyboard activation is now centralized in `event-registry.js`.
+- Removed `prototype/web-v1/.gitkeep` placeholder file.
+
+
 ## [1.4.7] — 2026-04
 
 ### Added
