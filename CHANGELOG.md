@@ -9,7 +9,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-## [1.4.8] — 2026-04
+### Fixed
+
+- Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
+
+
 
 ### Added
 
