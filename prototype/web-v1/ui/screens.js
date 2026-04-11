@@ -3158,7 +3158,6 @@ function endRun(returnedToHorcones) {
   outEl.textContent = outcome.label;
   outEl.className = 'debrief-outcome-value ' + outcome.cls;
 
-  /* EXPERIMENTAL — Decision 18: Update hero section if present */
   updateDebriefHero(outcome);
   document.querySelectorAll('.debrief-late-msg').forEach((el) => el.remove());
   const retreatMsg = document.getElementById('debrief-retreat-msg');
@@ -3439,7 +3438,7 @@ loadDataConfig()
     });
   });
 
-/* EXPERIMENTAL — Decision 18: Update debrief hero section with outcome-specific visuals */
+/* Update debrief hero section with outcome-specific visuals */
 function updateDebriefHero(outcome) {
   const hero = document.getElementById('debrief-hero');
   if (!hero) return;
@@ -3465,7 +3464,7 @@ function updateDebriefHero(outcome) {
     statsEl.textContent = `${G.character?.name || '—'} · ${highPos} · ${G.day} day${G.day !== 1 ? 's' : ''}`;
   }
 
-  /* EXPERIMENTAL — Decision 18: Populate stat grid cards */
+  /* Populate stat grid cards */
   const sc = DATA_CONFIG.scenariosWebV1?.predefinedScenarios?.find(s => s.id === G.scenarioId)
     || (DATA_CONFIG.scenariosWebV1?.predefinedScenarios || [])[0] || { name: 'Scenario' };
   const setId = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
@@ -3653,7 +3652,7 @@ window.beginExpedition = beginExpedition;
 window.quickStart = quickStart;
 window.CAROUSEL_STATE = CAROUSEL_STATE;
 
-/* EXPERIMENTAL — Decision 13: Bottom-sheet toggle functions — imported from flow-controller */
+/* Bottom-sheet toggle functions — imported from flow-controller */
 window.openBottomSheet = openBottomSheet;
 window.closeBottomSheet = closeBottomSheet;
 

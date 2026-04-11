@@ -3,9 +3,9 @@
    Decision 5: Title/welcome overlay gradient
    Decision 6: Ambient image reuse
    Decision 11: Difficulty pill-row (title screen)
-   Decision 13: [EXPERIMENTAL] Bottom-sheets game mobile
-   Decision 15: [EXPERIMENTAL] Onboarding briefing single view
-   Decision 18: [EXPERIMENTAL] Debrief 3 sections
+   Decision 13: Bottom-sheets game mobile
+   Decision 15: Onboarding briefing single view
+   Decision 18: Debrief 3 sections
    ═══════════════════════════════════════════ */
 
 /* ══════════════════════════════════════
@@ -384,7 +384,7 @@
 }
 
 /* ══════════════════════════════════════
-   ONBOARDING — EXPERIMENTAL (Decision 15)
+   ONBOARDING (Decision 15)
    ══════════════════════════════════════ */
 
 /* ══════════════════════════════════════
@@ -422,7 +422,7 @@
   font-size: 0.8125rem;
 }
 
-/* EXPERIMENTAL — Mobile bottom-sheet triggers (Decision 13) */
+/* Mobile bottom-sheet triggers */
 .game-mobile-bar {
   display: none; /* hidden on desktop; shown in responsive.css */
   flex-shrink: 0;
@@ -439,7 +439,7 @@
   font-size: 0.875rem;
 }
 
-/* EXPERIMENTAL — Bottom-sheet base (Decision 13) */
+/* Bottom-sheet base */
 .bottom-sheet {
   position: fixed;
   inset: auto 0 0;
@@ -478,7 +478,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-/* EXPERIMENTAL — Mini status bar for mobile game (Decision 13) */
+/* Mini status bar for mobile game */
 .game-mini-status {
   display: none; /* shown in responsive.css on mobile */
   flex-shrink: 0;
@@ -509,10 +509,10 @@
 .bottom-sheet-backdrop.visible { display: block; }
 
 /* ══════════════════════════════════════
-   DEBRIEF — EXPERIMENTAL (Decision 18)
+   DEBRIEF
    ══════════════════════════════════════ */
 
-/* EXPERIMENTAL — 3-section debrief layout (Decision 18) */
+/* 3-section debrief layout */
 #screen-debrief {
   padding: 0;
   align-items: stretch;
@@ -525,7 +525,7 @@
   padding: 1.5rem 1.25rem 2rem;
 }
 
-/* Section 1 — Emotional result (Decision 18) */
+/* Section 1 — Emotional result */
 .debrief-hero {
   position: relative;
   overflow: hidden;
@@ -540,7 +540,7 @@
     url('../../../art/concept-art/curated/concept-curated-4.webp') center/cover no-repeat;
 }
 
-/* Outcome-specific filters (Decision 18) */
+/* Outcome-specific filters */
 .debrief-hero::before {
   content: '';
   position: absolute;
@@ -787,7 +787,7 @@
 
 .reflection-list li.dynamic { border-left-color: var(--ochre-dim); }
 
-/* Section 3 — Actions (Decision 18) */
+/* Section 3 — Actions */
 .debrief-actions {
   display: flex;
   gap: 0.75rem;
