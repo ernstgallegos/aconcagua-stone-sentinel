@@ -9,6 +9,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.4.8] — 2026-04
+
 ### Added
 
 - Added a dual-prototype governance matrix in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
@@ -17,7 +19,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.
 - Added `docs/concept-art-catalog.md`: complete visual analysis catalog for the 13 unique scenes across `art/concept-art/curated/ig/` and `art/cover/ig/` (26 images = 13 paired compositions), covering style, subject, mood, palette, design-principle alignment, and recommended use cases per scene. Documents the pairing convention: `art/cover/ig/` carries the "ACONCAGUA: STONE SENTINEL" title overlay (promotional/cover use); `art/concept-art/curated/ig/` contains the same illustrations without text (documentation, web, and flexible marketing use). Updated `art/README.md` to document the `ig/` subdirectories and link to the catalog.
 - Integrated curated concept art illustrations into public-facing surfaces: upgraded landing page (`index.html`) hero to Scene 1 (`art/concept-art/curated/ig/1.png` — lone climber at dawn, recommended for landing primary visual); added three-scene atmospheric art strip (Scenes 3, 7, 13) between Vision and System sections; updated `README.md` and `README.es.md` visual-references sections to use the new cover plate (`art/cover/ig/2.png`) and a 4-scene concept art gallery (Scenes 1, 3, 7, 13). Added Section 12 (Visual assets) to `docs/design-system.md` with scene-role pairings, palette alignment notes, and a usage rule separating text-free vs. overlay variants.
-- Fixed landing page illustration layout: hero image now fills the full height of the hero section (`align-items: stretch`, `height: 100%`, `object-fit: cover`, `object-position: center 72%`) so the climber is visible and no dead space appears above the card; art strip figures now use `aspect-ratio: 4/5` to respect the original portrait composition, replacing the previous `height: 160px` + `object-position: center top` crop that showed only sky.
 
 ### Changed
 
@@ -30,6 +31,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed landing page illustration layout: hero image now fills the full height of the hero section (`align-items: stretch`, `height: 100%`, `object-fit: cover`, `object-position: center 72%`) so the climber is visible and no dead space appears above the card; art strip figures now use `aspect-ratio: 4/5` to respect the original portrait composition, replacing the previous `height: 160px` + `object-position: center top` crop that showed only sky.
 - Fixed an obsolete documentation debt entry in `docs/technical-debt-register.md`: removed the active “Narrative bank i18n parity” item after confirming `NARRATIVES` and `NARRATIVES_ES` key coverage is complete, and moved it to the resolved-debt table.
 - Fixed release-version drift in `README.md`, `README.es.md`, and `docs/simulation_engine.md` by aligning all public status references to `v1.4.7` (matching `package.json`, `docs/repo-truth.md`, and UI version labels).
 - Fixed parity-test coverage gap in `prototype/web-v1/tests/parity/repo-truth-parity.test.js` by extending the canonical version synchronization assertion to include `README.md`, `README.es.md`, and `docs/simulation_engine.md` with `v${package.version}` as the single source of truth.

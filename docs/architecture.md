@@ -1,9 +1,9 @@
 # Architecture — Prototype Web v1.4 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.6]`](../CHANGELOG.md#146--2026-04).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.8]`](../CHANGELOG.md#148--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.7** with phased rollout contracts preserved.
+> - Current public build is **v1.4.8** with phased rollout contracts preserved.
 
 Prototype Web v1.4 (public branch state) is the canonical active prototype in this repository, with completed and in-progress items from the v1.4 phase plan.
 
@@ -67,6 +67,18 @@ No other module should duplicate either the file-path list or the normalization 
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
+
+## v1.4.8 additions (governance matrix, concept art integration, artwork layout, quality gate hardening)
+
+- Added dual-prototype governance matrix (`docs/prototype-ownership-matrix.md`), cross-surface contract gate (`npm run test:contracts`), and enforcement tests in `tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities.
+- Added engine tuning guardrails in `tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
+- Added `scripts/check-markdown-links.js` and `npm run validate:links` for portable internal markdown link drift detection across `README*`, `docs/`, and `temp/`.
+- Added `docs/concept-art-catalog.md`: visual analysis catalog for all 13 scenes across `art/concept-art/curated/ig/` and `art/cover/ig/`, documenting the overlay/no-overlay pairing convention, palette alignment, and recommended use cases.
+- Integrated curated concept art into public surfaces: landing page hero (Scene 1), atmospheric art strip (Scenes 3, 7, 13), README gallery (Scenes 1, 3, 7, 13 + cover plate 2). Updated `docs/design-system.md` with Visual assets section (§12).
+- Fixed landing page illustration layout: hero now fills full height with `object-fit: cover`; art strip uses `aspect-ratio: 4/5` to respect portrait compositions.
+- Centralized run-log outcome annotation: `endRun()` now uses `annotateRunLogOutcome()` from `ui/helpers/run-log.js`; removed inline per-entry mapping.
+- Fixed run-log summary alias drift: removed legacy `lateSignalTriggered` fallback; canonical `lateSignalActivation` is the only supported counter.
+- Promoted all five active tech-debt items to resolved; no active debt items remain.
 
 ## v1.4.7 additions (carousel/narrative extraction, resource economy fix, NARRATIVES_ES parity)
 

@@ -4,9 +4,9 @@
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
 - **Latest calibration evidence run date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
-- **Latest documentation consolidation review:** **2026-04-08** (post-`v1.4.7` docs pass; no new Monte Carlo batch added in this revision).
+- **Latest documentation consolidation review:** **2026-04-11** (post-`v1.4.8` final consolidation; no new Monte Carlo batch added in this revision).
 - **Active calibration flags (canonical):**
-  - `none` (no currently open balance blockers documented after the post-`v1.4.7` review).
+  - `none` (no currently open balance blockers documented after the post-`v1.4.8` review).
   - `watch-next-batch`: rerun `npm run simulate` before the next release cut and update this file if any outcome band drifts beyond rollback thresholds.
 
 ## Target metric bands (per character)
@@ -67,6 +67,12 @@ Rollback procedure:
 2. Revert the last tuning commit touching pressure/action/character balance knobs.
 3. Re-run the full canonical battery and confirm all characters return to acceptable bands.
 4. Resume tuning with isolated single-axis adjustments (global pressure first, then character perception/risk, then raw capacity as last resort).
+
+## Post-v1.4.8 final consolidation (2026-04-11)
+
+- Promoted all [Unreleased] changelog work to `v1.4.8` (governance matrix, concept art integration, quality gate hardening, run-log centralization).
+- All five previously active tech-debt items confirmed resolved; no new blockers introduced.
+- Balance parameters unchanged from post-`v1.4.7` state; `watch-next-batch` reminder preserved.
 
 ## Post-v1.4.7 documentation consolidation (2026-04-08)
 
