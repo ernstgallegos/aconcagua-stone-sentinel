@@ -10,6 +10,8 @@ jobs:
   python-tests:
     name: Python simulator tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
@@ -35,6 +37,8 @@ jobs:
   json-validation:
     name: Expanded JSON validation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Set up Node.js
@@ -47,6 +51,8 @@ jobs:
   js-contract-tests:
     name: Web-v1 JS + TS gates
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4.2.2
 
@@ -78,6 +84,8 @@ jobs:
   web-smoke-test:
     name: Web-v1 Playwright smoke test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4.2.2
 
