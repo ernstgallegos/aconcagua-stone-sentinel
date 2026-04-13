@@ -21,6 +21,8 @@
   /* ── Borders ── */
   --border-soft: #93a8bc3d;
   --border-strong: #d7e6f252;
+  --line-soft: #93a8bc3d;
+  --line-strong: #d7e6f252;
 
   /* ── Text ── */
   --text-main: #e8eff7;
@@ -32,6 +34,8 @@
   --accent-mineral: #9bb9ce;
   --accent-amber: #d9b996;
   --accent-critical: #f2d4af;
+  --accent-glacier: #d6eef9;
+  --accent-copper: #c7a98a;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
