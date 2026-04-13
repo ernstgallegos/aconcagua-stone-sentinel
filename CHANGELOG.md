@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the canonical public landing page (`index.html`) with a new editorial information architecture and atmospheric visual language: sticky minimal nav, full-bleed alpine hero, narrative-first sequence (`Threshold → The Climb → Atmospheric States → Expedition Archive → The Return`), bilingual copy refresh, subtle scroll-reveal choreography with reduced-motion fallback, and consolidated CTA framing around the playable `web-v1` entry plus canonical documentation links.
+
 ### Fixed
 
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
