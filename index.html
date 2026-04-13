@@ -371,6 +371,7 @@
         letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
       }
       .status-value { font-size: 0.92rem; color: var(--text-dim); }
+      .status-band-title { margin: 0; font-family: var(--serif); font-size: 1.05rem; }
       @media (min-width: 860px) { .system-grid { grid-template-columns: 1.2fr 0.8fr; } }
       @media (min-width: 700px) {
         .status-row { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
@@ -726,7 +727,7 @@
               </div>
             </div>
             <div class="status-band reveal reveal-delay-1">
-              <h3 style="margin:0; font-family: var(--serif); font-size: 1.05rem;" data-i18n="statusTitle">Current State</h3>
+              <h3 class="status-band-title" data-i18n="statusTitle">Current State</h3>
               <div class="status-row">
                 <div class="status-item">
                   <span class="status-label" data-i18n="statusLabel2">Release</span>
@@ -1044,14 +1045,16 @@
 
     /* Hero parallax */
     (function initParallax() {
+      var PARALLAX_SCALE = 1.05;
+      var PARALLAX_RATE = 0.15;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var img = document.querySelector('.hero-bg img');
       if (!img) return;
       var ticking = false;
-      img.style.transform = 'scale(1.05)';
+      img.style.transform = 'scale(' + PARALLAX_SCALE + ')';
       function update() {
         var y = window.scrollY;
-        if (y < window.innerHeight * 1.2) img.style.transform = 'translateY(' + (y * 0.15) + 'px) scale(1.05)';
+        if (y < window.innerHeight * 1.2) img.style.transform = 'translateY(' + (y * PARALLAX_RATE) + 'px) scale(' + PARALLAX_SCALE + ')';
         ticking = false;
       }
       window.addEventListener('scroll', function () { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
