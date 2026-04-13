@@ -287,3 +287,5 @@ In addition to the changelog:
 - Debt-register hygiene is more reliable when active debt items are periodically re-validated against source/runtime truth (for example, EN/ES narrative-bank key parity) and moved to the resolved table immediately once the documented exit criterion is met.
 - Debt closure quality for `web-v1` improves when each closed debt item lands with one explicit guard: contract/parity tests for cross-surface policy, helper-level immutability tests for telemetry mutations, and config guardrail tests for EP/resource viability.
 - Cross-prototype drift control is stronger when release checklists include a dedicated `npm run test:contracts` gate and docs include an explicit active-vs-frozen ownership matrix that tests can parse.
+
+- Landing redesigns become more durable when architecture is written as an editorial ascent (altitude ledger → doctrine → canonical route → source materials → play CTA), so navigation mirrors mountain logic instead of marketing-template sections.

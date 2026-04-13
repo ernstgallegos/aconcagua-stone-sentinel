@@ -23,6 +23,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Rebuilt root `index.html` as an alpine editorial experience with a new information architecture (hero thesis, altitude ledger, doctrine, canonical route, source materials, and direct expedition CTA), updated bilingual copy, restrained atmospheric motion, and stronger typographic hierarchy.
+- Refreshed shared public tokens in `src/styles/public-tokens.css` to a colder stone/mist palette and aligned both landing/document surfaces to the same visual foundation.
+- Updated `docs/design-system.md` and README route copy to reflect the new landing architecture and public-entry narrative.
+
 - Changed Field Notes section from a static responsive grid to a compact auto-advancing carousel, significantly reducing vertical footprint on the landing page.
 - Removed "Outcome ethics" standalone section from landing page (`index.html`): its content (plural outcomes) is already represented in the Vision section's "Plural outcomes" pillar; removal reduces redundancy.
 - Removed "Runtime truth map" panel from the `#system` section: the developer-facing file paths were noise for general visitors; the audience panel and system flow diagram remain.

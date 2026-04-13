@@ -171,7 +171,7 @@ Public repository scope is explicit:
 
 This repository includes one canonical public entry point and one archived viewer:
 
-- **Canonical index (`/`)**: now serves the public project landing page with a primary CTA to `prototype/web-v1/index.html`.
+- **Canonical index (`/`)**: now serves an alpine editorial landing page with a primary CTA to `prototype/web-v1/index.html` and direct links to whitepaper/roadmap/repo materials.
 - **Prototype web-v1 (`prototype/web-v1/index.html`)**: interactive vertical slice with expanded mechanics.
 - **Archived MRA v0 viewer (`prototype/mra-v0/viewer/index.html`)**: legacy replay interface for bundled Python prototype runs.
 

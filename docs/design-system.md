@@ -1,127 +1,65 @@
 # Design System — Public Web Surface (`/`)
 
 ## 1) Scope
-This document defines the visual/interaction system for the root public site (`index.html`) and the shared tonal extension applied to `prototype/web-v1` shell theming.
+Defines the visual/interaction system for the root public site (`index.html`) and the shared tonal base used by public documentation surfaces (`md-viewer`).
 
-## 2) Design tokens
+## 2) Design direction
+- Alpine editorial, not SaaS/product-marketing.
+- Quiet hierarchy: long breathing space, asymmetry, low visual noise.
+- Mountain-first narrative framing: scale → pressure → decision → consequence.
 
-### 2.1 Color tokens
-- `--bg-0 #0b0f14`
-- `--bg-1 #101723`
-- `--bg-2 #172130`
-- `--surface-0 #111a27cc`
-- `--surface-1 #172335d9`
-- `--surface-2 #213348e6`
-- `--border-soft #93a8bc3d`
-- `--border-strong #d7e6f252`
-- `--text-main #e8eff7`
-- `--text-dim #adbbc9`
-- `--text-muted #8b9aab`
-- `--accent-ice #d6eef9`
-- `--accent-mineral #9bb9ce`
-- `--accent-amber #d9b996`
+## 3) Token baseline (`src/styles/public-tokens.css`)
 
-### 2.2 Typography tokens
-- Primary serif (brand/editorial): `"Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif`
-- Primary sans (UX/UI): `"Montserrat", "Plus Jakarta Sans", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif`
-- Reading sans (long-form support): `"Inter", "Montserrat", "Plus Jakarta Sans", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif`
-- Supporting mono (telemetry/system): `"IBM Plex Mono", "SFMono-Regular", Menlo, Monaco, "Roboto Mono", monospace`
+### 3.1 Color tokens
+- `--bg-0 #090d12`
+- `--bg-1 #0e141c`
+- `--bg-2 #141d28`
+- `--surface-0 #111924cf`
+- `--surface-1 #172230dc`
+- `--surface-2 #202f41e5`
+- `--border-soft #91a8bc3d`
+- `--border-strong #c8d8e85e`
+- `--text-main #e5edf5`
+- `--text-dim #a8b8c8`
+- `--text-muted #8597a8`
+- `--accent-ice #d9edf8`
+- `--accent-mist #b8cadb`
+- `--accent-mineral #94aec4`
+- `--accent-stone #ccb79e`
 
-**Role model (recommended):**
-- `--font-brand`: Playfair Display (hero title, section titles, narrative highlights).
-- `--font-ui`: Montserrat (navigation, buttons, labels, chips, dense interaction copy).
-- `--font-reading`: Inter (long-form explanatory paragraphs; optional, can collapse to `--font-ui`).
-- `--font-data`: IBM Plex Mono (stats, watch, telemetry, technical metadata).
+### 3.2 Typography tokens
+- Editorial serif: `Playfair Display`
+- UI/body sans: `Montserrat`
+- System/meta mono: `IBM Plex Mono`
 
-### 2.3 Radius tokens
-- `--radius-xs: 10px`
-- `--radius-sm: 14px`
-- `--radius-md: 22px`
-- `--radius-lg: 30px`
+### 3.3 Motion policy
+- Atmospheric micro-motion only (slow drift, no layout movement).
+- Reduced-motion support is mandatory (`prefers-reduced-motion: reduce`).
 
-### 2.4 Shadow tokens
-- `--shadow-soft: 0 16px 48px #05080d66`
-- `--shadow-strong: 0 30px 80px #04070ccc`
+## 4) Landing architecture (chapter order)
+1. **Hero thesis** — alpine premise + primary CTA to playable web-v1.
+2. **Altitude ledger** — four-step conceptual stack (geology → atmosphere → physiology → ethics).
+3. **Editorial doctrine** — visual language principles.
+4. **Canonical route** — landing role vs. gameplay authority boundaries.
+5. **Primary materials** — whitepaper, roadmap, README/governance, contact channels.
+6. **Closing CTA** — direct transition to playable expedition.
 
-### 2.5 Spacing tokens
-- `--space-1: 0.35rem`
-- `--space-2: 0.65rem`
-- `--space-3: 1rem`
-- `--space-4: 1.6rem`
-- `--space-5: 2.5rem`
-- `--space-6: 4rem`
-- `--space-7: 6rem`
+## 5) Component primitives
+- Header nav with compact mono chips.
+- Hero chapter with asymmetrical copy/image split.
+- Timeline-like `altitude-step` rows.
+- Doctrine cards (`principle`) and material cards (`material`).
+- Pill CTAs (`btn-primary`, `btn-ghost`).
+- Shared EN/ES language switch (`.lang-switch`, `.lang-btn`).
 
-## 3) Type scale
-- Hero H1: `clamp(2.1rem, 6.5vw, 4.8rem)`
-- Section H2: `clamp(1.55rem, 3.8vw, 2.7rem)`
-- Body: `~1rem`
-- Supporting metadata: `0.67rem–0.9rem`
+## 6) Accessibility
+- Skip link and semantic landmarks.
+- High-contrast focus states.
+- Keyboard-safe nav/CTA order.
+- No motion-only communication.
+- Language switch updates document title, meta description, and critical alt text.
 
-## 4) Containers and layout
-- Main shell width: `min(1220px, 92vw)`
-- Structural rhythm: large vertical chapters (`--space-7`) between major sections.
-- Desktop asymmetry enabled from `910px+` for hero/system/status compositions.
-
-## 5) Section patterns
-- **Hero chapter:** conceptual thesis + primary CTA + curated cover image.
-- **Manifest chapter:** three conceptual pillars in a denser framed block.
-- **System chapter:** flow strip + runtime/audience evidence panels.
-- **Intelligence chapter:** compact evidence cards linking to core documents/channels.
-- **Status chapter:** concise public readiness strip.
-- **Outcome chapter:** canonical outcome list with hierarchy.
-- **Final chapter:** high-priority single conversion zone.
-
-## 6) Reusable components
-- `btn` (`btn-primary`, `btn-secondary`)
-- `panel` (evidence/info module)
-- `intel-card` (doc/channel module)
-- `outcome` (outcome definition row)
-- `status-item` (readiness metric item)
-
-## 7) Component states
-- Hover: subtle upward translation on buttons.
-- Focus-visible: high-contrast outline (`2px`, ice accent).
-- Active language: pill-based `aria-pressed` state.
-
-## 8) Motion principles
-- Motion remains micro and atmospheric.
-- Transition targets: transform/background/border only.
-- No layout-shifting animations.
-- `prefers-reduced-motion` disables transitions globally.
-
-## 9) Responsive rules
-- Mobile-first linear reading order.
-- Desktop enhances density and asymmetry without reordering meaning.
-- CTA buttons wrap naturally to avoid overflow.
-
-## 10) Accessibility notes
-- Skip link present.
-- Semantic landmarks and heading order preserved.
-- Strong focus indicators for keyboard navigation.
-- Reduced-motion media query applied.
-- Language switch reflects state with `aria-pressed`.
-- Text/background combinations selected for high contrast in dark mode.
-
-## 11) Prototype extension notes (`prototype/web-v1`)
-- Token refresh keeps the same mountain-first palette family (cold mineral base + restrained amber/ice accents).
-- Welcome/setup surfaces use layered overlays instead of flat dark fills to preserve atmospheric continuity.
-- Primary actions remain high-contrast and calm; secondary/decision controls reduce visual noise while preserving affordance.
-
-## 12) Visual assets — concept art integration
-
-The repository contains 13 curated concept art scenes in `art/concept-art/curated/ig/` (text-free, odd-numbered `1.png`–`25.png`) and matching promotional cover plates with title overlay in `art/cover/ig/` (even-numbered `2.png`–`26.png`). Full catalog with palette notes and recommended use cases: [`docs/concept-art-catalog.md`](concept-art-catalog.md).
-
-**Scene-role pairings (production guidance):**
-
-| Scene | File | Primary role | Palette alignment |
-|---|---|---|---|
-| 1 — Dawn approach | `concept-art/curated/ig/1.png` | Landing page hero, title screen, expedition setup | Rose · lavender · `--accent-amber` |
-| 3 — Group ascent | `concept-art/curated/ig/5.png` | Onboarding, multiplayer framing, expedition context | Blazing amber · dark umber |
-| 4 — High camp at sunset | `concept-art/curated/ig/7.png` | Camp/rest decisions, resource management | Blue-lavender · coral · `--accent-amber` |
-| 5 — Whiteout | `concept-art/curated/ig/9.png` | Extreme weather overlay, high EP state | Near-white · rose tint (text-overlay safe) |
-| 7 — Golden hour | `concept-art/curated/ig/13.png` | Time-pressure moments, window-closing scenarios | Deep amber · `--accent-amber` (all-warm) |
-| 11 — Soft ridge, lavender | `concept-art/curated/ig/21.png` | Debrief/reflection screens, modal backgrounds | Lavender · cream (minimal contrast noise) |
-| 13 — Blue hour | `concept-art/curated/ig/25.png` | Critical-state moments, late-game, permit expiry | Cobalt · `--accent-ice` (inverted hierarchy) |
-
-**Usage rule:** prefer `art/concept-art/curated/ig/` (text-free) for all UI, docs, and web surface uses. Reserve `art/cover/ig/` (title overlay) for promotional/social outputs only.
+## 7) Asset guidance
+- Prefer text-free curated artwork: `art/concept-art/curated/ig/*.png`.
+- Reserve title-overlay covers for social/promotional outputs.
+- Keep imagery color-graded toward cold-light/stone tones; avoid high-saturation overlays.
