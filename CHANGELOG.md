@@ -18,8 +18,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 
 - Added bilingual "Field Notes / Notas de Campo" section to the public landing page (`index.html`) with 10 editorial cards covering Aconcagua's geography, altitude, park status, season, volcanic origin, etymology, first ascent, Inca ceremonial significance, and the Aconcagua child archaeological finding. All cards switch correctly between EN and ES via the existing `data-i18n` system.
-- Added responsive field-notes grid layout (1 col mobile → 2 col tablet → 3 col desktop) with hover/focus states aligned to existing design tokens.
+- Added auto-advancing carousel layout for the Field Notes section: one card visible at a time, advances every 5 s, pauses on hover/focus, supports prev/next buttons, dot navigation, left/right arrow keys, and respects `prefers-reduced-motion`.
 - Added "Field Notes" / "Notas de Campo" nav link in the header navigation, placed between Vision and System.
+
+### Changed
+
+- Changed Field Notes section from a static responsive grid to a compact auto-advancing carousel, significantly reducing vertical footprint on the landing page.
+- Removed "Outcome ethics" standalone section from landing page (`index.html`): its content (plural outcomes) is already represented in the Vision section's "Plural outcomes" pillar; removal reduces redundancy.
+- Removed "Runtime truth map" panel from the `#system` section: the developer-facing file paths were noise for general visitors; the audience panel and system flow diagram remain.
+- Removed `heroMeta2` audience description line from the hero: it duplicated the "Who this site serves" audience panel further down the page.
+- Removed "Playable flow" item from the `#status` strip: the flow sequence was already present in `heroMeta1`; status now shows only release version and Part 2 scope.
 - Added `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.

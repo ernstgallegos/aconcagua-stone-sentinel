@@ -474,27 +474,43 @@
         filter: saturate(1.0) contrast(1.03);
       }
 
-      /* ── Field Notes ── */
-      .field-notes-grid {
-        display: grid;
-        gap: var(--space-3);
-        grid-template-columns: 1fr;
+      /* ── Field Notes carousel ── */
+      @keyframes fnFadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
 
-      .field-note-card {
+      .fn-carousel {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .fn-card-region {
+        min-height: 178px;
+      }
+
+      .fn-slide {
+        display: none;
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-sm);
         background: linear-gradient(168deg, #152232e0 0%, #0f1824d9 100%);
         padding: var(--space-3) var(--space-3) var(--space-4);
-        display: flex;
         flex-direction: column;
         gap: 0.45rem;
-        transition: border-color 180ms ease;
       }
 
-      .field-note-card:hover,
-      .field-note-card:focus-within {
-        border-color: var(--border-strong);
+      .fn-slide.fn-active {
+        display: flex;
+        animation: fnFadeIn 260ms ease forwards;
+      }
+
+      .fn-slide h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 1.08rem;
+        font-weight: 600;
+        line-height: 1.18;
       }
 
       .field-note-kicker {
@@ -505,14 +521,6 @@
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-      }
-
-      .field-note-card h3 {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: 1.08rem;
-        font-weight: 600;
-        line-height: 1.18;
       }
 
       .field-note-fact {
@@ -527,15 +535,69 @@
         color: var(--text-dim);
         font-size: 0.88rem;
         line-height: 1.52;
-        max-width: 60ch;
+        max-width: 62ch;
       }
 
-      @media (min-width: 600px) {
-        .field-notes-grid { grid-template-columns: repeat(2, 1fr); }
+      .fn-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
       }
 
-      @media (min-width: 1020px) {
-        .field-notes-grid { grid-template-columns: repeat(3, 1fr); }
+      .fn-nav-btn {
+        background: transparent;
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        color: var(--text-dim);
+        font-family: var(--mono);
+        font-size: 1.1rem;
+        line-height: 1;
+        width: 2.1rem;
+        height: 2.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color 160ms ease, color 160ms ease;
+        flex-shrink: 0;
+      }
+
+      .fn-nav-btn:hover,
+      .fn-nav-btn:focus-visible {
+        border-color: var(--accent-mineral);
+        color: var(--text-main);
+        outline: none;
+      }
+
+      .fn-dots {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .fn-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #93a8bc30;
+        border: 1px solid #93a8bc55;
+        padding: 0;
+        cursor: pointer;
+        transition: background 200ms ease, transform 200ms ease, border-color 200ms ease;
+      }
+
+      .fn-dot.fn-dot-active {
+        background: var(--accent-mineral);
+        border-color: var(--accent-mineral);
+        transform: scale(1.3);
+      }
+
+      .fn-dot:focus-visible {
+        outline: 2px solid var(--accent-ice);
+        outline-offset: 2px;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -573,7 +635,6 @@
           <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
           <div class="hero-meta">
             <span data-i18n="heroMeta1">Public release: v1.4.8 · Active route: welcome → setup → onboarding → game → outcomes.</span>
-            <span data-i18n="heroMeta2">Built for players, collaborators, artists, festivals, and cultural press.</span>
           </div>
           <div class="hero-cta" role="group" aria-label="Main actions">
             <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
@@ -629,78 +690,96 @@
           <h2 id="field-notes-title" data-i18n="fnTitle">Ten reference points on the mountain behind the project.</h2>
           <p class="section-intro" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
         </div>
-        <div class="field-notes-grid">
+        <div class="fn-carousel" aria-roledescription="carousel">
+          <div class="fn-card-region" id="fn-card-region">
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
-            <p class="field-note-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
-            <p class="field-note-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
-          </article>
+            <article class="fn-slide fn-active" id="fn-slide-0" role="group" aria-roledescription="slide" aria-label="1 of 10" aria-hidden="false">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
+              <p class="field-note-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
+              <p class="field-note-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
-            <p class="field-note-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
-            <p class="field-note-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-1" role="group" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
+              <p class="field-note-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
+              <p class="field-note-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn03Title">6,962 m</h3>
-            <p class="field-note-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
-            <p class="field-note-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-2" role="group" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn03Title">6,962 m</h3>
+              <p class="field-note-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
+              <p class="field-note-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn04Title">A Provincial Park</h3>
-            <p class="field-note-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
-            <p class="field-note-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-3" role="group" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn04Title">A Provincial Park</h3>
+              <p class="field-note-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
+              <p class="field-note-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn05Title">Main Season: Nov–Apr</h3>
-            <p class="field-note-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to April 30.</p>
-            <p class="field-note-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-4" role="group" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn05Title">Main Season: Nov–Apr</h3>
+              <p class="field-note-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to April 30.</p>
+              <p class="field-note-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn06Title">Volcanic Origin</h3>
-            <p class="field-note-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
-            <p class="field-note-body" data-i18n="fn06Body">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-5" role="group" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn06Title">Volcanic Origin</h3>
+              <p class="field-note-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
+              <p class="field-note-body" data-i18n="fn06Body">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
-            <p class="field-note-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."</p>
-            <p class="field-note-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-6" role="group" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
+              <p class="field-note-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."</p>
+              <p class="field-note-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
-            <p class="field-note-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
-            <p class="field-note-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-7" role="group" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
+              <p class="field-note-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
+              <p class="field-note-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
-            <p class="field-note-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
-            <p class="field-note-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua's cultural significance predates European contact by centuries.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-8" role="group" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
+              <p class="field-note-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
+              <p class="field-note-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua's cultural significance predates European contact by centuries.</p>
+            </article>
 
-          <article class="field-note-card" tabindex="0">
-            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-            <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
-            <p class="field-note-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
-            <p class="field-note-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.</p>
-          </article>
+            <article class="fn-slide" id="fn-slide-9" role="group" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
+              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+              <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
+              <p class="field-note-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
+              <p class="field-note-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.</p>
+            </article>
 
+          </div>
+          <div class="fn-nav" role="group">
+            <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">‹</button>
+            <div class="fn-dots" role="group" aria-label="Field notes">
+              <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
+              <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="2" aria-label="Field note 3 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="3" aria-label="Field note 4 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="4" aria-label="Field note 5 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="5" aria-label="Field note 6 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="6" aria-label="Field note 7 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="7" aria-label="Field note 8 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="8" aria-label="Field note 9 of 10" aria-pressed="false"></button>
+              <button class="fn-dot" data-fn-idx="9" aria-label="Field note 10 of 10" aria-pressed="false"></button>
+            </div>
+            <button class="fn-nav-btn" id="fn-next" aria-label="Next field note" aria-controls="fn-card-region">›</button>
+          </div>
         </div>
       </section>
 
@@ -723,14 +802,6 @@
             </div>
           </article>
           <div class="stack">
-            <article class="panel">
-              <h3 data-i18n="runtimeTitle">Runtime truth map</h3>
-              <ul>
-                <li data-i18n="runtime1">Active prototype: <code>prototype/web-v1</code></li>
-                <li data-i18n="runtime2">Compatibility artifact: <code>prototype/mra-v0</code></li>
-                <li data-i18n="runtime3">Canonical outcomes and contracts in <code>data/*.json</code></li>
-              </ul>
-            </article>
             <article class="panel">
               <h3 data-i18n="audienceTitle">Who this site serves</h3>
               <ul>
@@ -785,10 +856,6 @@
         <article class="status-strip">
           <div class="status-line">
             <div class="status-item">
-              <span class="status-label" data-i18n="statusLabel1">Playable flow</span>
-              <span data-i18n="statusValue1">title → setup → onboarding → game → outcomes/debrief</span>
-            </div>
-            <div class="status-item">
               <span class="status-label" data-i18n="statusLabel2">Current release</span>
               <span data-i18n="statusValue2">v1.4.8 · public web prototype</span>
             </div>
@@ -798,19 +865,6 @@
             </div>
           </div>
         </article>
-      </section>
-
-      <section class="section" aria-labelledby="outcomes-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="outcomesKicker">Outcome ethics</p>
-          <h2 id="outcomes-title" data-i18n="outcomesTitle">Canonical outcomes center consequence, timing, and safe return.</h2>
-        </div>
-        <div class="outcome-grid">
-          <article class="outcome"><strong>Summit and Safe Return</strong><span data-i18n="outcome1">Summit plus explicit safe park exit.</span></article>
-          <article class="outcome"><strong>High Point Return</strong><span data-i18n="outcome2">Strong ascent with disciplined retreat before irreversible failure.</span></article>
-          <article class="outcome"><strong>Strategic Retreat / Rescue</strong><span data-i18n="outcome3">Risk-managed withdrawal or rescue when body-state thresholds break.</span></article>
-          <article class="outcome"><strong>Collapse / Permit / Window</strong><span data-i18n="outcome4">Failure classes tied to exposure, permit exhaustion, or expedition-window closure.</span></article>
-        </div>
       </section>
 
       <section class="section" aria-labelledby="final-title">
@@ -1109,6 +1163,66 @@
       }
 
       initLanguageSwitcher();
+
+      // ── Field Notes carousel ──
+      (function () {
+        var TOTAL = 10;
+        var AUTO_DELAY = 5000;
+        var current = 0;
+        var timer = null;
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function slides() { return document.querySelectorAll('.fn-slide'); }
+        function dots()   { return document.querySelectorAll('.fn-dot'); }
+
+        function goTo(idx) {
+          var ss = slides(), dd = dots();
+          if (!ss.length) return;
+          idx = ((idx % TOTAL) + TOTAL) % TOTAL;
+          ss[current].classList.remove('fn-active');
+          ss[current].setAttribute('aria-hidden', 'true');
+          dd[current].classList.remove('fn-dot-active');
+          dd[current].setAttribute('aria-pressed', 'false');
+          current = idx;
+          ss[current].classList.add('fn-active');
+          ss[current].setAttribute('aria-hidden', 'false');
+          dd[current].classList.add('fn-dot-active');
+          dd[current].setAttribute('aria-pressed', 'true');
+        }
+
+        function startAuto() {
+          if (reduced) return;
+          stopAuto();
+          timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY);
+        }
+
+        function stopAuto() {
+          if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        var carousel = document.querySelector('.fn-carousel');
+        if (!carousel) return;
+
+        document.getElementById('fn-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
+        document.getElementById('fn-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
+
+        dots().forEach(function (dot, i) {
+          dot.addEventListener('click', function () { goTo(i); startAuto(); });
+        });
+
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+        carousel.addEventListener('focusin', stopAuto);
+        carousel.addEventListener('focusout', function (e) {
+          if (!carousel.contains(e.relatedTarget)) startAuto();
+        });
+        carousel.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); startAuto(); }
+          if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); startAuto(); }
+        });
+
+        startAuto();
+      })();
     </script>
   </body>
 </html>
