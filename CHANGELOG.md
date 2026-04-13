@@ -37,6 +37,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Redesigned the root public landing page (`/index.html`) as an alpine editorial experience with a quieter visual hierarchy, asymmetrical hero composition, deeper atmospheric layering, and reduced-template section styling while preserving existing bilingual content, navigation anchors, and integration links.
 - Changed run-log mutation flow in `prototype/web-v1/ui/screens.js` to use the centralized telemetry helper `annotateRunLogOutcome()` from `prototype/web-v1/ui/helpers/run-log.js` instead of inline per-entry mapping in `endRun()`.
 - Changed public-readiness checklists (`docs/en/public-readiness-checklist.md`, `docs/es/checklist-preparacion-publica.md`) to include `npm run test:contracts` and to standardize JSON validation through `npm run validate:json`.
 - Changed `docs/technical-debt-register.md` by closing all five previously active debt items after landing their measurable exit criteria and moving them to the resolved table.
