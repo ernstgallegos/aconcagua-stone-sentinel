@@ -64,13 +64,13 @@ This document defines the visual/interaction system for the root public site (`i
 - Desktop asymmetry enabled from `910px+` for hero/system/status compositions.
 
 ## 5) Section patterns
-- **Hero chapter:** conceptual thesis + primary CTA + curated cover image.
-- **Manifest chapter:** three conceptual pillars in a denser framed block.
-- **System chapter:** flow strip + runtime/audience evidence panels.
-- **Intelligence chapter:** compact evidence cards linking to core documents/channels.
-- **Status chapter:** concise public readiness strip.
-- **Outcome chapter:** canonical outcome list with hierarchy.
-- **Final chapter:** high-priority single conversion zone.
+- **Entry chapter:** atmospheric thesis + primary expedition CTA + metadata lines.
+- **Mountain chapter:** place-first framing (geology, ethics of return, non-heroic framing).
+- **Climb chapter:** route timeline narrative (approach → compression → threshold → return).
+- **Atmosphere chapter:** asymmetrical concept-art gallery with micro labels.
+- **Expedition-logic chapter:** explicit resolver flow and auditability rationale.
+- **Materials chapter:** whitepaper/roadmap/repo/channels cards.
+- **Readiness chapter:** compact release + flow + Part 2 scope strip and final CTA pair.
 
 ## 6) Reusable components
 - `btn` (`btn-primary`, `btn-secondary`)
@@ -85,10 +85,10 @@ This document defines the visual/interaction system for the root public site (`i
 - Active language: pill-based `aria-pressed` state.
 
 ## 8) Motion principles
-- Motion remains micro and atmospheric.
-- Transition targets: transform/background/border only.
-- No layout-shifting animations.
-- `prefers-reduced-motion` disables transitions globally.
+- Motion remains micro and atmospheric (mist-like reveals + soft parallax drift).
+- Reveal choreography uses IntersectionObserver (`.reveal` → `.in-view`) without layout shifts.
+- Parallax is limited to transform-based offsets on selected blocks (`data-parallax`) with passive scroll listeners.
+- `prefers-reduced-motion` disables transitions/animations and bypasses parallax behavior.
 
 ## 9) Responsive rules
 - Mobile-first linear reading order.

@@ -9,6 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Rebuilt the root public landing page (`index.html`) as an atmospheric editorial experience with a new narrative architecture (`Mountain` → `Climb` → `Atmospheric States` → `Expedition Logic` → `Voices/Materials`), replacing the prior generic section cadence and field-notes carousel with an integrated climate-first flow.
+- Introduced reveal/parallax motion utilities on the landing page (`.reveal` + `IntersectionObserver`, `data-parallax` scroll drift) with explicit `prefers-reduced-motion` fallbacks to preserve performance and accessibility.
+- Updated `docs/design-system.md` section-pattern and motion-principle guidance to match the redesigned public-site architecture and atmospheric interaction model.
+
 ### Fixed
 
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
