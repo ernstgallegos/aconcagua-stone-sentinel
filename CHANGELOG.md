@@ -16,7 +16,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed parity-test coverage gap: extended `prototype/web-v1/tests/parity/repo-truth-parity.test.js` to assert that `index.html` contains the canonical version string derived from `package.json`, preventing future landing-page version drift.
 
 ### Added
- in `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
+
+- Added bilingual "Field Notes / Notas de Campo" section to the public landing page (`index.html`) with 10 editorial cards covering Aconcagua's geography, altitude, park status, season, volcanic origin, etymology, first ascent, Inca ceremonial significance, and the Aconcagua child archaeological finding. All cards switch correctly between EN and ES via the existing i18n system. Added a responsive grid layout (1 col mobile → 2 col tablet → 3 col desktop) with hover/focus states aligned to existing design tokens. Added "Field Notes" / "Notas de Campo" nav link in the header navigation.
+- Added `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
 - Added `scripts/check-markdown-links.js` and `npm run validate:links` to validate internal markdown links across `README*`, `docs/`, and optional `temp/` scope (`--include-temp`) as a portable drift guard.

@@ -474,6 +474,70 @@
         filter: saturate(1.0) contrast(1.03);
       }
 
+      /* ── Field Notes ── */
+      .field-notes-grid {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: 1fr;
+      }
+
+      .field-note-card {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        background: linear-gradient(168deg, #152232e0 0%, #0f1824d9 100%);
+        padding: var(--space-3) var(--space-3) var(--space-4);
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        transition: border-color 180ms ease;
+      }
+
+      .field-note-card:hover,
+      .field-note-card:focus-within {
+        border-color: var(--border-strong);
+      }
+
+      .field-note-kicker {
+        margin: 0;
+        color: var(--accent-mineral);
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .field-note-card h3 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 1.08rem;
+        font-weight: 600;
+        line-height: 1.18;
+      }
+
+      .field-note-fact {
+        margin: 0;
+        color: var(--accent-ice);
+        font-size: 0.88rem;
+        line-height: 1.42;
+      }
+
+      .field-note-body {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 0.88rem;
+        line-height: 1.52;
+        max-width: 60ch;
+      }
+
+      @media (min-width: 600px) {
+        .field-notes-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      @media (min-width: 1020px) {
+        .field-notes-grid { grid-template-columns: repeat(3, 1fr); }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
       }
@@ -488,6 +552,7 @@
         <div class="header-controls">
           <nav class="nav" aria-label="Primary navigation">
             <a href="#vision" data-i18n="navVision">Vision</a>
+            <a href="#field-notes" data-i18n="navFieldNotes">Field Notes</a>
             <a href="#system" data-i18n="navSystem">System</a>
             <a href="#status" data-i18n="navStatus">Status</a>
             <a href="#intel" data-i18n="navIntel">Materials</a>
@@ -557,6 +622,87 @@
           <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape — inverted twilight with luminous snow below a dark cobalt sky" loading="lazy" />
         </figure>
       </div>
+
+      <section id="field-notes" class="section" aria-labelledby="field-notes-title">
+        <div class="section-head">
+          <p class="section-kicker" data-i18n="fnKicker">Field Notes</p>
+          <h2 id="field-notes-title" data-i18n="fnTitle">Ten reference points on the mountain behind the project.</h2>
+          <p class="section-intro" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
+        </div>
+        <div class="field-notes-grid">
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
+            <p class="field-note-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
+            <p class="field-note-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
+            <p class="field-note-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
+            <p class="field-note-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn03Title">6,962 m</h3>
+            <p class="field-note-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
+            <p class="field-note-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn04Title">A Provincial Park</h3>
+            <p class="field-note-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
+            <p class="field-note-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn05Title">Main Season: Nov–Apr</h3>
+            <p class="field-note-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to April 30.</p>
+            <p class="field-note-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn06Title">Volcanic Origin</h3>
+            <p class="field-note-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
+            <p class="field-note-body" data-i18n="fn06Body">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
+            <p class="field-note-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."</p>
+            <p class="field-note-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
+            <p class="field-note-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
+            <p class="field-note-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
+            <p class="field-note-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
+            <p class="field-note-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua's cultural significance predates European contact by centuries.</p>
+          </article>
+
+          <article class="field-note-card" tabindex="0">
+            <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
+            <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
+            <p class="field-note-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
+            <p class="field-note-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.</p>
+          </article>
+
+        </div>
+      </section>
 
       <section id="system" class="section" aria-labelledby="system-title">
         <div class="section-head">
@@ -719,7 +865,7 @@
           pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
           skip: 'Skip to main content',
           brandSub: 'Public mountain systems project',
-          navVision: 'Vision', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
+          navVision: 'Vision', navFieldNotes: 'Field Notes', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
           eyebrow: 'Mountain-first, consequence-forward design',
           heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
           heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
@@ -727,6 +873,40 @@
           heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
           ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
           heroImageAlt: 'Lone climber facing Aconcagua at dawn — concept art, Scene 1',
+          fnKicker: 'Field Notes',
+          fnTitle: 'Ten reference points on the mountain behind the project.',
+          fnIntro: 'Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.',
+          fnLabel: 'Field note',
+          fn01Title: 'The Highest Outside Asia',
+          fn01Fact: 'The highest mountain in the Americas and the highest peak on Earth outside Asia.',
+          fn01Body: 'Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.',
+          fn02Title: 'Mendoza / Chile Border',
+          fn02Fact: 'Aconcagua stands in western Mendoza, right on the Chilean border.',
+          fn02Body: 'The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.',
+          fn03Title: '6,962 m',
+          fn03Fact: 'Official park reference height: 6,962 meters above sea level.',
+          fn03Body: 'Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.',
+          fn04Title: 'A Provincial Park',
+          fn04Fact: 'Aconcagua is protected within Parque Provincial Aconcagua.',
+          fn04Body: 'The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.',
+          fn05Title: 'Main Season: Nov–Apr',
+          fn05Fact: 'The official summer season runs from November 1 to April 30.',
+          fn05Body: 'Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.',
+          fn06Title: 'Volcanic Origin',
+          fn06Fact: 'Aconcagua is of volcanic origin, but it is not an active volcano.',
+          fn06Body: 'The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.',
+          fn07Title: 'Sentinel of Stone',
+          fn07Fact: 'The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."',
+          fn07Body: 'The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.',
+          fn08Title: 'First Ascent / 1897',
+          fn08Fact: 'The first successful ascent was made in 1897 by Matthias Zurbriggen.',
+          fn08Body: 'Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.',
+          fn09Title: 'An Inca Ceremonial Mountain',
+          fn09Fact: 'Aconcagua also forms part of a wider Andean archaeological and sacred landscape.',
+          fn09Body: 'The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua\'s cultural significance predates European contact by centuries.',
+          fn10Title: 'The Aconcagua Child',
+          fn10Fact: 'In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.',
+          fn10Body: 'The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.',
           visionKicker: 'Design premise',
           visionTitle: 'A systemic mountain experience where clarity beats bravado, every time.',
           visionIntro: 'This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The site follows the same rule: less noise, sharper signal, easier paths for deep reading.',
@@ -784,7 +964,7 @@
           pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
           skip: 'Saltar al contenido principal',
           brandSub: 'Proyecto público de sistemas de montaña',
-          navVision: 'Visión', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
+          navVision: 'Visión', navFieldNotes: 'Notas de Campo', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
           eyebrow: 'Diseño mountain-first, con consecuencias reales',
           heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
           heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
@@ -792,6 +972,40 @@
           heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
           ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
           heroImageAlt: 'Escalador solitario frente al Aconcagua al amanecer — arte conceptual, Escena 1',
+          fnKicker: 'Notas de Campo',
+          fnTitle: 'Diez puntos de referencia sobre la montaña detrás del proyecto.',
+          fnIntro: 'El Aconcagua es un lugar real, con geografía, historia y peso cultural concretos. Estas fichas anclan la experiencia en contexto verificado.',
+          fnLabel: 'Nota de campo',
+          fn01Title: 'La más alta fuera de Asia',
+          fn01Fact: 'La montaña más alta de América y la cumbre más alta de la Tierra fuera de Asia.',
+          fn01Body: 'El Aconcagua es el punto más alto del hemisferio occidental — la referencia continental para todo récord de altitud fuera del Himalaya y el Karakoram. Su escala define la identidad de los Andes.',
+          fn02Title: 'Mendoza / Frontera con Chile',
+          fn02Fact: 'El Aconcagua se encuentra en el oeste de Mendoza, sobre la frontera con Chile.',
+          fn02Body: 'La montaña se eleva en los Andes centrales del oeste de la provincia de Mendoza, Argentina, en la frontera con Chile. La ciudad más cercana es Mendoza, a unos 110 km al sudeste.',
+          fn03Title: '6.962 m',
+          fn03Fact: 'Altura de referencia oficial del parque: 6.962 metros sobre el nivel del mar.',
+          fn03Body: 'Los relevamientos han arrojado cifras levemente variables a lo largo de las décadas, pero 6.962 m es la altitud publicada por las autoridades del parque y usada como referencia operativa.',
+          fn04Title: 'Un parque provincial',
+          fn04Fact: 'El Aconcagua está protegido dentro del Parque Provincial Aconcagua.',
+          fn04Body: 'El parque es administrado por la provincia de Mendoza. La entrada de Horcones se ubica a unos 2.800 m, a unos 185 km al oeste de la ciudad por ruta.',
+          fn05Title: 'Temporada principal: nov–abr',
+          fn05Fact: 'La temporada estival oficial va del 1 de noviembre al 30 de abril.',
+          fn05Body: 'Los permisos y servicios operan durante el verano austral. La mayoría de los intentos de cumbre se concentran en diciembre y enero, cuando las ventanas de buen clima son más amplias.',
+          fn06Title: 'Origen volcánico',
+          fn06Fact: 'El Aconcagua es de origen volcánico, pero no es un volcán activo.',
+          fn06Body: 'El macizo se formó por actividad volcánica hace millones de años y fue luego elevado por compresión tectónica. Hoy se clasifica como volcán extinto — imponente, pero geológicamente quieto.',
+          fn07Title: 'Centinela de piedra',
+          fn07Fact: 'El nombre Aconcagua podría derivar del quechua y suele vincularse con la idea de un "centinela de piedra".',
+          fn07Body: 'La etimología está en debate. Una interpretación muy difundida vincula el nombre a raíces quechuas que significan "centinela de piedra". Otros investigadores proponen orígenes en mapudungún o aimara. Ninguna derivación está zanjada.',
+          fn08Title: 'Primera ascensión / 1897',
+          fn08Fact: 'La primera ascensión exitosa fue realizada en 1897 por Matthias Zurbriggen.',
+          fn08Body: 'El guía de montaña suizo Matthias Zurbriggen alcanzó la cumbre el 14 de enero de 1897, durante una expedición liderada por Edward FitzGerald. La expedición se acercó por la Ruta Normal desde el noroeste.',
+          fn09Title: 'Una montaña ceremonial inca',
+          fn09Fact: 'El Aconcagua también forma parte de un paisaje andino más amplio, arqueológico y sagrado.',
+          fn09Body: 'La montaña pertenece a la geografía sagrada andina vinculada al Qhapaq Ñan, el sistema vial incaico reconocido por la UNESCO. Sitios de alta montaña a lo largo de los Andes sirvieron como plataformas ceremoniales. La significación cultural del cerro precede al contacto europeo por siglos.',
+          fn10Title: 'El niño del Aconcagua',
+          fn10Fact: 'En 1985, montañistas hallaron los restos congelados de un niño inca de unos 7 años en el macizo del Aconcagua.',
+          fn10Body: 'Los restos fueron descubiertos a aproximadamente 5.300 m en el filo sudoeste. Los estudios arqueológicos los identificaron como los de un niño de unos siete años, sacrificado hace más de 500 años en lo que los investigadores interpretan como una ofrenda de capacocha — un ritual estatal inca de profundo peso religioso.',
           visionKicker: 'Premisa de diseño',
           visionTitle: 'Una experiencia sistémica de montaña donde la lucidez pesa más que la bravura.',
           visionIntro: 'El proyecto convierte presión geofísica, percepción parcial y decisiones éticas en algo jugable. El sitio sigue esa misma lógica: menos ruido, más señal, y rutas claras para profundizar.',
