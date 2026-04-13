@@ -64,13 +64,12 @@ This document defines the visual/interaction system for the root public site (`i
 - Desktop asymmetry enabled from `910px+` for hero/system/status compositions.
 
 ## 5) Section patterns
-- **Hero chapter:** conceptual thesis + primary CTA + curated cover image.
-- **Manifest chapter:** three conceptual pillars in a denser framed block.
-- **System chapter:** flow strip + runtime/audience evidence panels.
-- **Intelligence chapter:** compact evidence cards linking to core documents/channels.
-- **Status chapter:** concise public readiness strip.
-- **Outcome chapter:** canonical outcome list with hierarchy.
-- **Final chapter:** high-priority single conversion zone.
+- **Immersive hero chapter:** full-bleed alpine plate + restrained editorial copy + primary play CTA.
+- **Manifest chapter:** concise two-pillar thesis blocks (geology-first + time-pressure framing).
+- **Altitude ledger chapter:** four-band vertical progression framing mood/system pressure by elevation.
+- **Field Notes chapter:** compact contextual carousel with geography/history anchors.
+- **Materials chapter:** direct access to whitepaper, roadmap, and repository truth docs.
+- **Closing chapter:** single conversion zone to play prototype and inspect repo truth.
 
 ## 6) Reusable components
 - `btn` (`btn-primary`, `btn-secondary`)
@@ -85,8 +84,9 @@ This document defines the visual/interaction system for the root public site (`i
 - Active language: pill-based `aria-pressed` state.
 
 ## 8) Motion principles
-- Motion remains micro and atmospheric.
+- Motion remains micro and atmospheric (no theatrical parallax or cinematic overlays).
 - Transition targets: transform/background/border only.
+- Avoid autoplay-heavy movement on core reading surfaces; only low-friction note navigation uses step transitions.
 - No layout-shifting animations.
 - `prefers-reduced-motion` disables transitions globally.
 

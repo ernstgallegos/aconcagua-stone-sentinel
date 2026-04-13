@@ -9,9 +9,9 @@
   color-scheme: dark;
 
   /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  --bg-0: #070b11;
+  --bg-1: #0c131e;
+  --bg-2: #121b29;
 
   /* ── Surface layers ── */
   --surface-0: #111a27cc;
@@ -23,12 +23,12 @@
   --border-strong: #d7e6f252;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
+  --text-main: #e3ebf3;
+  --text-dim: #a9b8c8;
   --text-muted: #8b9aab;
 
   /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
+  --accent-ice: #d3e8f7;
   --accent-mineral: #9bb9ce;
   --accent-amber: #d9b996;
   --accent-critical: #f2d4af;

@@ -54,6 +54,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed run-log summary alias drift by removing legacy `lateSignalTriggered` fallback aggregation and keeping canonical `lateSignalActivation` as the only supported late-signal counter input in `prototype/web-v1/ui/helpers/run-log.js`.
 - Fixed a broken relative markdown image link in `temp/AUDITORIA_ACONCAGUA_COMPLETA_2026-03-30.md` by resolving it from `temp/` to repository root assets (`../art/...`).
 
+
+### Changed
+
+- Redesigned root public landing page (`index.html`) into an alpine editorial composition with a full-bleed atmospheric hero, asymmetric chapter rhythm, altitude-led narrative structure, and quieter information hierarchy focused on contemplative mountain framing rather than generic promo layout.
+- Rebuilt landing information architecture around six clearer chapters (`hero`, `manifest`, `altitude ledger`, `field notes`, `materials`, `closing CTA`) and streamlined primary navigation to those anchors.
+- Reworked landing motion behavior to remain subtle and purpose-driven, limiting interaction animation to micro transitions and lightweight field-note stepping while preserving `prefers-reduced-motion` behavior.
+- Updated shared public token palette values in `src/styles/public-tokens.css` toward colder stone-light contrast for better atmospheric consistency across root public surfaces.
+- Updated `docs/design-system.md` section-pattern and motion-principle guidance to match the new editorial landing structure and reduced-motion intent.
+
 ## [1.4.7] — 2026-04
 
 ### Added
