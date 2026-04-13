@@ -23,6 +23,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Redesigned the canonical public landing (`index.html`) as an atmospheric editorial experience with a new narrative information architecture (`The Mountain → The Climb → Atmospheric States → Expedition Logic → Project Intelligence → Final Threshold`), asymmetrical full-bleed hero treatment, and reduced generic promo-card patterns.
+- Rebuilt landing design foundations in `index.html` CSS using clearer section primitives, revised alpine color/light layering, serif/sans/mono editorial typography hierarchy, and reusable motion hooks (`[data-reveal]`) with reduced-motion-safe fallbacks.
+- Replaced the previous field-notes carousel/status-strip layout with sequence-oriented content blocks and auditable system framing, keeping canonical links/routes intact while improving clarity of project identity and entry flow.
+
 - Changed Field Notes section from a static responsive grid to a compact auto-advancing carousel, significantly reducing vertical footprint on the landing page.
 - Removed "Outcome ethics" standalone section from landing page (`index.html`): its content (plural outcomes) is already represented in the Vision section's "Plural outcomes" pillar; removal reduces redundancy.
 - Removed "Runtime truth map" panel from the `#system` section: the developer-facing file paths were noise for general visitors; the audience panel and system flow diagram remain.
