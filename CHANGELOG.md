@@ -17,7 +17,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
-- Added bilingual "Field Notes / Notas de Campo" section to the public landing page (`index.html`) with 10 editorial cards covering Aconcagua's geography, altitude, park status, season, volcanic origin, etymology, first ascent, Inca ceremonial significance, and the Aconcagua child archaeological finding. All cards switch correctly between EN and ES via the existing i18n system. Added a responsive grid layout (1 col mobile → 2 col tablet → 3 col desktop) with hover/focus states aligned to existing design tokens. Added "Field Notes" / "Notas de Campo" nav link in the header navigation.
+- Added bilingual "Field Notes / Notas de Campo" section to the public landing page (`index.html`) with 10 editorial cards covering Aconcagua's geography, altitude, park status, season, volcanic origin, etymology, first ascent, Inca ceremonial significance, and the Aconcagua child archaeological finding. All cards switch correctly between EN and ES via the existing `data-i18n` system.
+- Added responsive field-notes grid layout (1 col mobile → 2 col tablet → 3 col desktop) with hover/focus states aligned to existing design tokens.
+- Added "Field Notes" / "Notas de Campo" nav link in the header navigation, placed between Vision and System.
 - Added `docs/prototype-ownership-matrix.md`, a dedicated cross-surface gate script (`npm run test:contracts`), and parity enforcement tests in `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` to lock active-vs-frozen prototype responsibilities and shared-state overlap checks.
 - Added engine tuning guardrails in `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP scale constraints, fractional burn-rate floors, and deterministic summit-return viability checks.
 - Added nationality parity coverage in `prototype/web-v1/tests/unit/carousel-narrative.test.js` to assert ISO fallback visibility on both Part 1 and Part 2 character-card rendering paths.
