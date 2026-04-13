@@ -22,11 +22,11 @@ La documentación ahora incorpora enlaces directos al arte disponible dentro del
 
 Una selección de la colección de 13 escenas curadas. Catálogo completo con notas de uso: [`docs/concept-art-catalog.md`](docs/concept-art-catalog.md).
 
-| Escena 1 — Ascenso al amanecer | Escena 3 — Ascenso grupal |
+| Escena 1 | Escena 3 |
 |---|---|
 | ![Escalador solitario frente al Aconcagua al amanecer](art/concept-art/curated/ig/1.png) | ![Grupo ascendiendo terreno empinado bajo alpenglow](art/concept-art/curated/ig/5.png) |
 
-| Escena 7 — Hora dorada | Escena 13 — Hora azul |
+| Escena 7 | Escena 13 |
 |---|---|
 | ![Panorama de montaña en hora dorada](art/concept-art/curated/ig/13.png) | ![Paisaje nevado en hora azul con brillo invertido](art/concept-art/curated/ig/25.png) |
 
