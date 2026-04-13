@@ -24,6 +24,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Changed
 
 - Changed Field Notes section from a static responsive grid to a compact auto-advancing carousel, significantly reducing vertical footprint on the landing page.
+- Rebuilt root `index.html` into an alpine-editorial public experience with a new asymmetrical section architecture (`masthead → manifesto → structure timeline → atmosphere gallery → canonical materials`), quieter atmospheric motion, refined typography hierarchy, and updated EN/ES copy across all public CTAs while preserving canonical routes and `data-doc-link` language-aware document targeting.
 - Removed "Outcome ethics" standalone section from landing page (`index.html`): its content (plural outcomes) is already represented in the Vision section's "Plural outcomes" pillar; removal reduces redundancy.
 - Removed "Runtime truth map" panel from the `#system` section: the developer-facing file paths were noise for general visitors; the audience panel and system flow diagram remain.
 - Removed `heroMeta2` audience description line from the hero: it duplicated the "Who this site serves" audience panel further down the page.
