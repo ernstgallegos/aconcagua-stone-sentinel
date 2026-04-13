@@ -13,879 +13,795 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/public-tokens.css" />
     <style>
+      /* ═══════════════════════════════════════════════════════════════
+         ACONCAGUA: STONE SENTINEL — Immersive Editorial Landing
+         Complete architectural redesign · Atmospheric alpine experience
+         ═══════════════════════════════════════════════════════════════ */
 
       .skip-link {
         position: absolute;
         top: -100px;
         left: 12px;
-        z-index: 100;
+        z-index: 200;
         padding: 0.6rem 0.9rem;
         border-radius: var(--radius-xs);
         background: #f1f7ff;
         color: #091019;
         font-weight: 700;
+        font-family: var(--sans);
       }
       .skip-link:focus { top: 10px; }
 
-      .shell {
-        width: min(1220px, 92vw);
-        margin: 0 auto;
+      body { overflow-x: hidden; }
+
+      /* Subtle grain texture */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
       }
 
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        border-bottom: 1px solid var(--border-soft);
-        background: #0f1621c2;
-        backdrop-filter: blur(10px);
+      .shell { width: min(1220px, 92vw); margin: 0 auto; }
+
+      /* ── Scroll Reveal ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
       }
+      .reveal.is-visible { opacity: 1; transform: translateY(0); }
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
+      .reveal-delay-4 { transition-delay: 0.4s; }
 
-      .header-row {
-        display: grid;
-        gap: 0.8rem;
-        align-items: center;
-        padding: 0.75rem 0;
+      /* ── Navigation ── */
+      .site-nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        transition: background 0.4s ease, border-color 0.4s ease;
+        border-bottom: 1px solid transparent;
       }
-
-      .brand {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: 1rem;
-        letter-spacing: 0.03em;
+      .site-nav.is-scrolled {
+        background: rgba(11, 15, 20, 0.88);
+        backdrop-filter: blur(16px) saturate(1.4);
+        border-bottom-color: var(--border-soft);
       }
-
-      .brand small {
-        display: block;
-        color: var(--text-muted);
-        font-family: var(--sans);
-        font-size: 0.7rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+      .nav-inner {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0.9rem 0; gap: 1rem;
       }
-
-      .header-controls {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-2);
+      .nav-brand {
+        font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase;
+        color: var(--text-muted); white-space: nowrap;
+        transition: color 0.3s ease;
       }
-
-      .nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
+      .site-nav.is-scrolled .nav-brand { color: var(--text-dim); }
+      .nav-waypoints {
+        display: none; align-items: center; gap: 0.15rem;
+        list-style: none; margin: 0; padding: 0;
       }
-
-      .nav a {
-        font-family: var(--mono);
-        border: 1px solid transparent;
-        border-radius: 999px;
-        padding: 0.35rem 0.66rem;
-        color: var(--text-dim);
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+      .nav-waypoints a {
+        font-family: var(--mono); font-size: 0.66rem; font-weight: 400;
+        letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--text-muted); padding: 0.4rem 0.6rem;
+        border-radius: 999px; border: 1px solid transparent;
+        transition: color 0.2s ease, border-color 0.2s ease;
       }
-
-      .nav a:hover,
-      .nav a:focus-visible {
-        color: var(--text-main);
-        border-color: var(--border-soft);
-        text-decoration: none;
-        outline: none;
+      .nav-waypoints a:hover, .nav-waypoints a:focus-visible {
+        color: var(--text-main); border-color: var(--border-soft);
+        text-decoration: none; outline: none;
       }
+      .nav-controls { display: flex; align-items: center; gap: 0.5rem; }
+      @media (min-width: 860px) { .nav-waypoints { display: flex; } }
 
-      main { padding: var(--space-5) 0 var(--space-7); }
-
+      /* ── Hero ── */
       .hero {
-        display: grid;
-        gap: var(--space-4);
-        align-items: stretch;
+        position: relative; min-height: 100vh; min-height: 100dvh;
+        display: flex; flex-direction: column; justify-content: flex-end;
+        overflow: hidden;
       }
-
-      .hero-copy {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-lg);
-        background: linear-gradient(160deg, #152132f0 0%, #101824f0 70%);
-        box-shadow: var(--shadow-strong);
-        padding: clamp(1.2rem, 3.5vw, 2.7rem);
+      .hero-bg { position: absolute; inset: 0; z-index: -2; }
+      .hero-bg img {
+        width: 100%; height: 100%; object-fit: cover; object-position: center 60%;
+        filter: saturate(0.85) contrast(1.05) brightness(0.65);
+        transition: transform 0.1s linear;
       }
-
-      .eyebrow {
-        margin: 0;
-        color: var(--accent-mineral);
-        font-size: 0.74rem;
-        font-family: var(--mono);
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-weight: 700;
+      .hero-fog {
+        position: absolute; inset: 0; z-index: -1; pointer-events: none;
+        background:
+          linear-gradient(180deg,
+            rgba(11,15,20,0.3) 0%, rgba(11,15,20,0.05) 35%,
+            rgba(11,15,20,0.15) 60%, rgba(11,15,20,0.85) 88%, rgba(11,15,20,1) 100%
+          ),
+          radial-gradient(ellipse 120% 60% at 50% 70%, rgba(155,185,206,0.06) 0%, transparent 70%);
       }
-
-      h1 {
-        margin: 0.55rem 0 0;
+      .hero-content { position: relative; z-index: 1; padding: 0 0 clamp(3rem, 8vh, 6rem); }
+      .hero-content .shell { display: grid; gap: 1.5rem; }
+      .hero-eyebrow {
+        font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--accent-mineral); margin: 0;
+      }
+      .hero-title {
         font-family: var(--serif);
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        line-height: 1.03;
-        font-size: clamp(2.1rem, 6.5vw, 4.8rem);
-        max-width: 14ch;
+        font-size: clamp(2.6rem, 7.5vw, 6.5rem);
+        font-weight: 700; line-height: 0.95; letter-spacing: -0.015em;
+        margin: 0; max-width: 16ch; color: var(--text-main);
+        text-shadow: 0 2px 40px rgba(0,0,0,0.4);
       }
-
       .hero-lead {
-        margin: 1rem 0 0;
-        color: var(--text-dim);
-        max-width: 58ch;
-        font-size: clamp(1rem, 1.9vw, 1.15rem);
+        margin: 0; font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+        color: var(--text-dim); max-width: 52ch; line-height: 1.6;
       }
-
       .hero-meta {
-        margin-top: var(--space-3);
-        display: grid;
-        gap: 0.35rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
+        font-family: var(--mono); font-size: 0.72rem;
+        color: var(--text-muted); letter-spacing: 0.04em;
       }
-
-      .hero-cta {
-        margin-top: var(--space-4);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.55rem;
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
+      .hero-scroll {
+        position: absolute; bottom: 1.5rem; left: 50%;
+        transform: translateX(-50%); z-index: 2;
+        display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+        color: var(--text-muted); font-family: var(--mono);
+        font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+        opacity: 0.6; animation: breathe 3s ease-in-out infinite;
       }
+      .scroll-line {
+        width: 1px; height: 32px;
+        background: linear-gradient(180deg, var(--text-muted), transparent);
+        animation: scrollPulse 2s ease-in-out infinite;
+      }
+      @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+      @keyframes scrollPulse { 0%, 100% { transform: scaleY(1); opacity: 0.6; } 50% { transform: scaleY(0.6); opacity: 0.3; } }
 
+      /* ── Buttons ── */
       .btn {
-        font-family: var(--sans);
-        border: 1px solid transparent;
-        border-radius: 999px;
-        padding: 0.72rem 1.08rem;
-        font-weight: 700;
-        font-size: 0.9rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+        font-family: var(--sans); border: 1px solid transparent;
+        border-radius: 999px; padding: 0.72rem 1.3rem;
+        font-weight: 600; font-size: 0.88rem;
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+        cursor: pointer;
+        transition: transform 0.25s cubic-bezier(0.16,1,0.3,1),
+                    border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
       }
-      .btn:hover { transform: translateY(-1px); text-decoration: none; }
+      .btn:hover { transform: translateY(-2px); text-decoration: none; }
       .btn:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
-
       .btn-primary {
         color: #0a1118;
-        background: linear-gradient(120deg, var(--accent-ice), var(--accent-amber));
+        background: linear-gradient(125deg, var(--accent-ice), var(--accent-amber));
+        box-shadow: 0 4px 20px rgba(214,238,249,0.15);
       }
+      .btn-primary:hover { box-shadow: 0 8px 32px rgba(214,238,249,0.25); }
+      .btn-ghost {
+        color: var(--text-main); border-color: var(--border-soft);
+        background: rgba(17,26,39,0.6); backdrop-filter: blur(8px);
+      }
+      .btn-ghost:hover { border-color: var(--border-strong); background: rgba(23,35,53,0.8); }
 
-      .btn-secondary {
-        color: var(--text-main);
-        border-color: var(--border-soft);
-        background: #101a27d0;
-      }
-
-      .hero-art {
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-soft);
-        overflow: hidden;
-        background: #111926;
-        box-shadow: var(--shadow-soft);
-        min-height: 380px;
-      }
-      .hero-art img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 72%;
-        filter: saturate(0.93) contrast(1.03);
-      }
-
-      .section {
-        margin-top: var(--space-7);
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .section-head {
-        display: grid;
-        gap: 0.8rem;
-      }
-
+      /* ── Section Framework ── */
+      .section { padding: clamp(4rem, 10vh, 8rem) 0; position: relative; }
+      .section-head { display: grid; gap: 1rem; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
       .section-kicker {
-        margin: 0;
-        color: var(--accent-mineral);
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        font-size: 0.72rem;
-        font-weight: 700;
+        margin: 0; font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-mineral);
       }
-
-      .section h2 {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: clamp(1.55rem, 3.8vw, 2.7rem);
-        line-height: 1.08;
+      .section-title {
+        margin: 0; font-family: var(--serif);
+        font-size: clamp(1.8rem, 4.5vw, 3.8rem);
+        font-weight: 700; line-height: 1.02; letter-spacing: -0.01em; max-width: 20ch;
       }
-
       .section-intro {
-        margin: 0;
-        color: var(--text-dim);
-        max-width: 68ch;
+        margin: 0; color: var(--text-dim); max-width: 58ch;
+        font-size: clamp(0.95rem, 1.4vw, 1.08rem); line-height: 1.6;
+      }
+      .elevation-mark {
+        font-family: var(--mono); font-size: 0.6rem; font-weight: 300;
+        letter-spacing: 0.15em; color: var(--text-muted);
+        opacity: 0.5; text-transform: uppercase;
       }
 
-      .manifest {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: linear-gradient(170deg, #162336de 0%, #0f1723d9 100%);
-        padding: var(--space-4);
-      }
-
-      .manifest-grid {
-        margin-top: var(--space-3);
-        display: grid;
-        gap: 0.9rem;
-      }
-
-      .manifest-item {
-        border-left: 2px solid #bfd3e547;
-        padding-left: 0.8rem;
-      }
-
-      .manifest-item h3 { margin: 0; font-size: 1rem; }
-      .manifest-item p { margin: 0.36rem 0 0; color: var(--text-dim); }
-
-      .system-layout {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .flow {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: #132031d1;
-        padding: var(--space-4);
-      }
-
-      .flow-line {
-        display: grid;
-        gap: 0.55rem;
-      }
-
-      .flow-node {
-        border: 1px solid #c7d9ea3b;
-        border-radius: var(--radius-sm);
-        padding: 0.65rem 0.8rem;
-        background: #1a2a3fd9;
-        color: #dce7f2;
-        font-size: 0.93rem;
-      }
-
-      .flow-arrow {
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        padding-left: 0.25rem;
-      }
-
-      .stack {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .panel {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        background: #131f2fd9;
-        padding: var(--space-3);
-      }
-
-      .panel h3 { margin: 0; font-size: 1rem; }
-      .panel ul { margin: 0.6rem 0 0; padding-left: 1.05rem; color: var(--text-dim); }
-      .panel li + li { margin-top: 0.35rem; }
-
-      .intel-grid {
-        display: grid;
-        gap: var(--space-3);
-        grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
-      }
-
-      .intel-card {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        background: #111b29d9;
-        padding: var(--space-3);
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-      }
-
-      .intel-card h3 {
-        margin: 0;
-        font-size: 1rem;
-      }
-
-      .intel-card p {
-        margin: 0;
-        color: var(--text-dim);
-        font-size: 0.93rem;
-        flex: 1;
-      }
-
-      .status-strip {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: #111c2ad1;
-        padding: var(--space-4);
-      }
-
-      .status-line {
-        display: grid;
-        gap: 0.5rem;
-      }
-
-      .status-item {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.35rem;
-        border-top: 1px solid #a8bfd236;
-        padding-top: 0.5rem;
-      }
-
-      .status-item:first-child { border-top: 0; padding-top: 0; }
-      .status-label {
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-size: 0.67rem;
-      }
-
-      .outcome-grid {
-        display: grid;
-        gap: var(--space-2);
-      }
-
-      .outcome {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-xs);
-        background: #131f2ddc;
-        padding: 0.7rem 0.85rem;
-      }
-
-      .outcome strong {
-        display: block;
+      /* ── The Mountain ── */
+      .mountain-stat { display: grid; gap: 0.4rem; }
+      .mountain-stat-value {
         font-family: var(--serif);
-        margin-bottom: 0.22rem;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700; line-height: 1; letter-spacing: -0.02em;
+        background: linear-gradient(135deg, var(--text-main), var(--accent-mineral));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      }
+      .mountain-stat-label {
+        font-family: var(--mono); font-size: 0.7rem; font-weight: 400;
+        letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+      }
+      .mountain-stats-row {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: var(--space-4); padding: var(--space-4) 0;
+        border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);
+      }
+      .mountain-prose {
+        color: var(--text-dim); font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+        line-height: 1.7; max-width: 64ch;
+      }
+      .mountain-prose p { margin: 0 0 1.2rem; }
+      .mountain-prose p:last-child { margin-bottom: 0; }
+
+      /* ── Atmospheric Art ── */
+      .atmos-strip { display: grid; grid-template-columns: 1fr; gap: 2px; overflow: hidden; }
+      .atmos-panel { position: relative; overflow: hidden; aspect-ratio: 4/5; }
+      .atmos-panel img {
+        width: 100%; height: 100%; object-fit: cover;
+        filter: saturate(0.8) contrast(1.05);
+        transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.7s ease;
+      }
+      .atmos-panel:hover img { transform: scale(1.03); filter: saturate(0.95) contrast(1.05); }
+      .atmos-panel-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, transparent 40%, rgba(11,15,20,0.7) 100%);
+        display: flex; align-items: flex-end; padding: var(--space-3); pointer-events: none;
+      }
+      .atmos-label {
+        font-family: var(--mono); font-size: 0.62rem; font-weight: 400;
+        letter-spacing: 0.15em; text-transform: uppercase; color: rgba(232,239,247,0.7);
+      }
+      @media (min-width: 700px) {
+        .atmos-strip { grid-template-columns: repeat(3, 1fr); }
+        .atmos-panel { aspect-ratio: 3/4; }
       }
 
-      .final-band {
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius-md);
-        background: linear-gradient(145deg, #1a2a3de0, #111b28ed 72%);
+      /* ── Pillars ── */
+      .pillar-grid { display: grid; gap: var(--space-3); }
+      .pillar {
         padding: var(--space-4);
-        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+        background: linear-gradient(168deg, rgba(21,34,50,0.6) 0%, rgba(15,24,36,0.5) 100%);
+        backdrop-filter: blur(4px);
+        transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+        display: grid; gap: 0.6rem;
+      }
+      .pillar:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+      .pillar-number {
+        font-family: var(--mono); font-size: 0.6rem; font-weight: 300;
+        letter-spacing: 0.15em; color: var(--accent-mineral); text-transform: uppercase;
+      }
+      .pillar h3 { margin: 0; font-family: var(--serif); font-size: 1.15rem; font-weight: 600; line-height: 1.2; }
+      .pillar p { margin: 0; color: var(--text-dim); font-size: 0.92rem; line-height: 1.55; }
+      @media (min-width: 700px) { .pillar-grid { grid-template-columns: repeat(3, 1fr); } }
+
+      /* ── Pull Quote ── */
+      .pull-quote { border-left: 2px solid var(--accent-mineral); padding-left: var(--space-3); margin: var(--space-4) 0; }
+      .pull-quote p {
+        font-family: var(--serif); font-size: clamp(1.1rem, 2vw, 1.4rem);
+        font-style: italic; font-weight: 500; line-height: 1.4;
+        color: var(--text-dim); margin: 0;
       }
 
-      .site-footer {
-        margin-top: var(--space-7);
-        border-top: 1px solid var(--border-soft);
-        padding-top: var(--space-4);
-        color: var(--text-muted);
-        font-size: 0.88rem;
-      }
-
-      .footer-grid {
-        display: grid;
-        gap: var(--space-3);
-      }
-
-      .footer-block h3 {
-        margin: 0 0 0.45rem;
-        font-size: 0.74rem;
-        font-family: var(--mono);
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: var(--accent-mineral);
-      }
-
-      .footer-block p {
-        margin: 0;
-        color: var(--text-dim);
-      }
-
-      .footer-links {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 0.25rem;
-      }
-
-      .footer-links a {
-        color: var(--accent-ice);
-      }
-
-      .footer-bottom {
-        margin-top: var(--space-3);
-        border-top: 1px solid var(--border-soft);
-        padding-top: 0.75rem;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 0.5rem 1rem;
-      }
-
-      @media (min-width: 910px) {
-        .header-row { grid-template-columns: auto 1fr; }
-        .hero { grid-template-columns: 1.25fr 0.75fr; }
-        .system-layout { grid-template-columns: 1.1fr 0.9fr; }
-        .status-line { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-        .status-item { border-top: 0; border-left: 1px solid #a8bfd236; padding-top: 0; padding-left: 1rem; }
-        .status-item:first-child { border-left: 0; padding-left: 0; }
-        .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
-      }
-
-      .art-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-2);
-        margin-top: var(--space-5);
-      }
-
-      .art-strip figure {
-        margin: 0;
-        overflow: hidden;
-        line-height: 0;
-        border-radius: var(--radius-sm);
-        aspect-ratio: 4/5;
-      }
-
-      .art-strip img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center center;
-        filter: saturate(0.88) contrast(1.03);
-        display: block;
-        transition: filter 300ms ease;
-      }
-
-      .art-strip img:hover {
-        filter: saturate(1.0) contrast(1.03);
-      }
-
-      /* ── Field Notes carousel ── */
+      /* ── Field Notes ── */
       @keyframes fnFadeIn {
-        from { opacity: 0; transform: translateY(5px); }
+        from { opacity: 0; transform: translateY(8px); }
         to   { opacity: 1; transform: translateY(0); }
       }
-
-      .fn-carousel {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-2);
-      }
-
-      .fn-card-region {
-        min-height: 178px;
-      }
-
+      .fn-carousel { display: flex; flex-direction: column; gap: var(--space-3); }
+      .fn-card-region { min-height: 200px; }
       .fn-slide {
         display: none;
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        background: linear-gradient(168deg, #152232e0 0%, #0f1824d9 100%);
-        padding: var(--space-3) var(--space-3) var(--space-4);
-        flex-direction: column;
-        gap: 0.45rem;
+        border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+        background: linear-gradient(168deg, rgba(21,34,50,0.65) 0%, rgba(15,24,36,0.55) 100%);
+        backdrop-filter: blur(6px); padding: var(--space-4);
+        flex-direction: column; gap: 0.6rem;
       }
-
-      .fn-slide.fn-active {
-        display: flex;
-        animation: fnFadeIn 260ms ease forwards;
+      .fn-slide.fn-active { display: flex; animation: fnFadeIn 350ms cubic-bezier(0.16,1,0.3,1) forwards; }
+      .fn-slide-kicker {
+        margin: 0; font-family: var(--mono); font-size: 0.58rem; font-weight: 500;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-mineral);
       }
-
       .fn-slide h3 {
-        margin: 0;
-        font-family: var(--serif);
-        font-size: 1.08rem;
-        font-weight: 600;
-        line-height: 1.18;
+        margin: 0; font-family: var(--serif);
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 600; line-height: 1.15;
       }
-
-      .field-note-kicker {
-        margin: 0;
-        color: var(--accent-mineral);
-        font-family: var(--mono);
-        font-size: 0.62rem;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
-
-      .field-note-fact {
-        margin: 0;
-        color: var(--accent-ice);
-        font-size: 0.88rem;
-        line-height: 1.42;
-      }
-
-      .field-note-body {
-        margin: 0;
-        color: var(--text-dim);
-        font-size: 0.88rem;
-        line-height: 1.52;
-        max-width: 62ch;
-      }
-
-      .fn-nav {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-2);
-      }
-
+      .fn-slide-fact { margin: 0; color: var(--accent-ice); font-size: 0.92rem; line-height: 1.45; }
+      .fn-slide-body { margin: 0; color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; max-width: 58ch; }
+      .fn-nav { display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
       .fn-nav-btn {
-        background: transparent;
-        border: 1px solid var(--border-soft);
-        border-radius: 999px;
-        color: var(--text-dim);
-        font-family: var(--mono);
-        font-size: 1.1rem;
-        line-height: 1;
-        width: 2.1rem;
-        height: 2.1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: transparent; border: 1px solid var(--border-soft);
+        border-radius: 999px; color: var(--text-dim);
+        font-family: var(--mono); font-size: 1rem; line-height: 1;
+        width: 2.2rem; height: 2.2rem;
+        display: flex; align-items: center; justify-content: center;
         cursor: pointer;
-        transition: border-color 160ms ease, color 160ms ease;
+        transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
         flex-shrink: 0;
       }
-
-      .fn-nav-btn:hover,
-      .fn-nav-btn:focus-visible {
-        border-color: var(--accent-mineral);
-        color: var(--text-main);
-        outline: none;
+      .fn-nav-btn:hover, .fn-nav-btn:focus-visible {
+        border-color: var(--accent-mineral); color: var(--text-main);
+        transform: scale(1.05); outline: none;
       }
-
-      .fn-dots {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
+      .fn-dots { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
       .fn-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #93a8bc30;
-        border: 1px solid #93a8bc55;
-        padding: 0;
-        cursor: pointer;
-        transition: background 200ms ease, transform 200ms ease, border-color 200ms ease;
+        width: 6px; height: 6px; border-radius: 50%;
+        background: rgba(147,168,188,0.2); border: 1px solid rgba(147,168,188,0.35);
+        padding: 0; cursor: pointer;
+        transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease, width 0.25s ease;
       }
-
       .fn-dot.fn-dot-active {
-        background: var(--accent-mineral);
-        border-color: var(--accent-mineral);
-        transform: scale(1.3);
+        background: var(--accent-mineral); border-color: var(--accent-mineral);
+        width: 18px; border-radius: 999px;
+      }
+      .fn-dot:focus-visible { outline: 2px solid var(--accent-ice); outline-offset: 2px; }
+
+      /* ── System ── */
+      .system-grid { display: grid; gap: var(--space-4); }
+      .flow-diagram {
+        border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+        background: linear-gradient(170deg, rgba(19,32,49,0.7) 0%, rgba(15,23,35,0.65) 100%);
+        padding: var(--space-4); display: grid; gap: 0.65rem;
+      }
+      .flow-step { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.8rem; align-items: center; }
+      .flow-step-num {
+        font-family: var(--mono); font-size: 0.6rem; font-weight: 300;
+        letter-spacing: 0.1em; color: var(--accent-mineral);
+        text-align: center; padding: 0.4rem 0;
+        border: 1px solid var(--border-soft); border-radius: 999px;
+      }
+      .flow-step-text {
+        font-size: 0.92rem; color: var(--text-dim);
+        padding: 0.5rem 0; border-bottom: 1px solid rgba(147,168,188,0.12);
+      }
+      .flow-step:last-child .flow-step-text { border-bottom: none; }
+      .status-band {
+        border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+        background: linear-gradient(168deg, rgba(19,32,49,0.5) 0%, rgba(14,21,31,0.5) 100%);
+        padding: var(--space-4); display: grid; gap: var(--space-3);
+      }
+      .status-row { display: grid; gap: 0.6rem; }
+      .status-item { display: grid; gap: 0.3rem; }
+      .status-label {
+        font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+        letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+      }
+      .status-value { font-size: 0.92rem; color: var(--text-dim); }
+      @media (min-width: 860px) { .system-grid { grid-template-columns: 1.2fr 0.8fr; } }
+      @media (min-width: 700px) {
+        .status-row { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+        .status-item + .status-item { border-left: 1px solid var(--border-soft); padding-left: var(--space-3); }
       }
 
-      .fn-dot:focus-visible {
-        outline: 2px solid var(--accent-ice);
-        outline-offset: 2px;
+      /* ── Waypoints ── */
+      .waypoints-grid { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
+      .waypoint-card {
+        border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+        background: linear-gradient(165deg, rgba(21,34,50,0.5) 0%, rgba(15,24,36,0.4) 100%);
+        padding: var(--space-4); display: grid; gap: 0.8rem;
+        transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+      }
+      .waypoint-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+      .waypoint-card h3 { margin: 0; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; }
+      .waypoint-card p { margin: 0; color: var(--text-dim); font-size: 0.9rem; line-height: 1.55; }
+      .waypoint-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+      @media (min-width: 700px) { .waypoints-grid { grid-template-columns: repeat(2, 1fr); } }
+
+      /* ── Final CTA ── */
+      .final-section { position: relative; padding: clamp(5rem, 12vh, 10rem) 0; overflow: hidden; }
+      .final-bg { position: absolute; inset: 0; z-index: -1; }
+      .final-bg img {
+        width: 100%; height: 100%; object-fit: cover; object-position: center 50%;
+        filter: saturate(0.7) contrast(1.1) brightness(0.35);
+      }
+      .final-fog {
+        position: absolute; inset: 0; z-index: 0; pointer-events: none;
+        background: linear-gradient(180deg, rgba(11,15,20,1) 0%, rgba(11,15,20,0.5) 30%, rgba(11,15,20,0.5) 70%, rgba(11,15,20,1) 100%);
+      }
+      .final-content {
+        position: relative; z-index: 1; text-align: center;
+        display: grid; gap: 1.5rem; justify-items: center;
+      }
+      .final-title {
+        margin: 0; font-family: var(--serif);
+        font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+        font-weight: 700; line-height: 1.02; max-width: 18ch;
+      }
+      .final-lead {
+        margin: 0; color: var(--text-dim);
+        font-size: clamp(0.95rem, 1.4vw, 1.08rem); line-height: 1.6; max-width: 48ch;
+      }
+      .final-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+
+      /* ── Footer ── */
+      .site-footer { border-top: 1px solid var(--border-soft); padding: var(--space-5) 0 var(--space-4); }
+      .footer-grid { display: grid; gap: var(--space-4); }
+      .footer-block h3 {
+        margin: 0 0 0.5rem; font-family: var(--mono); font-size: 0.62rem; font-weight: 500;
+        letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-mineral);
+      }
+      .footer-block p { margin: 0; color: var(--text-dim); font-size: 0.88rem; }
+      .footer-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+      .footer-links a { color: var(--text-dim); font-size: 0.88rem; transition: color 0.2s ease; }
+      .footer-links a:hover { color: var(--accent-ice); }
+      .footer-bottom {
+        margin-top: var(--space-4); padding-top: var(--space-3);
+        border-top: 1px solid var(--border-soft);
+        display: flex; flex-wrap: wrap; justify-content: space-between;
+        gap: 0.5rem 1rem; font-size: 0.78rem; color: var(--text-muted);
+      }
+      @media (min-width: 700px) { .footer-grid { grid-template-columns: 1.3fr 1fr 1fr; } }
+
+      /* ── Ambient ── */
+      @keyframes ambientShift { 0%, 100% { opacity: 0.03; } 50% { opacity: 0.06; } }
+      .ambient-glow {
+        position: fixed; top: -200px; right: -200px; width: 800px; height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(155,185,206,0.08) 0%, transparent 70%);
+        pointer-events: none; z-index: -1;
+        animation: ambientShift 8s ease-in-out infinite;
       }
 
+      /* ── Reduced Motion ── */
       @media (prefers-reduced-motion: reduce) {
-        * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+        .reveal { opacity: 1; transform: none; }
       }
     </style>
   </head>
   <body>
+    <div class="ambient-glow" aria-hidden="true"></div>
     <a class="skip-link" href="#main-content" data-i18n="skip">Skip to main content</a>
 
-    <header class="site-header">
-      <div class="shell header-row">
-        <p class="brand">Aconcagua: Stone Sentinel<small data-i18n="brandSub">Public mountain systems project</small></p>
-        <div class="header-controls">
-          <nav class="nav" aria-label="Primary navigation">
-            <a href="#vision" data-i18n="navVision">Vision</a>
-            <a href="#field-notes" data-i18n="navFieldNotes">Field Notes</a>
-            <a href="#system" data-i18n="navSystem">System</a>
-            <a href="#status" data-i18n="navStatus">Status</a>
-            <a href="#intel" data-i18n="navIntel">Materials</a>
-          </nav>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <div class="shell nav-inner">
+        <span class="nav-brand">Aconcagua: Stone Sentinel</span>
+        <ul class="nav-waypoints">
+          <li><a href="#the-mountain" data-i18n="navMountain">The Mountain</a></li>
+          <li><a href="#the-ascent" data-i18n="navAscent">The Ascent</a></li>
+          <li><a href="#field-notes" data-i18n="navFieldNotes">Field Notes</a></li>
+          <li><a href="#the-system" data-i18n="navSystem">The System</a></li>
+          <li><a href="#waypoints" data-i18n="navWaypoints">Waypoints</a></li>
+        </ul>
+        <div class="nav-controls">
           <div class="lang-switch" role="group" aria-label="Language selector">
             <button class="lang-btn" type="button" data-lang="en" aria-pressed="true">EN</button>
             <button class="lang-btn" type="button" data-lang="es" aria-pressed="false">ES</button>
           </div>
         </div>
       </div>
+    </nav>
+
+    <header class="hero" id="main-content">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="/art/concept-art/curated/ig/1.png" alt="" />
+      </div>
+      <div class="hero-fog" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div class="shell">
+          <p class="hero-eyebrow reveal" data-i18n="eyebrow">Mountain-first narrative systems</p>
+          <h1 class="hero-title reveal reveal-delay-1" data-i18n="heroTitle" id="hero-title">The mountain leads. Every decision is a bargain with real limits.</h1>
+          <p class="hero-lead reveal reveal-delay-2" data-i18n="heroLead">A contemplative indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending &#8212; timing, judgment, and returning safely matter just as much.</p>
+          <div class="hero-meta reveal reveal-delay-3" aria-hidden="true">
+            <span data-i18n="heroMeta1">v1.4.8 &#183; Public web prototype</span>
+          </div>
+          <div class="hero-actions reveal reveal-delay-4" role="group" aria-label="Main actions">
+            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Enter the expedition</a>
+            <a class="btn btn-ghost" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="ctaWhitepaper">Read whitepaper</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">
+        <span data-i18n="scrollHint">Descend</span>
+        <div class="scroll-line"></div>
+      </div>
     </header>
 
-    <main id="main-content" class="shell">
-      <section class="hero" aria-labelledby="hero-title">
-        <article class="hero-copy">
-          <p class="eyebrow" data-i18n="eyebrow">Mountain-first narrative systems</p>
-          <h1 id="hero-title" data-i18n="heroTitle">The mountain is the main character. Your decisions are a negotiation with limits.</h1>
-          <p class="hero-lead" data-i18n="heroLead">Aconcagua: Stone Sentinel is a contemplative indie project about uncertainty, risk reading, and irreversible choices. Summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.</p>
-          <div class="hero-meta">
-            <span data-i18n="heroMeta1">Public release: v1.4.8 · Active route: welcome → setup → onboarding → game → outcomes.</span>
+    <main>
+      <!-- The Mountain -->
+      <section id="the-mountain" class="section">
+        <div class="shell">
+          <div class="section-head">
+            <span class="elevation-mark reveal" aria-hidden="true">6,962 m</span>
+            <p class="section-kicker reveal" data-i18n="mountainKicker">The Mountain</p>
+            <h2 class="section-title reveal reveal-delay-1" data-i18n="mountainTitle">Aconcagua is not a backdrop. It is the protagonist.</h2>
+            <p class="section-intro reveal reveal-delay-2" data-i18n="mountainIntro">The highest peak outside Asia. A stone sentinel standing at the border of Argentina and Chile, shaping weather, dictating routes, and defining the limits of human ambition for millennia.</p>
           </div>
-          <div class="hero-cta" role="group" aria-label="Main actions">
-            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="ctaPlay">Play current web prototype</a>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="ctaWhitepaper">Read whitepaper</a>
-            <a class="btn btn-secondary" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="ctaRepo">View repository</a>
+          <div class="mountain-stats-row reveal reveal-delay-3">
+            <div class="mountain-stat">
+              <span class="mountain-stat-value" data-i18n="mStatAlt">6,962 m</span>
+              <span class="mountain-stat-label" data-i18n="mStatAltLabel">Summit elevation</span>
+            </div>
+            <div class="mountain-stat">
+              <span class="mountain-stat-value" data-i18n="mStatHemisphere">Highest</span>
+              <span class="mountain-stat-label" data-i18n="mStatHemisphereLabel">Peak in the Americas</span>
+            </div>
+            <div class="mountain-stat">
+              <span class="mountain-stat-value" data-i18n="mStatFirst">1897</span>
+              <span class="mountain-stat-label" data-i18n="mStatFirstLabel">First recorded ascent</span>
+            </div>
+            <div class="mountain-stat">
+              <span class="mountain-stat-value" data-i18n="mStatSeason">Nov &#8211; Apr</span>
+              <span class="mountain-stat-label" data-i18n="mStatSeasonLabel">Climbing season</span>
+            </div>
           </div>
-        </article>
-
-        <figure class="hero-art">
-          <img src="/art/concept-art/curated/ig/1.png" alt="Aconcagua: Stone Sentinel atmospheric key art" data-i18n-attr="heroImageAlt:alt" loading="lazy" />
-        </figure>
-      </section>
-
-      <section id="vision" class="section" aria-labelledby="vision-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="visionKicker">Design premise</p>
-          <h2 id="vision-title" data-i18n="visionTitle">A systemic mountain experience where lucidity matters more than bravado.</h2>
-          <p class="section-intro" data-i18n="visionIntro">This project translates geophysical pressure, partial perception, and ethical decision-making into playable form. The website mirrors that rhythm: less noise, more signal, and clear pathways for deeper exploration.</p>
+          <div class="mountain-prose reveal reveal-delay-4">
+            <p data-i18n="mountainProse1">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano &#8212; imposing, but geologically quiet. The name may derive from Quechua roots meaning &#8220;stone sentinel,&#8221; though scholars also propose Mapudungun and Aymara origins.</p>
+            <p data-i18n="mountainProse2">Aconcagua belongs to the broader Andean sacred geography connected to the Qhapaq &#209;an, the Inca road system recognized by UNESCO. In 1985, climbers found the frozen remains of a seven-year-old Inca child at 5,300 m &#8212; a capacocha offering that predates European contact by centuries. The mountain&#8217;s cultural significance is inseparable from its physical presence.</p>
+          </div>
         </div>
-        <article class="manifest">
-          <div class="manifest-grid">
-            <div class="manifest-item">
-              <h3 data-i18n="pillar1Title">Environmental authority</h3>
-              <p data-i18n="pillar1Body">Altitude, weather, route timing, and fatigue accumulation drive the run. The mountain sets the terms.</p>
-            </div>
-            <div class="manifest-item">
-              <h3 data-i18n="pillar2Title">Partial information</h3>
-              <p data-i18n="pillar2Body">Signals are interpreted through confidence ranges, not omniscient readouts. Perception can drift before collapse appears.</p>
-            </div>
-            <div class="manifest-item">
-              <h3 data-i18n="pillar3Title">Plural outcomes</h3>
-              <p data-i18n="pillar3Body">Success is not only summit. Strategic retreat and safe return are meaningful endings with narrative and systemic weight.</p>
-            </div>
-          </div>
-        </article>
       </section>
 
-      <div class="art-strip" role="group" aria-label="Atmospheric concept art — expedition range">
-        <figure>
-          <img src="/art/concept-art/curated/ig/5.png" alt="Group of climbers ascending steep mountain terrain under alpenglow" loading="lazy" />
+      <!-- Atmospheric Art Strip 1 -->
+      <div class="atmos-strip reveal" role="group" aria-label="Atmospheric concept art">
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/5.png" alt="Climbers ascending steep terrain under alpenglow" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel1">Alpenglow &#183; Approach</span></div>
         </figure>
-        <figure>
-          <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama saturated in golden hour light" loading="lazy" />
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama in golden hour light" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel2">Golden hour &#183; Decision window</span></div>
         </figure>
-        <figure>
-          <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape — inverted twilight with luminous snow below a dark cobalt sky" loading="lazy" />
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/9.png" alt="Near-whiteout snowfield conditions" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel3">Whiteout &#183; Pressure state</span></div>
         </figure>
       </div>
 
-      <section id="field-notes" class="section" aria-labelledby="field-notes-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="fnKicker">Field Notes</p>
-          <h2 id="field-notes-title" data-i18n="fnTitle">Ten reference points on the mountain behind the project.</h2>
-          <p class="section-intro" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
-        </div>
-        <div class="fn-carousel" aria-roledescription="carousel">
-          <div class="fn-card-region" id="fn-card-region">
-
-            <article class="fn-slide fn-active" id="fn-slide-0" role="group" aria-roledescription="slide" aria-label="1 of 10" aria-hidden="false">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
-              <p class="field-note-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
-              <p class="field-note-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-1" role="group" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
-              <p class="field-note-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
-              <p class="field-note-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-2" role="group" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn03Title">6,962 m</h3>
-              <p class="field-note-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
-              <p class="field-note-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-3" role="group" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn04Title">A Provincial Park</h3>
-              <p class="field-note-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
-              <p class="field-note-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-4" role="group" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn05Title">Main Season: Nov–Apr</h3>
-              <p class="field-note-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to April 30.</p>
-              <p class="field-note-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-5" role="group" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn06Title">Volcanic Origin</h3>
-              <p class="field-note-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
-              <p class="field-note-body" data-i18n="fn06Body">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-6" role="group" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
-              <p class="field-note-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."</p>
-              <p class="field-note-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-7" role="group" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
-              <p class="field-note-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
-              <p class="field-note-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-8" role="group" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
-              <p class="field-note-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
-              <p class="field-note-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua's cultural significance predates European contact by centuries.</p>
-            </article>
-
-            <article class="fn-slide" id="fn-slide-9" role="group" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
-              <p class="field-note-kicker" data-i18n="fnLabel">Field note</p>
-              <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
-              <p class="field-note-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
-              <p class="field-note-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.</p>
-            </article>
-
-          </div>
-          <div class="fn-nav" role="group">
-            <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">‹</button>
-            <div class="fn-dots" role="group" aria-label="Field notes">
-              <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
-              <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="2" aria-label="Field note 3 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="3" aria-label="Field note 4 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="4" aria-label="Field note 5 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="5" aria-label="Field note 6 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="6" aria-label="Field note 7 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="7" aria-label="Field note 8 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="8" aria-label="Field note 9 of 10" aria-pressed="false"></button>
-              <button class="fn-dot" data-fn-idx="9" aria-label="Field note 10 of 10" aria-pressed="false"></button>
-            </div>
-            <button class="fn-nav-btn" id="fn-next" aria-label="Next field note" aria-controls="fn-card-region">›</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="system" class="section" aria-labelledby="system-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="systemKicker">Architecture signal</p>
-          <h2 id="system-title" data-i18n="systemTitle">Built as a coherent EP/BT model, not as cosmetic mountain flavor.</h2>
-          <p class="section-intro" data-i18n="systemIntro">Web-v1 uses a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs are aligned to keep public claims honest.</p>
-        </div>
-        <div class="system-layout">
-          <article class="flow" aria-label="System flow visualization">
-            <div class="flow-line">
-              <div class="flow-node" data-i18n="flow1">Action + time/resource spend</div>
-              <div class="flow-arrow">↓</div>
-              <div class="flow-node" data-i18n="flow2">Environmental Pressure ↔ Body Tolerance</div>
-              <div class="flow-arrow">↓</div>
-              <div class="flow-node" data-i18n="flow3">Perceived signal + confidence + trend</div>
-              <div class="flow-arrow">↓</div>
-              <div class="flow-node" data-i18n="flow4">Outcome classification + persistent run state</div>
-            </div>
-          </article>
-          <div class="stack">
-            <article class="panel">
-              <h3 data-i18n="audienceTitle">Who this site serves</h3>
-              <ul>
-                <li data-i18n="aud1">Players seeking atmospheric systemic play.</li>
-                <li data-i18n="aud2">Press, curators, and festival evaluators.</li>
-                <li data-i18n="aud3">Artists, developers, and cultural collaborators.</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="intel" class="section" aria-labelledby="intel-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="intelKicker">Project intelligence</p>
-          <h2 id="intel-title" data-i18n="intelTitle">Core materials for understanding direction, scope, and credibility.</h2>
-          <p class="section-intro" data-i18n="intelIntro">Use this hub to read the conceptual frame, track roadmap progress, and access governance/public-contact channels from one place.</p>
-        </div>
-        <div class="intel-grid">
-          <article class="intel-card">
-            <h3 data-i18n="intel1Title">Whitepaper</h3>
-            <p data-i18n="intel1Body">Long-form project vision, conceptual commitments, and mountain-first positioning.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="intel1Cta">Open whitepaper</a>
-          </article>
-          <article class="intel-card">
-            <h3 data-i18n="intel2Title">Public roadmap</h3>
-            <p data-i18n="intel2Body">Stage-by-stage implementation map and current execution status.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/meta/public-roadmap.md" data-doc-link="roadmap" data-i18n="intel2Cta">Open roadmap</a>
-          </article>
-          <article class="intel-card">
-            <h3 data-i18n="intel3Title">Repository + README</h3>
-            <p data-i18n="intel3Body">Technical source, governance policy links, and canonical route/deploy references.</p>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/README.md" data-doc-link="readme" data-i18n="intel3Cta">Open README</a>
-          </article>
-          <article class="intel-card">
-            <h3 data-i18n="intel4Title">Official channels</h3>
-            <p data-i18n="intel4Body">Follow updates on Instagram or contact the project team directly for collaboration and press.</p>
-            <div class="hero-cta">
-              <a class="btn btn-secondary" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="intel4Ig">Instagram</a>
-              <a class="btn btn-secondary" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="intel4Mail">Email</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="status" class="section" aria-labelledby="status-title">
-        <div class="section-head">
-          <p class="section-kicker" data-i18n="statusKicker">Public readiness</p>
-          <h2 id="status-title" data-i18n="statusTitle">Current state: playable, auditable, and open to external review.</h2>
-        </div>
-
-        <article class="status-strip">
-          <div class="status-line">
-            <div class="status-item">
-              <span class="status-label" data-i18n="statusLabel2">Current release</span>
-              <span data-i18n="statusValue2">v1.4.8 · public web prototype</span>
-            </div>
-            <div class="status-item">
-              <span class="status-label" data-i18n="statusLabel3">Part 2 scope</span>
-              <span data-i18n="statusValue3">Narrative bridge currently gated by summit-safe-return progression.</span>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="section" aria-labelledby="final-title">
-        <article class="final-band">
+      <!-- The Ascent -->
+      <section id="the-ascent" class="section">
+        <div class="shell">
           <div class="section-head">
-            <p class="section-kicker" data-i18n="finalKicker">Primary call to action</p>
-            <h2 id="final-title" data-i18n="finalTitle">Enter one expedition run. Then inspect the model and debrief trace.</h2>
-            <p class="section-intro" data-i18n="finalIntro">The fastest way to understand the project is to play, then read the resulting signals against documentation.</p>
+            <span class="elevation-mark reveal" aria-hidden="true">5,300 m</span>
+            <p class="section-kicker reveal" data-i18n="ascentKicker">The Ascent</p>
+            <h2 class="section-title reveal reveal-delay-1" data-i18n="ascentTitle">A systemic experience where clarity beats bravado.</h2>
+            <p class="section-intro reveal reveal-delay-2" data-i18n="ascentIntro">This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The mountain writes the terms; you respond.</p>
           </div>
-          <div class="hero-cta">
-            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalPlay">Start expedition</a>
-            <a class="btn btn-secondary" href="/md-viewer.html?file=/docs/repo-truth.md" data-doc-link="repoTruth" data-i18n="finalTruth">Open repo truth</a>
+          <div class="pillar-grid">
+            <article class="pillar reveal">
+              <span class="pillar-number" data-i18n="pillarNum1">01</span>
+              <h3 data-i18n="pillar1Title">Environmental authority</h3>
+              <p data-i18n="pillar1Body">Altitude, weather, route timing, and fatigue load shape each run. The mountain writes the terms; you respond.</p>
+            </article>
+            <article class="pillar reveal reveal-delay-1">
+              <span class="pillar-number" data-i18n="pillarNum2">02</span>
+              <h3 data-i18n="pillar2Title">Partial information</h3>
+              <p data-i18n="pillar2Body">Signals are interpreted through confidence ranges, never omniscient dashboards. Perception can drift long before collapse is obvious.</p>
+            </article>
+            <article class="pillar reveal reveal-delay-2">
+              <span class="pillar-number" data-i18n="pillarNum3">03</span>
+              <h3 data-i18n="pillar3Title">Plural outcomes</h3>
+              <p data-i18n="pillar3Body">Success is not summit-only. Strategic retreat and safe return are valid endings with real narrative and mechanical weight.</p>
+            </article>
           </div>
-        </article>
+          <div class="pull-quote reveal">
+            <p data-i18n="ascentQuote">&#8220;The summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.&#8221;</p>
+          </div>
+        </div>
       </section>
 
-      <footer class="site-footer">
+      <!-- Field Notes -->
+      <section id="field-notes" class="section">
+        <div class="shell">
+          <div class="section-head">
+            <span class="elevation-mark reveal" aria-hidden="true">4,200 m</span>
+            <p class="section-kicker reveal" data-i18n="fnKicker">Field Notes</p>
+            <h2 class="section-title reveal reveal-delay-1" data-i18n="fnTitle">Ten reference points on the mountain behind the project.</h2>
+            <p class="section-intro reveal reveal-delay-2" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
+          </div>
+          <div class="fn-carousel reveal" aria-roledescription="carousel">
+            <div class="fn-card-region" id="fn-card-region">
+              <article class="fn-slide fn-active" id="fn-slide-0" role="group" aria-roledescription="slide" aria-label="1 of 10" aria-hidden="false">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
+                <p class="fn-slide-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
+                <p class="fn-slide-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere &#8212; the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-1" role="group" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
+                <p class="fn-slide-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
+                <p class="fn-slide-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-2" role="group" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn03Title">6,962 m</h3>
+                <p class="fn-slide-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
+                <p class="fn-slide-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-3" role="group" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn04Title">A Provincial Park</h3>
+                <p class="fn-slide-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
+                <p class="fn-slide-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-4" role="group" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn05Title">Main Season: Nov&#8211;Apr</h3>
+                <p class="fn-slide-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to April 30.</p>
+                <p class="fn-slide-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-5" role="group" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn06Title">Volcanic Origin</h3>
+                <p class="fn-slide-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
+                <p class="fn-slide-body" data-i18n="fn06Body">The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano &#8212; imposing, but geologically quiet.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-6" role="group" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
+                <p class="fn-slide-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a &#8220;stone sentinel.&#8221;</p>
+                <p class="fn-slide-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning &#8220;stone sentinel.&#8221; Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-7" role="group" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
+                <p class="fn-slide-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
+                <p class="fn-slide-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-8" role="group" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
+                <p class="fn-slide-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
+                <p class="fn-slide-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq &#209;an, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua&#8217;s cultural significance predates European contact by centuries.</p>
+              </article>
+              <article class="fn-slide" id="fn-slide-9" role="group" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
+                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
+                <p class="fn-slide-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
+                <p class="fn-slide-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering &#8212; an Inca state ritual of profound religious significance.</p>
+              </article>
+            </div>
+            <div class="fn-nav" role="group">
+              <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">&#8249;</button>
+              <div class="fn-dots" role="group" aria-label="Field notes">
+                <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
+                <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="2" aria-label="Field note 3 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="3" aria-label="Field note 4 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="4" aria-label="Field note 5 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="5" aria-label="Field note 6 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="6" aria-label="Field note 7 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="7" aria-label="Field note 8 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="8" aria-label="Field note 9 of 10" aria-pressed="false"></button>
+                <button class="fn-dot" data-fn-idx="9" aria-label="Field note 10 of 10" aria-pressed="false"></button>
+              </div>
+              <button class="fn-nav-btn" id="fn-next" aria-label="Next field note" aria-controls="fn-card-region">&#8250;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Atmospheric Art Strip 2 -->
+      <div class="atmos-strip reveal" role="group" aria-label="Atmospheric concept art &#8212; descent range">
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/7.png" alt="High camp at sunset with dome tents and lone climber" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel4">High camp &#183; Rest state</span></div>
+        </figure>
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/19.png" alt="Snowfield under soft rose light with distant figure" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel5">Rose light &#183; Solitude</span></div>
+        </figure>
+        <figure class="atmos-panel">
+          <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape with luminous snow" loading="lazy" />
+          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel6">Blue hour &#183; Descent</span></div>
+        </figure>
+      </div>
+
+      <!-- The System -->
+      <section id="the-system" class="section">
+        <div class="shell">
+          <div class="section-head">
+            <span class="elevation-mark reveal" aria-hidden="true">3,400 m</span>
+            <p class="section-kicker reveal" data-i18n="systemKicker">The System</p>
+            <h2 class="section-title reveal reveal-delay-1" data-i18n="systemTitle">Built as a coherent EP/BT model, not mountain-themed decoration.</h2>
+            <p class="section-intro reveal reveal-delay-2" data-i18n="systemIntro">Web-v1 runs on a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs stay aligned so public claims remain verifiable.</p>
+          </div>
+          <div class="system-grid">
+            <div class="flow-diagram reveal">
+              <div class="flow-step">
+                <span class="flow-step-num">01</span>
+                <span class="flow-step-text" data-i18n="flow1">Action + time/resource spend</span>
+              </div>
+              <div class="flow-step">
+                <span class="flow-step-num">02</span>
+                <span class="flow-step-text" data-i18n="flow2">Environmental Pressure &#8596; Body Tolerance</span>
+              </div>
+              <div class="flow-step">
+                <span class="flow-step-num">03</span>
+                <span class="flow-step-text" data-i18n="flow3">Perceived signal + confidence + trend</span>
+              </div>
+              <div class="flow-step">
+                <span class="flow-step-num">04</span>
+                <span class="flow-step-text" data-i18n="flow4">Outcome classification + persistent run state</span>
+              </div>
+            </div>
+            <div class="status-band reveal reveal-delay-1">
+              <h3 style="margin:0; font-family: var(--serif); font-size: 1.05rem;" data-i18n="statusTitle">Current State</h3>
+              <div class="status-row">
+                <div class="status-item">
+                  <span class="status-label" data-i18n="statusLabel2">Release</span>
+                  <span class="status-value" data-i18n="statusValue2">v1.4.8 &#183; public web prototype</span>
+                </div>
+                <div class="status-item">
+                  <span class="status-label" data-i18n="statusLabel3">Part 2</span>
+                  <span class="status-value" data-i18n="statusValue3">Narrative bridge gated by summit-safe-return progression.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Waypoints -->
+      <section id="waypoints" class="section">
+        <div class="shell">
+          <div class="section-head">
+            <span class="elevation-mark reveal" aria-hidden="true">2,800 m</span>
+            <p class="section-kicker reveal" data-i18n="waypointsKicker">Waypoints</p>
+            <h2 class="section-title reveal reveal-delay-1" data-i18n="waypointsTitle">Core materials for understanding direction, scope, and credibility.</h2>
+          </div>
+          <div class="waypoints-grid">
+            <article class="waypoint-card reveal">
+              <h3 data-i18n="wp1Title">Whitepaper</h3>
+              <p data-i18n="wp1Body">Long-form vision, core commitments, and the mountain-first positioning in full detail.</p>
+              <a class="btn btn-ghost" href="/md-viewer.html?file=/meta/project-whitepaper.md" data-doc-link="whitepaper" data-i18n="wp1Cta">Open whitepaper</a>
+            </article>
+            <article class="waypoint-card reveal reveal-delay-1">
+              <h3 data-i18n="wp2Title">Public Roadmap</h3>
+              <p data-i18n="wp2Body">Stage-by-stage implementation map and current execution status.</p>
+              <a class="btn btn-ghost" href="/md-viewer.html?file=/meta/public-roadmap.md" data-doc-link="roadmap" data-i18n="wp2Cta">Open roadmap</a>
+            </article>
+            <article class="waypoint-card reveal reveal-delay-2">
+              <h3 data-i18n="wp3Title">Repository</h3>
+              <p data-i18n="wp3Body">Technical source, governance policy, and canonical routing references.</p>
+              <a class="btn btn-ghost" href="https://github.com/ernstgallegos/aconcagua-stone-sentinel" data-i18n="wp3Cta">View on GitHub</a>
+            </article>
+            <article class="waypoint-card reveal reveal-delay-3">
+              <h3 data-i18n="wp4Title">Official Channels</h3>
+              <p data-i18n="wp4Body">Follow updates on Instagram or contact the project team for collaboration and press.</p>
+              <div class="waypoint-actions">
+                <a class="btn btn-ghost" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="wp4Ig">Instagram</a>
+                <a class="btn btn-ghost" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="wp4Mail">Email</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="final-section" aria-labelledby="final-title">
+        <div class="final-bg" aria-hidden="true">
+          <img src="/art/concept-art/curated/ig/21.png" alt="" loading="lazy" />
+        </div>
+        <div class="final-fog" aria-hidden="true"></div>
+        <div class="shell final-content">
+          <p class="section-kicker reveal" data-i18n="finalKicker">Begin</p>
+          <h2 class="final-title reveal reveal-delay-1" id="final-title" data-i18n="finalTitle">Run one expedition. Then read the debrief trace with fresh eyes.</h2>
+          <p class="final-lead reveal reveal-delay-2" data-i18n="finalIntro">The quickest way to understand the project is simple: play one run, then read your signals against the documentation.</p>
+          <div class="final-actions reveal reveal-delay-3">
+            <a class="btn btn-primary" href="/prototype/web-v1/index.html" data-i18n="finalPlay">Start expedition</a>
+            <a class="btn btn-ghost" href="/md-viewer.html?file=/docs/repo-truth.md" data-doc-link="repoTruth" data-i18n="finalTruth">Open repo truth</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
         <div class="footer-grid">
           <section class="footer-block" aria-label="Project status and origin">
             <h3 data-i18n="footerProjectTitle">Project</h3>
-            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel · Public web prototype v1.4.8 · Mountain-first narrative systems.</p>
+            <p data-i18n="footerProjectBody">Aconcagua: Stone Sentinel &#183; Public web prototype v1.4.8 &#183; Mountain-first narrative systems.</p>
           </section>
           <section class="footer-block" aria-label="Official contact channels">
             <h3 data-i18n="footerContactTitle">Contact</h3>
@@ -896,7 +812,7 @@
             </ul>
           </section>
           <section class="footer-block" aria-label="Legal and governance links">
-            <h3 data-i18n="footerLegalTitle">Legal & governance</h3>
+            <h3 data-i18n="footerLegalTitle">Legal &amp; governance</h3>
             <ul class="footer-links">
               <li><a href="/LICENSE.md" data-i18n="footerLegalLicense">License</a></li>
               <li><a href="/SECURITY.md" data-i18n="footerLegalSecurity">Security policy</a></li>
@@ -905,324 +821,275 @@
           </section>
         </div>
         <div class="footer-bottom">
-          <span data-i18n="footerOrigin">Made in Argentina · Proyecto basado en Argentina.</span>
-          <span data-i18n="footerCopyright">© 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.</span>
+          <span data-i18n="footerOrigin">Made in Argentina &#183; Argentina-based project.</span>
+          <span data-i18n="footerCopyright">&#169; 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.</span>
         </div>
-      </footer>
-    </main>
+      </div>
+    </footer>
 
     <script src="/src/i18n/public-lang.js"></script>
     <script>
-      const TRANSLATIONS = {
-        en: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Mountain-first narrative systems project',
-          pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
-          skip: 'Skip to main content',
-          brandSub: 'Public mountain systems project',
-          navVision: 'Vision', navFieldNotes: 'Field Notes', navSystem: 'System', navStatus: 'Status', navIntel: 'Materials',
-          eyebrow: 'Mountain-first, consequence-forward design',
-          heroTitle: 'The mountain leads. Every decision you make is a bargain with real limits.',
-          heroLead: 'Aconcagua: Stone Sentinel is a reflective indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending; timing, judgment, and returning safely matter just as much.',
-          heroMeta1: 'Public release: v1.4.8 · Active route: welcome → setup → onboarding → game → outcomes.',
-          heroMeta2: 'Built for players, collaborators, artists, festivals, and cultural press.',
-          ctaPlay: 'Play current web prototype', ctaWhitepaper: 'Read whitepaper', ctaRepo: 'View repository',
-          heroImageAlt: 'Lone climber facing Aconcagua at dawn — concept art, Scene 1',
-          fnKicker: 'Field Notes',
-          fnTitle: 'Ten reference points on the mountain behind the project.',
-          fnIntro: 'Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.',
-          fnLabel: 'Field note',
-          fn01Title: 'The Highest Outside Asia',
-          fn01Fact: 'The highest mountain in the Americas and the highest peak on Earth outside Asia.',
-          fn01Body: 'Aconcagua is the highest point in the Western Hemisphere — the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.',
-          fn02Title: 'Mendoza / Chile Border',
-          fn02Fact: 'Aconcagua stands in western Mendoza, right on the Chilean border.',
-          fn02Body: 'The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.',
-          fn03Title: '6,962 m',
-          fn03Fact: 'Official park reference height: 6,962 meters above sea level.',
-          fn03Body: 'Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.',
-          fn04Title: 'A Provincial Park',
-          fn04Fact: 'Aconcagua is protected within Parque Provincial Aconcagua.',
-          fn04Body: 'The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.',
-          fn05Title: 'Main Season: Nov–Apr',
-          fn05Fact: 'The official summer season runs from November 1 to April 30.',
-          fn05Body: 'Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.',
-          fn06Title: 'Volcanic Origin',
-          fn06Fact: 'Aconcagua is of volcanic origin, but it is not an active volcano.',
-          fn06Body: 'The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano — imposing, but geologically quiet.',
-          fn07Title: 'Sentinel of Stone',
-          fn07Fact: 'The name Aconcagua may derive from Quechua and is often linked to the idea of a "stone sentinel."',
-          fn07Body: 'The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning "stone sentinel." Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.',
-          fn08Title: 'First Ascent / 1897',
-          fn08Fact: 'The first successful ascent was made in 1897 by Matthias Zurbriggen.',
-          fn08Body: 'Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.',
-          fn09Title: 'An Inca Ceremonial Mountain',
-          fn09Fact: 'Aconcagua also forms part of a wider Andean archaeological and sacred landscape.',
-          fn09Body: 'The mountain belongs to the broader Andean sacred geography connected to the Qhapaq Ñan, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua\'s cultural significance predates European contact by centuries.',
-          fn10Title: 'The Aconcagua Child',
-          fn10Fact: 'In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.',
-          fn10Body: 'The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering — an Inca state ritual of profound religious significance.',
-          visionKicker: 'Design premise',
-          visionTitle: 'A systemic mountain experience where clarity beats bravado, every time.',
-          visionIntro: 'This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The site follows the same rule: less noise, sharper signal, easier paths for deep reading.',
-          pillar1Title: 'Environmental authority',
-          pillar1Body: 'Altitude, weather, route timing, and fatigue load shape each run. The mountain writes the terms; you respond.',
-          pillar2Title: 'Partial information',
-          pillar2Body: 'Signals are interpreted through confidence ranges, never omniscient dashboards. Perception can drift long before collapse is obvious.',
-          pillar3Title: 'Plural outcomes',
-          pillar3Body: 'Success is not summit-only. Strategic retreat and safe return are valid endings with real narrative and mechanical weight.',
-          systemKicker: 'Architecture signal',
-          systemTitle: 'Built as a coherent EP/BT model, not mountain-themed decoration.',
-          systemIntro: 'Web-v1 runs on a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs stay aligned so public claims remain verifiable.',
-          flow1: 'Action + time/resource spend',
-          flow2: 'Environmental Pressure ↔ Body Tolerance',
-          flow3: 'Perceived signal + confidence + trend',
-          flow4: 'Outcome classification + persistent run state',
-          runtimeTitle: 'Runtime truth map',
-          runtime1: 'Active prototype: prototype/web-v1', runtime2: 'Compatibility artifact: prototype/mra-v0', runtime3: 'Canonical outcomes and contracts in data/*.json',
-          audienceTitle: 'Who this site serves',
-          aud1: 'Players seeking atmospheric systemic play.', aud2: 'Press, curators, and festival evaluators.', aud3: 'Artists, developers, and cultural collaborators.',
-          intelKicker: 'Project intelligence',
-          intelTitle: 'Core materials to understand direction, scope, and credibility fast.',
-          intelIntro: 'Use this hub to understand the design frame, follow roadmap movement, and reach official governance/contact channels without hunting through the repo.',
-          intel1Title: 'Whitepaper', intel1Body: 'Long-form vision, core commitments, and the mountain-first positioning in full detail.', intel1Cta: 'Open whitepaper',
-          intel2Title: 'Public roadmap', intel2Body: 'Stage-by-stage implementation map and current execution status.', intel2Cta: 'Open roadmap',
-          intel3Title: 'Repository + README', intel3Body: 'Technical source, governance policy links, and canonical routing/deploy references.', intel3Cta: 'Open README',
-          intel4Title: 'Official channels', intel4Body: 'Follow updates on Instagram or contact the project team directly for collaboration and press.', intel4Ig: 'Instagram', intel4Mail: 'Email',
-          statusKicker: 'Public readiness',
-          statusTitle: 'Current state: playable today, auditable in detail, and open to outside review.',
-          statusLabel1: 'Playable flow', statusValue1: 'title → setup → onboarding → game → outcomes/debrief',
-          statusLabel2: 'Current release', statusValue2: 'v1.4.8 · public web prototype',
-          statusLabel3: 'Part 2 scope', statusValue3: 'Narrative bridge currently gated by summit-safe-return progression.',
-          outcomesKicker: 'Outcome ethics',
-          outcomesTitle: 'Canonical outcomes prioritize consequence, timing, and safe return.',
-          outcome1: 'Summit plus explicit safe park exit.', outcome2: 'Strong ascent with disciplined retreat before irreversible failure.', outcome3: 'Risk-managed withdrawal or rescue when body-state thresholds break.', outcome4: 'Failure classes tied to exposure, permit exhaustion, or expedition-window closure.',
-          finalKicker: 'Primary call to action',
-          finalTitle: 'Run one expedition. Then inspect the model and read the debrief trace with fresh eyes.',
-          finalIntro: 'The quickest way to understand the project is simple: play one run, then read your signals against the documentation.',
-          finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
-          footerProjectTitle: 'Project',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Public web prototype v1.4.8 · Mountain-first narrative systems.',
-          footerContactTitle: 'Contact',
-          footerContactEmail: 'Official email',
-          footerContactInstagram: 'Instagram',
-          footerContactGithub: 'GitHub repository',
-          footerLegalTitle: 'Legal & governance',
-          footerLegalLicense: 'License',
-          footerLegalSecurity: 'Security policy',
-          footerLegalConduct: 'Code of conduct',
-          footerOrigin: 'Made in Argentina · Argentina-based project.',
-          footerCopyright: '© 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.'
-        },
-        es: {
-          pageTitle: 'Aconcagua: Stone Sentinel — Proyecto narrativo sistémico mountain-first',
-          pageDescription: 'Sitio público oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en montaña, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
-          skip: 'Saltar al contenido principal',
-          brandSub: 'Proyecto público de sistemas de montaña',
-          navVision: 'Visión', navFieldNotes: 'Notas de Campo', navSystem: 'Sistema', navStatus: 'Estado', navIntel: 'Materiales',
-          eyebrow: 'Diseño mountain-first, con consecuencias reales',
-          heroTitle: 'La montaña marca el ritmo. Cada decisión tuya negocia con límites de verdad.',
-          heroLead: 'Aconcagua: Stone Sentinel es un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin botón de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
-          heroMeta1: 'Release pública: v1.4.8 · Ruta activa: bienvenida → setup → onboarding → juego → outcomes.',
-          heroMeta2: 'Pensado para jugadores, colaboradores, artistas, festivales y prensa cultural.',
-          ctaPlay: 'Jugar prototipo web actual', ctaWhitepaper: 'Leer whitepaper', ctaRepo: 'Ver repositorio',
-          heroImageAlt: 'Escalador solitario frente al Aconcagua al amanecer — arte conceptual, Escena 1',
-          fnKicker: 'Notas de Campo',
-          fnTitle: 'Diez puntos de referencia sobre la montaña detrás del proyecto.',
-          fnIntro: 'El Aconcagua es un lugar real, con geografía, historia y peso cultural concretos. Estas fichas anclan la experiencia en contexto verificado.',
-          fnLabel: 'Nota de campo',
-          fn01Title: 'La más alta fuera de Asia',
-          fn01Fact: 'La montaña más alta de América y la cumbre más alta de la Tierra fuera de Asia.',
-          fn01Body: 'El Aconcagua es el punto más alto del hemisferio occidental — la referencia continental para todo récord de altitud fuera del Himalaya y el Karakoram. Su escala define la identidad de los Andes.',
-          fn02Title: 'Mendoza / Frontera con Chile',
-          fn02Fact: 'El Aconcagua se encuentra en el oeste de Mendoza, sobre la frontera con Chile.',
-          fn02Body: 'La montaña se eleva en los Andes centrales del oeste de la provincia de Mendoza, Argentina, en la frontera con Chile. La ciudad más cercana es Mendoza, a unos 110 km al sudeste.',
-          fn03Title: '6.962 m',
-          fn03Fact: 'Altura de referencia oficial del parque: 6.962 metros sobre el nivel del mar.',
-          fn03Body: 'Los relevamientos han arrojado cifras levemente variables a lo largo de las décadas, pero 6.962 m es la altitud publicada por las autoridades del parque y usada como referencia operativa.',
-          fn04Title: 'Un parque provincial',
-          fn04Fact: 'El Aconcagua está protegido dentro del Parque Provincial Aconcagua.',
-          fn04Body: 'El parque es administrado por la provincia de Mendoza. La entrada de Horcones se ubica a unos 2.800 m, a unos 185 km al oeste de la ciudad por ruta.',
-          fn05Title: 'Temporada principal: nov–abr',
-          fn05Fact: 'La temporada estival oficial va del 1 de noviembre al 30 de abril.',
-          fn05Body: 'Los permisos y servicios operan durante el verano austral. La mayoría de los intentos de cumbre se concentran en diciembre y enero, cuando las ventanas de buen clima son más amplias.',
-          fn06Title: 'Origen volcánico',
-          fn06Fact: 'El Aconcagua es de origen volcánico, pero no es un volcán activo.',
-          fn06Body: 'El macizo se formó por actividad volcánica hace millones de años y fue luego elevado por compresión tectónica. Hoy se clasifica como volcán extinto — imponente, pero geológicamente quieto.',
-          fn07Title: 'Centinela de piedra',
-          fn07Fact: 'El nombre Aconcagua podría derivar del quechua y suele vincularse con la idea de un "centinela de piedra".',
-          fn07Body: 'La etimología está en debate. Una interpretación muy difundida vincula el nombre a raíces quechuas que significan "centinela de piedra". Otros investigadores proponen orígenes en mapudungún o aimara. Ninguna derivación está zanjada.',
-          fn08Title: 'Primera ascensión / 1897',
-          fn08Fact: 'La primera ascensión exitosa fue realizada en 1897 por Matthias Zurbriggen.',
-          fn08Body: 'El guía de montaña suizo Matthias Zurbriggen alcanzó la cumbre el 14 de enero de 1897, durante una expedición liderada por Edward FitzGerald. La expedición se acercó por la Ruta Normal desde el noroeste.',
-          fn09Title: 'Una montaña ceremonial inca',
-          fn09Fact: 'El Aconcagua también forma parte de un paisaje andino más amplio, arqueológico y sagrado.',
-          fn09Body: 'La montaña pertenece a la geografía sagrada andina vinculada al Qhapaq Ñan, el sistema vial incaico reconocido por la UNESCO. Sitios de alta montaña a lo largo de los Andes sirvieron como plataformas ceremoniales. La significación cultural del cerro precede al contacto europeo por siglos.',
-          fn10Title: 'El niño del Aconcagua',
-          fn10Fact: 'En 1985, montañistas hallaron los restos congelados de un niño inca de unos 7 años en el macizo del Aconcagua.',
-          fn10Body: 'Los restos fueron descubiertos a aproximadamente 5.300 m en el filo sudoeste. Los estudios arqueológicos los identificaron como los de un niño de unos siete años, sacrificado hace más de 500 años en lo que los investigadores interpretan como una ofrenda de capacocha — un ritual estatal inca de profundo peso religioso.',
-          visionKicker: 'Premisa de diseño',
-          visionTitle: 'Una experiencia sistémica de montaña donde la lucidez pesa más que la bravura.',
-          visionIntro: 'El proyecto convierte presión geofísica, percepción parcial y decisiones éticas en algo jugable. El sitio sigue esa misma lógica: menos ruido, más señal, y rutas claras para profundizar.',
-          pillar1Title: 'Autoridad ambiental',
-          pillar1Body: 'Altitud, clima, timing de ruta y carga de fatiga modelan cada corrida. La montaña pone los términos; vos respondés.',
-          pillar2Title: 'Información parcial',
-          pillar2Body: 'Las señales se leen por rangos de confianza, nunca con tableros omniscientes. La percepción puede degradarse bastante antes del colapso visible.',
-          pillar3Title: 'Outcomes plurales',
-          pillar3Body: 'El éxito no es solo cumbre. La retirada estratégica y el retorno seguro son finales válidos con peso narrativo y mecánico real.',
-          systemKicker: 'Señal de arquitectura',
-          systemTitle: 'Construido como modelo EP/BT coherente, no como decoración con nieve.',
-          systemIntro: 'Web-v1 corre con un resolvedor por turnos donde Presión Ambiental y Tolerancia Corporal interactúan con capas de confianza y tendencia. Contratos, tests y docs se mantienen alineados para que lo público sea verificable.',
-          flow1: 'Acción + gasto de tiempo/recursos',
-          flow2: 'Presión Ambiental ↔ Tolerancia Corporal',
-          flow3: 'Señal percibida + confianza + tendencia',
-          flow4: 'Clasificación de outcome + estado persistente de corrida',
-          runtimeTitle: 'Mapa de verdad runtime',
-          runtime1: 'Prototipo activo: prototype/web-v1', runtime2: 'Artefacto de compatibilidad: prototype/mra-v0', runtime3: 'Outcomes y contratos canónicos en data/*.json',
-          audienceTitle: 'A quién sirve este sitio',
-          aud1: 'Jugadores que buscan atmósfera y sistemas.', aud2: 'Prensa, curadores y evaluadores de festivales.', aud3: 'Artistas, desarrolladores y colaboradores culturales.',
-          intelKicker: 'Inteligencia del proyecto',
-          intelTitle: 'Materiales clave para entender dirección, alcance y credibilidad rápido.',
-          intelIntro: 'Usá este hub para entender la base conceptual, seguir el pulso del roadmap y entrar a canales oficiales de gobernanza/contacto sin vueltas.',
-          intel1Title: 'Whitepaper', intel1Body: 'Visión extendida, compromisos conceptuales y posicionamiento mountain-first en profundidad.', intel1Cta: 'Abrir whitepaper',
-          intel2Title: 'Roadmap público', intel2Body: 'Mapa de implementación por etapas y estado actual de ejecución.', intel2Cta: 'Abrir roadmap',
-          intel3Title: 'Repositorio + README', intel3Body: 'Código fuente, enlaces de gobernanza y referencias canónicas de ruteo/deploy.', intel3Cta: 'Abrir README',
-          intel4Title: 'Canales oficiales', intel4Body: 'Seguí novedades en Instagram o contactá directamente al equipo para colaboración y prensa.', intel4Ig: 'Instagram', intel4Mail: 'Email',
-          statusKicker: 'Preparación pública',
-          statusTitle: 'Estado actual: jugable ahora, auditable al detalle y abierto a revisión externa.',
-          statusLabel1: 'Flujo jugable', statusValue1: 'título → setup → onboarding → juego → outcomes/debrief',
-          statusLabel2: 'Release actual', statusValue2: 'v1.4.8 · prototipo web público',
-          statusLabel3: 'Alcance Parte 2', statusValue3: 'Puente narrativo hoy gateado por progresión de cumbre + retorno seguro.',
-          outcomesKicker: 'Ética de outcomes',
-          outcomesTitle: 'Los outcomes canónicos priorizan consecuencia, timing y regreso seguro.',
-          outcome1: 'Cumbre con salida segura explícita del parque.', outcome2: 'Ascenso fuerte con retirada disciplinada antes de falla irreversible.', outcome3: 'Retirada o rescate bajo ruptura de umbrales corporales.', outcome4: 'Clases de falla ligadas a exposición, agotamiento de permiso o cierre de ventana.',
-          finalKicker: 'Llamado principal',
-          finalTitle: 'Entrá a una corrida. Después abrí el modelo y leé la traza de debrief con calma.',
-          finalIntro: 'La forma más rápida de entender el proyecto es simple: jugá una corrida y después leé tus señales junto a la documentación.',
-          finalPlay: 'Iniciar expedición', finalTruth: 'Abrir repo truth',
-          footerProjectTitle: 'Proyecto',
-          footerProjectBody: 'Aconcagua: Stone Sentinel · Prototipo web público v1.4.8 · Sistemas narrativos con la montaña como eje.',
-          footerContactTitle: 'Contacto',
-          footerContactEmail: 'Email oficial',
-          footerContactInstagram: 'Instagram',
-          footerContactGithub: 'Repositorio en GitHub',
-          footerLegalTitle: 'Legal y gobernanza',
-          footerLegalLicense: 'Licencia',
-          footerLegalSecurity: 'Política de seguridad',
-          footerLegalConduct: 'Código de conducta',
-          footerOrigin: 'Hecho en Argentina · Proyecto basado en Argentina.',
-          footerCopyright: '© 2026 Aconcagua: Stone Sentinel. Todos los derechos reservados cuando corresponda.'
-        }
-      };
-
-      const STORAGE_KEY = PublicLang.LANG_KEY;
-      const DOC_LINKS = {
-        whitepaper: { en: '/meta/project-whitepaper.md', es: '/meta/project-whitepaper.es.md' },
-        roadmap: { en: '/meta/public-roadmap.md', es: '/meta/public-roadmap.es.md' },
-        readme: { en: '/README.md', es: '/README.es.md' },
-        repoTruth: { en: '/docs/repo-truth.md', es: '/docs/repo-truth.es.md' }
-      };
-
-      function updateDocLinks(lang) {
-        document.querySelectorAll('[data-doc-link]').forEach((el) => {
-          const key = el.getAttribute('data-doc-link');
-          const entry = DOC_LINKS[key];
-          if (!entry) return;
-          const targetFile = entry[lang] || entry.en;
-          el.setAttribute('href', `/md-viewer.html?file=${encodeURIComponent(targetFile)}`);
-        });
+    var TRANSLATIONS = {
+      en: {
+        pageTitle: 'Aconcagua: Stone Sentinel \u2014 Mountain-first narrative systems project',
+        pageDescription: 'Official public site for Aconcagua: Stone Sentinel. Mountain-first narrative systems, playable current web prototype, and project intelligence for players, collaborators, and press.',
+        skip: 'Skip to main content',
+        scrollHint: 'Descend',
+        navMountain: 'The Mountain', navAscent: 'The Ascent', navFieldNotes: 'Field Notes', navSystem: 'The System', navWaypoints: 'Waypoints',
+        eyebrow: 'Mountain-first \u00B7 consequence-forward',
+        heroTitle: 'The mountain leads. Every decision is a bargain with real limits.',
+        heroLead: 'A contemplative indie project about uncertainty, risk literacy, and choices that do not rewind. Summit is only one valid ending \u2014 timing, judgment, and returning safely matter just as much.',
+        heroMeta1: 'v1.4.8 \u00B7 Public web prototype',
+        ctaPlay: 'Enter the expedition', ctaWhitepaper: 'Read whitepaper',
+        heroImageAlt: 'Lone climber facing Aconcagua at dawn \u2014 concept art',
+        mountainKicker: 'The Mountain',
+        mountainTitle: 'Aconcagua is not a backdrop. It is the protagonist.',
+        mountainIntro: 'The highest peak outside Asia. A stone sentinel standing at the border of Argentina and Chile, shaping weather, dictating routes, and defining the limits of human ambition for millennia.',
+        mStatAlt: '6,962 m', mStatAltLabel: 'Summit elevation',
+        mStatHemisphere: 'Highest', mStatHemisphereLabel: 'Peak in the Americas',
+        mStatFirst: '1897', mStatFirstLabel: 'First recorded ascent',
+        mStatSeason: 'Nov \u2013 Apr', mStatSeasonLabel: 'Climbing season',
+        mountainProse1: 'The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano \u2014 imposing, but geologically quiet. The name may derive from Quechua roots meaning \u201Cstone sentinel,\u201D though scholars also propose Mapudungun and Aymara origins.',
+        mountainProse2: 'Aconcagua belongs to the broader Andean sacred geography connected to the Qhapaq \u00D1an, the Inca road system recognized by UNESCO. In 1985, climbers found the frozen remains of a seven-year-old Inca child at 5,300 m \u2014 a capacocha offering that predates European contact by centuries. The mountain\u2019s cultural significance is inseparable from its physical presence.',
+        atmosLabel1: 'Alpenglow \u00B7 Approach', atmosLabel2: 'Golden hour \u00B7 Decision window', atmosLabel3: 'Whiteout \u00B7 Pressure state',
+        atmosLabel4: 'High camp \u00B7 Rest state', atmosLabel5: 'Rose light \u00B7 Solitude', atmosLabel6: 'Blue hour \u00B7 Descent',
+        ascentKicker: 'The Ascent',
+        ascentTitle: 'A systemic experience where clarity beats bravado.',
+        ascentIntro: 'This project turns geophysical pressure, partial perception, and ethical decision-making into something you can actually play. The mountain writes the terms; you respond.',
+        pillarNum1: '01', pillarNum2: '02', pillarNum3: '03',
+        pillar1Title: 'Environmental authority',
+        pillar1Body: 'Altitude, weather, route timing, and fatigue load shape each run. The mountain writes the terms; you respond.',
+        pillar2Title: 'Partial information',
+        pillar2Body: 'Signals are interpreted through confidence ranges, never omniscient dashboards. Perception can drift long before collapse is obvious.',
+        pillar3Title: 'Plural outcomes',
+        pillar3Body: 'Success is not summit-only. Strategic retreat and safe return are valid endings with real narrative and mechanical weight.',
+        ascentQuote: '\u201CThe summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.\u201D',
+        fnKicker: 'Field Notes',
+        fnTitle: 'Ten reference points on the mountain behind the project.',
+        fnIntro: 'Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.',
+        fnLabel: 'Field note',
+        fn01Title: 'The Highest Outside Asia', fn01Fact: 'The highest mountain in the Americas and the highest peak on Earth outside Asia.', fn01Body: 'Aconcagua is the highest point in the Western Hemisphere \u2014 the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.',
+        fn02Title: 'Mendoza / Chile Border', fn02Fact: 'Aconcagua stands in western Mendoza, right on the Chilean border.', fn02Body: 'The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.',
+        fn03Title: '6,962 m', fn03Fact: 'Official park reference height: 6,962 meters above sea level.', fn03Body: 'Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.',
+        fn04Title: 'A Provincial Park', fn04Fact: 'Aconcagua is protected within Parque Provincial Aconcagua.', fn04Body: 'The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.',
+        fn05Title: 'Main Season: Nov\u2013Apr', fn05Fact: 'The official summer season runs from November 1 to April 30.', fn05Body: 'Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.',
+        fn06Title: 'Volcanic Origin', fn06Fact: 'Aconcagua is of volcanic origin, but it is not an active volcano.', fn06Body: 'The massif formed through volcanic activity millions of years ago and was later uplifted by tectonic compression. Today it is classified as an extinct volcano \u2014 imposing, but geologically quiet.',
+        fn07Title: 'Sentinel of Stone', fn07Fact: 'The name Aconcagua may derive from Quechua and is often linked to the idea of a \u201Cstone sentinel.\u201D', fn07Body: 'The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning \u201Cstone sentinel.\u201D Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.',
+        fn08Title: 'First Ascent / 1897', fn08Fact: 'The first successful ascent was made in 1897 by Matthias Zurbriggen.', fn08Body: 'Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.',
+        fn09Title: 'An Inca Ceremonial Mountain', fn09Fact: 'Aconcagua also forms part of a wider Andean archaeological and sacred landscape.', fn09Body: 'The mountain belongs to the broader Andean sacred geography connected to the Qhapaq \u00D1an, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua\u2019s cultural significance predates European contact by centuries.',
+        fn10Title: 'The Aconcagua Child', fn10Fact: 'In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.', fn10Body: 'The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering \u2014 an Inca state ritual of profound religious significance.',
+        systemKicker: 'The System',
+        systemTitle: 'Built as a coherent EP/BT model, not mountain-themed decoration.',
+        systemIntro: 'Web-v1 runs on a turn resolver where Environmental Pressure and Body Tolerance interact with confidence and trend layers. Contracts, tests, and docs stay aligned so public claims remain verifiable.',
+        flow1: 'Action + time/resource spend', flow2: 'Environmental Pressure \u2194 Body Tolerance', flow3: 'Perceived signal + confidence + trend', flow4: 'Outcome classification + persistent run state',
+        statusTitle: 'Current State',
+        statusLabel2: 'Release', statusValue2: 'v1.4.8 \u00B7 public web prototype',
+        statusLabel3: 'Part 2', statusValue3: 'Narrative bridge gated by summit-safe-return progression.',
+        waypointsKicker: 'Waypoints',
+        waypointsTitle: 'Core materials for understanding direction, scope, and credibility.',
+        wp1Title: 'Whitepaper', wp1Body: 'Long-form vision, core commitments, and the mountain-first positioning in full detail.', wp1Cta: 'Open whitepaper',
+        wp2Title: 'Public Roadmap', wp2Body: 'Stage-by-stage implementation map and current execution status.', wp2Cta: 'Open roadmap',
+        wp3Title: 'Repository', wp3Body: 'Technical source, governance policy, and canonical routing references.', wp3Cta: 'View on GitHub',
+        wp4Title: 'Official Channels', wp4Body: 'Follow updates on Instagram or contact the project team for collaboration and press.', wp4Ig: 'Instagram', wp4Mail: 'Email',
+        finalKicker: 'Begin',
+        finalTitle: 'Run one expedition. Then read the debrief trace with fresh eyes.',
+        finalIntro: 'The quickest way to understand the project is simple: play one run, then read your signals against the documentation.',
+        finalPlay: 'Start expedition', finalTruth: 'Open repo truth',
+        footerProjectTitle: 'Project',
+        footerProjectBody: 'Aconcagua: Stone Sentinel \u00B7 Public web prototype v1.4.8 \u00B7 Mountain-first narrative systems.',
+        footerContactTitle: 'Contact', footerContactEmail: 'Official email', footerContactInstagram: 'Instagram', footerContactGithub: 'GitHub repository',
+        footerLegalTitle: 'Legal & governance', footerLegalLicense: 'License', footerLegalSecurity: 'Security policy', footerLegalConduct: 'Code of conduct',
+        footerOrigin: 'Made in Argentina \u00B7 Argentina-based project.',
+        footerCopyright: '\u00A9 2026 Aconcagua: Stone Sentinel. All rights reserved where applicable.'
+      },
+      es: {
+        pageTitle: 'Aconcagua: Stone Sentinel \u2014 Proyecto narrativo sist\u00E9mico mountain-first',
+        pageDescription: 'Sitio p\u00FAblico oficial de Aconcagua: Stone Sentinel. Sistemas narrativos centrados en monta\u00F1a, prototipo web actual jugable y materiales para jugadores, colaboradores y prensa.',
+        skip: 'Saltar al contenido principal',
+        scrollHint: 'Descender',
+        navMountain: 'La Monta\u00F1a', navAscent: 'El Ascenso', navFieldNotes: 'Notas de Campo', navSystem: 'El Sistema', navWaypoints: 'Puntos de Paso',
+        eyebrow: 'Mountain-first \u00B7 con consecuencias reales',
+        heroTitle: 'La monta\u00F1a marca el ritmo. Cada decisi\u00F3n negocia con l\u00EDmites de verdad.',
+        heroLead: 'Un proyecto indie contemplativo sobre incertidumbre, lectura de riesgo y decisiones sin bot\u00F3n de deshacer. La cumbre es una salida posible; volver seguro, llegar a tiempo y decidir con criterio pesan igual.',
+        heroMeta1: 'v1.4.8 \u00B7 Prototipo web p\u00FAblico',
+        ctaPlay: 'Entrar a la expedici\u00F3n', ctaWhitepaper: 'Leer whitepaper',
+        heroImageAlt: 'Escalador solitario frente al Aconcagua al amanecer \u2014 arte conceptual',
+        mountainKicker: 'La Monta\u00F1a',
+        mountainTitle: 'El Aconcagua no es un tel\u00F3n de fondo. Es el protagonista.',
+        mountainIntro: 'La cumbre m\u00E1s alta fuera de Asia. Un centinela de piedra en la frontera de Argentina y Chile, que modela el clima, dicta las rutas y define los l\u00EDmites de la ambici\u00F3n humana desde hace milenios.',
+        mStatAlt: '6.962 m', mStatAltLabel: 'Elevaci\u00F3n de cumbre',
+        mStatHemisphere: 'La m\u00E1s alta', mStatHemisphereLabel: 'Cumbre de Am\u00E9rica',
+        mStatFirst: '1897', mStatFirstLabel: 'Primera ascensi\u00F3n registrada',
+        mStatSeason: 'Nov \u2013 Abr', mStatSeasonLabel: 'Temporada de ascenso',
+        mountainProse1: 'El macizo se form\u00F3 por actividad volc\u00E1nica hace millones de a\u00F1os y fue luego elevado por compresi\u00F3n tect\u00F3nica. Hoy se clasifica como volc\u00E1n extinto \u2014 imponente, pero geol\u00F3gicamente quieto. El nombre podr\u00EDa derivar de ra\u00EDces quechuas que significan \u201Ccentinela de piedra\u201D, aunque otros investigadores proponen or\u00EDgenes en mapudung\u00FAn y aimara.',
+        mountainProse2: 'El Aconcagua pertenece a la geograf\u00EDa sagrada andina vinculada al Qhapaq \u00D1an, el sistema vial incaico reconocido por la UNESCO. En 1985, monta\u00F1istas hallaron los restos congelados de un ni\u00F1o inca de siete a\u00F1os a 5.300 m \u2014 una ofrenda de capacocha que precede al contacto europeo por siglos. La significaci\u00F3n cultural de la monta\u00F1a es inseparable de su presencia f\u00EDsica.',
+        atmosLabel1: 'Alpenglow \u00B7 Aproximaci\u00F3n', atmosLabel2: 'Hora dorada \u00B7 Ventana de decisi\u00F3n', atmosLabel3: 'Whiteout \u00B7 Estado de presi\u00F3n',
+        atmosLabel4: 'Campo alto \u00B7 Estado de descanso', atmosLabel5: 'Luz rosada \u00B7 Soledad', atmosLabel6: 'Hora azul \u00B7 Descenso',
+        ascentKicker: 'El Ascenso',
+        ascentTitle: 'Una experiencia sist\u00E9mica donde la lucidez pesa m\u00E1s que la bravura.',
+        ascentIntro: 'El proyecto convierte presi\u00F3n geof\u00EDsica, percepci\u00F3n parcial y decisiones \u00E9ticas en algo jugable. La monta\u00F1a pone los t\u00E9rminos; vos respond\u00E9s.',
+        pillarNum1: '01', pillarNum2: '02', pillarNum3: '03',
+        pillar1Title: 'Autoridad ambiental', pillar1Body: 'Altitud, clima, timing de ruta y carga de fatiga modelan cada corrida. La monta\u00F1a pone los t\u00E9rminos; vos respond\u00E9s.',
+        pillar2Title: 'Informaci\u00F3n parcial', pillar2Body: 'Las se\u00F1ales se leen por rangos de confianza, nunca con tableros omniscientes. La percepci\u00F3n puede degradarse bastante antes del colapso visible.',
+        pillar3Title: 'Outcomes plurales', pillar3Body: 'El \u00E9xito no es solo cumbre. La retirada estrat\u00E9gica y el retorno seguro son finales v\u00E1lidos con peso narrativo y mec\u00E1nico real.',
+        ascentQuote: '\u201CLa cumbre es una posibilidad entre muchos finales v\u00E1lidos. Volver seguro, el timing y el criterio son valores de dise\u00F1o centrales.\u201D',
+        fnKicker: 'Notas de Campo',
+        fnTitle: 'Diez puntos de referencia sobre la monta\u00F1a detr\u00E1s del proyecto.',
+        fnIntro: 'El Aconcagua es un lugar real, con geograf\u00EDa, historia y peso cultural concretos. Estas fichas anclan la experiencia en contexto verificado.',
+        fnLabel: 'Nota de campo',
+        fn01Title: 'La m\u00E1s alta fuera de Asia', fn01Fact: 'La monta\u00F1a m\u00E1s alta de Am\u00E9rica y la cumbre m\u00E1s alta de la Tierra fuera de Asia.', fn01Body: 'El Aconcagua es el punto m\u00E1s alto del hemisferio occidental \u2014 la referencia continental para todo r\u00E9cord de altitud fuera del Himalaya y el Karakoram. Su escala define la identidad de los Andes.',
+        fn02Title: 'Mendoza / Frontera con Chile', fn02Fact: 'El Aconcagua se encuentra en el oeste de Mendoza, sobre la frontera con Chile.', fn02Body: 'La monta\u00F1a se eleva en los Andes centrales del oeste de la provincia de Mendoza, Argentina, en la frontera con Chile. La ciudad m\u00E1s cercana es Mendoza, a unos 110 km al sudeste.',
+        fn03Title: '6.962 m', fn03Fact: 'Altura de referencia oficial del parque: 6.962 metros sobre el nivel del mar.', fn03Body: 'Los relevamientos han arrojado cifras levemente variables a lo largo de las d\u00E9cadas, pero 6.962 m es la altitud publicada por las autoridades del parque y usada como referencia operativa.',
+        fn04Title: 'Un parque provincial', fn04Fact: 'El Aconcagua est\u00E1 protegido dentro del Parque Provincial Aconcagua.', fn04Body: 'El parque es administrado por la provincia de Mendoza. La entrada de Horcones se ubica a unos 2.800 m, a unos 185 km al oeste de la ciudad por ruta.',
+        fn05Title: 'Temporada principal: nov\u2013abr', fn05Fact: 'La temporada estival oficial va del 1 de noviembre al 30 de abril.', fn05Body: 'Los permisos y servicios operan durante el verano austral. La mayor\u00EDa de los intentos de cumbre se concentran en diciembre y enero, cuando las ventanas de buen clima son m\u00E1s amplias.',
+        fn06Title: 'Origen volc\u00E1nico', fn06Fact: 'El Aconcagua es de origen volc\u00E1nico, pero no es un volc\u00E1n activo.', fn06Body: 'El macizo se form\u00F3 por actividad volc\u00E1nica hace millones de a\u00F1os y fue luego elevado por compresi\u00F3n tect\u00F3nica. Hoy se clasifica como volc\u00E1n extinto \u2014 imponente, pero geol\u00F3gicamente quieto.',
+        fn07Title: 'Centinela de piedra', fn07Fact: 'El nombre Aconcagua podr\u00EDa derivar del quechua y suele vincularse con la idea de un \u201Ccentinela de piedra\u201D.', fn07Body: 'La etimolog\u00EDa est\u00E1 en debate. Una interpretaci\u00F3n muy difundida vincula el nombre a ra\u00EDces quechuas que significan \u201Ccentinela de piedra\u201D. Otros investigadores proponen or\u00EDgenes en mapudung\u00FAn o aimara. Ninguna derivaci\u00F3n est\u00E1 zanjada.',
+        fn08Title: 'Primera ascensi\u00F3n / 1897', fn08Fact: 'La primera ascensi\u00F3n exitosa fue realizada en 1897 por Matthias Zurbriggen.', fn08Body: 'El gu\u00EDa de monta\u00F1a suizo Matthias Zurbriggen alcanz\u00F3 la cumbre el 14 de enero de 1897, durante una expedici\u00F3n liderada por Edward FitzGerald. La expedici\u00F3n se acerc\u00F3 por la Ruta Normal desde el noroeste.',
+        fn09Title: 'Una monta\u00F1a ceremonial inca', fn09Fact: 'El Aconcagua tambi\u00E9n forma parte de un paisaje andino m\u00E1s amplio, arqueol\u00F3gico y sagrado.', fn09Body: 'La monta\u00F1a pertenece a la geograf\u00EDa sagrada andina vinculada al Qhapaq \u00D1an, el sistema vial incaico reconocido por la UNESCO. Sitios de alta monta\u00F1a a lo largo de los Andes sirvieron como plataformas ceremoniales. La significaci\u00F3n cultural del cerro precede al contacto europeo por siglos.',
+        fn10Title: 'El ni\u00F1o del Aconcagua', fn10Fact: 'En 1985, monta\u00F1istas hallaron los restos congelados de un ni\u00F1o inca de unos 7 a\u00F1os en el macizo del Aconcagua.', fn10Body: 'Los restos fueron descubiertos a aproximadamente 5.300 m en el filo sudoeste. Los estudios arqueol\u00F3gicos los identificaron como los de un ni\u00F1o de unos siete a\u00F1os, sacrificado hace m\u00E1s de 500 a\u00F1os en lo que los investigadores interpretan como una ofrenda de capacocha \u2014 un ritual estatal inca de profundo peso religioso.',
+        systemKicker: 'El Sistema',
+        systemTitle: 'Construido como modelo EP/BT coherente, no como decoraci\u00F3n con nieve.',
+        systemIntro: 'Web-v1 corre con un resolvedor por turnos donde Presi\u00F3n Ambiental y Tolerancia Corporal interact\u00FAan con capas de confianza y tendencia. Contratos, tests y docs se mantienen alineados para que lo p\u00FAblico sea verificable.',
+        flow1: 'Acci\u00F3n + gasto de tiempo/recursos', flow2: 'Presi\u00F3n Ambiental \u2194 Tolerancia Corporal', flow3: 'Se\u00F1al percibida + confianza + tendencia', flow4: 'Clasificaci\u00F3n de outcome + estado persistente de corrida',
+        statusTitle: 'Estado Actual',
+        statusLabel2: 'Release', statusValue2: 'v1.4.8 \u00B7 prototipo web p\u00FAblico',
+        statusLabel3: 'Parte 2', statusValue3: 'Puente narrativo gateado por progresi\u00F3n de cumbre + retorno seguro.',
+        waypointsKicker: 'Puntos de Paso',
+        waypointsTitle: 'Materiales clave para entender direcci\u00F3n, alcance y credibilidad.',
+        wp1Title: 'Whitepaper', wp1Body: 'Visi\u00F3n extendida, compromisos conceptuales y posicionamiento mountain-first en profundidad.', wp1Cta: 'Abrir whitepaper',
+        wp2Title: 'Roadmap p\u00FAblico', wp2Body: 'Mapa de implementaci\u00F3n por etapas y estado actual de ejecuci\u00F3n.', wp2Cta: 'Abrir roadmap',
+        wp3Title: 'Repositorio', wp3Body: 'C\u00F3digo fuente, gobernanza y referencias can\u00F3nicas de ruteo.', wp3Cta: 'Ver en GitHub',
+        wp4Title: 'Canales oficiales', wp4Body: 'Segu\u00ED novedades en Instagram o contact\u00E1 al equipo para colaboraci\u00F3n y prensa.', wp4Ig: 'Instagram', wp4Mail: 'Email',
+        finalKicker: 'Comenzar',
+        finalTitle: 'Entr\u00E1 a una corrida. Despu\u00E9s le\u00E9 la traza de debrief con calma.',
+        finalIntro: 'La forma m\u00E1s r\u00E1pida de entender el proyecto es simple: jug\u00E1 una corrida y despu\u00E9s le\u00E9 tus se\u00F1ales junto a la documentaci\u00F3n.',
+        finalPlay: 'Iniciar expedici\u00F3n', finalTruth: 'Abrir repo truth',
+        footerProjectTitle: 'Proyecto',
+        footerProjectBody: 'Aconcagua: Stone Sentinel \u00B7 Prototipo web p\u00FAblico v1.4.8 \u00B7 Sistemas narrativos con la monta\u00F1a como eje.',
+        footerContactTitle: 'Contacto', footerContactEmail: 'Email oficial', footerContactInstagram: 'Instagram', footerContactGithub: 'Repositorio en GitHub',
+        footerLegalTitle: 'Legal y gobernanza', footerLegalLicense: 'Licencia', footerLegalSecurity: 'Pol\u00EDtica de seguridad', footerLegalConduct: 'C\u00F3digo de conducta',
+        footerOrigin: 'Hecho en Argentina \u00B7 Proyecto basado en Argentina.',
+        footerCopyright: '\u00A9 2026 Aconcagua: Stone Sentinel. Todos los derechos reservados cuando corresponda.'
       }
+    };
 
-      function applyLanguage(lang) {
-        const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
-        document.documentElement.lang = lang;
-        document.title = t.pageTitle;
-        const desc = document.querySelector('meta[name="description"]');
-        if (desc) desc.setAttribute('content', t.pageDescription);
+    var STORAGE_KEY = PublicLang.LANG_KEY;
+    var DOC_LINKS = {
+      whitepaper: { en: '/meta/project-whitepaper.md', es: '/meta/project-whitepaper.es.md' },
+      roadmap: { en: '/meta/public-roadmap.md', es: '/meta/public-roadmap.es.md' },
+      readme: { en: '/README.md', es: '/README.es.md' },
+      repoTruth: { en: '/docs/repo-truth.md', es: '/docs/repo-truth.es.md' }
+    };
 
-        document.querySelectorAll('[data-i18n]').forEach((el) => {
-          const key = el.getAttribute('data-i18n');
-          if (typeof t[key] === 'string') el.textContent = t[key];
-        });
+    function updateDocLinks(lang) {
+      document.querySelectorAll('[data-doc-link]').forEach(function (el) {
+        var key = el.getAttribute('data-doc-link');
+        var entry = DOC_LINKS[key];
+        if (!entry) return;
+        var targetFile = entry[lang] || entry.en;
+        el.setAttribute('href', '/md-viewer.html?file=' + encodeURIComponent(targetFile));
+      });
+    }
 
-        document.querySelectorAll('[data-i18n-attr]').forEach((el) => {
-          const [key, attr] = el.getAttribute('data-i18n-attr').split(':');
-          if (typeof t[key] === 'string') el.setAttribute(attr, t[key]);
-        });
+    function applyLanguage(lang) {
+      var t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      document.documentElement.lang = lang;
+      document.title = t.pageTitle;
+      var desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute('content', t.pageDescription);
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var key = el.getAttribute('data-i18n');
+        if (typeof t[key] === 'string') el.textContent = t[key];
+      });
+      document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+        var parts = el.getAttribute('data-i18n-attr').split(':');
+        if (typeof t[parts[0]] === 'string') el.setAttribute(parts[1], t[parts[0]]);
+      });
+      document.querySelectorAll('.lang-btn').forEach(function (btn) {
+        btn.setAttribute('aria-pressed', btn.dataset.lang === lang ? 'true' : 'false');
+      });
+      localStorage.setItem(STORAGE_KEY, lang);
+      updateDocLinks(lang);
+    }
 
-        document.querySelectorAll('.lang-btn').forEach((btn) => {
-          btn.setAttribute('aria-pressed', btn.dataset.lang === lang ? 'true' : 'false');
-        });
+    (function initLang() {
+      applyLanguage(PublicLang.detectInitialLang(TRANSLATIONS));
+      PublicLang.wireLangButtons(applyLanguage);
+    })();
 
-        localStorage.setItem(STORAGE_KEY, lang);
-        updateDocLinks(lang);
+    /* Scroll Reveal */
+    (function initReveal() {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+        return;
       }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+    })();
 
-      function initLanguageSwitcher() {
-        applyLanguage(PublicLang.detectInitialLang(TRANSLATIONS));
-        PublicLang.wireLangButtons(applyLanguage);
+    /* Navigation scroll state */
+    (function initNavScroll() {
+      var nav = document.querySelector('.site-nav');
+      if (!nav) return;
+      var ticking = false;
+      function update() { nav.classList.toggle('is-scrolled', window.scrollY > 80); ticking = false; }
+      window.addEventListener('scroll', function () { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
+      update();
+    })();
+
+    /* Hero parallax */
+    (function initParallax() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var img = document.querySelector('.hero-bg img');
+      if (!img) return;
+      var ticking = false;
+      img.style.transform = 'scale(1.05)';
+      function update() {
+        var y = window.scrollY;
+        if (y < window.innerHeight * 1.2) img.style.transform = 'translateY(' + (y * 0.15) + 'px) scale(1.05)';
+        ticking = false;
       }
+      window.addEventListener('scroll', function () { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
+    })();
 
-      initLanguageSwitcher();
-
-      // ── Field Notes carousel ──
-      (function () {
-        var TOTAL = 10;
-        var AUTO_DELAY = 5000;
-        var current = 0;
-        var timer = null;
-        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        function slides() { return document.querySelectorAll('.fn-slide'); }
-        function dots()   { return document.querySelectorAll('.fn-dot'); }
-
-        function goTo(idx) {
-          var ss = slides(), dd = dots();
-          if (!ss.length) return;
-          idx = ((idx % TOTAL) + TOTAL) % TOTAL;
-          ss[current].classList.remove('fn-active');
-          ss[current].setAttribute('aria-hidden', 'true');
-          dd[current].classList.remove('fn-dot-active');
-          dd[current].setAttribute('aria-pressed', 'false');
-          current = idx;
-          ss[current].classList.add('fn-active');
-          ss[current].setAttribute('aria-hidden', 'false');
-          dd[current].classList.add('fn-dot-active');
-          dd[current].setAttribute('aria-pressed', 'true');
-        }
-
-        function startAuto() {
-          if (reduced) return;
-          stopAuto();
-          timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY);
-        }
-
-        function stopAuto() {
-          if (timer) { clearInterval(timer); timer = null; }
-        }
-
-        var carousel = document.querySelector('.fn-carousel');
-        if (!carousel) return;
-
-        document.getElementById('fn-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
-        document.getElementById('fn-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
-
-        dots().forEach(function (dot, i) {
-          dot.addEventListener('click', function () { goTo(i); startAuto(); });
-        });
-
-        carousel.addEventListener('mouseenter', stopAuto);
-        carousel.addEventListener('mouseleave', startAuto);
-        carousel.addEventListener('focusin', stopAuto);
-        carousel.addEventListener('focusout', function (e) {
-          if (!carousel.contains(e.relatedTarget)) startAuto();
-        });
-        carousel.addEventListener('keydown', function (e) {
-          if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); startAuto(); }
-          if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); startAuto(); }
-        });
-
-        startAuto();
-      })();
+    /* Field Notes carousel */
+    (function initCarousel() {
+      var TOTAL = 10, AUTO_DELAY = 5000, current = 0, timer = null;
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function slides() { return document.querySelectorAll('.fn-slide'); }
+      function dots()   { return document.querySelectorAll('.fn-dot'); }
+      function goTo(idx) {
+        var ss = slides(), dd = dots();
+        if (!ss.length) return;
+        idx = ((idx % TOTAL) + TOTAL) % TOTAL;
+        ss[current].classList.remove('fn-active'); ss[current].setAttribute('aria-hidden', 'true');
+        dd[current].classList.remove('fn-dot-active'); dd[current].setAttribute('aria-pressed', 'false');
+        current = idx;
+        ss[current].classList.add('fn-active'); ss[current].setAttribute('aria-hidden', 'false');
+        dd[current].classList.add('fn-dot-active'); dd[current].setAttribute('aria-pressed', 'true');
+      }
+      function startAuto() { if (reduced) return; stopAuto(); timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY); }
+      function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+      var carousel = document.querySelector('.fn-carousel');
+      if (!carousel) return;
+      document.getElementById('fn-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
+      document.getElementById('fn-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
+      dots().forEach(function (dot, i) { dot.addEventListener('click', function () { goTo(i); startAuto(); }); });
+      carousel.addEventListener('mouseenter', stopAuto);
+      carousel.addEventListener('mouseleave', startAuto);
+      carousel.addEventListener('focusin', stopAuto);
+      carousel.addEventListener('focusout', function (e) { if (!carousel.contains(e.relatedTarget)) startAuto(); });
+      carousel.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); startAuto(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); startAuto(); }
+      });
+      startAuto();
+    })();
     </script>
   </body>
 </html>
