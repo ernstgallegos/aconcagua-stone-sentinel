@@ -117,6 +117,8 @@
           radial-gradient(ellipse 70% 50% at 50% 80%, rgba(212,168,116,0.03), transparent 55%);
         background-size: 200% 200%;
         animation: aurora 20s ease-in-out infinite;
+        will-change: background-position;
+        transform: translateZ(0);
       }
 
       /* Snow particles layer */
@@ -135,6 +137,8 @@
         background-size: 100% 100%;
         animation: snow 12s linear infinite;
         opacity: 0.5;
+        will-change: transform, opacity;
+        transform: translate3d(0,0,0);
       }
 
       .shell { width: min(1220px, 92vw); margin: 0 auto; }
@@ -215,6 +219,7 @@
         filter: saturate(0.85) contrast(1.08) brightness(0.6);
         animation: kenBurns 30s ease-in-out infinite;
         transform-origin: center center;
+        will-change: transform;
       }
 
       /* Multi-layer fog / vignette */
@@ -530,17 +535,12 @@
         position: relative;
       }
       .pull-quote::before {
-        content: "";
-        position: absolute; top: -0.6rem; left: var(--space-2);
+        content: "\201C";
+        position: absolute; top: -0.8rem; left: var(--space-2);
         font-family: var(--serif); font-size: 4rem; font-weight: 700;
         line-height: 1;
         color: var(--accent-mineral); opacity: 0.15;
         pointer-events: none;
-        /* Decorative glyph rendered via background to avoid screen reader duplication */
-        width: 2.5rem; height: 3rem;
-        background: var(--accent-mineral);
-        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Ctext x='0' y='42' font-size='48' font-family='serif'%3E%E2%80%9C%3C/text%3E%3C/svg%3E");
-        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 48'%3E%3Ctext x='0' y='42' font-size='48' font-family='serif'%3E%E2%80%9C%3C/text%3E%3C/svg%3E");
       }
       .pull-quote p {
         font-family: var(--serif); font-size: clamp(1.1rem, 2vw, 1.4rem);

@@ -124,6 +124,7 @@ a:hover { color: var(--accent-ice-bright); text-decoration: underline; }
   border-radius: 999px;
   padding: 0.2rem;
   background: #0a131e99;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 
