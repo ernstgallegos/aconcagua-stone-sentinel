@@ -280,6 +280,7 @@ In addition to the changelog:
 - Field Notes readability improves when carousel text + image live inside one shared container card (single visual frame) and only the inner panes swap content; this avoids dual-panel imbalance while keeping the same navigation model.
 - For fixed-size showcase media panes, prefer centered `object-fit: contain` over `cover` when full artwork composition must remain visible without distortion or unpredictable crop loss.
 - Copy refinements requested for one EN phrase should be mirrored in every linked occurrence (static fallback + translation keys + related Field Notes entries) to avoid bilingual/editorial drift in landing narratives.
+- In 50/50 text-image showcases, editorial card bodies should be calibrated for similar visual height to the media panel; tune copy length before forcing layout hacks so rhythm remains natural in both EN/ES.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
 - Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
