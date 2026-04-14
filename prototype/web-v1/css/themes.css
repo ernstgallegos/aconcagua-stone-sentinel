@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   THEMES — Sunset (fixed palette)
+   THEMES — Sunset (refined atmospheric palette)
    ═══════════════════════════════════════════ */
 
 /* ══════════════════════════════════════
@@ -7,24 +7,29 @@
    ══════════════════════════════════════ */
 
 body[data-theme='sunset'] {
-  --bg:        #101924;
-  --surface:   #182433;
-  --surface2:  #223247;
-  --border:    #50667d;
+  --bg:        #0e1520;
+  --surface:   #152230;
+  --surface2:  #1e3045;
+  --surface3:  #273d55;
+  --border:    #405a75;
+  --border-glow: #8fb5d01a;
   --stone:     #c1b19f;
-  --ochre:     #d6b287;
+  --ochre:     #d8b487;
   --ochre-dim: #9a7852;
-  --ice:       #c2d9ea;
+  --ice:       #bcd5ea;
   --ice-dim:   #7f9db8;
+  --ice-bright: #d8edfa;
   --white:     #eef4fa;
   --red:       #cd7668;
   --red-dim:   #904b41;
   --safety:    #8fb79a;
   --text:      #dce6ef;
-  --text-dim:  #9ab0c2;
+  --text-dim:  #96aec2;
   --text-soft: #b1c1cf;
-  --muted:     #9ab0c2;
-  --accent:    #d6b287;
+  --muted:     #96aec2;
+  --accent:    #d8b487;
+  --accent-rose: #c9a0b8;
+  --accent-aurora: #7fc4b8;
 }
 
 body[data-theme='sunset'] .decision-microcopy,
@@ -37,6 +42,6 @@ body[data-theme='sunset'] .decision-keyhint {
 
 body[data-theme='sunset'] #screen-title::before {
   background:
-    radial-gradient(circle at 52% 26%, rgba(214, 178, 135, 0.16), transparent 56%),
+    radial-gradient(circle at 52% 26%, rgba(216, 180, 135, 0.16), transparent 56%),
     linear-gradient(180deg, rgba(7, 13, 20, 0.1), rgba(7, 13, 20, 0.62));
 }

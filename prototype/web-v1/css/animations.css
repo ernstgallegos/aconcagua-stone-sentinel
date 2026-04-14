@@ -3,21 +3,22 @@
    Decision 4: Ken Burns on splash
    Decision 14: Entry/exit screen transitions
    Decision 16: Micro-interactions pulse + ripple
+   Aesthetic rebuild: Enhanced motion system
    ═══════════════════════════════════════════ */
 
 /* ══════════════════════════════════════
    SCREEN TRANSITIONS (Decision 14)
    ══════════════════════════════════════ */
 
-/* Entering screen (Decision 14) */
+/* Entering screen (Decision 14) — enhanced with scale */
 @keyframes screen-enter {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(12px) scale(0.99);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -25,16 +26,16 @@
 @keyframes screen-exit {
   from {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-8px) scale(0.99);
   }
 }
 
 .screen.exiting {
-  animation: screen-exit 0.15s ease-in forwards;
+  animation: screen-exit 0.18s ease-in forwards;
   pointer-events: none;
 }
 
@@ -86,6 +87,34 @@
 }
 
 .pop-in { animation: pop-in 0.2s ease-out; }
+
+/* ══════════════════════════════════════
+   ENHANCED AMBIENT ANIMATIONS
+   ══════════════════════════════════════ */
+
+/* Ambient glow shift for atmospheric backgrounds */
+@keyframes ambient-glow {
+  0%, 100% { opacity: 0.03; }
+  50%      { opacity: 0.06; }
+}
+
+/* Shimmer for highlighted text/stats */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Floating effect for decorative elements */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Ice glow pulse for active states */
+@keyframes ice-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50%      { box-shadow: 0 0 20px color-mix(in srgb, var(--ice) 12%, transparent); }
+}
 
 /* ══════════════════════════════════════
    REDUCE MOTION (Decisions 4, 14, 16)

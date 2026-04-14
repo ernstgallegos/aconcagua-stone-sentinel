@@ -148,6 +148,9 @@
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--surface) 92%, var(--surface2)),
     var(--surface));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
 }
 
 .panel-title {
