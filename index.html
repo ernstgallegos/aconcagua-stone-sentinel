@@ -550,18 +550,38 @@
 
       /* ── Field Notes — Glassmorphism Carousel ── */
       .field-notes-layout { display: grid; gap: var(--space-3); align-items: stretch; }
-      .fn-carousel { display: flex; flex-direction: column; gap: var(--space-3); }
+      .fn-carousel { display: flex; flex-direction: column; gap: var(--space-3); min-height: 100%; }
       .field-notes-art {
-        display: grid;
-        gap: 3px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        background: rgba(15,24,36,0.45);
+        backdrop-filter: blur(20px) saturate(1.2);
+        -webkit-backdrop-filter: blur(20px) saturate(1.2);
+        box-shadow: var(--shadow-soft), var(--shadow-inset);
+        overflow: hidden;
         min-height: 100%;
       }
-      .field-notes-art .atmos-panel { aspect-ratio: 3 / 4; }
-      .field-notes-art .atmos-panel:nth-child(2) { margin-top: 0; }
+      .fn-image-region { position: relative; min-height: 420px; height: 100%; }
+      .fn-image-slide {
+        display: none;
+        position: absolute;
+        inset: 0;
+      }
+      .fn-image-slide.fn-image-active { display: block; animation: fnFadeIn 400ms var(--ease-out-expo) forwards; }
+      .fn-image-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.82) contrast(1.06) brightness(0.92);
+      }
+      .fn-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(8,12,18,0.08) 0%, rgba(8,12,18,0.58) 100%);
+        pointer-events: none;
+      }
       @media (min-width: 980px) {
-        .field-notes-layout { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
-        .field-notes-art { grid-template-columns: 1fr; }
+        .field-notes-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
       }
       .fn-card-region { min-height: 200px; perspective: 800px; }
       .fn-slide {
@@ -1089,18 +1109,48 @@
             </div>
             </div>
             <div class="field-notes-art" role="group" aria-label="Atmospheric concept art &#8212; descent range">
-              <figure class="atmos-panel">
-                <img src="/art/concept-art/curated/ig/7.png" alt="High camp at sunset with dome tents and lone climber" loading="lazy" />
-                <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel4">High camp &#183; Rest state</span></div>
-              </figure>
-              <figure class="atmos-panel">
-                <img src="/art/concept-art/curated/ig/19.png" alt="Snowfield under soft rose light with distant figure" loading="lazy" />
-                <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel5">Rose light &#183; Solitude</span></div>
-              </figure>
-              <figure class="atmos-panel">
-                <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape with luminous snow" loading="lazy" />
-                <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel6">Blue hour &#183; Descent</span></div>
-              </figure>
+              <div class="fn-image-region" id="fn-image-region" aria-live="polite">
+                <figure class="fn-image-slide fn-image-active" aria-hidden="false">
+                  <img src="/art/concept-art/curated/ig/7.png" alt="High camp at sunset with dome tents and lone climber" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/19.png" alt="Snowfield under soft rose light with distant figure" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape with luminous snow" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/5.png" alt="Climbers ascending steep terrain under alpenglow" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama in golden hour light" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/9.png" alt="Near-whiteout snowfield conditions" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/21.png" alt="Summit ridge silhouette under cold ambient light" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/1.png" alt="Lone climber facing Aconcagua at dawn" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/13.png" alt="Golden altitude bands over the massif" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+                <figure class="fn-image-slide" aria-hidden="true">
+                  <img src="/art/concept-art/curated/ig/7.png" alt="Base camp geometry under sunset sky" loading="lazy" />
+                  <div class="fn-image-overlay"></div>
+                </figure>
+              </div>
             </div>
           </div>
         </div>
@@ -1473,18 +1523,22 @@
 
     /* Field Notes carousel */
     (function initCarousel() {
-      var TOTAL = 10, AUTO_DELAY = 5000, current = 0, timer = null;
+      var AUTO_DELAY = 5000, current = 0, timer = null;
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       function slides() { return document.querySelectorAll('.fn-slide'); }
+      function imageSlides() { return document.querySelectorAll('.fn-image-slide'); }
       function dots()   { return document.querySelectorAll('.fn-dot'); }
       function goTo(idx) {
-        var ss = slides(), dd = dots();
+        var ss = slides(), ii = imageSlides(), dd = dots();
+        var total = ss.length;
         if (!ss.length) return;
-        idx = ((idx % TOTAL) + TOTAL) % TOTAL;
+        idx = ((idx % total) + total) % total;
         ss[current].classList.remove('fn-active'); ss[current].setAttribute('aria-hidden', 'true');
+        if (ii[current]) { ii[current].classList.remove('fn-image-active'); ii[current].setAttribute('aria-hidden', 'true'); }
         dd[current].classList.remove('fn-dot-active'); dd[current].setAttribute('aria-pressed', 'false');
         current = idx;
         ss[current].classList.add('fn-active'); ss[current].setAttribute('aria-hidden', 'false');
+        if (ii[current]) { ii[current].classList.add('fn-image-active'); ii[current].setAttribute('aria-hidden', 'false'); }
         dd[current].classList.add('fn-dot-active'); dd[current].setAttribute('aria-pressed', 'true');
       }
       function startAuto() { if (reduced) return; stopAuto(); timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY); }
