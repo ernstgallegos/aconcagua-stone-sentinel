@@ -274,6 +274,13 @@ In addition to the changelog:
 
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
 - Testability for legacy inline-heavy UI modules is safer when tiny pure helpers (e.g., nationality/flag fallback formatter) are extracted without behavior changes; this enables deterministic unit coverage while keeping runtime rendering contracts intact.
+- Landing editorial revisions stay bilingual and consistent when every copy change is mirrored in both static fallback HTML text and the EN/ES `TRANSLATIONS` map, and markdown governance links are always wired through `data-doc-link` + `md-viewer.html` instead of raw `.md` URLs.
+- For dense landing sections like Field Notes, 50/50 split layouts are clearer when the companion media panel is also stateful (synced carousel) rather than a static collage, so visual rhythm matches the active narrative card.
+- Whenever landing links are moved into `md-viewer.html`, mirror that change in the viewer’s `DOCUMENTS` allowlist in the same commit; otherwise links can silently regress to “Unsupported document” despite correct `href` generation.
+- Field Notes readability improves when carousel text + image live inside one shared container card (single visual frame) and only the inner panes swap content; this avoids dual-panel imbalance while keeping the same navigation model.
+- For fixed-size showcase media panes, prefer centered `object-fit: contain` over `cover` when full artwork composition must remain visible without distortion or unpredictable crop loss.
+- Copy refinements requested for one EN phrase should be mirrored in every linked occurrence (static fallback + translation keys + related Field Notes entries) to avoid bilingual/editorial drift in landing narratives.
+- In 50/50 text-image showcases, editorial card bodies should be calibrated for similar visual height to the media panel; tune copy length before forcing layout hacks so rhythm remains natural in both EN/ES.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
 - Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
