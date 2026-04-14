@@ -274,6 +274,7 @@ In addition to the changelog:
 
 - Editorial public-web redesigns are more trustworthy when section order mirrors project logic (premise → system → evidence → status → outcomes → play CTA) and copy/visual cadence stays mountain-first instead of marketing-template-first.
 - Testability for legacy inline-heavy UI modules is safer when tiny pure helpers (e.g., nationality/flag fallback formatter) are extracted without behavior changes; this enables deterministic unit coverage while keeping runtime rendering contracts intact.
+- Landing editorial revisions stay bilingual and consistent when every copy change is mirrored in both static fallback HTML text and the EN/ES `TRANSLATIONS` map, and markdown governance links are always wired through `data-doc-link` + `md-viewer.html` instead of raw `.md` URLs.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
 - Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
