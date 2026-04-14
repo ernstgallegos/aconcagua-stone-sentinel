@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) from the Spanish original (`docs/es/biblia-geologica-aconcagua.md`), preserving all technical geological terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography entries.
+
 ### Changed
 
 - Fixed `index.html` Field Notes panel background mismatch: set `.fn-image-slide { background: transparent }` so both text and image panels inherit the same glassmorphic base from `.fn-showcase`, eliminating the visible tone difference between the two halves.
