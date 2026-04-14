@@ -17,21 +17,28 @@
   font-weight: 700;
   letter-spacing: 0.17em;
   text-transform: uppercase;
-  background: linear-gradient(120deg, color-mix(in srgb, var(--ice) 90%, white), color-mix(in srgb, var(--ochre) 78%, white));
+  background: linear-gradient(120deg,
+    color-mix(in srgb, var(--ice) 90%, white),
+    color-mix(in srgb, var(--ice-bright) 70%, white),
+    color-mix(in srgb, var(--ochre) 78%, white));
+  background-size: 200% 100%;
   border: 1px solid color-mix(in srgb, var(--white) 36%, transparent);
   color: #0a121c;
   padding: 0.82rem 2.3rem;
   cursor: pointer;
   transition:
-    background var(--dur-normal),
+    background-position var(--dur-slow),
     color var(--dur-normal),
     box-shadow var(--dur-slow),
-    transform var(--dur-fast);
+    transform var(--dur-fast),
+    filter var(--dur-normal);
 }
 
 .btn-primary:hover {
-  filter: brightness(1.04);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--ice) 28%, transparent);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 32px color-mix(in srgb, var(--ice) 28%, transparent),
+              0 0 40px color-mix(in srgb, var(--ice) 10%, transparent);
+  background-position: 100% 50%;
 }
 
 .btn-primary:active {
@@ -63,7 +70,9 @@
   font-size: 0.82rem;          /* Decision 9: 14px minimum for buttons */
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: transparent;
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   color: var(--text-soft);
   padding: 0.62rem 1.35rem;
@@ -72,13 +81,16 @@
     border-color var(--dur-normal),
     color var(--dur-normal),
     background var(--dur-normal),
+    box-shadow var(--dur-normal),
     transform var(--dur-fast);
 }
 
 .btn-ghost:hover {
   border-color: color-mix(in srgb, var(--ice) 65%, transparent);
   color: var(--white);
-  background: color-mix(in srgb, var(--ice) 10%, transparent);
+  background: color-mix(in srgb, var(--ice) 8%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--ice) 8%, transparent),
+              inset 0 1px 0 color-mix(in srgb, var(--ice) 10%, transparent);
 }
 
 .btn-ghost:active {
@@ -238,20 +250,25 @@
 
 .char-card {
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 65%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   padding: 1.5rem;
   cursor: pointer;
   transition:
     border-color var(--dur-normal),
     background var(--dur-normal),
-    transform var(--dur-fast);
+    transform var(--dur-fast),
+    box-shadow var(--dur-normal);
   position: relative;
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
 }
 
 .char-card:hover {
   border-color: var(--stone);
-  background: var(--surface2);
-  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface2) 70%, transparent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium), 0 0 20px color-mix(in srgb, var(--ice) 5%, transparent);
 }
 
 .char-card.selected {
@@ -381,19 +398,24 @@
 
 .scenario-card {
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 65%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   padding: 1.25rem;
   cursor: pointer;
   transition:
     border-color var(--dur-normal),
     background var(--dur-normal),
-    transform var(--dur-fast);
+    transform var(--dur-fast),
+    box-shadow var(--dur-normal);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
 }
 
 .scenario-card:hover {
   border-color: var(--stone);
-  background: var(--surface2);
-  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface2) 70%, transparent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium), 0 0 20px color-mix(in srgb, var(--ice) 5%, transparent);
 }
 
 .scenario-card.selected {
