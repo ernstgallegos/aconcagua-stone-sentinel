@@ -11,6 +11,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Fixed `index.html` Field Notes panel background mismatch: set `.fn-image-slide { background: transparent }` so both text and image panels inherit the same glassmorphic base from `.fn-showcase`, eliminating the visible tone difference between the two halves.
+- Rewrote all 10 Field Notes body paragraphs in EN and ES (HTML fallbacks + JS translations) with substantially expanded, atmospheric copy (~80–110 words each) to balance vertical space against the image panel height in the showcase layout.
+- Rewrote `mountainProse1` (EN/ES) to focus on the mountain's atmospheric and experiential character, eliminating word-for-word duplication with `fn06Body`.
+- Simplified `statusValue3` for non-technical first-time visitors: "Narrative bridge gated by summit-safe-return progression" → "Unlocks after completing a full expedition with safe return".
+- Renamed `finalTruth` CTA from "Open repo truth" to "Project status" (EN) / "Estado del proyecto" (ES) for greater legibility to newcomers.
+
 - Updated the public landing page (`index.html`) editorial copy in EN/ES for hero and mountain headings, shortened mountain context prose, aligned climbing-season references to end in March, simplified footer contact labels, and reduced footer origin copy to “Made in Argentina 🇦🇷”.
 - Updated the landing-page legal markdown links (`License`, `Security policy`, `Code of conduct`) to route through `md-viewer.html` via language-aware `data-doc-link` mapping instead of opening raw `.md` files directly.
 - Reworked the Field Notes section layout in `index.html` to a horizontal composition on desktop, placing the carousel and the three atmospheric images side-by-side to reduce total page height.
