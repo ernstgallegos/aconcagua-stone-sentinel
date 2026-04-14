@@ -9,6 +9,24 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Complete architectural redesign of the public landing page (`index.html`): replaced the previous section-based layout with an immersive editorial experience organized as a continuous atmospheric journey. New information architecture flows from full-viewport hero through elevation-marked sections: The Mountain (geological/cultural introduction with stats), Atmospheric Art Strips (6-panel concept art showcase), The Ascent (three-pillar philosophy with pull quote), Field Notes (10-card carousel), The System (EP/BT flow diagram + status), Waypoints (materials grid), and a cinematic final CTA with background art.
+- Redesigned navigation from standard header links to fixed waypoint-style nav with scroll-aware backdrop blur, elevation-marker decorative labels, and monospace waypoint typography.
+- Replaced static hero with full-viewport atmospheric entrance featuring parallax background, multi-layer fog gradients, gradient text overlay, and breathing scroll indicator.
+- Added scroll-based reveal animation system using Intersection Observer with staggered delay classes and `prefers-reduced-motion` respect.
+- Added atmospheric effects: subtle grain texture overlay, ambient glow radial gradient, hero parallax on scroll, and breathing animations.
+- Added "The Mountain" section with geological/cultural prose, four mountain statistics (elevation, hemisphere rank, first ascent year, climbing season), and verified historical context including Inca capacocha offering.
+- Added two atmospheric art strips (6 panels total) using curated concept art with hover zoom transitions and monospace atmosphere labels.
+- Added "The Ascent" section with three editorial pillars (Environmental authority, Partial information, Plural outcomes) and a pull quote.
+- Redesigned Field Notes carousel with improved card layout, fade-in animation, auto-advance with pause-on-hover/focus, keyboard navigation, and dot indicators.
+- Added "The System" section with EP/BT flow diagram (4-step numbered sequence) and current-state status band.
+- Added "Waypoints" section replacing previous materials layout with hover-lift card grid.
+- Added cinematic final CTA section with background concept art, fog overlay, and centered typography.
+- Redesigned footer with three-column grid (Project, Contact, Legal & governance) and bottom bar.
+- Full bilingual EN/ES i18n for all new sections via inline TRANSLATIONS object and existing `data-i18n` system.
+- All buttons redesigned with pill shape, gradient primary style, ghost variant with backdrop blur, and subtle hover lift.
+
 ### Fixed
 
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
