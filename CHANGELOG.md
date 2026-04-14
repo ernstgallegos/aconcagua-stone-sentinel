@@ -11,6 +11,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Full cinematic CSS rebuild of the public landing page (`index.html`): replaced all inline styles with atmospheric glassmorphism aesthetic, animated aurora/snow-particle backgrounds, Ken Burns hero zoom, gradient text fills, 3D perspective card tilts, mountain ridge SVG dividers, animated shimmer stats, immersive footer with ridge silhouettes, and comprehensive `prefers-reduced-motion` coverage. HTML and JavaScript remain untouched.
 - Complete architectural redesign of the public landing page (`index.html`): replaced the previous section-based layout with an immersive editorial experience organized as a continuous atmospheric journey. New information architecture flows from full-viewport hero through elevation-marked sections: The Mountain (geological/cultural introduction with stats), Atmospheric Art Strips (6-panel concept art showcase), The Ascent (three-pillar philosophy with pull quote), Field Notes (10-card carousel), The System (EP/BT flow diagram + status), Waypoints (materials grid), and a cinematic final CTA with background art.
 - Redesigned navigation from standard header links to fixed waypoint-style nav with scroll-aware backdrop blur, elevation-marker decorative labels, and monospace waypoint typography.
 - Replaced static hero with full-viewport atmospheric entrance featuring parallax background, multi-layer fog gradients, gradient text overlay, and breathing scroll indicator.
