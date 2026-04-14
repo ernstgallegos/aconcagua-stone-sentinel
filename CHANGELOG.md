@@ -41,6 +41,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed `md-viewer.html` document allowlist drift by adding `LICENSE.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md` to the supported `DOCUMENTS` map, restoring styled-viewer access for footer legal links.
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
 - Fixed version drift in root `index.html` landing page: bumped all six stale `v1.4.5` version strings (EN heroMeta1, statusValue2, footerProjectBody, and their ES mirrors) to `v1.4.8`, aligning the public website with `package.json`, `docs/repo-truth.md`, `prototype/web-v1/index.html`, and all other versioned surfaces.
 - Fixed parity-test coverage gap: extended `prototype/web-v1/tests/parity/repo-truth-parity.test.js` to assert that `index.html` contains the canonical version string derived from `package.json`, preventing future landing-page version drift.
