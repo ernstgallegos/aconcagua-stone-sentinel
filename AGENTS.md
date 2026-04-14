@@ -278,6 +278,7 @@ In addition to the changelog:
 - For dense landing sections like Field Notes, 50/50 split layouts are clearer when the companion media panel is also stateful (synced carousel) rather than a static collage, so visual rhythm matches the active narrative card.
 - Whenever landing links are moved into `md-viewer.html`, mirror that change in the viewer’s `DOCUMENTS` allowlist in the same commit; otherwise links can silently regress to “Unsupported document” despite correct `href` generation.
 - Field Notes readability improves when carousel text + image live inside one shared container card (single visual frame) and only the inner panes swap content; this avoids dual-panel imbalance while keeping the same navigation model.
+- For fixed-size showcase media panes, prefer centered `object-fit: contain` over `cover` when full artwork composition must remain visible without distortion or unpredictable crop loss.
 
 - Landing-to-prototype trust improves when `/` and `prototype/web-v1` share the same tonal token family (cold mineral neutrals + restrained ice/amber accents) so visual sophistication does not collapse after the Play CTA.
 - Typography governance stays coherent when one primary editorial serif (`Playfair Display`) is reserved for brand/narrative hierarchy while dense UI keeps a dedicated sans + mono pairing; define these as role-based tokens (`brand/ui/reading/data`) before component-level tweaks.
