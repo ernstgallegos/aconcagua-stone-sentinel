@@ -8,40 +8,55 @@
 :root {
   color-scheme: dark;
 
-  /* ── Background layers ── */
-  --bg-0: #0b0f14;
-  --bg-1: #101723;
-  --bg-2: #172130;
+  /* ── Background layers — deep alpine night ── */
+  --bg-0: #080c12;
+  --bg-1: #0d1420;
+  --bg-2: #121d2e;
+  --bg-3: #182840;
 
-  /* ── Surface layers ── */
-  --surface-0: #111a27cc;
-  --surface-1: #172335d9;
-  --surface-2: #213348e6;
+  /* ── Surface layers — frosted glass tiers ── */
+  --surface-0: #0f1824cc;
+  --surface-1: #152435d9;
+  --surface-2: #1e3348e6;
+  --surface-3: #253d55f0;
 
-  /* ── Borders ── */
-  --border-soft: #93a8bc3d;
+  /* ── Borders — atmospheric edges ── */
+  --border-soft: #7094b22e;
+  --border-medium: #93a8bc3d;
   --border-strong: #d7e6f252;
+  --border-glow: #a8d4f01a;
 
   /* ── Text ── */
-  --text-main: #e8eff7;
-  --text-dim: #adbbc9;
-  --text-muted: #8b9aab;
+  --text-main: #eaf1f8;
+  --text-dim: #a8bcce;
+  --text-muted: #7a8fa2;
+  --text-faint: #5a6d7e;
 
-  /* ── Accent palette ── */
-  --accent-ice: #d6eef9;
-  --accent-mineral: #9bb9ce;
-  --accent-amber: #d9b996;
+  /* ── Accent palette — mountain atmosphere ── */
+  --accent-ice: #c8e4f5;
+  --accent-ice-bright: #e0f2ff;
+  --accent-mineral: #8fb5d0;
+  --accent-amber: #d4a874;
+  --accent-amber-warm: #e8c9a0;
   --accent-critical: #f2d4af;
+  --accent-rose: #c9a0b8;
+  --accent-aurora: #7fc4b8;
+  --accent-summit: #f0dcc2;
 
   /* ── Border radius ── */
   --radius-xs: 10px;
   --radius-sm: 14px;
   --radius-md: 22px;
   --radius-lg: 30px;
+  --radius-xl: 40px;
 
-  /* ── Shadows ── */
-  --shadow-soft: 0 16px 48px #05080d66;
+  /* ── Shadows — layered depth ── */
+  --shadow-soft: 0 8px 32px #05080d44;
+  --shadow-medium: 0 16px 48px #05080d66;
   --shadow-strong: 0 30px 80px #04070ccc;
+  --shadow-glow-ice: 0 0 40px #a8d4f018, 0 0 80px #a8d4f00a;
+  --shadow-glow-amber: 0 0 40px #d4a87418, 0 0 80px #d4a8740a;
+  --shadow-inset: inset 0 1px 0 #ffffff08;
 
   /* ── Spacing scale ── */
   --space-1: 0.35rem;
@@ -51,11 +66,21 @@
   --space-5: 2.5rem;
   --space-6: 4rem;
   --space-7: 6rem;
+  --space-8: 8rem;
 
   /* ── Typography stacks ── */
   --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
   --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
   --sans: "Montserrat", "Inter", "Avenir Next", "Segoe UI", Roboto, system-ui, sans-serif;
+
+  /* ── Animation timing ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --dur-micro: 0.15s;
+  --dur-short: 0.3s;
+  --dur-medium: 0.6s;
+  --dur-long: 1.2s;
 }
 
 * { box-sizing: border-box; }
@@ -67,27 +92,29 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   background:
-    radial-gradient(1300px 600px at 82% -8%, #b9d0e31f, transparent 58%),
-    radial-gradient(900px 460px at 12% -4%, #d9b9961f, transparent 52%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+    radial-gradient(1400px 700px at 78% -12%, #6ea0c818, transparent 62%),
+    radial-gradient(1000px 500px at 15% -6%, #d4a87414, transparent 55%),
+    radial-gradient(600px 600px at 50% 60%, #182e4618, transparent 70%),
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 25%, var(--bg-1) 55%, var(--bg-0) 100%);
   min-height: 100vh;
 }
 
+/* Topographic grid overlay */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  opacity: 0.18;
+  opacity: 0.12;
   pointer-events: none;
   background-image:
-    linear-gradient(#ffffff04 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px);
-  background-size: 34px 34px;
+    linear-gradient(#ffffff03 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff03 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-a { color: var(--accent-ice); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { color: var(--accent-ice); text-decoration: none; transition: color var(--dur-micro) ease; }
+a:hover { color: var(--accent-ice-bright); text-decoration: underline; }
 
 /* ── Language switcher — shared between landing and md-viewer ── */
 .lang-switch {
@@ -96,7 +123,8 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 0.2rem;
-  background: #0e151f99;
+  background: #0a131e99;
+  backdrop-filter: blur(12px);
 }
 
 .lang-btn {
@@ -111,6 +139,7 @@ a:hover { text-decoration: underline; }
   text-transform: uppercase;
   padding: 0.32rem 0.54rem;
   cursor: pointer;
+  transition: color var(--dur-micro) ease, background var(--dur-short) ease;
 }
 
 .lang-btn[aria-pressed='true'] {

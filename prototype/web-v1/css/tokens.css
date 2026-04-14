@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    TOKENS — Design System Custom Properties
-   Alpine editorial palette refresh (v1.4.5+ public UX pass)
+   Alpine editorial palette refresh (v1.4.8+ aggressive aesthetics pass)
    ═══════════════════════════════════════════ */
 
 /* Breakpoint reference tokens (Decision 7 — mobile-first 5 tiers)
@@ -12,25 +12,30 @@
 */
 
 :root {
-  /* ── Color palette: alpine dusk ── */
-  --bg:        #0b121d;
-  --surface:   #141f2d;
-  --surface2:  #1d2b3d;
-  --border:    #3a4d60;
+  /* ── Color palette: deep alpine atmosphere ── */
+  --bg:        #080c12;
+  --surface:   #101b2a;
+  --surface2:  #182b40;
+  --surface3:  #1e3348;
+  --border:    #2e4560;
+  --border-glow: #6ea0c81a;
   --stone:     #b9ac9e;
-  --ochre:     #d2b48d;
-  --ochre-dim: #967757;
-  --ice:       #b9d3e6;
-  --ice-dim:   #6f90a9;
-  --white:     #eef3f8;
+  --ochre:     #d4a874;
+  --ochre-dim: #8e6d4a;
+  --ice:       #b0d0e6;
+  --ice-dim:   #6890aa;
+  --ice-bright: #d8edfa;
+  --white:     #eaf1f8;
   --red:       #c96f63;
   --red-dim:   #8d473f;
-  --safety:    #89b492;
-  --text:      #d6dfe8;
-  --text-dim:  #91a2b3;
-  --text-soft: #abb9c7;
-  --muted:     #91a2b3;
-  --accent:    #d2b48d;
+  --safety:    #7fb89a;
+  --text:      #dae4ee;
+  --text-dim:  #8da2b6;
+  --text-soft: #a8baca;
+  --muted:     #8da2b6;
+  --accent:    #d4a874;
+  --accent-rose: #c9a0b8;
+  --accent-aurora: #7fc4b8;
 
   /* ── Typography ── */
   --brand:   'Playfair Display', 'Lora', Georgia, serif;
@@ -52,9 +57,21 @@
   /* ── Border radius ── */
   --radius-sm: 8px;
   --radius-md: 14px;
+  --radius-lg: 22px;
 
   /* ── Transition speeds ── */
   --dur-fast:   0.15s;
-  --dur-normal: 0.2s;
-  --dur-slow:   0.3s;
+  --dur-normal: 0.25s;
+  --dur-slow:   0.4s;
+
+  /* ── Animation easing ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* ── Enhanced shadows ── */
+  --shadow-soft: 0 8px 32px #05080d44;
+  --shadow-medium: 0 16px 48px #05080d66;
+  --shadow-glow-ice: 0 0 30px #a0c8e012, 0 0 60px #a0c8e008;
+  --shadow-glow-amber: 0 0 30px #d4a87412, 0 0 60px #d4a87408;
+  --shadow-inset: inset 0 1px 0 #ffffff06;
 }
