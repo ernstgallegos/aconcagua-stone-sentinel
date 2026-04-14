@@ -549,19 +549,27 @@
       }
 
       /* ── Field Notes — Glassmorphism Carousel ── */
-      .field-notes-layout { display: grid; gap: var(--space-3); align-items: stretch; }
-      .fn-carousel { display: flex; flex-direction: column; gap: var(--space-3); min-height: 100%; }
-      .field-notes-art {
+      .field-notes-layout {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      .fn-showcase {
         border: 1px solid var(--border-soft);
         border-radius: var(--radius-md);
         background: rgba(15,24,36,0.45);
-        backdrop-filter: blur(20px) saturate(1.2);
-        -webkit-backdrop-filter: blur(20px) saturate(1.2);
+        backdrop-filter: blur(20px) saturate(1.25);
+        -webkit-backdrop-filter: blur(20px) saturate(1.25);
         box-shadow: var(--shadow-soft), var(--shadow-inset);
         overflow: hidden;
-        min-height: 100%;
       }
-      .fn-image-region { position: relative; min-height: 420px; height: 100%; }
+      .fn-showcase-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        min-height: 440px;
+      }
+      .fn-carousel { min-height: 100%; }
+      .field-notes-art { min-height: 100%; border-left: 0; }
+      .fn-image-region { position: relative; min-height: 320px; height: 100%; }
       .fn-image-slide {
         display: none;
         position: absolute;
@@ -581,26 +589,18 @@
         pointer-events: none;
       }
       @media (min-width: 980px) {
-        .field-notes-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+        .fn-showcase-content { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+        .field-notes-art { border-left: 1px solid var(--border-soft); }
+        .fn-image-region { min-height: 440px; }
       }
       .fn-card-region { min-height: 200px; perspective: 800px; }
       .fn-slide {
         display: none;
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-md);
-        background: rgba(15,24,36,0.45);
-        backdrop-filter: blur(20px) saturate(1.4);
-        -webkit-backdrop-filter: blur(20px) saturate(1.4);
-        padding: var(--space-4);
+        padding: clamp(1.1rem, 2vw, 2rem);
         flex-direction: column; gap: 0.6rem;
-        box-shadow: var(--shadow-soft), var(--shadow-inset);
         position: relative; overflow: hidden;
-      }
-      /* Glass shine edge */
-      .fn-slide::before {
-        content: "";
-        position: absolute; top: 0; left: 0; right: 0; height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(200,228,245,0.15), transparent);
+        height: 100%;
+        justify-content: center;
       }
       .fn-slide.fn-active {
         display: flex;
@@ -623,7 +623,8 @@
       }
       .fn-nav {
         display: flex; align-items: center; justify-content: center;
-        gap: var(--space-2);
+        gap: var(--space-2); padding: var(--space-3);
+        border-top: 1px solid var(--border-soft);
       }
       .fn-nav-btn {
         background: rgba(15,24,36,0.5); border: 1px solid var(--border-soft);
@@ -1028,128 +1029,132 @@
             <p class="section-intro reveal reveal-delay-2" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
           </div>
           <div class="field-notes-layout reveal">
-            <div class="fn-carousel" aria-roledescription="carousel">
-              <div class="fn-card-region" id="fn-card-region">
-              <article class="fn-slide fn-active" id="fn-slide-0" role="group" aria-roledescription="slide" aria-label="1 of 10" aria-hidden="false">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
-                <p class="fn-slide-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
-                <p class="fn-slide-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere &#8212; the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-1" role="group" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
-                <p class="fn-slide-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
-                <p class="fn-slide-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-2" role="group" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn03Title">6,962 m</h3>
-                <p class="fn-slide-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
-                <p class="fn-slide-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-3" role="group" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn04Title">A Provincial Park</h3>
-                <p class="fn-slide-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
-                <p class="fn-slide-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-4" role="group" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn05Title">Main Season: Nov&#8211;Mar</h3>
-                <p class="fn-slide-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to March 31.</p>
-                <p class="fn-slide-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-5" role="group" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn06Title">Volcanic Origin</h3>
-                <p class="fn-slide-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
-                <p class="fn-slide-body" data-i18n="fn06Body">The massif was formed through millions and uplifted by tectonic compression.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-6" role="group" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
-                <p class="fn-slide-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a &#8220;stone sentinel.&#8221;</p>
-                <p class="fn-slide-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning &#8220;stone sentinel.&#8221; Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-7" role="group" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
-                <p class="fn-slide-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
-                <p class="fn-slide-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-8" role="group" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
-                <p class="fn-slide-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
-                <p class="fn-slide-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq &#209;an, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua&#8217;s cultural significance predates European contact by centuries.</p>
-              </article>
-              <article class="fn-slide" id="fn-slide-9" role="group" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
-                <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
-                <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
-                <p class="fn-slide-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
-                <p class="fn-slide-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering &#8212; an Inca state ritual of profound religious significance.</p>
-              </article>
-            </div>
-            <div class="fn-nav" role="group">
-              <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">&#8249;</button>
-              <div class="fn-dots" role="group" aria-label="Field notes">
-                <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
-                <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="2" aria-label="Field note 3 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="3" aria-label="Field note 4 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="4" aria-label="Field note 5 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="5" aria-label="Field note 6 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="6" aria-label="Field note 7 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="7" aria-label="Field note 8 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="8" aria-label="Field note 9 of 10" aria-pressed="false"></button>
-                <button class="fn-dot" data-fn-idx="9" aria-label="Field note 10 of 10" aria-pressed="false"></button>
+            <div class="fn-showcase" aria-roledescription="carousel">
+              <div class="fn-showcase-content">
+                <div class="fn-carousel">
+                  <div class="fn-card-region" id="fn-card-region">
+                    <article class="fn-slide fn-active" id="fn-slide-0" role="group" aria-roledescription="slide" aria-label="1 of 10" aria-hidden="false">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn01Title">The Highest Outside Asia</h3>
+                      <p class="fn-slide-fact" data-i18n="fn01Fact">The highest mountain in the Americas and the highest peak on Earth outside Asia.</p>
+                      <p class="fn-slide-body" data-i18n="fn01Body">Aconcagua is the highest point in the Western Hemisphere &#8212; the continental reference for every altitude record outside the Himalayas and the Karakoram. Its scale defines the identity of the Andes.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-1" role="group" aria-roledescription="slide" aria-label="2 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn02Title">Mendoza / Chile Border</h3>
+                      <p class="fn-slide-fact" data-i18n="fn02Fact">Aconcagua stands in western Mendoza, right on the Chilean border.</p>
+                      <p class="fn-slide-body" data-i18n="fn02Body">The mountain rises in the Central Andes of western Mendoza province, Argentina, at the border with Chile. The nearest city is Mendoza, roughly 110 km to the southeast.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-2" role="group" aria-roledescription="slide" aria-label="3 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn03Title">6,962 m</h3>
+                      <p class="fn-slide-fact" data-i18n="fn03Fact">Official park reference height: 6,962 meters above sea level.</p>
+                      <p class="fn-slide-body" data-i18n="fn03Body">Measured surveys have returned slightly varying figures over the decades, but 6,962 m is the altitude published by park authorities and used as the working reference.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-3" role="group" aria-roledescription="slide" aria-label="4 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn04Title">A Provincial Park</h3>
+                      <p class="fn-slide-fact" data-i18n="fn04Fact">Aconcagua is protected within Parque Provincial Aconcagua.</p>
+                      <p class="fn-slide-body" data-i18n="fn04Body">The park is managed by the province of Mendoza. The Horcones entrance sits at roughly 2,800 m, about 185 km west of the city by road.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-4" role="group" aria-roledescription="slide" aria-label="5 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn05Title">Main Season: Nov&#8211;Mar</h3>
+                      <p class="fn-slide-fact" data-i18n="fn05Fact">The official summer season runs from November 1 to March 31.</p>
+                      <p class="fn-slide-body" data-i18n="fn05Body">Permits and services operate during the austral summer. Most summit attempts concentrate in December and January, when weather windows are widest.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-5" role="group" aria-roledescription="slide" aria-label="6 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn06Title">Volcanic Origin</h3>
+                      <p class="fn-slide-fact" data-i18n="fn06Fact">Aconcagua is of volcanic origin, but it is not an active volcano.</p>
+                      <p class="fn-slide-body" data-i18n="fn06Body">The massif was formed through millions and uplifted by tectonic compression.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-6" role="group" aria-roledescription="slide" aria-label="7 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn07Title">Sentinel of Stone</h3>
+                      <p class="fn-slide-fact" data-i18n="fn07Fact">The name Aconcagua may derive from Quechua and is often linked to the idea of a &#8220;stone sentinel.&#8221;</p>
+                      <p class="fn-slide-body" data-i18n="fn07Body">The etymology is debated. One widely cited interpretation links the name to Quechua roots meaning &#8220;stone sentinel.&#8221; Other scholars propose Mapudungun or Aymara origins. No single derivation is settled.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-7" role="group" aria-roledescription="slide" aria-label="8 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn08Title">First Ascent / 1897</h3>
+                      <p class="fn-slide-fact" data-i18n="fn08Fact">The first successful ascent was made in 1897 by Matthias Zurbriggen.</p>
+                      <p class="fn-slide-body" data-i18n="fn08Body">Swiss mountain guide Matthias Zurbriggen reached the summit on January 14, 1897, during an expedition led by Edward FitzGerald. The party approached via the Normal Route from the northwest.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-8" role="group" aria-roledescription="slide" aria-label="9 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn09Title">An Inca Ceremonial Mountain</h3>
+                      <p class="fn-slide-fact" data-i18n="fn09Fact">Aconcagua also forms part of a wider Andean archaeological and sacred landscape.</p>
+                      <p class="fn-slide-body" data-i18n="fn09Body">The mountain belongs to the broader Andean sacred geography connected to the Qhapaq &#209;an, the Inca road system recognized by UNESCO. High-altitude sites across the Andes served as ceremonial platforms. Aconcagua&#8217;s cultural significance predates European contact by centuries.</p>
+                    </article>
+                    <article class="fn-slide" id="fn-slide-9" role="group" aria-roledescription="slide" aria-label="10 of 10" aria-hidden="true">
+                      <p class="fn-slide-kicker" data-i18n="fnLabel">Field note</p>
+                      <h3 data-i18n="fn10Title">The Aconcagua Child</h3>
+                      <p class="fn-slide-fact" data-i18n="fn10Fact">In 1985, climbers found the frozen remains of a 7-year-old Inca child on the Aconcagua massif.</p>
+                      <p class="fn-slide-body" data-i18n="fn10Body">The remains were discovered at approximately 5,300 m on the southwest ridge. Archaeological study identified them as those of a boy of around seven years, sacrificed over 500 years ago in what researchers interpret as a capacocha offering &#8212; an Inca state ritual of profound religious significance.</p>
+                    </article>
+                  </div>
+                </div>
+                <div class="field-notes-art" role="group" aria-label="Atmospheric concept art &#8212; descent range">
+                  <div class="fn-image-region" id="fn-image-region" aria-live="polite">
+                    <figure class="fn-image-slide fn-image-active" aria-hidden="false">
+                      <img src="/art/concept-art/curated/ig/7.png" alt="High camp at sunset with dome tents and lone climber" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/19.png" alt="Snowfield under soft rose light with distant figure" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape with luminous snow" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/5.png" alt="Climbers ascending steep terrain under alpenglow" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama in golden hour light" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/9.png" alt="Near-whiteout snowfield conditions" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/21.png" alt="Summit ridge silhouette under cold ambient light" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/1.png" alt="Lone climber facing Aconcagua at dawn" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/13.png" alt="Golden altitude bands over the massif" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                    <figure class="fn-image-slide" aria-hidden="true">
+                      <img src="/art/concept-art/curated/ig/7.png" alt="Base camp geometry under sunset sky" loading="lazy" />
+                      <div class="fn-image-overlay"></div>
+                    </figure>
+                  </div>
+                </div>
               </div>
-              <button class="fn-nav-btn" id="fn-next" aria-label="Next field note" aria-controls="fn-card-region">&#8250;</button>
-            </div>
-            </div>
-            <div class="field-notes-art" role="group" aria-label="Atmospheric concept art &#8212; descent range">
-              <div class="fn-image-region" id="fn-image-region" aria-live="polite">
-                <figure class="fn-image-slide fn-image-active" aria-hidden="false">
-                  <img src="/art/concept-art/curated/ig/7.png" alt="High camp at sunset with dome tents and lone climber" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/19.png" alt="Snowfield under soft rose light with distant figure" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/25.png" alt="Blue hour snowscape with luminous snow" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/5.png" alt="Climbers ascending steep terrain under alpenglow" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama in golden hour light" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/9.png" alt="Near-whiteout snowfield conditions" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/21.png" alt="Summit ridge silhouette under cold ambient light" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/1.png" alt="Lone climber facing Aconcagua at dawn" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/13.png" alt="Golden altitude bands over the massif" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
-                <figure class="fn-image-slide" aria-hidden="true">
-                  <img src="/art/concept-art/curated/ig/7.png" alt="Base camp geometry under sunset sky" loading="lazy" />
-                  <div class="fn-image-overlay"></div>
-                </figure>
+              <div class="fn-nav" role="group">
+                <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">&#8249;</button>
+                <div class="fn-dots" role="group" aria-label="Field notes">
+                  <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
+                  <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="2" aria-label="Field note 3 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="3" aria-label="Field note 4 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="4" aria-label="Field note 5 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="5" aria-label="Field note 6 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="6" aria-label="Field note 7 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="7" aria-label="Field note 8 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="8" aria-label="Field note 9 of 10" aria-pressed="false"></button>
+                  <button class="fn-dot" data-fn-idx="9" aria-label="Field note 10 of 10" aria-pressed="false"></button>
+                </div>
+                <button class="fn-nav-btn" id="fn-next" aria-label="Next field note" aria-controls="fn-card-region">&#8250;</button>
               </div>
             </div>
           </div>
@@ -1543,7 +1548,7 @@
       }
       function startAuto() { if (reduced) return; stopAuto(); timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY); }
       function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
-      var carousel = document.querySelector('.fn-carousel');
+      var carousel = document.querySelector('.fn-showcase');
       if (!carousel) return;
       document.getElementById('fn-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
       document.getElementById('fn-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
