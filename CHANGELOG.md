@@ -11,6 +11,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Integrated geological grounding into design pillars (EN `docs/en/design-pillars.md`, ES `docs/es/pilares-de-diseno.md`): new "Geological Grounding" / "Anclaje geológico" subsection in Pillar 1 linking AVC stratigraphy, AFTB structure, argillic alteration, and active mass-wasting to the Environmental Pressure system.
+- Added geological structure component and geological grounding paragraph to Mountain System in systems overview (EN `docs/en/systems-overview.md`, ES `docs/es/vision-de-sistemas.md`).
+- Added geological interaction paragraph to Weather System in systems overview (EN/ES) documenting cryoclastism, structurally controlled wind load, and Horcones Inferior glacier surge dynamics.
 - Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) from the Spanish original (`docs/es/biblia-geologica-aconcagua.md`), preserving all technical geological terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography entries.
 - Added Section 6 "Geology: the rock beneath the route" to the English reality reference (`docs/en/aconcagua-reality-reference.md`) with five subsections: geological identity (AVC stratovolcano), three-layer design framework, route-relevant geology per waypoint, active hazards, and design implications linking geology to Pillar 1 / EP system.
 - Added geological context note to Section 3 (Territory) of the English reality reference, cross-referencing the new geology section.

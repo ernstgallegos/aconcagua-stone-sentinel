@@ -80,6 +80,7 @@ Sistema soberano. Define las condiciones base bajo las cuales operan todos los d
 - Terreno (pendiente, estabilidad, tipo de superficie)
 - Exposición
 - Distancia entre puntos seguros
+- Estructura geológica (orientación de estratos volcaniclásticos, zonas de alteración, crestas de diques)
 
 **Produce**
 - Restricciones al movimiento
@@ -89,6 +90,9 @@ Sistema soberano. Define las condiciones base bajo las cuales operan todos los d
 **No produce**
 - Daño arbitrario
 - Eventos guionados desconectados del terreno
+
+**Anclaje geológico**
+El modelo de terreno está fundamentado en geología real: los estratos volcaniclásticos miocenos del Aconcagua y la superficie glaciar–periglaciar cuaternaria producen los campos de acarreo, las laderas debilitadas por alteración y las crestas resistentes que definen la dificultad de ruta y la distribución de peligros. Para la referencia geológica completa, ver `docs/es/biblia-geologica-aconcagua.md`.
 
 ---
 
@@ -112,6 +116,9 @@ Sistema dinámico y probabilístico que modifica el estado de la montaña. El cl
 - Nunca es completamente predecible
 - Se anticipa a través de señales
 - Opera en ventanas temporales, no en ciclos fijos
+
+**Interacción geológica**
+El clima interactúa directamente con el sustrato geológico: los ciclos de hielo-deshielo (crioclastismo) sobre roca volcaniclástica alterada impulsan los ~400 eventos de remoción en masa inventariados en el parque. La carga del viento se intensifica a lo largo de crestas y pasos controlados estructuralmente. La dinámica glaciar (incluyendo surges documentados en el Horcones Inferior) responde a la entrada térmica estacional sobre hielo cubierto de detritos.
 
 ---
 

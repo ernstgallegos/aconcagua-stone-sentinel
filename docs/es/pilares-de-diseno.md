@@ -56,6 +56,12 @@ Una ladera parece estable pero incrementa desgaste y riesgo.
 - Realismo punitivo → usar consecuencias graduales.
 - Sobresimulación → pocas variables, feedback claro.
 
+### Anclaje geológico
+
+El Pilar 1 está anclado en realidad geológica verificada. El Aconcagua es el remanente de un estratovolcán compuesto mioceno (el Complejo Volcánico Aconcagua, ~15,8–8,9 Ma) incorporado estructuralmente a la Faja Plegada y Corrida del Aconcagua. La autoridad de la montaña sobre la jugabilidad no es abstracta: los estratos volcaniclásticos inclinados controlan la estabilidad del acarreo, las zonas de alteración argílica generan variaciones en la carga del terreno, los diques resistentes definen líneas de cresta, y los procesos cuaternarios activos (surges glaciares, remociones en masa, dinámica periglaciar) son los peligros reales modelados en el sistema de Presión Ambiental. Se han inventariado aproximadamente 400 eventos de remoción en masa dentro del parque, con ~89% clasificados como activos. La geología no es decoración: es el sustrato literal del que emergen la dificultad del terreno, las restricciones de ruta y la presión ambiental.
+
+Para la referencia geológica canónica, ver `docs/es/biblia-geologica-aconcagua.md`.
+
 ---
 
 ## Pilar 2 — Información parcial
