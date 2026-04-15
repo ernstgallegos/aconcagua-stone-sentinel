@@ -612,6 +612,17 @@
         margin: 0; font-family: var(--mono); font-size: 0.58rem; font-weight: 500;
         letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-aurora);
       }
+      .visually-hidden {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
       .fn-slide h3 {
         margin: 0; font-family: var(--serif);
         font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 600; line-height: 1.15;
@@ -1031,6 +1042,8 @@
           <div class="section-head">
             <span class="elevation-mark reveal" aria-hidden="true">4,200 m</span>
             <p class="section-kicker reveal" data-i18n="fnKicker">Field Notes</p>
+            <h2 class="section-title visually-hidden" data-i18n="fnTitle">Ten reference points on the mountain behind the project.</h2>
+            <p class="section-intro visually-hidden" data-i18n="fnIntro">Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.</p>
           </div>
           <div class="field-notes-layout reveal">
             <div class="fn-showcase" aria-roledescription="carousel">
@@ -1334,6 +1347,8 @@
         pillar3Body: 'Success is not summit-only. Strategic retreat and safe return are valid endings with real narrative and mechanical weight.',
         ascentQuote: '\u201CThe summit is one possibility among many valid outcomes. Safe return, timing, and judgment are core design values.\u201D',
         fnKicker: 'Field Notes',
+        fnTitle: 'Ten reference points on the mountain behind the project.',
+        fnIntro: 'Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.',
         fnLabel: 'Field note',
         fn01Title: 'The Highest Outside Asia', fn01Fact: 'The highest mountain in the Americas and the highest peak on Earth outside Asia.', fn01Body: 'Aconcagua stands above every other peak in the Western Hemisphere and simultaneously holds altitude records for the Southern and Eastern hemispheres. Its position makes it the definitive benchmark outside the Asian 8,000ers. At summit elevation, oxygen partial pressure drops to roughly 47% of sea level \u2014 producing genuine hypoxic conditions that degrade judgment and endurance regardless of fitness. The mountain\u2019s height is not incidental to the project: it is the operating environment, and every mechanical design constraint in the simulation traces back to it.',
         fn02Title: 'Mendoza / Chile Border', fn02Fact: 'Aconcagua stands in western Mendoza, right on the Chilean border.', fn02Body: 'The mountain rises in the Central Andes of western Mendoza province, Argentina, directly on the border with Chile. Mendoza city lies roughly 110 km to the southeast and serves as the logistical hub for permits, transport, and gear supply. The park entrance at Horcones is reached via National Route 7 \u2014 the same corridor connecting Argentina to Chile through the Andes. That proximity to infrastructure is part of what makes Aconcagua one of the most accessible extreme-altitude ascents on Earth, drawing hundreds of expedition teams from dozens of countries each season.',
@@ -1402,6 +1417,8 @@
         pillar3Title: 'Outcomes plurales', pillar3Body: 'El \u00E9xito no es solo cumbre. La retirada estrat\u00E9gica y el retorno seguro son finales v\u00E1lidos con peso narrativo y mec\u00E1nico real.',
         ascentQuote: '\u201CLa cumbre es una posibilidad entre muchos finales v\u00E1lidos. Volver seguro, el timing y el criterio son valores de dise\u00F1o centrales.\u201D',
         fnKicker: 'Notas de Campo',
+        fnTitle: 'Diez puntos de referencia sobre la monta\u00F1a detr\u00E1s del proyecto.',
+        fnIntro: 'El Aconcagua es un lugar real, con geograf\u00EDa, historia y peso cultural concretos. Estas fichas anclan la experiencia en contexto verificado.',
         fnLabel: 'Nota de campo',
         fn01Title: 'La m\u00E1s alta fuera de Asia', fn01Fact: 'La monta\u00F1a m\u00E1s alta de Am\u00E9rica y la cumbre m\u00E1s alta de la Tierra fuera de Asia.', fn01Body: 'El Aconcagua supera en altura a cualquier otra cumbre del hemisferio occidental y detenta simult\u00E1neamente los r\u00E9cords de altitud del hemisferio sur y del hemisferio oriental. Esa posici\u00F3n lo convierte en la referencia definitiva fuera de los ochomiles asi\u00E1ticos. A nivel de cumbre, la presi\u00F3n parcial de ox\u00EDgeno cae al 47\u00A0% del nivel del mar aproximadamente, produciendo condiciones de hipoxia real que degradan el juicio y la resistencia con independencia de la condici\u00F3n f\u00EDsica. La altura de la monta\u00F1a no es un dato de color: es el entorno operativo real del proyecto.',
         fn02Title: 'Mendoza / Frontera con Chile', fn02Fact: 'El Aconcagua se encuentra en el oeste de Mendoza, sobre la frontera con Chile.', fn02Body: 'La monta\u00F1a se eleva en los Andes Centrales de la provincia de Mendoza, Argentina, sobre la frontera con Chile. La ciudad de Mendoza queda a unos 110\u00A0km al sudeste y act\u00FAa como centro log\u00EDstico para permisos, transporte y equipamiento. La entrada al parque en Horcones se alcanza por la Ruta Nacional 7, el corredor que une Argentina y Chile a trav\u00E9s de la cordillera. Esa cercan\u00EDa a la infraestructura es parte de lo que convierte al Aconcagua en uno de los ascensos de extrema altitud m\u00E1s accesibles del planeta, atrayendo cada temporada cientos de expediciones de decenas de pa\u00EDses.',
