@@ -63,6 +63,14 @@ Uncertainty, partial information, and irreversible consequences are not flavor t
 
 ---
 
+## Geological Identity
+
+Aconcagua is not merely a tall peak — it is the remnant of a Miocene composite stratovolcano. The Aconcagua Volcanic Complex (~15.8–8.9 Ma) built an edifice of andesitic-dacitic breccias, lavas, tuffs, and pyroclastic flows that now stands tilted within the Aconcagua Fold-and-Thrust Belt. Its layered volcaniclastic strata control scree stability and route surface conditions; argillic alteration zones create terrain-load variation; resistant dykes define the ridgelines climbers follow. At the surface, active Quaternary processes — glacial surges, ~400 inventoried mass-wasting events, periglacial dynamics — generate the real hazards that the game's Environmental Pressure system models.
+
+This geological grounding is not incidental: it is the substrate from which terrain difficulty, route constraints, and environmental authority emerge. For the full canonical reference, see [`docs/en/geological-bible-aconcagua.md`](docs/en/geological-bible-aconcagua.md).
+
+---
+
 ## Design Pillars
 
 _Aconcagua: Stone Sentinel_ is designed as a systemic experience.
