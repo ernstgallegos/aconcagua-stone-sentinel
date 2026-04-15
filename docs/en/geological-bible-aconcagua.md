@@ -177,7 +177,7 @@ Model and ages supported by compilations (volcanism 1996), recent U-Pb, structur
 
 **Proposed figure (mandatory to have a "flagship section" in the project):**
 
-![Balanced structural section of the southern AFTB and Cordillera Frontal (33°30′–33°45′S), basis for restorations. Extract/adapt from Giambiagi (2003), Fig. 2b (and also cite Giambiagi & Ramos, 2002).](assets/figuras/seccion_estructural_AFTB_Giambiagi2003_Fig2b.png) <!-- citeturn45view0turn17view0 -->
+**Visual reference pending repository inclusion:** balanced structural section of the southern AFTB and Cordillera Frontal (33°30′–33°45′S), basis for restorations; extract/adapt from Giambiagi (2003), Fig. 2b (and also cite Giambiagi & Ramos, 2002). <!-- citeturn45view0turn17view0 -->
 
 **Additional schematic diagram (Mermaid, for quick documentation):**
 

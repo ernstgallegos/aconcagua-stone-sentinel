@@ -648,6 +648,14 @@
         background: rgba(200,228,245,0.06);
         outline: none;
       }
+      .fn-nav-btn--toggle {
+        width: auto;
+        min-width: 6.2rem;
+        padding: 0 0.9rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
       .fn-dots {
         display: flex; align-items: center; gap: 6px;
         flex-wrap: wrap; justify-content: center;
@@ -1149,6 +1157,7 @@
               </div>
               <div class="fn-nav" role="group">
                 <button class="fn-nav-btn" id="fn-prev" aria-label="Previous field note" aria-controls="fn-card-region">&#8249;</button>
+                <button class="fn-nav-btn fn-nav-btn--toggle" id="fn-toggle-auto" type="button" aria-pressed="false" aria-label="Pause field notes autoplay" data-i18n-attr="fnPauseAria:aria-label" data-i18n="fnPause">Pause</button>
                 <div class="fn-dots" role="group" aria-label="Field notes">
                   <button class="fn-dot fn-dot-active" data-fn-idx="0" aria-label="Field note 1 of 10" aria-pressed="true"></button>
                   <button class="fn-dot" data-fn-idx="1" aria-label="Field note 2 of 10" aria-pressed="false"></button>
@@ -1341,6 +1350,10 @@
         fnTitle: 'Ten reference points on the mountain behind the project.',
         fnIntro: 'Aconcagua is a real place with specific geography, history, and cultural weight. These cards ground the experience in verified context.',
         fnLabel: 'Field note',
+        fnPause: 'Pause',
+        fnResume: 'Resume',
+        fnPauseAria: 'Pause field notes autoplay',
+        fnResumeAria: 'Resume field notes autoplay',
         fn01Title: 'The Highest Outside Asia', fn01Fact: 'The highest mountain in the Americas and the highest peak on Earth outside Asia.', fn01Body: 'Aconcagua stands above every other peak in the Western Hemisphere and simultaneously holds altitude records for the Southern and Eastern hemispheres. Its position makes it the definitive benchmark outside the Asian 8,000ers. At summit elevation, oxygen partial pressure drops to roughly 47% of sea level \u2014 producing genuine hypoxic conditions that degrade judgment and endurance regardless of fitness. The mountain\u2019s height is not incidental to the project: it is the operating environment, and every mechanical design constraint in the simulation traces back to it.',
         fn02Title: 'Mendoza / Chile Border', fn02Fact: 'Aconcagua stands in western Mendoza, right on the Chilean border.', fn02Body: 'The mountain rises in the Central Andes of western Mendoza province, Argentina, directly on the border with Chile. Mendoza city lies roughly 110 km to the southeast and serves as the logistical hub for permits, transport, and gear supply. The park entrance at Horcones is reached via National Route 7 \u2014 the same corridor connecting Argentina to Chile through the Andes. That proximity to infrastructure is part of what makes Aconcagua one of the most accessible extreme-altitude ascents on Earth, drawing hundreds of expedition teams from dozens of countries each season.',
         fn03Title: '6,962 m', fn03Fact: 'Official park reference height: 6,962 meters above sea level.', fn03Body: 'Precise surveys have returned slightly varying figures as measurement technology evolved, but 6,962 m is the altitude published by park authorities and used across permits, route planning, and safety briefings. At this elevation, barometric pressure drops to roughly 330 hPa \u2014 about a third of sea-level pressure \u2014 and the body\u2019s capacity to function without supplemental oxygen depends entirely on prior acclimatization. Every meter above 5,000 m represents a compounding physiological threshold that expedition planners must account for from the moment they set departure dates.',
@@ -1412,6 +1425,10 @@
         fnTitle: 'Diez puntos de referencia sobre la monta\u00F1a detr\u00E1s del proyecto.',
         fnIntro: 'El Aconcagua es un lugar real, con geograf\u00EDa, historia y peso cultural concretos. Estas fichas anclan la experiencia en contexto verificado.',
         fnLabel: 'Nota de campo',
+        fnPause: 'Pausar',
+        fnResume: 'Reanudar',
+        fnPauseAria: 'Pausar reproducci\u00F3n autom\u00E1tica de notas de campo',
+        fnResumeAria: 'Reanudar reproducci\u00F3n autom\u00E1tica de notas de campo',
         fn01Title: 'La m\u00E1s alta fuera de Asia', fn01Fact: 'La monta\u00F1a m\u00E1s alta de Am\u00E9rica y la cumbre m\u00E1s alta de la Tierra fuera de Asia.', fn01Body: 'El Aconcagua supera en altura a cualquier otra cumbre del hemisferio occidental y detenta simult\u00E1neamente los r\u00E9cords de altitud del hemisferio sur y del hemisferio oriental. Esa posici\u00F3n lo convierte en la referencia definitiva fuera de los ochomiles asi\u00E1ticos. A nivel de cumbre, la presi\u00F3n parcial de ox\u00EDgeno cae al 47\u00A0% del nivel del mar aproximadamente, produciendo condiciones de hipoxia real que degradan el juicio y la resistencia con independencia de la condici\u00F3n f\u00EDsica. La altura de la monta\u00F1a no es un dato de color: es el entorno operativo real del proyecto.',
         fn02Title: 'Mendoza / Frontera con Chile', fn02Fact: 'El Aconcagua se encuentra en el oeste de Mendoza, sobre la frontera con Chile.', fn02Body: 'La monta\u00F1a se eleva en los Andes Centrales de la provincia de Mendoza, Argentina, sobre la frontera con Chile. La ciudad de Mendoza queda a unos 110\u00A0km al sudeste y act\u00FAa como centro log\u00EDstico para permisos, transporte y equipamiento. La entrada al parque en Horcones se alcanza por la Ruta Nacional 7, el corredor que une Argentina y Chile a trav\u00E9s de la cordillera. Esa cercan\u00EDa a la infraestructura es parte de lo que convierte al Aconcagua en uno de los ascensos de extrema altitud m\u00E1s accesibles del planeta, atrayendo cada temporada cientos de expediciones de decenas de pa\u00EDses.',
         fn03Title: '6.962\u00A0m', fn03Fact: 'Altura de referencia oficial del parque: 6.962 metros sobre el nivel del mar.', fn03Body: 'Los relevamientos precisos han arrojado cifras levemente variables a medida que la tecnolog\u00EDa de medici\u00F3n evolucion\u00F3, pero 6.962\u00A0m es la altitud publicada por las autoridades del parque y utilizada en permisos, planificaci\u00F3n de rutas y briefings de seguridad. A esa elevaci\u00F3n, la presi\u00F3n barom\u00E9trica cae a unos 330\u00A0hPa \u2014 cerca de un tercio de la presi\u00F3n al nivel del mar \u2014 y la capacidad del cuerpo para funcionar sin ox\u00EDgeno suplementario depende completamente del tiempo de aclimataci\u00F3n previo. Cada metro sobre los 5.000\u00A0m representa un umbral fisiol\u00F3gico compuesto que los planificadores deben tener en cuenta desde que fijan las fechas de partida.',
@@ -1488,6 +1505,7 @@
       });
       localStorage.setItem(STORAGE_KEY, lang);
       updateDocLinks(lang);
+      window.dispatchEvent(new CustomEvent('public-lang-changed', { detail: { lang: lang } }));
     }
 
     (function initLang() {
@@ -1539,11 +1557,25 @@
 
     /* Field Notes carousel */
     (function initCarousel() {
-      var AUTO_DELAY = 5000, current = 0, timer = null;
+      var AUTO_DELAY = 5000, current = 0, timer = null, isUserPaused = false;
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function getLang() { return localStorage.getItem(STORAGE_KEY) || 'en'; }
+      function t(key) {
+        var lang = getLang();
+        var pack = TRANSLATIONS[lang] || TRANSLATIONS.en;
+        return (pack && pack[key]) || TRANSLATIONS.en[key] || '';
+      }
       function slides() { return document.querySelectorAll('.fn-slide'); }
       function imageSlides() { return document.querySelectorAll('.fn-image-slide'); }
       function dots()   { return document.querySelectorAll('.fn-dot'); }
+      function syncPauseButtonLabel() {
+        var toggleBtn = document.getElementById('fn-toggle-auto');
+        if (!toggleBtn) return;
+        var isPaused = reduced || isUserPaused;
+        toggleBtn.textContent = isPaused ? t('fnResume') : t('fnPause');
+        toggleBtn.setAttribute('aria-label', isPaused ? t('fnResumeAria') : t('fnPauseAria'));
+        toggleBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+      }
       function goTo(idx) {
         var ss = slides(), ii = imageSlides(), dd = dots();
         var total = ss.length;
@@ -1557,10 +1589,21 @@
         if (ii[current]) { ii[current].classList.add('fn-image-active'); ii[current].setAttribute('aria-hidden', 'false'); }
         dd[current].classList.add('fn-dot-active'); dd[current].setAttribute('aria-pressed', 'true');
       }
-      function startAuto() { if (reduced) return; stopAuto(); timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY); }
+      function startAuto() {
+        if (reduced || isUserPaused) { syncPauseButtonLabel(); return; }
+        stopAuto();
+        timer = setInterval(function () { goTo(current + 1); }, AUTO_DELAY);
+        syncPauseButtonLabel();
+      }
       function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
       var carousel = document.querySelector('.fn-showcase');
       if (!carousel) return;
+      document.getElementById('fn-toggle-auto').addEventListener('click', function () {
+        isUserPaused = !isUserPaused;
+        if (isUserPaused) stopAuto();
+        else startAuto();
+        syncPauseButtonLabel();
+      });
       document.getElementById('fn-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
       document.getElementById('fn-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
       dots().forEach(function (dot, i) { dot.addEventListener('click', function () { goTo(i); startAuto(); }); });
@@ -1572,6 +1615,11 @@
         if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); startAuto(); }
         if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); startAuto(); }
       });
+      window.addEventListener('storage', function (e) {
+        if (e.key === STORAGE_KEY) syncPauseButtonLabel();
+      });
+      window.addEventListener('public-lang-changed', syncPauseButtonLabel);
+      syncPauseButtonLabel();
       startAuto();
     })();
     </script>

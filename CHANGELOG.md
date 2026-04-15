@@ -34,6 +34,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Refined the Field Notes split layout in `index.html` to a strict 50/50 desktop distribution and converted the right-side imagery into a synchronized image carousel that advances with the Field Notes cards.
 - Redesigned the Field Notes block in `index.html` into a single full-width showcase card with a balanced 50/50 text-image composition and centered controls to remove panel mismatch and improve visual coherence.
 - Adjusted Field Notes media rendering to preserve full image framing (`object-fit: contain`, centered) within the existing panel bounds and updated the landing hero artwork source to `art/concept-art/curated/concept-curated-9.png`.
+- Added a user-controlled pause/resume toggle to the landing-page Field Notes carousel (`index.html`) so readers can stop automatic card transitions and continue manually at their own pace (EN/ES labels and aria text included).
 - Refined mountain geology copy in `index.html` (`mountainProse1`, `fn06Body`) to the expanded phrasing “millions of years of geological activity…” and synchronized the Spanish mirror text in `TRANSLATIONS.es`.
 - Rewrote all Field Notes body copy in EN/ES to provide fuller, more vertically balanced card reading blocks that better match the image panel height in the unified showcase layout.
 - **Aggressive full UI/aesthetics rebuild** of the public landing page and web-v1 prototype to eliminate generic dark-template aesthetics and establish a distinctive cinematic alpine visual identity.
@@ -66,6 +67,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
 - Fixed version drift in root `index.html` landing page: bumped all six stale `v1.4.5` version strings (EN heroMeta1, statusValue2, footerProjectBody, and their ES mirrors) to `v1.4.8`, aligning the public website with `package.json`, `docs/repo-truth.md`, `prototype/web-v1/index.html`, and all other versioned surfaces.
 - Fixed parity-test coverage gap: extended `prototype/web-v1/tests/parity/repo-truth-parity.test.js` to assert that `index.html` contains the canonical version string derived from `package.json`, preventing future landing-page version drift.
+- Fixed markdown-link validation failures in the geological bibles (`docs/en/geological-bible-aconcagua.md`, `docs/es/biblia-geologica-aconcagua.md`) by replacing unresolved local image links with explicit “reference pending inclusion” text notes.
 
 ### Added
 
