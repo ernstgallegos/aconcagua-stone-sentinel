@@ -903,6 +903,22 @@
   margin-top: 1.4rem;
 }
 
+.part2-step-illustration {
+  width: min(620px, 100%);
+  margin: 1.1rem auto 0.25rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  background: color-mix(in srgb, var(--surface) 80%, rgba(0, 0, 0, 0.2));
+}
+
+.part2-step-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .part2-step--titleless h3 {
   display: none;
 }

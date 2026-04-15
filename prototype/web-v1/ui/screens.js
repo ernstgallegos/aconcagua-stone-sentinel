@@ -244,23 +244,19 @@ const PART2_NARRATIVE_SEQUENCE = [
     id: 'mendoza_room',
     eyebrow: 'Night before departure',
     title: 'Mendoza',
-    body: `When you close the hotel door, Mendoza starts to feel provisional. Two beds become sorting tables. Duffels open. Passport, permits, chargers, straps, gloves, bags inside bags. Everything already belongs to the mountain, even if the mountain is still one transfer away.
+    illustrationSrc: '../../../art/concept-art/curated/ig/27.png',
+    illustrationAlt: 'Mendoza hotel room with expedition gear prepared before departure.',
+    body: `When the hotel-room door closes, Mendoza starts to feel temporary. The two beds become sorting tables. Open duffels. Passport, permits, chargers, straps, gloves, bags inside bags. Everything is already promised to the mountain.
 
-STONE SENTINEL EXPEDITIONS has handled the visible logistics: airport pickup, room booking, permit support, rentals, gear check timing. Shared room is standard unless you pay for privacy. Tonight, that means Blake on the other bed, repeating his system like repetition could quiet uncertainty.
+STONE SENTINEL EXPEDITIONS handled the logistics: airport pickup, room, permit process, rentals, gear check. Sharing a room is standard unless you pay extra for privacy. Tonight that means Blake on the other bed, repeating his method as if repetition could reduce uncertainty.
 
 “Weight is everything,” he says. “Every gram counts.”
 
-You stay quiet and check your own gear more slowly. For a moment he asks, “You’ve done altitude before?” You shake your head. He nods and returns to straps and categories.
+You stay quiet and check your gear, just a little slower. After a moment he asks, “You’ve done altitude before?” You tilt your head like saying yes... but not this much.
 
-You take Mateo’s photo from a side pocket, look for a few seconds, and put it back. Mateo, older than you, gone since COVID in 2021, still occupies space no bag can carry.
+You pull Mateo’s photo from a pocket in your pack, look at it for a few seconds, and put it back.
 
-Outside, the city keeps moving.
-
-Inside, something has already shifted.
-
-You share a room.
-
-But not the same mountain.`,
+Outside, the city keeps moving.`,
     variant: 'standard',
     animationPreset: 'room_stillness',
     visualMode: 'hotel-room',
@@ -274,21 +270,11 @@ But not the same mountain.`,
     id: 'team_presentation',
     eyebrow: 'Hotel lobby',
     title: 'The Group',
-    body: `In the lobby, the expedition appears in fragments: mountain boots in city light, jackets from other climates, overlapping voices, practiced confidence, concealed doubt.
+    body: `In the lobby, the expedition appears in fragments: mountain boots in city light, jackets from other climates, overlapping voices, practiced confidence, hidden doubt.
 
-You and the other five are six clients on a guided Normal Route ascent with STONE SENTINEL EXPEDITIONS. The structure is solid—permits, transfers, mule loads, camp sequence, acclimatization margins, radios, treated water, cooks, support staff. Real competence. Real limits.
+Martina introduces herself with calm efficiency. Laura comes after: mountain doctor, precise and without drama. Erik speaks loudly, as if pace were also authority. Irina watches more than she talks. Daniela notices details almost no one else sees.
 
-Names circulate. Laura is precise. Erik is spare. Daniela measures before speaking. Irina is still without being passive. Blake trims every sentence.
-
-When your turn comes, you say your name, say you are a runner, say you are ready. The words are ordered correctly. That is not the same as certainty.
-
-You read everyone quickly. You know that impulse.
-
-Most of those first readings will be wrong.
-
-The group is now real.
-
-Trust is not.`,
+No one knows each other fully yet. But you already share the same permit, the same departure hour, and the same edge between excitement and calculation.`,
     variant: 'standard',
     animationPreset: 'lobby_drift',
     visualMode: 'hotel-lobby',
@@ -302,19 +288,11 @@ Trust is not.`,
     id: 'after_circle',
     eyebrow: 'Unstructured time',
     title: 'After the Introductions',
-    body: `The circle breaks without ceremony. Small conversations form and dissolve. This is where roles loosen and temperament starts to show.
+    body: `The circle breaks without ceremony. Conversations form and dissolve. This is the moment when roles loosen and real temperament shows.
 
-Laura keeps asking. Erik keeps assessing. Daniela listens first. Blake explains more than requested, usually well. Irina steps outside as if the room already said enough.
+Some compare thermal layers and gloves. Others argue about acclimatization timing. Someone says, “If the day opens, you push.” Someone else answers that phrase has already buried too many expeditions.
 
-You stay in place, trying to read the group and to place yourself inside it. Those are different tasks.
-
-Tomorrow’s chain is clear: remaining permit checks, early transfer, logistics yard, tagged and weighed duffels, park entry, Horcones, first long walk. Everyone knows the order. No one knows the cost.
-
-For a few minutes, talk moves around you without malice and without invitation.
-
-The group is forming.
-
-You are still outside of it.`,
+You listen more than you talk. The mountain has not started yet, but the way each person decides is already here.`,
     variant: 'standard',
     animationPreset: 'social_fragments',
     visualMode: 'lobby-side',
@@ -328,21 +306,11 @@ You are still outside of it.`,
     id: 'guides',
     eyebrow: 'Structure',
     title: 'Who Leads',
-    body: `When the guides begin, the room settles. Not because they dominate it, but because they reduce ambiguity.
+    body: `When the guides speak, the room settles. Not because they raise their voice, but because they reduce ambiguity.
 
-Here STONE SENTINEL EXPEDITIONS becomes tangible: not a logo, but a chain—Mendoza coordination, permits, logistics hub, mule transport, comms, treated water, cooking systems, camp rhythm, weather margins, contingency.
+Simple rule: nobody races a mountain. Pace, reading, and return margin first.
 
-Agustina says it plainly: “The mountain decides. We adapt. Turning back is not failure.” In the hotel it sounds like principle. On the mountain it will sound like fact.
-
-Alejandro says less, but his presence completes the tone: attentive, serious, ready for both paperwork under electric light and short commands at altitude.
-
-Then more names appear in the machinery—Jorge with load timing and animal coordination, Tomás moving between baggage, instructions, and whatever breaks first. Food, duffels, and fuel will leave your hands and reappear where needed.
-
-Names become roles. Roles become responsibility. Responsibility becomes tempo.
-
-The expedition starts to take shape.
-
-It also becomes more fragile.`,
+Key reminder: summit is not success if you do not return to the park with margin. The whole plan turns around that axis.`,
     variant: 'standard',
     animationPreset: 'guided_stability',
     visualMode: 'briefing-room',
@@ -356,21 +324,11 @@ It also becomes more fragile.`,
     id: 'briefing_night',
     eyebrow: 'Before departure',
     title: '',
-    body: `“Eat. Drink. Say it early.” The instructions sound simple. They are not.
+    body: `“Eat. Drink. Say everything early.” The instructions sound simple. They are not.
 
-The logistics become concrete: two duffels, different destinations, one daypack for approach essentials, one climbing pack for above base camp. You carry less than expected on the first walk; the rest moves through mule and camp systems.
+On the night before departure, almost everything feels controllable. At altitude, almost nothing is.
 
-The briefing ends, but people stay still a moment longer, as if translation were still happening.
-
-Back in the room, Blake keeps adjusting straps. Repetition as comfort. Repetition as fear.
-
-You lie down with the light on, thinking through tomorrow’s hardening sequence: shuttle, logistics yard, park entry, Horcones, Confluencia.
-
-You try to picture the mountain and get only fragments.
-
-When the light goes out, the room fills with two breathing patterns.
-
-Out of sync.`,
+The expedition is still a promise. Tomorrow it becomes a system.`,
     variant: 'titleless',
     animationPreset: 'night_breath',
     visualMode: 'dark-room',
@@ -384,25 +342,11 @@ Out of sync.`,
     id: 'departure_road',
     eyebrow: 'Early morning',
     title: 'Road to Horcones',
-    body: `Morning is colder than expected. Movements turn automatic: pack, check, lift. Conversation thins.
+    body: `Morning is colder than expected. Movements turn automatic: load, check, lift. Conversation gets thinner.
 
-Blake is efficient and quiet. You feel ready, but not steadily.
+Through the window, Mendoza stays behind and the dry profile of the access corridor appears. Urban traffic gives way to wind and stone.
 
-The bus waits. You could still stay. No one does.
-
-Out of Mendoza, logistics comes first: a stop at the operations yard, duffels tagged and weighed, loads split by timing, storage for what stays behind, day-use items kept close, altitude gear sent forward. This is the least romantic face of a guided expedition, and one of the truest.
-
-Then the valley opens and the city drops away. References change. Preparation meets consequence.
-
-On board, some sleep, some watch the road, Blake tracks distance and elevation.
-
-You look out without forcing meaning. The mountain is not visible yet, but it is already surrounding the day.
-
-Soon the Normal Route sequence begins: Horcones, Confluencia, Plaza de Mulas, carries and camps above.
-
-It will become movement.
-
-And movement has consequences.`,
+There is no epic in this section. Only transition. And with it, one silent decision: how you will read the mountain when it answers.`,
     variant: 'standard',
     animationPreset: 'road_transition',
     visualMode: 'bus-window',
@@ -416,15 +360,11 @@ And movement has consequences.`,
     id: 'future_cta',
     eyebrow: 'Development continues',
     title: 'The Expedition Ahead',
-    body: `What follows is already underway. The real expedition beyond this threshold—full team on the mountain, decisions under consequence—is in development.
+    body: `What comes after this threshold is already under construction. The full expedition —team on the mountain, decisions with integral consequences— is still in development.
 
-This prototype pauses here, but the project continues: deeper field progression on the Normal Route, expanded systems, and a broader narrative arc.
+If you got this far, you already did the hardest part: sustaining attention, not just impulse.
 
-If you want to follow, support, or collaborate, this is the right moment to step closer. Writers, developers, artists, designers, mountaineers, researchers, testers, and curious minds are welcome.
-
-The mountain is still there.
-
-So is the work.`,
+Thank you for playing, observing, and sharing feedback. That information also builds the route.`,
     variant: 'standard',
     animationPreset: 'future_hold',
     visualMode: 'end-card',
@@ -443,19 +383,18 @@ const PART2_NARRATIVE_ES = {
   mendoza_room: {
     eyebrow: 'Noche antes de partir',
     title: 'Mendoza',
-    body: `Cuando cierras la puerta del hotel, Mendoza empieza a sentirse provisoria. Las dos camas se vuelven mesas de clasificación. Bolsos abiertos. Pasaporte, permisos, cargadores, correas, guantes, bolsas dentro de bolsas. Todo ya pertenece a la montaña, aunque la montaña todavía esté a un traslado de distancia.
+    illustrationAlt: 'Habitación de hotel en Mendoza con el equipo de expedición listo antes de partir.',
+    body: `Cuando se cierra la puerta de la habitación del hotel, Mendoza empieza a sentirse provisoria. Las dos camas se vuelven mesas de clasificación. Bolsos abiertos. Pasaporte, permisos, cargadores, correas, guantes, bolsas dentro de bolsas. Todo ya está prometido a la montaña.
 
-STONE SENTINEL EXPEDITIONS resolvió la logística visible: traslado desde el aeropuerto, habitación, trámite de permiso, alquileres, chequeo de equipo. Compartir cuarto es lo normal salvo que pagues privacidad. Esta noche eso significa Blake en la otra cama, repitiendo su método como si repetir pudiera calmar la incertidumbre.
+STONE SENTINEL EXPEDITIONS resolvió la logística: traslado desde el aeropuerto, habitación, trámite de permiso, alquileres, chequeo de equipo. Compartir cuarto es lo normal salvo que pagues un extra por la privacidad. Esta noche eso significa que Blake está en la otra cama, repitiendo su método como si repetir pudiera disminuir la incertidumbre.
 
 “El peso es todo”, dice. “Cada gramo cuenta”.
 
-Vos te quedas en silencio y revisas tu equipo más despacio. Por un momento pregunta: “¿Ya hiciste altura antes?”. Negás con la cabeza. Él asiente y vuelve a las correas y categorías.
+Vos te quedas en silencio y revisas tu equipo pero un poco más despacio. Por un momento pregunta: “¿Ya hiciste altura antes?”. Hacés un gesto con la cabeza como diciendo sí... pero no tanta.
 
-Sacás la foto de Mateo de un bolsillo lateral, la mirás unos segundos y la guardás. Mateo, mayor que vos, perdido desde el COVID en 2021, sigue ocupando un lugar que ningún bolso puede cargar.
+Sacás la foto de Mateo de un bolsillo de la mochila, la mirás unos segundos y la guardás.
 
-Afuera, la ciudad sigue.
-
-Adentro, algo ya cambió.`,
+Afuera, la ciudad sigue.`,
   },
   team_presentation: {
     eyebrow: 'Lobby del hotel',
@@ -933,6 +872,9 @@ function setLanguage(lang) {
   // Rebuild carousels if expedition-setup is active or was already built
   const expeditionSetupEl = document.getElementById('screen-expedition-setup');
   if (expeditionSetupEl) buildExpeditionSetupCarousels();
+  const activeScreenId = document.querySelector('.screen.active')?.id?.replace('screen-', '');
+  if (activeScreenId === 'part2-character') buildPart2SetupScreen();
+  if (activeScreenId && PART2_NARRATIVE_IDS.has(activeScreenId)) renderPart2NarrativeScreen(activeScreenId);
 }
 
 function initLanguage() {

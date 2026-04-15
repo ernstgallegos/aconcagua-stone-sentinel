@@ -21,6 +21,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Refreshed all Part 2 narrative screens from `mendoza_room` through `future_cta` in `prototype/web-v1/ui/screens.js` for tighter EN/ES parity, using shorter Spanish-led pacing and synchronized English adaptations.
+- Updated Part 2 Mendoza opening scene copy (EN/ES) in `prototype/web-v1/ui/screens.js`, including the new approved Spanish text and aligned English localization.
+- Added curated illustration support for the Part 2 Mendoza room scene by rendering `art/concept-art/curated/ig/27.png` inline between narrative paragraphs and navigation actions (instead of a background treatment) via `prototype/web-v1/ui/screens/part2.js` and `prototype/web-v1/css/screens.css`.
 - Updated landing-page mountain context copy in `index.html` (EN/ES) to a shortened two-paragraph geological/cultural summary and removed the Field Notes title/intro preface so the section opens directly on the notes carousel.
 - Added explicit `#01`–`#10` numbering to each Field Note kicker in `index.html` while preserving bilingual "Field note / Nota de campo" labeling.
 - Restored hidden-accessibility heading and intro text for the `#field-notes` section in `index.html` (EN/ES via `fnTitle`/`fnIntro`) using a visually hidden utility class, preserving screen-reader section naming without changing visible layout.
@@ -67,6 +70,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed Part 2 language-switch behavior in `prototype/web-v1/ui/screens.js`: changing EN/ES now re-renders the currently active Part 2 setup/narrative screen immediately instead of waiting for next/back navigation.
 - Fixed `md-viewer.html` document allowlist drift by adding `LICENSE.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md` to the supported `DOCUMENTS` map, restoring styled-viewer access for footer legal links.
 - Fixed CI false failure in `js-contract-tests` job: the "Run release smoke gate" step now only runs on `push` to `main` (added `if: github.event_name == 'push'` condition in `.github/workflows/ci.yml`), preventing spurious failures on PRs where the Vercel production deployment has not yet been updated to match the branch version. Updated `docs/en/public-readiness-checklist.md` and `docs/es/checklist-preparacion-publica.md` to document this CI behavior.
 - Fixed version drift in root `index.html` landing page: bumped all six stale `v1.4.5` version strings (EN heroMeta1, statusValue2, footerProjectBody, and their ES mirrors) to `v1.4.8`, aligning the public website with `package.json`, `docs/repo-truth.md`, `prototype/web-v1/index.html`, and all other versioned surfaces.
