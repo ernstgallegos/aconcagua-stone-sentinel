@@ -30,6 +30,8 @@ Weather windows in season (November–March) often span 2–5 favorable days. Cl
 
 System criterion: each milestone should carry physical and decision-relevant properties, not only a name tag in a positional list. Expedition start must be modeled at Horcones (Aconcagua Provincial Park entrance), not at base camp.
 
+Note: Aconcagua's terrain is not passive substrate. The mountain is a Miocene stratovolcano (see Section 6), and the rock properties at each waypoint — argillic alteration, volcaniclastic scree, resistant dyke ridges — directly influence the physical conditions described here.
+
 Horcones Lagoon (2,950 m): first scale revelation and park registration gate; revelation function, not major strategic function.
 
 Confluencia (3,390 m): first true route bifurcation (Plaza Francia vs Plaza de Mulas); introduces contemplation-vs-progression as a costly choice.
@@ -71,3 +73,40 @@ Andean apu worldview treats high mountains as entities requiring respect rather 
 Situated human knowledge around Aconcagua includes muleteers, certified guides, park rangers, and base-camp physicians. These actors are not omniscient; they provide partial but often high-value signals. Design implication: source calibration should be learned through experience.
 
 The project’s technical expedition script functions as an “ideal plan” baseline. Real runs become narratives through the measurable gap between planned sequence and lived constraints.
+
+## 6. Geology: the rock beneath the route
+
+### 6.1 Geological identity
+
+Aconcagua is the remnant of a Miocene composite stratovolcano — the Aconcagua Volcanic Complex (AVC, ~15.8–8.9 Ma) — built of andesitic-dacitic breccias, lavas, tuffs, and pyroclastic flows. It is not a simple uplifted sedimentary peak. The volcanic edifice has been tilted and structurally incorporated into the Aconcagua Fold-and-Thrust Belt (AFTB), an east-vergent compressional system that controls the regional architecture of this segment of the Principal Cordillera. The AVC divides into a lower section (~13.7–11.3 Ma) and an upper section (~11.1–9.6 Ma) separated by an angular unconformity recording a mid-Miocene deformation pulse.
+
+### 6.2 Three-layer framework (for design)
+
+The geology relevant to system design operates across three nested layers:
+
+- **Deep layer (tectonic):** The AFTB, with its Mesozoic extensional inheritance, controls valley architecture, escarpment fronts, and the overall “bone structure” of the landscape. Major thrust faults (Penitentes, Los Horcones) define the corridor the Normal Route follows.
+- **Middle layer (Miocene volcanic):** The AVC constitutes the mountain body itself. Tilted strata define terrain surfaces and slope angles. Argillic alteration zones weaken volcaniclastic rock into unstable scree. Resistant dykes and intact andesitic intrusions form ridgelines and structural spurs that climbers traverse as route features.
+- **Surface layer (active Quaternary):** Glaciers, mass wasting (~400 inventoried events, ~89% active), and periglacial processes — cryoclastism, rock glaciers, thermokarst — are the dynamic agents generating hazards, narrative set pieces, and continuous landscape variation between seasons and even between days.
+
+### 6.3 Route-relevant geology
+
+**Horcones–Confluencia (2,950–3,390 m):** Quaternary alluvial and glacial deposits dominate. The Horcones and Almacenes formations, long interpreted as glacial moraines, have been reinterpreted as mega-landslide deposits — evidence of catastrophic mass wasting that shaped the valley floor. The terrain is loose, broad, and deceptively gentle.
+
+**Plaza de Mulas approach (3,400–4,350 m):** The route crosses Penitentes thrust structures, exposing synorogenic conglomerates dated ~15–12 Ma. These outcrops mark the transition from valley-floor deposits to deformed Andean basement. Rock type shifts visibly from rounded alluvial material to angular, tectonically fractured clasts.
+
+**High camps, Canadá–Cólera (5,050–5,970 m):** Tilted volcaniclastic strata of the AVC dominate. Argillic alteration — clay-mineral replacement of original volcanic rock by hydrothermal fluids — weakens breccias into crumbling, unstable scree. Slope angles follow bedding-plane dips. Terrain difficulty here is a direct product of rock chemistry, not abstraction.
+
+**La Canaleta–Summit (6,700–6,962 m):** The steep loose-rock funnel of La Canaleta is carved into andesitic breccia. The summit rock is andesite dated ~9.6 Ma. Near La Canaleta, a late andesitic intrusion dated ~8.9 Ma represents the youngest magmatic activity of the AVC. The per-step cost and rockfall hazard in this sector derive from the mechanical properties of altered volcanic rock under freeze-thaw cycling.
+
+### 6.4 Active hazards from geological processes
+
+- **Mass wasting:** ~400 events inventoried within Aconcagua Provincial Park, ~89% classified as active. Types range from debris flows and rock avalanches to slow creep on altered volcaniclastic slopes.
+- **Glacier surges:** Horcones Inferior glacier surged in 1985 and again in 2003–2006, advancing hundreds of meters and modifying the lower valley. Debris-covered glaciers and thermokarst dynamics produce ongoing surface instability.
+- **Seismic activity:** The 2019 Punta de Vacas swarm (Mw ~2.7–3.9) demonstrated that shallow crustal seismicity can trigger rockfall and alter route conditions without warning.
+- **Cryoclastism:** Freeze-thaw cycling on argillically altered volcaniclastic rock drives continuous rockfall, particularly in the high camps and La Canaleta sector. This is not seasonal decoration; it is the primary agent of terrain change above 5,000 m.
+
+### 6.5 Design implications
+
+Geology connects directly to Pillar 1 (“The Mountain Governs”) and the Environmental Pressure (EP) system. Terrain difficulty, route surface conditions, rockfall probability, and scree instability emerge from real geological substrate — argillic alteration, bedding-plane dip, cryoclastic fragmentation — not from abstract game parameters. The three-layer framework (Section 6.2) provides the structural rationale for why certain waypoints carry higher `terrain_load`, why weather interacts differently with rock at different altitudes, and why mass-wasting hazards cluster where they do.
+
+For canonical geological detail, radiometric dates, and structural cross-sections, see `docs/en/geological-bible-aconcagua.md`.

@@ -12,6 +12,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 
 - Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) from the Spanish original (`docs/es/biblia-geologica-aconcagua.md`), preserving all technical geological terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography entries.
+- Added Section 6 "Geology: the rock beneath the route" to the English reality reference (`docs/en/aconcagua-reality-reference.md`) with five subsections: geological identity (AVC stratovolcano), three-layer design framework, route-relevant geology per waypoint, active hazards, and design implications linking geology to Pillar 1 / EP system.
+- Added geological context note to Section 3 (Territory) of the English reality reference, cross-referencing the new geology section.
+- Replaced the Spanish reality reference stub (`docs/es/referencia-realidad-aconcagua.md`) with a full professional translation mirroring all six sections of the updated English file, including the complete geology section.
 
 ### Changed
 
