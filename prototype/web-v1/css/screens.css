@@ -903,6 +903,22 @@
   margin-top: 1.4rem;
 }
 
+.part2-step-illustration {
+  width: min(620px, 100%);
+  margin: 1.1rem auto 0.25rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  background: color-mix(in srgb, var(--surface) 80%, rgba(0, 0, 0, 0.2));
+}
+
+.part2-step-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .part2-step--titleless h3 {
   display: none;
 }
@@ -949,12 +965,6 @@
 
 .part2-visual-dark-room {
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 82%, #000 18%), color-mix(in srgb, var(--surface2) 88%, #000 12%));
-}
-
-.part2-visual-hotel-room {
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 62%, rgba(3, 8, 16, 0.52) 38%), color-mix(in srgb, var(--surface2) 64%, rgba(3, 8, 16, 0.58) 36%)),
-    url('../../../art/concept-art/curated/ig/27.png') center/cover no-repeat;
 }
 
 @keyframes part2ContainerIn {

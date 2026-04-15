@@ -244,6 +244,8 @@ const PART2_NARRATIVE_SEQUENCE = [
     id: 'mendoza_room',
     eyebrow: 'Night before departure',
     title: 'Mendoza',
+    illustrationSrc: '../../../art/concept-art/curated/ig/27.png',
+    illustrationAlt: 'Mendoza hotel room with expedition gear prepared before departure.',
     body: `When the hotel-room door closes, Mendoza starts to feel temporary. The two beds become sorting tables. Open duffels. Passport, permits, chargers, straps, gloves, bags inside bags. Everything is already promised to the mountain.
 
 STONE SENTINEL EXPEDITIONS handled the logistics: airport pickup, room, permit process, rentals, gear check. Sharing a room is standard unless you pay extra for privacy. Tonight that means Blake on the other bed, repeating his method as if repetition could reduce uncertainty.
@@ -381,6 +383,7 @@ const PART2_NARRATIVE_ES = {
   mendoza_room: {
     eyebrow: 'Noche antes de partir',
     title: 'Mendoza',
+    illustrationAlt: 'Habitación de hotel en Mendoza con el equipo de expedición listo antes de partir.',
     body: `Cuando se cierra la puerta de la habitación del hotel, Mendoza empieza a sentirse provisoria. Las dos camas se vuelven mesas de clasificación. Bolsos abiertos. Pasaporte, permisos, cargadores, correas, guantes, bolsas dentro de bolsas. Todo ya está prometido a la montaña.
 
 STONE SENTINEL EXPEDITIONS resolvió la logística: traslado desde el aeropuerto, habitación, trámite de permiso, alquileres, chequeo de equipo. Compartir cuarto es lo normal salvo que pagues un extra por la privacidad. Esta noche eso significa que Blake está en la otra cama, repitiendo su método como si repetir pudiera disminuir la incertidumbre.

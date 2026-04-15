@@ -150,6 +150,7 @@ In addition to the changelog:
 
 - Multilingual rollout in `web-v1` is safest when language state is centralized (single source + localStorage) and reapplied after rebuilding dynamic grids (character/scenario) to avoid mixed-language UI fragments.
 - Part 2 narrative parity is more stable when EN/ES copy is maintained as synchronized short-form beats, and language toggles explicitly re-render the currently active Part 2 screen so text changes are immediate without requiring navigation.
+- In Part 2 narrative screens, curated scene art reads better as an inline illustration block inserted after body copy and before CTA/navigation buttons than as a full-panel background, preserving text contrast and scan rhythm.
 
 - Inline `onclick` controls in `index.html` depend on both successful ES-module parsing and explicit `window.*` facades; one unescaped apostrophe in i18n strings or a missing facade export (e.g., `setVisualMode`) can disable all title/splash controls at once.
 

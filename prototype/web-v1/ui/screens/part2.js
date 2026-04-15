@@ -6,6 +6,7 @@ export function localizePart2Narrative({ CURRENT_LANGUAGE, PART2_NARRATIVE_ES, s
     ...screen,
     eyebrow: patch.eyebrow ?? screen.eyebrow,
     title: patch.title ?? screen.title,
+    illustrationAlt: patch.illustrationAlt ?? screen.illustrationAlt,
     body: patch.body ?? screen.body,
   };
 }
@@ -63,6 +64,18 @@ export function renderPart2NarrativeScreen({
     if (PART2_BREATHING_LINES.has(paragraph)) p.classList.add('part2-breath-line');
     stepEl.appendChild(p);
   });
+
+  if (screen.illustrationSrc) {
+    const figure = document.createElement('figure');
+    figure.className = 'part2-step-illustration';
+    const img = document.createElement('img');
+    img.src = screen.illustrationSrc;
+    img.alt = screen.illustrationAlt || '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    figure.appendChild(img);
+    stepEl.appendChild(figure);
+  }
 
   const actions = document.createElement('div');
   actions.className = 'part2-step-actions';
