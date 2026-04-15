@@ -951,6 +951,12 @@
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 82%, #000 18%), color-mix(in srgb, var(--surface2) 88%, #000 12%));
 }
 
+.part2-visual-hotel-room {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 62%, rgba(3, 8, 16, 0.52) 38%), color-mix(in srgb, var(--surface2) 64%, rgba(3, 8, 16, 0.58) 36%)),
+    url('../../../art/concept-art/curated/ig/27.png') center/cover no-repeat;
+}
+
 @keyframes part2ContainerIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
