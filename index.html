@@ -567,7 +567,7 @@
         grid-template-columns: 1fr;
         min-height: 440px;
       }
-      .fn-carousel { min-height: 100%; }
+      .fn-carousel { min-height: 100%; height: 100%; }
       .field-notes-art { min-height: 100%; border-left: 0; }
       .fn-image-region { position: relative; min-height: 320px; height: 100%; }
       .fn-image-slide {
@@ -591,21 +591,25 @@
         pointer-events: none;
       }
       @media (min-width: 980px) {
-        .fn-showcase-content { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+        .fn-showcase-content {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          min-height: 520px;
+          height: 520px;
+        }
         .field-notes-art { border-left: 1px solid var(--border-soft); }
-        .fn-image-region { min-height: 440px; }
+        .fn-image-region { min-height: 520px; height: 520px; }
       }
-      .fn-card-region { min-height: 200px; perspective: 800px; }
+      .fn-card-region { min-height: 200px; perspective: 800px; height: 100%; }
       .fn-slide {
         display: none;
         padding: clamp(1.1rem, 2vw, 2rem);
-        flex-direction: column; gap: 0.6rem;
+        grid-template-rows: auto auto auto minmax(0, 1fr);
+        gap: 0.6rem;
         position: relative; overflow: hidden;
         height: 100%;
-        justify-content: center;
       }
       .fn-slide.fn-active {
-        display: flex;
+        display: grid;
         animation: fnFadeIn 400ms var(--ease-out-expo) forwards;
       }
       .fn-slide-kicker {
@@ -632,7 +636,13 @@
       }
       .fn-slide-body {
         margin: 0; color: var(--text-dim); font-size: 0.9rem;
-        line-height: 1.6; max-width: 58ch;
+        line-height: 1.6; max-width: none;
+      }
+      @media (min-width: 980px) {
+        .fn-slide-body {
+          overflow-y: auto;
+          padding-right: 0.35rem;
+        }
       }
       .fn-nav {
         display: flex; align-items: center; justify-content: center;
