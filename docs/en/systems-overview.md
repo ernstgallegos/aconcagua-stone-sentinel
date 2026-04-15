@@ -79,6 +79,7 @@ Sovereign system. Defines the baseline conditions under which all other systems 
 - Terrain (slope, stability, surface type)
 - Exposure
 - Distance between safe points
+- Geological structure (volcaniclastic strata orientation, alteration zones, dyke ridges)
 
 **Produces**
 - Movement constraints
@@ -88,6 +89,9 @@ Sovereign system. Defines the baseline conditions under which all other systems 
 **Does Not Produce**
 - Arbitrary damage
 - Scripted events disconnected from terrain
+
+**Geological Grounding**
+The terrain model is grounded in real geology: Aconcagua's Miocene volcaniclastic strata and Quaternary glacial–periglacial surface produce the specific scree fields, alteration-weakened slopes, and resistant ridgelines that define route difficulty and hazard distribution. For the full geological reference, see `docs/en/geological-bible-aconcagua.md`.
 
 ---
 
@@ -111,6 +115,9 @@ Dynamic, probabilistic system that modifies the state of the mountain. Weather c
 - Never fully predictable
 - Anticipated through signals
 - Operates in temporal windows rather than fixed cycles
+
+**Geological Interaction**
+Weather interacts directly with the geological substrate: freeze-thaw cycles (cryoclastism) on altered volcaniclastic rock drive the ~400 mass-wasting events inventoried in the park. Wind load intensifies along structurally controlled ridges and passes. Glacier dynamics (including documented surges on Horcones Inferior) respond to seasonal thermal input on debris-covered ice.
 
 ---
 

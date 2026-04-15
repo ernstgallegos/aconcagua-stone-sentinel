@@ -58,6 +58,12 @@ A slope looks stable but increases energy cost and slip risk.
 - Punitive realism → use gradual consequences.
 - Oversimulation → limit variables, ensure clear feedback.
 
+### Geological Grounding
+
+Pillar 1 is anchored in verified geological reality. Aconcagua is the remnant of a Miocene composite stratovolcano (the Aconcagua Volcanic Complex, ~15.8–8.9 Ma) structurally embedded within the Aconcagua Fold-and-Thrust Belt. The mountain's authority over gameplay is not abstract: tilted volcaniclastic strata control scree stability, argillic alteration zones create terrain-load variation, resistant dykes define ridgelines, and active Quaternary processes (glacial surges, mass wasting, periglacial dynamics) generate the real hazards modeled in the Environmental Pressure system. Approximately 400 mass-wasting events have been inventoried within the park, with ~89% classified as active. The geology is not decoration — it is the literal substrate from which terrain difficulty, route constraints, and environmental pressure emerge.
+
+For the canonical geological reference, see `docs/en/geological-bible-aconcagua.md`.
+
 ---
 
 ## Pillar 2 — Partial Information

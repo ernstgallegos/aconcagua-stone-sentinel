@@ -9,8 +9,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) — complete professional translation of the Spanish original, preserving all technical terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography.
+- Added Section 6 "Geology: the rock beneath the route" to reality reference (EN `docs/en/aconcagua-reality-reference.md`, ES `docs/es/referencia-realidad-aconcagua.md`) — five subsections: geological identity (AVC stratovolcano), three-layer design framework, route-relevant geology per waypoint, active hazards (~400 mass-wasting events, glacier surges, seismicity), and design implications linking geology to Pillar 1 / EP system.
+- Added "Geological Grounding" / "Anclaje geológico" subsection to Pillar 1 in design pillars (EN `docs/en/design-pillars.md`, ES `docs/es/pilares-de-diseno.md`) — links AVC stratigraphy, AFTB structure, argillic alteration, and active mass-wasting to the Environmental Pressure system.
+- Added geological structure component and grounding paragraph to Mountain System, and geological interaction paragraph to Weather System, in systems overview (EN `docs/en/systems-overview.md`, ES `docs/es/vision-de-sistemas.md`).
+- Added "Geological Identity" / "Identidad geológica" section to both READMEs (`README.md`, `README.es.md`) — describes AVC as Miocene stratovolcano, links to canonical bible.
+- Replaced Spanish reality reference stub (`docs/es/referencia-realidad-aconcagua.md`) with full professional translation of all six sections including geology.
+- Created detailed prototype geological integration proposal (EN `docs/en/prototype-geological-proposal.md`, ES `docs/es/propuesta-geologica-prototipo.md`) — six phased proposals: node metadata enrichment, geology-aware context events, geological narrative enrichment, terrain-load calibration review, geological visual cues, and debrief geological insights.
+
 ### Changed
 
+- Landing page Mountain section (`index.html`): added new volcanic complex age stat (~15.8–8.9 Ma), added geological prose paragraph with AVC/AFTB data, and rewritten Field Note #6 with precise geological data from the geological bible (both EN and ES translations updated).
 - Fixed `index.html` Field Notes panel background mismatch: set `.fn-image-slide { background: transparent }` so both text and image panels inherit the same glassmorphic base from `.fn-showcase`, eliminating the visible tone difference between the two halves.
 - Rewrote all 10 Field Notes body paragraphs in EN and ES (HTML fallbacks + JS translations) with substantially expanded, atmospheric copy (~80–110 words each) to balance vertical space against the image panel height in the showcase layout.
 - Rewrote `mountainProse1` (EN/ES) to focus on the mountain's atmospheric and experiential character, eliminating word-for-word duplication with `fn06Body`.

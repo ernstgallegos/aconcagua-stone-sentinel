@@ -60,6 +60,14 @@ La incertidumbre, la información parcial y las consecuencias irreversibles no s
 
 ---
 
+## Identidad geológica
+
+El Aconcagua no es simplemente una cumbre alta: es el remanente de un estratovolcán compuesto mioceno. El Complejo Volcánico Aconcagua (~15,8–8,9 Ma) construyó un edificio de brechas, lavas, tobas y flujos piroclásticos andesítico-dacíticos que hoy permanece inclinado dentro de la Faja Plegada y Corrida del Aconcagua. Sus estratos volcaniclásticos controlan la estabilidad del acarreo y las condiciones de superficie de las rutas; las zonas de alteración argílica generan variaciones en la carga del terreno; los diques resistentes definen las líneas de cresta que siguen los escaladores. En superficie, los procesos cuaternarios activos — surges glaciares, ~400 eventos de remoción en masa inventariados, dinámica periglaciar — son los peligros reales que modela el sistema de Presión Ambiental del juego.
+
+Este anclaje geológico no es incidental: es el sustrato del que emergen la dificultad del terreno, las restricciones de ruta y la autoridad ambiental. Para la referencia canónica completa, ver [`docs/es/biblia-geologica-aconcagua.md`](docs/es/biblia-geologica-aconcagua.md).
+
+---
+
 ## Pilares de diseño
 
 _Aconcagua: Stone Sentinel_ está concebido como una experiencia sistémica.
