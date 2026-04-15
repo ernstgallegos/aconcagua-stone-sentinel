@@ -22,6 +22,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Changed
 
 - Updated landing-page mountain context copy in `index.html` (EN/ES) to a shortened two-paragraph geological/cultural summary and removed the Field Notes title/intro preface so the section opens directly on the notes carousel.
+- Added explicit `#01`–`#10` numbering to each Field Note kicker in `index.html` while preserving bilingual "Field note / Nota de campo" labeling.
 - Landing page Mountain section (`index.html`): added new volcanic complex age stat (~15.8–8.9 Ma), added geological prose paragraph with AVC/AFTB data, and rewritten Field Note #6 with precise geological data from the geological bible (both EN and ES translations updated).
 - Fixed `index.html` Field Notes panel background mismatch: set `.fn-image-slide { background: transparent }` so both text and image panels inherit the same glassmorphic base from `.fn-showcase`, eliminating the visible tone difference between the two halves.
 - Rewrote all 10 Field Notes body paragraphs in EN and ES (HTML fallbacks + JS translations) with substantially expanded, atmospheric copy (~80–110 words each) to balance vertical space against the image panel height in the showcase layout.
