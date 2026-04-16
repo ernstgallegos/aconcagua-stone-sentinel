@@ -179,8 +179,10 @@
         font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
         letter-spacing: 0.16em; text-transform: uppercase;
         color: var(--text-muted); white-space: nowrap;
+        text-decoration: none;
         transition: color var(--dur-short) ease, text-shadow var(--dur-short) ease;
       }
+      .nav-brand:hover, .nav-brand:focus-visible { text-decoration: none; }
       .site-nav.is-scrolled .nav-brand {
         color: var(--accent-ice);
         text-shadow: 0 0 20px rgba(200,228,245,0.15);
@@ -917,7 +919,7 @@
 
     <nav class="site-nav" aria-label="Primary navigation">
       <div class="shell nav-inner">
-        <span class="nav-brand">Aconcagua: Stone Sentinel</span>
+        <a class="nav-brand" href="#main-content">Aconcagua: Stone Sentinel</a>
         <ul class="nav-waypoints">
           <li><a href="#the-mountain" data-i18n="navMountain">The Mountain</a></li>
           <li><a href="#the-ascent" data-i18n="navAscent">The Ascent</a></li>
@@ -1002,15 +1004,12 @@
       <div class="atmos-strip reveal" role="group" aria-label="Atmospheric concept art">
         <figure class="atmos-panel">
           <img src="/art/concept-art/curated/ig/5.png" alt="Climbers ascending steep terrain under alpenglow" loading="lazy" />
-          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel1">Alpenglow &#183; Approach</span></div>
         </figure>
         <figure class="atmos-panel">
           <img src="/art/concept-art/curated/ig/13.png" alt="Mountain panorama in golden hour light" loading="lazy" />
-          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel2">Golden hour &#183; Decision window</span></div>
         </figure>
         <figure class="atmos-panel">
           <img src="/art/concept-art/curated/ig/9.png" alt="Near-whiteout snowfield conditions" loading="lazy" />
-          <div class="atmos-panel-overlay"><span class="atmos-label" data-i18n="atmosLabel3">Whiteout &#183; Pressure state</span></div>
         </figure>
       </div>
 
