@@ -21,6 +21,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Removed the text overlays from the three atmospheric landing images between "The Mountain" and "The Ascent" in `index.html`, keeping the same artwork visible in both English and Spanish modes.
 - Refreshed all Part 2 narrative screens from `mendoza_room` through `future_cta` in `prototype/web-v1/ui/screens.js` for tighter EN/ES parity, using shorter Spanish-led pacing and synchronized English adaptations.
 - Updated Part 2 Mendoza opening scene copy (EN/ES) in `prototype/web-v1/ui/screens.js`, including the new approved Spanish text and aligned English localization.
 - Added curated illustration support for the Part 2 Mendoza room scene by rendering `art/concept-art/curated/ig/27.png` inline between narrative paragraphs and navigation actions (instead of a background treatment) via `prototype/web-v1/ui/screens/part2.js` and `prototype/web-v1/css/screens.css`.
