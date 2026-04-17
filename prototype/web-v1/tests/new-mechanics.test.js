@@ -10,11 +10,19 @@ const indexPath = path.join(__dirname, '..', 'index.html');
 const uiPath = path.join(__dirname, '..', 'ui', 'screens.js');
 const carouselPath = path.join(__dirname, '..', 'ui', 'helpers', 'carousel.js');
 const narrativePath = path.join(__dirname, '..', 'ui', 'helpers', 'narrative.js');
+const difficultyConfigPath = path.join(__dirname, '..', 'ui', 'config', 'difficulty.js');
+const languageConfigPath = path.join(__dirname, '..', 'ui', 'config', 'language.js');
+const part2DataPath = path.join(__dirname, '..', 'ui', 'config', 'part2-data.js');
 
 const indexSource = fs.readFileSync(indexPath, 'utf8');
 const uiSource = fs.readFileSync(uiPath, 'utf8');
 const carouselSource = fs.readFileSync(carouselPath, 'utf8');
 const narrativeSource = fs.readFileSync(narrativePath, 'utf8');
+const difficultySource = fs.readFileSync(difficultyConfigPath, 'utf8');
+const languageSource = fs.readFileSync(languageConfigPath, 'utf8');
+const part2DataSource = fs.readFileSync(part2DataPath, 'utf8');
+/* Combined source for pattern checks that may live in screens.js or config modules */
+const uiAndConfigSource = uiSource + '\n' + difficultySource + '\n' + languageSource + '\n' + part2DataSource;
 
 function json(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'data', file), 'utf8'));
@@ -45,12 +53,12 @@ test('welcome info modal, difficulty selector, and onboarding tutorial remain vi
   assert.doesNotMatch(indexSource, /class="title-main"/);
   assert.doesNotMatch(indexSource, /id="carousel-card-difficulty"/);
   assert.match(indexSource, /Full Tutorial \/ FAQ/);
-  assert.match(uiSource, /const DIFFICULTY_LEVELS = \[/);
-  assert.match(uiSource, /id: 'very-easy'/);
-  assert.match(uiSource, /id: 'very-hard'/);
-  assert.match(uiSource, /pressureBias: -14/);
-  assert.match(uiSource, /pressureBias: 16/);
-  assert.match(uiSource, /permitDaysBonus: -2/);
+  assert.match(difficultySource, /DIFFICULTY_LEVELS = \[/);
+  assert.match(difficultySource, /id: 'very-easy'/);
+  assert.match(difficultySource, /id: 'very-hard'/);
+  assert.match(difficultySource, /pressureBias: -14/);
+  assert.match(difficultySource, /pressureBias: 16/);
+  assert.match(difficultySource, /permitDaysBonus: -2/);
   assert.match(uiSource, /window\.setDifficulty = setDifficulty/);
   assert.match(uiSource, /window\.openIntroModal = openIntroModal/);
   assert.match(uiSource, /window\.openTutorialModal = openTutorialModal/);
@@ -71,10 +79,10 @@ test('data loader treats environmental pressure config as required', () => {
 
 
 test('descend UX copy documents Horcones exit behavior and Daniela guard wiring remains explicit', () => {
-  assert.match(uiSource, /From Horcones, descending again exits the park and ends the expedition\./);
-  assert.match(uiSource, /Summit reached\. No more climbing — start the descent\./);
+  assert.match(languageSource, /From Horcones, descending again exits the park and ends the expedition\./);
+  assert.match(uiAndConfigSource, /Summit reached\. No more climbing — start the descent\./);
   assert.match(narrativeSource, /There is no higher ground left to earn\. The only meaningful move now is the descent\./);
-  assert.match(uiSource, /Only Daniela can use this action\./);
+  assert.match(uiAndConfigSource, /Only Daniela can use this action\./);
   assert.match(uiSource, /photoBtn\.style\.display = 'none'/);
   assert.match(uiSource, /'6': 'btn-shoot-photo'/);
 });
@@ -100,14 +108,14 @@ test('watch/status layout keeps desktop grouping, mobile sync, and retired contr
 test('Part 2 bridge keeps the full roster visible while gating the public path', () => {
   assert.match(indexSource, /id="part2-carousel-card-character"/);
   assert.match(indexSource, /id="part2-carousel-card-route"/);
-  assert.match(uiSource, /const PART2_ROUTE_OPTIONS = \[/);
-  assert.match(uiSource, /id: 'guided-normal-route'/);
-  assert.match(uiSource, /id: 'independent-normal-route'/);
+  assert.match(part2DataSource, /PART2_ROUTE_OPTIONS = \[/);
+  assert.match(part2DataSource, /id: 'guided-normal-route'/);
+  assert.match(part2DataSource, /id: 'independent-normal-route'/);
   assert.match(uiSource, /id !== 'francisco'/);
   assert.match(uiSource, /id !== 'guided-normal-route'/);
   assert.match(carouselSource, /part2-lock-pill/);
   assert.match(uiSource, /window\.confirmPart2Character = confirmPart2Character/);
-  assert.match(uiSource, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
+  assert.match(part2DataSource, /\{ label: 'Follow on Instagram', action: 'open_instagram', role: 'secondary' \}/);
   assert.match(uiSource, /window\.open\('mailto:aconcaguastonesentinel@gmail.com', '_self'\)/);
   assert.match(uiSource, /window\.open\('https:\/\/www\.instagram\.com\/aconcaguastonesentinel\/', '_blank', 'noopener,noreferrer'\)/);
 });
