@@ -39,6 +39,7 @@ import { reportRuntimeDiagnostic } from './helpers/runtime-diagnostics.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import { getNationalityBadge } from './helpers/nationality.js';
+import { initMountainVisualization, updateClimberPosition } from './helpers/mountain-visualization.js';
 import {
   renderIntroContent as renderIntroContentView,
   copyProjectShareLink as copyProjectShareLinkView,
@@ -1899,6 +1900,12 @@ function startGame() {
   // clear resource warning
   clearElement(document.getElementById('resource-warning-box'));
 
+  // Initialize mountain profile visualization
+  const mountainMain = document.querySelector('.mountain-main');
+  const existingViz = mountainMain?.querySelector('.mountain-viz-svg');
+  if (existingViz) existingViz.remove();
+  initMountainVisualization(mountainMain);
+
   renderPositionList();
   const logEntries = document.getElementById('log-entries');
   clearElement(logEntries);
@@ -2659,6 +2666,9 @@ function renderWatch() {
 // ════════════════════════════════════════════════
 function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
+  // Sync mountain visualization climber with current position
+  const curIdx = POSITIONS.indexOf(G.state.position);
+  updateClimberPosition(curIdx, POSITIONS.length, { highestIndex: G.highestPosIdx });
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {

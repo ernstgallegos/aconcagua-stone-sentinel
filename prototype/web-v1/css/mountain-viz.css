@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════════
+   MOUNTAIN VISUALIZATION — SVG profile + climber animation
+   Proof-of-concept visual layer for the gameplay screen.
+   ═══════════════════════════════════════════ */
+
+/* ── Container placement ── */
+.mountain-viz-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Mountain-main needs relative positioning for the SVG overlay */
+.mountain-main {
+  position: relative;
+}
+
+/* Ensure narrative text and controls stay above the SVG */
+.mountain-main > *:not(.mountain-viz-svg) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Climber marker transitions ── */
+.mtn-climber {
+  transition: cx 0.8s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+              cy 0.8s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1));
+}
+
+.mtn-climber-pulse {
+  transition: cx 0.8s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
+              cy 0.8s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1));
+  animation: climber-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes climber-pulse {
+  0%, 100% { opacity: 0.4; r: 2.2; }
+  50%      { opacity: 0.12; r: 3.5; }
+}
+
+/* ── Trail walked glow ── */
+.mtn-trail-walked {
+  transition: d 0.6s ease-out;
+}
+
+/* ── Subtle mountain body breathing ── */
+.mtn-body {
+  opacity: 1;
+}
+
+.mtn-snow {
+  animation: snow-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes snow-shimmer {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.22; }
+}
+
+/* ── Camp markers ── */
+.mtn-camp {
+  transition: opacity 0.3s ease;
+}
+
+/* ── Summit marker subtle pulse ── */
+.mtn-summit-marker {
+  animation: summit-glow 4s ease-in-out infinite;
+}
+
+@keyframes summit-glow {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.85; }
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION — disable all mountain viz animations
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .mtn-climber,
+  .mtn-climber-pulse,
+  .mtn-trail-walked {
+    transition: none;
+  }
+
+  .mtn-climber-pulse,
+  .mtn-snow,
+  .mtn-summit-marker {
+    animation: none;
+  }
+
+  .mtn-climber-pulse {
+    opacity: 0.3;
+  }
+}

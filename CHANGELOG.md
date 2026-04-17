@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Mountain profile visualization on the gameplay screen (`prototype/web-v1`): SVG-based mountain silhouette with animated climber marker that tracks current position along the Normal Route. Includes camp markers, summit marker, altitude band lines, walked-trail highlight, and pulsing climber glow. New module `ui/helpers/mountain-visualization.js` and CSS `css/mountain-viz.css`. Respects `prefers-reduced-motion`.
+
 ### Changed
 
 - Extracted landing page CSS (~900 lines) from inline `<style>` in `index.html` to external `src/styles/landing.css` for browser cacheability and maintainability.
