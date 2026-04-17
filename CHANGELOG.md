@@ -9,6 +9,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Extracted landing page CSS (~900 lines) from inline `<style>` in `index.html` to external `src/styles/landing.css` for browser cacheability and maintainability.
+- Simplified landing animations: removed snow particles, shimmer on stats, floating elevation marks, ambient glow shift, ridge float, and border glow — 6 excess effects removed; kept Ken Burns, glassmorphism, scroll reveal, and breathe.
+- Removed inline `onkeydown` handler from watch-band in `prototype/web-v1/index.html`; added centralized keyboard activation (Enter/Space) to `ui/event-registry.js` for all `data-action` elements.
+- Extracted 620 lines of configuration from `screens.js` (3628→3008 lines) into four dedicated modules:
+  - `ui/config/difficulty.js` — difficulty levels, storage key, accessor functions
+  - `ui/config/language.js` — I18N dictionary, tutorial content, character/scenario i18n patches, `t()`, `uiText()`
+  - `ui/config/carousel-state.js` — mutable carousel index state for Part 1 and Part 2
+  - `ui/config/part2-data.js` — Part 2 route options, narrative sequence EN/ES, breathing lines
+- Condensed `README.md` from 335 to 88 lines: focused pitch, cover art, how-to-play, repository structure table, key doc links, design pillars, governance, license/contact. Technical detail moved to existing `docs/` references.
+
 ### Added
 
 - Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) — complete professional translation of the Spanish original, preserving all technical terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography.
