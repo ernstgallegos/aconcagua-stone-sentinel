@@ -2664,7 +2664,7 @@ function renderWatch() {
 function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
   // Sync mountain visualization climber with current position + environment
-  const curIdx = POSITIONS.indexOf(G.state.position);
+  const curIdx = Math.max(0, POSITIONS.indexOf(G.state.position));
   updateClimberPosition(curIdx, {
     highestIndex: G.highestPosIdx,
     minutesOfDay: G.minutesOfDay,

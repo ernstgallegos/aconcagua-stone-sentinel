@@ -629,9 +629,6 @@ export function initMountainVisualization(container) {
 
   const rng = seededRng(777);
   const particles = [];
-  for (let i = 0; i < 50; i++) particles.push(new Particle(canvas.width, canvas.height, 'snow', rng));
-  for (let i = 0; i < 20; i++) particles.push(new Particle(canvas.width, canvas.height, 'wind', rng));
-  for (let i = 0; i < 15; i++) particles.push(new Particle(canvas.width, canvas.height, 'dust', rng));
 
   const state = {
     canvas, ctx, camera, climber, terrainStrips, particles, rng,
@@ -664,6 +661,10 @@ export function initMountainVisualization(container) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
+  // Initialize particles after canvas has been properly sized
+  for (let i = 0; i < 50; i++) particles.push(new Particle(canvas.width, canvas.height, 'snow', rng));
+  for (let i = 0; i < 20; i++) particles.push(new Particle(canvas.width, canvas.height, 'wind', rng));
+  for (let i = 0; i < 15; i++) particles.push(new Particle(canvas.width, canvas.height, 'dust', rng));
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(container);
   state._resizeObserver = resizeObserver;
@@ -686,7 +687,8 @@ export function initMountainVisualization(container) {
     camera.followClimber(climber.worldX, climber.worldY, climber.worldZ);
     camera.update(dt);
 
-    const altNorm = (ROUTE_NODES[state.positionIndex]?.alt - ALT_MIN) / ALT_RANGE;
+    const posIdx = Math.max(0, Math.min(state.positionIndex, ROUTE_NODES.length - 1));
+    const altNorm = (ROUTE_NODES[posIdx].alt - ALT_MIN) / ALT_RANGE;
     const atmosphere = getAtmosphere(state.minutesOfDay, state.weatherSeverity, state.visibility, altNorm);
 
     if (!state.reducedMotion) {
@@ -695,7 +697,12 @@ export function initMountainVisualization(container) {
           (p.type === 'snow' && atmosphere.hasSnow) ||
           (p.type === 'dust' && atmosphere.hasDust) ||
           (p.type === 'wind');
-        if (shouldShow) p.update(canvasW, canvasH, atmosphere.windStrength, rng);
+        if (shouldShow) {
+          p.update(canvasW, canvasH, atmosphere.windStrength, rng);
+        } else {
+          // Reset inactive particles so they don't pop in at stale positions
+          p.reset(canvasW, canvasH, rng, true);
+        }
       });
     }
 
