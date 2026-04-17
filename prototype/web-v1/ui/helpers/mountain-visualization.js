@@ -18,22 +18,27 @@
 // ROUTE DATA — 15 waypoints matching data/nodes.json routeIndex 0–14
 // Each has world-space x/z (horizontal progress / depth) and altitude y.
 // ═══════════════════════════════════════════════════════════════
+// Coordinates modelled on the real Ruta Normal profile:
+// - Long gentle approach through the Horcones valley (~22km, 1400m gain)
+// - Steeper upper mountain from Plaza de Mulas (~10km, 2600m gain)
+// - La Travesía traverse visible as lateral movement near summit
+// - x = lateral offset (winding path), z = depth along route
 const ROUTE_NODES = [
   { id: 'horcones',              alt: 2950, camp: false, x: 0,    z: 0    },
-  { id: 'horcones_lagoon',       alt: 3050, camp: false, x: 60,   z: 80   },
-  { id: 'approach_confluencia',  alt: 3390, camp: true,  x: 140,  z: 200  },
-  { id: 'cuesta_brava',          alt: 4000, camp: false, x: 230,  z: 340  },
-  { id: 'base_plaza_mulas',      alt: 4350, camp: true,  x: 320,  z: 480  },
-  { id: 'piedras_conway',        alt: 4750, camp: false, x: 400,  z: 600  },
-  { id: 'camp_canada',           alt: 5050, camp: true,  x: 470,  z: 720  },
-  { id: 'cambio_pendiente',      alt: 5300, camp: false, x: 530,  z: 830  },
-  { id: 'camp_nido_condores',    alt: 5560, camp: true,  x: 580,  z: 940  },
-  { id: 'balcon_amarillo',       alt: 5800, camp: false, x: 630,  z: 1050 },
-  { id: 'camp_colera',           alt: 5970, camp: true,  x: 680,  z: 1150 },
-  { id: 'portezuelo_viento',     alt: 6500, camp: false, x: 740,  z: 1280 },
-  { id: 'travesia',              alt: 6630, camp: false, x: 790,  z: 1380 },
-  { id: 'canaleta',              alt: 6700, camp: false, x: 830,  z: 1460 },
-  { id: 'summit',                alt: 6962, camp: false, x: 860,  z: 1540 },
+  { id: 'horcones_lagoon',       alt: 3050, camp: false, x: 25,   z: 85   },
+  { id: 'approach_confluencia',  alt: 3390, camp: true,  x: 65,   z: 300  },
+  { id: 'cuesta_brava',          alt: 4000, camp: false, x: 40,   z: 520  },
+  { id: 'base_plaza_mulas',      alt: 4350, camp: true,  x: 10,   z: 750  },
+  { id: 'piedras_conway',        alt: 4750, camp: false, x: -15,  z: 880  },
+  { id: 'camp_canada',           alt: 5050, camp: true,  x: -25,  z: 970  },
+  { id: 'cambio_pendiente',      alt: 5300, camp: false, x: -10,  z: 1050 },
+  { id: 'camp_nido_condores',    alt: 5560, camp: true,  x: 5,    z: 1120 },
+  { id: 'balcon_amarillo',       alt: 5800, camp: false, x: 15,   z: 1180 },
+  { id: 'camp_colera',           alt: 5970, camp: true,  x: 5,    z: 1230 },
+  { id: 'portezuelo_viento',     alt: 6500, camp: false, x: -15,  z: 1310 },
+  { id: 'travesia',              alt: 6630, camp: false, x: -45,  z: 1370 },
+  { id: 'canaleta',              alt: 6700, camp: false, x: -25,  z: 1420 },
+  { id: 'summit',                alt: 6962, camp: false, x: 0,    z: 1500 },
 ];
 
 const ALT_MIN = 2950;
@@ -74,10 +79,14 @@ function generateTerrainStrips(numStrips) {
     }
     const t = nextNode.z === prevNode.z ? 0 : (z - prevNode.z) / (nextNode.z - prevNode.z);
     const baseAlt = prevNode.alt + (nextNode.alt - prevNode.alt) * t;
+    const routeX = prevNode.x + (nextNode.x - prevNode.x) * t;
+    // Ridge heights shrink at altitude (wide valley → narrow summit ridge)
+    const altNorm = (baseAlt - ALT_MIN) / ALT_RANGE;
+    const ridgeScale = 1.0 - altNorm * 0.6;
     const variation = rng() * 400 - 200;
-    const leftAlt = baseAlt + 200 + variation + rng() * 300;
-    const rightAlt = baseAlt + 150 + (rng() * 400 - 100);
-    strips.push({ z, baseAlt, leftAlt, rightAlt });
+    const leftAlt = baseAlt + (200 + variation + rng() * 300) * ridgeScale;
+    const rightAlt = baseAlt + (150 + rng() * 400 - 100) * ridgeScale;
+    strips.push({ z, baseAlt, leftAlt, rightAlt, routeX });
   }
   return strips;
 }
@@ -169,8 +178,6 @@ class Climber {
     this.worldX = ROUTE_NODES[0].x;
     this.worldY = altToY(ROUTE_NODES[0].alt);
     this.worldZ = ROUTE_NODES[0].z;
-    this.targetX = this.worldX;
-    this.targetY = this.worldY;
     this.targetZ = this.worldZ;
     this.walkCycle = 0;
     this.isMoving = false;
@@ -182,19 +189,17 @@ class Climber {
     const node = ROUTE_NODES[idx];
     if (node.z > this.targetZ + 1) this.facingDir = 1;
     else if (node.z < this.targetZ - 1) this.facingDir = -1;
-    this.targetX = node.x;
-    this.targetY = altToY(node.alt);
     this.targetZ = node.z;
     this.isMoving = true;
   }
   update(dt) {
     const speed = Math.min(dt * 1.8, 1);
-    const prevX = this.worldX;
     const prevZ = this.worldZ;
-    this.worldX += (this.targetX - this.worldX) * speed;
-    this.worldY += (this.targetY - this.worldY) * speed;
     this.worldZ += (this.targetZ - this.worldZ) * speed;
-    const dist = Math.abs(this.worldX - prevX) + Math.abs(this.worldZ - prevZ);
+    // Derive X and Y from the route path at current Z — guarantees climber stays on terrain
+    this.worldX = lerpRouteX(this.worldZ);
+    this.worldY = altToY(lerpRouteAlt(this.worldZ));
+    const dist = Math.abs(this.worldZ - prevZ);
     this.isMoving = dist > 0.1;
     if (this.isMoving) {
       this.walkCycle += dt * 8;
@@ -329,6 +334,17 @@ function lerpRouteX(z) {
   return z < ROUTE_NODES[0].z ? ROUTE_NODES[0].x : ROUTE_NODES[ROUTE_NODES.length - 1].x;
 }
 
+// Interpolate route altitude at any z position (keeps climber on terrain surface)
+function lerpRouteAlt(z) {
+  for (let i = 0; i < ROUTE_NODES.length - 1; i++) {
+    if (z >= ROUTE_NODES[i].z && z <= ROUTE_NODES[i + 1].z) {
+      const t = (z - ROUTE_NODES[i].z) / (ROUTE_NODES[i + 1].z - ROUTE_NODES[i].z);
+      return ROUTE_NODES[i].alt + (ROUTE_NODES[i + 1].alt - ROUTE_NODES[i].alt) * t;
+    }
+  }
+  return z < ROUTE_NODES[0].z ? ROUTE_NODES[0].alt : ROUTE_NODES[ROUTE_NODES.length - 1].alt;
+}
+
 function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere) {
   const visibleStrips = [];
   for (let i = 0; i < strips.length; i++) {
@@ -337,9 +353,10 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere) {
     const baseY = altToY(strip.baseAlt);
     const leftY = altToY(strip.leftAlt);
     const rightY = altToY(strip.rightAlt);
-    const center = camera.project(0, baseY, strip.z, canvasW, canvasH);
-    const left = camera.project(-300, leftY, strip.z, canvasW, canvasH);
-    const right = camera.project(300, rightY, strip.z, canvasW, canvasH);
+    const rx = strip.routeX;
+    const center = camera.project(rx, baseY, strip.z, canvasW, canvasH);
+    const left = camera.project(rx - 300, leftY, strip.z, canvasW, canvasH);
+    const right = camera.project(rx + 300, rightY, strip.z, canvasW, canvasH);
     if (!center || !left || !right) continue;
     if (center.y < -canvasH || center.y > canvasH * 2) continue;
     visibleStrips.push({ strip, center, left, right, altNorm, depth: center.depth });

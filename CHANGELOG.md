@@ -13,6 +13,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 - Pseudo-3D third-person mountain visualization on the gameplay screen (`prototype/web-v1`): Canvas2D perspective terrain with procedural ridgelines, a walking climber figure (red jacket, backpack, trekking pole, walk-cycle animation), third-person camera that follows the climber from behind/above, camp tent markers, summit flag, altitude-based terrain coloring (green approach → brown scree → grey rock → white snow), day/night cycle tied to `G.minutesOfDay` (dawn/dusk gradients, stars, sun position), weather-reactive atmosphere (fog density from `weather_severity` + `visibility`, snow/dust/wind particles), and in-view altitude HUD. Replaces previous SVG profile visualization. Same public API contract. New module `ui/helpers/mountain-visualization.js` and CSS `css/mountain-viz.css`. Respects `prefers-reduced-motion` (skips particle animations). Zero new dependencies — pure Canvas2D.
 
+### Fixed
+
+- Fixed climber walking off the terrain surface at higher altitudes: terrain center now follows the route path instead of being hardcoded at x=0, and the climber derives its X/Y position from Z via route interpolation (guarantees it stays on the terrain surface during movement between nodes).
+- Replaced linear route coordinates with realistic Ruta Normal profile: proportional z-spacing (long Horcones valley approach ~50% of route, compressed steep upper mountain), lateral x variation modelling the winding path (valley curves, La Travesía traverse near summit), and altitude-modulated ridge heights (wide valley walls at approach, narrow summit ridge).
+
 ### Changed
 
 - Extracted landing page CSS (~900 lines) from inline `<style>` in `index.html` to external `src/styles/landing.css` for browser cacheability and maintainability.
