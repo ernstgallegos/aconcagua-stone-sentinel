@@ -39,7 +39,7 @@ import { reportRuntimeDiagnostic } from './helpers/runtime-diagnostics.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import { getNationalityBadge } from './helpers/nationality.js';
-import { initMountainVisualization, updateClimberPosition } from './helpers/mountain-visualization.js';
+import { initMountainVisualization, updateClimberPosition, destroyMountainVisualization } from './helpers/mountain-visualization.js';
 import {
   renderIntroContent as renderIntroContentView,
   copyProjectShareLink as copyProjectShareLinkView,
@@ -2663,9 +2663,14 @@ function renderWatch() {
 // ════════════════════════════════════════════════
 function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
-  // Sync mountain visualization climber with current position
+  // Sync mountain visualization climber with current position + environment
   const curIdx = POSITIONS.indexOf(G.state.position);
-  updateClimberPosition(curIdx, { highestIndex: G.highestPosIdx });
+  updateClimberPosition(curIdx, {
+    highestIndex: G.highestPosIdx,
+    minutesOfDay: G.minutesOfDay,
+    weatherSeverity: G.state.weather_severity,
+    visibility: G.state.visibility,
+  });
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
@@ -3086,6 +3091,7 @@ function buildReflectionPrompts() {
 
 function endRun(returnedToHorcones) {
   if (DECISION_TICKER) { clearInterval(DECISION_TICKER); DECISION_TICKER = null; }
+  destroyMountainVisualization();
   const outcome = classifyOutcome();
   const sc = G.scenario;
   const s = G.state;
