@@ -5,8 +5,8 @@
 // marker that moves between positions on each turn.
 //
 // Public API:
-//   initMountainVisualization(container)  — build the SVG once
-//   updateClimberPosition(positionIndex, totalPositions, options)  — animate marker
+//   initMountainVisualization(container)  — build the SVG (removes previous if present)
+//   updateClimberPosition(positionIndex, options)  — animate marker
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -100,17 +100,20 @@ function createSvgElement(tag, attrs = {}) {
   return el;
 }
 
+// Module-level cache for the active SVG to avoid repeated DOM queries.
+let _cachedSvg = null;
+
 /**
  * Build the mountain profile SVG inside the given container element.
- * Idempotent — will not re-create if already present.
+ * Removes any previous visualization before creating a new one.
  *
  * @param {HTMLElement} container
- * @returns {{ svg: SVGSVGElement, climber: SVGElement, trailHead: SVGElement } | null}
  */
 export function initMountainVisualization(container) {
-  if (!container) return null;
+  if (!container) return;
   const existing = container.querySelector('.mountain-viz-svg');
-  if (existing) return null; // already initialized
+  if (existing) existing.remove();
+  _cachedSvg = null;
 
   const svg = createSvgElement('svg', {
     class: 'mountain-viz-svg',
@@ -281,19 +284,18 @@ export function initMountainVisualization(container) {
   svg.appendChild(pulse);
 
   container.insertBefore(svg, container.firstChild);
-  return { svg, climber, trailHead };
+  _cachedSvg = svg;
 }
 
 /**
  * Update the climber position on the mountain profile.
  *
  * @param {number} positionIndex  — current route index (0–14)
- * @param {number} totalPositions — total route nodes (typically 15)
  * @param {object} [options]
  * @param {number} [options.highestIndex] — highest position reached
  */
-export function updateClimberPosition(positionIndex, totalPositions, options = {}) {
-  const svg = document.querySelector('.mountain-viz-svg');
+export function updateClimberPosition(positionIndex, options = {}) {
+  const svg = _cachedSvg;
   if (!svg) return;
 
   const idx = Math.max(0, Math.min(positionIndex, ROUTE_POINTS.length - 1));

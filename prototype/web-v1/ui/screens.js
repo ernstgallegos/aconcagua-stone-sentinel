@@ -1900,11 +1900,8 @@ function startGame() {
   // clear resource warning
   clearElement(document.getElementById('resource-warning-box'));
 
-  // Initialize mountain profile visualization
-  const mountainMain = document.querySelector('.mountain-main');
-  const existingViz = mountainMain?.querySelector('.mountain-viz-svg');
-  if (existingViz) existingViz.remove();
-  initMountainVisualization(mountainMain);
+  // Initialize mountain profile visualization (re-init each run)
+  initMountainVisualization(document.querySelector('.mountain-main'));
 
   renderPositionList();
   const logEntries = document.getElementById('log-entries');
@@ -2668,7 +2665,7 @@ function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
   // Sync mountain visualization climber with current position
   const curIdx = POSITIONS.indexOf(G.state.position);
-  updateClimberPosition(curIdx, POSITIONS.length, { highestIndex: G.highestPosIdx });
+  updateClimberPosition(curIdx, { highestIndex: G.highestPosIdx });
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
