@@ -9,6 +9,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+
+- Extracted landing page CSS (~900 lines) from inline `<style>` in `index.html` to external `src/styles/landing.css` for browser cacheability and maintainability.
+- Simplified landing animations: removed snow particles, shimmer on stats, floating elevation marks, ambient glow shift, ridge float, and border glow — 6 excess effects removed; kept Ken Burns, glassmorphism, scroll reveal, and breathe.
+- Condensed `README.md` from 335 to 88 lines: focused pitch, cover art, how-to-play, repository structure table, key doc links, design pillars, governance, license/contact. Technical detail moved to existing `docs/` references.
+
 ### Added
 
 - Created English translation of the Aconcagua geological bible (`docs/en/geological-bible-aconcagua.md`) — complete professional translation of the Spanish original, preserving all technical terminology, data values, citation markers, Mermaid diagrams, tables, and bibliography.
