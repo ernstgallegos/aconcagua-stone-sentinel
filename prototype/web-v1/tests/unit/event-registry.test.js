@@ -11,7 +11,7 @@ test('bindUiEventRegistry routes delegated click action and args', () => {
 
   global.document = {
     addEventListener(type, cb) {
-      if (type !== 'click') return; /* only test the click path */
+      assert.equal(type, 'click');
       const event = {
         target: {
           closest(selector) {

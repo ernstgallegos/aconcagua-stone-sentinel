@@ -6,15 +6,13 @@ test('repo truth, package version, UI version, and versioned docs are synchroniz
   const pkg = JSON.parse(await readFile('package.json', 'utf8'));
   const repoTruth = await readFile('docs/repo-truth.md', 'utf8');
   const ui = await readFile('prototype/web-v1/ui/screens.js', 'utf8');
-  const langConfig = await readFile('prototype/web-v1/ui/config/language.js', 'utf8');
-  const uiCombined = ui + '\n' + langConfig;
   const readme = await readFile('README.md', 'utf8');
   const readmeEs = await readFile('README.es.md', 'utf8');
   const simulationEngineDoc = await readFile('docs/simulation_engine.md', 'utf8');
   const landingPage = await readFile('index.html', 'utf8');
   const release = `v${pkg.version}`;
   assert.ok(repoTruth.includes(release));
-  assert.ok(uiCombined.includes(`Prototype · ${release}`));
+  assert.ok(ui.includes(`Prototype · ${release}`));
   assert.ok(readme.includes(release));
   assert.ok(readmeEs.includes(release));
   assert.ok(simulationEngineDoc.includes(release));
