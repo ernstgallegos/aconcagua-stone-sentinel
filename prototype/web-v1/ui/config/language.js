@@ -337,3 +337,4 @@ export function t(path) {
 
 export function uiText(en, es) {
   return _currentLanguage === 'es' ? es : en;
+}
