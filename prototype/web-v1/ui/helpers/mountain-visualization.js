@@ -68,18 +68,8 @@ function generateTerrainStrips(numStrips) {
 
   for (let i = 0; i <= numStrips; i++) {
     const z = (i / numStrips) * maxZ;
-    let prevNode = ROUTE_NODES[0];
-    let nextNode = ROUTE_NODES[ROUTE_NODES.length - 1];
-    for (let n = 0; n < ROUTE_NODES.length - 1; n++) {
-      if (z >= ROUTE_NODES[n].z && z <= ROUTE_NODES[n + 1].z) {
-        prevNode = ROUTE_NODES[n];
-        nextNode = ROUTE_NODES[n + 1];
-        break;
-      }
-    }
-    const t = nextNode.z === prevNode.z ? 0 : (z - prevNode.z) / (nextNode.z - prevNode.z);
-    const baseAlt = prevNode.alt + (nextNode.alt - prevNode.alt) * t;
-    const routeX = prevNode.x + (nextNode.x - prevNode.x) * t;
+    const baseAlt = lerpRouteField(z, 'alt');
+    const routeX = lerpRouteField(z, 'x');
     // Ridge heights shrink at altitude (wide valley → narrow summit ridge)
     const altNorm = (baseAlt - ALT_MIN) / ALT_RANGE;
     const ridgeScale = 1.0 - altNorm * 0.6;
@@ -324,26 +314,23 @@ function getTerrainColor(altNorm) {
   return { r: 100, g: 105, b: 85 };
 }
 
-function lerpRouteX(z) {
+// Interpolate a route property at a given z position.
+// Route nodes have strictly increasing z values; the guard handles edge cases.
+function lerpRouteField(z, field) {
   for (let i = 0; i < ROUTE_NODES.length - 1; i++) {
     if (z >= ROUTE_NODES[i].z && z <= ROUTE_NODES[i + 1].z) {
-      const t = (z - ROUTE_NODES[i].z) / (ROUTE_NODES[i + 1].z - ROUTE_NODES[i].z);
-      return ROUTE_NODES[i].x + (ROUTE_NODES[i + 1].x - ROUTE_NODES[i].x) * t;
+      const dz = ROUTE_NODES[i + 1].z - ROUTE_NODES[i].z;
+      const t = dz === 0 ? 0 : (z - ROUTE_NODES[i].z) / dz;
+      return ROUTE_NODES[i][field] + (ROUTE_NODES[i + 1][field] - ROUTE_NODES[i][field]) * t;
     }
   }
-  return z < ROUTE_NODES[0].z ? ROUTE_NODES[0].x : ROUTE_NODES[ROUTE_NODES.length - 1].x;
+  return z < ROUTE_NODES[0].z ? ROUTE_NODES[0][field] : ROUTE_NODES[ROUTE_NODES.length - 1][field];
 }
 
+function lerpRouteX(z) { return lerpRouteField(z, 'x'); }
+
 // Interpolate route altitude at any z position (keeps climber on terrain surface)
-function lerpRouteAlt(z) {
-  for (let i = 0; i < ROUTE_NODES.length - 1; i++) {
-    if (z >= ROUTE_NODES[i].z && z <= ROUTE_NODES[i + 1].z) {
-      const t = (z - ROUTE_NODES[i].z) / (ROUTE_NODES[i + 1].z - ROUTE_NODES[i].z);
-      return ROUTE_NODES[i].alt + (ROUTE_NODES[i + 1].alt - ROUTE_NODES[i].alt) * t;
-    }
-  }
-  return z < ROUTE_NODES[0].z ? ROUTE_NODES[0].alt : ROUTE_NODES[ROUTE_NODES.length - 1].alt;
-}
+function lerpRouteAlt(z) { return lerpRouteField(z, 'alt'); }
 
 function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere) {
   const visibleStrips = [];
