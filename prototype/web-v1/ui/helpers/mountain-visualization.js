@@ -79,10 +79,15 @@ function lerpLateral(t) {
  */
 function computeVizWaypoints(runtimeNodes) {
   if (!runtimeNodes || runtimeNodes.length === 0) return [];
-  const alts = runtimeNodes.map(n => n.altitudeMeters || 0);
-  const altMin = Math.min(...alts);
-  const altMax = Math.max(...alts);
   const n = runtimeNodes.length;
+  // Single pass: collect altitudes for range calculation while building waypoints
+  let altMin = Infinity;
+  let altMax = -Infinity;
+  for (const node of runtimeNodes) {
+    const a = node.altitudeMeters || 0;
+    if (a < altMin) altMin = a;
+    if (a > altMax) altMax = a;
+  }
   return runtimeNodes.map((node, idx) => ({
     id:   node.id,
     alt:  node.altitudeMeters || altMin,
@@ -681,8 +686,13 @@ export function initMountainVisualization(container, runtimeNodes) {
   }
 
   // Guard: if ROUTE_NODES is still empty (no runtime data, no previous init),
-  // there is nothing to render. Return early rather than throw.
-  if (ROUTE_NODES.length === 0) return;
+  // there is nothing to render. Log a warning so developers can diagnose easily.
+  if (ROUTE_NODES.length === 0) {
+    if (typeof console !== 'undefined') {
+      console.warn('[mountain-visualization] initMountainVisualization called with no route nodes — visualization skipped. Pass runtimeNodes from normalizeRouteData().');
+    }
+    return;
+  }
 
   destroyMountainVisualization();
   const existing = container.querySelector('.mountain-viz-canvas');
