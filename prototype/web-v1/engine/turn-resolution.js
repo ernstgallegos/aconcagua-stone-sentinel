@@ -92,12 +92,13 @@ export function createTurnEngine(deps) {
     else if (r > survivalChance) outcome = 'Retreat';
     else outcome = 'Hold';
 
-    // Wait never changes position — the player chose to stay.
+    // Stationary actions never change position — the player chose to stay.
+    // wait and shoot_photo are both position-holding actions.
     // (Previously only blocked at approach altitude, letting high-camp waits
     // accidentally advance or retreat.)
-    const isWait = context.action === 'wait' || context.action === 'shoot_photo';
-    if (isWait && outcome === 'Advance') outcome = 'Hold';
-    if (isWait && outcome === 'Retreat') outcome = 'Hold';
+    const isStationary = context.action === 'wait' || context.action === 'shoot_photo';
+    if (isStationary && outcome === 'Advance') outcome = 'Hold';
+    if (isStationary && outcome === 'Retreat') outcome = 'Hold';
     if (isSummitAdvanceAttempt) outcome = 'Hold';
     if (isHorconesExit) outcome = 'Advance';
 

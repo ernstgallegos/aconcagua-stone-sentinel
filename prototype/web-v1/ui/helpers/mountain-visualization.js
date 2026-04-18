@@ -1140,10 +1140,12 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere, time) {
     const b = Math.round(col.b * (1 - fogAmount) + fogB * fogAmount);
 
     // Directional lighting: left face darker (shadow), right face lit
+    // Distance-dependent contrast reduction (atmospheric scattering)
     const sunAngle = atmosphere.hour ? ((atmosphere.hour - 6) / 12) : 0.5;
     const sunDir = Math.cos(sunAngle * Math.PI) * 0.15;
-    const shadowShade = 0.62 + 0.18 * (1 - fogAmount) - sunDir;
-    const lightShade = Math.min(0.72 + 0.28 * (1 - fogAmount) + sunDir, 1.05);
+    const contrastFade = (1 - fogAmount); // contrast diminishes with distance
+    const shadowShade = 0.62 + 0.18 * contrastFade - sunDir * contrastFade;
+    const lightShade = Math.min(0.72 + 0.28 * contrastFade + sunDir * contrastFade, 1.05);
 
     // === Left face (shadow side) ===
     ctx.fillStyle = `rgb(${Math.round(r * shadowShade)},${Math.round(g * shadowShade)},${Math.round(b * shadowShade)})`;
@@ -1213,7 +1215,7 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere, time) {
       const midX = (curr.center.x + next.center.x) * 0.5;
       const midY = (curr.center.y + next.center.y) * 0.5;
 
-      // Inter-strip shadow line at base of each strip
+      // Inter-strip shadow line at base of each strip (depth illusion)
       ctx.strokeStyle = `rgba(0,0,0,${texAlpha * 0.5})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1221,29 +1223,51 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere, time) {
       ctx.lineTo(curr.right ? curr.right.x : midX + 30, next.center.y + 1);
       ctx.stroke();
 
-      // Rock fracture lines (altNorm 0.25–0.75)
-      if (curr.altNorm >= 0.25 && curr.altNorm <= 0.75) {
+      // Ridge-top highlight line (subtle edge light on ridgeline crest)
+      if (contrastFade > 0.3) {
+        ctx.strokeStyle = `rgba(255,255,255,${texAlpha * 0.2 * contrastFade})`;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(curr.center.x, curr.center.y - 1);
+        ctx.lineTo(curr.right ? lerpVal(curr.center.x, curr.right.x, 0.4) : midX + 15, curr.center.y - 1);
+        ctx.stroke();
+      }
+
+      // Rock fracture lines (altNorm 0.25–0.80, wider range for more detail)
+      if (curr.altNorm >= 0.25 && curr.altNorm <= 0.80) {
         ctx.strokeStyle = `rgba(60,55,50,${texAlpha})`;
         ctx.lineWidth = 0.5;
-        const nFractures = 2 + Math.floor(texRng());
+        const nFractures = 2 + Math.floor(texRng() * 2);
         for (let f = 0; f < nFractures; f++) {
           const fx = lerpVal(curr.center.x, curr.right ? curr.right.x : midX + 20, texRng() * 0.6 + 0.1);
           const fy = lerpVal(curr.center.y, next.center.y, texRng());
           ctx.beginPath();
           ctx.moveTo(fx, fy);
-          ctx.lineTo(fx + (texRng() - 0.5) * 8, fy + 3 + texRng() * 4);
+          // Branching fracture for more realism
+          const fx2 = fx + (texRng() - 0.5) * 10;
+          const fy2 = fy + 3 + texRng() * 5;
+          ctx.lineTo(fx2, fy2);
           ctx.stroke();
+          // Occasional secondary branch
+          if (texRng() > 0.6) {
+            ctx.beginPath();
+            ctx.moveTo(fx2, fy2);
+            ctx.lineTo(fx2 + (texRng() - 0.5) * 6, fy2 + 2 + texRng() * 3);
+            ctx.stroke();
+          }
         }
       }
 
-      // Scree dots (altNorm 0.35–0.65)
-      if (curr.altNorm >= 0.35 && curr.altNorm <= 0.65) {
-        ctx.fillStyle = `rgba(90,85,75,${texAlpha * 0.8})`;
-        const nDots = 3 + Math.floor(texRng() * 3);
+      // Scree/talud dots (altNorm 0.30–0.70, wider range, more dots)
+      if (curr.altNorm >= 0.30 && curr.altNorm <= 0.70) {
+        const nDots = 4 + Math.floor(texRng() * 4);
         for (let d = 0; d < nDots; d++) {
           const dx = lerpVal(curr.center.x - 10, curr.right ? curr.right.x : midX + 10, texRng());
           const dy = lerpVal(curr.center.y, next.center.y, texRng());
           const dr = 0.5 + texRng() * 1.5;
+          // Vary scree color between warm and cool greys
+          const scrLum = 70 + Math.floor(texRng() * 30);
+          ctx.fillStyle = `rgba(${scrLum},${scrLum - 5},${scrLum - 10},${texAlpha * 0.8})`;
           ctx.beginPath();
           ctx.arc(dx, dy, dr, 0, Math.PI * 2);
           ctx.fill();
@@ -1254,14 +1278,27 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere, time) {
       if (curr.strip.snowCover > 0.2) {
         ctx.strokeStyle = `rgba(240,245,255,${texAlpha * curr.strip.snowCover})`;
         ctx.lineWidth = 0.6;
-        const nCurves = 2 + Math.floor(texRng());
+        const nCurves = 2 + Math.floor(texRng() * 2);
         for (let s = 0; s < nCurves; s++) {
           const sx = lerpVal(curr.center.x, curr.right ? curr.right.x : midX + 15, 0.15 + texRng() * 0.5);
           const sy = lerpVal(curr.center.y, next.center.y, texRng());
           ctx.beginPath();
-          ctx.moveTo(sx - 4, sy);
-          ctx.quadraticCurveTo(sx, sy - 1.5 - texRng() * 2, sx + 4 + texRng() * 3, sy + texRng() * 1.5);
+          ctx.moveTo(sx - 5, sy);
+          ctx.quadraticCurveTo(sx, sy - 2 - texRng() * 2.5, sx + 5 + texRng() * 4, sy + texRng() * 2);
           ctx.stroke();
+        }
+        // Wind-sculpted snow ripples (additional sastrugi detail)
+        if (curr.strip.snowCover > 0.5) {
+          ctx.strokeStyle = `rgba(220,230,250,${texAlpha * 0.3})`;
+          ctx.lineWidth = 0.4;
+          for (let w = 0; w < 2; w++) {
+            const wx = lerpVal(curr.center.x - 5, curr.right ? curr.right.x : midX + 10, texRng());
+            const wy = lerpVal(curr.center.y, next.center.y, texRng());
+            ctx.beginPath();
+            ctx.moveTo(wx, wy);
+            ctx.bezierCurveTo(wx + 3, wy - 1, wx + 7, wy + 1, wx + 10, wy - 0.5);
+            ctx.stroke();
+          }
         }
       }
     }
@@ -1923,18 +1960,40 @@ function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionM
   ctx.fillStyle = vigGrad;
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  // b) Film grain (2-3% opacity, seeded per frame)
+  // b) Film grain (2-3% opacity, seeded per frame, varied luminance)
   const grainSeed = Math.floor(time * 60);
   const grainRng = seededRng(grainSeed);
-  const grainStep = Math.max(12, Math.floor(canvasW / 35));
-  ctx.fillStyle = 'rgba(128,128,128,0.025)';
+  const grainStep = Math.max(10, Math.floor(canvasW / 40));
   for (let gy = 0; gy < canvasH; gy += grainStep) {
     for (let gx = 0; gx < canvasW; gx += grainStep) {
-      if (grainRng() > 0.55) {
+      const rv = grainRng();
+      if (rv > 0.5) {
+        // Vary grain brightness for more organic texture
+        const grainLum = 80 + Math.floor(grainRng() * 96);
+        const grainAlpha = 0.018 + grainRng() * 0.016;
+        ctx.fillStyle = `rgba(${grainLum},${grainLum},${grainLum},${grainAlpha})`;
         ctx.fillRect(gx, gy, grainStep, grainStep);
       }
     }
   }
+
+  // b2) Chromatic aberration — subtle 1px color shift at canvas edges
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  const caMargin = Math.max(20, canvasW * 0.08);
+  const caAlpha = 0.015;
+  // Red channel shift (left edge)
+  ctx.fillStyle = `rgba(180,0,0,${caAlpha})`;
+  ctx.fillRect(0, 0, caMargin, canvasH);
+  // Blue channel shift (right edge)
+  ctx.fillStyle = `rgba(0,0,180,${caAlpha})`;
+  ctx.fillRect(canvasW - caMargin, 0, caMargin, canvasH);
+  // Slight top/bottom color fringe
+  ctx.fillStyle = `rgba(0,100,180,${caAlpha * 0.6})`;
+  ctx.fillRect(0, 0, canvasW, caMargin * 0.5);
+  ctx.fillStyle = `rgba(180,80,0,${caAlpha * 0.6})`;
+  ctx.fillRect(0, canvasH - caMargin * 0.5, canvasW, caMargin * 0.5);
+  ctx.restore();
 
   // c) Color grading by altitude/hour
   const altNorm = state ? (ROUTE_NODES[clampIdx(state.positionIndex)].alt - ALT_MIN) / ALT_RANGE : 0;
@@ -1948,14 +2007,19 @@ function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionM
     ctx.fillStyle = 'rgba(40,60,120,0.06)';
     ctx.fillRect(0, 0, canvasW, canvasH);
   }
-  // High-altitude desaturation
+  // High-altitude desaturation (simulates oxygen deprivation)
   if (altNorm > 0.75) {
     const desatAlpha = (altNorm - 0.75) * 0.16;
     ctx.fillStyle = `rgba(180,185,195,${desatAlpha})`;
     ctx.fillRect(0, 0, canvasW, canvasH);
   }
+  // Mid-day harsh light — faint warm overlay
+  if (!atmosphere.isNight && !atmosphere.isDawn && !atmosphere.isDusk && atmosphere.hour >= 10 && atmosphere.hour <= 14) {
+    ctx.fillStyle = 'rgba(255,250,230,0.02)';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+  }
 
-  // d) Bloom on sun/moon (extra glow pass after sky drawn)
+  // d) Bloom on sun/moon (extra glow pass)
   if (!atmosphere.isNight) {
     const sunAngle = ((atmosphere.hour - 6) / 12) * Math.PI;
     const sunX = canvasW * 0.2 + Math.cos(sunAngle) * canvasW * 0.35;
@@ -1967,6 +2031,17 @@ function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionM
     bloom.addColorStop(1, 'rgba(255,230,170,0)');
     ctx.fillStyle = bloom;
     ctx.fillRect(sunX - bloomR, sunY - bloomR, bloomR * 2, bloomR * 2);
+  } else {
+    // Moonlight bloom during night
+    const moonX = canvasW * 0.7;
+    const moonY = canvasH * 0.18;
+    const moonBloomR = Math.max(40, canvasW * 0.08);
+    const moonBloom = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, moonBloomR);
+    moonBloom.addColorStop(0, 'rgba(180,200,240,0.04)');
+    moonBloom.addColorStop(0.5, 'rgba(160,180,220,0.02)');
+    moonBloom.addColorStop(1, 'rgba(140,160,200,0)');
+    ctx.fillStyle = moonBloom;
+    ctx.fillRect(moonX - moonBloomR, moonY - moonBloomR, moonBloomR * 2, moonBloomR * 2);
   }
 
   // Transition-driven overlays

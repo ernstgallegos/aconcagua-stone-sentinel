@@ -11,6 +11,20 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- Per-character visual identity in mountain visualization: each of the 6 playable characters now renders with a unique appearance on the Canvas2D climber figure. Character visual profiles define jacket primary/highlight/shadow colors, hat/balaclava color, skin tone, gloves, gaiters, boots, pack, arm color, sunglasses, headlamp tint, build scale (body size multiplier), and shoulder width. `initMountainVisualization` now accepts an optional third argument `{ characterId }` to configure the climber appearance. Daniela De Rossi additionally renders a visible camera body on her pack strap.
+  - Francisco Aguirre: red jacket, navy beanie, warm olive skin, standard build
+  - Laura Kim: teal/cerulean jacket, cream beanie, lighter build
+  - Erik Lundvall: mustard gold jacket, charcoal beanie, tall/broad build
+  - Daniela De Rossi: deep violet jacket, camera on pack, athletic build
+  - Blake Harris: near-black jacket, bright red beanie, stocky build
+  - Irina Orlova: burnt orange jacket, cream beanie, lean/tall build
+- Enhanced post-processing passes: chromatic aberration at canvas edges (subtle 1px RGB color fringe), improved film grain with varied luminance per cell, moonlight bloom during night scenes, mid-day warm light overlay.
+- Improved terrain rendering: ridge-top highlight lines for better crest definition, branching rock fracture patterns with secondary branches, wider scree/talud altitude range with color-varied stones, enhanced snow sastrugi with wind-sculpted ripple detail, atmospheric scattering contrast reduction on distant terrain strips.
+
+### Fixed
+
+- **Decision-position bug**: `wait` and `shoot_photo` actions no longer cause unintended position changes. Previously, only approach-altitude waits were forced to Hold — at higher altitudes the RNG could roll Advance (player moves up without choosing to) or Retreat (player descends despite waiting). Now all wait and shoot_photo outcomes are forced to Hold at every altitude (except body-failure Collapse). This eliminates the reported issue where choosing "wait" could advance or descend the climber.
+
 - High-fidelity Canvas2D mountain visualization upgrade (`prototype/web-v1`): comprehensive visual overhaul of `ui/helpers/mountain-visualization.js` (1480 → 2171 lines) raising the rendering pipeline from MVP proof-of-concept to near-production quality. Same public API contract (`initMountainVisualization`/`updateClimberPosition`/`destroyMountainVisualization`). Zero new dependencies — pure Canvas2D. Respects `prefers-reduced-motion`. New features include:
   - **Post-decision transition system**: `TransitionManager` class with `TransitionEffect` primitives. `updateClimberPosition` now accepts `options.action` (`advance`/`advance_slowly`/`descend`/`wait`/`sleep`) triggering camera zoom-push/pull, wind spikes, fog clearing, cloud time-lapse, and sleep dim-then-brighten. `options.flags` array (`white-wind-hit`/`collapse`) drives screen shake and red-edge flash. `options.fatigue`/`options.exposure` > 70 activate progressive dark/blue vignette overlays.
   - **Post-processing passes**: permanent subtle corner vignette (7% opacity), per-frame film grain (2.5% opacity, seeded), color grading by altitude/hour (golden-hour amber tint, night blue shift, high-altitude desaturation), bloom glow on sun, transition-driven dimming/red-flash/vignette overlays.
