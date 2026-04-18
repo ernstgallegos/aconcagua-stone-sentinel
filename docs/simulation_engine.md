@@ -53,6 +53,8 @@ Canonical resolver order is enforced by `RESOLVE_TURN_PIPELINE` in `prototype/we
 
 Pressure delta governs node-to-node progress, physiological cost, and outcome risk.
 
+**Sign convention:** positive delta means the environment is winning (harder conditions, higher risk); negative delta means the body is coping well (easier conditions, lower risk). A delta of zero represents equilibrium between environmental pressure and body tolerance.
+
 ## Perception model
 
 `calculatePerception({ state, EP, BT, pressureDelta })` produces:

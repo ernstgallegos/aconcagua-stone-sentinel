@@ -33,7 +33,7 @@ jobs:
         run: pytest prototype/mra-v0/test_simulator.py -v
 
   json-validation:
-    name: Expanded JSON validation
+    name: Expanded JSON + markdown validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
@@ -43,6 +43,8 @@ jobs:
           node-version: "20"
       - name: Validate all repository JSON files are well-formed
         run: npm run validate:json
+      - name: Validate internal markdown links
+        run: npm run validate:links
 
   js-contract-tests:
     name: Web-v1 JS + TS gates
@@ -69,13 +71,15 @@ jobs:
       - name: Run web-v1 mechanic tests
         run: npm test
 
+      - name: Run dependency security audit
+        run: npm audit --audit-level=high || true
+
       - name: Run release smoke gate
         if: github.event_name == 'push'
         run: npm run smoke:release
 
   web-smoke-test:
-    name: Web-v1 Playwright smoke test (PR)
-    if: github.event_name == 'pull_request'
+    name: Web-v1 Playwright smoke test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2

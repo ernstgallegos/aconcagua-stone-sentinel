@@ -21,9 +21,20 @@ const FALLBACK_ORIGINS = [
 function getAllowedOrigins() {
   const configured = splitCsv(process.env.ALLOWED_ORIGINS);
   if (configured.length > 0) return configured;
-  console.warn(
-    "[api/run] ALLOWED_ORIGINS env var not set — using hardcoded fallback origins. " +
-    "Set ALLOWED_ORIGINS in Vercel Project Settings for production."
+
+  // In production (Vercel), ALLOWED_ORIGINS should always be set via
+  // Vercel Project Settings → Environment Variables. Log a structured
+  // warning that is visible in function logs for operational monitoring.
+  const isVercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
+  const level = isVercel ? "error" : "warn";
+  console[level](
+    JSON.stringify({
+      source: "api/run",
+      event: "allowed_origins_fallback",
+      message: "ALLOWED_ORIGINS env var not set — using hardcoded fallback origins.",
+      action: "Set ALLOWED_ORIGINS in Vercel Project Settings for production.",
+      isVercel,
+    })
   );
   return FALLBACK_ORIGINS;
 }

@@ -23,20 +23,21 @@ Public repository scope is explicit:
 
 ---
 
-## Compact Status Matrix (v1.4 snapshot)
+## Compact Status Matrix (v1.5 snapshot)
 
 | Stage | Status | Design lock | Implementation | Evidence snapshot |
 | --- | --- | --- | --- | --- |
 | Stage 1 — Grounding the Project | Done | Done | Done (documentation stage) | Core framing published in consolidated design and plan docs. |
 | Stage 2 — Systemic Definition | Done | Done | Done (system contracts implemented in both prototypes) | `prototype/mra-v0/simulator.py` + `prototype/web-v1/engine/turn-resolution.js` preserve turn/system loop semantics. |
-| Stage 3 — Visual Intent and Curation | Done | Done | In progress | Visual intent documented; iterative readability refinements continue in web-v1 UI copy/layout. |
+| Stage 3 — Visual Intent and Curation | Done | Done | Done | Visual intent documented; cinematic Canvas2D rendering + per-character visual identity delivered in v1.5.0. |
 | Stage 4 — Core Experience Prototype | Done | Done | Done | MRA v0 deterministic simulation + scenario validation/tests are stable and retained as reference baseline. |
-| Design Consolidation v1.4 | Done | Done | In progress by phase | Locked in `docs/en/consolidated-design-v1.4.md` + phased delivery in `docs/en/implementation-plan-v1.4.md`. |
+| Design Consolidation v1.4 | Done | Done | Done | Locked in `docs/en/consolidated-design-v1.4.md` + phased delivery in `docs/en/implementation-plan-v1.4.md`. |
 | Stage 5 — Selective System Prototyping | Done | Done | Done | Permit, timers, contextual actions, perception latency, and telemetry are implemented in web-v1. |
-| Stage 6 — Integrated Prototype | In progress (current) | Done | In progress | Canonical flow is playable end-to-end with cross-system interaction and Part 2 bridge gating. |
+| Stage 6 — Integrated Prototype | Done | Done | Done | Canonical flow is playable end-to-end with cross-system interaction and Part 2 bridge gating. v1.5.0 adds production-tier visualization. |
+| v1.5.0 — Visual & Mechanical Refinement | Done | Done | Done | Canvas2D overhaul, per-character visual identity, decision-position bug fix. Delivery recorded in `docs/en/implementation-plan-v1.5.md`. |
 | Stage 7 — Evaluation and Direction Lock | Planned | Planned | Planned | Pending publication-readiness checks and directional decision. |
 
-Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Real progress snapshot](../docs/en/implementation-plan-v1.4.md#phase-2--in-progress-current-sprint-follow-up).
+Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status](../docs/en/implementation-plan-v1.4.md) · [`docs/en/implementation-plan-v1.5.md` v1.5.0 delivery](../docs/en/implementation-plan-v1.5.md).
 
 ---
 
@@ -65,13 +66,13 @@ Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Rea
 ---
 
 ## Stage 3 — Visual Intent and Curation  
-**Status: Done (design) / In progress (implementation polish)**
+**Status: Done**
 
 > Establishing tone and scale through restraint.
 
 ### Objective repository evidence
 - **Design lock complete:** visual and narrative positioning is consolidated in v1.4 docs and public-facing readmes.
-- **Implementation in progress:** ongoing legibility and readability refinements are delivered in `prototype/web-v1/index.html` and tracked through web-v1 test coverage (`prototype/web-v1/tests/new-mechanics.test.js`).
+- **Implementation complete:** cinematic Canvas2D mountain visualization, per-character visual identity, and editorial landing page design delivered in v1.5.0. Ongoing minor polish continues through normal maintenance.
 
 ---
 
@@ -87,7 +88,7 @@ Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Rea
 ---
 
 ## Design Consolidation v1.4 — Documentation and Planning Lock  
-**Status: Done (design lock) / In progress (phase implementation)**
+**Status: Done**
 
 > Consolidating narrative/systemic targets before and during implementation rollout.
 
@@ -95,7 +96,7 @@ Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Rea
 - **Design lock complete:**
   - `docs/en/consolidated-design-v1.4.md` and `docs/es/diseno-consolidado-v1.4.md`.
   - `docs/en/implementation-plan-v1.4.md` and `docs/es/plan-implementacion-v1.4.md`.
-- **Implementation in progress:** phase execution is actively tracked in the implementation plan, including explicit completed items in the Phase 2 real-progress snapshot.
+- **Implementation complete:** all v1.4 phases delivered; v1.5.0 builds on this foundation. Delivery record in `docs/en/implementation-plan-v1.5.md`.
 
 ---
 
@@ -115,18 +116,31 @@ Progress references: [`docs/en/implementation-plan-v1.4.md` Phase status and Rea
 ---
 
 ## Stage 6 — Integrated Prototype  
-**Status: In progress (current stage)**
+**Status: Done**
 
 > Combining systems into a single playable structure.
 
 ### Objective repository evidence
 - **Design lock complete:** integration targets are explicit in v1.4 consolidated design and implementation-plan DoD statements.
-- **Implementation in progress (already substantially integrated):**
-  - Canonical playable flow is wired and validated (`welcome/title → expedition-setup → onboarding → game → summit-success/debrief`) in `prototype/web-v1/ui/screens.js` and smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py`.
+- **Implementation complete:**
+  - Canonical playable flow is wired and validated end-to-end in `prototype/web-v1/ui/screens.js` and smoke coverage in `prototype/web-v1/tests/test_smoke_flow.py`.
   - Engine-state/UI integration is modularized across `prototype/web-v1/state/game-state.js`, `prototype/web-v1/engine/turn-resolution.js`, and `prototype/web-v1/ui/screens.js`.
-  - Part 2 narrative bridge gating is implemented in `prototype/web-v1/index.html` and documented as in-progress production scope in `docs/en/implementation-plan-v1.4.md`.
+  - Part 2 narrative bridge gating is implemented and documented.
 
-This stage is no longer “planned only”: it is the **current active integration stage**.
+---
+
+## v1.5.0 — Visual & Mechanical Refinement  
+**Status: Done**
+
+> Elevating visual fidelity and fixing decision-position mechanics.
+
+### Objective repository evidence
+- **Design lock complete:** visual identity decisions documented in `data/characters.json` visual profiles and Canvas2D rendering pipeline.
+- **Implementation complete:**
+  - Professional-grade Canvas2D mountain visualization (2991 lines, pure Canvas2D, zero new dependencies).
+  - Per-character climber visual identity (6 unique profiles: jacket color, hat, build, accessories).
+  - Decision-position bug fix: `wait`/`shoot_photo` forced to Hold at all altitudes.
+  - Delivery recorded in `docs/en/implementation-plan-v1.5.md` and `docs/es/plan-implementacion-v1.5.md`.
 
 ---
 
