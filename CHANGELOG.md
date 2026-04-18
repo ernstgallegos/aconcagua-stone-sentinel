@@ -17,6 +17,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 - Fixed climber walking off the terrain surface at higher altitudes: terrain center now follows the route path instead of being hardcoded at x=0, and the climber derives its X/Y position from Z via route interpolation (guarantees it stays on the terrain surface during movement between nodes).
 - Replaced linear route coordinates with realistic Ruta Normal profile: proportional z-spacing (long Horcones valley approach ~50% of route, compressed steep upper mountain), lateral x variation modelling the winding path (valley curves, La Travesía traverse near summit), and altitude-modulated ridge heights (wide valley walls at approach, narrow summit ridge).
+- Fixed visualization waypoint/route drift: `mountain-visualization.js` previously hardcoded 15 route nodes, causing the climber and terrain to silently diverge from runtime route state if `data/nodes.json` node count or order ever changed. Visualization waypoints are now derived from the runtime `normalizeRouteData()` output passed to `initMountainVisualization(container, runtimeNodes)`: `alt`/`camp`/`id` come directly from runtime data; `z` (depth) is computed via piecewise altitude-to-depth mapping; `x` (lateral offset) is computed from a normalized lateral profile applied to the node's fractional position in the route. `ALT_MIN`/`ALT_MAX`/`ALT_RANGE` are also derived at init time from live data. `screens.js` updated to pass `ROUTE_NODES` at init.
 
 ### Changed
 

@@ -9,44 +9,99 @@
 // projection, a walking climber silhouette, atmospheric fog/particles, and
 // day-cycle lighting. Zero external dependencies — pure Canvas2D.
 //
-// Public API (same contract as previous SVG version):
-//   initMountainVisualization(container)  — build canvas, start render loop
+// Public API:
+//   initMountainVisualization(container, runtimeNodes) — build canvas, start render loop
+//     runtimeNodes: array of normalized route nodes from normalizeRouteData(), each
+//     having at minimum { id, altitudeMeters, isCamp }. Visualization waypoints are
+//     generated from this data so the viz always matches the live route state.
 //   updateClimberPosition(positionIndex, options) — move climber + camera
-//   destroyMountainVisualization()        — stop loop, clean up
+//   destroyMountainVisualization()               — stop loop, clean up
 
 // ═══════════════════════════════════════════════════════════════
-// ROUTE DATA — 15 waypoints matching data/nodes.json routeIndex 0–14
-// Each has world-space x/z (horizontal progress / depth) and altitude y.
+// ROUTE DATA — derived at init from runtime route nodes
+// World-space coordinates: x = lateral offset, z = depth along route
 // ═══════════════════════════════════════════════════════════════
-// Coordinates modelled on the real Ruta Normal profile:
-// - Long gentle approach through the Horcones valley (~22km, 1400m gain)
-// - Steeper upper mountain from Plaza de Mulas (~10km, 2600m gain)
-// - La Travesía traverse visible as lateral movement near summit
-// - x = lateral offset (winding path), z = depth along route
-const ROUTE_NODES = [
-  { id: 'horcones',              alt: 2950, camp: false, x: 0,    z: 0    },
-  { id: 'horcones_lagoon',       alt: 3050, camp: false, x: 25,   z: 85   },
-  { id: 'approach_confluencia',  alt: 3390, camp: true,  x: 65,   z: 300  },
-  { id: 'cuesta_brava',          alt: 4000, camp: false, x: 40,   z: 520  },
-  { id: 'base_plaza_mulas',      alt: 4350, camp: true,  x: 10,   z: 750  },
-  { id: 'piedras_conway',        alt: 4750, camp: false, x: -15,  z: 880  },
-  { id: 'camp_canada',           alt: 5050, camp: true,  x: -25,  z: 970  },
-  { id: 'cambio_pendiente',      alt: 5300, camp: false, x: -10,  z: 1050 },
-  { id: 'camp_nido_condores',    alt: 5560, camp: true,  x: 5,    z: 1120 },
-  { id: 'balcon_amarillo',       alt: 5800, camp: false, x: 15,   z: 1180 },
-  { id: 'camp_colera',           alt: 5970, camp: true,  x: 5,    z: 1230 },
-  { id: 'portezuelo_viento',     alt: 6500, camp: false, x: -15,  z: 1310 },
-  { id: 'travesia',              alt: 6630, camp: false, x: -45,  z: 1370 },
-  { id: 'canaleta',              alt: 6700, camp: false, x: -25,  z: 1420 },
-  { id: 'summit',                alt: 6962, camp: false, x: 0,    z: 1500 },
+
+// Lateral profile: normalized route position (0→1) → lateral x-offset.
+// Models the real Ruta Normal path: wide valley curves on approach,
+// leftward traverse at La Travesía, return to center at summit.
+// Independent of node count — used to interpolate x for any node set.
+const LATERAL_PROFILE = [
+  { t: 0.00, x:   0 },
+  { t: 0.05, x:  25 },
+  { t: 0.20, x:  65 },
+  { t: 0.35, x:  40 },
+  { t: 0.50, x:  10 },
+  { t: 0.59, x: -15 },
+  { t: 0.65, x: -25 },
+  { t: 0.70, x: -10 },
+  { t: 0.75, x:   5 },
+  { t: 0.79, x:  15 },
+  { t: 0.82, x:   5 },
+  { t: 0.87, x: -15 },
+  { t: 0.91, x: -45 },
+  { t: 0.95, x: -25 },
+  { t: 1.00, x:   0 },
 ];
 
-const ALT_MIN = 2950;
-const ALT_MAX = 6962;
-const ALT_RANGE = ALT_MAX - ALT_MIN;
+// Piecewise altitude → depth-z mapping that models the Ruta Normal profile:
+// long Horcones valley approach (50% of total z-range for ~35% of altitude gain),
+// steeper compressed upper mountain above Plaza de Mulas.
+const Z_TOTAL = 1500;
+const Z_APPROACH_SPLIT = 750;   // z at the approach/upper-mountain boundary
+const ALT_APPROACH_SPLIT = 4350; // altitude at Plaza de Mulas (approach boundary)
+
+function altToZ(altMeters, altMin, altMax) {
+  if (altMeters <= ALT_APPROACH_SPLIT) {
+    const span = ALT_APPROACH_SPLIT - altMin;
+    return span <= 0 ? 0 : ((altMeters - altMin) / span) * Z_APPROACH_SPLIT;
+  }
+  const span = altMax - ALT_APPROACH_SPLIT;
+  return span <= 0 ? Z_APPROACH_SPLIT
+    : Z_APPROACH_SPLIT + ((altMeters - ALT_APPROACH_SPLIT) / span) * (Z_TOTAL - Z_APPROACH_SPLIT);
+}
+
+function lerpLateral(t) {
+  for (let i = 0; i < LATERAL_PROFILE.length - 1; i++) {
+    if (t >= LATERAL_PROFILE[i].t && t <= LATERAL_PROFILE[i + 1].t) {
+      const dt = LATERAL_PROFILE[i + 1].t - LATERAL_PROFILE[i].t;
+      const frac = dt === 0 ? 0 : (t - LATERAL_PROFILE[i].t) / dt;
+      return LATERAL_PROFILE[i].x + (LATERAL_PROFILE[i + 1].x - LATERAL_PROFILE[i].x) * frac;
+    }
+  }
+  return t <= 0 ? LATERAL_PROFILE[0].x : LATERAL_PROFILE[LATERAL_PROFILE.length - 1].x;
+}
+
+/**
+ * Derive visualization waypoints from runtime normalized route nodes.
+ * Each runtime node needs { id, altitudeMeters, isCamp }.
+ * Returns an array of { id, alt, camp, x, z } for every node in order.
+ */
+function computeVizWaypoints(runtimeNodes) {
+  if (!runtimeNodes || runtimeNodes.length === 0) return [];
+  const alts = runtimeNodes.map(n => n.altitudeMeters || 0);
+  const altMin = Math.min(...alts);
+  const altMax = Math.max(...alts);
+  const n = runtimeNodes.length;
+  return runtimeNodes.map((node, idx) => ({
+    id:   node.id,
+    alt:  node.altitudeMeters || altMin,
+    camp: !!node.isCamp,
+    z:    altToZ(node.altitudeMeters || altMin, altMin, altMax),
+    x:    lerpLateral(n > 1 ? idx / (n - 1) : 0),
+  }));
+}
+
+// Module-level ROUTE_NODES — populated by initMountainVisualization()
+let ROUTE_NODES = [];
+
+// Altitude range — derived from ROUTE_NODES at init, used by altToY()
+let ALT_MIN = 2950;
+let ALT_MAX = 6962;
+let ALT_RANGE = ALT_MAX - ALT_MIN;
 
 function altToY(alt) {
-  return ((alt - ALT_MIN) / ALT_RANGE) * 180;
+  return ALT_RANGE > 0 ? ((alt - ALT_MIN) / ALT_RANGE) * 180 : 0;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -608,9 +663,26 @@ function prefersReducedMotion() {
  * Removes any previous visualization before creating a new one.
  *
  * @param {HTMLElement} container
+ * @param {Array} [runtimeNodes] — normalized route nodes from normalizeRouteData(),
+ *   each having { id, altitudeMeters, isCamp }. When provided the visualization
+ *   waypoints are derived from this data so the climber/terrain always match the
+ *   live route state regardless of node count. Falls back to the last computed
+ *   ROUTE_NODES if omitted (e.g. re-init without a fresh data load).
  */
-export function initMountainVisualization(container) {
+export function initMountainVisualization(container, runtimeNodes) {
   if (!container) return;
+
+  // Rebuild ROUTE_NODES from runtime data when provided
+  if (runtimeNodes && runtimeNodes.length > 0) {
+    ROUTE_NODES = computeVizWaypoints(runtimeNodes);
+    ALT_MIN  = Math.min(...ROUTE_NODES.map(n => n.alt));
+    ALT_MAX  = Math.max(...ROUTE_NODES.map(n => n.alt));
+    ALT_RANGE = ALT_MAX - ALT_MIN || 1;
+  }
+
+  // Guard: if ROUTE_NODES is still empty (no runtime data, no previous init),
+  // there is nothing to render. Return early rather than throw.
+  if (ROUTE_NODES.length === 0) return;
 
   destroyMountainVisualization();
   const existing = container.querySelector('.mountain-viz-canvas');
@@ -726,7 +798,7 @@ export function initMountainVisualization(container) {
 /**
  * Update the climber position on the mountain.
  *
- * @param {number} positionIndex — current route index (0–14)
+ * @param {number} positionIndex — index into the runtime POSITIONS array (0 … n-1)
  * @param {object} [options]
  * @param {number} [options.highestIndex] — highest position reached
  * @param {number} [options.minutesOfDay] — current time of day (0–1440)
