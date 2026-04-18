@@ -1900,8 +1900,12 @@ function startGame() {
   // clear resource warning
   clearElement(document.getElementById('resource-warning-box'));
 
-  // Initialize mountain profile visualization (re-init each run, passing current route nodes)
-  initMountainVisualization(document.querySelector('.mountain-main'), ROUTE_NODES);
+  // Initialize mountain profile visualization (re-init each run, passing current route nodes + character)
+  initMountainVisualization(
+    document.querySelector('.mountain-main'),
+    ROUTE_NODES,
+    { characterId: G.character?.id },
+  );
 
   renderPositionList();
   const logEntries = document.getElementById('log-entries');

@@ -13,9 +13,9 @@
 // Zero external dependencies — pure Canvas2D.
 //
 // Public API (same contract as previous version):
-//   initMountainVisualization(container, runtimeNodes) — build canvas, start render loop
-//   updateClimberPosition(positionIndex, options)      — move climber + camera
-//   destroyMountainVisualization()                     — stop loop, clean up
+//   initMountainVisualization(container, runtimeNodes, options) — build canvas, start render loop
+//   updateClimberPosition(positionIndex, options)               — move climber + camera
+//   destroyMountainVisualization()                              — stop loop, clean up
 
 // ═══════════════════════════════════════════════════════════════
 // ROUTE DATA — derived at init from runtime route nodes
@@ -458,11 +458,175 @@ class Particle {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// CHARACTER VISUAL PROFILES — per-character appearance & identity
+// ═══════════════════════════════════════════════════════════════
+
+const CHARACTER_PROFILES = {
+  // Francisco Aguirre — Argentine teacher/runner, standard build
+  francisco: {
+    jacketPrimary: '#b83d2e',    // Red (Argentine outdoor)
+    jacketHighlight: '#d44a38',
+    jacketShadow: '#a03528',
+    jacketDetail: 'rgba(0,0,0,0.15)',
+    hatColor: '#1e3b5e',         // Navy blue beanie
+    balaclavaColor: '#1a1a2a',
+    skinTone: '#c89868',         // Warm olive
+    skinHighlight: '#d4a874',
+    glovesColor: '#222',
+    legColor: '#3a3530',
+    legColorAlt: '#3a3a4a',
+    bootColor: '#1e1510',
+    gaiterColor: '#c94433',
+    packColor: '#5a3820',
+    packStrap: '#4a2e18',
+    matColor: '#6b7a55',
+    armColor: '#c94433',
+    sunglassColor: '#1a1a1a',
+    headlampColor: '#ff0',
+    buildScale: 1.0,             // Normal proportions
+    shoulderWidth: 1.0,
+    flagHint: null,              // Native country, no extra indicator needed
+  },
+  // Laura Kim — Korean physician, slimmer build, meticulous gear
+  laura: {
+    jacketPrimary: '#2e6a8b',    // Teal/cerulean blue
+    jacketHighlight: '#3a8ab0',
+    jacketShadow: '#1e5570',
+    jacketDetail: 'rgba(255,255,255,0.08)',
+    hatColor: '#eee8e0',         // Off-white / cream beanie
+    balaclavaColor: '#d0ccc4',
+    skinTone: '#e0c8a0',         // Light warm
+    skinHighlight: '#ecd6b2',
+    glovesColor: '#2a3a50',
+    legColor: '#2e2e36',
+    legColorAlt: '#323242',
+    bootColor: '#1e1510',
+    gaiterColor: '#2e6a8b',
+    packColor: '#3e5444',        // Olive green pack
+    packStrap: '#2e4034',
+    matColor: '#5a6a80',
+    armColor: '#2e7a9b',
+    sunglassColor: '#2a1a1a',
+    headlampColor: '#ffe',
+    buildScale: 0.9,             // Slightly smaller frame
+    shoulderWidth: 0.88,
+    flagHint: null,
+  },
+  // Erik Lundvall — Norwegian offshore engineer, tall/broad build
+  erik: {
+    jacketPrimary: '#d4a030',    // Mustard yellow / expedition gold
+    jacketHighlight: '#e4b840',
+    jacketShadow: '#b08828',
+    jacketDetail: 'rgba(0,0,0,0.12)',
+    hatColor: '#2a2a2e',         // Charcoal grey beanie
+    balaclavaColor: '#222228',
+    skinTone: '#e8c8a8',         // Fair Nordic
+    skinHighlight: '#f0d4b8',
+    glovesColor: '#333',
+    legColor: '#2a2a30',
+    legColorAlt: '#32323a',
+    bootColor: '#1e1510',
+    gaiterColor: '#d4a030',
+    packColor: '#4a4a52',        // Dark grey pack
+    packStrap: '#3a3a42',
+    matColor: '#5a5a62',
+    armColor: '#d4a838',
+    sunglassColor: '#1a1a1a',
+    headlampColor: '#ff0',
+    buildScale: 1.12,            // Tall, broad
+    shoulderWidth: 1.15,
+    flagHint: null,
+  },
+  // Daniela De Rossi — Italian photographer, athletic build, camera gear visible
+  daniela: {
+    jacketPrimary: '#6b3a78',    // Deep violet / plum
+    jacketHighlight: '#8a4e96',
+    jacketShadow: '#552a62',
+    jacketDetail: 'rgba(255,255,255,0.06)',
+    hatColor: '#4a2a52',         // Purple-tinted beanie
+    balaclavaColor: '#322038',
+    skinTone: '#d4a878',         // Warm Mediterranean
+    skinHighlight: '#e0b88a',
+    glovesColor: '#2a2028',
+    legColor: '#302830',
+    legColorAlt: '#38303a',
+    bootColor: '#1e1510',
+    gaiterColor: '#6b3a78',
+    packColor: '#2e2e3a',        // Dark slate pack
+    packStrap: '#1e1e2a',
+    matColor: '#4a5060',
+    armColor: '#7b4a88',
+    sunglassColor: '#2a1a2a',
+    headlampColor: '#ffe8d0',
+    buildScale: 0.94,            // Athletic, slightly smaller
+    shoulderWidth: 0.92,
+    flagHint: 'camera',          // Camera visible on pack
+  },
+  // Blake Harris — American executive, stocky build
+  blake: {
+    jacketPrimary: '#2a2a2e',    // Near-black technical jacket
+    jacketHighlight: '#3a3a42',
+    jacketShadow: '#1a1a1e',
+    jacketDetail: 'rgba(255,255,255,0.05)',
+    hatColor: '#cc2200',         // Bright red beanie (striking contrast)
+    balaclavaColor: '#aa1a00',
+    skinTone: '#d4a070',         // Warm tan
+    skinHighlight: '#e0b080',
+    glovesColor: '#1a1a1e',
+    legColor: '#22222a',
+    legColorAlt: '#2a2a32',
+    bootColor: '#1e1510',
+    gaiterColor: '#444',
+    packColor: '#3a3a3e',        // Matching dark pack
+    packStrap: '#2a2a2e',
+    matColor: '#5a5a5e',
+    armColor: '#333338',
+    sunglassColor: '#0a0a0a',
+    headlampColor: '#ff0',
+    buildScale: 1.06,            // Stocky
+    shoulderWidth: 1.1,
+    flagHint: null,
+  },
+  // Irina Orlova — Russian former pro climber, lean/tall alpine build
+  irina: {
+    jacketPrimary: '#cc4422',    // Burnt orange-red
+    jacketHighlight: '#e05530',
+    jacketShadow: '#aa3318',
+    jacketDetail: 'rgba(0,0,0,0.1)',
+    hatColor: '#f0e8d0',         // Cream/pale gold beanie
+    balaclavaColor: '#e0d8c0',
+    skinTone: '#eedcc8',         // Very fair
+    skinHighlight: '#f8e8d8',
+    glovesColor: '#2a2a30',
+    legColor: '#2e2830',
+    legColorAlt: '#36303a',
+    bootColor: '#1e1510',
+    gaiterColor: '#cc4422',
+    packColor: '#4e3a30',        // Warm brown pack
+    packStrap: '#3e2a20',
+    matColor: '#6a6a5a',
+    armColor: '#d44a28',
+    sunglassColor: '#1a1a1a',
+    headlampColor: '#ffe',
+    buildScale: 1.04,            // Lean but tall
+    shoulderWidth: 0.95,
+    flagHint: null,
+  },
+};
+
+// Default fallback profile (generic climber, matches original red jacket)
+const DEFAULT_PROFILE = CHARACTER_PROFILES.francisco;
+
+function getCharacterProfile(characterId) {
+  return CHARACTER_PROFILES[characterId] || DEFAULT_PROFILE;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // CLIMBER — high-detail animated figure with altitude-aware gear
 // ═══════════════════════════════════════════════════════════════
 
 class Climber {
-  constructor() {
+  constructor(characterId) {
     this.worldX = ROUTE_NODES[0].x;
     this.worldY = altToY(ROUTE_NODES[0].alt);
     this.worldZ = ROUTE_NODES[0].z;
@@ -482,6 +646,9 @@ class Climber {
     this._idleTime = 0;
     this._headTiltPhase = 0;
     this._fidgetPhase = 0;
+    // Character visual profile
+    this.characterId = characterId || null;
+    this.profile = getCharacterProfile(characterId);
   }
   setTarget(nodeIdx) {
     const idx = clampIdx(nodeIdx);
@@ -560,7 +727,8 @@ class Climber {
     const projected = camera.project(this.worldX, this.worldY, this.worldZ, canvasW, canvasH);
     if (!projected || projected.depth > 600) return;
     const { x, y, scale } = projected;
-    const size = Math.max(8, Math.min(scale * 14, 48));
+    const p = this.profile;
+    const size = Math.max(8, Math.min(scale * 14 * p.buildScale, 48));
 
     ctx.save();
     ctx.translate(x, y);
@@ -614,8 +782,9 @@ class Climber {
     const headR = h * 0.13;
     const torsoH = h * 0.34;
     const legH = h * 0.36;
-    // Wider stance when descending
-    const stanceWidth = this.currentAction === 'descend' ? 0.09 : 0.06;
+    // Wider stance when descending, scaled by character build
+    const stanceBase = this.currentAction === 'descend' ? 0.09 : 0.06;
+    const stanceWidth = stanceBase * p.shoulderWidth;
 
     // Ground shadow — elongated in sun direction
     const shadowAlpha = atmosphere.ambientLight * 0.25;
@@ -626,7 +795,7 @@ class Climber {
 
     // === Legs ===
     const legY = -torsoH + breathBob - bodyBob;
-    const legColor = altNorm > 0.7 ? '#3a3a4a' : '#4a3828';
+    const legColor = altNorm > 0.7 ? p.legColorAlt : p.legColor;
     ctx.strokeStyle = legColor;
     ctx.lineWidth = Math.max(1.8, h * 0.065);
     ctx.lineCap = 'round';
@@ -643,13 +812,13 @@ class Climber {
 
     // Boots — heavier at altitude (mountaineering boots)
     const bootSize = Math.max(2.5, h * (altNorm > 0.6 ? 0.065 : 0.05));
-    ctx.fillStyle = '#1e1510';
+    ctx.fillStyle = p.bootColor;
     ctx.fillRect(-h * stanceWidth + legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
     ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
 
     // Gaiter detail at altitude
     if (altNorm > 0.55) {
-      ctx.fillStyle = '#c94433';
+      ctx.fillStyle = p.gaiterColor;
       const gW = bootSize * 0.7;
       ctx.fillRect(-h * stanceWidth + legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
       ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
@@ -657,11 +826,11 @@ class Climber {
 
     // === Torso (jacket with gradient) ===
     const torsoY = -torsoH - headR * 2 + breathBob - bodyBob;
-    // Red jacket with subtle gradient for depth
+    // Character-specific jacket with subtle gradient for depth
     const jacketGrad = ctx.createLinearGradient(-h * 0.12, torsoY, h * 0.12, torsoY + torsoH);
-    jacketGrad.addColorStop(0, '#b83d2e');
-    jacketGrad.addColorStop(0.5, '#d44a38');
-    jacketGrad.addColorStop(1, '#a03528');
+    jacketGrad.addColorStop(0, p.jacketShadow);
+    jacketGrad.addColorStop(0.5, p.jacketHighlight);
+    jacketGrad.addColorStop(1, p.jacketShadow);
     ctx.fillStyle = jacketGrad;
     ctx.beginPath();
     ctx.moveTo(-h * 0.1, torsoY + torsoH);
@@ -674,7 +843,7 @@ class Climber {
     ctx.fill();
 
     // Jacket zipper line
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.strokeStyle = p.jacketDetail;
     ctx.lineWidth = Math.max(0.5, h * 0.015);
     ctx.beginPath();
     ctx.moveTo(0, torsoY + 2);
@@ -692,7 +861,7 @@ class Climber {
     ctx.fill();
 
     // === Backpack with detail ===
-    ctx.fillStyle = '#5a3820';
+    ctx.fillStyle = p.packColor;
     const bpW = h * 0.16;
     const bpH = torsoH * 0.75;
     const bpX = -bpW / 2 + h * 0.015;
@@ -704,7 +873,7 @@ class Climber {
     ctx.closePath();
     ctx.fill();
     // Backpack straps
-    ctx.strokeStyle = '#4a2e18';
+    ctx.strokeStyle = p.packStrap;
     ctx.lineWidth = Math.max(0.7, h * 0.02);
     ctx.beginPath();
     ctx.moveTo(bpX + 2, torsoY + 3);
@@ -715,13 +884,33 @@ class Climber {
     ctx.lineTo(h * 0.08, torsoY);
     ctx.stroke();
     // Sleeping mat roll on pack
-    ctx.fillStyle = '#6b7a55';
+    ctx.fillStyle = p.matColor;
     ctx.beginPath();
     ctx.ellipse(bpX + bpW / 2, torsoY + bpH + 1, bpW * 0.4, h * 0.03, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    // Daniela: camera body visible on pack strap
+    if (p.flagHint === 'camera') {
+      const camX = bpX + bpW + h * 0.02;
+      const camY = torsoY + bpH * 0.3;
+      const camW = h * 0.06;
+      const camH = h * 0.04;
+      ctx.fillStyle = '#222';
+      ctx.fillRect(camX, camY, camW, camH);
+      // Lens circle
+      ctx.fillStyle = '#4488aa';
+      ctx.beginPath();
+      ctx.arc(camX + camW * 0.65, camY + camH * 0.5, camH * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      // Lens glint
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.beginPath();
+      ctx.arc(camX + camW * 0.7, camY + camH * 0.35, camH * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     // === Arms ===
-    ctx.strokeStyle = '#c94433';
+    ctx.strokeStyle = p.armColor;
     ctx.lineWidth = Math.max(1.4, h * 0.055);
     ctx.lineCap = 'round';
     // Left arm
@@ -737,7 +926,7 @@ class Climber {
 
     // Gloves at high altitude
     if (altNorm > 0.5) {
-      ctx.fillStyle = '#222';
+      ctx.fillStyle = p.glovesColor;
       const gloveR = Math.max(1.5, h * 0.03);
       ctx.beginPath();
       ctx.arc(-h * 0.19 + armSwing * h * 0.15, torsoY + torsoH * 0.72, gloveR, 0, Math.PI * 2);
@@ -810,10 +999,10 @@ class Climber {
     // === Head ===
     const headY = torsoY - headR * 0.8 + breathBob - bodyBob - headTiltOffset * h;
     // Neck
-    ctx.fillStyle = '#c99a6a';
+    ctx.fillStyle = p.skinTone;
     ctx.fillRect(-h * 0.025, torsoY - h * 0.02, h * 0.05, headR * 0.6);
     // Face
-    ctx.fillStyle = '#d4a874';
+    ctx.fillStyle = p.skinHighlight;
     ctx.beginPath();
     ctx.arc(0, headY, headR, 0, Math.PI * 2);
     ctx.fill();
@@ -828,21 +1017,21 @@ class Climber {
     // === Hat / Balaclava ===
     if (altNorm > 0.7) {
       // Full balaclava at high altitude
-      ctx.fillStyle = '#222';
+      ctx.fillStyle = p.balaclavaColor;
       ctx.beginPath();
       ctx.arc(0, headY, headR * 1.08, 0, Math.PI * 2);
       ctx.fill();
       // Eye slit
-      ctx.fillStyle = '#d4a874';
+      ctx.fillStyle = p.skinHighlight;
       ctx.fillRect(-headR * 0.5, headY - headR * 0.15, headR, headR * 0.3);
     } else {
-      // Beanie
-      ctx.fillStyle = '#2a4060';
+      // Beanie — character-colored
+      ctx.fillStyle = p.hatColor;
       ctx.beginPath();
       ctx.arc(0, headY - headR * 0.2, headR * 1.08, Math.PI, Math.PI * 2);
       ctx.fill();
       // Beanie fold line
-      ctx.strokeStyle = '#1e3050';
+      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
       ctx.lineWidth = Math.max(0.5, h * 0.012);
       ctx.beginPath();
       ctx.arc(0, headY - headR * 0.05, headR * 1.02, Math.PI + 0.2, Math.PI * 2 - 0.2);
@@ -850,7 +1039,7 @@ class Climber {
 
       // Sunglasses
       if (altNorm > 0.3 && atmosphere.ambientLight > 0.4) {
-        ctx.fillStyle = '#1a1a1a';
+        ctx.fillStyle = p.sunglassColor;
         ctx.fillRect(-headR * 0.55, headY - headR * 0.2, headR * 0.45, headR * 0.28);
         ctx.fillRect(headR * 0.1, headY - headR * 0.2, headR * 0.45, headR * 0.28);
         // Bridge
@@ -866,7 +1055,7 @@ class Climber {
     // === Headlamp at night ===
     if (atmosphere.isNight || atmosphere.hour < 6 || atmosphere.hour > 19) {
       // Lamp on forehead
-      ctx.fillStyle = '#ff0';
+      ctx.fillStyle = p.headlampColor;
       const lampR = Math.max(1, headR * 0.2);
       ctx.beginPath();
       ctx.arc(0, headY - headR * 0.7, lampR, 0, Math.PI * 2);
@@ -1926,8 +2115,11 @@ function prefersReducedMotion() {
  *   waypoints are derived from this data so the climber/terrain always match the
  *   live route state regardless of node count. Falls back to the last computed
  *   ROUTE_NODES if omitted (e.g. re-init without a fresh data load).
+ * @param {Object} [options] — optional configuration
+ * @param {string} [options.characterId] — ID of the selected character for
+ *   per-character visual styling (jacket color, build, skin tone, etc.)
  */
-export function initMountainVisualization(container, runtimeNodes) {
+export function initMountainVisualization(container, runtimeNodes, options = {}) {
   if (!container) return;
 
   // Rebuild ROUTE_NODES from runtime data when provided
@@ -1960,7 +2152,7 @@ export function initMountainVisualization(container, runtimeNodes) {
   if (!ctx) return;
 
   const camera = new Camera();
-  const climber = new Climber();
+  const climber = new Climber(options.characterId);
   const transitionMgr = new TransitionManager();
   const terrainStrips = generateTerrainStrips(160); // More strips for detail
   const backdropRng = seededRng(333);
