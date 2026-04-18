@@ -9,6 +9,25 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.5.0] — 2026-04
+
+### Added
+
+- **Professional-grade Canvas2D mountain visualization** — comprehensive visual fidelity upgrade of `ui/helpers/mountain-visualization.js` elevating the in-game visualizer to production-tier quality. Same public API contract. Zero new dependencies — pure Canvas2D. Respects `prefers-reduced-motion`. Enhancements include:
+  - **Enhanced Climber figure**: character-colored sleeping bag with pillow/face/quilted seams/zipper/breath vapor; torso jacket with 4-stop gradient shading, shoulder seam lines, chest pocket, collar/hood-up toggle based on wind/snow conditions, zipper pull tab, fresnel-style rim light; crampons rendering at high altitude (>75% altitude norm); boot detail with shaped soles and lace tongue lines; hip belt, sternum strap, and compression strap on backpack; backpack lid flap and gradient body; rope coil visible at altitude >60%; sleeping mat with spiral end texture.
+  - **Breath vapor system**: visible breath condensation puffs from climber at high altitude or cold/night conditions — dual-ellipse animation synced to breathing cycle.
+  - **Enhanced headlamp**: headlamp strap across forehead, lamp housing detail, wider two-layer beam cone with inner bright and outer diffuse light gradient.
+  - **Enhanced camp markers**: gradient-shaded tent faces (lit sun-side vs shadow), fabric fold lines, ridge pole seam, guy ropes with stake pegs, ground shadow ellipse, door opening with gradient, second tent at base camps (>4000m), animated fire with 3-flame system (individual oscillation + ember + ground light pool).
+  - **Summit flag upgrade**: cairn rock pile at pole base, metallic gradient pole with tip ornament, 8-segment higher-fidelity waving cloth with gravity droop physics, Sol de Mayo golden sun with 8-ray star on white band center, fold depth shadow lines.
+  - **God rays / crepuscular rays**: volumetric light shafts from sun at dawn/dusk and golden-hour transitions (5 rays with screen-mode blending).
+  - **Shooting stars**: rare (1.5% chance per frame-group) meteor streaks across the night sky with gradient fade trails.
+  - **Atmospheric horizon band**: subtle gradient band at horizon line with time-of-day-aware color (night blue, dawn/dusk warm, day haze).
+  - **Enhanced post-processing**: multi-stop radial vignette with warm edge tint; finer-grain film noise (8px cells, varied density); radial gradient chromatic aberration (smoother than rectangular); cinematic color grading per altitude band (approach warmth, high-altitude desaturation + purple shift, golden-hour warm shadows, night teal in lower canvas, midday shadow deepening); multi-radius sun bloom (outer + inner); lens flare ghost elements (4 color-shifted ghosts along sun-center line); depth-of-field edge softening (top/bottom gradient bands); moon halo ring; enhanced collapse red-flash with multi-stop ring; multi-stop fatigue/exposure vignette.
+
+### Changed
+
+- Version bumped from 1.4.8 to 1.5.0 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings), prototype intro chip (`prototype/web-v1/index.html`), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/simulation_engine.md`.
+
 ### Added
 
 - Per-character visual identity in mountain visualization: each of the 6 playable characters now renders with a unique appearance on the Canvas2D climber figure. Character visual profiles define jacket primary/highlight/shadow colors, hat/balaclava color, skin tone, gloves, gaiters, boots, pack, arm color, sunglasses, headlamp tint, build scale (body size multiplier), and shoulder width. `initMountainVisualization` now accepts an optional third argument `{ characterId }` to configure the climber appearance. Daniela De Rossi additionally renders a visible camera body on her pack strap.

@@ -501,7 +501,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.8',
+      introVersionValue: 'Prototype · v1.5.0',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
