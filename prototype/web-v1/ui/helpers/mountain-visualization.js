@@ -238,6 +238,9 @@ class Camera {
     this.fov = 280;
     this.tilt = 0.35;
     this.sway = 0;
+    this.zoomOffset = 0;
+    this.shakeX = 0;
+    this.shakeY = 0;
   }
   update(dt, time) {
     const speed = Math.min(dt * 2.2, 1);
@@ -248,9 +251,9 @@ class Camera {
     this.sway = Math.sin(time * 0.4) * 0.3 + Math.sin(time * 0.7) * 0.15;
   }
   project(worldX, worldY, worldZ, canvasW, canvasH) {
-    const relX = worldX - this.x + this.sway;
-    const relY = worldY - this.y;
-    const relZ = worldZ - this.z;
+    const relX = worldX - this.x + this.sway + this.shakeX;
+    const relY = worldY - this.y + this.shakeY;
+    const relZ = worldZ - this.z + this.zoomOffset;
     if (relZ <= 1) return null;
     const scale = this.fov / relZ;
     return {
@@ -264,6 +267,148 @@ class Camera {
     this.targetX = cx;
     this.targetY = cy + 60;
     this.targetZ = cz - 140;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRANSITION MANAGER — post-decision visual effects
+// ═══════════════════════════════════════════════════════════════
+
+class TransitionEffect {
+  constructor(type, duration, intensity = 1) {
+    this.type = type;
+    this.duration = duration;
+    this.elapsed = 0;
+    this.intensity = intensity;
+    this.active = true;
+  }
+  progress() { return Math.min(this.elapsed / this.duration, 1); }
+  update(dt) {
+    this.elapsed += dt;
+    if (this.elapsed >= this.duration) this.active = false;
+  }
+}
+
+class TransitionManager {
+  constructor() {
+    this.effects = [];
+    this.vignetteAlpha = 0;
+    this.vignetteColor = { r: 0, g: 0, b: 0 };
+    this.dimLevel = 0;
+    this.redFlashAlpha = 0;
+    this.cloudSpeedMult = 1;
+  }
+
+  triggerAction(action) {
+    this.effects = this.effects.filter(e => e.type !== 'action');
+    switch (action) {
+      case 'advance':
+        this.effects.push(new TransitionEffect('zoom-push', 2.0, 1.0));
+        this.effects.push(new TransitionEffect('wind-spike', 2.0, 1.0));
+        break;
+      case 'advance_slowly':
+        this.effects.push(new TransitionEffect('zoom-push', 2.0, 0.4));
+        break;
+      case 'descend':
+        this.effects.push(new TransitionEffect('zoom-pull', 2.0, 1.0));
+        this.effects.push(new TransitionEffect('fog-clear', 2.0, 1.0));
+        break;
+      case 'wait':
+        this.effects.push(new TransitionEffect('cloud-timelapse', 2.0, 1.0));
+        break;
+      case 'sleep':
+        this.effects.push(new TransitionEffect('sleep-dim', 3.0, 1.0));
+        break;
+    }
+  }
+
+  triggerFlags(flags) {
+    if (!flags || !Array.isArray(flags)) return;
+    for (const flag of flags) {
+      if (flag === 'white-wind-hit') {
+        this.effects.push(new TransitionEffect('shake', 1.5, 2.5));
+      } else if (flag === 'collapse') {
+        this.effects.push(new TransitionEffect('shake', 1.5, 5.0));
+        this.effects.push(new TransitionEffect('red-flash', 1.5, 1.0));
+      }
+    }
+  }
+
+  setBodyState(fatigue, exposure) {
+    const targetFatigueVignette = fatigue > 70 ? (fatigue - 70) / 30 * 0.25 : 0;
+    const targetExposureVignette = exposure > 70 ? (exposure - 70) / 30 * 0.2 : 0;
+    this.vignetteAlpha = Math.max(targetFatigueVignette, targetExposureVignette);
+    this.vignetteColor = exposure > 70 && exposure >= fatigue
+      ? { r: 40, g: 80, b: 160 }
+      : { r: 0, g: 0, b: 0 };
+  }
+
+  update(dt, camera, reducedMotion) {
+    if (reducedMotion) {
+      camera.zoomOffset = 0;
+      camera.shakeX = 0;
+      camera.shakeY = 0;
+      this.dimLevel = 0;
+      this.redFlashAlpha = 0;
+      this.cloudSpeedMult = 1;
+      this.effects.length = 0;
+      return;
+    }
+
+    camera.zoomOffset = 0;
+    camera.shakeX = 0;
+    camera.shakeY = 0;
+    this.dimLevel = 0;
+    this.redFlashAlpha = 0;
+    this.cloudSpeedMult = 1;
+
+    for (let i = this.effects.length - 1; i >= 0; i--) {
+      const e = this.effects[i];
+      e.update(dt);
+      const p = e.progress();
+      const ease = 1 - p;
+
+      switch (e.type) {
+        case 'zoom-push':
+          camera.zoomOffset = -15 * e.intensity * ease;
+          break;
+        case 'zoom-pull':
+          camera.zoomOffset = 20 * e.intensity * ease;
+          break;
+        case 'wind-spike':
+          break;
+        case 'fog-clear':
+          break;
+        case 'cloud-timelapse':
+          this.cloudSpeedMult = 1 + 4 * ease;
+          break;
+        case 'sleep-dim': {
+          const mid = 0.5;
+          this.dimLevel = p < mid
+            ? smoothstep(0, mid, p) * 0.6
+            : (1 - smoothstep(mid, 1, p)) * 0.6;
+          break;
+        }
+        case 'shake': {
+          const decay = ease * ease;
+          camera.shakeX = (Math.random() - 0.5) * e.intensity * decay;
+          camera.shakeY = (Math.random() - 0.5) * e.intensity * decay;
+          break;
+        }
+        case 'red-flash':
+          this.redFlashAlpha = 0.25 * ease;
+          break;
+      }
+
+      if (!e.active) this.effects.splice(i, 1);
+    }
+  }
+
+  isWindSpiking() {
+    return this.effects.some(e => e.type === 'wind-spike' && e.active);
+  }
+  isFogClearing() {
+    return this.effects.some(e => e.type === 'fog-clear' && e.active);
   }
 }
 
@@ -330,6 +475,13 @@ class Climber {
     // Trail of recent positions for footprint rendering
     this.trail = [];
     this.trailTimer = 0;
+    // Pose system
+    this.currentAction = 'wait';
+    this.fatigueLevel = 0; // 0-100 from game state
+    // Idle micro-animation timers
+    this._idleTime = 0;
+    this._headTiltPhase = 0;
+    this._fidgetPhase = 0;
   }
   setTarget(nodeIdx) {
     const idx = clampIdx(nodeIdx);
@@ -353,7 +505,8 @@ class Climber {
     this.isMoving = dist > 0.08;
 
     // Walk cycle slows with fatigue
-    const walkSpeed = 8 - this.fatigueFactor * 3;
+    const fatigueNorm = this.fatigueLevel / 100;
+    const walkSpeed = 8 - this.fatigueFactor * 3 - fatigueNorm * 1.5;
     if (this.isMoving) {
       this.walkCycle += dt * walkSpeed;
     } else {
@@ -361,6 +514,15 @@ class Climber {
     }
     // Heavier breathing at altitude
     this.breathCycle += dt * (1.5 + this.fatigueFactor * 1.0);
+
+    // Idle micro-animations
+    if (!this.isMoving) {
+      this._idleTime += dt;
+    } else {
+      this._idleTime = 0;
+    }
+    this._headTiltPhase += dt;
+    this._fidgetPhase += dt;
 
     // Drop trail markers
     this.trailTimer += dt;
@@ -372,6 +534,28 @@ class Climber {
     for (const tp of this.trail) tp.age += dt;
   }
 
+  _drawSleepingBag(ctx, h, atmosphere) {
+    // Sleeping bag near terrain instead of standing climber
+    const bagW = h * 0.55;
+    const bagH = h * 0.18;
+    ctx.fillStyle = '#2a4060';
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bagW, bagH, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Pillow end
+    ctx.fillStyle = '#3a5070';
+    ctx.beginPath();
+    ctx.ellipse(-bagW * 0.7, 0, bagH * 0.9, bagH * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Bag seam
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = Math.max(0.5, h * 0.01);
+    ctx.beginPath();
+    ctx.moveTo(-bagW * 0.3, -bagH * 0.5);
+    ctx.quadraticCurveTo(bagW * 0.2, -bagH * 0.1, bagW * 0.8, 0);
+    ctx.stroke();
+  }
+
   draw(ctx, camera, canvasW, canvasH, atmosphere) {
     const projected = camera.project(this.worldX, this.worldY, this.worldZ, canvasW, canvasH);
     if (!projected || projected.depth > 600) return;
@@ -381,17 +565,57 @@ class Climber {
     ctx.save();
     ctx.translate(x, y);
 
+    const h = size;
+
+    // Sleep pose: draw sleeping bag and return early
+    if (this.currentAction === 'sleep') {
+      this._drawSleepingBag(ctx, h, atmosphere);
+      ctx.restore();
+      return;
+    }
+
+    // Pose-based body tilt
+    const fatigueNorm = this.fatigueLevel / 100;
+    let poseTilt = 0;
+    if (this.currentAction === 'advance') poseTilt = 0.14; // ~8° forward
+    else if (this.currentAction === 'advance_slowly') poseTilt = 0.08;
+    else if (this.currentAction === 'descend') poseTilt = -0.12; // backward lean
+    // Fatigue adds progressive forward hunch
+    poseTilt += fatigueNorm * 0.1;
+
+    // Idle micro-animations
+    let headTiltOffset = 0;
+    let armFidgetOffset = 0;
+    if (!this.isMoving && this.currentAction !== 'sleep') {
+      // Head tilt looking up at summit every 5s for 1s
+      const headCycle = this._headTiltPhase % 5.0;
+      if (headCycle < 1.0) headTiltOffset = Math.sin(headCycle * Math.PI) * 0.08;
+      // Pack strap fidget every 8s
+      const fidgetCycle = this._fidgetPhase % 8.0;
+      if (fidgetCycle < 0.6) armFidgetOffset = Math.sin(fidgetCycle / 0.6 * Math.PI) * 0.12;
+    }
+
+    // Fatigue walk irregularity
+    const limpOffset = fatigueNorm > 0.5 ? Math.sin(this.walkCycle * 0.7) * fatigueNorm * 0.15 : 0;
+
+    if (poseTilt !== 0) ctx.rotate(poseTilt);
+
     const breathAmp = 0.8 + this.fatigueFactor * 0.6;
     const breathBob = Math.sin(this.breathCycle) * breathAmp;
-    const legSwing = this.isMoving ? Math.sin(this.walkCycle) * 0.4 : 0;
-    const armSwing = this.isMoving ? Math.sin(this.walkCycle + Math.PI) * 0.35 : 0;
-    const bodyBob = this.isMoving ? Math.abs(Math.sin(this.walkCycle * 2)) * 1.8 : 0;
+    const legSwing = this.isMoving ? Math.sin(this.walkCycle + limpOffset) * 0.4 : 0;
+    const armRange = Math.max(0.1, 0.35 - fatigueNorm * 0.2);
+    const armSwing = this.isMoving
+      ? Math.sin(this.walkCycle + Math.PI) * armRange + armFidgetOffset
+      : armFidgetOffset;
+    const asymmetry = fatigueNorm > 0.3 ? Math.sin(this.walkCycle * 1.3) * fatigueNorm * 0.4 : 0;
+    const bodyBob = this.isMoving ? (Math.abs(Math.sin(this.walkCycle * 2)) * 1.8 + asymmetry) : 0;
     const altNorm = ALT_RANGE > 0 ? (lerpRouteAlt(this.worldZ) - ALT_MIN) / ALT_RANGE : 0;
 
-    const h = size;
     const headR = h * 0.13;
     const torsoH = h * 0.34;
     const legH = h * 0.36;
+    // Wider stance when descending
+    const stanceWidth = this.currentAction === 'descend' ? 0.09 : 0.06;
 
     // Ground shadow — elongated in sun direction
     const shadowAlpha = atmosphere.ambientLight * 0.25;
@@ -408,27 +632,27 @@ class Climber {
     ctx.lineCap = 'round';
     // Left leg
     ctx.beginPath();
-    ctx.moveTo(-h * 0.06, legY);
-    ctx.lineTo(-h * 0.06 + legSwing * h * 0.22, legY + legH);
+    ctx.moveTo(-h * stanceWidth, legY);
+    ctx.lineTo(-h * stanceWidth + legSwing * h * 0.22, legY + legH);
     ctx.stroke();
     // Right leg
     ctx.beginPath();
-    ctx.moveTo(h * 0.06, legY);
-    ctx.lineTo(h * 0.06 - legSwing * h * 0.22, legY + legH);
+    ctx.moveTo(h * stanceWidth, legY);
+    ctx.lineTo(h * stanceWidth - legSwing * h * 0.22, legY + legH);
     ctx.stroke();
 
     // Boots — heavier at altitude (mountaineering boots)
     const bootSize = Math.max(2.5, h * (altNorm > 0.6 ? 0.065 : 0.05));
     ctx.fillStyle = '#1e1510';
-    ctx.fillRect(-h * 0.06 + legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
-    ctx.fillRect(h * 0.06 - legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
+    ctx.fillRect(-h * stanceWidth + legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
+    ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
 
     // Gaiter detail at altitude
     if (altNorm > 0.55) {
       ctx.fillStyle = '#c94433';
       const gW = bootSize * 0.7;
-      ctx.fillRect(-h * 0.06 + legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
-      ctx.fillRect(h * 0.06 - legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
+      ctx.fillRect(-h * stanceWidth + legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
+      ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
     }
 
     // === Torso (jacket with gradient) ===
@@ -523,7 +747,7 @@ class Climber {
       ctx.fill();
     }
 
-    // === Trekking pole / Ice axe ===
+    // === Trekking pole / Ice axe (pose-aware) ===
     const poleHandX = h * 0.19 - armSwing * h * 0.15;
     const poleHandY = torsoY + torsoH * 0.72;
     if (altNorm > 0.75) {
@@ -532,7 +756,8 @@ class Climber {
       ctx.lineWidth = Math.max(1, h * 0.025);
       ctx.beginPath();
       ctx.moveTo(poleHandX, poleHandY);
-      ctx.lineTo(poleHandX + h * 0.04, poleHandY + legH * 0.7);
+      const axeExtend = this.currentAction === 'advance' ? 0.9 : 0.7;
+      ctx.lineTo(poleHandX + h * 0.04, poleHandY + legH * axeExtend);
       ctx.stroke();
       // Axe head
       ctx.strokeStyle = '#778';
@@ -541,8 +766,31 @@ class Climber {
       ctx.moveTo(poleHandX - h * 0.04, poleHandY - h * 0.01);
       ctx.lineTo(poleHandX + h * 0.04, poleHandY + h * 0.01);
       ctx.stroke();
+    } else if (this.currentAction === 'wait') {
+      // Pole resting at side
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = Math.max(0.8, h * 0.02);
+      ctx.beginPath();
+      ctx.moveTo(poleHandX + h * 0.02, poleHandY);
+      ctx.lineTo(poleHandX + h * 0.02, poleHandY + legH * 0.95);
+      ctx.stroke();
+    } else if (this.currentAction === 'descend') {
+      // Pole behind as brake
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = Math.max(0.8, h * 0.02);
+      ctx.beginPath();
+      ctx.moveTo(poleHandX, poleHandY);
+      ctx.lineTo(poleHandX - h * 0.08, poleHandY + legH * 0.9);
+      ctx.stroke();
+      const basketY = poleHandY + legH * 0.8;
+      const basketX = poleHandX - h * 0.07;
+      ctx.strokeStyle = '#777';
+      ctx.lineWidth = Math.max(0.5, h * 0.012);
+      ctx.beginPath();
+      ctx.arc(basketX, basketY, h * 0.025, 0, Math.PI * 2);
+      ctx.stroke();
     } else {
-      // Trekking pole
+      // Trekking pole — forward (advance / advance_slowly)
       ctx.strokeStyle = '#999';
       ctx.lineWidth = Math.max(0.8, h * 0.02);
       ctx.beginPath();
@@ -560,7 +808,7 @@ class Climber {
     }
 
     // === Head ===
-    const headY = torsoY - headR * 0.8 + breathBob - bodyBob;
+    const headY = torsoY - headR * 0.8 + breathBob - bodyBob - headTiltOffset * h;
     // Neck
     ctx.fillStyle = '#c99a6a';
     ctx.fillRect(-h * 0.025, torsoY - h * 0.02, h * 0.05, headR * 0.6);
@@ -769,6 +1017,66 @@ function drawTerrain(ctx, camera, strips, canvasW, canvasH, atmosphere, time) {
       ctx.fill();
     }
 
+    // === Procedural terrain texture ===
+    if (fogAmount < 0.5) {
+      const texAlpha = (1 - fogAmount) * 0.15;
+      const texRng = seededRng(Math.round(curr.strip.z * 100 + i));
+      const midX = (curr.center.x + next.center.x) * 0.5;
+      const midY = (curr.center.y + next.center.y) * 0.5;
+
+      // Inter-strip shadow line at base of each strip
+      ctx.strokeStyle = `rgba(0,0,0,${texAlpha * 0.5})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(curr.left ? curr.left.x : midX - 30, next.center.y + 1);
+      ctx.lineTo(curr.right ? curr.right.x : midX + 30, next.center.y + 1);
+      ctx.stroke();
+
+      // Rock fracture lines (altNorm 0.25–0.75)
+      if (curr.altNorm >= 0.25 && curr.altNorm <= 0.75) {
+        ctx.strokeStyle = `rgba(60,55,50,${texAlpha})`;
+        ctx.lineWidth = 0.5;
+        const nFractures = 2 + Math.floor(texRng());
+        for (let f = 0; f < nFractures; f++) {
+          const fx = lerpVal(curr.center.x, curr.right ? curr.right.x : midX + 20, texRng() * 0.6 + 0.1);
+          const fy = lerpVal(curr.center.y, next.center.y, texRng());
+          ctx.beginPath();
+          ctx.moveTo(fx, fy);
+          ctx.lineTo(fx + (texRng() - 0.5) * 8, fy + 3 + texRng() * 4);
+          ctx.stroke();
+        }
+      }
+
+      // Scree dots (altNorm 0.35–0.65)
+      if (curr.altNorm >= 0.35 && curr.altNorm <= 0.65) {
+        ctx.fillStyle = `rgba(90,85,75,${texAlpha * 0.8})`;
+        const nDots = 3 + Math.floor(texRng() * 3);
+        for (let d = 0; d < nDots; d++) {
+          const dx = lerpVal(curr.center.x - 10, curr.right ? curr.right.x : midX + 10, texRng());
+          const dy = lerpVal(curr.center.y, next.center.y, texRng());
+          const dr = 0.5 + texRng() * 1.5;
+          ctx.beginPath();
+          ctx.arc(dx, dy, dr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Snow sastrugi texture (snow-covered areas)
+      if (curr.strip.snowCover > 0.2) {
+        ctx.strokeStyle = `rgba(240,245,255,${texAlpha * curr.strip.snowCover})`;
+        ctx.lineWidth = 0.6;
+        const nCurves = 2 + Math.floor(texRng());
+        for (let s = 0; s < nCurves; s++) {
+          const sx = lerpVal(curr.center.x, curr.right ? curr.right.x : midX + 15, 0.15 + texRng() * 0.5);
+          const sy = lerpVal(curr.center.y, next.center.y, texRng());
+          ctx.beginPath();
+          ctx.moveTo(sx - 4, sy);
+          ctx.quadraticCurveTo(sx, sy - 1.5 - texRng() * 2, sx + 4 + texRng() * 3, sy + texRng() * 1.5);
+          ctx.stroke();
+        }
+      }
+    }
+
     // === Route trail ===
     if (i < visibleStrips.length - 2) {
       const rp = camera.project(lerpRouteX(curr.strip.z), altToY(curr.strip.baseAlt) + 0.5, curr.strip.z, canvasW, canvasH);
@@ -802,7 +1110,11 @@ function drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, time) {
     const size = Math.max(3, Math.min(projected.scale * 7, 16));
 
     ctx.save();
-    ctx.translate(projected.x, projected.y);
+    // Wind shake: oscillate camp markers at high wind
+    const windShake = atmosphere.windStrength > 2
+      ? Math.sin(time * 7 + node.z * 0.5) * (atmosphere.windStrength - 2) * 1.2
+      : 0;
+    ctx.translate(projected.x + windShake, projected.y);
     ctx.globalAlpha = alpha;
 
     // Tent body — more detailed shape
@@ -1268,25 +1580,328 @@ function drawFogOverlay(ctx, canvasW, canvasH, atmosphere) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ALTITUDE HUD — refined
+// CINEMATIC ALTITUDE HUD
 // ═══════════════════════════════════════════════════════════════
 
-function drawAltitudeHUD(ctx, canvasW, canvasH, positionIndex, atmosphere) {
+function drawAltitudeHUD(ctx, canvasW, canvasH, positionIndex, atmosphere, state) {
   const node = ROUTE_NODES[clampIdx(positionIndex)];
   const alpha = 0.5 * atmosphere.ambientLight + 0.15;
   ctx.save();
   const fontSize = Math.max(9, canvasW * 0.02);
-  ctx.font = `500 ${fontSize}px 'IBM Plex Mono', monospace`;
+  const smFont = Math.max(7, canvasW * 0.015);
+  const altNorm = (node.alt - ALT_MIN) / ALT_RANGE;
 
-  // Subtle backdrop for readability
-  const textW = ctx.measureText(`${node.alt}m`).width;
+  // === Altitude gauge (left edge, 70% canvas height) ===
+  const gaugeX = 10;
+  const gaugeTop = canvasH * 0.12;
+  const gaugeH = canvasH * 0.70;
+  const gaugeW = 4;
+
+  // Track background
+  ctx.fillStyle = `rgba(0,0,0,${alpha * 0.2})`;
+  ctx.fillRect(gaugeX, gaugeTop, gaugeW, gaugeH);
+
+  // Color zones: green bottom 30%, amber 30-70%, red top 30%
+  const greenH = gaugeH * 0.3;
+  const amberH = gaugeH * 0.4;
+  const redH = gaugeH * 0.3;
+  ctx.fillStyle = `rgba(80,180,80,${alpha * 0.35})`;
+  ctx.fillRect(gaugeX, gaugeTop + gaugeH - greenH, gaugeW, greenH);
+  ctx.fillStyle = `rgba(210,170,60,${alpha * 0.35})`;
+  ctx.fillRect(gaugeX, gaugeTop + redH, gaugeW, amberH);
+  ctx.fillStyle = `rgba(200,60,60,${alpha * 0.35})`;
+  ctx.fillRect(gaugeX, gaugeTop, gaugeW, redH);
+
+  // Camp tick marks
+  for (const rn of ROUTE_NODES) {
+    if (!rn.camp) continue;
+    const campNorm = (rn.alt - ALT_MIN) / ALT_RANGE;
+    const cy = gaugeTop + gaugeH * (1 - campNorm);
+    ctx.fillStyle = `rgba(210,180,140,${alpha * 0.6})`;
+    ctx.fillRect(gaugeX + gaugeW, cy - 1, 6, 2);
+  }
+
+  // Position dot (smoothly animated via altNorm)
+  const posY = gaugeTop + gaugeH * (1 - altNorm);
+  ctx.fillStyle = `rgba(255,100,60,${alpha})`;
+  ctx.beginPath();
+  ctx.arc(gaugeX + gaugeW / 2, posY, 3.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Highest reached triangle
+  if (state && state.highestIndex != null) {
+    const hNode = ROUTE_NODES[clampIdx(state.highestIndex)];
+    const hNorm = (hNode.alt - ALT_MIN) / ALT_RANGE;
+    const hY = gaugeTop + gaugeH * (1 - hNorm);
+    ctx.fillStyle = `rgba(255,220,100,${alpha * 0.7})`;
+    ctx.beginPath();
+    ctx.moveTo(gaugeX + gaugeW + 8, hY);
+    ctx.lineTo(gaugeX + gaugeW + 14, hY - 3);
+    ctx.lineTo(gaugeX + gaugeW + 14, hY + 3);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // === Info overlay (bottom-left) ===
+  const infoX = 9;
+  let infoY = canvasH - 8;
+
+  // Background panel
+  const panelH = fontSize * 3.8;
   ctx.fillStyle = `rgba(0,0,0,${alpha * 0.25})`;
-  ctx.fillRect(4, canvasH - fontSize - 10, textW + 10, fontSize + 6);
+  ctx.fillRect(4, canvasH - panelH - 4, canvasW * 0.22, panelH);
 
+  ctx.font = `500 ${fontSize}px 'IBM Plex Mono', monospace`;
   ctx.fillStyle = `rgba(210,218,228,${alpha})`;
   ctx.textAlign = 'left';
-  ctx.fillText(`${node.alt}m`, 9, canvasH - 8);
+  ctx.fillText(`${node.alt}m`, infoX, infoY);
+  infoY -= fontSize * 1.25;
+
+  // Time of day (HH:MM)
+  if (state && state.minutesOfDay != null) {
+    const totalMin = Math.round(state.minutesOfDay);
+    const hh = String(Math.floor(totalMin / 60) % 24).padStart(2, '0');
+    const mm = String(totalMin % 60).padStart(2, '0');
+    ctx.font = `400 ${smFont}px 'IBM Plex Mono', monospace`;
+    ctx.fillStyle = `rgba(190,200,215,${alpha * 0.85})`;
+    ctx.fillText(`${hh}:${mm}`, infoX, infoY);
+    infoY -= smFont * 1.3;
+  }
+
+  // Weather severity dots (1-4 filled circles)
+  if (state && state.weatherSeverity != null) {
+    const ws = Math.round(Math.max(0, Math.min(state.weatherSeverity, 4)));
+    for (let d = 0; d < 4; d++) {
+      const dx = infoX + d * (smFont * 0.7);
+      ctx.fillStyle = d < ws
+        ? `rgba(230,180,80,${alpha})`
+        : `rgba(120,125,130,${alpha * 0.4})`;
+      ctx.beginPath();
+      ctx.arc(dx + smFont * 0.25, infoY - smFont * 0.35, smFont * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    infoY -= smFont * 1.1;
+  }
+
+  // Trend arrow
+  if (state && state._prevAltNorm != null) {
+    const diff = altNorm - state._prevAltNorm;
+    if (Math.abs(diff) > 0.005) {
+      ctx.font = `700 ${smFont}px 'IBM Plex Mono', monospace`;
+      ctx.fillStyle = diff > 0 ? `rgba(100,200,120,${alpha})` : `rgba(200,120,100,${alpha})`;
+      ctx.fillText(diff > 0 ? '▲' : '▼', infoX, infoY);
+    }
+  }
+
+  // === Summit distance arc (top of canvas) ===
+  const progressFraction = ROUTE_NODES.length > 1 ? positionIndex / (ROUTE_NODES.length - 1) : 0;
+  const arcCX = canvasW * 0.5;
+  const arcCY = 6;
+  const arcR = canvasW * 0.3;
+  // Background arc
+  ctx.strokeStyle = `rgba(120,130,140,${alpha * 0.15})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(arcCX, arcCY, arcR, 0.1 * Math.PI, 0.9 * Math.PI, false);
+  ctx.stroke();
+  // Progress arc
+  if (progressFraction > 0) {
+    ctx.strokeStyle = `rgba(255,180,80,${alpha * 0.4})`;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    const startAngle = 0.1 * Math.PI;
+    const endAngle = startAngle + progressFraction * 0.8 * Math.PI;
+    ctx.arc(arcCX, arcCY, arcR, startAngle, endAngle, false);
+    ctx.stroke();
+  }
+
+  // Store altitude norm for trend arrow next frame
+  if (state) state._prevAltNorm = altNorm;
+
   ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// POST-PROCESSING PASSES
+// ═══════════════════════════════════════════════════════════════
+
+function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionMgr, state) {
+  // a) Permanent subtle vignette (5–8% opacity)
+  const vigRadius = Math.max(canvasW, canvasH) * 0.75;
+  const vigGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.4, canvasW / 2, canvasH / 2, vigRadius);
+  vigGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  vigGrad.addColorStop(1, 'rgba(0,0,0,0.07)');
+  ctx.fillStyle = vigGrad;
+  ctx.fillRect(0, 0, canvasW, canvasH);
+
+  // b) Film grain (2-3% opacity, seeded per frame)
+  const grainSeed = Math.floor(time * 60);
+  const grainRng = seededRng(grainSeed);
+  const grainStep = Math.max(8, Math.floor(canvasW / 50));
+  ctx.fillStyle = 'rgba(128,128,128,0.025)';
+  for (let gy = 0; gy < canvasH; gy += grainStep) {
+    for (let gx = 0; gx < canvasW; gx += grainStep) {
+      if (grainRng() > 0.5) {
+        ctx.fillRect(gx, gy, grainStep, grainStep);
+      }
+    }
+  }
+
+  // c) Color grading by altitude/hour
+  const altNorm = state ? (ROUTE_NODES[clampIdx(state.positionIndex)].alt - ALT_MIN) / ALT_RANGE : 0;
+  // Golden hour warm tint
+  if (atmosphere.isDawn || atmosphere.isDusk) {
+    ctx.fillStyle = 'rgba(255,180,100,0.05)';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+  }
+  // Night cool shift
+  if (atmosphere.isNight) {
+    ctx.fillStyle = 'rgba(40,60,120,0.06)';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+  }
+  // High-altitude desaturation
+  if (altNorm > 0.75) {
+    const desatAlpha = (altNorm - 0.75) * 0.16;
+    ctx.fillStyle = `rgba(180,185,195,${desatAlpha})`;
+    ctx.fillRect(0, 0, canvasW, canvasH);
+  }
+
+  // d) Bloom on sun/moon (extra glow pass after sky drawn)
+  if (!atmosphere.isNight) {
+    const sunAngle = ((atmosphere.hour - 6) / 12) * Math.PI;
+    const sunX = canvasW * 0.2 + Math.cos(sunAngle) * canvasW * 0.35;
+    const sunY = canvasH * 0.35 - Math.sin(sunAngle) * canvasH * 0.32;
+    const bloomR = Math.max(50, canvasW * 0.1);
+    const bloom = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, bloomR);
+    bloom.addColorStop(0, 'rgba(255,250,220,0.06)');
+    bloom.addColorStop(0.4, 'rgba(255,240,190,0.03)');
+    bloom.addColorStop(1, 'rgba(255,230,170,0)');
+    ctx.fillStyle = bloom;
+    ctx.fillRect(sunX - bloomR, sunY - bloomR, bloomR * 2, bloomR * 2);
+  }
+
+  // Transition-driven overlays
+  if (transitionMgr) {
+    // Sleep dimming
+    if (transitionMgr.dimLevel > 0) {
+      ctx.fillStyle = `rgba(0,0,10,${transitionMgr.dimLevel})`;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+    }
+    // Red edge flash (collapse)
+    if (transitionMgr.redFlashAlpha > 0) {
+      const rfGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.5, canvasW / 2, canvasH / 2, vigRadius);
+      rfGrad.addColorStop(0, 'rgba(200,30,30,0)');
+      rfGrad.addColorStop(1, `rgba(200,30,30,${transitionMgr.redFlashAlpha})`);
+      ctx.fillStyle = rfGrad;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+    }
+    // Fatigue/exposure vignette
+    if (transitionMgr.vignetteAlpha > 0) {
+      const { r: vr, g: vg, b: vb } = transitionMgr.vignetteColor;
+      const vGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.35, canvasW / 2, canvasH / 2, vigRadius);
+      vGrad.addColorStop(0, `rgba(${vr},${vg},${vb},0)`);
+      vGrad.addColorStop(1, `rgba(${vr},${vg},${vb},${transitionMgr.vignetteAlpha})`);
+      ctx.fillStyle = vGrad;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VISUAL SOUND CUES
+// ═══════════════════════════════════════════════════════════════
+
+function drawVisualSoundCues(ctx, canvasW, canvasH, atmosphere, time, camera, climber) {
+  // Wind intensity streaks (full-width horizontal white streaks)
+  if (atmosphere.windStrength > 1.5) {
+    const numStreaks = Math.floor((atmosphere.windStrength - 1.5) * 4);
+    const streakRng = seededRng(Math.floor(time * 30));
+    ctx.strokeStyle = `rgba(220,225,240,${0.06 + (atmosphere.windStrength - 1.5) * 0.03})`;
+    ctx.lineWidth = 0.5;
+    for (let s = 0; s < numStreaks; s++) {
+      const sy = streakRng() * canvasH;
+      const sx = streakRng() * canvasW * 0.3;
+      const sw = canvasW * (0.3 + streakRng() * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx + sw, sy + (streakRng() - 0.5) * 4);
+      ctx.stroke();
+    }
+  }
+
+  // Pressure pulse ring around climber
+  if (atmosphere.weatherSeverity > 0) {
+    const proj = camera.project(climber.worldX, climber.worldY, climber.worldZ, canvasW, canvasH);
+    if (proj && proj.depth < 500) {
+      const pulseSpeed = 1.5 + atmosphere.weatherSeverity * 1.0;
+      const pulsePhase = (time * pulseSpeed) % 1;
+      const pulseR = 8 + pulsePhase * 18;
+      const pulseAlpha = (1 - pulsePhase) * 0.08 * atmosphere.weatherSeverity;
+      ctx.strokeStyle = `rgba(200,210,230,${pulseAlpha})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(proj.x, proj.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SMOOTH WEATHER TRANSITION
+// ═══════════════════════════════════════════════════════════════
+
+function lerpAtmosphere(current, target, t) {
+  if (!current) return target;
+  const out = {};
+  const colorKeys = ['skyTop', 'skyMid', 'skyBottom', 'fogColor'];
+  for (const key of colorKeys) {
+    out[key] = lerpColor(current[key], target[key], t);
+  }
+  const numKeys = ['fogDensity', 'ambientLight', 'windStrength', 'cloudDensity', 'hour'];
+  for (const key of numKeys) {
+    out[key] = lerpVal(current[key] ?? 0, target[key] ?? 0, t);
+  }
+  out.isNight = target.isNight;
+  out.isDawn = target.isDawn;
+  out.isDusk = target.isDusk;
+  out.hasSnow = target.hasSnow;
+  out.hasDust = target.hasDust;
+  out.weatherSeverity = target.weatherSeverity ?? 0;
+  out.visibility = target.visibility ?? 3;
+  return out;
+}
+
+function drawLightningFlash(ctx, canvasW, canvasH, weatherSeverity, time) {
+  if (weatherSeverity < 3) return;
+  // ~5% chance per frame at 60fps
+  const flashRng = seededRng(Math.floor(time * 600));
+  if (flashRng() > 0.05) return;
+  const flashAlpha = 0.15 + flashRng() * 0.2;
+  ctx.fillStyle = `rgba(240,245,255,${flashAlpha})`;
+  ctx.fillRect(0, 0, canvasW, canvasH * 0.55);
+}
+
+function drawWhiteoutOverlay(ctx, canvasW, canvasH, visibility, climberProj) {
+  if (visibility > 1) return;
+  const whiteAlpha = 0.3 + (1 - visibility) * 0.25;
+  ctx.fillStyle = `rgba(220,225,240,${whiteAlpha})`;
+  ctx.fillRect(0, 0, canvasW, canvasH);
+  // Cut out a silhouette around the climber
+  if (climberProj) {
+    const clearR = 20 + visibility * 15;
+    const clearGrad = ctx.createRadialGradient(
+      climberProj.x, climberProj.y, clearR * 0.3,
+      climberProj.x, climberProj.y, clearR
+    );
+    clearGrad.addColorStop(0, `rgba(220,225,240,${whiteAlpha})`);
+    clearGrad.addColorStop(1, 'rgba(220,225,240,0)');
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = clearGrad;
+    ctx.beginPath();
+    ctx.arc(climberProj.x, climberProj.y, clearR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1345,6 +1960,7 @@ export function initMountainVisualization(container, runtimeNodes) {
 
   const camera = new Camera();
   const climber = new Climber();
+  const transitionMgr = new TransitionManager();
   const terrainStrips = generateTerrainStrips(160); // More strips for detail
   const backdropRng = seededRng(333);
   const backdrop = generateBackdropRidges(backdropRng);
@@ -1353,7 +1969,7 @@ export function initMountainVisualization(container, runtimeNodes) {
   const particles = [];
 
   const state = {
-    canvas, ctx, camera, climber, terrainStrips, backdrop, particles, rng,
+    canvas, ctx, camera, climber, transitionMgr, terrainStrips, backdrop, particles, rng,
     positionIndex: 0,
     highestIndex: 0,
     minutesOfDay: 360,
@@ -1365,6 +1981,15 @@ export function initMountainVisualization(container, runtimeNodes) {
     reducedMotion: prefersReducedMotion(),
     destroyed: false,
     _resizeObserver: null,
+    // Smooth weather transition state
+    _currentAtmosphere: null,
+    _targetAtmosphere: null,
+    // Climber body state for transition effects
+    currentAction: 'wait',
+    fatigueLevel: 0,
+    exposureLevel: 0,
+    // Altitude tracking for trend arrow
+    _prevAltNorm: null,
   };
   _state = state;
 
@@ -1406,13 +2031,37 @@ export function initMountainVisualization(container, runtimeNodes) {
     const canvasW = rect.width;
     const canvasH = rect.height;
 
+    // Update transition manager
+    transitionMgr.update(dt, camera, state.reducedMotion);
+
     climber.update(dt);
     camera.followClimber(climber.worldX, climber.worldY, climber.worldZ);
     camera.update(dt, state.time);
 
     const posIdx = clampIdx(state.positionIndex);
     const altNorm = (ROUTE_NODES[posIdx].alt - ALT_MIN) / ALT_RANGE;
-    const atmosphere = getAtmosphere(state.minutesOfDay, state.weatherSeverity, state.visibility, altNorm);
+
+    // Smooth weather: compute target, then lerp toward it
+    const targetAtmo = getAtmosphere(state.minutesOfDay, state.weatherSeverity, state.visibility, altNorm);
+    // Inject extra data needed downstream
+    targetAtmo.weatherSeverity = state.weatherSeverity;
+    targetAtmo.visibility = state.visibility;
+    state._targetAtmosphere = targetAtmo;
+    const weatherLerpSpeed = state.reducedMotion ? 1 : Math.min(dt * 2.5, 1);
+    state._currentAtmosphere = lerpAtmosphere(state._currentAtmosphere, state._targetAtmosphere, weatherLerpSpeed);
+    const atmosphere = state._currentAtmosphere;
+
+    // Wind spike from transition
+    if (transitionMgr.isWindSpiking()) {
+      atmosphere.windStrength = Math.min(4, atmosphere.windStrength + 1.5);
+    }
+    // Fog-clear from descend transition
+    if (transitionMgr.isFogClearing()) {
+      atmosphere.fogDensity = Math.max(0.1, atmosphere.fogDensity * 0.7);
+    }
+    // Cloud timelapse speed multiplier applied to cloud drawing time
+    const effectiveTime = state.time;
+    const cloudTime = state.time * transitionMgr.cloudSpeedMult;
 
     if (!state.reducedMotion) {
       particles.forEach(p => {
@@ -1431,16 +2080,30 @@ export function initMountainVisualization(container, runtimeNodes) {
     ctx.clearRect(0, 0, canvasW, canvasH);
 
     // Render pipeline (back → front)
-    drawSky(ctx, canvasW, canvasH, atmosphere, state.time);
+    drawSky(ctx, canvasW, canvasH, atmosphere, cloudTime);
     drawBackdrop(ctx, canvasW, canvasH, backdrop, atmosphere);
-    drawTerrain(ctx, camera, terrainStrips, canvasW, canvasH, atmosphere, state.time);
+    drawTerrain(ctx, camera, terrainStrips, canvasW, canvasH, atmosphere, effectiveTime);
     drawFootprints(ctx, camera, canvasW, canvasH, climber.trail, atmosphere);
-    drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, state.time);
-    drawSummitFlag(ctx, camera, canvasW, canvasH, state.time);
+    drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, effectiveTime);
+    drawSummitFlag(ctx, camera, canvasW, canvasH, effectiveTime);
     if (!state.reducedMotion) drawParticles(ctx, particles, atmosphere);
     climber.draw(ctx, camera, canvasW, canvasH, atmosphere);
     drawFogOverlay(ctx, canvasW, canvasH, atmosphere);
-    drawAltitudeHUD(ctx, canvasW, canvasH, state.positionIndex, atmosphere);
+
+    // Weather effects: lightning flash and whiteout
+    if (!state.reducedMotion) {
+      drawLightningFlash(ctx, canvasW, canvasH, state.weatherSeverity, effectiveTime);
+      const climberProj = camera.project(climber.worldX, climber.worldY, climber.worldZ, canvasW, canvasH);
+      drawWhiteoutOverlay(ctx, canvasW, canvasH, state.visibility, climberProj);
+    }
+
+    drawAltitudeHUD(ctx, canvasW, canvasH, state.positionIndex, atmosphere, state);
+
+    // Post-processing passes (after HUD, before frame ends)
+    if (!state.reducedMotion) {
+      drawPostProcessing(ctx, canvasW, canvasH, atmosphere, effectiveTime, transitionMgr, state);
+      drawVisualSoundCues(ctx, canvasW, canvasH, atmosphere, effectiveTime, camera, climber);
+    }
   }
 
   state.animationId = requestAnimationFrame(frame);
@@ -1455,6 +2118,10 @@ export function initMountainVisualization(container, runtimeNodes) {
  * @param {number} [options.minutesOfDay] — current time of day (0–1440)
  * @param {number} [options.weatherSeverity] — weather severity (0–4)
  * @param {number} [options.visibility] — visibility level (0–4)
+ * @param {string} [options.action] — current action ('advance'|'advance_slowly'|'descend'|'wait'|'sleep')
+ * @param {string[]} [options.flags] — event flags ('white-wind-hit'|'collapse')
+ * @param {number} [options.fatigue] — fatigue level (0–100)
+ * @param {number} [options.exposure] — exposure level (0–100)
  */
 export function updateClimberPosition(positionIndex, options = {}) {
   if (!_state) return;
@@ -1465,6 +2132,29 @@ export function updateClimberPosition(positionIndex, options = {}) {
   if (options.minutesOfDay != null) _state.minutesOfDay = options.minutesOfDay;
   if (options.weatherSeverity != null) _state.weatherSeverity = options.weatherSeverity;
   if (options.visibility != null) _state.visibility = options.visibility;
+
+  // Post-decision transition triggers
+  if (options.action != null) {
+    _state.currentAction = options.action;
+    _state.climber.currentAction = options.action;
+    _state.transitionMgr.triggerAction(options.action);
+  }
+  if (options.flags) {
+    _state.transitionMgr.triggerFlags(options.flags);
+  }
+  if (options.fatigue != null) {
+    _state.fatigueLevel = options.fatigue;
+    _state.climber.fatigueLevel = options.fatigue;
+  }
+  if (options.exposure != null) {
+    _state.exposureLevel = options.exposure;
+  }
+  // Update body state vignettes
+  _state.transitionMgr.setBodyState(
+    _state.fatigueLevel,
+    _state.exposureLevel
+  );
+
   _state.reducedMotion = prefersReducedMotion();
 }
 
