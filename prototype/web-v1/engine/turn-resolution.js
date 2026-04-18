@@ -36,6 +36,8 @@ export const RESOLVE_TURN_PIPELINE = Object.freeze([
 export function createTurnEngine(deps) {
   // Validate required dependencies at initialization to fail fast instead of
   // surfacing cryptic errors deep in turn resolution.
+  // NOTE: This list must be kept in sync with the destructured keys below.
+  // If a new required dependency is added to the destructuring, add it here too.
   const REQUIRED_DEPS = [
     'G', 'POSITIONS', 'CANONICAL_OUTCOMES', 'getActionModifier', 'applyTimeCost',
     'spendResourcesForMinutes', 'getCurrentNode', 'getCurrentStage',

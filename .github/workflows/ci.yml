@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ["main"]
 
+# Restrict default GITHUB_TOKEN permissions to read-only for all jobs.
+permissions:
+  contents: read
+
 jobs:
   python-tests:
     name: Python simulator tests

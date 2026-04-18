@@ -115,7 +115,8 @@ function ensureAllowedKeys(partial, defaults, sliceName) {
 }
 
 // Maximum number of pressure history entries retained per run.
-// Prevents unbounded array growth during long expedition runs (~50-60 turns).
+// Set to 2x the expected maximum expedition length (~50 turns) as a safety margin,
+// preventing unbounded array growth during exceptionally long runs.
 const MAX_PRESSURE_HISTORY = 100;
 
 function applySliceUpdate(targetSlice, defaults, partial, sliceName) {

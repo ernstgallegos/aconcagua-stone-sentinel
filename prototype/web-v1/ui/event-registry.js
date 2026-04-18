@@ -44,8 +44,11 @@ export function bindUiEventRegistry({ resolve }) {
     const trigger = event.target.closest('[data-action]');
     if (!trigger) return;
     // Only handle keyboard on elements that act as buttons
-    // (real <button> elements handle Enter/Space natively).
-    if (trigger.tagName === 'BUTTON' || trigger.tagName === 'A') return;
+    // (real <button> elements handle Enter/Space natively;
+    // <a> with href handles Enter natively).
+    const tag = trigger.tagName;
+    if (tag === 'BUTTON') return;
+    if (tag === 'A' && trigger.hasAttribute('href')) return;
     event.preventDefault();
     dispatchAction(event, resolve);
   });
