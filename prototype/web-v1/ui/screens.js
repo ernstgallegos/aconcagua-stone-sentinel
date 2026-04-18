@@ -2665,12 +2665,25 @@ function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
   // Sync mountain visualization climber with current position + environment
   const curIdx = Math.max(0, POSITIONS.indexOf(G.state.position));
-  updateClimberPosition(curIdx, {
+  const vizOpts = {
     highestIndex: G.highestPosIdx,
     minutesOfDay: G.minutesOfDay,
     weatherSeverity: G.state.weather_severity,
     visibility: G.state.visibility,
-  });
+  };
+  // Forward last decision action + event flags for transition effects
+  if (G._vizAction) {
+    vizOpts.action = G._vizAction;
+    G._vizAction = null;
+  }
+  if (G._vizFlags) {
+    vizOpts.flags = G._vizFlags;
+    G._vizFlags = null;
+  }
+  // Body-state levels drive fatigue/exposure vignettes
+  if (G.state.fatigue != null) vizOpts.fatigue = G.state.fatigue;
+  if (G.state.exposure != null) vizOpts.exposure = G.state.exposure;
+  updateClimberPosition(curIdx, vizOpts);
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {

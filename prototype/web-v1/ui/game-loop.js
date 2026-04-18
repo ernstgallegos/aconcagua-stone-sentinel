@@ -87,6 +87,10 @@ export function createGameLoop({
     const resolvedDecision = turnResult.resolvedAction || decision;
     applyAcclimatizationGain(resolvedDecision);
     updateRunState(G, { signals: computeSignals() });
+    // Stash last action + flags so renderPositionList can forward them
+    // to the mountain visualization transition system.
+    G._vizAction = resolvedDecision;
+    G._vizFlags = turnResult.flags;
     renderWatch();
     const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
 
