@@ -702,25 +702,78 @@ class Climber {
   }
 
   _drawSleepingBag(ctx, h, atmosphere) {
-    // Sleeping bag near terrain instead of standing climber
+    const p = this.profile;
     const bagW = h * 0.55;
     const bagH = h * 0.18;
-    ctx.fillStyle = '#2a4060';
+
+    // Ground pad shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.beginPath();
+    ctx.ellipse(0, bagH * 0.3, bagW * 1.1, bagH * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Sleeping bag body — character-colored outer shell with gradient
+    const bagGrad = ctx.createLinearGradient(-bagW, -bagH, bagW, bagH);
+    bagGrad.addColorStop(0, p.jacketShadow);
+    bagGrad.addColorStop(0.5, p.jacketPrimary);
+    bagGrad.addColorStop(1, p.jacketShadow);
+    ctx.fillStyle = bagGrad;
     ctx.beginPath();
     ctx.ellipse(0, 0, bagW, bagH, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Pillow end
-    ctx.fillStyle = '#3a5070';
+
+    // Bag lining visible at opening
+    ctx.fillStyle = '#556680';
+    ctx.beginPath();
+    ctx.ellipse(-bagW * 0.65, 0, bagH * 0.8, bagH * 0.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pillow / hood bump — character hat-colored
+    ctx.fillStyle = p.hatColor;
     ctx.beginPath();
     ctx.ellipse(-bagW * 0.7, 0, bagH * 0.9, bagH * 0.7, 0, 0, Math.PI * 2);
     ctx.fill();
-    // Bag seam
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+
+    // Face peeking out (small skin-colored oval)
+    ctx.fillStyle = p.skinHighlight;
+    ctx.beginPath();
+    ctx.ellipse(-bagW * 0.62, 0, bagH * 0.35, bagH * 0.28, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bag seam with subtle stitching
+    ctx.strokeStyle = 'rgba(0,0,0,0.12)';
     ctx.lineWidth = Math.max(0.5, h * 0.01);
     ctx.beginPath();
-    ctx.moveTo(-bagW * 0.3, -bagH * 0.5);
-    ctx.quadraticCurveTo(bagW * 0.2, -bagH * 0.1, bagW * 0.8, 0);
+    ctx.moveTo(-bagW * 0.3, -bagH * 0.6);
+    ctx.quadraticCurveTo(bagW * 0.2, -bagH * 0.15, bagW * 0.85, 0);
     ctx.stroke();
+    // Second quilted seam
+    ctx.beginPath();
+    ctx.moveTo(-bagW * 0.2, bagH * 0.55);
+    ctx.quadraticCurveTo(bagW * 0.3, bagH * 0.1, bagW * 0.8, bagH * 0.05);
+    ctx.stroke();
+
+    // Zipper line
+    ctx.strokeStyle = 'rgba(180,180,200,0.25)';
+    ctx.lineWidth = Math.max(0.4, h * 0.008);
+    ctx.beginPath();
+    ctx.moveTo(-bagW * 0.45, -bagH * 0.15);
+    ctx.lineTo(bagW * 0.2, -bagH * 0.3);
+    ctx.stroke();
+
+    // Breath vapor in cold (night / high altitude)
+    if (atmosphere.isNight || atmosphere.hour < 7) {
+      const breathAlpha = 0.15 + Math.sin(this.breathCycle * 0.5) * 0.06;
+      ctx.fillStyle = `rgba(200,210,230,${breathAlpha})`;
+      const bx = -bagW * 0.85;
+      const by = -bagH * 0.1;
+      ctx.beginPath();
+      ctx.ellipse(bx, by, h * 0.06, h * 0.035, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(bx - h * 0.04, by - h * 0.03, h * 0.04, h * 0.025, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   draw(ctx, camera, canvasW, canvasH, atmosphere) {
@@ -810,11 +863,59 @@ class Climber {
     ctx.lineTo(h * stanceWidth - legSwing * h * 0.22, legY + legH);
     ctx.stroke();
 
-    // Boots — heavier at altitude (mountaineering boots)
+    // Boots — heavier at altitude (mountaineering boots with detail)
     const bootSize = Math.max(2.5, h * (altNorm > 0.6 ? 0.065 : 0.05));
     ctx.fillStyle = p.bootColor;
-    ctx.fillRect(-h * stanceWidth + legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
-    ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - bootSize / 2, legY + legH - 1, bootSize, bootSize * 0.8);
+    // Left boot
+    ctx.beginPath();
+    ctx.moveTo(-h * stanceWidth + legSwing * h * 0.22 - bootSize / 2, legY + legH - 1);
+    ctx.lineTo(-h * stanceWidth + legSwing * h * 0.22 + bootSize / 2, legY + legH - 1);
+    ctx.lineTo(-h * stanceWidth + legSwing * h * 0.22 + bootSize * 0.6, legY + legH + bootSize * 0.6);
+    ctx.lineTo(-h * stanceWidth + legSwing * h * 0.22 - bootSize * 0.4, legY + legH + bootSize * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    // Right boot
+    ctx.beginPath();
+    ctx.moveTo(h * stanceWidth - legSwing * h * 0.22 - bootSize / 2, legY + legH - 1);
+    ctx.lineTo(h * stanceWidth - legSwing * h * 0.22 + bootSize / 2, legY + legH - 1);
+    ctx.lineTo(h * stanceWidth - legSwing * h * 0.22 + bootSize * 0.6, legY + legH + bootSize * 0.6);
+    ctx.lineTo(h * stanceWidth - legSwing * h * 0.22 - bootSize * 0.4, legY + legH + bootSize * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    // Boot lace/tongue detail
+    ctx.strokeStyle = 'rgba(120,100,80,0.3)';
+    ctx.lineWidth = Math.max(0.3, h * 0.005);
+    const lbx = -h * stanceWidth + legSwing * h * 0.22;
+    const rbx = h * stanceWidth - legSwing * h * 0.22;
+    ctx.beginPath();
+    ctx.moveTo(lbx, legY + legH);
+    ctx.lineTo(lbx, legY + legH + bootSize * 0.3);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(rbx, legY + legH);
+    ctx.lineTo(rbx, legY + legH + bootSize * 0.3);
+    ctx.stroke();
+
+    // Crampons at very high altitude
+    if (altNorm > 0.75) {
+      ctx.strokeStyle = '#aab';
+      ctx.lineWidth = Math.max(0.5, h * 0.008);
+      const crampY = legY + legH + bootSize * 0.55;
+      // Left crampon points
+      for (let cp = -1; cp <= 1; cp++) {
+        ctx.beginPath();
+        ctx.moveTo(lbx + cp * bootSize * 0.25, crampY);
+        ctx.lineTo(lbx + cp * bootSize * 0.25, crampY + bootSize * 0.2);
+        ctx.stroke();
+      }
+      // Right crampon points
+      for (let cp = -1; cp <= 1; cp++) {
+        ctx.beginPath();
+        ctx.moveTo(rbx + cp * bootSize * 0.25, crampY);
+        ctx.lineTo(rbx + cp * bootSize * 0.25, crampY + bootSize * 0.2);
+        ctx.stroke();
+      }
+    }
 
     // Gaiter detail at altitude
     if (altNorm > 0.55) {
@@ -824,12 +925,13 @@ class Climber {
       ctx.fillRect(h * stanceWidth - legSwing * h * 0.22 - gW / 2, legY + legH - bootSize, gW, bootSize * 0.5);
     }
 
-    // === Torso (jacket with gradient) ===
+    // === Torso (jacket with multi-layer gradient shading) ===
     const torsoY = -torsoH - headR * 2 + breathBob - bodyBob;
-    // Character-specific jacket with subtle gradient for depth
-    const jacketGrad = ctx.createLinearGradient(-h * 0.12, torsoY, h * 0.12, torsoY + torsoH);
+    // Character-specific jacket — 3-stop gradient for dimensional depth
+    const jacketGrad = ctx.createLinearGradient(-h * 0.14, torsoY, h * 0.14, torsoY + torsoH);
     jacketGrad.addColorStop(0, p.jacketShadow);
-    jacketGrad.addColorStop(0.5, p.jacketHighlight);
+    jacketGrad.addColorStop(0.35, p.jacketHighlight);
+    jacketGrad.addColorStop(0.65, p.jacketPrimary);
     jacketGrad.addColorStop(1, p.jacketShadow);
     ctx.fillStyle = jacketGrad;
     ctx.beginPath();
@@ -842,16 +944,31 @@ class Climber {
     ctx.closePath();
     ctx.fill();
 
-    // Jacket zipper line
+    // Shoulder seams — subtle lines for jacket panel construction
+    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = Math.max(0.3, h * 0.006);
+    ctx.beginPath();
+    ctx.moveTo(-h * 0.1, torsoY + h * 0.01);
+    ctx.quadraticCurveTo(-h * 0.08, torsoY + h * 0.06, -h * 0.06, torsoY + torsoH * 0.3);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(h * 0.1, torsoY + h * 0.01);
+    ctx.quadraticCurveTo(h * 0.08, torsoY + h * 0.06, h * 0.06, torsoY + torsoH * 0.3);
+    ctx.stroke();
+
+    // Jacket zipper line with tab
     ctx.strokeStyle = p.jacketDetail;
     ctx.lineWidth = Math.max(0.5, h * 0.015);
     ctx.beginPath();
     ctx.moveTo(0, torsoY + 2);
     ctx.lineTo(0, torsoY + torsoH - 2);
     ctx.stroke();
+    // Zipper pull tab
+    ctx.fillStyle = 'rgba(180,180,190,0.4)';
+    ctx.fillRect(-h * 0.01, torsoY + torsoH * 0.25, h * 0.02, h * 0.025);
 
-    // Jacket highlight (sun side)
-    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    // Jacket highlight (sun side) — fresnel-style rim light
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.beginPath();
     ctx.moveTo(-h * 0.1, torsoY + torsoH);
     ctx.lineTo(-h * 0.13, torsoY + h * 0.02);
@@ -860,16 +977,48 @@ class Climber {
     ctx.closePath();
     ctx.fill();
 
-    // === Backpack with detail ===
-    ctx.fillStyle = p.packColor;
+    // Hood on back or collar detail
+    if (atmosphere.windStrength > 2 || atmosphere.hasSnow) {
+      // Hood up — rounded bump behind head
+      ctx.fillStyle = p.jacketShadow;
+      ctx.beginPath();
+      ctx.arc(0, torsoY - headR * 0.2, headR * 1.2, Math.PI * 0.8, Math.PI * 0.2, true);
+      ctx.fill();
+    } else {
+      // Collar at neckline
+      ctx.fillStyle = p.jacketHighlight;
+      ctx.fillRect(-h * 0.05, torsoY - 1, h * 0.1, h * 0.025);
+    }
+
+    // Chest pocket detail (subtle)
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    ctx.lineWidth = Math.max(0.3, h * 0.005);
+    ctx.strokeRect(h * 0.02, torsoY + torsoH * 0.15, h * 0.04, h * 0.04);
+
+    // === Backpack with frame structure and detail ===
     const bpW = h * 0.16;
     const bpH = torsoH * 0.75;
     const bpX = -bpW / 2 + h * 0.015;
+    // Pack body with gradient
+    const packGrad = ctx.createLinearGradient(bpX, torsoY, bpX + bpW, torsoY + bpH);
+    packGrad.addColorStop(0, p.packStrap);
+    packGrad.addColorStop(0.5, p.packColor);
+    packGrad.addColorStop(1, p.packStrap);
+    ctx.fillStyle = packGrad;
     ctx.beginPath();
     ctx.moveTo(bpX, torsoY + 2);
     ctx.lineTo(bpX + bpW, torsoY + 2);
     ctx.lineTo(bpX + bpW - 1, torsoY + bpH);
     ctx.lineTo(bpX + 1, torsoY + bpH);
+    ctx.closePath();
+    ctx.fill();
+    // Pack lid flap (top closure)
+    ctx.fillStyle = p.packStrap;
+    ctx.beginPath();
+    ctx.moveTo(bpX - 1, torsoY + 1);
+    ctx.lineTo(bpX + bpW + 1, torsoY + 1);
+    ctx.lineTo(bpX + bpW, torsoY + bpH * 0.12);
+    ctx.lineTo(bpX, torsoY + bpH * 0.12);
     ctx.closePath();
     ctx.fill();
     // Backpack straps
@@ -883,11 +1032,55 @@ class Climber {
     ctx.moveTo(bpX + bpW - 2, torsoY + 3);
     ctx.lineTo(h * 0.08, torsoY);
     ctx.stroke();
+    // Sternum strap
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = Math.max(0.4, h * 0.008);
+    ctx.beginPath();
+    ctx.moveTo(-h * 0.07, torsoY + torsoH * 0.25);
+    ctx.lineTo(h * 0.07, torsoY + torsoH * 0.25);
+    ctx.stroke();
+    // Hip belt
+    ctx.strokeStyle = p.packStrap;
+    ctx.lineWidth = Math.max(0.6, h * 0.015);
+    ctx.beginPath();
+    ctx.moveTo(bpX, torsoY + bpH - 2);
+    ctx.lineTo(-h * 0.12, torsoY + bpH + 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(bpX + bpW, torsoY + bpH - 2);
+    ctx.lineTo(h * 0.12, torsoY + bpH + 2);
+    ctx.stroke();
+    // Pack compression straps (side)
+    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+    ctx.lineWidth = Math.max(0.3, h * 0.005);
+    ctx.beginPath();
+    ctx.moveTo(bpX + bpW, torsoY + bpH * 0.3);
+    ctx.lineTo(bpX + bpW + 1, torsoY + bpH * 0.7);
+    ctx.stroke();
     // Sleeping mat roll on pack
     ctx.fillStyle = p.matColor;
     ctx.beginPath();
     ctx.ellipse(bpX + bpW / 2, torsoY + bpH + 1, bpW * 0.4, h * 0.03, 0, 0, Math.PI * 2);
     ctx.fill();
+    // Mat roll texture (spiral end)
+    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+    ctx.lineWidth = 0.3;
+    ctx.beginPath();
+    ctx.arc(bpX + bpW / 2 + bpW * 0.3, torsoY + bpH + 1, h * 0.015, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Rope coil on pack (visible at high altitude)
+    if (altNorm > 0.6) {
+      ctx.strokeStyle = '#d4c090';
+      ctx.lineWidth = Math.max(0.6, h * 0.012);
+      const ropeX = bpX - h * 0.02;
+      const ropeY = torsoY + bpH * 0.3;
+      for (let rc = 0; rc < 3; rc++) {
+        ctx.beginPath();
+        ctx.arc(ropeX, ropeY + rc * h * 0.02, h * 0.035, 0.3, Math.PI * 2 - 0.3);
+        ctx.stroke();
+      }
+    }
 
     // Daniela: camera body visible on pack strap
     if (p.flagHint === 'camera') {
@@ -1054,24 +1247,54 @@ class Climber {
 
     // === Headlamp at night ===
     if (atmosphere.isNight || atmosphere.hour < 6 || atmosphere.hour > 19) {
+      // Headlamp strap across forehead
+      ctx.strokeStyle = 'rgba(60,60,60,0.4)';
+      ctx.lineWidth = Math.max(0.5, h * 0.01);
+      ctx.beginPath();
+      ctx.arc(0, headY, headR * 1.05, Math.PI * 0.85, Math.PI * 0.15, true);
+      ctx.stroke();
       // Lamp on forehead
       ctx.fillStyle = p.headlampColor;
-      const lampR = Math.max(1, headR * 0.2);
+      const lampR = Math.max(1, headR * 0.22);
       ctx.beginPath();
-      ctx.arc(0, headY - headR * 0.7, lampR, 0, Math.PI * 2);
+      ctx.arc(0, headY - headR * 0.72, lampR, 0, Math.PI * 2);
       ctx.fill();
-      // Light beam cone
-      const beamGrad = ctx.createRadialGradient(0, headY - headR, 0, 0, headY - headR, h * 1.2);
-      beamGrad.addColorStop(0, 'rgba(255,240,180,0.12)');
-      beamGrad.addColorStop(1, 'rgba(255,240,180,0)');
+      // Lamp housing
+      ctx.fillStyle = '#444';
+      ctx.fillRect(-lampR * 1.3, headY - headR * 0.72 - lampR * 0.5, lampR * 2.6, lampR * 0.4);
+      // Light beam cone — wider with two intensity layers
+      const beamGrad = ctx.createRadialGradient(0, headY - headR, 0, 0, headY - headR, h * 1.5);
+      beamGrad.addColorStop(0, 'rgba(255,240,180,0.14)');
+      beamGrad.addColorStop(0.3, 'rgba(255,235,170,0.06)');
+      beamGrad.addColorStop(1, 'rgba(255,230,160,0)');
       ctx.fillStyle = beamGrad;
       ctx.beginPath();
-      ctx.moveTo(-h * 0.05, headY - headR);
-      ctx.lineTo(-h * 0.3, headY + h * 0.5);
-      ctx.lineTo(h * 0.3, headY + h * 0.5);
-      ctx.lineTo(h * 0.05, headY - headR);
+      ctx.moveTo(-h * 0.04, headY - headR);
+      ctx.lineTo(-h * 0.35, headY + h * 0.6);
+      ctx.lineTo(h * 0.35, headY + h * 0.6);
+      ctx.lineTo(h * 0.04, headY - headR);
       ctx.closePath();
       ctx.fill();
+    }
+
+    // === Breath vapor (visible in cold) ===
+    if (altNorm > 0.45 || atmosphere.isNight || atmosphere.hour < 7) {
+      const breathPhase = Math.sin(this.breathCycle * 0.8);
+      const breathAlpha = (0.08 + breathPhase * 0.05) * Math.min(1, altNorm + 0.3);
+      if (breathAlpha > 0.03) {
+        ctx.fillStyle = `rgba(210,220,240,${breathAlpha})`;
+        const bx = this.facingDir * h * 0.12;
+        const by = headY + headR * 0.1;
+        const bSize = h * 0.04 + breathPhase * h * 0.015;
+        ctx.beginPath();
+        ctx.ellipse(bx, by, bSize * 1.3, bSize * 0.7, this.facingDir * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        // Secondary smaller puff
+        ctx.fillStyle = `rgba(210,220,240,${breathAlpha * 0.5})`;
+        ctx.beginPath();
+        ctx.ellipse(bx + this.facingDir * h * 0.04, by - h * 0.02, bSize * 0.7, bSize * 0.4, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     ctx.restore();
@@ -1336,27 +1559,38 @@ function drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, time) {
     const size = Math.max(3, Math.min(projected.scale * 7, 16));
 
     ctx.save();
-    // Wind shake: oscillate camp markers at high wind
     const windShake = atmosphere.windStrength > 2
       ? Math.sin(time * 7 + node.z * 0.5) * (atmosphere.windStrength - 2) * 1.2
       : 0;
     ctx.translate(projected.x + windShake, projected.y);
     ctx.globalAlpha = alpha;
 
-    // Tent body — more detailed shape
-    ctx.fillStyle = '#d4a874';
+    // Ground shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.beginPath();
+    ctx.ellipse(0, size * 0.2, size * 1.2, size * 0.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- Main tent with fabric texture ---
+    // Lit face (right/sun-facing)
+    const tentGradR = ctx.createLinearGradient(0, -size, size * 0.9, size * 0.15);
+    tentGradR.addColorStop(0, '#e0c08a');
+    tentGradR.addColorStop(0.5, '#d4a874');
+    tentGradR.addColorStop(1, '#c89a68');
+    ctx.fillStyle = tentGradR;
     ctx.beginPath();
     ctx.moveTo(0, -size);
-    ctx.lineTo(-size * 0.9, size * 0.15);
-    ctx.lineTo(-size * 0.7, size * 0.15);
-    ctx.lineTo(0, -size * 0.3);
-    ctx.lineTo(size * 0.7, size * 0.15);
     ctx.lineTo(size * 0.9, size * 0.15);
+    ctx.lineTo(size * 0.7, size * 0.15);
+    ctx.lineTo(0, -size * 0.3);
     ctx.closePath();
     ctx.fill();
 
-    // Tent shadow side
-    ctx.fillStyle = '#9a7a5a';
+    // Shadow face (left)
+    const tentGradL = ctx.createLinearGradient(0, -size, -size * 0.9, size * 0.15);
+    tentGradL.addColorStop(0, '#b89060');
+    tentGradL.addColorStop(1, '#8a6a48');
+    ctx.fillStyle = tentGradL;
     ctx.beginPath();
     ctx.moveTo(0, -size);
     ctx.lineTo(-size * 0.9, size * 0.15);
@@ -1365,8 +1599,31 @@ function drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, time) {
     ctx.closePath();
     ctx.fill();
 
-    // Tent door
-    ctx.fillStyle = '#6b4226';
+    // Ridge pole seam
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = Math.max(0.4, size * 0.03);
+    ctx.beginPath();
+    ctx.moveTo(0, -size);
+    ctx.lineTo(0, -size * 0.3);
+    ctx.stroke();
+
+    // Fabric fold lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+    ctx.lineWidth = Math.max(0.3, size * 0.02);
+    ctx.beginPath();
+    ctx.moveTo(0, -size * 0.7);
+    ctx.lineTo(size * 0.5, size * 0.05);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, -size * 0.7);
+    ctx.lineTo(-size * 0.5, size * 0.05);
+    ctx.stroke();
+
+    // Door opening
+    const doorGrad = ctx.createLinearGradient(0, -size * 0.3, 0, size * 0.15);
+    doorGrad.addColorStop(0, '#5a3620');
+    doorGrad.addColorStop(1, '#3a2210');
+    ctx.fillStyle = doorGrad;
     ctx.beginPath();
     ctx.moveTo(0, -size * 0.3);
     ctx.lineTo(-size * 0.2, size * 0.15);
@@ -1374,34 +1631,102 @@ function drawCampMarkers(ctx, camera, canvasW, canvasH, atmosphere, time) {
     ctx.closePath();
     ctx.fill();
 
+    // Guy ropes (tent tensioning lines)
+    ctx.strokeStyle = 'rgba(150,140,120,0.25)';
+    ctx.lineWidth = Math.max(0.3, size * 0.015);
+    // Left guy rope
+    ctx.beginPath();
+    ctx.moveTo(-size * 0.5, -size * 0.15);
+    ctx.lineTo(-size * 1.3, size * 0.2);
+    ctx.stroke();
+    // Right guy rope
+    ctx.beginPath();
+    ctx.moveTo(size * 0.5, -size * 0.15);
+    ctx.lineTo(size * 1.3, size * 0.2);
+    ctx.stroke();
+    // Stake pegs (small dots at rope ends)
+    ctx.fillStyle = 'rgba(120,110,100,0.3)';
+    ctx.beginPath();
+    ctx.arc(-size * 1.3, size * 0.2, size * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(size * 1.3, size * 0.2, size * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Second smaller tent at base camps (higher altitude = bigger camp)
+    if (node.alt > 4000 && size > 5) {
+      ctx.save();
+      ctx.translate(size * 1.8, size * 0.05);
+      ctx.scale(0.65, 0.65);
+      // Mini tent (simpler)
+      ctx.fillStyle = '#b0c8d0';
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.lineTo(-size * 0.8, size * 0.15);
+      ctx.lineTo(size * 0.8, size * 0.15);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#8aabb8';
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.lineTo(-size * 0.8, size * 0.15);
+      ctx.lineTo(0, -size * 0.2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
     // Warm campfire glow (at night or dusk)
     if (atmosphere.ambientLight < 0.7) {
       const glowIntensity = (0.7 - atmosphere.ambientLight) / 0.45;
       const flicker = 0.8 + Math.sin(time * 5 + node.z) * 0.2;
-      const glowR = size * 2.5 * flicker;
+      const glowR = size * 3.0 * flicker;
       const glowGrad = ctx.createRadialGradient(size * 0.3, size * 0.1, 0, size * 0.3, size * 0.1, glowR);
-      glowGrad.addColorStop(0, `rgba(255,180,60,${0.25 * glowIntensity * flicker})`);
-      glowGrad.addColorStop(0.5, `rgba(255,120,30,${0.1 * glowIntensity})`);
+      glowGrad.addColorStop(0, `rgba(255,180,60,${0.3 * glowIntensity * flicker})`);
+      glowGrad.addColorStop(0.3, `rgba(255,140,40,${0.15 * glowIntensity})`);
+      glowGrad.addColorStop(0.6, `rgba(255,100,20,${0.05 * glowIntensity})`);
       glowGrad.addColorStop(1, 'rgba(255,80,20,0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(-glowR, -glowR + size * 0.1, glowR * 2, glowR * 2);
 
-      // Tiny fire
-      ctx.fillStyle = `rgba(255,160,40,${0.6 * glowIntensity * flicker})`;
+      // Fire flames
+      const fBaseX = size * 0.3;
+      const fBaseY = size * 0.1;
+      for (let f = 0; f < 3; f++) {
+        const fOff = Math.sin(time * 8 + f * 2.1) * size * 0.05;
+        const fH = size * (0.15 + Math.sin(time * 6 + f * 1.7) * 0.06);
+        const fGrad = ctx.createLinearGradient(fBaseX + fOff, fBaseY, fBaseX + fOff, fBaseY - fH);
+        fGrad.addColorStop(0, `rgba(255,200,50,${0.7 * glowIntensity * flicker})`);
+        fGrad.addColorStop(0.5, `rgba(255,120,20,${0.5 * glowIntensity})`);
+        fGrad.addColorStop(1, `rgba(255,60,10,0)`);
+        ctx.fillStyle = fGrad;
+        ctx.beginPath();
+        ctx.moveTo(fBaseX + fOff - size * 0.04, fBaseY);
+        ctx.quadraticCurveTo(fBaseX + fOff, fBaseY - fH, fBaseX + fOff + size * 0.04, fBaseY);
+        ctx.fill();
+      }
+      // Embers
+      ctx.fillStyle = `rgba(255,180,80,${0.3 * glowIntensity})`;
       ctx.beginPath();
-      ctx.arc(size * 0.3, size * 0.1, size * 0.12, 0, Math.PI * 2);
+      ctx.arc(fBaseX, fBaseY, size * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ground light pool
+      ctx.fillStyle = `rgba(255,160,40,${0.04 * glowIntensity})`;
+      ctx.beginPath();
+      ctx.ellipse(fBaseX, fBaseY + size * 0.1, size * 1.5, size * 0.25, 0, 0, Math.PI * 2);
       ctx.fill();
     }
 
     // Smoke wisps (subtle always)
     if (fogAmount < 0.6) {
       const smokeAlpha = 0.08 * (1 - fogAmount);
-      for (let s = 0; s < 3; s++) {
-        const sTime = time * 0.8 + s * 1.5 + node.z * 0.1;
+      for (let s = 0; s < 4; s++) {
+        const sTime = time * 0.8 + s * 1.3 + node.z * 0.1;
         const sy = -size * 1.2 - Math.abs(Math.sin(sTime)) * size * 1.5 - s * size * 0.5;
         const sx = size * 0.3 + Math.sin(sTime * 1.3) * size * 0.4;
-        const sr = size * (0.1 + s * 0.08);
-        ctx.fillStyle = `rgba(180,180,190,${smokeAlpha * (1 - s * 0.25)})`;
+        const sr = size * (0.1 + s * 0.09);
+        ctx.fillStyle = `rgba(180,180,190,${smokeAlpha * (1 - s * 0.2)})`;
         ctx.beginPath();
         ctx.arc(sx, sy, sr, 0, Math.PI * 2);
         ctx.fill();
@@ -1426,62 +1751,114 @@ function drawSummitFlag(ctx, camera, canvasW, canvasH, time) {
   ctx.save();
   ctx.translate(projected.x, projected.y);
 
-  // Pole
-  ctx.strokeStyle = '#bbb';
+  // Pole base cairn (rock pile)
+  ctx.fillStyle = '#8a8078';
+  ctx.beginPath();
+  ctx.ellipse(0, size * 0.35, size * 0.3, size * 0.1, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#7a7068';
+  ctx.beginPath();
+  ctx.ellipse(-size * 0.08, size * 0.28, size * 0.18, size * 0.08, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pole with metallic gradient
+  const poleGrad = ctx.createLinearGradient(-1, size * 0.3, 1, -size * 1.7);
+  poleGrad.addColorStop(0, '#888');
+  poleGrad.addColorStop(0.3, '#ccc');
+  poleGrad.addColorStop(0.6, '#aaa');
+  poleGrad.addColorStop(1, '#ddd');
+  ctx.strokeStyle = poleGrad;
   ctx.lineWidth = Math.max(1.2, size * 0.08);
   ctx.beginPath();
   ctx.moveTo(0, size * 0.3);
-  ctx.lineTo(0, -size * 1.6);
+  ctx.lineTo(0, -size * 1.7);
   ctx.stroke();
 
-  // Pole tip
-  ctx.fillStyle = '#ddd';
+  // Pole tip ornament
+  ctx.fillStyle = '#e8e0d0';
   ctx.beginPath();
-  ctx.arc(0, -size * 1.6, size * 0.06, 0, Math.PI * 2);
+  ctx.arc(0, -size * 1.72, size * 0.07, 0, Math.PI * 2);
   ctx.fill();
 
-  // Argentine flag — waving cloth simulation
-  const segments = 6;
-  const flagW = size * 0.7;
-  const flagH = size * 0.5;
+  // Argentine flag — higher-fidelity waving cloth simulation
+  const segments = 8;
+  const flagW = size * 0.8;
+  const flagH = size * 0.55;
+  const topY = -size * 1.65;
+
   for (let seg = 0; seg < segments; seg++) {
     const t0 = seg / segments;
     const t1 = (seg + 1) / segments;
-    const wave0 = Math.sin(time * 3.5 + t0 * 4) * 2 * t0;
-    const wave1 = Math.sin(time * 3.5 + t1 * 4) * 2 * t1;
+    const wave0 = Math.sin(time * 3.5 + t0 * 5) * 2.5 * t0;
+    const wave1 = Math.sin(time * 3.5 + t1 * 5) * 2.5 * t1;
+    const droop0 = t0 * t0 * flagH * 0.08; // Gravity droop
+    const droop1 = t1 * t1 * flagH * 0.08;
     const x0 = t0 * flagW + wave0;
     const x1 = t1 * flagW + wave1;
-    const topY = -size * 1.55;
 
-    // Light blue stripe
+    // Light blue stripe (top)
     ctx.fillStyle = '#75AADB';
     ctx.beginPath();
-    ctx.moveTo(x0, topY);
-    ctx.lineTo(x1, topY);
-    ctx.lineTo(x1, topY + flagH * 0.33);
-    ctx.lineTo(x0, topY + flagH * 0.33);
+    ctx.moveTo(x0, topY + droop0);
+    ctx.lineTo(x1, topY + droop1);
+    ctx.lineTo(x1, topY + flagH * 0.33 + droop1);
+    ctx.lineTo(x0, topY + flagH * 0.33 + droop0);
     ctx.closePath();
     ctx.fill();
 
-    // White stripe
+    // White stripe (center)
     ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.moveTo(x0, topY + flagH * 0.33);
-    ctx.lineTo(x1, topY + flagH * 0.33);
-    ctx.lineTo(x1, topY + flagH * 0.67);
-    ctx.lineTo(x0, topY + flagH * 0.67);
+    ctx.moveTo(x0, topY + flagH * 0.33 + droop0);
+    ctx.lineTo(x1, topY + flagH * 0.33 + droop1);
+    ctx.lineTo(x1, topY + flagH * 0.67 + droop1);
+    ctx.lineTo(x0, topY + flagH * 0.67 + droop0);
     ctx.closePath();
     ctx.fill();
 
-    // Light blue stripe
+    // Light blue stripe (bottom)
     ctx.fillStyle = '#75AADB';
     ctx.beginPath();
-    ctx.moveTo(x0, topY + flagH * 0.67);
-    ctx.lineTo(x1, topY + flagH * 0.67);
-    ctx.lineTo(x1, topY + flagH);
-    ctx.lineTo(x0, topY + flagH);
+    ctx.moveTo(x0, topY + flagH * 0.67 + droop0);
+    ctx.lineTo(x1, topY + flagH * 0.67 + droop1);
+    ctx.lineTo(x1, topY + flagH + droop1);
+    ctx.lineTo(x0, topY + flagH + droop0);
     ctx.closePath();
     ctx.fill();
+  }
+
+  // Sol de Mayo (golden sun in white band center)
+  const solX = flagW * 0.3 + Math.sin(time * 3.5 + 1.5) * 1.5;
+  const solY = topY + flagH * 0.5 + (0.3 * 0.3 * flagH * 0.08);
+  const solR = flagH * 0.1;
+  // Sun disc
+  ctx.fillStyle = '#F6B40E';
+  ctx.beginPath();
+  ctx.arc(solX, solY, solR, 0, Math.PI * 2);
+  ctx.fill();
+  // Sun rays (simplified)
+  ctx.strokeStyle = '#F6B40E';
+  ctx.lineWidth = Math.max(0.3, size * 0.015);
+  for (let ray = 0; ray < 8; ray++) {
+    const angle = (ray / 8) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(solX + Math.cos(angle) * solR * 1.2, solY + Math.sin(angle) * solR * 1.2);
+    ctx.lineTo(solX + Math.cos(angle) * solR * 2.0, solY + Math.sin(angle) * solR * 2.0);
+    ctx.stroke();
+  }
+
+  // Flag shadow/fold depth
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+  ctx.lineWidth = Math.max(0.3, size * 0.01);
+  for (let seg = 1; seg < segments; seg++) {
+    const t = seg / segments;
+    const wv = Math.sin(time * 3.5 + t * 5) * 2.5 * t;
+    const dp = t * t * flagH * 0.08;
+    const sx = t * flagW + wv;
+    ctx.beginPath();
+    ctx.moveTo(sx, topY + dp);
+    ctx.lineTo(sx, topY + flagH + dp);
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -1711,7 +2088,72 @@ function drawSky(ctx, canvasW, canvasH, atmosphere, time) {
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, canvasH * 0.3, canvasW, canvasH * 0.4);
     }
+
+    // === God rays / crepuscular rays ===
+    if (atmosphere.isDawn || atmosphere.isDusk || (hour >= 7 && hour <= 9) || (hour >= 16 && hour <= 18)) {
+      const rayT = atmosphere.isDawn
+        ? smoothstep(5.5, 7, hour) * (1 - smoothstep(7, 9, hour))
+        : smoothstep(16, 18, hour) * (1 - smoothstep(18, 20, hour));
+      if (rayT > 0.05) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        const rayRng = seededRng(789);
+        const numRays = 5;
+        for (let r = 0; r < numRays; r++) {
+          const rayAngle = (rayRng() - 0.5) * 0.6 + sunAngle;
+          const rayLen = canvasH * (0.4 + rayRng() * 0.3);
+          const rayWidth = canvasW * (0.02 + rayRng() * 0.03);
+          const rayAlpha = rayT * (0.03 + rayRng() * 0.03);
+          ctx.fillStyle = `rgba(255,240,200,${rayAlpha})`;
+          ctx.beginPath();
+          ctx.moveTo(sunX - rayWidth, sunY);
+          ctx.lineTo(sunX + rayWidth, sunY);
+          ctx.lineTo(sunX + Math.cos(rayAngle + 0.5) * rayLen, sunY + rayLen);
+          ctx.lineTo(sunX + Math.cos(rayAngle - 0.5) * rayLen, sunY + rayLen);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
   }
+
+  // === Shooting stars (night only, rare) ===
+  if (isNight) {
+    const shootRng = seededRng(Math.floor(time * 8));
+    if (shootRng() < 0.015) { // ~1.5% per frame-group
+      const sx = shootRng() * canvasW * 0.8 + canvasW * 0.1;
+      const sy = shootRng() * canvasH * 0.3;
+      const sAngle = 0.5 + shootRng() * 0.8;
+      const sLen = 15 + shootRng() * 25;
+      const sGrad = ctx.createLinearGradient(sx, sy, sx + Math.cos(sAngle) * sLen, sy + Math.sin(sAngle) * sLen);
+      sGrad.addColorStop(0, 'rgba(255,255,255,0.6)');
+      sGrad.addColorStop(0.5, 'rgba(200,210,240,0.3)');
+      sGrad.addColorStop(1, 'rgba(180,200,240,0)');
+      ctx.strokeStyle = sGrad;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx + Math.cos(sAngle) * sLen, sy + Math.sin(sAngle) * sLen);
+      ctx.stroke();
+    }
+  }
+
+  // === Atmospheric gradient band at horizon ===
+  const horizonY = canvasH * 0.62;
+  const bandH = canvasH * 0.06;
+  const bandGrad = ctx.createLinearGradient(0, horizonY - bandH, 0, horizonY + bandH);
+  bandGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  if (isNight) {
+    bandGrad.addColorStop(0.5, 'rgba(30,40,70,0.08)');
+  } else if (atmosphere.isDawn || atmosphere.isDusk) {
+    bandGrad.addColorStop(0.5, 'rgba(180,120,80,0.06)');
+  } else {
+    bandGrad.addColorStop(0.5, 'rgba(160,180,210,0.05)');
+  }
+  bandGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = bandGrad;
+  ctx.fillRect(0, horizonY - bandH, canvasW, bandH * 2);
 
   // === Cloud layers ===
   if (atmosphere.cloudDensity > 0.05) {
@@ -1952,118 +2394,229 @@ function drawAltitudeHUD(ctx, canvasW, canvasH, positionIndex, atmosphere, state
 // ═══════════════════════════════════════════════════════════════
 
 function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionMgr, state) {
-  // a) Permanent subtle vignette (5–8% opacity)
+  // a) Enhanced vignette — multi-stop radial with subtle warm edge
   const vigRadius = Math.max(canvasW, canvasH) * 0.75;
-  const vigGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.4, canvasW / 2, canvasH / 2, vigRadius);
+  const vigGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.35, canvasW / 2, canvasH / 2, vigRadius);
   vigGrad.addColorStop(0, 'rgba(0,0,0,0)');
-  vigGrad.addColorStop(1, 'rgba(0,0,0,0.07)');
+  vigGrad.addColorStop(0.7, 'rgba(0,0,0,0.02)');
+  vigGrad.addColorStop(1, 'rgba(0,0,0,0.09)');
   ctx.fillStyle = vigGrad;
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  // b) Film grain (2-3% opacity, seeded per frame, varied luminance)
+  // a2) Warm edge tint (subtle photographic lens character)
+  const warmVig = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.5, canvasW / 2, canvasH / 2, vigRadius);
+  warmVig.addColorStop(0, 'rgba(0,0,0,0)');
+  warmVig.addColorStop(1, 'rgba(40,20,10,0.03)');
+  ctx.fillStyle = warmVig;
+  ctx.fillRect(0, 0, canvasW, canvasH);
+
+  // b) Film grain (organic, varied density and luminance)
   const grainSeed = Math.floor(time * 60);
   const grainRng = seededRng(grainSeed);
-  const grainStep = Math.max(10, Math.floor(canvasW / 40));
+  const grainStep = Math.max(8, Math.floor(canvasW / 50));
   for (let gy = 0; gy < canvasH; gy += grainStep) {
     for (let gx = 0; gx < canvasW; gx += grainStep) {
       const rv = grainRng();
-      if (rv > 0.5) {
-        // Vary grain brightness for more organic texture
-        const grainLum = 80 + Math.floor(grainRng() * 96);
-        const grainAlpha = 0.018 + grainRng() * 0.016;
+      if (rv > 0.45) {
+        const grainLum = 70 + Math.floor(grainRng() * 110);
+        const grainAlpha = 0.015 + grainRng() * 0.018;
         ctx.fillStyle = `rgba(${grainLum},${grainLum},${grainLum},${grainAlpha})`;
         ctx.fillRect(gx, gy, grainStep, grainStep);
       }
     }
   }
 
-  // b2) Chromatic aberration — subtle 1px color shift at canvas edges
+  // b2) Chromatic aberration — subtle radial color fringe (lens simulation)
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
   const caMargin = Math.max(20, canvasW * 0.08);
-  const caAlpha = 0.015;
-  // Red channel shift (left edge)
-  ctx.fillStyle = `rgba(180,0,0,${caAlpha})`;
-  ctx.fillRect(0, 0, caMargin, canvasH);
-  // Blue channel shift (right edge)
-  ctx.fillStyle = `rgba(0,0,180,${caAlpha})`;
-  ctx.fillRect(canvasW - caMargin, 0, caMargin, canvasH);
-  // Slight top/bottom color fringe
-  ctx.fillStyle = `rgba(0,100,180,${caAlpha * 0.6})`;
-  ctx.fillRect(0, 0, canvasW, caMargin * 0.5);
-  ctx.fillStyle = `rgba(180,80,0,${caAlpha * 0.6})`;
-  ctx.fillRect(0, canvasH - caMargin * 0.5, canvasW, caMargin * 0.5);
+  const caAlpha = 0.012;
+  // Radial: red shift outer-left/bottom, blue shift outer-right/top
+  const caGradL = ctx.createLinearGradient(0, 0, caMargin * 1.5, 0);
+  caGradL.addColorStop(0, `rgba(180,30,0,${caAlpha})`);
+  caGradL.addColorStop(1, 'rgba(180,30,0,0)');
+  ctx.fillStyle = caGradL;
+  ctx.fillRect(0, 0, caMargin * 1.5, canvasH);
+
+  const caGradR = ctx.createLinearGradient(canvasW, 0, canvasW - caMargin * 1.5, 0);
+  caGradR.addColorStop(0, `rgba(0,30,200,${caAlpha})`);
+  caGradR.addColorStop(1, 'rgba(0,30,200,0)');
+  ctx.fillStyle = caGradR;
+  ctx.fillRect(canvasW - caMargin * 1.5, 0, caMargin * 1.5, canvasH);
+
+  const caGradT = ctx.createLinearGradient(0, 0, 0, caMargin * 0.8);
+  caGradT.addColorStop(0, `rgba(0,80,180,${caAlpha * 0.5})`);
+  caGradT.addColorStop(1, 'rgba(0,80,180,0)');
+  ctx.fillStyle = caGradT;
+  ctx.fillRect(0, 0, canvasW, caMargin * 0.8);
+
+  const caGradB = ctx.createLinearGradient(0, canvasH, 0, canvasH - caMargin * 0.8);
+  caGradB.addColorStop(0, `rgba(180,60,0,${caAlpha * 0.5})`);
+  caGradB.addColorStop(1, 'rgba(180,60,0,0)');
+  ctx.fillStyle = caGradB;
+  ctx.fillRect(0, canvasH - caMargin * 0.8, canvasW, caMargin * 0.8);
   ctx.restore();
 
-  // c) Color grading by altitude/hour
+  // c) Color grading by altitude/hour — cinematic LUT-style per-band
   const altNorm = state ? (ROUTE_NODES[clampIdx(state.positionIndex)].alt - ALT_MIN) / ALT_RANGE : 0;
-  // Golden hour warm tint
+  // Golden hour warm tint (enhanced)
   if (atmosphere.isDawn || atmosphere.isDusk) {
-    ctx.fillStyle = 'rgba(255,180,100,0.05)';
+    const ghIntensity = atmosphere.isDawn
+      ? smoothstep(5.5, 6.5, atmosphere.hour)
+      : (1 - smoothstep(18, 20, atmosphere.hour));
+    ctx.fillStyle = `rgba(255,170,90,${0.04 + ghIntensity * 0.03})`;
     ctx.fillRect(0, 0, canvasW, canvasH);
+    // Warm shadows
+    ctx.fillStyle = `rgba(120,50,20,${0.02 * ghIntensity})`;
+    ctx.fillRect(0, canvasH * 0.5, canvasW, canvasH * 0.5);
   }
-  // Night cool shift
+  // Night cool shift — blue-teal for mountain night feel
   if (atmosphere.isNight) {
-    ctx.fillStyle = 'rgba(40,60,120,0.06)';
+    ctx.fillStyle = 'rgba(30,50,110,0.06)';
     ctx.fillRect(0, 0, canvasW, canvasH);
+    // Subtle teal in shadows
+    ctx.fillStyle = 'rgba(20,60,80,0.03)';
+    ctx.fillRect(0, canvasH * 0.4, canvasW, canvasH * 0.6);
   }
-  // High-altitude desaturation (simulates oxygen deprivation)
-  if (altNorm > 0.75) {
-    const desatAlpha = (altNorm - 0.75) * 0.16;
-    ctx.fillStyle = `rgba(180,185,195,${desatAlpha})`;
+  // High-altitude desaturation and slight purple shift (oxygen deprivation)
+  if (altNorm > 0.7) {
+    const desatAlpha = (altNorm - 0.7) * 0.14;
+    ctx.fillStyle = `rgba(175,180,200,${desatAlpha})`;
     ctx.fillRect(0, 0, canvasW, canvasH);
+    // Cold purple tint at extreme altitude
+    if (altNorm > 0.85) {
+      ctx.fillStyle = `rgba(100,80,140,${(altNorm - 0.85) * 0.08})`;
+      ctx.fillRect(0, 0, canvasW, canvasH);
+    }
   }
-  // Mid-day harsh light — faint warm overlay
+  // Mid-day harsh light with slight contrast boost
   if (!atmosphere.isNight && !atmosphere.isDawn && !atmosphere.isDusk && atmosphere.hour >= 10 && atmosphere.hour <= 14) {
-    ctx.fillStyle = 'rgba(255,250,230,0.02)';
+    ctx.fillStyle = 'rgba(255,252,235,0.025)';
+    ctx.fillRect(0, 0, canvasW, canvasH);
+    // Slight shadow deepening at midday
+    ctx.fillStyle = 'rgba(0,0,20,0.012)';
+    ctx.fillRect(0, canvasH * 0.55, canvasW, canvasH * 0.45);
+  }
+  // Approach-altitude warmth (valley golden-green)
+  if (altNorm < 0.3) {
+    ctx.fillStyle = `rgba(200,180,100,${(0.3 - altNorm) * 0.02})`;
     ctx.fillRect(0, 0, canvasW, canvasH);
   }
 
-  // d) Bloom on sun/moon (extra glow pass)
+  // d) Bloom on sun/moon (enhanced multi-radius)
   if (!atmosphere.isNight) {
     const sunAngle = ((atmosphere.hour - 6) / 12) * Math.PI;
     const sunX = canvasW * 0.2 + Math.cos(sunAngle) * canvasW * 0.35;
     const sunY = canvasH * 0.35 - Math.sin(sunAngle) * canvasH * 0.32;
-    const bloomR = Math.max(50, canvasW * 0.1);
+    // Outer bloom
+    const bloomR = Math.max(60, canvasW * 0.12);
     const bloom = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, bloomR);
-    bloom.addColorStop(0, 'rgba(255,250,220,0.06)');
-    bloom.addColorStop(0.4, 'rgba(255,240,190,0.03)');
-    bloom.addColorStop(1, 'rgba(255,230,170,0)');
+    bloom.addColorStop(0, 'rgba(255,250,220,0.07)');
+    bloom.addColorStop(0.2, 'rgba(255,245,200,0.04)');
+    bloom.addColorStop(0.5, 'rgba(255,235,180,0.02)');
+    bloom.addColorStop(1, 'rgba(255,225,160,0)');
     ctx.fillStyle = bloom;
     ctx.fillRect(sunX - bloomR, sunY - bloomR, bloomR * 2, bloomR * 2);
+    // Inner bright bloom
+    const innerR = bloomR * 0.3;
+    const innerBloom = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, innerR);
+    innerBloom.addColorStop(0, 'rgba(255,252,240,0.08)');
+    innerBloom.addColorStop(1, 'rgba(255,248,230,0)');
+    ctx.fillStyle = innerBloom;
+    ctx.fillRect(sunX - innerR, sunY - innerR, innerR * 2, innerR * 2);
+
+    // e) Lens flare when sun is high and bright
+    if (atmosphere.hour >= 8 && atmosphere.hour <= 16) {
+      const flareIntensity = Math.sin(((atmosphere.hour - 8) / 8) * Math.PI) * 0.3;
+      if (flareIntensity > 0.05) {
+        // Line from sun through center to opposite edge
+        const cx = canvasW / 2;
+        const cy = canvasH / 2;
+        const dx = cx - sunX;
+        const dy = cy - sunY;
+        // 3-4 ghost flares along the line
+        const ghostPositions = [0.3, 0.55, 0.7, 0.9];
+        const ghostColors = [
+          [255, 200, 100],
+          [100, 180, 255],
+          [255, 150, 200],
+          [150, 255, 200],
+        ];
+        for (let g = 0; g < ghostPositions.length; g++) {
+          const gx = sunX + dx * ghostPositions[g] * 2;
+          const gy = sunY + dy * ghostPositions[g] * 2;
+          const gr = Math.max(3, canvasW * (0.008 + g * 0.004));
+          const [fr, fg, fb] = ghostColors[g];
+          const fAlpha = flareIntensity * (0.04 - g * 0.008);
+          if (fAlpha > 0.005) {
+            const flareGrad = ctx.createRadialGradient(gx, gy, 0, gx, gy, gr);
+            flareGrad.addColorStop(0, `rgba(${fr},${fg},${fb},${fAlpha})`);
+            flareGrad.addColorStop(1, `rgba(${fr},${fg},${fb},0)`);
+            ctx.fillStyle = flareGrad;
+            ctx.beginPath();
+            ctx.arc(gx, gy, gr, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+    }
   } else {
-    // Moonlight bloom during night
+    // Moonlight bloom during night — enhanced with glow ring
     const moonX = canvasW * 0.7;
     const moonY = canvasH * 0.18;
-    const moonBloomR = Math.max(40, canvasW * 0.08);
+    const moonBloomR = Math.max(50, canvasW * 0.1);
     const moonBloom = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, moonBloomR);
-    moonBloom.addColorStop(0, 'rgba(180,200,240,0.04)');
-    moonBloom.addColorStop(0.5, 'rgba(160,180,220,0.02)');
-    moonBloom.addColorStop(1, 'rgba(140,160,200,0)');
+    moonBloom.addColorStop(0, 'rgba(180,200,240,0.05)');
+    moonBloom.addColorStop(0.3, 'rgba(160,185,225,0.03)');
+    moonBloom.addColorStop(0.6, 'rgba(140,170,210,0.01)');
+    moonBloom.addColorStop(1, 'rgba(130,160,200,0)');
     ctx.fillStyle = moonBloom;
     ctx.fillRect(moonX - moonBloomR, moonY - moonBloomR, moonBloomR * 2, moonBloomR * 2);
+    // Moon halo ring
+    ctx.strokeStyle = 'rgba(180,200,230,0.02)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, moonBloomR * 0.6, 0, Math.PI * 2);
+    ctx.stroke();
   }
+
+  // f) Depth-of-field approximation — soft blur on edges via gradient bands
+  const dofMargin = canvasH * 0.08;
+  // Top foreground blur band
+  const dofTop = ctx.createLinearGradient(0, 0, 0, dofMargin);
+  dofTop.addColorStop(0, 'rgba(0,0,0,0.04)');
+  dofTop.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = dofTop;
+  ctx.fillRect(0, 0, canvasW, dofMargin);
+  // Bottom foreground blur band
+  const dofBot = ctx.createLinearGradient(0, canvasH - dofMargin, 0, canvasH);
+  dofBot.addColorStop(0, 'rgba(0,0,0,0)');
+  dofBot.addColorStop(1, 'rgba(0,0,0,0.05)');
+  ctx.fillStyle = dofBot;
+  ctx.fillRect(0, canvasH - dofMargin, canvasW, dofMargin);
 
   // Transition-driven overlays
   if (transitionMgr) {
-    // Sleep dimming
+    // Sleep dimming with starfield overlay
     if (transitionMgr.dimLevel > 0) {
       ctx.fillStyle = `rgba(0,0,10,${transitionMgr.dimLevel})`;
       ctx.fillRect(0, 0, canvasW, canvasH);
     }
-    // Red edge flash (collapse)
+    // Red edge flash (collapse) — pulsing ring
     if (transitionMgr.redFlashAlpha > 0) {
-      const rfGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.5, canvasW / 2, canvasH / 2, vigRadius);
+      const rfGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.4, canvasW / 2, canvasH / 2, vigRadius);
       rfGrad.addColorStop(0, 'rgba(200,30,30,0)');
-      rfGrad.addColorStop(1, `rgba(200,30,30,${transitionMgr.redFlashAlpha})`);
+      rfGrad.addColorStop(0.7, `rgba(200,30,30,${transitionMgr.redFlashAlpha * 0.5})`);
+      rfGrad.addColorStop(1, `rgba(180,20,20,${transitionMgr.redFlashAlpha})`);
       ctx.fillStyle = rfGrad;
       ctx.fillRect(0, 0, canvasW, canvasH);
     }
-    // Fatigue/exposure vignette
+    // Fatigue/exposure vignette — multi-ring with color-coded severity
     if (transitionMgr.vignetteAlpha > 0) {
       const { r: vr, g: vg, b: vb } = transitionMgr.vignetteColor;
-      const vGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.35, canvasW / 2, canvasH / 2, vigRadius);
+      const vGrad = ctx.createRadialGradient(canvasW / 2, canvasH / 2, vigRadius * 0.3, canvasW / 2, canvasH / 2, vigRadius);
       vGrad.addColorStop(0, `rgba(${vr},${vg},${vb},0)`);
+      vGrad.addColorStop(0.6, `rgba(${vr},${vg},${vb},${transitionMgr.vignetteAlpha * 0.3})`);
       vGrad.addColorStop(1, `rgba(${vr},${vg},${vb},${transitionMgr.vignetteAlpha})`);
       ctx.fillStyle = vGrad;
       ctx.fillRect(0, 0, canvasW, canvasH);
