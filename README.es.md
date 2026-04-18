@@ -308,16 +308,16 @@ aconcaguastonesentinel@gmail.com
 *Aconcagua: Stone Sentinel explora la idea de que avanzar no siempre significa progresar, y que reconocer los límites —externos e internos— puede ser una forma de éxito.*
 
 
-## Estado canónico del prototipo (v1.5.0 estado público)
+## Estado canónico del prototipo (v1.5.1 estado público)
 
 > **Estado canónico (anclado al código):**
-> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[1.5.0]`](./CHANGELOG.md).
+> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[1.5.1]`](./CHANGELOG.md).
 > - El progreso por fase se rastrea en [`docs/es/plan-implementacion-v1.4.md`](./docs/es/plan-implementacion-v1.4.md) (versión en inglés: `docs/en/implementation-plan-v1.4.md`).
-> - La versión pública actual es **v1.5.0**.
+> - La versión pública actual es **v1.5.1**.
 
-El prototipo activo canónico es **`prototype/web-v1` (v1.5.0 estado público)**.
+El prototipo activo canónico es **`prototype/web-v1` (v1.5.1 estado público)**.
 
-- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.5.0 modulares en despliegue público.
+- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.5.1 modulares en despliegue público.
   - Los contratos de arranque son estrictos: los archivos de modelo requeridos deben cargar y validar antes de jugar; los fallos bloqueantes muestran archivo/categoría de diagnóstico.
   - La orquestación de turnos es responsabilidad de `ui/game-loop.js` (factory `createGameLoop(deps)`) con callbacks de renderizado inyectados.
   - El flujo de pantallas y modales es responsabilidad de `ui/flow-controller.js` (`initFlowController(hooks)`).

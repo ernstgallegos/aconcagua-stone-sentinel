@@ -12,12 +12,32 @@ For every release PR:
 
 ## Active debt items
 
-No active debt items are currently registered. Re-open an item only when its measurable exit criterion regresses.
+| Debt item | Owner | Risk | Symptoms | Measurable exit criterion |
+|---|---|---|---|---|
+| `screens.js` monolith (3658 lines) | UI layer | Medium — maintainability risk, merge conflict surface | Difficulty navigating/reviewing; multiple responsibilities in one file | `screens.js` reduced to < 500 lines of pure wiring/init; remaining logic extracted to dedicated modules with independent tests |
+| `mountain-visualization.js` size (2991 lines) | UI layer | Low — isolated module with stable API | Single large rendering file with mixed concerns (terrain, climber, atmosphere, HUD, post-processing) | Subsystems extracted to at least 3 focused modules; each independently importable |
+| No test coverage metrics | Quality | Low — tests exist but coverage visibility is zero | Cannot identify untested paths without manual review | Coverage reporting via `c8` or equivalent integrated into `npm test` output |
 
 ## Resolved debt items
 
 | Debt item | Resolution | Resolved in |
 |---|---|---|
+| Inline `onkeydown` handler (CSP/a11y inconsistency) | Removed inline handler from `index.html`; keyboard activation for `[data-action]` elements handled by centralized `event-registry.js` with Enter/Space delegation. | v1.5.1 |
+| `epResult.pressureScore` direct mutation | Replaced with separate `adjustedPressureScore` variable in `turn-resolution.js`. EP result object is no longer mutated. | v1.5.1 |
+| Magic numbers in turn-resolution.js undocumented | Added inline comments documenting all balance-critical constants (progress base 58, collapse multiplier 1.2, acclimatization thresholds, late-signal gates, photo confidence values). | v1.5.1 |
+| `JSON.parse(JSON.stringify())` deep clone risk | Replaced with `structuredClone` (JSON fallback) in `game-state.js`. | v1.5.1 |
+| `createTurnEngine` missing dependency validation | Added required-deps check at initialization with descriptive error. | v1.5.1 |
+| `pressureHistory` unbounded array growth | Added ring-buffer cap (100 entries) in `game-state.js` `applySliceUpdate`. | v1.5.1 |
+| DOM property pollution via `__modalKeydownHandler` | Replaced with `WeakMap` in `accessibility.js`. | v1.5.1 |
+| Duplicate position list rendering (innerHTML copy) | Refactored `renderPositionList` in `screens/game.js` to build DOM nodes independently for both containers. | v1.5.1 |
+| Version drift in docs/architecture.md and docs/simulation_engine.md | Updated version headers from v1.4.8 to v1.5.0. | v1.5.1 |
+| Broken markdown links in geological bible docs | Replaced image references with citation placeholders (copyrighted figure). | v1.5.1 |
+| Public roadmap missing v1.5.0 | Updated EN/ES roadmaps with v1.5.0 stage and status matrix. | v1.5.1 |
+| No v1.5.0 implementation plan | Created `docs/en/implementation-plan-v1.5.md` and ES mirror. | v1.5.1 |
+| Playwright smoke tests not running on push to main | Removed PR-only condition; smoke tests now run on both push and PRs. | v1.5.1 |
+| No dependency security scanning in CI | Added `npm audit --audit-level=high` to `js-contract-tests` job. | v1.5.1 |
+| No markdown link validation in CI | Added `npm run validate:links` to `json-validation` job. | v1.5.1 |
+| `temp/` legacy audit files and naming issues | Archived to `devlog/` with corrected naming; replaced empty README. | v1.5.1 |
 | Tuning fragility hotspots (EP/BT multipliers, stage penalties, and resource economy thresholds) | Added automated guardrail suite `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP root-scale constraints, fractional burn-rate floor behavior, and deterministic summit-return viability. Updated balance notes with current target bands and dispersion table as canonical references. | v1.4.8 |
 | Dual-prototype divergence (`prototype/web-v1` active vs `prototype/mra-v0` reference) | Added explicit ownership matrix `docs/prototype-ownership-matrix.md`, added required contract gate script `npm run test:contracts`, and added parity enforcement suite `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` validating ownership/contract overlap and intentional divergences. | v1.4.8 |
 | Run-log compatibility aliases (legacy additive fields kept for historical consumers) | Removed legacy summary alias fallback (`lateSignalTriggered`) from run-log summarization so telemetry aggregation now reads canonical `lateSignalActivation` only. Added immutability helper `annotateRunLogOutcome()` and contract tests to prevent alias reintroduction. | v1.4.8 |

@@ -9,6 +9,42 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.5.1] — 2026-04
+
+### Added
+
+- Created implementation plan v1.5.0 EN (`docs/en/implementation-plan-v1.5.md`) and ES mirror (`docs/es/plan-implementacion-v1.5.md`) documenting Canvas2D visualization, per-character visual identity, and decision-position fix deliverables.
+- Added keyboard activation support (Enter/Space) for `[data-action]` elements with `role="button"` in `event-registry.js`, replacing inline `onkeydown` handlers for CSP compatibility and accessibility consistency.
+- Added dependency validation in `createTurnEngine()` that fails fast with a descriptive error listing missing required dependencies instead of cryptic runtime failures.
+- Added `pressureHistory` ring-buffer cap (100 entries) in `game-state.js` to prevent unbounded array growth during long expedition runs.
+- Added `npm run validate:links` (markdown link validation) to CI pipeline.
+- Added `npm audit --audit-level=high` dependency security scanning to CI pipeline.
+- Added pressure delta sign convention documentation to `docs/simulation_engine.md`.
+- Added explicit `permissions: contents: read` to CI workflow for least-privilege GitHub token scope (CodeQL finding).
+
+### Changed
+
+- Version bumped from 1.5.0 to 1.5.1 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings), prototype intro chip (`prototype/web-v1/index.html`), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`.
+- Updated version headers in `docs/architecture.md` and `docs/simulation_engine.md` from v1.4.8 to v1.5.0, aligning with canonical version.
+- Updated public roadmap (EN `meta/public-roadmap.md`, ES `meta/public-roadmap.es.md`) to v1.5 snapshot: marked Stages 3, 6, and Design Consolidation v1.4 as Done; added v1.5.0 Visual & Mechanical Refinement stage with implementation evidence.
+- Replaced `JSON.parse(JSON.stringify())` deep clone in `game-state.js` with `structuredClone` (with JSON fallback), correctly handling Date, RegExp, and undefined values.
+- Replaced `__modalKeydownHandler` DOM property pollution in `accessibility.js` with a `WeakMap` for clean per-overlay handler storage.
+- Refactored `renderPositionList` in `screens/game.js` to build DOM nodes directly in both desktop and mobile containers via shared builder function instead of copying `innerHTML`.
+- Improved `ALLOWED_ORIGINS` fallback in `api/run.js`: structured JSON logging, environment-aware severity (error on Vercel, warn locally), and `isVercel` flag for operational monitoring.
+- Enabled Playwright smoke tests on both push to main and PRs (removed `if: github.event_name == 'pull_request'` condition).
+- Archived legacy audit files from `temp/` to `devlog/` (renamed with sequential numbering and corrected "Adutoria" typo), replaced empty `README.MD` with descriptive `README.md`.
+- Updated `CONTRIBUTING.md` documentation consistency checklist to reference both v1.4 and v1.5 implementation plans.
+
+### Fixed
+
+- Fixed stale Spanish intro version string in `screens.js`: was displaying `v1.4.8` instead of current version (English was already correct at `v1.5.0`).
+- Fixed direct mutation of `epResult.pressureScore` in `turn-resolution.js`: acclimatization penalty and bivouac adjustments now compute a separate `adjustedPressureScore` variable instead of mutating the returned EP result object.
+- Removed inline `onkeydown` handler from watch-band element in `prototype/web-v1/index.html`; keyboard activation is now handled by the centralized event registry for CSP compliance.
+- Fixed broken markdown image links in geological bible docs (EN/ES): replaced `![...]()` references to missing copyrighted figure with italic citation placeholders.
+- Fixed `img.currentSrc` browser compatibility in `carousel-media.js`: replaced `||` with `??` (nullish coalesce) for correct falsy-value handling when `currentSrc` is empty string.
+- Fixed event cooldown initial state magic number in `events-core.js`: replaced `-999` with `-Infinity` so cooldown checks work correctly regardless of turn counter value.
+- Added inline documentation for all balance-critical magic numbers in `turn-resolution.js`: progress base (58), collapse multiplier (1.2), acclimatization thresholds (20/40), late-signal gates (0.75/18), photo confidence values (6/4/8).
+
 ## [1.5.0] — 2026-04
 
 ### Added

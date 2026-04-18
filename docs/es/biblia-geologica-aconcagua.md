@@ -177,7 +177,7 @@ Modelo y edades apoyados en compilaciones (volcanismo 1996), U-Pb recientes, sí
 
 **Figura propuesta (obligatoria para tener una “sección bandera” en el proyecto):**
 
-![Sección estructural balanceada del AFTB sur y Cordillera Frontal (33°30′–33°45′S), base para restauraciones. Extraer/adaptar de Giambiagi (2003), Fig. 2b (y citar también Giambiagi & Ramos, 2002).](assets/figuras/seccion_estructural_AFTB_Giambiagi2003_Fig2b.png) <!-- citeturn45view0turn17view0 -->
+*[Figura: Sección estructural balanceada del AFTB sur y Cordillera Frontal (33°30′–33°45′S). Fuente: Giambiagi (2003), Fig. 2b; véase también Giambiagi & Ramos (2002). Imagen no incluida en el repositorio por restricciones de derechos de autor — consultar la fuente original.]*
 
 **Diagrama esquemático adicional (Mermaid, para documentación rápida):**
 

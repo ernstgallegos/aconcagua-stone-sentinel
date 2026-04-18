@@ -1,9 +1,9 @@
-# Simulation Engine — Prototype Web v1.4 (public state)
+# Simulation Engine — Prototype Web v1.5 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.0]`](../CHANGELOG.md#148--2026-04).
-> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.5.0**.
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.1]`](../CHANGELOG.md#151--2026-04).
+> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`). v1.5.0 delivery documented in [`docs/en/implementation-plan-v1.5.md`](./en/implementation-plan-v1.5.md).
+> - Current public build is **v1.5.1**.
 > - Legacy v1.3 compatibility that is intentionally still active is limited to additive run-log aliases and test fixtures in `prototype/mra-v0`; canonical web-v1 authority and outcome taxonomy are v1.5.0 contracts.
 
 
@@ -52,6 +52,8 @@ Canonical resolver order is enforced by `RESOLVE_TURN_PIPELINE` in `prototype/we
 `pressureDelta = EP - BT`
 
 Pressure delta governs node-to-node progress, physiological cost, and outcome risk.
+
+**Sign convention:** positive delta means the environment is winning (harder conditions, higher risk); negative delta means the body is coping well (easier conditions, lower risk). A delta of zero represents equilibrium between environmental pressure and body tolerance.
 
 ## Perception model
 
