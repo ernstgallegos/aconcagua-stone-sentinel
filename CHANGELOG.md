@@ -11,7 +11,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
-- Pseudo-3D third-person mountain visualization on the gameplay screen (`prototype/web-v1`): Canvas2D perspective terrain with procedural ridgelines, a walking climber figure (red jacket, backpack, trekking pole, walk-cycle animation), third-person camera that follows the climber from behind/above, camp tent markers, summit flag, altitude-based terrain coloring (green approach → brown scree → grey rock → white snow), day/night cycle tied to `G.minutesOfDay` (dawn/dusk gradients, stars, sun position), weather-reactive atmosphere (fog density from `weather_severity` + `visibility`, snow/dust/wind particles), and in-view altitude HUD. Replaces previous SVG profile visualization. Same public API contract. New module `ui/helpers/mountain-visualization.js` and CSS `css/mountain-viz.css`. Respects `prefers-reduced-motion` (skips particle animations). Zero new dependencies — pure Canvas2D.
+- High-fidelity Canvas2D mountain visualization upgrade (`prototype/web-v1`): comprehensive visual overhaul of `ui/helpers/mountain-visualization.js` raising the rendering pipeline from MVP proof-of-concept to near-production quality. Same public API contract (initMountainVisualization/updateClimberPosition/destroyMountainVisualization). Zero new dependencies — pure Canvas2D. Respects `prefers-reduced-motion`. New features include:
+  - **Multi-layer terrain**: sub-ridgelines (secondary peaks at 40% width), smooth 6-stop altitude color gradient (valley green → olive → brown/tan → blue-grey → snow → summit white), snow patches with specular highlights at altitude, ambient occlusion in valley floors, directional sun lighting on terrain faces (shadow side / lit side varying with sun position).
+  - **Distant backdrop**: 4-layer procedural mountain silhouettes behind the main terrain with depth-based fog fade.
+  - **Enhanced sky**: 4-stop gradient (top/mid/bottom/horizon), 80-star field with color temperature variation and cross-spike diffraction on bright stars, Milky Way band at night, crescent moon with mare detail and glow halo, sun with radial corona glow, alpenglow gradient at dawn/dusk, procedural cloud layers (multi-puff ellipse shapes drifting with wind, density driven by weather severity).
+  - **Volumetric fog overlay**: screen-space depth-based atmospheric haze layer drawn after terrain for enhanced distance perception.
+  - **Climber detail**: altitude-aware equipment (gaiters above 5500m, gloves above mid-altitude, balaclava above 6500m, ice axe replaces trekking pole above 75% altitude, sunglasses in daylight above 4000m), headlamp with light-cone beam at night, ground shadow shaped by sun, fatigue simulation (movement slows at altitude, heavier breathing animation), sunburn tint at altitude, jacket with gradient and zipper detail, backpack with straps and sleeping mat roll, trekking pole with basket detail.
+  - **Footprint trail**: climber leaves fading elliptical footprint markers on the terrain surface that age out over 6 seconds.
+  - **Camp markers**: upgraded tent shapes with shadow side, door detail, campfire glow at night/dusk (flickering radial gradient), smoke wisps rising from camps.
+  - **Summit flag**: Argentine flag (celeste-blanco-celeste) with multi-segment cloth wave simulation replacing the single red triangle.
+  - **Camera**: gentle breathing sway for life-like feel.
+  - **Particles**: increased snow count (70), wind streaks drawn as elongated lines (not circles), dust motes with warm tint, phase-offset oscillation for natural drift.
+  - **Altitude HUD**: subtle dark backdrop behind altitude text for improved readability.
 
 ### Fixed
 
