@@ -39,6 +39,7 @@ import { reportRuntimeDiagnostic } from './helpers/runtime-diagnostics.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
 import { getNationalityBadge } from './helpers/nationality.js';
+import { initMountainVisualization, updateClimberPosition, destroyMountainVisualization } from './helpers/mountain-visualization.js';
 import {
   renderIntroContent as renderIntroContentView,
   copyProjectShareLink as copyProjectShareLinkView,
@@ -500,7 +501,7 @@ const I18N = {
       introClose: 'Close',
       introSummary: 'A narrative decision prototype about reading the mountain, managing body tolerance, and choosing when to continue or retreat.',
       introVersionLabel: 'Version',
-      introVersionValue: 'Prototype · v1.4.8',
+      introVersionValue: 'Prototype · v1.5.0',
       introFormatLabel: 'Format',
       introFormatValue: 'Single-run expedition prototype with onboarding, playable ascent/descent loop, and post-run debrief.',
       introAccessLabel: 'Access',
@@ -1899,6 +1900,13 @@ function startGame() {
   // clear resource warning
   clearElement(document.getElementById('resource-warning-box'));
 
+  // Initialize mountain profile visualization (re-init each run, passing current route nodes + character)
+  initMountainVisualization(
+    document.querySelector('.mountain-main'),
+    ROUTE_NODES,
+    { characterId: G.character?.id },
+  );
+
   renderPositionList();
   const logEntries = document.getElementById('log-entries');
   clearElement(logEntries);
@@ -2659,6 +2667,27 @@ function renderWatch() {
 // ════════════════════════════════════════════════
 function renderPositionList() {
   renderPositionListView({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT });
+  // Sync mountain visualization climber with current position + environment
+  const curIdx = Math.max(0, POSITIONS.indexOf(G.state.position));
+  const vizOpts = {
+    highestIndex: G.highestPosIdx,
+    minutesOfDay: G.minutesOfDay,
+    weatherSeverity: G.state.weather_severity,
+    visibility: G.state.visibility,
+  };
+  // Forward last decision action + event flags for transition effects
+  if (G._vizAction) {
+    vizOpts.action = G._vizAction;
+    G._vizAction = null;
+  }
+  if (G._vizFlags) {
+    vizOpts.flags = G._vizFlags;
+    G._vizFlags = null;
+  }
+  // Body-state levels drive fatigue/exposure vignettes
+  if (G.state.fatigue != null) vizOpts.fatigue = G.state.fatigue;
+  if (G.state.exposure != null) vizOpts.exposure = G.state.exposure;
+  updateClimberPosition(curIdx, vizOpts);
 }
 
 function syncMobileStatusPanels({ state, pressureText, watchTimeText, capacityText, bodyStateText, resourceText, permitText }) {
@@ -3079,6 +3108,7 @@ function buildReflectionPrompts() {
 
 function endRun(returnedToHorcones) {
   if (DECISION_TICKER) { clearInterval(DECISION_TICKER); DECISION_TICKER = null; }
+  destroyMountainVisualization();
   const outcome = classifyOutcome();
   const sc = G.scenario;
   const s = G.state;

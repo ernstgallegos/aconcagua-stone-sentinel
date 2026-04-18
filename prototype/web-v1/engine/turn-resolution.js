@@ -77,7 +77,6 @@ export function createTurnEngine(deps) {
     const survivalChance = clamp(100 - collapseChance + actionMod.survival, 4, 98);
 
     const nodeIndex = POSITIONS.indexOf(state.position);
-    const isApproachWait = context.action === 'wait' && (context.altitudeBand ?? 99) <= 1;
     const isHorconesExit = context.action === 'descend' && state.position === 'horcones';
     const isSummit = state.position === 'summit';
     const isSummitAdvanceAttempt = isSummit && (
@@ -93,7 +92,13 @@ export function createTurnEngine(deps) {
     else if (r > survivalChance) outcome = 'Retreat';
     else outcome = 'Hold';
 
-    if (isApproachWait && outcome === 'Advance') outcome = 'Hold';
+    // Stationary actions never change position — the player chose to stay.
+    // wait and shoot_photo are both position-holding actions.
+    // (Previously only blocked at approach altitude, letting high-camp waits
+    // accidentally advance or retreat.)
+    const isStationary = context.action === 'wait' || context.action === 'shoot_photo';
+    if (isStationary && outcome === 'Advance') outcome = 'Hold';
+    if (isStationary && outcome === 'Retreat') outcome = 'Hold';
     if (isSummitAdvanceAttempt) outcome = 'Hold';
     if (isHorconesExit) outcome = 'Advance';
 

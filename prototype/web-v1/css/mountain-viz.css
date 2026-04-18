@@ -1,0 +1,53 @@
+/* ═══════════════════════════════════════════
+   MOUNTAIN VISUALIZATION — Canvas2D pseudo-3D terrain
+   Third-person mountain view for the gameplay screen.
+   ═══════════════════════════════════════════ */
+
+/* Mountain-main needs relative positioning for the canvas overlay */
+.mountain-main {
+  position: relative;
+}
+
+/* Canvas sits behind narrative text and controls */
+.mountain-viz-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.9;
+  border-radius: 2px;
+}
+
+/* Ensure narrative text and controls stay above the canvas */
+.mountain-main > *:not(.mountain-viz-canvas) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Narrative text readability over 3D terrain */
+.mountain-main .narrative-text {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6),
+               0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.mountain-main .ambient-signal {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.mountain-main .field-log-trigger,
+.mountain-main .game-help-trigger {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION — canvas render loop handles this internally
+   via prefersReducedMotion() check; CSS is supplementary.
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .mountain-viz-canvas {
+    /* Canvas loop will skip particle animations */
+    opacity: 0.8;
+  }
+}

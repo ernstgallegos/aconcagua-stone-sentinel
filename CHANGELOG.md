@@ -9,6 +9,61 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.5.0] — 2026-04
+
+### Added
+
+- **Professional-grade Canvas2D mountain visualization** — comprehensive visual fidelity upgrade of `ui/helpers/mountain-visualization.js` elevating the in-game visualizer to production-tier quality. Same public API contract. Zero new dependencies — pure Canvas2D. Respects `prefers-reduced-motion`. Enhancements include:
+  - **Enhanced Climber figure**: character-colored sleeping bag with pillow/face/quilted seams/zipper/breath vapor; torso jacket with 4-stop gradient shading, shoulder seam lines, chest pocket, collar/hood-up toggle based on wind/snow conditions, zipper pull tab, fresnel-style rim light; crampons rendering at high altitude (>75% altitude norm); boot detail with shaped soles and lace tongue lines; hip belt, sternum strap, and compression strap on backpack; backpack lid flap and gradient body; rope coil visible at altitude >60%; sleeping mat with spiral end texture.
+  - **Breath vapor system**: visible breath condensation puffs from climber at high altitude or cold/night conditions — dual-ellipse animation synced to breathing cycle.
+  - **Enhanced headlamp**: headlamp strap across forehead, lamp housing detail, wider two-layer beam cone with inner bright and outer diffuse light gradient.
+  - **Enhanced camp markers**: gradient-shaded tent faces (lit sun-side vs shadow), fabric fold lines, ridge pole seam, guy ropes with stake pegs, ground shadow ellipse, door opening with gradient, second tent at base camps (>4000m), animated fire with 3-flame system (individual oscillation + ember + ground light pool).
+  - **Summit flag upgrade**: cairn rock pile at pole base, metallic gradient pole with tip ornament, 8-segment higher-fidelity waving cloth with gravity droop physics, Sol de Mayo golden sun with 8-ray star on white band center, fold depth shadow lines.
+  - **God rays / crepuscular rays**: volumetric light shafts from sun at dawn/dusk and golden-hour transitions (5 rays with screen-mode blending).
+  - **Shooting stars**: rare (1.5% chance per frame-group) meteor streaks across the night sky with gradient fade trails.
+  - **Atmospheric horizon band**: subtle gradient band at horizon line with time-of-day-aware color (night blue, dawn/dusk warm, day haze).
+  - **Enhanced post-processing**: multi-stop radial vignette with warm edge tint; finer-grain film noise (8px cells, varied density); radial gradient chromatic aberration (smoother than rectangular); cinematic color grading per altitude band (approach warmth, high-altitude desaturation + purple shift, golden-hour warm shadows, night teal in lower canvas, midday shadow deepening); multi-radius sun bloom (outer + inner); lens flare ghost elements (4 color-shifted ghosts along sun-center line); depth-of-field edge softening (top/bottom gradient bands); moon halo ring; enhanced collapse red-flash with multi-stop ring; multi-stop fatigue/exposure vignette.
+
+### Changed
+
+- Version bumped from 1.4.8 to 1.5.0 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings), prototype intro chip (`prototype/web-v1/index.html`), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/simulation_engine.md`.
+
+### Added
+
+- Per-character visual identity in mountain visualization: each of the 6 playable characters now renders with a unique appearance on the Canvas2D climber figure. Character visual profiles define jacket primary/highlight/shadow colors, hat/balaclava color, skin tone, gloves, gaiters, boots, pack, arm color, sunglasses, headlamp tint, build scale (body size multiplier), and shoulder width. `initMountainVisualization` now accepts an optional third argument `{ characterId }` to configure the climber appearance. Daniela De Rossi additionally renders a visible camera body on her pack strap.
+  - Francisco Aguirre: red jacket, navy beanie, warm olive skin, standard build
+  - Laura Kim: teal/cerulean jacket, cream beanie, lighter build
+  - Erik Lundvall: mustard gold jacket, charcoal beanie, tall/broad build
+  - Daniela De Rossi: deep violet jacket, camera on pack, athletic build
+  - Blake Harris: near-black jacket, bright red beanie, stocky build
+  - Irina Orlova: burnt orange jacket, cream beanie, lean/tall build
+- Enhanced post-processing passes: chromatic aberration at canvas edges (subtle 1px RGB color fringe), improved film grain with varied luminance per cell, moonlight bloom during night scenes, mid-day warm light overlay.
+- Improved terrain rendering: ridge-top highlight lines for better crest definition, branching rock fracture patterns with secondary branches, wider scree/talud altitude range with color-varied stones, enhanced snow sastrugi with wind-sculpted ripple detail, atmospheric scattering contrast reduction on distant terrain strips.
+
+### Fixed
+
+- **Decision-position bug**: `wait` and `shoot_photo` actions no longer cause unintended position changes. Previously, only approach-altitude waits were forced to Hold — at higher altitudes the RNG could roll Advance (player moves up without choosing to) or Retreat (player descends despite waiting). Now all wait and shoot_photo outcomes are forced to Hold at every altitude (except body-failure Collapse). This eliminates the reported issue where choosing "wait" could advance or descend the climber.
+
+- High-fidelity Canvas2D mountain visualization upgrade (`prototype/web-v1`): comprehensive visual overhaul of `ui/helpers/mountain-visualization.js` (1480 → 2171 lines) raising the rendering pipeline from MVP proof-of-concept to near-production quality. Same public API contract (`initMountainVisualization`/`updateClimberPosition`/`destroyMountainVisualization`). Zero new dependencies — pure Canvas2D. Respects `prefers-reduced-motion`. New features include:
+  - **Post-decision transition system**: `TransitionManager` class with `TransitionEffect` primitives. `updateClimberPosition` now accepts `options.action` (`advance`/`advance_slowly`/`descend`/`wait`/`sleep`) triggering camera zoom-push/pull, wind spikes, fog clearing, cloud time-lapse, and sleep dim-then-brighten. `options.flags` array (`white-wind-hit`/`collapse`) drives screen shake and red-edge flash. `options.fatigue`/`options.exposure` > 70 activate progressive dark/blue vignette overlays.
+  - **Post-processing passes**: permanent subtle corner vignette (7% opacity), per-frame film grain (2.5% opacity, seeded), color grading by altitude/hour (golden-hour amber tint, night blue shift, high-altitude desaturation), bloom glow on sun, transition-driven dimming/red-flash/vignette overlays.
+  - **Smooth weather transition**: `lerpAtmosphere` interpolates `_currentAtmosphere` toward `_targetAtmosphere` each frame so weather changes feel gradual. Lightning flash for `weatherSeverity ≥ 3`. Whiteout overlay for `visibility ≤ 1` (white-blue veil with radial silhouette cutout around climber).
+  - **Climber pose system**: action-driven stances (advance: 8° forward lean; descend: backward lean, wider stance; wait: upright; sleep: sleeping-bag replaces standing figure). Idle micro-animations: head tilt at summit every 5s, pack-strap fidget every 8s. Fatigue expression: progressive hunch, irregular walk cycle, decreased arm swing.
+  - **Cinematic altitude HUD**: vertical altitude gauge (left edge, 70% canvas height) with color zones (green/amber/red), camp tick marks, smooth position dot, highest-reached triangle. Info overlay: altitude, HH:MM clock, weather severity dots, trend arrow. Summit distance arc at canvas top.
+  - **Procedural terrain texture**: rock fracture lines (altNorm 0.25–0.75), scree dots (altNorm 0.35–0.65), snow sastrugi curves, 1px inter-strip shadow line for depth.
+  - **Visual sound cues**: horizontal wind intensity streaks at `windStrength > 1.5`, pulsing pressure ring around climber, camp marker wind shake.
+  - **Multi-layer terrain**: sub-ridgelines, smooth 6-stop altitude color gradient, snow patches with specular highlights, ambient occlusion, directional sun lighting.
+  - **Enhanced sky**: 80-star field with Milky Way band, crescent moon with mare detail, sun with radial corona, alpenglow, procedural cloud layers.
+  - **Camera**: gentle breathing sway, zoom/shake offsets for transition effects.
+  - **Particles**: 70 snow particles, wind streaks as elongated lines, dust motes with warm tint.
+- Game loop now forwards player decision action, event flags, fatigue, and exposure levels to the mountain visualization via `updateClimberPosition` extended options, enabling real-time visual feedback on turn consequences (`ui/game-loop.js`, `ui/screens.js`).
+
+### Fixed
+
+- Fixed climber walking off the terrain surface at higher altitudes: terrain center now follows the route path instead of being hardcoded at x=0, and the climber derives its X/Y position from Z via route interpolation (guarantees it stays on the terrain surface during movement between nodes).
+- Replaced linear route coordinates with realistic Ruta Normal profile: proportional z-spacing (long Horcones valley approach ~50% of route, compressed steep upper mountain), lateral x variation modelling the winding path (valley curves, La Travesía traverse near summit), and altitude-modulated ridge heights (wide valley walls at approach, narrow summit ridge).
+- Fixed visualization waypoint/route drift: `mountain-visualization.js` previously hardcoded 15 route nodes, causing the climber and terrain to silently diverge from runtime route state if `data/nodes.json` node count or order ever changed. Visualization waypoints are now derived from the runtime `normalizeRouteData()` output passed to `initMountainVisualization(container, runtimeNodes)`: `alt`/`camp`/`id` come directly from runtime data; `z` (depth) is computed via piecewise altitude-to-depth mapping; `x` (lateral offset) is computed from a normalized lateral profile applied to the node's fractional position in the route. `ALT_MIN`/`ALT_MAX`/`ALT_RANGE` are also derived at init time from live data. `screens.js` updated to pass `ROUTE_NODES` at init.
+
 ### Changed
 
 - Extracted landing page CSS (~900 lines) from inline `<style>` in `index.html` to external `src/styles/landing.css` for browser cacheability and maintainability.
