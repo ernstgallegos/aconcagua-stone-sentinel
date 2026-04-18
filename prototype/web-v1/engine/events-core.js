@@ -133,7 +133,7 @@ export function applyCharacterEvent({ G, state, action, stage, flags, characterE
 
   const eventState = { ...(G.characterEventState || {}) };
   for (const event of available) {
-    const snapshot = eventState[event.id] || { uses: 0, lastTurn: -999 };
+    const snapshot = eventState[event.id] || { uses: 0, lastTurn: -Infinity };
     const limits = event.limits || { cooldownTurns: 0, maxPerRun: 1 };
     const maxPerRun = Math.max(1, Number(limits.maxPerRun ?? 1));
     const cooldownTurns = Math.max(0, Number(limits.cooldownTurns ?? 0));

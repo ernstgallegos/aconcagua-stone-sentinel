@@ -7,6 +7,10 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+// WeakMap for storing modal keydown handlers per overlay element,
+// avoiding DOM property pollution from the previous __ convention.
+const modalKeydownHandlers = new WeakMap();
+
 function getFocusableElements(root) {
   if (!root?.querySelectorAll) return [];
   return Array.from(root.querySelectorAll(FOCUSABLE_SELECTOR)).filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true');
@@ -32,14 +36,15 @@ function attachFocusTrap(overlay, dialog) {
       first.focus();
     }
   };
-  overlay.__modalKeydownHandler = onKeydown;
+  modalKeydownHandlers.set(overlay, onKeydown);
   overlay.addEventListener?.('keydown', onKeydown);
 }
 
 function detachFocusTrap(overlay) {
-  if (!overlay?.__modalKeydownHandler) return;
-  overlay.removeEventListener?.('keydown', overlay.__modalKeydownHandler);
-  delete overlay.__modalKeydownHandler;
+  const handler = modalKeydownHandlers.get(overlay);
+  if (!handler) return;
+  overlay.removeEventListener?.('keydown', handler);
+  modalKeydownHandlers.delete(overlay);
 }
 
 function getModalCount() {

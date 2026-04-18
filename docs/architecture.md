@@ -1,11 +1,11 @@
-# Architecture — Prototype Web v1.4 (public state)
+# Architecture — Prototype Web v1.5 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.4.8]`](../CHANGELOG.md#148--2026-04).
-> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.4.8** with phased rollout contracts preserved.
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.0]`](../CHANGELOG.md#150--2026-04).
+> - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`). v1.5.0 delivery documented in [`docs/en/implementation-plan-v1.5.md`](./en/implementation-plan-v1.5.md).
+> - Current public build is **v1.5.0** with phased rollout contracts preserved.
 
-Prototype Web v1.4 (public branch state) is the canonical active prototype in this repository, with completed and in-progress items from the v1.4 phase plan.
+Prototype Web v1.5 (public branch state) is the canonical active prototype in this repository, building on completed v1.4 phase plan items with v1.5.0 additions (Canvas2D visualization, character visual identity, decision-position fix).
 
 Canonical repo status is centralized in [`docs/repo-truth.md`](./repo-truth.md).
 

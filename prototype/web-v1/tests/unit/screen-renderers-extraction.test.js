@@ -53,7 +53,7 @@ test('title renderer builds difficulty pills and description', () => {
 
 test('game renderer builds reversed position list', () => {
   const list = { innerHTML: '', children: [], appendChild(node) { this.children.push(node); } };
-  const mobile = { innerHTML: '' };
+  const mobile = { innerHTML: '', children: [], appendChild(node) { this.children.push(node); } };
 
   global.document = {
     getElementById(id) {
@@ -80,7 +80,7 @@ test('game renderer builds reversed position list', () => {
   });
 
   assert.equal(list.children.length, 3);
-  assert.equal(typeof mobile.innerHTML, 'string');
+  assert.equal(mobile.children.length, 3);
 });
 
 test('debrief classifyOutcome delegates class mapping', () => {

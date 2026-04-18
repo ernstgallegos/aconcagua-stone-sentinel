@@ -54,26 +54,32 @@ export function renderContextWidget({ state, getRiskProfile, clearElement, G }) 
 export function renderPositionList({ G, POSITIONS, POS_BAND, POS_LABELS, POS_ALT }) {
   const s = G.state;
   const curIdx = POSITIONS.indexOf(s.position);
+
+  // Build position list items once, then apply to both desktop and mobile containers.
+  // This avoids duplicated innerHTML assignment and ensures both panels stay identical.
+  function buildListItems(container) {
+    container.innerHTML = '';
+    [...POSITIONS].reverse().forEach(pos => {
+      const idx = POSITIONS.indexOf(pos);
+      const bandRaw = POS_BAND[pos];
+      const bandClass = ['approach','base','upper_base'].includes(bandRaw) ? 'low' : (bandRaw === 'high' ? 'mid' : 'high');
+      const isCurrent = pos === s.position;
+      const isReached = idx <= G.highestPosIdx && !isCurrent;
+      const isAbove = idx > curIdx;
+      const li = document.createElement('li');
+      li.className = `pos-item band-${bandClass}${isCurrent?' current':''}${isReached&&!isCurrent?' reached':''}${isAbove?' above':''}`;
+      if (isCurrent) li.setAttribute('aria-current', 'location');
+      li.innerHTML = `
+        <div class="pos-dot"></div>
+        <span class="pos-label">${POS_LABELS[pos]} · ${POS_ALT[pos]}${idx===G.highestPosIdx&&!isCurrent?' <span class="pos-highest-mark">◆</span>':''}</span>
+      `;
+      container.appendChild(li);
+    });
+  }
+
   const list = document.getElementById('position-list');
-  if (!list) return;
-  list.innerHTML = '';
-  [...POSITIONS].reverse().forEach(pos => {
-    const idx = POSITIONS.indexOf(pos);
-    const bandRaw = POS_BAND[pos];
-    const bandClass = ['approach','base','upper_base'].includes(bandRaw) ? 'low' : (bandRaw === 'high' ? 'mid' : 'high');
-    const isCurrent = pos === s.position;
-    const isReached = idx <= G.highestPosIdx && !isCurrent;
-    const isAbove = idx > curIdx;
-    const li = document.createElement('li');
-    li.className = `pos-item band-${bandClass}${isCurrent?' current':''}${isReached&&!isCurrent?' reached':''}${isAbove?' above':''}`;
-    if (isCurrent) li.setAttribute('aria-current', 'location');
-    li.innerHTML = `
-      <div class="pos-dot"></div>
-      <span class="pos-label">${POS_LABELS[pos]} · ${POS_ALT[pos]}${idx===G.highestPosIdx&&!isCurrent?' <span class="pos-highest-mark">◆</span>':''}</span>
-    `;
-    list.appendChild(li);
-  });
+  if (list) buildListItems(list);
 
   const mobileList = document.getElementById('bs-position-list');
-  if (mobileList) mobileList.innerHTML = list.innerHTML;
+  if (mobileList) buildListItems(mobileList);
 }

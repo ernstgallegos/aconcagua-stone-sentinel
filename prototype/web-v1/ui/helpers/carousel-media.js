@@ -78,7 +78,8 @@ export function hydrateManagedPortraits(root) {
     if (!img) return;
 
     const markLoaded = () => {
-      if (img.currentSrc || img.src) LOADED_IMAGE_CACHE.add(img.currentSrc || img.src);
+      const resolvedSrc = img.currentSrc ?? img.src;
+      if (resolvedSrc) LOADED_IMAGE_CACHE.add(resolvedSrc);
       markState(wrapper, 'ready');
     };
 

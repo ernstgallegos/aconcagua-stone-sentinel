@@ -34,6 +34,21 @@ export const RESOLVE_TURN_PIPELINE = Object.freeze([
 ]);
 
 export function createTurnEngine(deps) {
+  // Validate required dependencies at initialization to fail fast instead of
+  // surfacing cryptic errors deep in turn resolution.
+  const REQUIRED_DEPS = [
+    'G', 'POSITIONS', 'CANONICAL_OUTCOMES', 'getActionModifier', 'applyTimeCost',
+    'spendResourcesForMinutes', 'getCurrentNode', 'getCurrentStage',
+    'getPersistenceTier', 'calculateEnvironmentalPressure', 'applyBivouacPenalty',
+    'calculateBodyTolerance', 'calculatePerception', 'applyDecisionWindowDegradation',
+    'applySummitDifficultyRegressionGuard', 'isCampPosition', 'updateAmbientSignal',
+    'computeSignals', 'renderNarrative', 'updateRunState', 'assertStateShape',
+  ];
+  const missing = REQUIRED_DEPS.filter((key) => deps[key] == null);
+  if (missing.length) {
+    throw new Error(`createTurnEngine: missing required dependencies: ${missing.join(', ')}`);
+  }
+
   const {
     G,
     POSITIONS,
@@ -72,8 +87,16 @@ export function createTurnEngine(deps) {
       ? Math.min(pressureDelta, actionMod.pressureDeltaCap)
       : pressureDelta;
 
+    // Progress chance: base 58% adjusted by effective pressure and action progress.
+    // 58 chosen to give ~55% advance rate at neutral delta with standard advance (+20 progress).
+    // Clamped [4, 92] to prevent deterministic outcomes at pressure extremes.
     const progressChance = clamp(58 - Math.max(0, effectiveDelta) + actionMod.progress, 4, 92);
+    // Collapse chance: pressure-driven with body degradation factor.
+    // 1.2 multiplier converts pressure delta into collapse risk (was 2.0 pre-v1.4.5;
+    // reduced to prevent >60% collapse on weather spikes). Capped at 96 to preserve
+    // a minimum 4% survival floor.
     const collapseChance = clamp(Math.max(0, effectiveDelta) * 1.2 + (100 - state.functional_capacity) * 0.1 + actionMod.collapse, 0, 96);
+    // Survival chance: inverse of collapse with action modifier; clamped [4, 98].
     const survivalChance = clamp(100 - collapseChance + actionMod.survival, 4, 98);
 
     const nodeIndex = POSITIONS.indexOf(state.position);
@@ -231,27 +254,38 @@ export function createTurnEngine(deps) {
     state.persistenceTier = getPersistenceTier(G.persistenceTurns);
 
     markStage(trace, 'compute-pressure-and-perception');
-    let epResult = calculateEnvironmentalPressure(state);
-    epResult.pressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
+    const epResult = calculateEnvironmentalPressure(state);
+    // Compute adjusted pressure score without mutating the original EP result.
+    // Bivouac penalty and acclimatization deficit are additive post-calculation adjustments.
+    let adjustedPressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
     const currentStageForAccl = stageAtTurnStart;
     const acclNow = G.acclimatization || 0;
     let acclPenaltyApplied = 0;
+    // Acclimatization penalty: players who haven't acclimatized enough face additional
+    // environmental pressure. Thresholds (20/40) represent minimum acclimatization points
+    // needed for HIGH_CAMP/SUMMIT_DAY respectively. Multipliers (0.6/0.8) scale the deficit
+    // into pressure units — higher at summit to reflect real physiological risk.
     if (currentStageForAccl === 'HIGH_CAMP' && acclNow < 20) {
       acclPenaltyApplied = (20 - acclNow) * 0.6;
-      epResult.pressureScore += acclPenaltyApplied;
+      adjustedPressureScore += acclPenaltyApplied;
       if (acclNow < 10) flags.push('acclimatization-deficit');
     } else if (currentStageForAccl === 'SUMMIT_DAY' && acclNow < 40) {
       acclPenaltyApplied = (40 - acclNow) * 0.8;
-      epResult.pressureScore += acclPenaltyApplied;
+      adjustedPressureScore += acclPenaltyApplied;
       if (acclNow < 20) flags.push('acclimatization-deficit');
     }
 
     const BT = calculateBodyTolerance(state);
-    const pressureDelta = epResult.pressureScore - BT;
-    const perception = calculatePerception({ state, EP: epResult.pressureScore, BT, pressureDelta });
+    // Pressure delta sign convention: positive = environment wins (harder),
+    // negative = body coping well (easier). This is the core EP − BT calculation.
+    const pressureDelta = adjustedPressureScore - BT;
+    const perception = calculatePerception({ state, EP: adjustedPressureScore, BT, pressureDelta });
 
     let lateSignalEvent = null;
+    // Late-signal lock-in: triggers when perception latency is strongly active (≥75%
+    // activation) AND pressure delta is high (≥18). This represents a "dead reckoning"
+    // moment where the player's delayed perception collides with dangerous conditions.
     if (perception.latency?.active && perception.latency.activationRatio >= 0.75 && pressureDelta >= 18) {
       lateSignalEvent = {
         turn: G.turn,
@@ -275,8 +309,13 @@ export function createTurnEngine(deps) {
 
     let photoEffectApplied = null;
     if (resolvedAction === 'shoot_photo') {
+      // Photo confidence gain: immediate confidence boost (max 6, capped at 8 to prevent stacking).
+      // Uncertainty drop: signal clarity improvement (max 4, capped at 6).
+      // These values keep photo useful but bounded — one shot improves ~6% confidence.
       const confidenceGain = Math.min(actionMod.photoConfidenceGain || 6, 8);
       const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop || 4, 6);
+      // Photo trend assist: collapses extreme trend labels into less-alarming readings,
+      // simulating a "calmer assessment" from reviewing the frame.
       if (actionMod.photoTrendAssist) {
         const trendMap = { 'worsening fast': 'worsening', worsening: 'worsening', easing: 'easing', steady: 'steady' };
         perception.trendEstimate = trendMap[perception.trendEstimate] || perception.trendEstimate;
@@ -322,7 +361,7 @@ export function createTurnEngine(deps) {
       pressureDelta,
     });
     if (summitRegression.acclPenaltyCapped) {
-      epResult.pressureScore -= Math.max(0, acclPenaltyApplied - summitRegression.acclPenaltyApplied);
+      adjustedPressureScore -= Math.max(0, acclPenaltyApplied - summitRegression.acclPenaltyApplied);
       acclPenaltyApplied = summitRegression.acclPenaltyApplied;
     }
     let finalPressureDelta = pressureDelta;
@@ -401,7 +440,7 @@ export function createTurnEngine(deps) {
             persistenceTier: state.persistenceTier,
           },
           pressure: {
-            EP: Number((epResult.pressureScore || 0).toFixed(2)),
+            EP: Number((adjustedPressureScore || 0).toFixed(2)),
             BT: Number((BT || 0).toFixed(2)),
             delta: Number((result.pressureDelta || 0).toFixed(2)),
             effectiveDelta: Number((result.effectiveDelta || 0).toFixed(2)),

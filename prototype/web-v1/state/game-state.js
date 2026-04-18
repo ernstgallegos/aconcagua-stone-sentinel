@@ -75,6 +75,11 @@ const KEY_TO_SLICE = Object.freeze(
 );
 
 function cloneValue(value) {
+  // Prefer structuredClone for correct handling of Date, RegExp, undefined, etc.
+  // Falls back to JSON round-trip for environments without structuredClone (e.g., older Node).
+  if (typeof globalThis.structuredClone === 'function') {
+    return globalThis.structuredClone(value);
+  }
   return JSON.parse(JSON.stringify(value));
 }
 
@@ -109,11 +114,19 @@ function ensureAllowedKeys(partial, defaults, sliceName) {
   });
 }
 
+// Maximum number of pressure history entries retained per run.
+// Prevents unbounded array growth during long expedition runs (~50-60 turns).
+const MAX_PRESSURE_HISTORY = 100;
+
 function applySliceUpdate(targetSlice, defaults, partial, sliceName) {
   ensureAllowedKeys(partial, defaults, sliceName);
   Object.entries(partial).forEach(([key, value]) => {
     targetSlice[key] = value == null && defaults[key] !== null ? cloneValue(defaults[key]) : value;
   });
+  // Ring-buffer cap on pressureHistory to prevent unbounded memory growth.
+  if (sliceName === 'runState' && Array.isArray(targetSlice.pressureHistory) && targetSlice.pressureHistory.length > MAX_PRESSURE_HISTORY) {
+    targetSlice.pressureHistory = targetSlice.pressureHistory.slice(-MAX_PRESSURE_HISTORY);
+  }
 }
 
 function registerLegacyFacade(state) {
