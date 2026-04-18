@@ -1737,11 +1737,11 @@ function drawPostProcessing(ctx, canvasW, canvasH, atmosphere, time, transitionM
   // b) Film grain (2-3% opacity, seeded per frame)
   const grainSeed = Math.floor(time * 60);
   const grainRng = seededRng(grainSeed);
-  const grainStep = Math.max(8, Math.floor(canvasW / 50));
+  const grainStep = Math.max(12, Math.floor(canvasW / 35));
   ctx.fillStyle = 'rgba(128,128,128,0.025)';
   for (let gy = 0; gy < canvasH; gy += grainStep) {
     for (let gx = 0; gx < canvasW; gx += grainStep) {
-      if (grainRng() > 0.5) {
+      if (grainRng() > 0.55) {
         ctx.fillRect(gx, gy, grainStep, grainStep);
       }
     }
@@ -1873,8 +1873,8 @@ function lerpAtmosphere(current, target, t) {
 
 function drawLightningFlash(ctx, canvasW, canvasH, weatherSeverity, time) {
   if (weatherSeverity < 3) return;
-  // ~5% chance per frame at 60fps
-  const flashRng = seededRng(Math.floor(time * 600));
+  // ~5% chance per frame — use time + a scrambled counter for non-repeating sequences
+  const flashRng = seededRng(Math.floor(time * 600) ^ 0xA5A5);
   if (flashRng() > 0.05) return;
   const flashAlpha = 0.15 + flashRng() * 0.2;
   ctx.fillStyle = `rgba(240,245,255,${flashAlpha})`;
@@ -1883,6 +1883,7 @@ function drawLightningFlash(ctx, canvasW, canvasH, weatherSeverity, time) {
 
 function drawWhiteoutOverlay(ctx, canvasW, canvasH, visibility, climberProj) {
   if (visibility > 1) return;
+  ctx.save();
   const whiteAlpha = 0.3 + (1 - visibility) * 0.25;
   ctx.fillStyle = `rgba(220,225,240,${whiteAlpha})`;
   ctx.fillRect(0, 0, canvasW, canvasH);
@@ -1900,8 +1901,8 @@ function drawWhiteoutOverlay(ctx, canvasW, canvasH, visibility, climberProj) {
     ctx.beginPath();
     ctx.arc(climberProj.x, climberProj.y, clearR, 0, Math.PI * 2);
     ctx.fill();
-    ctx.globalCompositeOperation = 'source-over';
   }
+  ctx.restore();
 }
 
 // ═══════════════════════════════════════════════════════════════
