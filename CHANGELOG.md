@@ -29,6 +29,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed dead `JSON.parse(JSON.stringify())` fallback from `game-state.js cloneValue()`: project requires Node ≥18 which guarantees `structuredClone` — the conditional branch was unreachable dead code.
 - Standardized remaining `||` → `??` for photo action numeric defaults in `turn-resolution.js` (`photoConfidenceGain`, `photoUncertaintyDrop`, `photoInsightTurns`) to prevent zero-value coercion in action modifier data.
 - Extended `||` → `??` standardization to `screens.js` perception calculation layer: `calculatePerceptionLatency` (4 numeric defaults), `calculatePerception` (5 numeric/object defaults), `getStageModifier` (2 object/numeric defaults), `calculateBodyTolerance` (2 object defaults), `applyAcclimatizationGain` (2 numeric defaults), and `applyBivouacPenalty` (1 object default) — completing the convention across all gameplay-affecting numeric fallbacks.
+- Extended `||` → `??` standardization to `screens.js` config, setup, and engine-wiring layer: `buildRandomScenario` (10 config defaults), `beginExpedition` init block (5 numeric/object defaults), `spendResourcesForMinutes` resource burn (1 object default), photo carry-over perception (2 numeric defaults), `applySummitDifficultyRegressionGuard` (4 telemetry defaults), `applyContextEvents` (2 object defaults), and `getTimeWindows` engine wiring (1 object default). Total: ~55 `||` → `??` conversions across `screens.js`.
 
 ### Added
 
