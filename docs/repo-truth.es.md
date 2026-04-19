@@ -10,7 +10,7 @@ _Última actualización: abril de 2026._
 - **Artefacto de compatibilidad congelado:** `prototype/mra-v0` (sin evolución de features; solo mantenimiento de compatibilidad/tests).
 
 ## Versión pública canónica
-- **Versión pública canónica tras este sprint:** `v1.4.6`.
+- **Versión pública canónica tras este sprint:** `v1.5.1`.
 - Fuente de verdad de versión: `package.json` + `package-lock.json`, espejada en UI/docs/changelog.
 
 ## Verdad del roster
