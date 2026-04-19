@@ -17,11 +17,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Eliminated duplicate EP calculation per turn in `game-loop.js` by reusing the `lastTurnRecord.pressure.EP` value already computed during `resolveTurn`, with a fallback recalculation for safety.
 - Fixed `efficiency || 1` falsy-zero bug in `turn-rules.js`: replaced with `efficiency ?? 1` (nullish coalescing) so an intentional efficiency of `0` is preserved and floored by `Math.max(..., 0.1)` instead of silently becoming `1`.
 - Synchronized stale version strings: `docs/repo-truth.es.md` updated from `v1.4.6` to `v1.5.1`; `prototype/web-v1/README.md` updated from `v1.4.5` to `v1.5.1`.
+- Routed `applyTimeCost` time mutations through `applyClockDelta` + `updateRunState` for consistency with `applyEventTimePenalty` (was directly mutating `G.day`, `G.permitDay`, `G.minutesOfDay` through legacy facade).
+- Routed `spendResourcesForMinutes` counter mutation (`G.consecutiveWater0`) through `updateRunState` instead of direct legacy facade assignment.
+- Routed `applyBivouacPenalty` G-level mutations (`G.persistenceTurns`, `G.minutesOfDay`) through `updateRunState` instead of direct legacy facade assignment.
 
 ### Changed
 
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
+- Updated technical debt register with 11 newly resolved items from the post-v1.5.1 audit pass.
 
 ## [1.5.1] — 2026-04
 

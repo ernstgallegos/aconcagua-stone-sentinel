@@ -64,7 +64,8 @@ try {
 } catch (err) {
   // Distinguish network/DNS errors (environment issue) from deployment failures
   // (real problem) so developers running this offline get a clear message.
-  const isNetworkError = err.code === 'ENOTFOUND' || err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT' || err.code === 'EAI_AGAIN';
+  const NETWORK_ERROR_CODES = ['ENOTFOUND', 'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN'];
+  const isNetworkError = NETWORK_ERROR_CODES.includes(err.code);
   if (isNetworkError) {
     console.error(`release smoke skipped — network unreachable (${err.code}): ${baseUrl}`);
     console.error('This is expected in sandboxed/offline environments. Set a reachable URL via: npm run smoke:release <url>');

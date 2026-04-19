@@ -127,6 +127,8 @@ export function createGameLoop({
 
     // Reuse EP already computed during resolveTurn (stored in telemetry) instead
     // of recalculating, which would double the cost and risk value drift.
+    // Fallback recalculation should only trigger if telemetry recording fails
+    // or the record shape changes — investigate if it occurs regularly.
     const lastRecord = G.lastTurnRecord;
     const currentEP = lastRecord?.pressure?.EP ?? calculateEnvironmentalPressure(G.state).pressureScore;
     const updatedHistory = [...(G.pressureHistory || []), currentEP].slice(-5);

@@ -38,6 +38,16 @@ For every release PR:
 | No dependency security scanning in CI | Added `npm audit --audit-level=high` to `js-contract-tests` job. | v1.5.1 |
 | No markdown link validation in CI | Added `npm run validate:links` to `json-validation` job. | v1.5.1 |
 | `temp/` legacy audit files and naming issues | Archived to `devlog/` with corrected naming; replaced empty README. | v1.5.1 |
+| `vizAction`/`vizFlags` direct property assignment bypassing state validation | Added `vizAction`/`vizFlags` to `RUN_STATE_DEFAULTS`; all writes routed through `updateRunState()`. | post-v1.5.1 audit |
+| Remaining `JSON.parse(JSON.stringify())` in `screens.js` and `data-config.js` | Replaced with `structuredClone` for consistency with `game-state.js` upgrade. | post-v1.5.1 audit |
+| Decision timing bias (`turnDecisionStartedAt` recorded before render delay) | Moved recording into `setTimeout` callback in `game-loop.js` so measurement begins when UI is interactive. | post-v1.5.1 audit |
+| Duplicate EP calculation per turn in `game-loop.js` | Reuses `lastTurnRecord.pressure.EP` from telemetry with fallback recalculation. | post-v1.5.1 audit |
+| `efficiency \|\| 1` falsy-zero bug in `turn-rules.js` | Replaced with `efficiency ?? 1` (nullish coalescing) to preserve intentional zero. | post-v1.5.1 audit |
+| Version drift: `docs/repo-truth.es.md` (v1.4.6) and `prototype/web-v1/README.md` (v1.4.5) | Synchronized to `v1.5.1`; added both files to version parity test. | post-v1.5.1 audit |
+| Release smoke script crash on DNS/network failure | Added graceful error handling with clear message for unreachable environments. | post-v1.5.1 audit |
+| `applyTimeCost` direct G-level mutations (`day`, `permitDay`, `minutesOfDay`) | Routed through `applyClockDelta` + `updateRunState` for consistency with `applyEventTimePenalty`. | post-v1.5.1 audit |
+| `spendResourcesForMinutes` direct `G.consecutiveWater0` mutation | Routed through `updateRunState` for state management consistency. | post-v1.5.1 audit |
+| `applyBivouacPenalty` direct G-level mutations (`persistenceTurns`, `minutesOfDay`) | Routed through `updateRunState` for state management consistency. | post-v1.5.1 audit |
 | Tuning fragility hotspots (EP/BT multipliers, stage penalties, and resource economy thresholds) | Added automated guardrail suite `prototype/web-v1/tests/engine/tuning-guardrails.test.js` covering EP root-scale constraints, fractional burn-rate floor behavior, and deterministic summit-return viability. Updated balance notes with current target bands and dispersion table as canonical references. | v1.4.8 |
 | Dual-prototype divergence (`prototype/web-v1` active vs `prototype/mra-v0` reference) | Added explicit ownership matrix `docs/prototype-ownership-matrix.md`, added required contract gate script `npm run test:contracts`, and added parity enforcement suite `prototype/web-v1/tests/parity/dual-prototype-contract.test.js` validating ownership/contract overlap and intentional divergences. | v1.4.8 |
 | Run-log compatibility aliases (legacy additive fields kept for historical consumers) | Removed legacy summary alias fallback (`lateSignalTriggered`) from run-log summarization so telemetry aggregation now reads canonical `lateSignalActivation` only. Added immutability helper `annotateRunLogOutcome()` and contract tests to prevent alias reintroduction. | v1.4.8 |
