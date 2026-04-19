@@ -2,7 +2,7 @@ import { clamp } from './turn-resolution.js';
 
 export function calculateResourceBurnForMinutes({ minutes, burnPerHour, efficiency = 1 }) {
   const hours = minutes / 60;
-  const safeEfficiency = Math.max(efficiency || 1, 0.1);
+  const safeEfficiency = Math.max(efficiency ?? 1, 0.1);
   const waterRaw = (burnPerHour?.water || 0) * hours / safeEfficiency;
   const foodRaw = (burnPerHour?.food || 0) * hours / safeEfficiency;
   return {
