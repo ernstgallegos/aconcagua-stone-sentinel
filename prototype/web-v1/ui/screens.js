@@ -2096,11 +2096,11 @@ function spendResourcesForMinutes(minutes, flags) {
   G.state.water = Math.max(0, G.state.water - waterBurn);
   G.state.food = Math.max(0, G.state.food - foodBurn);
   if (G.state.water === 0) {
-    G.consecutiveWater0++;
+    updateRunState(G, { consecutiveWater0: G.consecutiveWater0 + 1 });
     flags.push('water-depleted');
     G.state.functional_capacity = clamp(G.state.functional_capacity - 8, 0, 100);
   } else {
-    G.consecutiveWater0 = 0;
+    updateRunState(G, { consecutiveWater0: 0 });
   }
   if (G.state.food === 0) {
     flags.push('food-depleted');
@@ -2853,19 +2853,17 @@ function applyTimeCost(action) {
   const actionMod = getActionModifier(action);
   const sim = getSimConfig();
   if (action === 'sleep') {
-    G.day += 1;
-    G.permitDay = G.day;
-    G.minutesOfDay = sim.dayStartMinutes || TUNING.dayStartMinutes;
+    const nextDay = G.day + 1;
+    updateRunState(G, {
+      day: nextDay,
+      permitDay: nextDay,
+      minutesOfDay: sim.dayStartMinutes || TUNING.dayStartMinutes,
+    });
     return actionMod.timeCost || 480;
   }
   const minutes = actionMod.timeCost || 60;
-  G.minutesOfDay += minutes;
-  // Roll over to next calendar day if past midnight
-  if (G.minutesOfDay >= 1440) {
-    G.day += 1;
-    G.permitDay = G.day;
-    G.minutesOfDay -= 1440;
-  }
+  const synced = applyClockDelta({ minutesOfDay: G.minutesOfDay, day: G.day, deltaMinutes: minutes });
+  updateRunState(G, synced);
   return minutes;
 }
 
@@ -2894,11 +2892,12 @@ function applyBivouacPenalty(state, ep, flags) {
     state.fatigue = clamp(state.fatigue + biv.fatigue, 0, 100);
     state.exposure = clamp(state.exposure + biv.exposure, 0, 100);
     state.functional_capacity = clamp(state.functional_capacity - (biv.capacity || 12), 0, 100);
-    G.persistenceTurns = Math.max(G.persistenceTurns, biv.persistenceTurns || 8);
-    state.persistenceTier = 'critical';
+    const bivUpdates = { persistenceTurns: Math.max(G.persistenceTurns, biv.persistenceTurns || 8) };
     if (G.minutesOfDay >= 1440) {
-      G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
+      bivUpdates.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
     }
+    updateRunState(G, bivUpdates);
+    state.persistenceTier = 'critical';
     return ep + (biv.ep || 20);
   }
   return ep;
