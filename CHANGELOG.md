@@ -23,17 +23,24 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Routed all remaining `G.character`/`G.scenario`/`G.seed` setup-phase mutations (12 call sites: `selectCharacter`, `confirmCharacter`, `beginExpedition`, `quickStart`, `selectMode`, `confirmScenario`, deep-link resolver) through `updateRunState()` for consistency with engine-level state management.
 - Standardized `||` to `??` (nullish coalescing) for all numeric defaults across engine files (`pressure-model.js`, `turn-rules.js`, `turn-resolution.js`, `events-core.js`) to prevent silent zero-value coercion. Added `Math.max(..., 0.1)` floor guard on `fatigueResistance`/`exposureResistance` in `pressure-model.js` to prevent division-by-zero.
 - Cleaned up 5 stale `FIX:` comments in `screens.js` where fixes were already applied but comments were never updated — preventing false audit signals.
+- Fixed `effectiveDelta || pressureDelta` zero-coercion bug in `turn-resolution.js:updateState()`: when `effectiveDelta` was capped to `0` by `pressureDeltaCap`, `||` would silently fall through to the uncapped `pressureDelta`, bypassing the cap and inflating fatigue/exposure amplification by up to 5×. Replaced with `??`.
+- Completed `||` → `??` standardization for remaining object/config fallbacks in `pressure-model.js` (6 config lookup lines) and `events-core.js` (8 object default lines) to align with engine-wide nullish coalescing convention.
+- Fixed `api/run.js` OPTIONS preflight: added `Access-Control-Max-Age: 86400` for cache efficiency and `Access-Control-Expose-Headers` for `X-RateLimit-Limit, X-RateLimit-Remaining` so CORS clients can read rate-limit headers.
+- Removed dead `JSON.parse(JSON.stringify())` fallback from `game-state.js cloneValue()`: project requires Node ≥18 which guarantees `structuredClone` — the conditional branch was unreachable dead code.
+- Standardized remaining `||` → `??` for photo action numeric defaults in `turn-resolution.js` (`photoConfidenceGain`, `photoUncertaintyDrop`, `photoInsightTurns`) to prevent zero-value coercion in action modifier data.
 
 ### Added
 
 - Added 23 unit tests for `ui/helpers/debrief.js` covering `computeDecisionPattern`, `computeDominantRiskAxis`, `buildRunSignature`, and `buildSignalInterpretationHint` (previously zero coverage).
 - Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
+- Added regression test for zero `effectiveDelta` pressure factor path in `resolve-turn-pipeline.test.js` to prevent reintroduction of the `||` coercion bug.
+- Added API test for `Access-Control-Max-Age` header on OPTIONS preflight and `Access-Control-Expose-Headers` on data responses.
 
 ### Changed
 
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
-- Updated technical debt register with 16 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2).
+- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
 
 ## [1.5.1] — 2026-04
 
