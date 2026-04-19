@@ -11,13 +11,13 @@ export function calculateEnvironmentalPressureScore({
   timeOfDayBucket,
   environmentalPressureConfig = {},
 }) {
-  const epConf = environmentalPressureConfig || {};
-  const altitudeScale = epConf.altitudePressureByBand || {};
-  const terrainScale = epConf.terrainLoadScale || {};
-  const weatherScale = epConf.weatherSeverityScale || {};
-  const visibilityScale = epConf.visibilityRiskScale || {};
-  const timeScale = epConf.timeOfDayRiskScale || {};
-  const persistenceScale = epConf.exposurePersistenceScale || {};
+  const epConf = environmentalPressureConfig ?? {};
+  const altitudeScale = epConf.altitudePressureByBand ?? {};
+  const terrainScale = epConf.terrainLoadScale ?? {};
+  const weatherScale = epConf.weatherSeverityScale ?? {};
+  const visibilityScale = epConf.visibilityRiskScale ?? {};
+  const timeScale = epConf.timeOfDayRiskScale ?? {};
+  const persistenceScale = epConf.exposurePersistenceScale ?? {};
 
   const altitudePressure = altitudeScale[String(node?.altitudeBand ?? 0)] ?? 0;
   const terrainLoad = terrainScale[String(clamp(node?.terrainLoad ?? 1, 1, 5))] ?? 0;

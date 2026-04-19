@@ -160,7 +160,7 @@ export function createTurnEngine(deps) {
 
   function updateState(state, result, action) {
     const actionMod = getActionModifier(action);
-    const pressureFactor = clamp((result.effectiveDelta || result.pressureDelta) / 20, 0.5, 2.5);
+    const pressureFactor = clamp((result.effectiveDelta ?? result.pressureDelta) / 20, 0.5, 2.5);
 
     // Fatigue: pressure amplifies cost (positive) deltas; recovery (negative) deltas are fixed.
     const fatigueDelta = actionMod.fatigueDelta * actionMod.fatigueMultiplier;
@@ -314,8 +314,8 @@ export function createTurnEngine(deps) {
       // Photo confidence gain: immediate confidence boost (max 6, capped at 8 to prevent stacking).
       // Uncertainty drop: signal clarity improvement (max 4, capped at 6).
       // These values keep photo useful but bounded — one shot improves ~6% confidence.
-      const confidenceGain = Math.min(actionMod.photoConfidenceGain || 6, 8);
-      const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop || 4, 6);
+      const confidenceGain = Math.min(actionMod.photoConfidenceGain ?? 6, 8);
+      const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop ?? 4, 6);
       // Photo trend assist: collapses extreme trend labels into less-alarming readings,
       // simulating a "calmer assessment" from reviewing the frame.
       if (actionMod.photoTrendAssist) {
@@ -328,7 +328,7 @@ export function createTurnEngine(deps) {
       updateRunState(G, {
         photoShotsTaken: G.photoShotsTaken + 1,
         lastPhotoTurn: G.turn,
-        photoInsightTurns: Math.max(G.photoInsightTurns, actionMod.photoInsightTurns || 2),
+        photoInsightTurns: Math.max(G.photoInsightTurns, actionMod.photoInsightTurns ?? 2),
         photoLastEffectLabel: 'Frame review improved route reading confidence.',
       });
 
@@ -336,7 +336,7 @@ export function createTurnEngine(deps) {
         confidenceBoost: confidenceGain,
         uncertaintyDrop,
         trendAssist: !!actionMod.photoTrendAssist,
-        insightTurnsGranted: actionMod.photoInsightTurns || 2,
+        insightTurnsGranted: actionMod.photoInsightTurns ?? 2,
         shotsUsed: G.photoShotsTaken,
       };
     } else if (G.photoInsightTurns > 0) {
