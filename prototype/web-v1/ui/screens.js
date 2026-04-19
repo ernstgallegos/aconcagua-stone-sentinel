@@ -2343,7 +2343,7 @@ function getOnboardingLayer(activeRisks = []) {
 
 function getRiskProfile(state) {
   const permitRemaining = G.permitMaxDays - G.permitDay + 1;
-  const tw = getSimConfig().timeWindows || { summitLateStart: 1020 };
+  const tw = getSimConfig().timeWindows ?? { summitLateStart: 1020 };
   const isLate = G.minutesOfDay >= tw.summitLateStart;
   const waterCritical = state.water === 0;
   const foodCritical = state.food === 0;
@@ -2413,7 +2413,7 @@ function renderWatch() {
   if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
-  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
+  const tw = getSimConfig().timeWindows ?? { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
   const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
   const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
@@ -2526,7 +2526,7 @@ function renderWatch() {
     }
   }
 
-  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
+  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] ?? { water: 0.4, food: 0.3 };
   const displayResourceCount = (value) => {
     if (!Number.isFinite(value) || value <= 0) return 0;
     return Math.ceil(value);
@@ -2791,9 +2791,9 @@ function buildDebriefAnalytics() {
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
   const difficultyMods = getDifficultyModifiers();
   const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, degradeEveryMs: 5000 };
-  const p = character?.engine?.decisionWindow || {};
+  const p = character?.engine?.decisionWindow ?? {};
   const baseMs = (p.baseMs ?? base.baseMs) + difficultyMods.decisionWindowMsBonus;
-  const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
+  const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs ?? {}) };
   const minFloorMs = Math.max(6000, (p.minFloorMs ?? base.minFloorMs) + Math.round(difficultyMods.decisionWindowMsBonus * 0.4));
   const total = baseMs + (stageMods[stage] ?? 0);
   return {
@@ -2807,7 +2807,7 @@ function getDecisionWindowProfile(character = G.character, stage = getCurrentSta
 
 function computeDecisionWindowState() {
   const profile = getDecisionWindowProfile();
-  const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt || Date.now()));
+  const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt ?? Date.now()));
   const effectiveElapsed = elapsed;
   const overMs = Math.max(0, effectiveElapsed - profile.totalWindowMs);
   const stepsOver = Math.floor(overMs / Math.max(profile.degradeEveryMs, 1000));
@@ -2827,7 +2827,7 @@ function getDecisionPressureCopy(winState = computeDecisionWindowState()) {
 
 function applyDecisionWindowDegradation(actionMod, perception) {
   const winState = computeDecisionWindowState();
-  const guardrails = perception?.guardrails || getPerceptionGuardrails();
+  const guardrails = perception?.guardrails ?? getPerceptionGuardrails();
   const degraded = applyDecisionWindowDegradationRule({
     actionMod,
     perception,
@@ -2865,11 +2865,11 @@ function applyTimeCost(action) {
     updateRunState(G, {
       day: nextDay,
       permitDay: nextDay,
-      minutesOfDay: sim.dayStartMinutes || TUNING.dayStartMinutes,
+      minutesOfDay: sim.dayStartMinutes ?? TUNING.dayStartMinutes,
     });
-    return actionMod.timeCost || 480;
+    return actionMod.timeCost ?? 480;
   }
-  const minutes = actionMod.timeCost || 60;
+  const minutes = actionMod.timeCost ?? 60;
   const synced = applyClockDelta({ minutesOfDay: G.minutesOfDay, day: G.day, deltaMinutes: minutes });
   updateRunState(G, synced);
   return minutes;
@@ -2899,14 +2899,14 @@ function applyBivouacPenalty(state, ep, flags) {
     flags.push('forced-bivouac');
     state.fatigue = clamp(state.fatigue + biv.fatigue, 0, 100);
     state.exposure = clamp(state.exposure + biv.exposure, 0, 100);
-    state.functional_capacity = clamp(state.functional_capacity - (biv.capacity || 12), 0, 100);
-    const bivUpdates = { persistenceTurns: Math.max(G.persistenceTurns, biv.persistenceTurns || 8) };
+    state.functional_capacity = clamp(state.functional_capacity - (biv.capacity ?? 12), 0, 100);
+    const bivUpdates = { persistenceTurns: Math.max(G.persistenceTurns, biv.persistenceTurns ?? 8) };
     if (G.minutesOfDay >= 1440) {
-      bivUpdates.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
+      bivUpdates.minutesOfDay = getSimConfig().dayStartMinutes ?? TUNING.dayStartMinutes;
     }
     updateRunState(G, bivUpdates);
     state.persistenceTier = 'critical';
-    return ep + (biv.ep || 20);
+    return ep + (biv.ep ?? 20);
   }
   return ep;
 }
@@ -3068,10 +3068,10 @@ function addLogEntry(entry) {
   meta.appendChild(decisionTag);
   const pressureTime = entry.decisionWindowExceeded
     ? uiText(
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late`,
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s tarde`
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs ?? 0)/1000,1))}s late`,
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs ?? 0)/1000,1))}s tarde`
     )
-    : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
+    : ` · ${Math.max(1, Math.round((entry.decisionMs ?? 0)/1000))}s`;
   meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty}${pressureTime} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
 
   const narrative = document.createElement('div');
@@ -3253,11 +3253,11 @@ ${readingHint}`;
 
 
 function reviewPrevTurn() {
-  updateRunReviewPanel((G.reviewTurnIndex || 0) - 1);
+  updateRunReviewPanel((G.reviewTurnIndex ?? 0) - 1);
 }
 
 function reviewNextTurn() {
-  updateRunReviewPanel((G.reviewTurnIndex || 0) + 1);
+  updateRunReviewPanel((G.reviewTurnIndex ?? 0) + 1);
 }
 
 function copyRunSignature() {
