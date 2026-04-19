@@ -2064,9 +2064,9 @@ function canUseShootPhoto(state = G.state) {
 
 function getStageModifier(position = G.state.position) {
   const stage = getStageForPosition(position);
-  const base = DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
+  const base = DATA_CONFIG.stageModifiers[stage] ?? { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
   const difficultyMods = getDifficultyModifiers();
-  return { ...base, weatherSeverityBias: (base.weatherSeverityBias || 0) + difficultyMods.stageWeatherBias };
+  return { ...base, weatherSeverityBias: (base.weatherSeverityBias ?? 0) + difficultyMods.stageWeatherBias };
 }
 
 
@@ -2084,8 +2084,8 @@ function calculateEnvironmentalPressure(state) {
 function calculateBodyTolerance(state) {
   return calculateBodyToleranceScore({
     state,
-    acclimatization: G.acclimatization || 0,
-    characterEngine: G.character?.engine || {},
+    acclimatization: G.acclimatization ?? 0,
+    characterEngine: G.character?.engine ?? {},
     difficultyModifiers: getDifficultyModifiers(),
   });
 }
@@ -2123,8 +2123,8 @@ function getLatencyReadabilityLabel(activationRatio) {
 }
 
 function calculatePerceptionLatency({ pressureDelta }) {
-  const latency = G.character?.engine?.perceptionLatency || {};
-  const baseDelay = clamp(latency.baseDelay || 0, 0, 0.85);
+  const latency = G.character?.engine?.perceptionLatency ?? {};
+  const baseDelay = clamp(latency.baseDelay ?? 0, 0, 0.85);
   if (baseDelay <= 0) {
     return {
       active: false,
@@ -2137,10 +2137,10 @@ function calculatePerceptionLatency({ pressureDelta }) {
   }
 
   const stage = getCurrentStage();
-  const pressureStart = latency.pressureDeltaStart || 18;
+  const pressureStart = latency.pressureDeltaStart ?? 18;
   const stageWeight = latency.stageActivation?.[stage] ?? 0;
-  const timeStart = latency.timeActivationStart || 780;
-  const earlyHintFloor = clamp(latency.minEarlyHint || 0.38, 0.3, 0.75);
+  const timeStart = latency.timeActivationStart ?? 780;
+  const earlyHintFloor = clamp(latency.minEarlyHint ?? 0.38, 0.3, 0.75);
 
   const pressureGate = pressureDelta >= pressureStart;
   const stageGate = stageWeight > 0;
@@ -2162,7 +2162,7 @@ function calculatePerceptionLatency({ pressureDelta }) {
 }
 
 function getPerceptionGuardrails() {
-  return G.character?.engine?.perceptionGuardrails || {};
+  return G.character?.engine?.perceptionGuardrails ?? {};
 }
 
 function enforcePerceptionGuardrails(confidenceLevel, noiseLevel) {
@@ -2186,18 +2186,18 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
   const stats = G.character?.engine || {};
-  const stability = stats.confidenceStability || 1;
-  const riskTol = stats.riskTolerance || 1;
+  const stability = stats.confidenceStability ?? 1;
+  const riskTol = stats.riskTolerance ?? 1;
   let confidenceLevel = clamp(
-    (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0)) * stability,
+    (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility ?? 0)) * 6) - (stageMod.confidencePenalty ?? 0)) * stability,
     5,
     95
   );
-  confidenceLevel = clamp(confidenceLevel + (G.characterConfidenceDrift || 0), 5, 98);
+  confidenceLevel = clamp(confidenceLevel + (G.characterConfidenceDrift ?? 0), 5, 98);
   const currentEp = EP ?? calculateEnvironmentalPressure(state).pressureScore;
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
   let trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
-  let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+  let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf ?? 18) * riskTol + (stats.perceptionBias ?? 0), 0, 35);
   const latency = calculatePerceptionLatency({ pressureDelta: pressureDelta ?? 0 });
 
   if (latency.active) {
@@ -2883,10 +2883,10 @@ function applyEventTimePenalty(minutes) {
 
 function applyAcclimatizationGain(action) {
   const mod = getActionModifier(action);
-  const gain = mod.acclimatizationGain || 0;
+  const gain = mod.acclimatizationGain ?? 0;
   if (gain <= 0) return;
   const rate = G.character?.engine?.acclimatizationRate ?? 1.0;
-  const current = G.acclimatization || 0;
+  const current = G.acclimatization ?? 0;
   updateRunState(G, {
     acclimatization: clamp(current + gain * rate, 0, 100)
   });
@@ -2894,7 +2894,7 @@ function applyAcclimatizationGain(action) {
 
 function applyBivouacPenalty(state, ep, flags) {
   const sim = getSimConfig();
-  const biv = sim.bivouacPenalty || { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
+  const biv = sim.bivouacPenalty ?? { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
   if (G.minutesOfDay > 1320 && !isCampPosition(state.position)) {
     flags.push('forced-bivouac');
     state.fatigue = clamp(state.fatigue + biv.fatigue, 0, 100);

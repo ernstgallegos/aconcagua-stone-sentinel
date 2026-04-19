@@ -28,6 +28,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `api/run.js` OPTIONS preflight: added `Access-Control-Max-Age: 86400` for cache efficiency and `Access-Control-Expose-Headers` for `X-RateLimit-Limit, X-RateLimit-Remaining` so CORS clients can read rate-limit headers.
 - Removed dead `JSON.parse(JSON.stringify())` fallback from `game-state.js cloneValue()`: project requires Node ≥18 which guarantees `structuredClone` — the conditional branch was unreachable dead code.
 - Standardized remaining `||` → `??` for photo action numeric defaults in `turn-resolution.js` (`photoConfidenceGain`, `photoUncertaintyDrop`, `photoInsightTurns`) to prevent zero-value coercion in action modifier data.
+- Extended `||` → `??` standardization to `screens.js` perception calculation layer: `calculatePerceptionLatency` (4 numeric defaults), `calculatePerception` (5 numeric/object defaults), `getStageModifier` (2 object/numeric defaults), `calculateBodyTolerance` (2 object defaults), `applyAcclimatizationGain` (2 numeric defaults), and `applyBivouacPenalty` (1 object default) — completing the convention across all gameplay-affecting numeric fallbacks.
 
 ### Added
 
