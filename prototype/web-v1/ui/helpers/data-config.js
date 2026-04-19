@@ -131,7 +131,7 @@ export function validateLoadedDataConfig(config) {
 }
 
 export function createDefaultDataConfig() {
-  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  return structuredClone(DEFAULT_CONFIG);
 }
 
 export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {

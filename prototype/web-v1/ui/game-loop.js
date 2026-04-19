@@ -89,8 +89,7 @@ export function createGameLoop({
     updateRunState(G, { signals: computeSignals() });
     // Stash last action + flags so renderPositionList can forward them
     // to the mountain visualization transition system.
-    G._vizAction = resolvedDecision;
-    G._vizFlags = turnResult.flags;
+    updateRunState(G, { vizAction: resolvedDecision, vizFlags: turnResult.flags });
     renderWatch();
     const narrativeText = renderNarrative(resolvedDecision, G.signals, turnResult.flags);
 
@@ -126,15 +125,21 @@ export function createGameLoop({
       return;
     }
 
-    const currentEP = calculateEnvironmentalPressure(G.state).pressureScore;
+    // Reuse EP already computed during resolveTurn (stored in telemetry) instead
+    // of recalculating, which would double the cost and risk value drift.
+    const lastRecord = G.lastTurnRecord;
+    const currentEP = lastRecord?.pressure?.EP ?? calculateEnvironmentalPressure(G.state).pressureScore;
     const updatedHistory = [...(G.pressureHistory || []), currentEP].slice(-5);
     updateRunState(G, { pressureHistory: updatedHistory });
     updateRunState(G, { turn: G.turn + 1 });
-    recordTelemetry(G, { turnDecisionStartedAt: Date.now() });
     setTimeout(() => {
       renderWatch();
       renderNarrative(null, G.signals);
       setDecisionButtonsEnabled(true);
+      // Record decision start *after* the UI is interactive, not before the
+      // render delay.  This ensures decisionTimeSpentMs measures actual player
+      // deliberation rather than engine processing + render latency.
+      recordTelemetry(G, { turnDecisionStartedAt: Date.now() });
       if (decisionPanel) decisionPanel.classList.remove('processing');
     }, 400);
   }

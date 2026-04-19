@@ -39,6 +39,8 @@ const RUN_STATE_DEFAULTS = Object.freeze({
   characterConfidenceDrift: 0,
   runSignature: '',
   reviewTurnIndex: 0,
+  vizAction: null,
+  vizFlags: null,
 });
 
 const UI_STATE_DEFAULTS = Object.freeze({

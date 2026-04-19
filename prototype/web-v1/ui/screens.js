@@ -1886,7 +1886,7 @@ function startGame() {
   });
 
   // deep copy initial state + apply character mods
-  const s = JSON.parse(JSON.stringify(sc.initial));
+  const s = structuredClone(sc.initial);
   if (mods.functionalCapacityBonus) s.functional_capacity = clamp(s.functional_capacity + mods.functionalCapacityBonus, 0, 100);
   s.functional_capacity = clamp((s.functional_capacity || 0) + difficultyMods.initialCapacityBonus, 0, 100);
   s.water = clamp((s.water || 0) + difficultyMods.initialWaterBonus, 0, 60);
@@ -2676,13 +2676,13 @@ function renderPositionList() {
     visibility: G.state.visibility,
   };
   // Forward last decision action + event flags for transition effects
-  if (G._vizAction) {
-    vizOpts.action = G._vizAction;
-    G._vizAction = null;
+  if (G.vizAction) {
+    vizOpts.action = G.vizAction;
+    updateRunState(G, { vizAction: null });
   }
-  if (G._vizFlags) {
-    vizOpts.flags = G._vizFlags;
-    G._vizFlags = null;
+  if (G.vizFlags) {
+    vizOpts.flags = G.vizFlags;
+    updateRunState(G, { vizFlags: null });
   }
   // Body-state levels drive fatigue/exposure vignettes
   if (G.state.fatigue != null) vizOpts.fatigue = G.state.fatigue;
