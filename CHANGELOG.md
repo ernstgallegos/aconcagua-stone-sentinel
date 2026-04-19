@@ -11,6 +11,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed architecture/debt-status documentation contradiction in `docs/architecture.md`: updated prototype status wording from v1.4 to v1.5.1 and replaced the stale “no active debt items remain” claim with a scoped historical statement that points to `docs/technical-debt-register.md` as the live debt source.
 - Fixed `#debrief` deep-link bootstrap crash in `prototype/web-v1/ui/screens.js`: replaced an out-of-scope `sc.max_turns` reference with `scenario.max_turns ?? 40`, preventing `ReferenceError` during mock debrief initialization.
 - Extended release smoke network-failure handling in `scripts/release-smoke-vercel.js` to treat `ENETUNREACH` as an environment limitation (skip) instead of an unhandled crash.
 - Moved `vizAction`/`vizFlags` from direct `G` property assignment to validated `RUN_STATE_DEFAULTS` in `game-state.js`, routing all writes through `updateRunState()` to eliminate state-shape assertion warnings.

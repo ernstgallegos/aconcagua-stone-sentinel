@@ -63,7 +63,7 @@ No other module should duplicate either the file-path list or the normalization 
 
 ## Repository prototype status
 
-- `prototype/web-v1/`: **active canonical prototype** (v1.4 public state, phased progress).
+- `prototype/web-v1/`: **active canonical prototype** (v1.5.1 public state, phased progress).
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 
@@ -78,7 +78,8 @@ No other module should duplicate either the file-path list or the normalization 
 - Fixed landing page illustration layout: hero now fills full height with `object-fit: cover`; art strip uses `aspect-ratio: 4/5` to respect portrait compositions.
 - Centralized run-log outcome annotation: `endRun()` now uses `annotateRunLogOutcome()` from `ui/helpers/run-log.js`; removed inline per-entry mapping.
 - Fixed run-log summary alias drift: removed legacy `lateSignalTriggered` fallback; canonical `lateSignalActivation` is the only supported counter.
-- Promoted all five active tech-debt items to resolved; no active debt items remain.
+- Promoted all five tech-debt items that were active in the v1.4.8 window to resolved.
+- Current active debt status is maintained in `docs/technical-debt-register.md` and may differ from this historical v1.4.8 snapshot.
 
 ## v1.4.7 additions (carousel/narrative extraction, resource economy fix, NARRATIVES_ES parity)
 
