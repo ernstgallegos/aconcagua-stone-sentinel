@@ -1,5 +1,8 @@
 import { clamp } from './turn-resolution.js';
 
+// Minimum resistance value to prevent division-by-zero in BT calculation.
+const MIN_RESISTANCE = 0.1;
+
 export function calculateEnvironmentalPressureScore({
   state,
   node,
@@ -8,21 +11,21 @@ export function calculateEnvironmentalPressureScore({
   timeOfDayBucket,
   environmentalPressureConfig = {},
 }) {
-  const epConf = environmentalPressureConfig || {};
-  const altitudeScale = epConf.altitudePressureByBand || {};
-  const terrainScale = epConf.terrainLoadScale || {};
-  const weatherScale = epConf.weatherSeverityScale || {};
-  const visibilityScale = epConf.visibilityRiskScale || {};
-  const timeScale = epConf.timeOfDayRiskScale || {};
-  const persistenceScale = epConf.exposurePersistenceScale || {};
+  const epConf = environmentalPressureConfig ?? {};
+  const altitudeScale = epConf.altitudePressureByBand ?? {};
+  const terrainScale = epConf.terrainLoadScale ?? {};
+  const weatherScale = epConf.weatherSeverityScale ?? {};
+  const visibilityScale = epConf.visibilityRiskScale ?? {};
+  const timeScale = epConf.timeOfDayRiskScale ?? {};
+  const persistenceScale = epConf.exposurePersistenceScale ?? {};
 
   const altitudePressure = altitudeScale[String(node?.altitudeBand ?? 0)] ?? 0;
   const terrainLoad = terrainScale[String(clamp(node?.terrainLoad ?? 1, 1, 5))] ?? 0;
   const weatherSeverity = weatherScale[String(clamp(state?.weather_severity ?? 0, 0, 4))] ?? 0;
   const visibilityRisk = visibilityScale[String(clamp(4 - (state?.visibility ?? 2), 0, 4))] ?? 0;
   const timeOfDayRiskRaw = timeScale[timeOfDayBucket] ?? 0;
-  const timeOfDayRisk = timeOfDayRiskRaw * (node?.timeSensitivity || 1);
-  const exposurePersistence = persistenceScale[state?.persistenceTier || 'fresh'] ?? 0;
+  const timeOfDayRisk = timeOfDayRiskRaw * (node?.timeSensitivity ?? 1);
+  const exposurePersistence = persistenceScale[state?.persistenceTier ?? 'fresh'] ?? 0;
 
   const pressureScore = altitudePressure +
     terrainLoad +
@@ -30,10 +33,10 @@ export function calculateEnvironmentalPressureScore({
     visibilityRisk +
     timeOfDayRisk +
     exposurePersistence +
-    (node?.weatherBias || 0) +
-    (node?.visibilityBias || 0) +
-    (stageModifier?.weatherSeverityBias || 0) +
-    (difficultyModifiers?.pressureBias || 0);
+    (node?.weatherBias ?? 0) +
+    (node?.visibilityBias ?? 0) +
+    (stageModifier?.weatherSeverityBias ?? 0) +
+    (difficultyModifiers?.pressureBias ?? 0);
 
   return {
     pressureScore,
@@ -51,13 +54,13 @@ export function calculateBodyToleranceScore({
   const hydrationState = clamp(((state?.water ?? 0) / resourceBase) * 100, 0, 100);
   const nutritionState = clamp(((state?.food ?? 0) / resourceBase) * 100, 0, 100);
 
-  const fatigueResistance = characterEngine.fatigueResistance || 1;
-  const exposureResistance = characterEngine.exposureResistance || 1;
+  const fatigueResistance = Math.max(characterEngine.fatigueResistance ?? 1, MIN_RESISTANCE);
+  const exposureResistance = Math.max(characterEngine.exposureResistance ?? 1, MIN_RESISTANCE);
   const bt = ((state?.functional_capacity ?? 0) * 0.4) +
     (acclimatization * 0.35) +
     (hydrationState * 0.1) +
     (nutritionState * 0.05) +
-    (difficultyModifiers?.bodyToleranceBonus || 0) -
+    (difficultyModifiers?.bodyToleranceBonus ?? 0) -
     (((state?.fatigue ?? 0) * 0.05) / fatigueResistance) -
     (((state?.exposure ?? 0) * 0.05) / exposureResistance);
 

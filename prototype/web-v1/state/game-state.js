@@ -39,6 +39,8 @@ const RUN_STATE_DEFAULTS = Object.freeze({
   characterConfidenceDrift: 0,
   runSignature: '',
   reviewTurnIndex: 0,
+  vizAction: null,
+  vizFlags: null,
 });
 
 const UI_STATE_DEFAULTS = Object.freeze({
@@ -75,12 +77,7 @@ const KEY_TO_SLICE = Object.freeze(
 );
 
 function cloneValue(value) {
-  // Prefer structuredClone for correct handling of Date, RegExp, undefined, etc.
-  // Falls back to JSON round-trip for environments without structuredClone (e.g., older Node).
-  if (typeof globalThis.structuredClone === 'function') {
-    return globalThis.structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value));
+  return structuredClone(value);
 }
 
 function shouldReportStateWarnings() {

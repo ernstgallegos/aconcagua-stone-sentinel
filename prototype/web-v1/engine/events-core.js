@@ -23,7 +23,7 @@ const DEFAULT_CONTEXT_EVENT_ARCHETYPES = [
 ];
 
 function clampBounded(value, bounds) {
-  return clamp(Number(value || 0), bounds.min, bounds.max);
+  return clamp(Number(value ?? 0), bounds.min, bounds.max);
 }
 
 function sanitizeCharacterEffects(effects = {}) {
@@ -43,8 +43,8 @@ function sanitizeContextEffects(effects = {}, fallback = {}) {
 }
 
 function normalizeContextArchetype(event) {
-  const trigger = event?.trigger || {};
-  const normalizedEffects = sanitizeContextEffects(event?.effects || {}, event || {});
+  const trigger = event?.trigger ?? {};
+  const normalizedEffects = sanitizeContextEffects(event?.effects ?? {}, event ?? {});
   return {
     id: event.id,
     category: event.category || 'context',
@@ -58,9 +58,9 @@ function normalizeContextArchetype(event) {
     telemetryTag: event.telemetryTag,
     visibleToPlayer: event.visibleToPlayer ?? true,
     hiddenFromPlayer: event.hiddenFromPlayer ?? false,
-    limits: event.limits || { maxPerRun: 1 },
-    narrative: event.narrative || '',
-    notes: event.notes || '',
+    limits: event.limits ?? { maxPerRun: 1 },
+    narrative: event.narrative ?? '',
+    notes: event.notes ?? '',
   };
 }
 
@@ -81,7 +81,7 @@ export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
 }
 
 export function buildEnvironmentEventPlan(seed, maxTurns = 40, contextEvents = DEFAULT_CONTEXT_EVENT_ARCHETYPES) {
-  const offset = Number(seed || 0) % 3;
+  const offset = Number(seed ?? 0) % 3;
   const archetypes = Array.isArray(contextEvents) && contextEvents.length ? contextEvents : DEFAULT_CONTEXT_EVENT_ARCHETYPES;
   return archetypes
     .map(normalizeContextArchetype)
@@ -97,7 +97,7 @@ export function applyContextEvent({ turn, action, stage, state, environmentEvent
   if (!active || action === 'sleep') return null;
   if (active.trigger?.stages?.length && !active.trigger.stages.includes(stage)) return null;
 
-  const effect = sanitizeContextEffects(active.effects || {}, active);
+  const effect = sanitizeContextEffects(active.effects ?? {}, active);
   state.weather_severity = clamp(state.weather_severity + effect.weatherDelta, 0, 4);
   state.visibility = clamp(state.visibility + effect.visibilityDelta, 0, 3);
   const appliedTimePenalty = effect.timePenalty && stage === 'SUMMIT_DAY' ? effect.timePenalty : 0;
@@ -111,7 +111,7 @@ export function applyContextEvent({ turn, action, stage, state, environmentEvent
 }
 
 export function eventMatchesTrigger(event, { G, state, action, stage }) {
-  const trigger = event.trigger || {};
+  const trigger = event.trigger ?? {};
   if (Array.isArray(trigger.actions) && !trigger.actions.includes(action)) return false;
   if (Array.isArray(trigger.stages) && !trigger.stages.includes(stage)) return false;
   if (trigger.minTurn != null && G.turn < trigger.minTurn) return false;
@@ -131,10 +131,10 @@ export function applyCharacterEvent({ G, state, action, stage, flags, characterE
   const available = characterEvents.filter((event) => event.characterId === characterId);
   if (!available.length) return null;
 
-  const eventState = { ...(G.characterEventState || {}) };
+  const eventState = { ...(G.characterEventState ?? {}) };
   for (const event of available) {
-    const snapshot = eventState[event.id] || { uses: 0, lastTurn: -Infinity };
-    const limits = event.limits || { cooldownTurns: 0, maxPerRun: 1 };
+    const snapshot = eventState[event.id] ?? { uses: 0, lastTurn: -Infinity };
+    const limits = event.limits ?? { cooldownTurns: 0, maxPerRun: 1 };
     const maxPerRun = Math.max(1, Number(limits.maxPerRun ?? 1));
     const cooldownTurns = Math.max(0, Number(limits.cooldownTurns ?? 0));
 
@@ -142,11 +142,11 @@ export function applyCharacterEvent({ G, state, action, stage, flags, characterE
     if (G.turn - snapshot.lastTurn < cooldownTurns) continue;
     if (!eventMatchesTrigger(event, { G, state, action, stage })) continue;
 
-    const effects = sanitizeCharacterEffects(event.effects || {});
+    const effects = sanitizeCharacterEffects(event.effects ?? {});
     state.fatigue = clamp(state.fatigue + effects.fatigueDelta, 0, 100);
     state.exposure = clamp(state.exposure + effects.exposureDelta, 0, 100);
     if (effects.confidenceDelta) {
-      G.characterConfidenceDrift = clamp((G.characterConfidenceDrift || 0) + effects.confidenceDelta, -12, 12);
+      G.characterConfidenceDrift = clamp((G.characterConfidenceDrift ?? 0) + effects.confidenceDelta, -12, 12);
     }
 
     if (event.telemetryTag) flags.push(event.telemetryTag);

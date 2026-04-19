@@ -160,7 +160,7 @@ export function createTurnEngine(deps) {
 
   function updateState(state, result, action) {
     const actionMod = getActionModifier(action);
-    const pressureFactor = clamp((result.effectiveDelta || result.pressureDelta) / 20, 0.5, 2.5);
+    const pressureFactor = clamp((result.effectiveDelta ?? result.pressureDelta) / 20, 0.5, 2.5);
 
     // Fatigue: pressure amplifies cost (positive) deltas; recovery (negative) deltas are fixed.
     const fatigueDelta = actionMod.fatigueDelta * actionMod.fatigueMultiplier;
@@ -262,7 +262,7 @@ export function createTurnEngine(deps) {
     let adjustedPressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
     const currentStageForAccl = stageAtTurnStart;
-    const acclNow = G.acclimatization || 0;
+    const acclNow = G.acclimatization ?? 0;
     let acclPenaltyApplied = 0;
     // Acclimatization penalty: players who haven't acclimatized enough face additional
     // environmental pressure. Thresholds (20/40) represent minimum acclimatization points
@@ -314,8 +314,8 @@ export function createTurnEngine(deps) {
       // Photo confidence gain: immediate confidence boost (max 6, capped at 8 to prevent stacking).
       // Uncertainty drop: signal clarity improvement (max 4, capped at 6).
       // These values keep photo useful but bounded — one shot improves ~6% confidence.
-      const confidenceGain = Math.min(actionMod.photoConfidenceGain || 6, 8);
-      const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop || 4, 6);
+      const confidenceGain = Math.min(actionMod.photoConfidenceGain ?? 6, 8);
+      const uncertaintyDrop = Math.min(actionMod.photoUncertaintyDrop ?? 4, 6);
       // Photo trend assist: collapses extreme trend labels into less-alarming readings,
       // simulating a "calmer assessment" from reviewing the frame.
       if (actionMod.photoTrendAssist) {
@@ -328,7 +328,7 @@ export function createTurnEngine(deps) {
       updateRunState(G, {
         photoShotsTaken: G.photoShotsTaken + 1,
         lastPhotoTurn: G.turn,
-        photoInsightTurns: Math.max(G.photoInsightTurns, actionMod.photoInsightTurns || 2),
+        photoInsightTurns: Math.max(G.photoInsightTurns, actionMod.photoInsightTurns ?? 2),
         photoLastEffectLabel: 'Frame review improved route reading confidence.',
       });
 
@@ -336,7 +336,7 @@ export function createTurnEngine(deps) {
         confidenceBoost: confidenceGain,
         uncertaintyDrop,
         trendAssist: !!actionMod.photoTrendAssist,
-        insightTurnsGranted: actionMod.photoInsightTurns || 2,
+        insightTurnsGranted: actionMod.photoInsightTurns ?? 2,
         shotsUsed: G.photoShotsTaken,
       };
     } else if (G.photoInsightTurns > 0) {
@@ -346,7 +346,7 @@ export function createTurnEngine(deps) {
     if (resolvedAction !== 'shoot_photo' && G.photoInsightTurns > 0) {
       actionMod = {
         ...actionMod,
-        fatigueMultiplier: Math.max(0.75, (actionMod.fatigueMultiplier || 1) - 0.05),
+        fatigueMultiplier: Math.max(0.75, (actionMod.fatigueMultiplier ?? 1) - 0.05),
       };
     }
 
@@ -442,10 +442,10 @@ export function createTurnEngine(deps) {
             persistenceTier: state.persistenceTier,
           },
           pressure: {
-            EP: Number((adjustedPressureScore || 0).toFixed(2)),
-            BT: Number((BT || 0).toFixed(2)),
-            delta: Number((result.pressureDelta || 0).toFixed(2)),
-            effectiveDelta: Number((result.effectiveDelta || 0).toFixed(2)),
+            EP: Number((adjustedPressureScore ?? 0).toFixed(2)),
+            BT: Number((BT ?? 0).toFixed(2)),
+            delta: Number((result.pressureDelta ?? 0).toFixed(2)),
+            effectiveDelta: Number((result.effectiveDelta ?? 0).toFixed(2)),
           },
           perceivedSignals: {
             trend: timedPerception?.trendEstimate,

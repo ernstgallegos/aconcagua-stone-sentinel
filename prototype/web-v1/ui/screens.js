@@ -1120,7 +1120,7 @@ function buildCharacterGrid() {
     const card = document.createElement('div');
     card.className = 'char-card';
     card.id = 'char-' + c.id;
-    // FIX: aria attributes for accessibility
+    // Accessibility: role=radio with aria-checked for screen-reader card selection
     card.setAttribute('role', 'radio');
     card.setAttribute('aria-checked', 'false');
     card.setAttribute('tabindex', '0');
@@ -1168,9 +1168,11 @@ function selectCharacter(id) {
   const card = document.getElementById(id === 'random' ? 'char-random' : 'char-' + id);
   card.classList.add('selected');
   card.setAttribute('aria-checked', 'true');
-  G.character = id === 'random'
-    ? { id: 'random', name: 'Random Character' }
-    : (DATA_CONFIG.characters || []).find(c => c.id === id);
+  updateRunState(G, {
+    character: id === 'random'
+      ? { id: 'random', name: 'Random Character' }
+      : (DATA_CONFIG.characters || []).find(c => c.id === id),
+  });
   const btn = document.getElementById('btn-char-confirm');
   btn.disabled = false;
   btn.removeAttribute('aria-disabled');
@@ -1180,7 +1182,7 @@ function confirmCharacter() {
   if (G.character.id === 'random') {
     const availableCharacters = DATA_CONFIG.characters || [];
     if (!availableCharacters.length) return;
-    G.character = rngChoice(() => Math.random(), availableCharacters);
+    updateRunState(G, { character: rngChoice(() => Math.random(), availableCharacters) });
   }
   buildScenarioGrid();
   showScreen('scenario');
@@ -1415,9 +1417,9 @@ function beginExpedition() {
   if (selectedChar._random) {
     const availableChars = DATA_CONFIG.characters || [];
     if (!availableChars.length) return;
-    G.character = rngChoice(() => Math.random(), availableChars);
+    updateRunState(G, { character: rngChoice(() => Math.random(), availableChars) });
   } else {
-    G.character = selectedChar;
+    updateRunState(G, { character: selectedChar });
   }
 
   // Scenario
@@ -1426,14 +1428,16 @@ function beginExpedition() {
   const selectedScen = scenItems[scenIdx];
 
   if (selectedScen._random) {
-    G.scenario = buildRandomScenario();
-    G.seed = G.scenario._randomSeed;
+    const randomScenario = buildRandomScenario();
+    updateRunState(G, { scenario: randomScenario, seed: randomScenario._randomSeed });
     deriveDifficultyFromScenario();
     showOnboarding('random');
   } else {
-    G.scenario = selectedScen;
     const seeds = selectedScen.seeds || [];
-    G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+    updateRunState(G, {
+      scenario: selectedScen,
+      seed: seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000,
+    });
     deriveDifficultyFromScenario();
     showOnboarding('predefined');
   }
@@ -1443,15 +1447,17 @@ function quickStart() {
   // Random character from the 6 characters (not the Random option)
   const availableChars = DATA_CONFIG.characters || [];
   if (!availableChars.length) return;
-  G.character = rngChoice(() => Math.random(), availableChars);
+  updateRunState(G, { character: rngChoice(() => Math.random(), availableChars) });
 
   // Random scenario from predefined scenarios
   const scenarios = getConfiguredScenarios();
   if (!scenarios.length) return;
   const scenario = rngChoice(() => Math.random(), scenarios);
-  G.scenario = scenario;
   const seeds = scenario.seeds || [];
-  G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+  updateRunState(G, {
+    scenario,
+    seed: seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000,
+  });
   deriveDifficultyFromScenario();
   showOnboarding('predefined');
 }
@@ -1682,8 +1688,8 @@ function confirmPart2Character() {
 // ════════════════════════════════════════════════
 function selectMode(mode) {
   if (mode === 'random') {
-    G.scenario = buildRandomScenario();
-    G.seed = G.scenario._randomSeed;
+    const randomScenario = buildRandomScenario();
+    updateRunState(G, { scenario: randomScenario, seed: randomScenario._randomSeed });
     showOnboarding(mode);
   } else {
     buildScenarioGrid();
@@ -1710,7 +1716,7 @@ function buildScenarioGrid() {
     const card = document.createElement('div');
     card.className = 'scenario-card';
     card.id = 'sc-' + sc.id;
-    // FIX: aria role for scenario cards
+    // Accessibility: role=radio with aria-checked for screen-reader card selection
     card.setAttribute('role', 'radio');
     card.setAttribute('aria-checked', 'false');
     card.setAttribute('tabindex', '0');
@@ -1765,8 +1771,10 @@ function selectScenario(id) {
 }
 function confirmScenario() {
   if (!selectedScenarioId) return;
-  G.scenario = getConfiguredScenarios().find(s => s.id === selectedScenarioId);
-  G.seed = selectedSeed;
+  updateRunState(G, {
+    scenario: getConfiguredScenarios().find(s => s.id === selectedScenarioId),
+    seed: selectedSeed,
+  });
   showOnboarding('predefined');
 }
 
@@ -1787,19 +1795,19 @@ function showOnboarding(mode) {
 // ════════════════════════════════════════════════
 function buildRandomScenario() {
   const randomConfig = getRandomScenarioConfig();
-  const seedRange = randomConfig.seedRange || { min: 10000, max: 99999 };
-  const maxTurnsRange = randomConfig.maxTurnsRange || { min: 46, max: 54 };
-  const initialBase = randomConfig.initialBase || { position: 'horcones', altitude_band: 'approach' };
-  const initialRanges = randomConfig.initialRanges || {};
-  const terrainRange = initialRanges.terrain_load || { min: 0, max: 2 };
-  const functionalCapacityRange = initialRanges.functional_capacity || { min: 74, max: 94 };
+  const seedRange = randomConfig.seedRange ?? { min: 10000, max: 99999 };
+  const maxTurnsRange = randomConfig.maxTurnsRange ?? { min: 46, max: 54 };
+  const initialBase = randomConfig.initialBase ?? { position: 'horcones', altitude_band: 'approach' };
+  const initialRanges = randomConfig.initialRanges ?? {};
+  const terrainRange = initialRanges.terrain_load ?? { min: 0, max: 2 };
+  const functionalCapacityRange = initialRanges.functional_capacity ?? { min: 74, max: 94 };
   const rseed = Math.floor(Math.random() * (seedRange.max - seedRange.min + 1)) + seedRange.min;
   const rng = mulberry32(rseed);
-  const archetypes = randomConfig.archetypes || [];
+  const archetypes = randomConfig.archetypes ?? [];
   const arch = archetypes[rngInt(rng, 0, archetypes.length - 1)];
   return {
     id: 'random-' + rseed,
-    num: randomConfig.num || '06',
+    num: randomConfig.num ?? '06',
     name: arch.name,
     desc: `Expedition ${rseed} · ${arch.name}`,
     intro: `Expedition ${rseed}. ${arch.name}. Conditions are never neutral; they only become legible through disciplined turns.`,
@@ -1815,8 +1823,8 @@ function buildRandomScenario() {
     bias: arch.tweak.bias,
     _randomSeed: rseed,
     _archetype: arch.name,
-    _acclimatizationBonus: arch.tweak._acclimatizationBonus || 0,
-    _equinoxTrapTurn: arch.tweak._equinoxTrapTurn || null,
+    _acclimatizationBonus: arch.tweak._acclimatizationBonus ?? 0,
+    _equinoxTrapTurn: arch.tweak._equinoxTrapTurn ?? null,
   };
 }
 
@@ -1832,7 +1840,7 @@ function startGame() {
 
   const sc = G.scenario;
   const ch = G.character;
-  const mods = ch.engine || {};
+  const mods = ch.engine ?? {};
   const difficulty = getDifficultyConfig();
   const difficultyMods = difficulty.modifiers;
 
@@ -1847,10 +1855,10 @@ function startGame() {
     day: 1,
     permitDay: 1,
     permitMaxDays: clamp(20 + difficultyMods.permitDaysBonus, 12, 26),
-    minutesOfDay: getSimConfig().dayStartMinutes || TUNING.dayStartMinutes,
+    minutesOfDay: getSimConfig().dayStartMinutes ?? TUNING.dayStartMinutes,
     irreversibleTriggered: false,
     irreversibleTurn: null,
-    runNumber: (G.runNumber || 0) + 1,
+    runNumber: (G.runNumber ?? 0) + 1,
     acclimatization: 0,
     consecutiveAdvances: 0,
     persistenceTurns: 0,
@@ -1886,13 +1894,13 @@ function startGame() {
   });
 
   // deep copy initial state + apply character mods
-  const s = JSON.parse(JSON.stringify(sc.initial));
+  const s = structuredClone(sc.initial);
   if (mods.functionalCapacityBonus) s.functional_capacity = clamp(s.functional_capacity + mods.functionalCapacityBonus, 0, 100);
-  s.functional_capacity = clamp((s.functional_capacity || 0) + difficultyMods.initialCapacityBonus, 0, 100);
-  s.water = clamp((s.water || 0) + difficultyMods.initialWaterBonus, 0, 60);
-  s.food = clamp((s.food || 0) + difficultyMods.initialFoodBonus, 0, 60);
+  s.functional_capacity = clamp((s.functional_capacity ?? 0) + difficultyMods.initialCapacityBonus, 0, 100);
+  s.water = clamp((s.water ?? 0) + difficultyMods.initialWaterBonus, 0, 60);
+  s.food = clamp((s.food ?? 0) + difficultyMods.initialFoodBonus, 0, 60);
 
-  if (sc._acclimatizationBonus || difficultyMods.acclimatizationBonus) updateRunState(G, { acclimatization: clamp((sc._acclimatizationBonus || 0) + difficultyMods.acclimatizationBonus, 0, 100) });
+  if (sc._acclimatizationBonus || difficultyMods.acclimatizationBonus) updateRunState(G, { acclimatization: clamp((sc._acclimatizationBonus ?? 0) + difficultyMods.acclimatizationBonus, 0, 100) });
   updateRunState(G, { difficulty: difficulty.id });
   s.persistenceTier = 'fresh';
   updateRunState(G, { state: s });
@@ -1937,7 +1945,7 @@ function startGame() {
 
 // formatMinutes, formatTrendArrow, confidenceTier imported from ./helpers/screen-utils.js
 function metricDisplay(value, confidence) {
-  const spread = Math.round((100 - confidence) / 100 * (getSimConfig().noiseRangeAtZeroConf || 18));
+  const spread = Math.round((100 - confidence) / 100 * (getSimConfig().noiseRangeAtZeroConf ?? 18));
   const lo = clamp(value - spread, 0, 100);
   const hi = clamp(value + spread, 0, 100);
   return `${Math.round(lo)}–${Math.round(hi)} · ${confidenceTier(confidence)} conf`;
@@ -1951,17 +1959,17 @@ function getCurrentStage() {
 // getPersistenceTier imported from ./helpers/screen-utils.js
 
 function getSimConfig() {
-  return DATA_CONFIG.environmentalPressure?.simulation || {};
+  return DATA_CONFIG.environmentalPressure?.simulation ?? {};
 }
 
 function getCurrentNode(state = G.state) {
-  return ROUTE_NODES.find((n) => n.id === state.position) || ROUTE_NODES[0];
+  return ROUTE_NODES.find((n) => n.id === state.position) ?? ROUTE_NODES[0];
 }
 
 function getStageForPosition(position = G.state.position) {
   if (position && STAGE_BY_POSITION[position]) return STAGE_BY_POSITION[position];
-  const fallbackNode = ROUTE_NODES.find((n) => n.id === position) || ROUTE_NODES[0];
-  return fallbackNode?.stage || 'APPROACH';
+  const fallbackNode = ROUTE_NODES.find((n) => n.id === position) ?? ROUTE_NODES[0];
+  return fallbackNode?.stage ?? 'APPROACH';
 }
 
 function isCampPosition(position = G.state.position) {
@@ -1993,8 +2001,8 @@ function getActionModifier(action) {
     sleep: { fatigueDelta: -10, exposureDelta: -8, capacityDelta: 4 },
     shoot_photo: { fatigueDelta: 2, exposureDelta: 2, capacityDelta: 0 },
   };
-  const configured = DATA_CONFIG.actionModifiers[action] || {};
-  const fallback = baseByAction[action] || { fatigueDelta: 3, exposureDelta: 3, capacityDelta: -1 };
+  const configured = DATA_CONFIG.actionModifiers[action] ?? {};
+  const fallback = baseByAction[action] ?? { fatigueDelta: 3, exposureDelta: 3, capacityDelta: -1 };
 
   const fatigueDelta = Number.isFinite(configured.fatigueDelta)
     ? configured.fatigueDelta
@@ -2046,8 +2054,8 @@ function getActionModifier(action) {
 function canUseShootPhoto(state = G.state) {
   if (G.character?.id !== 'daniela') return { allowed: false, reason: 'Only Daniela can use this action.' };
   const mod = getActionModifier('shoot_photo');
-  const maxShots = mod.photoSessionCap || 4;
-  const cooldownTurns = mod.photoCooldownTurns || 2;
+  const maxShots = mod.photoSessionCap ?? 4;
+  const cooldownTurns = mod.photoCooldownTurns ?? 2;
   if (G.photoShotsTaken >= maxShots) return { allowed: false, reason: 'No film stock left for this ascent.' };
   if (G.turn - G.lastPhotoTurn < cooldownTurns) return { allowed: false, reason: 'You need time to process the last frame.' };
   if (state.water <= 0 || state.food <= 0) return { allowed: false, reason: 'You cannot spare focus while resources are depleted.' };
@@ -2056,9 +2064,9 @@ function canUseShootPhoto(state = G.state) {
 
 function getStageModifier(position = G.state.position) {
   const stage = getStageForPosition(position);
-  const base = DATA_CONFIG.stageModifiers[stage] || { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
+  const base = DATA_CONFIG.stageModifiers[stage] ?? { fatigueMultiplier: 1, exposureMultiplier: 1, weatherSeverityBias: 0, confidencePenalty: 0 };
   const difficultyMods = getDifficultyModifiers();
-  return { ...base, weatherSeverityBias: (base.weatherSeverityBias || 0) + difficultyMods.stageWeatherBias };
+  return { ...base, weatherSeverityBias: (base.weatherSeverityBias ?? 0) + difficultyMods.stageWeatherBias };
 }
 
 
@@ -2076,8 +2084,8 @@ function calculateEnvironmentalPressure(state) {
 function calculateBodyTolerance(state) {
   return calculateBodyToleranceScore({
     state,
-    acclimatization: G.acclimatization || 0,
-    characterEngine: G.character?.engine || {},
+    acclimatization: G.acclimatization ?? 0,
+    characterEngine: G.character?.engine ?? {},
     difficultyModifiers: getDifficultyModifiers(),
   });
 }
@@ -2086,7 +2094,7 @@ function calculateBodyTolerance(state) {
 
 function spendResourcesForMinutes(minutes, flags) {
   const stage = getCurrentStage();
-  const burn = getSimConfig().resourceBurnPerHour?.[stage] || { water: 0.4, food: 0.3 };
+  const burn = getSimConfig().resourceBurnPerHour?.[stage] ?? { water: 0.4, food: 0.3 };
   const eff = getCombinedResourceEfficiency();
   const { waterBurn, foodBurn } = calculateResourceBurnForMinutes({
     minutes,
@@ -2096,11 +2104,11 @@ function spendResourcesForMinutes(minutes, flags) {
   G.state.water = Math.max(0, G.state.water - waterBurn);
   G.state.food = Math.max(0, G.state.food - foodBurn);
   if (G.state.water === 0) {
-    G.consecutiveWater0++;
+    updateRunState(G, { consecutiveWater0: G.consecutiveWater0 + 1 });
     flags.push('water-depleted');
     G.state.functional_capacity = clamp(G.state.functional_capacity - 8, 0, 100);
   } else {
-    G.consecutiveWater0 = 0;
+    updateRunState(G, { consecutiveWater0: 0 });
   }
   if (G.state.food === 0) {
     flags.push('food-depleted');
@@ -2115,8 +2123,8 @@ function getLatencyReadabilityLabel(activationRatio) {
 }
 
 function calculatePerceptionLatency({ pressureDelta }) {
-  const latency = G.character?.engine?.perceptionLatency || {};
-  const baseDelay = clamp(latency.baseDelay || 0, 0, 0.85);
+  const latency = G.character?.engine?.perceptionLatency ?? {};
+  const baseDelay = clamp(latency.baseDelay ?? 0, 0, 0.85);
   if (baseDelay <= 0) {
     return {
       active: false,
@@ -2129,10 +2137,10 @@ function calculatePerceptionLatency({ pressureDelta }) {
   }
 
   const stage = getCurrentStage();
-  const pressureStart = latency.pressureDeltaStart || 18;
+  const pressureStart = latency.pressureDeltaStart ?? 18;
   const stageWeight = latency.stageActivation?.[stage] ?? 0;
-  const timeStart = latency.timeActivationStart || 780;
-  const earlyHintFloor = clamp(latency.minEarlyHint || 0.38, 0.3, 0.75);
+  const timeStart = latency.timeActivationStart ?? 780;
+  const earlyHintFloor = clamp(latency.minEarlyHint ?? 0.38, 0.3, 0.75);
 
   const pressureGate = pressureDelta >= pressureStart;
   const stageGate = stageWeight > 0;
@@ -2154,7 +2162,7 @@ function calculatePerceptionLatency({ pressureDelta }) {
 }
 
 function getPerceptionGuardrails() {
-  return G.character?.engine?.perceptionGuardrails || {};
+  return G.character?.engine?.perceptionGuardrails ?? {};
 }
 
 function enforcePerceptionGuardrails(confidenceLevel, noiseLevel) {
@@ -2177,19 +2185,19 @@ function clampSignalHintsForReadability(rawHint) {
 function calculatePerception({ state, EP, BT, pressureDelta }) {
   const node = getCurrentNode(state);
   const stageMod = getStageModifier(state.position);
-  const stats = G.character?.engine || {};
-  const stability = stats.confidenceStability || 1;
-  const riskTol = stats.riskTolerance || 1;
+  const stats = G.character?.engine ?? {};
+  const stability = stats.confidenceStability ?? 1;
+  const riskTol = stats.riskTolerance ?? 1;
   let confidenceLevel = clamp(
-    (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility || 0)) * 6) - (stageMod.confidencePenalty || 0)) * stability,
+    (100 - (node.altitudeBand * 8) - (state.fatigue * 0.35) - (state.exposure * 0.4) - ((4 - (state.visibility ?? 0)) * 6) - (stageMod.confidencePenalty ?? 0)) * stability,
     5,
     95
   );
-  confidenceLevel = clamp(confidenceLevel + (G.characterConfidenceDrift || 0), 5, 98);
+  confidenceLevel = clamp(confidenceLevel + (G.characterConfidenceDrift ?? 0), 5, 98);
   const currentEp = EP ?? calculateEnvironmentalPressure(state).pressureScore;
   const prevEp = G.pressureHistory.length ? G.pressureHistory[G.pressureHistory.length - 1] : currentEp;
   let trendEstimate = currentEp > prevEp + 7 ? 'worsening fast' : (currentEp > prevEp + 2 ? 'worsening' : (currentEp < prevEp - 2 ? 'easing' : 'steady'));
-  let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf || 18) * riskTol + (stats.perceptionBias || 0), 0, 35);
+  let noiseLevel = clamp(((100 - confidenceLevel) / 100) * (getSimConfig().noiseRangeAtZeroConf ?? 18) * riskTol + (stats.perceptionBias ?? 0), 0, 35);
   const latency = calculatePerceptionLatency({ pressureDelta: pressureDelta ?? 0 });
 
   if (latency.active) {
@@ -2201,8 +2209,8 @@ function calculatePerception({ state, EP, BT, pressureDelta }) {
 
   if (G.character?.id === 'daniela' && G.photoInsightTurns > 0) {
     const photoMod = getActionModifier('shoot_photo');
-    const carryConfidence = Math.min(photoMod.photoCarryConfidenceGain || 3, 4);
-    const carryUncertaintyDrop = Math.min((photoMod.photoUncertaintyDrop || 4) - 2, 3);
+    const carryConfidence = Math.min(photoMod.photoCarryConfidenceGain ?? 3, 4);
+    const carryUncertaintyDrop = Math.min((photoMod.photoUncertaintyDrop ?? 4) - 2, 3);
     trendEstimate = trendEstimate === 'worsening fast' ? 'worsening' : trendEstimate;
     noiseLevel = clamp(noiseLevel - carryUncertaintyDrop, 0, 35);
     confidenceLevel = clamp(confidenceLevel + carryConfidence, 5, 98);
@@ -2335,7 +2343,7 @@ function getOnboardingLayer(activeRisks = []) {
 
 function getRiskProfile(state) {
   const permitRemaining = G.permitMaxDays - G.permitDay + 1;
-  const tw = getSimConfig().timeWindows || { summitLateStart: 1020 };
+  const tw = getSimConfig().timeWindows ?? { summitLateStart: 1020 };
   const isLate = G.minutesOfDay >= tw.summitLateStart;
   const waterCritical = state.water === 0;
   const foodCritical = state.food === 0;
@@ -2405,7 +2413,7 @@ function renderWatch() {
   if (watchTurnEl) watchTurnEl.textContent = `TURN ${G.turn} / ${sc.max_turns}`;
   updateTurnProgress(G.turn, sc.max_turns);
   const tm = G.minutesOfDay;
-  const tw = getSimConfig().timeWindows || { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
+  const tw = getSimConfig().timeWindows ?? { summitOptimalStart: 300, summitOptimalEnd: 630, summitLateStart: 1020 };
   const isOptimal = tm >= tw.summitOptimalStart && tm <= tw.summitOptimalEnd;
   const isLate = tm >= tw.summitLateStart;
   const suffix = isOptimal ? ' ◈ optimal' : (isLate ? ' ⚠ late' : '');
@@ -2518,7 +2526,7 @@ function renderWatch() {
     }
   }
 
-  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] || { water: 0.4, food: 0.3 };
+  const stageBurn = getSimConfig().resourceBurnPerHour?.[getCurrentStage()] ?? { water: 0.4, food: 0.3 };
   const displayResourceCount = (value) => {
     if (!Number.isFinite(value) || value <= 0) return 0;
     return Math.ceil(value);
@@ -2676,13 +2684,13 @@ function renderPositionList() {
     visibility: G.state.visibility,
   };
   // Forward last decision action + event flags for transition effects
-  if (G._vizAction) {
-    vizOpts.action = G._vizAction;
-    G._vizAction = null;
+  if (G.vizAction) {
+    vizOpts.action = G.vizAction;
+    updateRunState(G, { vizAction: null });
   }
-  if (G._vizFlags) {
-    vizOpts.flags = G._vizFlags;
-    G._vizFlags = null;
+  if (G.vizFlags) {
+    vizOpts.flags = G.vizFlags;
+    updateRunState(G, { vizFlags: null });
   }
   // Body-state levels drive fatigue/exposure vignettes
   if (G.state.fatigue != null) vizOpts.fatigue = G.state.fatigue;
@@ -2783,9 +2791,9 @@ function buildDebriefAnalytics() {
 function getDecisionWindowProfile(character = G.character, stage = getCurrentStage()) {
   const difficultyMods = getDifficultyModifiers();
   const base = { baseMs: 28000, stageModifiersMs: { APPROACH: 4000, HIGH_CAMP: 0, SUMMIT_DAY: -4000 }, minFloorMs: 9000, degradeEveryMs: 5000 };
-  const p = character?.engine?.decisionWindow || {};
+  const p = character?.engine?.decisionWindow ?? {};
   const baseMs = (p.baseMs ?? base.baseMs) + difficultyMods.decisionWindowMsBonus;
-  const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs || {}) };
+  const stageMods = { ...base.stageModifiersMs, ...(p.stageModifiersMs ?? {}) };
   const minFloorMs = Math.max(6000, (p.minFloorMs ?? base.minFloorMs) + Math.round(difficultyMods.decisionWindowMsBonus * 0.4));
   const total = baseMs + (stageMods[stage] ?? 0);
   return {
@@ -2799,7 +2807,7 @@ function getDecisionWindowProfile(character = G.character, stage = getCurrentSta
 
 function computeDecisionWindowState() {
   const profile = getDecisionWindowProfile();
-  const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt || Date.now()));
+  const elapsed = Math.max(0, Date.now() - (G.turnDecisionStartedAt ?? Date.now()));
   const effectiveElapsed = elapsed;
   const overMs = Math.max(0, effectiveElapsed - profile.totalWindowMs);
   const stepsOver = Math.floor(overMs / Math.max(profile.degradeEveryMs, 1000));
@@ -2819,7 +2827,7 @@ function getDecisionPressureCopy(winState = computeDecisionWindowState()) {
 
 function applyDecisionWindowDegradation(actionMod, perception) {
   const winState = computeDecisionWindowState();
-  const guardrails = perception?.guardrails || getPerceptionGuardrails();
+  const guardrails = perception?.guardrails ?? getPerceptionGuardrails();
   const degraded = applyDecisionWindowDegradationRule({
     actionMod,
     perception,
@@ -2853,19 +2861,17 @@ function applyTimeCost(action) {
   const actionMod = getActionModifier(action);
   const sim = getSimConfig();
   if (action === 'sleep') {
-    G.day += 1;
-    G.permitDay = G.day;
-    G.minutesOfDay = sim.dayStartMinutes || TUNING.dayStartMinutes;
-    return actionMod.timeCost || 480;
+    const nextDay = G.day + 1;
+    updateRunState(G, {
+      day: nextDay,
+      permitDay: nextDay,
+      minutesOfDay: sim.dayStartMinutes ?? TUNING.dayStartMinutes,
+    });
+    return actionMod.timeCost ?? 480;
   }
-  const minutes = actionMod.timeCost || 60;
-  G.minutesOfDay += minutes;
-  // Roll over to next calendar day if past midnight
-  if (G.minutesOfDay >= 1440) {
-    G.day += 1;
-    G.permitDay = G.day;
-    G.minutesOfDay -= 1440;
-  }
+  const minutes = actionMod.timeCost ?? 60;
+  const synced = applyClockDelta({ minutesOfDay: G.minutesOfDay, day: G.day, deltaMinutes: minutes });
+  updateRunState(G, synced);
   return minutes;
 }
 
@@ -2877,10 +2883,10 @@ function applyEventTimePenalty(minutes) {
 
 function applyAcclimatizationGain(action) {
   const mod = getActionModifier(action);
-  const gain = mod.acclimatizationGain || 0;
+  const gain = mod.acclimatizationGain ?? 0;
   if (gain <= 0) return;
   const rate = G.character?.engine?.acclimatizationRate ?? 1.0;
-  const current = G.acclimatization || 0;
+  const current = G.acclimatization ?? 0;
   updateRunState(G, {
     acclimatization: clamp(current + gain * rate, 0, 100)
   });
@@ -2888,18 +2894,19 @@ function applyAcclimatizationGain(action) {
 
 function applyBivouacPenalty(state, ep, flags) {
   const sim = getSimConfig();
-  const biv = sim.bivouacPenalty || { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
+  const biv = sim.bivouacPenalty ?? { ep: 20, fatigue: 18, exposure: 22, persistenceTurns: 8, capacity: 12 };
   if (G.minutesOfDay > 1320 && !isCampPosition(state.position)) {
     flags.push('forced-bivouac');
     state.fatigue = clamp(state.fatigue + biv.fatigue, 0, 100);
     state.exposure = clamp(state.exposure + biv.exposure, 0, 100);
-    state.functional_capacity = clamp(state.functional_capacity - (biv.capacity || 12), 0, 100);
-    G.persistenceTurns = Math.max(G.persistenceTurns, biv.persistenceTurns || 8);
-    state.persistenceTier = 'critical';
+    state.functional_capacity = clamp(state.functional_capacity - (biv.capacity ?? 12), 0, 100);
+    const bivUpdates = { persistenceTurns: Math.max(G.persistenceTurns, biv.persistenceTurns ?? 8) };
     if (G.minutesOfDay >= 1440) {
-      G.minutesOfDay = getSimConfig().dayStartMinutes || TUNING.dayStartMinutes;
+      bivUpdates.minutesOfDay = getSimConfig().dayStartMinutes ?? TUNING.dayStartMinutes;
     }
-    return ep + (biv.ep || 20);
+    updateRunState(G, bivUpdates);
+    state.persistenceTier = 'critical';
+    return ep + (biv.ep ?? 20);
   }
   return ep;
 }
@@ -2909,11 +2916,11 @@ function applyBivouacPenalty(state, ep, flags) {
 function applySummitDifficultyRegressionGuard({ stage, acclPenalty, decisionEffect, pressureDelta }) {
   const guard = {
     stage,
-    acclPenaltyRaw: Number((acclPenalty || 0).toFixed(2)),
-    acclPenaltyApplied: Number((acclPenalty || 0).toFixed(2)),
+    acclPenaltyRaw: Number((acclPenalty ?? 0).toFixed(2)),
+    acclPenaltyApplied: Number((acclPenalty ?? 0).toFixed(2)),
     acclPenaltyCapped: false,
-    pressureDeltaRaw: Number((pressureDelta || 0).toFixed(2)),
-    pressureDeltaApplied: Number((pressureDelta || 0).toFixed(2)),
+    pressureDeltaRaw: Number((pressureDelta ?? 0).toFixed(2)),
+    pressureDeltaApplied: Number((pressureDelta ?? 0).toFixed(2)),
     pressureDeltaCapped: false,
     triggered: false,
   };
@@ -2945,11 +2952,11 @@ function applyContextEvents({ state, action, stage, flags }) {
     if (eventEffect.timePenalty) applyEventTimePenalty(eventEffect.timePenalty);
   } else updateRunState(G, { activeEnvironmentEvent: null });
 
-  const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags, characterEvents: DATA_CONFIG.characterEvents || [] });
+  const charEffect = maybeApplyCharacterEvent({ G, state, action, stage, flags, characterEvents: DATA_CONFIG.characterEvents ?? [] });
   if (charEffect?.characterId) {
     updateRunState(G, {
       characterEventHistory: [...G.characterEventHistory, charEffect.id],
-      characterEventState: charEffect.eventState || G.characterEventState || {},
+      characterEventState: charEffect.eventState ?? G.characterEventState ?? {},
     });
   }
 
@@ -2992,7 +2999,7 @@ const { resolveTurn, evaluateOutcome, updateState } = createTurnEngine({
   computeSignals,
   renderNarrative,
   deriveTerminalOutcome,
-  getTimeWindows: () => getSimConfig().timeWindows || { summitLateStart: 1020 },
+  getTimeWindows: () => getSimConfig().timeWindows ?? { summitLateStart: 1020 },
   updateRunState,
   recordTelemetry,
   assertStateShape,
@@ -3028,7 +3035,7 @@ function makeDecision(decision) {
 
 // ════════════════════════════════════════════════
 // LOG ENTRY
-// FIX: uses logEntry.narrativeText directly (no DOM read)
+// Uses logEntry.narrativeText directly (no DOM read)
 // ════════════════════════════════════════════════
 function addLogEntry(entry) {
   const container = document.getElementById('log-entries');
@@ -3061,10 +3068,10 @@ function addLogEntry(entry) {
   meta.appendChild(decisionTag);
   const pressureTime = entry.decisionWindowExceeded
     ? uiText(
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s late`,
-      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs || 0)/1000,1))}s tarde`
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs ?? 0)/1000,1))}s late`,
+      ` · +${Math.ceil(Math.max((entry.decisionWindowEffect?.overMs ?? 0)/1000,1))}s tarde`
     )
-    : ` · ${Math.max(1, Math.round((entry.decisionMs || 0)/1000))}s`;
+    : ` · ${Math.max(1, Math.round((entry.decisionMs ?? 0)/1000))}s`;
   meta.append(document.createTextNode(`${blockedNote} | ${entry.trend} · ${entry.uncertainty}${pressureTime} | ${entry.body.capacity} · ${entry.body.fatigue} · ${entry.body.exposure}`));
 
   const narrative = document.createElement('div');
@@ -3193,7 +3200,7 @@ function endRun(returnedToHorcones) {
   updateRunReviewPanel(0);
 
   // debrief actions
-  // FIX: journal button records that we came from debrief
+  // Journal button records that we came from debrief
   const debriefActions = document.getElementById('debrief-actions');
   clearElement(debriefActions);
   [
@@ -3246,11 +3253,11 @@ ${readingHint}`;
 
 
 function reviewPrevTurn() {
-  updateRunReviewPanel((G.reviewTurnIndex || 0) - 1);
+  updateRunReviewPanel((G.reviewTurnIndex ?? 0) - 1);
 }
 
 function reviewNextTurn() {
-  updateRunReviewPanel((G.reviewTurnIndex || 0) + 1);
+  updateRunReviewPanel((G.reviewTurnIndex ?? 0) + 1);
 }
 
 function copyRunSignature() {
@@ -3280,7 +3287,7 @@ function buildRunLogExport() {
   return buildRunLogExportHelper(G.runLogRecords);
 }
 
-// FIX: journal navigation helper — records the origin screen
+// Journal navigation helper — records the origin screen
 function openJournalFrom(origin) {
   updateUIState(G, { journalReturnScreen: origin });
   showScreen('journal');
@@ -3519,9 +3526,7 @@ function bootstrapMockDebrief(params) {
   const mockLog = buildMockTurnLog(finalOutcome);
 
   // Apply minimal G state so classifyOutcome / updateDebriefHero / analytics work
-  G.character = char;
-  G.scenario = scenario;
-  G.seed = seed;
+  updateRunState(G, { character: char, scenario, seed });
   deriveDifficultyFromScenario();
   updateRunState(G, {
     finalOutcome,
@@ -3533,11 +3538,11 @@ function bootstrapMockDebrief(params) {
     hasSummited: finalOutcome === 'Summit and Safe Return',
     permitDay: 4,
     permitMaxDays: 20,
-    runNumber: (G.runNumber || 0) + 1,
+    runNumber: (G.runNumber ?? 0) + 1,
     consecutiveCollapses: 0,
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
-    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns, DATA_CONFIG.contextEvents || []),
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns, DATA_CONFIG.contextEvents ?? []),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
     characterEventState: {},

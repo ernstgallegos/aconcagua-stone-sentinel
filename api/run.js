@@ -93,12 +93,14 @@ function parseJsonl(content) {
 export default async (req, res) => {
   applySecurityHeaders(req, res);
   if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Max-Age", "86400");
     return res.status(204).end();
   }
 
   const rate = checkRateLimit(getClientIp(req));
   res.setHeader("X-RateLimit-Limit", String(rateMaxRequests));
   res.setHeader("X-RateLimit-Remaining", String(rate.remaining));
+  res.setHeader("Access-Control-Expose-Headers", "X-RateLimit-Limit, X-RateLimit-Remaining");
   if (rate.limited) {
     return res.status(429).json({ error: "rate limit exceeded", retry_after_ms: rateWindowMs });
   }

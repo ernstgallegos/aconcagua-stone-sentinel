@@ -64,3 +64,50 @@ test('resolveTurnWithTrace follows the canonical stage pipeline in order', () =>
   assert.deepEqual(run.result.pipelineTrace, run.expectedPipeline);
   assert.deepEqual(harness.expectedPipeline, run.expectedPipeline);
 });
+
+test('zero effectiveDelta uses capped value, not raw pressureDelta (regression: || vs ?? coercion)', () => {
+  // When pressureDeltaCap is 0, effectiveDelta is 0.
+  // Before the fix, `effectiveDelta || pressureDelta` would bypass the cap
+  // and use the raw (higher) pressureDelta for fatigue/exposure amplification.
+  // After the fix, `effectiveDelta ?? pressureDelta` correctly uses 0.
+  const deps = makeDeps();
+  // Return an action modifier with pressureDeltaCap = 0 to force effectiveDelta = 0
+  deps.getActionModifier = () => ({
+    progress: -20, collapse: -90, survival: -10,
+    fatigueDelta: 2, fatigueMultiplier: 0.65,
+    exposureDelta: 2, exposureMultiplier: 0.6,
+    capacityDelta: -1, timeCost: 60,
+    pressureDeltaCap: 0,
+    fatigueRecovery: 4, exposureRecovery: 4,
+  });
+  // Set EP much higher than BT to create large raw pressureDelta
+  deps.calculateEnvironmentalPressure = () => ({ pressureScore: 80 });
+  deps.calculateBodyTolerance = () => 30;
+  // No summit regression capping so raw delta stays high
+  deps.applySummitDifficultyRegressionGuard = () => ({
+    acclPenaltyApplied: 0, acclPenaltyCapped: false,
+    pressureDeltaApplied: 50, pressureDeltaCapped: false,
+  });
+
+  const initialFatigue = 20;
+  const harness = createDeterministicTurnHarness({
+    deps,
+    initialState: {
+      position: 'camp_colera', functional_capacity: 85,
+      fatigue: initialFatigue, exposure: 15,
+      weather_severity: 2, visibility: 2, water: 8, food: 8,
+    },
+  });
+
+  const run = harness.run('descend');
+  // With effectiveDelta = 0, pressureFactor = clamp(0/20, 0.5, 2.5) = 0.5
+  // Without the fix (|| coercion), pressureFactor would use raw pressureDelta (~50),
+  // giving clamp(50/20, 0.5, 2.5) = 2.5 — 5× higher amplification.
+  // The result.effectiveDelta should be 0 (capped by pressureDeltaCap).
+  assert.equal(run.result.result.effectiveDelta, 0, 'effectiveDelta should be 0 when capped');
+  // Fatigue should not have been amplified by the uncapped pressureDelta
+  assert.ok(
+    run.state.fatigue <= initialFatigue + 10,
+    `fatigue should stay low with capped pressure (got ${run.state.fatigue}), not spike from uncapped raw delta`
+  );
+});

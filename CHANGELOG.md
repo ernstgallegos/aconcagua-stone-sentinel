@@ -9,6 +9,40 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+
+- Moved `vizAction`/`vizFlags` from direct `G` property assignment to validated `RUN_STATE_DEFAULTS` in `game-state.js`, routing all writes through `updateRunState()` to eliminate state-shape assertion warnings.
+- Replaced remaining `JSON.parse(JSON.stringify())` deep-clone calls in `screens.js` and `data-config.js` with `structuredClone` for consistency with the upgrade applied to `game-state.js` in v1.5.1.
+- Fixed decision timing: `turnDecisionStartedAt` is now recorded after the render delay completes and the decision UI becomes interactive, ensuring `decisionTimeSpentMs` measures actual player deliberation rather than engine processing + render latency.
+- Eliminated duplicate EP calculation per turn in `game-loop.js` by reusing the `lastTurnRecord.pressure.EP` value already computed during `resolveTurn`, with a fallback recalculation for safety.
+- Fixed `efficiency || 1` falsy-zero bug in `turn-rules.js`: replaced with `efficiency ?? 1` (nullish coalescing) so an intentional efficiency of `0` is preserved and floored by `Math.max(..., 0.1)` instead of silently becoming `1`.
+- Synchronized stale version strings: `docs/repo-truth.es.md` updated from `v1.4.6` to `v1.5.1`; `prototype/web-v1/README.md` updated from `v1.4.5` to `v1.5.1`.
+- Routed `applyTimeCost` time mutations through `applyClockDelta` + `updateRunState` for consistency with `applyEventTimePenalty` (was directly mutating `G.day`, `G.permitDay`, `G.minutesOfDay` through legacy facade).
+- Routed `spendResourcesForMinutes` counter mutation (`G.consecutiveWater0`) through `updateRunState` instead of direct legacy facade assignment.
+- Routed `applyBivouacPenalty` G-level mutations (`G.persistenceTurns`, `G.minutesOfDay`) through `updateRunState` instead of direct legacy facade assignment.
+- Routed all remaining `G.character`/`G.scenario`/`G.seed` setup-phase mutations (12 call sites: `selectCharacter`, `confirmCharacter`, `beginExpedition`, `quickStart`, `selectMode`, `confirmScenario`, deep-link resolver) through `updateRunState()` for consistency with engine-level state management.
+- Standardized `||` to `??` (nullish coalescing) for all numeric defaults across engine files (`pressure-model.js`, `turn-rules.js`, `turn-resolution.js`, `events-core.js`) to prevent silent zero-value coercion. Added `Math.max(..., 0.1)` floor guard on `fatigueResistance`/`exposureResistance` in `pressure-model.js` to prevent division-by-zero.
+- Cleaned up 5 stale `FIX:` comments in `screens.js` where fixes were already applied but comments were never updated — preventing false audit signals.
+- Fixed `effectiveDelta || pressureDelta` zero-coercion bug in `turn-resolution.js:updateState()`: when `effectiveDelta` was capped to `0` by `pressureDeltaCap`, `||` would silently fall through to the uncapped `pressureDelta`, bypassing the cap and inflating fatigue/exposure amplification by up to 5×. Replaced with `??`.
+- Completed `||` → `??` standardization for remaining object/config fallbacks in `pressure-model.js` (6 config lookup lines) and `events-core.js` (8 object default lines) to align with engine-wide nullish coalescing convention.
+- Fixed `api/run.js` OPTIONS preflight: added `Access-Control-Max-Age: 86400` for cache efficiency and `Access-Control-Expose-Headers` for `X-RateLimit-Limit, X-RateLimit-Remaining` so CORS clients can read rate-limit headers.
+- Removed dead `JSON.parse(JSON.stringify())` fallback from `game-state.js cloneValue()`: project requires Node ≥18 which guarantees `structuredClone` — the conditional branch was unreachable dead code.
+- Standardized remaining `||` → `??` for photo action numeric defaults in `turn-resolution.js` (`photoConfidenceGain`, `photoUncertaintyDrop`, `photoInsightTurns`) to prevent zero-value coercion in action modifier data.
+- Extended `||` → `??` standardization to all gameplay-affecting defaults in `screens.js`: perception calculations (`calculatePerceptionLatency`, `calculatePerception`, `getStageModifier`, `calculateBodyTolerance`), config/setup (`buildRandomScenario`, `beginExpedition`, `getSimConfig`), resource economy (`spendResourcesForMinutes`, `applyBivouacPenalty`), photo system (`canUseShootPhoto`, carry-over perception), time management (`applyTimeCost`, `getTimeWindows`), decision window (`getDecisionWindowProfile`, `applyDecisionWindowDegradation`), context events (`applyContextEvents`), summit guard (`applySummitDifficultyRegressionGuard`), risk profile (`getRiskProfile`), UI signals (`metricDisplay`), and telemetry display. Total: ~70 `||` → `??` conversions. Intentionally preserved `||` only for string/display fallbacks (i18n text, labels, empty-string coercion) and boolean OR conditions.
+
+### Added
+
+- Added 23 unit tests for `ui/helpers/debrief.js` covering `computeDecisionPattern`, `computeDominantRiskAxis`, `buildRunSignature`, and `buildSignalInterpretationHint` (previously zero coverage).
+- Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
+- Added regression test for zero `effectiveDelta` pressure factor path in `resolve-turn-pipeline.test.js` to prevent reintroduction of the `||` coercion bug.
+- Added API test for `Access-Control-Max-Age` header on OPTIONS preflight and `Access-Control-Expose-Headers` on data responses.
+
+### Changed
+
+- Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
+- Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
+- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
+
 ## [1.5.1] — 2026-04
 
 ### Added

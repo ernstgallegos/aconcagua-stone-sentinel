@@ -23,6 +23,13 @@ test("OPTIONS preflight returns 204", async () => {
   assert.equal(res._status, 204);
 });
 
+test("OPTIONS preflight includes Access-Control-Max-Age header", async () => {
+  const req = mockReq({ method: "OPTIONS" });
+  const res = mockRes();
+  await handler(req, res);
+  assert.equal(res.headers["Access-Control-Max-Age"], "86400");
+});
+
 test("missing query params returns 400", async () => {
   const req = mockReq({ query: { scenario: "accumulated-fatigue-trap" } });
   const res = mockRes();
@@ -77,4 +84,8 @@ test("security headers are set on valid request", async () => {
   assert.ok(res.headers["X-Content-Type-Options"], "X-Content-Type-Options must be set");
   assert.ok(res.headers["Content-Security-Policy"], "Content-Security-Policy must be set");
   assert.ok(res.headers["X-RateLimit-Limit"], "X-RateLimit-Limit must be set");
+  assert.ok(
+    res.headers["Access-Control-Expose-Headers"],
+    "Access-Control-Expose-Headers must be set so clients can read rate-limit headers"
+  );
 });
