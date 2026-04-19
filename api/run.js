@@ -5,6 +5,8 @@ const rateWindowMs = Number(process.env.API_RATE_LIMIT_WINDOW_MS || 60_000);
 const rateMaxRequests = Number(process.env.API_RATE_LIMIT_MAX || 30);
 const requestCounters = new Map();
 let cleanupTick = 0;
+const KV_REST_API_URL = process.env.KV_REST_API_URL || "";
+const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN || "";
 
 function splitCsv(value) {
   return String(value || "")
@@ -14,8 +16,8 @@ function splitCsv(value) {
 }
 
 const FALLBACK_ORIGINS = [
-  "https://aconcagua-stone-sentinel.vercel.app",
-  "https://www.aconcagua-stone-sentinel.vercel.app",
+  "https://aconcaguastonesentinel.com",
+  "https://www.aconcaguastonesentinel.com",
 ];
 
 function getAllowedOrigins() {
@@ -73,6 +75,42 @@ function checkRateLimit(ip) {
   return { limited, remaining: Math.max(0, rateMaxRequests - current.count) };
 }
 
+function hasDistributedRateLimitConfig() {
+  return Boolean(KV_REST_API_URL && KV_REST_API_TOKEN);
+}
+
+async function callKv(pathname) {
+  const endpoint = `${KV_REST_API_URL.replace(/\/$/, "")}/${pathname}`;
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${KV_REST_API_TOKEN}`,
+      Accept: "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`kv-http-${response.status}`);
+  }
+  const body = await response.json();
+  return body?.result;
+}
+
+async function checkRateLimitDistributed(ip) {
+  const key = `api:run:ratelimit:${ip}`;
+  const windowSeconds = Math.max(1, Math.ceil(rateWindowMs / 1000));
+  const count = Number(await callKv(`incr/${encodeURIComponent(key)}`));
+  if (!Number.isFinite(count) || count <= 0) {
+    throw new Error("kv-invalid-counter");
+  }
+  if (count === 1) {
+    await callKv(`expire/${encodeURIComponent(key)}/${windowSeconds}`);
+  }
+  return {
+    limited: count > rateMaxRequests,
+    remaining: Math.max(0, rateMaxRequests - count),
+  };
+}
+
 function applySecurityHeaders(req, res) {
   res.setHeader("Access-Control-Allow-Origin", resolveOrigin(req));
   res.setHeader("Vary", "Origin");
@@ -97,7 +135,27 @@ export default async (req, res) => {
     return res.status(204).end();
   }
 
-  const rate = checkRateLimit(getClientIp(req));
+  const isVercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
+  const canUseDistributedRateLimit = hasDistributedRateLimitConfig();
+  if (isVercel && !canUseDistributedRateLimit) {
+    return res.status(503).json({
+      error: "rate limit backend is not configured",
+      detail: "Set KV_REST_API_URL and KV_REST_API_TOKEN in Vercel environment variables.",
+    });
+  }
+
+  let rate;
+  try {
+    const clientIp = getClientIp(req);
+    rate = canUseDistributedRateLimit
+      ? await checkRateLimitDistributed(clientIp)
+      : checkRateLimit(clientIp);
+  } catch (error) {
+    return res.status(503).json({
+      error: "rate limit backend unavailable",
+      detail: error.message,
+    });
+  }
   res.setHeader("X-RateLimit-Limit", String(rateMaxRequests));
   res.setHeader("X-RateLimit-Remaining", String(rate.remaining));
   res.setHeader("Access-Control-Expose-Headers", "X-RateLimit-Limit, X-RateLimit-Remaining");

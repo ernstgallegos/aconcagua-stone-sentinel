@@ -6,6 +6,7 @@ This document is the single source of truth for public entry routes, local previ
 
 ### Canonical public routes
 
+- Canonical production domain: `https://aconcaguastonesentinel.com`
 - `/` → canonical public landing page, with a primary CTA to `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` → normalized to `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → archived legacy viewer, normalized to `/prototype/mra-v0/viewer/index.html`.
@@ -34,14 +35,12 @@ In local static mode, archived viewer run files are loaded from `prototype/mra-v
 - Routing behavior is defined in `vercel.json`.
 
 
-### API rate-limit limitation (current behavior)
+### API rate limiting (current behavior)
 
-`api/run.js` currently uses an in-memory `Map` counter per process instance.
+`api/run.js` supports distributed counters through KV REST credentials (`KV_REST_API_URL`, `KV_REST_API_TOKEN`).
 
-- Single-instance/local preview: limits behave as expected for one process.
-- Multi-instance/serverless deployments: counters are not shared across instances, so limits are **best-effort per instance**, not a global quota.
-
-This limitation is intentionally documented as current state for this release hardening pass; no distributed/persistent backend is implemented in this repository scope.
+- Vercel production/runtime: fails closed with HTTP `503` when distributed backend credentials are missing or unavailable.
+- Local/static preview: falls back to in-memory counters for convenience.
 
 ### API CORS allowlist (`api/run.js`)
 
@@ -59,6 +58,7 @@ ALLOWED_ORIGINS=https://example.com,https://www.example.com
 
 ### Rutas públicas canónicas
 
+- Dominio productivo canónico: `https://aconcaguastonesentinel.com`
 - `/` → landing pública canónica, con CTA principal a `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` → normalizada a `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → visor histórico archivado, normalizado a `/prototype/mra-v0/viewer/index.html`.
@@ -87,14 +87,12 @@ En modo estático local, el visor archivado carga corridas desde `prototype/mra-
 - El comportamiento de ruteo está definido en `vercel.json`.
 
 
-### Limitación actual de rate limit en API
+### Rate limit de API (estado actual)
 
-`api/run.js` usa hoy un contador en memoria (`Map`) por instancia de proceso.
+`api/run.js` soporta contadores distribuidos mediante credenciales KV REST (`KV_REST_API_URL`, `KV_REST_API_TOKEN`).
 
-- Instancia única/preview local: el límite funciona como se espera para ese proceso.
-- Deploy multi-instancia/serverless: los contadores no se comparten entre instancias, por lo que el límite es **best-effort por instancia**, no una cuota global.
-
-Esta limitación queda documentada explícitamente como estado actual en este pass de estabilización; no se implementa backend distribuido/persistente dentro del alcance de este repositorio.
+- Runtime productivo en Vercel: falla cerrado con HTTP `503` si faltan credenciales o el backend distribuido no está disponible.
+- Preview local/estático: usa fallback en memoria para conveniencia de desarrollo.
 
 ### Allowlist CORS de la API (`api/run.js`)
 

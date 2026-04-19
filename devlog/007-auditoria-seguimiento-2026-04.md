@@ -2,7 +2,7 @@
 
 ## 1. Objetivo de la auditoría
 
-Se realizó una auditoría exhaustiva del repositorio público `ernstgallegos/aconcagua-stone-sentinel` y de la web app desplegada en <https://aconcagua-stone-sentinel.vercel.app>. El objetivo fue identificar incoherencias, bugs y “cabos sueltos” que deban corregirse antes de publicar oficialmente la versión 1.4.5 del prototipo. Se revisaron el código, la documentación y la experiencia de juego (playtest) para validar que estén alineados.
+Se realizó una auditoría exhaustiva del repositorio público `ernstgallegos/aconcagua-stone-sentinel` y de la web app desplegada en <https://aconcaguastonesentinel.com>. El objetivo fue identificar incoherencias, bugs y “cabos sueltos” que deban corregirse antes de publicar oficialmente la versión 1.4.5 del prototipo. Se revisaron el código, la documentación y la experiencia de juego (playtest) para validar que estén alineados.
 
 ## 2. Hallazgos de la documentación y arquitectura
 

@@ -76,7 +76,7 @@ jobs:
         run: npm test
 
       - name: Run dependency security audit
-        run: npm audit --audit-level=high || true
+        run: npm audit --audit-level=high
 
       - name: Run release smoke gate
         if: github.event_name == 'push'

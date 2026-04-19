@@ -54,7 +54,7 @@ npm test
 npm run typecheck
 ```
 
-**Release deploy smoke check (canonical Vercel URL by default):**
+**Release deploy smoke check (canonical production URL by default):**
 ```bash
 npm run smoke:release
 ```
@@ -120,6 +120,20 @@ ALLOWED_ORIGINS=https://example.com,https://www.example.com
 ```
 
 If `ALLOWED_ORIGINS` is not set, the function uses the repository's hardcoded dev default allowlist.
+
+## Serverless API rate-limit backend (required in Vercel)
+
+`api/run.js` uses distributed counters when `KV_REST_API_URL` and `KV_REST_API_TOKEN` are configured (Upstash/Vercel KV REST API).
+
+- In **Vercel environments**, distributed rate-limit config is mandatory; if missing, the API now fails closed with HTTP `503`.
+- In local/dev environments, the handler falls back to in-memory counters for convenience.
+
+Example environment variables:
+
+```bash
+KV_REST_API_URL=https://<your-kv-endpoint>.upstash.io
+KV_REST_API_TOKEN=<your-read-write-token>
+```
 
 Manual rate-limit smoke checklist (when touching `api/run.js`):
 

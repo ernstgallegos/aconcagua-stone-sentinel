@@ -11,6 +11,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed `#debrief` deep-link bootstrap crash in `prototype/web-v1/ui/screens.js`: replaced an out-of-scope `sc.max_turns` reference with `scenario.max_turns ?? 40`, preventing `ReferenceError` during mock debrief initialization.
+- Extended release smoke network-failure handling in `scripts/release-smoke-vercel.js` to treat `ENETUNREACH` as an environment limitation (skip) instead of an unhandled crash.
 - Moved `vizAction`/`vizFlags` from direct `G` property assignment to validated `RUN_STATE_DEFAULTS` in `game-state.js`, routing all writes through `updateRunState()` to eliminate state-shape assertion warnings.
 - Replaced remaining `JSON.parse(JSON.stringify())` deep-clone calls in `screens.js` and `data-config.js` with `structuredClone` for consistency with the upgrade applied to `game-state.js` in v1.5.1.
 - Fixed decision timing: `turnDecisionStartedAt` is now recorded after the render delay completes and the decision UI becomes interactive, ensuring `decisionTimeSpentMs` measures actual player deliberation rather than engine processing + render latency.
@@ -39,9 +41,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Updated canonical production domain references from `https://aconcagua-stone-sentinel.vercel.app` to `https://aconcaguastonesentinel.com` across runtime defaults and documentation (`api/run.js` fallback origins, release smoke default URL, deep-link docs, README mirrors, and deploy references).
+- Hardened dependency security policy in CI by making `npm audit --audit-level=high` a blocking gate in `.github/workflows/ci.yml` (removed `|| true` bypass).
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
 - Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
+
+### Security
+
+- Hardened API rate-limiting behavior in `api/run.js`: Vercel deployments now require distributed KV-backed counters (`KV_REST_API_URL`, `KV_REST_API_TOKEN`) and fail closed with HTTP 503 when the backend is missing or unavailable, eliminating production fallback to per-instance memory counters.
 
 ## [1.5.1] — 2026-04
 
@@ -301,7 +309,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added shape-validation regression tests in `prototype/web-v1/tests/smoke/model-ready.test.js` for malformed non-first entries in `outcomes` and `scenariosWebV1.predefinedScenarios`.
 - Added `scripts/install-local-skill.sh` plus AI skills README guidance to reinstall repository-defined skills into `$CODEX_HOME/skills` for ephemeral web Codex sessions.
 - Added `docs/ai/skills/prompting-for-frontend-aesthetics-skill.md` and registered it in the AI skills catalog/manifest.
-- Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical Vercel URL.
+- Added `scripts/release-smoke-vercel.sh` and `npm run smoke:release` to run a deterministic deploy smoke against the canonical production URL.
 - Added `meta/release-readiness-v1.4.5-final.md` as the final readiness closeout report with explicit gate-by-gate evidence and outcomes.
 - Added shared text-based favicon asset `art/brand/favicon-aconcagua.svg` and wired it across all public HTML entry points.
 

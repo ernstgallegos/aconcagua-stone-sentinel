@@ -13,7 +13,7 @@ Hash-based deep links let you open any screen directly without clicking through 
 **Canonical base URL:**
 
 ```
-https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
+https://aconcaguastonesentinel.com/prototype/web-v1/index.html
 ```
 
 ---
@@ -51,22 +51,22 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 
 | Screen ID | Purpose | Deep-link URL |
 |-----------|---------|---------------|
-| `title` | Welcome / cover screen | [`#title`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#title) |
-| `expedition-setup` | Character + scenario selection carousels | [`#expedition-setup`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#expedition-setup) |
-| `onboarding` | Pre-run briefing modal flow entry — opens over the game screen (not a standalone DOM screen; requires character + scenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
-| `game` | Main gameplay loop | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
-| `journal` | Expedition journal (cross-run log) | [`#journal`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#journal) |
-| `debrief` | Post-run debrief (mock state, option A) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
-| `summit-success` | Narrative bridge after summit + safe return | [`#summit-success`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#summit-success) |
-| `part2-character` | Part 2 character + route selection (gated) | [`#part2-character&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-character&force=1) |
-| `mendoza_room` | Part 2 narrative — Mendoza hotel room | [`#mendoza_room&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#mendoza_room&force=1) |
-| `team_presentation` | Part 2 narrative — team presentation | [`#team_presentation&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#team_presentation&force=1) |
-| `after_circle` | Part 2 narrative — after introductions | [`#after_circle&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#after_circle&force=1) |
-| `guides` | Part 2 narrative — guide/company briefing | [`#guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#guides&force=1) |
-| `briefing_night` | Part 2 narrative — titleless night briefing | [`#briefing_night&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#briefing_night&force=1) |
-| `departure_road` | Part 2 narrative — road to Horcones | [`#departure_road&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#departure_road&force=1) |
-| `future_cta` | Part 2 narrative — future collaboration coda | [`#future_cta&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#future_cta&force=1) |
-| `fatal-error` | Blocking data-load error screen | [`#fatal-error`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#fatal-error) |
+| `title` | Welcome / cover screen | [`#title`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#title) |
+| `expedition-setup` | Character + scenario selection carousels | [`#expedition-setup`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#expedition-setup) |
+| `onboarding` | Pre-run briefing modal flow entry — opens over the game screen (not a standalone DOM screen; requires character + scenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
+| `game` | Main gameplay loop | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
+| `journal` | Expedition journal (cross-run log) | [`#journal`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#journal) |
+| `debrief` | Post-run debrief (mock state, option A) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
+| `summit-success` | Narrative bridge after summit + safe return | [`#summit-success`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#summit-success) |
+| `part2-character` | Part 2 character + route selection (gated) | [`#part2-character&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#part2-character&force=1) |
+| `mendoza_room` | Part 2 narrative — Mendoza hotel room | [`#mendoza_room&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#mendoza_room&force=1) |
+| `team_presentation` | Part 2 narrative — team presentation | [`#team_presentation&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#team_presentation&force=1) |
+| `after_circle` | Part 2 narrative — after introductions | [`#after_circle&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#after_circle&force=1) |
+| `guides` | Part 2 narrative — guide/company briefing | [`#guides&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#guides&force=1) |
+| `briefing_night` | Part 2 narrative — titleless night briefing | [`#briefing_night&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#briefing_night&force=1) |
+| `departure_road` | Part 2 narrative — road to Horcones | [`#departure_road&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#departure_road&force=1) |
+| `future_cta` | Part 2 narrative — future collaboration coda | [`#future_cta&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#future_cta&force=1) |
+| `fatal-error` | Blocking data-load error screen | [`#fatal-error`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#fatal-error) |
 
 ---
 
@@ -173,7 +173,7 @@ Los deep links basados en hash permiten abrir cualquier pantalla directamente si
 **URL base canónica:**
 
 ```
-https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
+https://aconcaguastonesentinel.com/prototype/web-v1/index.html
 ```
 
 ---
@@ -211,22 +211,22 @@ https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html
 
 | ID de pantalla | Propósito | URL de deep link |
 |----------------|-----------|-----------------|
-| `title` | Pantalla de bienvenida / portada | [`#title`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#title) |
-| `expedition-setup` | Carruseles de selección de personaje + escenario | [`#expedition-setup`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#expedition-setup) |
-| `onboarding` | Entrada de flujo modal de briefing previo — se abre sobre la pantalla de juego (no es una pantalla DOM independiente; requiere personaje + escenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
-| `game` | Bucle principal de juego | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
-| `journal` | Diario de expedición (log entre runs) | [`#journal`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#journal) |
-| `debrief` | Análisis post-run (estado simulado) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
-| `summit-success` | Puente narrativo tras cumbre + retorno seguro | [`#summit-success`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#summit-success) |
-| `part2-character` | Selección de personaje/ruta Parte 2 (con gate) | [`#part2-character&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#part2-character&force=1) |
-| `mendoza_room` | Narrativa Parte 2 — hotel en Mendoza | [`#mendoza_room&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#mendoza_room&force=1) |
-| `team_presentation` | Narrativa Parte 2 — presentación del grupo | [`#team_presentation&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#team_presentation&force=1) |
-| `after_circle` | Narrativa Parte 2 — después de la presentación | [`#after_circle&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#after_circle&force=1) |
-| `guides` | Narrativa Parte 2 — encuentro con los guías | [`#guides&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#guides&force=1) |
-| `briefing_night` | Narrativa Parte 2 — noche previa (sin título) | [`#briefing_night&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#briefing_night&force=1) |
-| `departure_road` | Narrativa Parte 2 — salida hacia Horcones | [`#departure_road&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#departure_road&force=1) |
-| `future_cta` | Narrativa Parte 2 — coda de colaboración futura | [`#future_cta&force=1`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#future_cta&force=1) |
-| `fatal-error` | Pantalla de error bloqueante de carga de datos | [`#fatal-error`](https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#fatal-error) |
+| `title` | Pantalla de bienvenida / portada | [`#title`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#title) |
+| `expedition-setup` | Carruseles de selección de personaje + escenario | [`#expedition-setup`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#expedition-setup) |
+| `onboarding` | Entrada de flujo modal de briefing previo — se abre sobre la pantalla de juego (no es una pantalla DOM independiente; requiere personaje + escenario) | [`#onboarding&character=francisco&scenario=assisted-route&seed=1234`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#onboarding&character=francisco&scenario=assisted-route&seed=1234) |
+| `game` | Bucle principal de juego | [`#game&character=francisco&scenario=assisted-route&seed=1234`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#game&character=francisco&scenario=assisted-route&seed=1234) |
+| `journal` | Diario de expedición (log entre runs) | [`#journal`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#journal) |
+| `debrief` | Análisis post-run (estado simulado) | [`#debrief&outcome=Strategic%20Retreat`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#debrief&outcome=Strategic%20Retreat) |
+| `summit-success` | Puente narrativo tras cumbre + retorno seguro | [`#summit-success`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#summit-success) |
+| `part2-character` | Selección de personaje/ruta Parte 2 (con gate) | [`#part2-character&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#part2-character&force=1) |
+| `mendoza_room` | Narrativa Parte 2 — hotel en Mendoza | [`#mendoza_room&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#mendoza_room&force=1) |
+| `team_presentation` | Narrativa Parte 2 — presentación del grupo | [`#team_presentation&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#team_presentation&force=1) |
+| `after_circle` | Narrativa Parte 2 — después de la presentación | [`#after_circle&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#after_circle&force=1) |
+| `guides` | Narrativa Parte 2 — encuentro con los guías | [`#guides&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#guides&force=1) |
+| `briefing_night` | Narrativa Parte 2 — noche previa (sin título) | [`#briefing_night&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#briefing_night&force=1) |
+| `departure_road` | Narrativa Parte 2 — salida hacia Horcones | [`#departure_road&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#departure_road&force=1) |
+| `future_cta` | Narrativa Parte 2 — coda de colaboración futura | [`#future_cta&force=1`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#future_cta&force=1) |
+| `fatal-error` | Pantalla de error bloqueante de carga de datos | [`#fatal-error`](https://aconcaguastonesentinel.com/prototype/web-v1/index.html#fatal-error) |
 
 ---
 

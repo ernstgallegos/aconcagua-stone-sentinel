@@ -144,7 +144,7 @@ El realismo se expresa a través de sistemas y mecánicas, no mediante espectacu
 
 El prototipo web interactivo es la superficie activa de desarrollo. Implementa el engine completo de Environmental Pressure / Body Tolerance, seis personajes diferenciados, presión por permiso, ventana de decisión por tiempo, acción contextual por personaje y puente narrativo de Parte 2 con acceso condicionado por outcome y cambio de idioma en UI (inglés y español).
 
-Jugable en la URL canónica de Vercel. Ejecutar localmente con:
+Jugable en la URL canónica pública: **https://aconcaguastonesentinel.com/**. Ejecutar localmente con:
 
 ```bash
 python3 -m http.server 4173
@@ -248,7 +248,7 @@ El unlock sigue siendo exclusivo de `Summit and Safe Return`.
 
 Cada pantalla del prototipo es accesible directamente mediante una URL basada en hash. Después de cargar los datos, `handleDeepLink()` lee `window.location.hash` y navega en consecuencia. La navegación normal dentro de la app mantiene el hash sincronizado, por lo que cualquier pantalla es compartible.
 
-Formato: `https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html#<screenId>[&param=valor…]`
+Formato: `https://aconcaguastonesentinel.com/prototype/web-v1/index.html#<screenId>[&param=valor…]`
 
 Ejemplos:
 

@@ -3542,7 +3542,7 @@ function bootstrapMockDebrief(params) {
     consecutiveCollapses: 0,
     lateSignalDeterminantTurns: 0,
     lateSignalEvents: [],
-    environmentEventPlan: buildEnvironmentEventPlan(G.seed, sc.max_turns, DATA_CONFIG.contextEvents ?? []),
+    environmentEventPlan: buildEnvironmentEventPlan(G.seed, scenario.max_turns ?? 40, DATA_CONFIG.contextEvents ?? []),
     activeEnvironmentEvent: null,
     characterEventHistory: [],
     characterEventState: {},
