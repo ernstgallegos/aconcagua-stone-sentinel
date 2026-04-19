@@ -1,5 +1,8 @@
 import { clamp } from './turn-resolution.js';
 
+// Minimum resistance value to prevent division-by-zero in BT calculation.
+const MIN_RESISTANCE = 0.1;
+
 export function calculateEnvironmentalPressureScore({
   state,
   node,
@@ -51,8 +54,8 @@ export function calculateBodyToleranceScore({
   const hydrationState = clamp(((state?.water ?? 0) / resourceBase) * 100, 0, 100);
   const nutritionState = clamp(((state?.food ?? 0) / resourceBase) * 100, 0, 100);
 
-  const fatigueResistance = Math.max(characterEngine.fatigueResistance ?? 1, 0.1);
-  const exposureResistance = Math.max(characterEngine.exposureResistance ?? 1, 0.1);
+  const fatigueResistance = Math.max(characterEngine.fatigueResistance ?? 1, MIN_RESISTANCE);
+  const exposureResistance = Math.max(characterEngine.exposureResistance ?? 1, MIN_RESISTANCE);
   const bt = ((state?.functional_capacity ?? 0) * 0.4) +
     (acclimatization * 0.35) +
     (hydrationState * 0.1) +
