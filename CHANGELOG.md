@@ -9,6 +9,20 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+
+- Moved `vizAction`/`vizFlags` from direct `G` property assignment to validated `RUN_STATE_DEFAULTS` in `game-state.js`, routing all writes through `updateRunState()` to eliminate state-shape assertion warnings.
+- Replaced remaining `JSON.parse(JSON.stringify())` deep-clone calls in `screens.js` and `data-config.js` with `structuredClone` for consistency with the upgrade applied to `game-state.js` in v1.5.1.
+- Fixed decision timing: `turnDecisionStartedAt` is now recorded after the render delay completes and the decision UI becomes interactive, ensuring `decisionTimeSpentMs` measures actual player deliberation rather than engine processing + render latency.
+- Eliminated duplicate EP calculation per turn in `game-loop.js` by reusing the `lastTurnRecord.pressure.EP` value already computed during `resolveTurn`, with a fallback recalculation for safety.
+- Fixed `efficiency || 1` falsy-zero bug in `turn-rules.js`: replaced with `efficiency ?? 1` (nullish coalescing) so an intentional efficiency of `0` is preserved and floored by `Math.max(..., 0.1)` instead of silently becoming `1`.
+- Synchronized stale version strings: `docs/repo-truth.es.md` updated from `v1.4.6` to `v1.5.1`; `prototype/web-v1/README.md` updated from `v1.4.5` to `v1.5.1`.
+
+### Changed
+
+- Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
+- Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
+
 ## [1.5.1] — 2026-04
 
 ### Added
