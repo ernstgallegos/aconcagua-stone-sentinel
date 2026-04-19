@@ -20,12 +20,20 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Routed `applyTimeCost` time mutations through `applyClockDelta` + `updateRunState` for consistency with `applyEventTimePenalty` (was directly mutating `G.day`, `G.permitDay`, `G.minutesOfDay` through legacy facade).
 - Routed `spendResourcesForMinutes` counter mutation (`G.consecutiveWater0`) through `updateRunState` instead of direct legacy facade assignment.
 - Routed `applyBivouacPenalty` G-level mutations (`G.persistenceTurns`, `G.minutesOfDay`) through `updateRunState` instead of direct legacy facade assignment.
+- Routed all remaining `G.character`/`G.scenario`/`G.seed` setup-phase mutations (12 call sites: `selectCharacter`, `confirmCharacter`, `beginExpedition`, `quickStart`, `selectMode`, `confirmScenario`, deep-link resolver) through `updateRunState()` for consistency with engine-level state management.
+- Standardized `||` to `??` (nullish coalescing) for all numeric defaults across engine files (`pressure-model.js`, `turn-rules.js`, `turn-resolution.js`, `events-core.js`) to prevent silent zero-value coercion. Added `Math.max(..., 0.1)` floor guard on `fatigueResistance`/`exposureResistance` in `pressure-model.js` to prevent division-by-zero.
+- Cleaned up 5 stale `FIX:` comments in `screens.js` where fixes were already applied but comments were never updated — preventing false audit signals.
+
+### Added
+
+- Added 23 unit tests for `ui/helpers/debrief.js` covering `computeDecisionPattern`, `computeDominantRiskAxis`, `buildRunSignature`, and `buildSignalInterpretationHint` (previously zero coverage).
+- Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
 
 ### Changed
 
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
-- Updated technical debt register with 11 newly resolved items from the post-v1.5.1 audit pass.
+- Updated technical debt register with 16 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2).
 
 ## [1.5.1] — 2026-04
 
