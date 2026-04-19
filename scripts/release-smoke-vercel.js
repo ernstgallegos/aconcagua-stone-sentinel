@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const baseUrl = (process.argv[2] || 'https://aconcagua-stone-sentinel.vercel.app').replace(/\/$/, '');
+const baseUrl = (process.argv[2] || 'https://aconcaguastonesentinel.com').replace(/\/$/, '');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJsonPath = path.resolve(__dirname, '../package.json');
@@ -64,7 +64,7 @@ try {
 } catch (err) {
   // Distinguish network/DNS errors (environment issue) from deployment failures
   // (real problem) so developers running this offline get a clear message.
-  const NETWORK_ERROR_CODES = ['ENOTFOUND', 'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN'];
+  const NETWORK_ERROR_CODES = ['ENOTFOUND', 'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN', 'ENETUNREACH'];
   const isNetworkError = NETWORK_ERROR_CODES.includes(err.code);
   if (isNetworkError) {
     console.error(`release smoke skipped — network unreachable (${err.code}): ${baseUrl}`);

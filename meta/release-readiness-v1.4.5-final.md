@@ -10,7 +10,7 @@ Close all residual pre-release consolidation findings so the public `v1.4.5` bas
 - runtime behavior (`prototype/web-v1`),
 - published documentation (`README*`, checklists, changelog, repo-truth links),
 - release process evidence (explicit command proofs),
-- deployed surface smoke validation (canonical Vercel URL).
+- deployed surface smoke validation (canonical production URL).
 
 ## 2) Consolidation fixes completed
 

@@ -16,6 +16,8 @@ The mountain is the primary system and the final authority. You do not "defeat" 
 
 The current public build is **v1.5.1** — a complete 30-minute expedition on the Normal Route with six playable characters, five scenarios, and a full EP/BT simulation engine.
 
+Official site: **https://aconcaguastonesentinel.com/**
+
 Run locally:
 
 ```bash

@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import handler from "./run.js";
 
+const originalEnv = { ...process.env };
+
 // Minimal req/res mocks for a Vercel-style serverless handler.
 function mockReq({ method = "GET", query = {}, headers = {} } = {}) {
   return { method, query, headers };
@@ -88,4 +90,18 @@ test("security headers are set on valid request", async () => {
     res.headers["Access-Control-Expose-Headers"],
     "Access-Control-Expose-Headers must be set so clients can read rate-limit headers"
   );
+});
+
+test("returns 503 on Vercel when distributed rate-limit backend is not configured", async () => {
+  process.env.VERCEL = "1";
+  delete process.env.KV_REST_API_URL;
+  delete process.env.KV_REST_API_TOKEN;
+  const req = mockReq({
+    query: { scenario: "accumulated-fatigue-trap", seed: "808", policy: "waiter" },
+  });
+  const res = mockRes();
+  await handler(req, res);
+  assert.equal(res._status, 503);
+  assert.match(res._body.error, /not configured/);
+  process.env = { ...originalEnv };
 });

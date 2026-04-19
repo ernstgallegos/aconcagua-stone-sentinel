@@ -4,7 +4,7 @@ Compact contributor reference derived from [`docs/deep-links.web-v1.md`](./deep-
 
 ## Canonical base URL
 
-`https://aconcagua-stone-sentinel.vercel.app/prototype/web-v1/index.html`
+`https://aconcaguastonesentinel.com/prototype/web-v1/index.html`
 
 ## Format
 

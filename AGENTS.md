@@ -249,6 +249,9 @@ In addition to the changelog:
 
 - Root-entry presentation is cleaner for public onboarding when `/index.html` acts as a lightweight landing page with one privileged “play web-v1” CTA and secondary links to repo/whitepaper, instead of forcing an immediate redirect before context is shown.
 
+- Serverless API rate limits should fail closed on production runtimes when distributed backend credentials are missing; local in-memory fallback is acceptable only for non-production/dev execution.
+- Domain migrations are safest when runtime defaults (CORS allowlists, smoke-script base URL) and all public-facing deep-link/docs references are updated in one commit so canonical URL evidence cannot drift.
+
 - When root UX changes from redirect-shell to landing, `vercel.json` must drop any `/` redirect to `prototype/web-v1/index.html`; otherwise production deploys bypass the landing despite local static previews looking correct.
 
 - Public landing redesigns are more reliable when they are delivered as a full package (audit + direction + design-system doc + implementation changelog) so UX intent, visual system rules, and shipped behavior stay synchronized.
