@@ -3,8 +3,8 @@ import { clamp } from './turn-resolution.js';
 export function calculateResourceBurnForMinutes({ minutes, burnPerHour, efficiency = 1 }) {
   const hours = minutes / 60;
   const safeEfficiency = Math.max(efficiency ?? 1, 0.1);
-  const waterRaw = (burnPerHour?.water || 0) * hours / safeEfficiency;
-  const foodRaw = (burnPerHour?.food || 0) * hours / safeEfficiency;
+  const waterRaw = (burnPerHour?.water ?? 0) * hours / safeEfficiency;
+  const foodRaw = (burnPerHour?.food ?? 0) * hours / safeEfficiency;
   return {
     waterBurn: Math.max(0, Number(waterRaw.toFixed(2))),
     foodBurn: Math.max(0, Number(foodRaw.toFixed(2))),
@@ -44,8 +44,8 @@ export function applyDecisionWindowDegradationRule({ actionMod, perception, wind
 
   const adjustedActionMod = {
     ...actionMod,
-    fatigueMultiplier: (actionMod.fatigueMultiplier || 1) + actionPenalty,
-    exposureMultiplier: (actionMod.exposureMultiplier || 1) + Math.max(0.02, actionPenalty * 0.7),
+    fatigueMultiplier: (actionMod.fatigueMultiplier ?? 1) + actionPenalty,
+    exposureMultiplier: (actionMod.exposureMultiplier ?? 1) + Math.max(0.02, actionPenalty * 0.7),
   };
   const adjustedPerception = {
     ...perception,

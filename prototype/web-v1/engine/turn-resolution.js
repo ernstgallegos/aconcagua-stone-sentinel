@@ -262,7 +262,7 @@ export function createTurnEngine(deps) {
     let adjustedPressureScore = applyBivouacPenalty(state, epResult.pressureScore, flags);
 
     const currentStageForAccl = stageAtTurnStart;
-    const acclNow = G.acclimatization || 0;
+    const acclNow = G.acclimatization ?? 0;
     let acclPenaltyApplied = 0;
     // Acclimatization penalty: players who haven't acclimatized enough face additional
     // environmental pressure. Thresholds (20/40) represent minimum acclimatization points
@@ -346,7 +346,7 @@ export function createTurnEngine(deps) {
     if (resolvedAction !== 'shoot_photo' && G.photoInsightTurns > 0) {
       actionMod = {
         ...actionMod,
-        fatigueMultiplier: Math.max(0.75, (actionMod.fatigueMultiplier || 1) - 0.05),
+        fatigueMultiplier: Math.max(0.75, (actionMod.fatigueMultiplier ?? 1) - 0.05),
       };
     }
 
@@ -442,10 +442,10 @@ export function createTurnEngine(deps) {
             persistenceTier: state.persistenceTier,
           },
           pressure: {
-            EP: Number((adjustedPressureScore || 0).toFixed(2)),
-            BT: Number((BT || 0).toFixed(2)),
-            delta: Number((result.pressureDelta || 0).toFixed(2)),
-            effectiveDelta: Number((result.effectiveDelta || 0).toFixed(2)),
+            EP: Number((adjustedPressureScore ?? 0).toFixed(2)),
+            BT: Number((BT ?? 0).toFixed(2)),
+            delta: Number((result.pressureDelta ?? 0).toFixed(2)),
+            effectiveDelta: Number((result.effectiveDelta ?? 0).toFixed(2)),
           },
           perceivedSignals: {
             trend: timedPerception?.trendEstimate,

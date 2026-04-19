@@ -1120,7 +1120,7 @@ function buildCharacterGrid() {
     const card = document.createElement('div');
     card.className = 'char-card';
     card.id = 'char-' + c.id;
-    // FIX: aria attributes for accessibility
+    // Accessibility: role=radio with aria-checked for screen-reader card selection
     card.setAttribute('role', 'radio');
     card.setAttribute('aria-checked', 'false');
     card.setAttribute('tabindex', '0');
@@ -1168,9 +1168,11 @@ function selectCharacter(id) {
   const card = document.getElementById(id === 'random' ? 'char-random' : 'char-' + id);
   card.classList.add('selected');
   card.setAttribute('aria-checked', 'true');
-  G.character = id === 'random'
-    ? { id: 'random', name: 'Random Character' }
-    : (DATA_CONFIG.characters || []).find(c => c.id === id);
+  updateRunState(G, {
+    character: id === 'random'
+      ? { id: 'random', name: 'Random Character' }
+      : (DATA_CONFIG.characters || []).find(c => c.id === id),
+  });
   const btn = document.getElementById('btn-char-confirm');
   btn.disabled = false;
   btn.removeAttribute('aria-disabled');
@@ -1180,7 +1182,7 @@ function confirmCharacter() {
   if (G.character.id === 'random') {
     const availableCharacters = DATA_CONFIG.characters || [];
     if (!availableCharacters.length) return;
-    G.character = rngChoice(() => Math.random(), availableCharacters);
+    updateRunState(G, { character: rngChoice(() => Math.random(), availableCharacters) });
   }
   buildScenarioGrid();
   showScreen('scenario');
@@ -1415,9 +1417,9 @@ function beginExpedition() {
   if (selectedChar._random) {
     const availableChars = DATA_CONFIG.characters || [];
     if (!availableChars.length) return;
-    G.character = rngChoice(() => Math.random(), availableChars);
+    updateRunState(G, { character: rngChoice(() => Math.random(), availableChars) });
   } else {
-    G.character = selectedChar;
+    updateRunState(G, { character: selectedChar });
   }
 
   // Scenario
@@ -1426,14 +1428,16 @@ function beginExpedition() {
   const selectedScen = scenItems[scenIdx];
 
   if (selectedScen._random) {
-    G.scenario = buildRandomScenario();
-    G.seed = G.scenario._randomSeed;
+    const randomScenario = buildRandomScenario();
+    updateRunState(G, { scenario: randomScenario, seed: randomScenario._randomSeed });
     deriveDifficultyFromScenario();
     showOnboarding('random');
   } else {
-    G.scenario = selectedScen;
     const seeds = selectedScen.seeds || [];
-    G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+    updateRunState(G, {
+      scenario: selectedScen,
+      seed: seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000,
+    });
     deriveDifficultyFromScenario();
     showOnboarding('predefined');
   }
@@ -1443,15 +1447,17 @@ function quickStart() {
   // Random character from the 6 characters (not the Random option)
   const availableChars = DATA_CONFIG.characters || [];
   if (!availableChars.length) return;
-  G.character = rngChoice(() => Math.random(), availableChars);
+  updateRunState(G, { character: rngChoice(() => Math.random(), availableChars) });
 
   // Random scenario from predefined scenarios
   const scenarios = getConfiguredScenarios();
   if (!scenarios.length) return;
   const scenario = rngChoice(() => Math.random(), scenarios);
-  G.scenario = scenario;
   const seeds = scenario.seeds || [];
-  G.seed = seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000;
+  updateRunState(G, {
+    scenario,
+    seed: seeds[Math.floor(Math.random() * seeds.length)] || Math.floor(Math.random() * 9000) + 1000,
+  });
   deriveDifficultyFromScenario();
   showOnboarding('predefined');
 }
@@ -1682,8 +1688,8 @@ function confirmPart2Character() {
 // ════════════════════════════════════════════════
 function selectMode(mode) {
   if (mode === 'random') {
-    G.scenario = buildRandomScenario();
-    G.seed = G.scenario._randomSeed;
+    const randomScenario = buildRandomScenario();
+    updateRunState(G, { scenario: randomScenario, seed: randomScenario._randomSeed });
     showOnboarding(mode);
   } else {
     buildScenarioGrid();
@@ -1710,7 +1716,7 @@ function buildScenarioGrid() {
     const card = document.createElement('div');
     card.className = 'scenario-card';
     card.id = 'sc-' + sc.id;
-    // FIX: aria role for scenario cards
+    // Accessibility: role=radio with aria-checked for screen-reader card selection
     card.setAttribute('role', 'radio');
     card.setAttribute('aria-checked', 'false');
     card.setAttribute('tabindex', '0');
@@ -1765,8 +1771,10 @@ function selectScenario(id) {
 }
 function confirmScenario() {
   if (!selectedScenarioId) return;
-  G.scenario = getConfiguredScenarios().find(s => s.id === selectedScenarioId);
-  G.seed = selectedSeed;
+  updateRunState(G, {
+    scenario: getConfiguredScenarios().find(s => s.id === selectedScenarioId),
+    seed: selectedSeed,
+  });
   showOnboarding('predefined');
 }
 
@@ -3027,7 +3035,7 @@ function makeDecision(decision) {
 
 // ════════════════════════════════════════════════
 // LOG ENTRY
-// FIX: uses logEntry.narrativeText directly (no DOM read)
+// Uses logEntry.narrativeText directly (no DOM read)
 // ════════════════════════════════════════════════
 function addLogEntry(entry) {
   const container = document.getElementById('log-entries');
@@ -3192,7 +3200,7 @@ function endRun(returnedToHorcones) {
   updateRunReviewPanel(0);
 
   // debrief actions
-  // FIX: journal button records that we came from debrief
+  // Journal button records that we came from debrief
   const debriefActions = document.getElementById('debrief-actions');
   clearElement(debriefActions);
   [
@@ -3279,7 +3287,7 @@ function buildRunLogExport() {
   return buildRunLogExportHelper(G.runLogRecords);
 }
 
-// FIX: journal navigation helper — records the origin screen
+// Journal navigation helper — records the origin screen
 function openJournalFrom(origin) {
   updateUIState(G, { journalReturnScreen: origin });
   showScreen('journal');
@@ -3518,9 +3526,7 @@ function bootstrapMockDebrief(params) {
   const mockLog = buildMockTurnLog(finalOutcome);
 
   // Apply minimal G state so classifyOutcome / updateDebriefHero / analytics work
-  G.character = char;
-  G.scenario = scenario;
-  G.seed = seed;
+  updateRunState(G, { character: char, scenario, seed });
   deriveDifficultyFromScenario();
   updateRunState(G, {
     finalOutcome,

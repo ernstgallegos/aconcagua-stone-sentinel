@@ -23,7 +23,7 @@ const DEFAULT_CONTEXT_EVENT_ARCHETYPES = [
 ];
 
 function clampBounded(value, bounds) {
-  return clamp(Number(value || 0), bounds.min, bounds.max);
+  return clamp(Number(value ?? 0), bounds.min, bounds.max);
 }
 
 function sanitizeCharacterEffects(effects = {}) {
@@ -81,7 +81,7 @@ export function applyClockDelta({ minutesOfDay, day, deltaMinutes }) {
 }
 
 export function buildEnvironmentEventPlan(seed, maxTurns = 40, contextEvents = DEFAULT_CONTEXT_EVENT_ARCHETYPES) {
-  const offset = Number(seed || 0) % 3;
+  const offset = Number(seed ?? 0) % 3;
   const archetypes = Array.isArray(contextEvents) && contextEvents.length ? contextEvents : DEFAULT_CONTEXT_EVENT_ARCHETYPES;
   return archetypes
     .map(normalizeContextArchetype)
@@ -146,7 +146,7 @@ export function applyCharacterEvent({ G, state, action, stage, flags, characterE
     state.fatigue = clamp(state.fatigue + effects.fatigueDelta, 0, 100);
     state.exposure = clamp(state.exposure + effects.exposureDelta, 0, 100);
     if (effects.confidenceDelta) {
-      G.characterConfidenceDrift = clamp((G.characterConfidenceDrift || 0) + effects.confidenceDelta, -12, 12);
+      G.characterConfidenceDrift = clamp((G.characterConfidenceDrift ?? 0) + effects.confidenceDelta, -12, 12);
     }
 
     if (event.telemetryTag) flags.push(event.telemetryTag);
