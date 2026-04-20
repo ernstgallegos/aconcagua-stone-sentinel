@@ -19,5 +19,8 @@
     "typecheck": "tsc --noEmit",
     "build:ts": "tsc -p tsconfig.json",
     "validate:json": "node scripts/validate-json.js"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
   }
 }
