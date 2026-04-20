@@ -43,6 +43,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Changed
 
 - Updated canonical production domain references from `https://aconcagua-stone-sentinel.vercel.app` to `https://aconcaguastonesentinel.com` across runtime defaults and documentation (`api/run.js` fallback origins, release smoke default URL, deep-link docs, README mirrors, and deploy references).
+- Updated landing page Field Notes carousel media in `index.html` to use the curated tagged assets from `art/concept-art/curated/field-notes/field-note-01.png` through `field-note-10.png`.
 - Hardened dependency security policy in CI by making `npm audit --audit-level=high` a blocking gate in `.github/workflows/ci.yml` (removed `|| true` bypass).
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
