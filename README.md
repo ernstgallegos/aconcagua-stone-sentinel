@@ -77,6 +77,10 @@ See [`prototype/web-v1/README.md`](./prototype/web-v1/README.md) for full instru
 
 English is the canonical project language. Spanish documentation is maintained in parallel. See [`README.es.md`](./README.es.md).
 
+## On AI use
+
+This project used AI assistance for documents, programming support, and concept art during its initial public stage — not as an ideal, but as the only viable starting tool. We will always prefer work by human artists and collaborators. Full statement: [`meta/press-kit.md`](./meta/press-kit.md#on-ai-use).
+
 ## License
 
 **CC BY-NC-ND 4.0** — read, share, and reference for non-commercial purposes. See [`LICENSE.md`](./LICENSE.md).

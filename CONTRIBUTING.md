@@ -13,6 +13,8 @@ Before proposing public-facing/release hardening changes, complete:
 For AI-assisted contributions, this checklist is mandatory (not advisory). PR descriptions must include explicit command evidence for each executed gate.
 When creating/updating skills, follow [`docs/ai/skills/contributing-skills.md`](./docs/ai/skills/contributing-skills.md).
 
+This project used AI for documents, programming assistance, and concept art in its initial public stage — as a starting tool, not an ideal. We will always prefer contributions from human collaborators. Full statement: [`meta/press-kit.md`](./meta/press-kit.md#on-ai-use).
+
 ---
 
 ## Language Policy

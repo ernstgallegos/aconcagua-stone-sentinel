@@ -9,7 +9,13 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+- AI use manifesto section ("On AI use" / "Sobre el uso de IA") added to `meta/press-kit.md` and `meta/press-kit.es.md`, placed between Cultural Commitment and Current State sections; includes the full bilingual transparency statement about AI-assisted documents, programming, and concept art.
+- Brief AI transparency notes added to `README.md`, `README.es.md`, and `CONTRIBUTING.md` referencing the press kit manifesto section.
+
 ### Changed
+- Press kit (EN + ES): concept art gallery reduced from 14 to 9 images (removed scenes 01, 02, 08, 10, 14); remaining 9 images presented as a clean 3×3 grid.
+- Press kit version bumped to 1.2 (EN + ES).
 - Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
 - Press kit (EN + ES): each character portrait now shows Part 1 and Part 2 images side-by-side in a two-column table.
 - Press kit (EN + ES): Concept art section replaced three sample images with a 3-column gallery grid of all 14 curated `/art/concept-art/curated/ig/` images.

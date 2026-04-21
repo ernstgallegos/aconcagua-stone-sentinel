@@ -1,7 +1,7 @@
 # Aconcagua: Stone Sentinel — Press Kit
 
 **Public document · April 2026**  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** Public web prototype v1.5.1  
 **Spanish version:** [`meta/press-kit.es.md`](./press-kit.es.md)
 
@@ -240,6 +240,27 @@ Aconcagua is not only a record to break. It is a territory layered with Andean c
 
 ---
 
+## On AI use
+
+We want to say this clearly.
+
+In this first public stage of *Aconcagua: Stone Sentinel*, we used AI to draft some documents, assist part of the programming work, and create the illustrations currently in this kit.
+
+Not because it is our ideal. Because it was the only way we found to launch the project quickly, with no budget and almost nothing beyond an idea, time, and work.
+
+At this stage, AI was a starting tool. Scaffolding. A provisional prosthesis.
+
+But it is not the horizon we want.
+
+We would love for this first visual identity to be replaced as soon as possible by the work of real human artists and collaborators. We will always prefer the work of people over what a machine can produce.
+
+If this project resonates with you and you feel you could contribute from anywhere in the world, we'd love to hear from you.
+
+This is how we were able to begin.  
+Hopefully now it helps us meet real people.
+
+---
+
 ## Current state and roadmap
 
 | Stage | Status |
@@ -267,11 +288,9 @@ Curated selection from the project gallery at `/art/concept-art/curated/ig/`:
 
 | | | |
 |---|---|---|
-| ![Scene 01](/art/concept-art/curated/ig/1.png) | ![Scene 02](/art/concept-art/curated/ig/3.png) | ![Scene 03](/art/concept-art/curated/ig/5.png) |
-| ![Scene 04](/art/concept-art/curated/ig/7.png) | ![Scene 05](/art/concept-art/curated/ig/9.png) | ![Scene 06](/art/concept-art/curated/ig/11.png) |
-| ![Scene 07](/art/concept-art/curated/ig/13.png) | ![Scene 08](/art/concept-art/curated/ig/15.png) | ![Scene 09](/art/concept-art/curated/ig/17.png) |
-| ![Scene 10](/art/concept-art/curated/ig/19.png) | ![Scene 11](/art/concept-art/curated/ig/21.png) | ![Scene 12](/art/concept-art/curated/ig/23.png) |
-| ![Scene 13](/art/concept-art/curated/ig/25.png) | ![Scene 14](/art/concept-art/curated/ig/27.png) | |
+| ![Scene 01](/art/concept-art/curated/ig/5.png) | ![Scene 02](/art/concept-art/curated/ig/7.png) | ![Scene 03](/art/concept-art/curated/ig/9.png) |
+| ![Scene 04](/art/concept-art/curated/ig/11.png) | ![Scene 05](/art/concept-art/curated/ig/13.png) | ![Scene 06](/art/concept-art/curated/ig/17.png) |
+| ![Scene 07](/art/concept-art/curated/ig/21.png) | ![Scene 08](/art/concept-art/curated/ig/23.png) | ![Scene 09](/art/concept-art/curated/ig/25.png) |
 
 ### Brand
 
@@ -291,4 +310,4 @@ We respond to press inquiries, collaboration proposals, and coverage requests. R
 
 ---
 
-*Press kit version 1.1 · April 2026 · aconcaguastonesentinel.com*
+*Press kit version 1.2 · April 2026 · aconcaguastonesentinel.com*
