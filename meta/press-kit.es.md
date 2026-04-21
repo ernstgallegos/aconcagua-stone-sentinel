@@ -1,7 +1,7 @@
 # Aconcagua: Stone Sentinel — Kit de prensa
 
 **Documento público · Abril 2026**  
-**Versión:** 1.0  
+**Versión:** 1.1  
 **Estado:** Prototipo web público v1.5.1  
 **Versión en inglés:** [`meta/press-kit.md`](./press-kit.md)
 
@@ -64,18 +64,100 @@ Esperar, descansar, observar y elegir no actuar son acciones reales con consecue
 
 ## Los personajes (v1.5.1)
 
-Seis roles de expedición jugables con perfiles de motor diferenciados:
+Seis roles jugables: cada uno es una forma distinta de estar en la montaña y, en consecuencia, de equivocarse en ella. Cada personaje tiene un perfil de motor único que moldea cómo percibe señales, gestiona recursos y responde a la presión.
 
-| Personaje | Perfil | Especialidad |
-|---|---|---|
-| **Francisco Aguirre** | Guía argentino | Aclimatización, lectura de ruta |
-| **Laura Kim** | Escaladora coreana | Eficiencia de recursos, velocidad |
-| **Erik Lundvall** | Veterano sueco | Resistencia, tolerancia al clima |
-| **Daniela De Rossi** | Fotógrafa italiana | Claridad perceptual, acciones de foto |
-| **Blake Harris** | Aventurero estadounidense | Perfil exigente, alto riesgo/recompensa |
-| **Irina Orlova** | Investigadora rusa | Sistemática, gestión fuerte de permisos |
+### Referencia rápida
 
-Cada personaje tiene parámetros de motor distintos: latencia perceptual, eficiencia de recursos, tasa de aclimatización, postura de riesgo y capacidad funcional.
+| Personaje | Nacionalidad | Edad | Profesión | Dificultad |
+|---|---|---|---|---|
+| Francisco Aguirre 🇦🇷 | Argentina | 33 | Docente y corredor de fondo amateur | Estándar |
+| Laura Kim 🇰🇷 | Corea del Sur | 38 | Médica de emergencias | Favorable |
+| Erik Lundvall 🇳🇴 | Noruega | 45 | Ingeniero offshore | Exigente |
+| Daniela De Rossi 🇮🇹 | Italia | 26 | Fotógrafa y periodista | Exigente |
+| Irina Orlova 🇷🇺 | Rusia | 41 | Ex alpinista de elite | Exigente |
+| Blake Harris 🇺🇸 | Estados Unidos | 58 | Ejecutivo | Muy exigente |
+
+---
+
+### Francisco Aguirre 🇦🇷
+
+![Francisco Aguirre](/art/characters/francisco-aguirre.png)
+
+**Argentina · 33 · Docente y corredor de fondo amateur · Dificultad: Estándar**
+
+Francisco llega cargando un duelo no resuelto por Mateo —un amigo mayor que murió de COVID-19 en 2021. Su identidad jugable es la persistencia bajo presión; su riesgo psicológico es confundir el esfuerzo con el sentido. Puede sostener el avance más que casi cualquier otro miembro del grupo, pero sus señales de alarma corporal llegan tarde y tiende a interpretar los datos y el esfuerzo como mandato.
+
+**Identidad mecánica:** Alta resistencia a la fatiga. Sesgo de señal levemente optimista (las advertencias tempranas llegan atenuadas). Eficiencia sólida de recursos. Ritmo de aclimatización promedio. El jugador que sigue cuando descansar sería lo correcto.
+
+---
+
+### Laura Kim 🇰🇷
+
+![Laura Kim](/art/characters/laura-kim.png)
+
+**Corea del Sur · 38 · Médica de emergencias · Dificultad: Favorable**
+
+Laura lee las señales corporales y grupales con precisión clínica afinada en el triaje de pandemia. Su herida es la fatiga moral de tomar decisiones imposibles bajo crisis de recursos. Su punto de presión es posponer la acción en busca de certeza —un patrón que protegió vidas en la UCI pero puede costar horas críticas en altura.
+
+**Identidad mecánica:** Mejor claridad de señal y estabilidad de confianza del roster. Alta eficiencia de recursos y tasa de aclimatización. Baja tolerancia al riesgo: valida exhaustivamente antes de comprometerse. Dificultad Favorable porque su calidad de información es consistentemente superior al ruido de la montaña.
+
+---
+
+### Erik Lundvall 🇳🇴
+
+![Erik Lundvall](/art/characters/erik-lundvall.png)
+
+**Noruega · 45 · Ingeniero offshore · Dificultad: Exigente**
+
+Erik tiene ejecución técnica sólida y trabaja en su proyecto de las Siete Cumbres. Estructurado y competente, su desafío es la interpretación del riesgo filtrada por el ego: cuando la evidencia de la montaña contradice su autoimagen, empuja demasiado tiempo. La activación tardía de señales de riesgo bajo presión es su riesgo mecánico central.
+
+**Identidad mecánica:** Alta capacidad funcional y tasa de aclimatización. Eficiencia de recursos sólida. Tolerancia al riesgo muy alta. Sesgo de percepción alto: ve las condiciones bastante mejor de lo que son. Exigente porque la brecha entre su competencia percibida y el estado real de la montaña puede permanecer invisible hasta que es demasiado tarde.
+
+---
+
+### Daniela De Rossi 🇮🇹
+
+![Daniela De Rossi](/art/characters/daniela-de-rossi.png)
+
+**Italia · 26 · Fotógrafa y periodista · Dificultad: Exigente**
+
+Daniela es la lectora ambiental más precisa del grupo: detecta cambios de clima, textura del terreno y dinámicas grupales sutiles antes que nadie. Su desafío es que ver más no significa resistir más: su aclimatización es la más débil del roster y las acciones de observación cuestan reservas corporales críticas en altura.
+
+**Identidad mecánica:** Mejor precisión de percepción del juego: sesgo negativo significa que lee la montaña más cerca de su estado real. Acción exclusiva *disparar foto* (hasta 4 usos por corrida) que mejora la confianza en las señales. Menor tasa de aclimatización. Baja capacidad funcional inicial. Exigente porque su cuerpo no sigue el ritmo de su percepción.
+
+---
+
+### Irina Orlova 🇷🇺
+
+![Irina Orlova](/art/characters/irina-orlova.png)
+
+**Rusia · 41 · Ex alpinista de elite · Dificultad: Exigente**
+
+Irina vuelve a la alta montaña después de años fuera del alpinismo de elite. Su memoria técnica y economía de movimiento son las mejores del roster. Su desafío sutil es el bloqueo por patrones: los protocolos previos del contexto de alto rendimiento pueden sobreajustar las condiciones presentes y aumentar el ruido perceptual en situaciones genuinamente nuevas.
+
+**Identidad mecánica:** Mayor bono de capacidad funcional y tasa de aclimatización. Mejor eficiencia de recursos. Pero también la mayor tolerancia al riesgo y uno de los sesgos de percepción más altos del grupo. Mecánicas de elite con sobreconfianza como costo oculto. Exigente porque su activo más fuerte (la experiencia) es también su principal modo de fallo.
+
+---
+
+### Blake Harris 🇺🇸
+
+![Blake Harris](/art/characters/blake-harris.png)
+
+**Estados Unidos · 58 · Ejecutivo · Dificultad: Muy exigente**
+
+Blake está construido sobre el logro visible y la validación externa. Llega decidido a demostrar que todavía puede, cargando la mayor brecha entre confianza y preparación del grupo. La montaña niega los atajos de estatus: la logística, la carga de fatiga y la vulnerabilidad son no negociables.
+
+**Identidad mecánica:** Menor capacidad funcional inicial. Pobre tasa de aclimatización y eficiencia de recursos. Mayor sesgo de percepción: el más alejado de una lectura precisa de señales. Tolerancia al riesgo muy alta. El personaje más difícil del juego porque la brecha entre su convicción y el estado de su cuerpo es la más amplia, y se amplifica bajo presión.
+
+---
+
+## Dinámicas interpersonales
+
+Los seis personajes están diseñados como un conjunto, no como seis caminos independientes. Estas tensiones son canónicas para el encuadre narrativo y la dinámica de expedición:
+
+- **Francisco ↔ Laura:** carga afín a la culpa compartida; la pareja de confianza más funcional de la expedición cuando ambos leen con claridad.
+- **Erik ↔ Blake:** tensión de validación — filtro de competencia técnica versus sobrecompensación basada en estatus.
+- **Irina ↔ Daniela:** desconfianza de la experiencia versus percepción observacional; su dinámica se resuelve cuando la observación demuestra ser mountain-first, no estética.
 
 ---
 
@@ -83,13 +165,50 @@ Cada personaje tiene parámetros de motor distintos: latencia perceptual, eficie
 
 El juego corre sobre un resolvedor de turnos donde:
 
-1. El jugador elige una acción (avanzar, avanzar despacio, esperar, descender, dormir, foto).
-2. Se calcula la Presión Ambiental (EP) en función de altitud, clima, terreno, hora del día y persistencia de exposición.
-3. La Tolerancia Corporal (BT) integra fatiga, exposición y capacidad funcional.
-4. Se genera una señal percibida desde EP y BT a través de una capa de confianza y tendencia (información parcial).
+1. El jugador elige una acción: **avanzar**, **avanzar despacio**, **esperar**, **descender**, **dormir** o (para Daniela) **disparar foto**.
+2. La **Presión Ambiental (EP)** se calcula desde banda de altitud, severidad climática, carga de terreno, hora del día y exposición acumulada.
+3. La **Tolerancia Corporal (BT)** integra fatiga, acumulación de exposición y capacidad funcional.
+4. Se genera una **señal percibida** desde EP y BT a través de una capa de confianza y tendencia específica del personaje: los jugadores nunca ven valores en bruto, solo lecturas interpretadas con confiabilidad variable.
 5. El outcome se clasifica: progreso, espera, retiro o evento terminal.
 
 Todos los parámetros son data-driven (archivos JSON) y todos los claims son verificables. El motor está completamente desacoplado de la UI.
+
+---
+
+## Los escenarios (v1.5.1)
+
+Cinco escenarios distintos definen condiciones de partida, sesgo de presión y qué eje de peligro domina cada corrida:
+
+| # | Nombre | Dificultad | Tensión central |
+|---|---|---|---|
+| 01 | **Ruta Asistida** | Baja | Aprender a leer señales antes de que las condiciones dejen de perdonar |
+| 02 | **Ventana Climática Estrecha** | Media | Correr contra una tendencia atmosférica que se deteriora |
+| 03 | **Terreno de Falsa Estabilidad** | Media | Cielo claro que oculta una carga de terreno que crece |
+| 04 | **Trampa de Fatiga Acumulada** | Media | Condiciones benignas que enmascaran una deuda física compuesta |
+| 05 | **Ventana Climática** | Alta | Una breve apertura en mal tiempo — reconocer cuándo se abre y cuándo se cierra |
+
+Los escenarios comparten los mismos nodos de ruta y sistema de outcomes. Se diferencian en el estado inicial (fatiga, recursos, severidad climática) y en el sesgo ambiental (si las condiciones tienden a deteriorarse, estabilizarse o mejorar brevemente).
+
+---
+
+## Los outcomes (canónicos)
+
+El juego tiene diez outcomes terminales. Todos son válidos; ninguno es exclusivamente "fracaso."
+
+| Outcome | Qué significa |
+|---|---|
+| **Cumbre y Retorno Seguro** | Alcanzó la cumbre y descendió hasta la salida del parque |
+| **Retorno al Punto Alto** | Retirada desde altura sin incidente; la montaña pone el límite |
+| **Retirada Estratégica** | Retirada deliberada antes de que las condiciones se volvieran críticas — lectura correcta |
+| **Rescate** | El deterioro requirió intervención externa |
+| **Colapso (Fatiga)** | La fatiga física superó el umbral de tolerancia corporal |
+| **Colapso (Exposición)** | La exposición ambiental acumulada superó la tolerancia corporal |
+| **Agotamiento de Recursos** | Agua o alimentos agotados; el descenso no pudo sostenerse |
+| **Ventana de Expedición Cerrada** | Los días de permiso expiraron antes de la salida |
+| **Permiso Vencido** | El plazo calendario se cumplió antes de salir del parque |
+| **Fatalidad** | El umbral máximo de presión se cruzó sin margen de recuperación |
+
+Cumbre y Retorno Seguro es el outcome más raro: típicamente 10–30% para jugadores humanos que internalizan el modelo EP/BT. La Retirada Estratégica es el outcome no-colapso más frecuente y está explícitamente diseñado para sentirse como un logro.
 
 ---
 
@@ -122,12 +241,29 @@ Ver el roadmap público: [aconcaguastonesentinel.com](https://aconcaguastonesent
 
 ---
 
-## Assets disponibles
+## Assets visuales
 
-- Arte conceptual: `/art/concept-art/` (ver repositorio)
-- Assets de marca: `/art/brand/` (logo, favicon)
-- Imágenes de Notas de Campo: `/art/concept-art/curated/field-notes/` (10 imágenes curadas)
-- Capturas del prototipo: disponibles a pedido
+Todos los assets visuales están disponibles en el repositorio público.
+
+### Retratos de personajes
+
+Seis retratos de personajes en `/art/characters/`. Variantes de Parte 2 en `/art/characters/part-2/`.
+
+### Arte conceptual
+
+Selección curada en `/art/concept-art/curated/`. Muestra:
+
+![Arte conceptual — aproximación a la montaña](/art/concept-art/curated/concept-curated-1.png)
+
+![Arte conceptual — alta montaña](/art/concept-art/curated/concept-curated-2.png)
+
+Serie Field Notes (10 imágenes) en `/art/concept-art/curated/field-notes/`:
+
+![Field note 01](/art/concept-art/curated/field-notes/field-note-01.png)
+
+### Marca
+
+Logo y favicon en `/art/brand/`.
 
 **Condiciones de uso:** Todos los assets visuales son © 2026 Aconcagua: Stone Sentinel. El uso de prensa (editorial, reseñas, notas) está permitido con atribución. El uso comercial requiere permiso escrito.
 
@@ -143,4 +279,4 @@ Respondemos consultas de prensa, propuestas de colaboración y solicitudes de co
 
 ---
 
-*Kit de prensa versión 1.0 · Abril 2026 · aconcaguastonesentinel.com*
+*Kit de prensa versión 1.1 · Abril 2026 · aconcaguastonesentinel.com*

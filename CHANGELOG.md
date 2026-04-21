@@ -12,6 +12,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 
 - Added press kit document (`meta/press-kit.md` / `meta/press-kit.es.md`) with project overview, character roster, key mechanics summary, and media contact information; wired into landing page waypoints section and `md-viewer.html` document allowlist.
+- Revised press kit to v1.1 (EN + ES): corrected all character profiles using canonical data (`data/characters.json`, `docs/en/characters_v_3_en.md`); added character portrait images; added interpersonal dynamics section; added scenarios section with all 5 scenario descriptions; added complete outcomes glossary (all 10 canonical outcomes with descriptions); added concept art and field-note sample images in visual assets section.
 - Added telemetry evaluation document (`docs/telemetry-evaluation.md`): architecture assessment and reference design for optional anonymous opt-in run-summary telemetry endpoint using the existing API and run_log.json infrastructure.
 - Ran Monte Carlo batch for v1.5.1 engine; report written to `docs/playtest-results/monte-carlo-v1.5.1.md`. No structural regression detected (summit > 0% for all characters). Resource Exhaustion increase from 0.9% to 11.0% attributable to `||→??` fix (see balance calibration notes).
 
