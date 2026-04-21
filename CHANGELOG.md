@@ -11,6 +11,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 - Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
+- Press kit (EN + ES): each character portrait now shows Part 1 and Part 2 images side-by-side in a two-column table.
+- Press kit (EN + ES): Concept art section replaced three sample images with a 3-column gallery grid of all 14 curated `/art/concept-art/curated/ig/` images.
 
 
 ### Added

@@ -81,7 +81,9 @@ Six playable roles, each a distinct way of being in the mountains — and a dist
 
 ### Francisco Aguirre 🇦🇷
 
-![Francisco Aguirre](/art/characters/francisco-aguirre.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Francisco Aguirre — Part 1](/art/characters/francisco-aguirre.png) | ![Francisco Aguirre — Part 2](/art/characters/part-2/francisco-aguirre.png) |
 
 **Argentina · 33 · Teacher & amateur endurance runner · Difficulty: Standard**
 
@@ -93,7 +95,9 @@ Francisco arrives carrying unresolved grief for Mateo — an older friend who di
 
 ### Laura Kim 🇰🇷
 
-![Laura Kim](/art/characters/laura-kim.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Laura Kim — Part 1](/art/characters/laura-kim.png) | ![Laura Kim — Part 2](/art/characters/part-2/laura-kim.png) |
 
 **South Korea · 38 · Emergency physician · Difficulty: Favorable**
 
@@ -105,7 +109,9 @@ Laura reads body and group signals with clinical precision honed in pandemic tri
 
 ### Erik Lundvall 🇳🇴
 
-![Erik Lundvall](/art/characters/erik-lundvall.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Erik Lundvall — Part 1](/art/characters/erik-lundvall.png) | ![Erik Lundvall — Part 2](/art/characters/part-2/erik-lundvall.png) |
 
 **Norway · 45 · Offshore engineer · Difficulty: Demanding**
 
@@ -117,7 +123,9 @@ Erik has strong technical execution and is working through the Seven Summits. St
 
 ### Daniela De Rossi 🇮🇹
 
-![Daniela De Rossi](/art/characters/daniela-de-rossi.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Daniela De Rossi — Part 1](/art/characters/daniela-de-rossi.png) | ![Daniela De Rossi — Part 2](/art/characters/part-2/daniela-de-rossi.png) |
 
 **Italy · 26 · Photographer & journalist · Difficulty: Demanding**
 
@@ -129,7 +137,9 @@ Daniela is the sharpest environmental reader in the group — she spots weather 
 
 ### Irina Orlova 🇷🇺
 
-![Irina Orlova](/art/characters/irina-orlova.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Irina Orlova — Part 1](/art/characters/irina-orlova.png) | ![Irina Orlova — Part 2](/art/characters/part-2/irina-orlova.png) |
 
 **Russia · 41 · Former professional climber · Difficulty: Demanding**
 
@@ -141,7 +151,9 @@ Irina returns to high altitude after years away from elite climbing. Her technic
 
 ### Blake Harris 🇺🇸
 
-![Blake Harris](/art/characters/blake-harris.png)
+| Part 1 | Part 2 |
+|---|---|
+| ![Blake Harris — Part 1](/art/characters/blake-harris.png) | ![Blake Harris — Part 2](/art/characters/part-2/blake-harris.png) |
 
 **United States · 58 · Executive · Difficulty: Very Demanding**
 
@@ -251,15 +263,15 @@ Six character portraits at `/art/characters/`. Part 2 variants at `/art/characte
 
 ### Concept art
 
-Curated selection at `/art/concept-art/curated/`. Sample:
+Curated selection from the project gallery at `/art/concept-art/curated/ig/`:
 
-![Concept art — mountain approach](/art/concept-art/curated/concept-curated-1.png)
-
-![Concept art — high altitude](/art/concept-art/curated/concept-curated-2.png)
-
-Field Notes series (10 images) at `/art/concept-art/curated/field-notes/`:
-
-![Field note 01](/art/concept-art/curated/field-notes/field-note-01.png)
+| | | |
+|---|---|---|
+| ![Scene 01](/art/concept-art/curated/ig/1.png) | ![Scene 02](/art/concept-art/curated/ig/3.png) | ![Scene 03](/art/concept-art/curated/ig/5.png) |
+| ![Scene 04](/art/concept-art/curated/ig/7.png) | ![Scene 05](/art/concept-art/curated/ig/9.png) | ![Scene 06](/art/concept-art/curated/ig/11.png) |
+| ![Scene 07](/art/concept-art/curated/ig/13.png) | ![Scene 08](/art/concept-art/curated/ig/15.png) | ![Scene 09](/art/concept-art/curated/ig/17.png) |
+| ![Scene 10](/art/concept-art/curated/ig/19.png) | ![Scene 11](/art/concept-art/curated/ig/21.png) | ![Scene 12](/art/concept-art/curated/ig/23.png) |
+| ![Scene 13](/art/concept-art/curated/ig/25.png) | ![Scene 14](/art/concept-art/curated/ig/27.png) | |
 
 ### Brand
 

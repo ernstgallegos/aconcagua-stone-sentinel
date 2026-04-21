@@ -81,7 +81,9 @@ Seis roles jugables: cada uno es una forma distinta de estar en la montaña y, e
 
 ### Francisco Aguirre 🇦🇷
 
-![Francisco Aguirre](/art/characters/francisco-aguirre.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Francisco Aguirre — Parte 1](/art/characters/francisco-aguirre.png) | ![Francisco Aguirre — Parte 2](/art/characters/part-2/francisco-aguirre.png) |
 
 **Argentina · 33 · Docente y corredor de fondo amateur · Dificultad: Estándar**
 
@@ -93,7 +95,9 @@ Francisco llega cargando un duelo no resuelto por Mateo —un amigo mayor que mu
 
 ### Laura Kim 🇰🇷
 
-![Laura Kim](/art/characters/laura-kim.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Laura Kim — Parte 1](/art/characters/laura-kim.png) | ![Laura Kim — Parte 2](/art/characters/part-2/laura-kim.png) |
 
 **Corea del Sur · 38 · Médica de emergencias · Dificultad: Favorable**
 
@@ -105,7 +109,9 @@ Laura lee las señales corporales y grupales con precisión clínica afinada en 
 
 ### Erik Lundvall 🇳🇴
 
-![Erik Lundvall](/art/characters/erik-lundvall.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Erik Lundvall — Parte 1](/art/characters/erik-lundvall.png) | ![Erik Lundvall — Parte 2](/art/characters/part-2/erik-lundvall.png) |
 
 **Noruega · 45 · Ingeniero offshore · Dificultad: Exigente**
 
@@ -117,7 +123,9 @@ Erik tiene ejecución técnica sólida y trabaja en su proyecto de las Siete Cum
 
 ### Daniela De Rossi 🇮🇹
 
-![Daniela De Rossi](/art/characters/daniela-de-rossi.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Daniela De Rossi — Parte 1](/art/characters/daniela-de-rossi.png) | ![Daniela De Rossi — Parte 2](/art/characters/part-2/daniela-de-rossi.png) |
 
 **Italia · 26 · Fotógrafa y periodista · Dificultad: Exigente**
 
@@ -129,7 +137,9 @@ Daniela es la lectora ambiental más precisa del grupo: detecta cambios de clima
 
 ### Irina Orlova 🇷🇺
 
-![Irina Orlova](/art/characters/irina-orlova.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Irina Orlova — Parte 1](/art/characters/irina-orlova.png) | ![Irina Orlova — Parte 2](/art/characters/part-2/irina-orlova.png) |
 
 **Rusia · 41 · Ex alpinista de elite · Dificultad: Exigente**
 
@@ -141,7 +151,9 @@ Irina vuelve a la alta montaña después de años fuera del alpinismo de elite. 
 
 ### Blake Harris 🇺🇸
 
-![Blake Harris](/art/characters/blake-harris.png)
+| Parte 1 | Parte 2 |
+|---|---|
+| ![Blake Harris — Parte 1](/art/characters/blake-harris.png) | ![Blake Harris — Parte 2](/art/characters/part-2/blake-harris.png) |
 
 **Estados Unidos · 58 · Ejecutivo · Dificultad: Muy exigente**
 
@@ -251,15 +263,15 @@ Seis retratos de personajes en `/art/characters/`. Variantes de Parte 2 en `/art
 
 ### Arte conceptual
 
-Selección curada en `/art/concept-art/curated/`. Muestra:
+Selección curada de la galería del proyecto en `/art/concept-art/curated/ig/`:
 
-![Arte conceptual — aproximación a la montaña](/art/concept-art/curated/concept-curated-1.png)
-
-![Arte conceptual — alta montaña](/art/concept-art/curated/concept-curated-2.png)
-
-Serie Field Notes (10 imágenes) en `/art/concept-art/curated/field-notes/`:
-
-![Field note 01](/art/concept-art/curated/field-notes/field-note-01.png)
+| | | |
+|---|---|---|
+| ![Escena 01](/art/concept-art/curated/ig/1.png) | ![Escena 02](/art/concept-art/curated/ig/3.png) | ![Escena 03](/art/concept-art/curated/ig/5.png) |
+| ![Escena 04](/art/concept-art/curated/ig/7.png) | ![Escena 05](/art/concept-art/curated/ig/9.png) | ![Escena 06](/art/concept-art/curated/ig/11.png) |
+| ![Escena 07](/art/concept-art/curated/ig/13.png) | ![Escena 08](/art/concept-art/curated/ig/15.png) | ![Escena 09](/art/concept-art/curated/ig/17.png) |
+| ![Escena 10](/art/concept-art/curated/ig/19.png) | ![Escena 11](/art/concept-art/curated/ig/21.png) | ![Escena 12](/art/concept-art/curated/ig/23.png) |
+| ![Escena 13](/art/concept-art/curated/ig/25.png) | ![Escena 14](/art/concept-art/curated/ig/27.png) | |
 
 ### Marca
 
