@@ -819,13 +819,13 @@ function buildReport(batchResult) {
   }
   md += '\n';
 
-  // Band violations
-  md += `## Band violation warnings\n\n`;
+  // Rollback threshold violations
+  md += `## Rollback threshold violations\n\n`;
   if (allViolations.length === 0) {
-    md += `✅ All characters fall within target bands.\n\n`;
+    md += `✅ All characters fall within rollback thresholds.\n\n`;
   } else {
-    md += `⚠️ The following outcomes fall outside target bands:\n\n`;
-    md += `| Character | Outcome | Actual | Band |\n|---|---|---:|---|\n`;
+    md += `⚠️ The following outcomes fall outside rollback thresholds:\n\n`;
+    md += `| Character | Outcome | Actual | Rollback Threshold |\n|---|---|---:|---|\n`;
     for (const v of allViolations) {
       md += `| ${v.charId} | ${v.outcome} | ${v.actual}% | ${v.band} |\n`;
     }
@@ -841,7 +841,7 @@ function buildReport(batchResult) {
   md += `- **Script:** \`scripts/monte-carlo-web-v1.js\`\n`;
   md += `- **Policy:** \`reasonablePolicy\` (conservative AI agent)\n`;
   md += `- **Difficulty:** Standard\n`;
-  md += `- **Band violations:** ${allViolations.length}\n`;
+  md += `- **Rollback threshold violations:** ${allViolations.length}\n`;
   md += '\n';
   md += `> Summit rates from a headless policy agent tend to be lower than human player rates (~10–30%). A 0% summit rate across all characters indicates a structural engine bug. The policy agent correctly validates regression detection per the \`docs/balance-calibration-notes.md\` design intent.\n`;
 
@@ -910,9 +910,9 @@ for (const char of characters) {
   violations += v.length;
 }
 if (violations > 0) {
-  console.log(`   ⚠️  ${violations} band violation(s) detected (see report for details).`);
-  console.log(`      Note: AI policy runs conservatively vs human players; band violations`);
+  console.log(`   ⚠️  ${violations} rollback threshold violation(s) detected (see report for details).`);
+  console.log(`      Note: AI policy runs conservatively vs human players; threshold violations`);
   console.log(`      expected. A 0% summit rate would indicate an engine regression.\n`);
 } else {
-  console.log(`   ✅ All characters within target bands.\n`);
+  console.log(`   ✅ All characters within rollback thresholds.\n`);
 }

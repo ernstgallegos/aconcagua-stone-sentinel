@@ -109,11 +109,11 @@ Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — loos
 | Collapse (Exposure) | 0%–18% |
 | Permit Expired | 2%–14% |
 
-## Band violation warnings
+## Rollback threshold violations
 
-⚠️ The following outcomes fall outside target bands:
+⚠️ The following outcomes fall outside rollback thresholds:
 
-| Character | Outcome | Actual | Band |
+| Character | Outcome | Actual | Rollback Threshold |
 |---|---|---:|---|
 | Francisco Aguirre | Summit and Safe Return | 0.4% | 6%–24% |
 | Francisco Aguirre | Rescue | 0.0% | 3%–18% |
@@ -144,7 +144,7 @@ Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — loos
 | Irina Orlova | Collapse (Fatigue) | 55.2% | 4%–18% |
 | Irina Orlova | Permit Expired | 14.0% | 2%–14% |
 
-> **Note:** Band violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
+> **Note:** Rollback threshold violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
 
 ---
 
@@ -156,6 +156,6 @@ Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — loos
 - **Script:** `scripts/monte-carlo-web-v1.js`
 - **Policy:** `reasonablePolicy` (conservative AI agent)
 - **Difficulty:** Standard
-- **Band violations:** 28
+- **Rollback threshold violations:** 28
 
 > Summit rates from a headless policy agent tend to be lower than human player rates (~10–30%). A 0% summit rate across all characters indicates a structural engine bug. The policy agent correctly validates regression detection per the `docs/balance-calibration-notes.md` design intent.

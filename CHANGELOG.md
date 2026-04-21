@@ -13,6 +13,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
 - Press kit (EN + ES): each character portrait now shows Part 1 and Part 2 images side-by-side in a two-column table.
 - Press kit (EN + ES): Concept art section replaced three sample images with a 3-column gallery grid of all 14 curated `/art/concept-art/curated/ig/` images.
+- Monte Carlo script and all simulation reports: renamed "Band violation warnings" section and all "target bands" references in violation blocks to "rollback thresholds"; renamed column header "Band" → "Rollback Threshold"; renamed console output and metadata key accordingly. Aligned `balance-calibration-notes.md` rollback criterion sentence to reference rollback thresholds (not target performance bands).
 
 
 ### Added

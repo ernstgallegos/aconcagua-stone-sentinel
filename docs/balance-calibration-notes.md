@@ -64,7 +64,7 @@ The Monte Carlo headless AI policy consistently produces results outside both ba
 
 ## Rollback criterion for tuning passes
 
-Trigger rollback (full revert or targeted rollback of last tuning batch) when any character falls outside target bands in **two consecutive** calibration runs using the canonical battery:
+Trigger rollback (full revert or targeted rollback of last tuning batch) when any character falls outside rollback thresholds in **two consecutive** calibration runs using the canonical battery:
 
 - Summit and Safe Return < 6% or > 24%
 - Rescue < 3% or > 18%
@@ -223,9 +223,9 @@ Summit rates (0%–4%) are significantly lower than the target bands (8%–20%).
 
 The simulator should be used to detect **structural regressions** (0% summit rate = engine broken), not for absolute calibration. If summit rates drop to 0% for all characters across all scenarios, that indicates a blocking engine bug and should trigger investigation before any release.
 
-### All characters within target bands?
+### All characters within rollback thresholds?
 
-No — 25 band violations across 6 characters. All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.5.md` for the full violation table.
+No — 25 rollback threshold violations across 6 characters. All violations are expected given AI policy limitations. See `docs/playtest-results/monte-carlo-v1.4.5.md` for the full violation table.
 
 ## Post-v1.5.1 calibration run (2026-04-21)
 

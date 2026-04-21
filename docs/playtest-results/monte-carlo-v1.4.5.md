@@ -96,11 +96,11 @@
 | Accumulated Fatigue Trap | 6.0% | 8.0% | 32.0% | 0.0% | 52.0% | 0.0% | 0.0% | 2.0% | 0.0% | 0.0% |
 | Weather Window | 0.0% | 2.0% | 42.0% | 0.0% | 54.0% | 0.0% | 0.0% | 2.0% | 0.0% | 0.0% |
 
-## Target bands comparison
+## Rollback trigger thresholds comparison
 
-Target bands from `docs/balance-calibration-notes.md`:
+Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — looser than target performance bands):
 
-| Outcome | Target Band |
+| Outcome | Rollback Threshold |
 |---|---|
 | Summit and Safe Return | 6%–24% |
 | Rescue | 3%–18% |
@@ -109,11 +109,11 @@ Target bands from `docs/balance-calibration-notes.md`:
 | Collapse (Exposure) | 0%–18% |
 | Permit Expired | 2%–14% |
 
-## Band violation warnings
+## Rollback threshold violations
 
-⚠️ The following outcomes fall outside target bands:
+⚠️ The following outcomes fall outside rollback thresholds:
 
-| Character | Outcome | Actual | Band |
+| Character | Outcome | Actual | Rollback Threshold |
 |---|---|---:|---|
 | Francisco Aguirre | Summit and Safe Return | 1.2% | 6%–24% |
 | Francisco Aguirre | Rescue | 0.0% | 3%–18% |
@@ -141,7 +141,7 @@ Target bands from `docs/balance-calibration-notes.md`:
 | Irina Orlova | Strategic Retreat | 30.4% | 50%–82% |
 | Irina Orlova | Collapse (Fatigue) | 51.6% | 4%–18% |
 
-> **Note:** Band violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
+> **Note:** Rollback threshold violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
 
 ---
 
@@ -153,6 +153,6 @@ Target bands from `docs/balance-calibration-notes.md`:
 - **Script:** `scripts/monte-carlo-web-v1.js`
 - **Policy:** `reasonablePolicy` (conservative AI agent)
 - **Difficulty:** Standard
-- **Band violations:** 25
+- **Rollback threshold violations:** 25
 
 > Summit rates from a headless policy agent tend to be lower than human player rates (~10–30%). A 0% summit rate across all characters indicates a structural engine bug. The policy agent correctly validates regression detection per the `docs/balance-calibration-notes.md` design intent.
