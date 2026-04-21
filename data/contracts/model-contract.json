@@ -1,5 +1,5 @@
 {
-  "contractVersion": "1.0.0",
+  "contractVersion": "1.1.0",
   "scope": "Canonical model concepts shared across prototype/mra-v0 and prototype/web-v1",
   "authoritativeArtifacts": {
     "outcomes": "data/outcomes.json (web-v1 active canonical source)",
@@ -7,6 +7,17 @@
     "mraBaselineSemantics": "prototype/mra-v0/simulator.py (historical baseline only)",
     "mraRequiredStateShape": "prototype/mra-v0/scenarios/scenario.schema.json",
     "contextEvents": "data/context_events.json (seeded bounded environment-event contract for web-v1)"
+  },
+  "jsonSchemas": {
+    "description": "JSON Schema (draft-07) files for all canonical data contracts. Used for IDE validation and formal contract documentation.",
+    "characters": "data/contracts/characters.schema.json",
+    "nodes": "data/contracts/nodes.schema.json",
+    "actionModifiers": "data/contracts/action_modifiers.schema.json",
+    "stageModifiers": "data/contracts/stage_modifiers.schema.json",
+    "outcomes": "data/contracts/outcomes.schema.json",
+    "scenarios": "data/contracts/scenarios.web-v1.schema.json",
+    "contextEvents": "data/contracts/context_events.schema.json",
+    "characterEvents": "data/contracts/character_events.schema.json"
   },
   "sharedContract": {
     "stateMetricsRequired": [

@@ -47,7 +47,19 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Hardened dependency security policy in CI by making `npm audit --audit-level=high` a blocking gate in `.github/workflows/ci.yml` (removed `|| true` bypass).
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
-- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
+- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3); closed `No test coverage metrics` debt item (exit criterion met by `npm run coverage`).
+
+### Fixed (audit remediation)
+
+- Fixed favicon references in both `index.html` (landing page) and `prototype/web-v1/index.html`: changed from JPEG to SVG (`favicon-aconcagua.svg`) for sharp rendering at all resolutions; updated `apple-touch-icon` to use the PNG variant.
+- Removed historical per-version addition sections (v1.4.5–v1.4.8) from `docs/architecture.md`: history belongs in `CHANGELOG.md`. Architecture document now describes only the current system structure, with explicit pointers to `docs/technical-debt-register.md` and `CHANGELOG.md`.
+
+### Added (audit remediation)
+
+- Added GitHub issue templates (`.github/ISSUE_TEMPLATE/bug_report.md` for reproducible defects; `.github/ISSUE_TEMPLATE/playtest_feedback.md` for structured play-session observations) to lower friction for external bug reports and playtest feedback.
+- Added GitHub pull request template (`.github/pull_request_template.md`) that auto-scaffolds the CONTRIBUTING.md evidence checklist (typecheck, test, JSON/link validation, smoke outputs, debt review, and version-bump gates).
+- Added JSON Schema (draft-07) files for all eight canonical data contracts in `data/contracts/`: `characters.schema.json`, `nodes.schema.json`, `action_modifiers.schema.json`, `stage_modifiers.schema.json`, `outcomes.schema.json`, `scenarios.web-v1.schema.json`, `context_events.schema.json`, `character_events.schema.json`. Schemas enable IDE validation (VS Code JSON schema association), formal contract documentation, and a foundation for CI-level enforcement. Updated `data/contracts/model-contract.json` to `contractVersion` 1.1.0 and registered all schema paths.
+- Added `c8` (v11) as a dev dependency and `npm run coverage` script for code-coverage reporting (`c8 --reporter=text --reporter=lcov`), closing the long-standing `No test coverage metrics` debt item.
 
 ### Security
 

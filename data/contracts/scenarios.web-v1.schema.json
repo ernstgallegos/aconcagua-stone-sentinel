@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aconcaguastonesentinel.com/data/contracts/scenarios.web-v1.schema.json",
+  "title": "Scenarios (web-v1)",
+  "description": "Scenario configuration file for Aconcagua: Stone Sentinel web-v1. Contains predefinedScenarios (shown in the expedition-setup carousel) and an optional randomScenario template.",
+  "type": "object",
+  "required": ["predefinedScenarios"],
+  "additionalProperties": false,
+  "properties": {
+    "predefinedScenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/scenario" }
+    },
+    "randomScenario": { "$ref": "#/definitions/scenario" }
+  },
+  "definitions": {
+    "difficultyModifiers": {
+      "type": "object",
+      "description": "Numeric overrides applied on top of the global difficulty preset for this scenario.",
+      "additionalProperties": false,
+      "properties": {
+        "pressureBias": { "type": "number" },
+        "stageWeatherBias": { "type": "number" },
+        "bodyToleranceBonus": { "type": "number" },
+        "acclimatizationBonus": { "type": "number" },
+        "fatigueMultiplier": { "type": "number", "minimum": 0 },
+        "exposureMultiplier": { "type": "number", "minimum": 0 },
+        "resourceEfficiency": { "type": "number", "minimum": 0 },
+        "permitDaysBonus": { "type": "number" },
+        "initialCapacityBonus": { "type": "number" },
+        "initialWaterBonus": { "type": "number" },
+        "initialFoodBonus": { "type": "number" },
+        "decisionWindowMsBonus": { "type": "number" }
+      }
+    },
+    "initialState": {
+      "type": "object",
+      "required": [
+        "position",
+        "altitude_band",
+        "weather_severity",
+        "visibility",
+        "terrain_load",
+        "functional_capacity",
+        "fatigue",
+        "exposure",
+        "water",
+        "food"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "type": "string",
+          "description": "Starting node ID; must match a nodeId in data/nodes.json."
+        },
+        "altitude_band": { "type": "string" },
+        "weather_severity": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "visibility": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "terrain_load": { "type": "integer", "minimum": 0 },
+        "functional_capacity": { "type": "number", "minimum": 0, "maximum": 100 },
+        "fatigue": { "type": "number", "minimum": 0, "maximum": 100 },
+        "exposure": { "type": "number", "minimum": 0, "maximum": 100 },
+        "water": { "type": "number", "minimum": 0 },
+        "food": { "type": "number", "minimum": 0 }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "name", "max_turns", "seeds"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "num": {
+          "type": "string",
+          "pattern": "^\\d{2}$",
+          "description": "Zero-padded two-digit display number, e.g. '01'."
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "desc": { "type": "string" },
+        "intro": { "type": "string" },
+        "max_turns": { "type": "integer", "minimum": 1 },
+        "seeds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 0 },
+          "description": "Pool of seeds; one is randomly selected at run start to produce a reproducible but varied session."
+        },
+        "difficulty": { "type": "string" },
+        "difficultyModifiers": { "$ref": "#/definitions/difficultyModifiers" },
+        "initial": { "$ref": "#/definitions/initialState" },
+        "bias": {
+          "type": "object",
+          "description": "Per-scenario environmental drift biases applied during weather/event generation.",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    }
+  }
+}

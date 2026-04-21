@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aconcaguastonesentinel.com/data/contracts/characters.schema.json",
+  "title": "Characters",
+  "description": "Array of playable characters for Aconcagua: Stone Sentinel web-v1. Each character has identity fields, difficulty metadata, and a rich engine-parameter object that drives EP/BT/perception calculations.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["id", "name", "engine"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique kebab-case identifier; must match runtime POSITIONS and character event characterId references."
+      },
+      "name": { "type": "string" },
+      "flag": { "type": "string", "description": "Unicode flag emoji for the character's nationality." },
+      "role": { "type": "string" },
+      "bio": { "type": "string" },
+      "traits": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      },
+      "difficultyLabel": {
+        "type": "string",
+        "description": "Human-readable challenge rating shown in the UI carousel."
+      },
+      "engine": {
+        "type": "object",
+        "required": [
+          "functionalCapacityBonus",
+          "acclimatizationRate",
+          "resourceEfficiency",
+          "fatigueResistance",
+          "exposureResistance",
+          "confidenceStability",
+          "riskTolerance",
+          "perceptionBias",
+          "perceptionGuardrails",
+          "perceptionLatency",
+          "decisionWindow"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "functionalCapacityBonus": { "type": "number", "description": "Additive offset to starting functional_capacity." },
+          "acclimatizationRate": { "type": "number", "minimum": 0, "description": "Multiplier applied to acclimatization gains." },
+          "resourceEfficiency": { "type": "number", "minimum": 0, "description": "Multiplier reducing resource burn (>1 = more efficient)." },
+          "fatigueResistance": { "type": "number", "minimum": 0, "description": "Divides fatigue damage in BT calculation; must be > 0." },
+          "exposureResistance": { "type": "number", "minimum": 0, "description": "Divides exposure damage in BT calculation; must be > 0." },
+          "confidenceStability": { "type": "number", "minimum": 0, "description": "Modulates confidence decay under pressure." },
+          "riskTolerance": { "type": "number", "minimum": 0, "description": "Scales decision-threshold aggressiveness." },
+          "perceptionBias": { "type": "number", "description": "Additive offset to perceived pressure score (positive = optimistic / noisier)." },
+          "perceptionGuardrails": {
+            "type": "object",
+            "required": ["minConfidence", "maxNoise", "minHintLevel", "maxTimingActionPenalty", "maxTimingConfidencePenalty", "maxTimingNoiseIncrease"],
+            "additionalProperties": false,
+            "properties": {
+              "minConfidence": { "type": "number", "minimum": 0, "maximum": 100 },
+              "maxNoise": { "type": "number", "minimum": 0, "maximum": 100 },
+              "minHintLevel": { "type": "integer", "minimum": 0 },
+              "maxTimingActionPenalty": { "type": "number", "minimum": 0, "maximum": 1 },
+              "maxTimingConfidencePenalty": { "type": "number", "minimum": 0 },
+              "maxTimingNoiseIncrease": { "type": "number", "minimum": 0 }
+            }
+          },
+          "perceptionLatency": {
+            "type": "object",
+            "required": ["baseDelay", "pressureDeltaStart", "stageActivation", "timeActivationStart", "minEarlyHint"],
+            "additionalProperties": false,
+            "properties": {
+              "baseDelay": { "type": "number", "minimum": 0, "maximum": 1 },
+              "pressureDeltaStart": { "type": "number" },
+              "stageActivation": {
+                "type": "object",
+                "required": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"],
+                "additionalProperties": false,
+                "properties": {
+                  "APPROACH": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "HIGH_CAMP": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "SUMMIT_DAY": { "type": "number", "minimum": 0, "maximum": 1 }
+                }
+              },
+              "timeActivationStart": { "type": "number", "description": "Minutes-of-day threshold at which time-based latency activates." },
+              "minEarlyHint": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          },
+          "decisionWindow": {
+            "type": "object",
+            "required": ["baseMs", "stageModifiersMs", "minFloorMs", "degradeEveryMs"],
+            "additionalProperties": false,
+            "properties": {
+              "baseMs": { "type": "integer", "minimum": 0 },
+              "stageModifiersMs": {
+                "type": "object",
+                "required": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"],
+                "additionalProperties": false,
+                "properties": {
+                  "APPROACH": { "type": "integer" },
+                  "HIGH_CAMP": { "type": "integer" },
+                  "SUMMIT_DAY": { "type": "integer" }
+                }
+              },
+              "minFloorMs": { "type": "integer", "minimum": 0 },
+              "degradeEveryMs": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

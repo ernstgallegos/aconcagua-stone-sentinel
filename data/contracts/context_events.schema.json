@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aconcaguastonesentinel.com/data/contracts/context_events.schema.json",
+  "title": "Context Events",
+  "description": "Array of seeded environment events consumed by applyContextEvents() in turn-resolution.js. Each event adjusts weather/visibility on specific turns without bypassing the EP/BT resolver pipeline.",
+  "type": "array",
+  "minItems": 0,
+  "items": {
+    "type": "object",
+    "required": ["id", "category", "trigger", "effects", "limits", "label"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string", "minLength": 1, "description": "Unique identifier for telemetry and deduplication." },
+      "category": { "type": "string", "const": "context" },
+      "icon": { "type": "string" },
+      "label": { "type": "string", "minLength": 1, "description": "Short display label shown in watch-event cue." },
+      "stage": {
+        "type": "string",
+        "enum": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"],
+        "description": "Optional stage restriction; if omitted the event can fire in any stage."
+      },
+      "trigger": {
+        "type": "object",
+        "required": ["turns"],
+        "additionalProperties": false,
+        "properties": {
+          "turns": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "integer", "minimum": 1 },
+            "description": "Turn numbers on which this event is eligible to fire."
+          },
+          "stages": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"] }
+          }
+        }
+      },
+      "effects": {
+        "type": "object",
+        "required": [],
+        "additionalProperties": false,
+        "properties": {
+          "weatherDelta": { "type": "integer", "description": "Additive change to weather_severity (clamped [0,4])." },
+          "visibilityDelta": { "type": "integer", "description": "Additive change to visibility (clamped [0,3])." },
+          "timePenalty": { "type": "integer", "minimum": 0, "description": "Additional minutes consumed this turn." }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "required": ["maxPerRun"],
+        "additionalProperties": false,
+        "properties": {
+          "maxPerRun": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "telemetryTag": { "type": "string" },
+      "visibleToPlayer": { "type": "boolean" },
+      "hiddenFromPlayer": { "type": "boolean" },
+      "narrative": { "type": "string" },
+      "notes": { "type": "string" }
+    }
+  }
+}

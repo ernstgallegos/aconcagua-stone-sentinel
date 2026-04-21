@@ -16,12 +16,12 @@ For every release PR:
 |---|---|---|---|---|
 | `screens.js` monolith (3658 lines) | UI layer | Medium — maintainability risk, merge conflict surface | Difficulty navigating/reviewing; multiple responsibilities in one file | `screens.js` reduced to < 500 lines of pure wiring/init; remaining logic extracted to dedicated modules with independent tests |
 | `mountain-visualization.js` size (2991 lines) | UI layer | Low — isolated module with stable API | Single large rendering file with mixed concerns (terrain, climber, atmosphere, HUD, post-processing) | Subsystems extracted to at least 3 focused modules; each independently importable |
-| No test coverage metrics | Quality | Low — tests exist but coverage visibility is zero | Cannot identify untested paths without manual review | Coverage reporting via `c8` or equivalent integrated into `npm test` output |
 
 ## Resolved debt items
 
 | Debt item | Resolution | Resolved in |
 |---|---|---|
+| No test coverage metrics | Added `c8` (v11) as devDependency; added `npm run coverage` script (`c8 --reporter=text --reporter=lcov node scripts/run-webv1-tests.js`). Gives line/branch/function visibility across the entire engine and UI test surface. | post-v1.5.1 audit (comprehensive review) |
 | Inline `onkeydown` handler (CSP/a11y inconsistency) | Removed inline handler from `index.html`; keyboard activation for `[data-action]` elements handled by centralized `event-registry.js` with Enter/Space delegation. | v1.5.1 |
 | `epResult.pressureScore` direct mutation | Replaced with separate `adjustedPressureScore` variable in `turn-resolution.js`. EP result object is no longer mutated. | v1.5.1 |
 | Magic numbers in turn-resolution.js undocumented | Added inline comments documenting all balance-critical constants (progress base 58, collapse multiplier 1.2, acclimatization thresholds, late-signal gates, photo confidence values). | v1.5.1 |

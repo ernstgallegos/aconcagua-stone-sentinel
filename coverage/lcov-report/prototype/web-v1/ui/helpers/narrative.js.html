@@ -1,0 +1,715 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for prototype/web-v1/ui/helpers/narrative.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">prototype/web-v1/ui/helpers</a> narrative.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">99.52% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>209/210</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">59.09% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>39/66</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>3/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">99.52% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>209/210</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// ui/helpers/narrative.js
+//
+// Narrative text bank and picker extracted from screens.js.
+// Owns: all contextual narrative snippet banks (EN/ES), the
+// pickNarrative selector, and the renderNarrative dispatcher
+// that maps (decision, signals, flags) to a single prose line.
+&nbsp;
+// ────────────────────────────────────────────────
+// Narrative banks
+// ────────────────────────────────────────────────
+&nbsp;
+export const NARRATIVES = {
+  advance_good: [
+    'The slope opens in a narrow margin. You move inside it, without pretending control.',
+    'Progress is measured in disciplined breaths, not in ambition.',
+    'The terrain allows passage for now. You accept the terms and keep moving.',
+    'Every step asks for balance first, speed second.',
+    'The route holds. The body answers. For this turn, that is enough.',
+    'Gain comes quietly: no triumph, only continuity.'
+  ],
+  advance_severe: [
+    'The wind has intent now. You lean into it and spend more than planned.',
+    'Forward remains possible, but expensive in ways the watch cannot fully count.',
+    'Progress continues under protest from terrain, weather, and breath alike.',
+    'Each meter feels borrowed from a later turn.',
+    'You move because stopping here costs differently, not less.',
+    'This is advancement without momentum.'
+  ],
+  advance_slowly: [
+    'Half pace preserves structure. The mountain notices haste before you do.',
+    'Slow movement is still movement; today, that distinction matters.',
+    'Cadence replaces force. You trade distance for tomorrow.',
+    'Deliberate steps hold the line between effort and error.',
+    'Measured rhythm protects more than pride ever could.',
+    'You advance by refusing to rush.'
+  ],
+  first_high: ['Above six thousand meters, the rules tighten without announcement.','The air thins; consequences do not.','From here, mistakes mature quickly.','High camp begins where excuses end.','Altitude removes noise and leaves only cost.','The route continues, but margins narrow sharply.'],
+  wait_low: ['Waiting here is strategy, not inertia.','Stillness buys clarity if you can tolerate the clock.','The mountain keeps moving while you do not.','You hold position and audit the system.','A paused body can still lose ground to weather.','Patience is useful only when paired with attention.'],
+  wait_high: ['At this altitude, waiting is not rest but managed decay.','The tent blocks wind, not consequence.','You spend less than moving, but never zero.','Holding ground here is already an action.','The body works continuously just to remain viable.','Silence in high camp is operational, not peaceful.'],
+  descend: ['Descent is not surrender; it is a complete sentence in mountain logic.','Downward movement preserves options that summits can erase.','You turn before the system turns you.','Retreat converts uncertainty into survival.','The route back is the only guaranteed route.','Judgment arrives as a direction, not a speech.'],
+  pre_collapse_fatigue: ['Reaction time stretches. Intent arrives late to the body.','Fatigue starts editing your decisions.','Simple actions now require negotiation.','Your pace decouples from your plan.','The watch reports numbers; your legs report delay.','This is fatigue with authority.'],
+  pre_collapse_exposure: ['Cold is no longer peripheral; it is architectural.','You feel heat leaving faster than you can replace it.','Dexterity narrows. Small tasks become loud.','Exposure now shapes judgment as much as weather does.','The shell holds, but only partially.','Cold has moved from sensation to system.'],
+  crit_exposure: ['Exposure is now an active threat to cognition and movement.','The mountain is charging compound interest on time.','Heat loss outruns correction.','Operational capacity is shrinking in real time.','This is beyond discomfort.','You are now in emergency thermodynamics.'],
+  crit_fatigue: ['The body issues a direct warning.','Effort and output have separated.','You can still act, but not reliably.','Fatigue is now a strategic actor.','Delay enters every movement chain.','The system is near functional break.'],
+  water_gone: ['Water has reached zero; all remaining turns become expensive.', 'Hydration debt starts collecting immediately.', 'Without water, every choice becomes shorter-term.', 'The body begins rationing performance.', 'This is a hard boundary, not a soft warning.', 'From here, degradation accelerates.'],
+  food_gone: ['Food is exhausted. The body shifts to deficit management.', 'Energy planning is now damage planning.', 'The margin between action and collapse narrows further.', 'No intake means no recovery reserve.', 'You can continue, but the bill is immediate.', 'Operational endurance contracts sharply.'],
+  slept: ['Night at camp recovers structure, never certainty.', 'Sleep reduces noise, not objective risk.', 'Morning starts with less debt, not with none.', 'The body stabilizes where altitude permits it.', 'Recovery is local and conditional.', 'A camp night is maintenance, not reset.'],
+  shoot_photo: ['Daniela frames the ridge and catches a shift before it hardens into risk.', 'A quick shot locks in texture, wind trace, and line quality for the next push.', 'The lens turns scattered cues into a readable pattern.', 'She spends minutes now to avoid a blind move later.', 'The frame records what panic usually blurs.', 'A single photo buys a cleaner read of terrain mood.'],
+  bivouac: ['Open bivouac exacts payment in exposure and capacity.', 'Unplanned night outside camp accelerates systemic decay.', 'The clock rolls over; the debt does not.', 'Forced bivouac turns one mistake into several.', 'Shelter without camp still costs heavily.', 'Night outside support is punitive by design.'],
+  irreversible: ['First irreversible point crossed. Retreat remains valid, never cheap.', 'Above this line, every reversal carries compound cost.', 'The route changed from expedition to commitment.', 'You can still descend, but not neutrally.', 'The mountain has marked this threshold.', 'From here, price and altitude move together.'],
+  window_open: ['A clean window appears. Timing and readiness must coincide.', 'Conditions loosen briefly; indecision has a cost.', 'The system is permissive for a short interval.', 'This is not safety, only opportunity.', 'The route offers less resistance now.', 'A window is useful only if recognized in time.'],
+  window_close: ['The window closes and penalties return with interest.', 'What was feasible one turn ago now degrades.', 'Late movement enters a different weather regime.', 'The route has tightened again.', 'Opportunity has elapsed, not paused.', 'The mountain resumes its baseline severity.'],
+  euphoria: ['Signals seem generous; overconfidence is now plausible.', 'Favorable readings can still hide delayed penalties.', 'Clarity may be real or simply temporary.', 'Good turns can distort risk memory.', 'Do not confuse momentum with permission.', 'The body feels strong; the system remains indifferent.'],
+  dehydration: ['Dehydration now affects both output and interpretation.', 'Signals become harder to read under hydration debt.', 'Decision quality starts slipping with fluid loss.', 'You are not only weaker; you are noisier.', 'Hydration deficit destabilizes discipline.', 'The body asks for water before it asks for ambition.'],
+  terrain_block: [
+    'The body and terrain agree: not this turn. Force the step and pay more than you can afford.',
+    'The slope refuses. So does the body. Wisdom is accepting both answers at once.',
+    'Three meters of gain — technically possible. Physiologically reckless. The difference matters here.'
+  ],
+  white_wind_sign: ['Lenticular signs accumulate; the air has changed intent.','Wind tone sharpens before visibility collapses.','Precursors are present if you are still reading them.','The mountain is announcing a harder phase.','Pressure and movement disagree.','This signal is warning, not narrative flavor.'],
+  white_wind_hit: ['White wind impact: orientation degrades in seconds.','Visibility collapses and route confidence drops sharply.','The system shifts from progress logic to damage control.','Direction remains, legibility does not.','Movement now carries amplified uncertainty.','This is the mountain reducing options in real time.'],
+  observation_weather:['Cloud texture clarifies the next phase of weather.','Wind direction is legible from drifting crystals.','The sky gives a short forecast if you stand still.','Observation lowers uncertainty for one turn.','You confirm trend before committing movement.','A quiet read often beats a noisy push.'],
+  poor_acclimatization:['Altitude penalty rises; acclimatization is below threshold.','The body has not adapted enough for this stage.','You are climbing faster than adaptation allows.','High camp without adaptation multiplies fatigue.','Summit day punishes low acclimatization severely.','This is a mismatch between ambition and physiology.']
+};
+&nbsp;
+export const NARRATIVES_ES = {
+  advance_good: [
+    'La ladera abre un margen estrecho. Te mueves dentro de él, sin fingir control.',
+    'El progreso se mide en respiraciones disciplinadas, no en ambición.',
+    'El terreno permite el paso por ahora. Aceptas sus términos y sigues.',
+    'Cada paso pide primero equilibrio y después velocidad.',
+    'La ruta se sostiene. El cuerpo responde. En este turno, eso alcanza.',
+    'La ganancia llega en silencio: sin triunfo, solo continuidad.'
+  ],
+  advance_severe: [
+    'El viento ya tiene intención. Te inclinas y gastas más de lo planeado.',
+    'Seguir es posible, pero caro en formas que el reloj no cuenta del todo.',
+    'El avance continúa bajo protesta de terreno, clima y respiración.',
+    'Cada metro parece prestado de un turno futuro.',
+    'Te mueves porque detenerte aquí cuesta distinto, no menos.',
+    'Esto es avance sin inercia.'
+  ],
+  advance_slowly: [
+    'Medio ritmo preserva estructura. La montaña detecta la prisa antes que tú.',
+    'Moverse lento sigue siendo moverse; hoy esa diferencia importa.',
+    'La cadencia reemplaza la fuerza. Cambias distancia por mañana.',
+    'Pasos deliberados sostienen la línea entre esfuerzo y error.',
+    'El ritmo medido protege más de lo que protegería el orgullo.',
+    'Avanzas negándote a apurar.'
+  ],
+  wait_low: ['Esperar aquí es estrategia, no inercia.','La quietud compra claridad si toleras el reloj.','La montaña sigue moviéndose aunque tú no.','Sostienes posición y auditas el sistema.','Un cuerpo quieto igual puede perder terreno por clima.','La paciencia sirve solo si viene con atención.'],
+  wait_high: ['A esta altitud, esperar no es descanso sino desgaste gestionado.','La carpa frena viento, no consecuencias.','Gastas menos que moviéndote, pero nunca cero.','Mantener terreno aquí ya es una acción.','El cuerpo trabaja de forma continua solo para seguir viable.','El silencio en altura es operativo, no pacífico.'],
+  descend: ['Descender no es rendirse; es una oración completa en lógica de montaña.','Bajar preserva opciones que una cumbre puede borrar.','Giras antes de que el sistema te haga girar.','Retirarte convierte incertidumbre en supervivencia.','La ruta de regreso es la única garantizada.','El juicio llega como dirección, no como discurso.'],
+  slept: ['La noche en campamento recupera estructura, nunca certeza.', 'Dormir reduce ruido, no riesgo objetivo.', 'La mañana empieza con menos deuda, no sin deuda.', 'El cuerpo se estabiliza donde la altitud lo permite.', 'La recuperación es local y condicional.', 'Una noche de campamento es mantenimiento, no reinicio.'],
+  shoot_photo: ['Daniela encuadra la cresta y detecta un cambio antes de que se vuelva riesgo.', 'Una toma rápida fija textura, traza de viento y línea para el próximo empuje.', 'La lente convierte señales dispersas en un patrón legible.', 'Invierte minutos ahora para evitar un movimiento ciego después.', 'El encuadre registra lo que el pánico suele borrar.', 'Una sola foto compra una lectura más limpia del ánimo del terreno.'],
+  first_high: ['Por encima de seis mil metros, las reglas se cierran sin aviso.','El aire se afina; las consecuencias no.','Desde aquí, los errores maduran rápido.','El campamento alto empieza donde terminan las excusas.','La altitud quita ruido y deja solo costo.','La ruta sigue, pero los márgenes se estrechan.'],
+  pre_collapse_fatigue: ['El tiempo de reacción se alarga. La intención llega tarde al cuerpo.','La fatiga empieza a editar tus decisiones.','Acciones simples ahora requieren negociación.','Tu ritmo se desacopla de tu plan.','El reloj reporta números; las piernas reportan retraso.','Esto es fatiga con autoridad.'],
+  pre_collapse_exposure: ['El frío ya no es periférico; es estructural.','Sientes el calor escapar más rápido de lo que puedes reponerlo.','La destreza se estrecha. Las tareas simples se vuelven ruidosas.','La exposición moldea el juicio tanto como el clima.','La capa aguanta, pero solo a medias.','El frío pasó de sensación a sistema.'],
+  crit_exposure: ['La exposición es ahora una amenaza activa para la cognición y el movimiento.','La montaña cobra interés compuesto sobre el tiempo.','La pérdida de calor supera la corrección.','La capacidad operativa se contrae en tiempo real.','Esto va más allá del malestar.','Estás en termodinámica de emergencia.'],
+  crit_fatigue: ['El cuerpo emite una advertencia directa.','Esfuerzo y resultado se han separado.','Aún puedes actuar, pero no con fiabilidad.','La fatiga es ahora un actor estratégico.','El retardo entra en cada cadena de movimiento.','El sistema está cerca del colapso funcional.'],
+  water_gone: ['El agua llegó a cero; todos los turnos restantes se vuelven costosos.', 'La deuda de hidratación empieza a acumularse de inmediato.', 'Sin agua, cada elección acorta el horizonte.', 'El cuerpo empieza a racionar rendimiento.', 'Esto es un límite duro, no una advertencia suave.', 'A partir de aquí, el deterioro se acelera.'],
+  food_gone: ['La comida se agotó. El cuerpo cambia a gestión de déficit.', 'La planificación de energía es ahora planificación de daños.', 'El margen entre acción y colapso se estrecha aún más.', 'Sin ingesta no hay reserva de recuperación.', 'Puedes continuar, pero la factura es inmediata.', 'La resistencia operativa se contrae bruscamente.'],
+  bivouac: ['El vivac a la intemperie cobra en exposición y capacidad.', 'Una noche no planificada fuera del campamento acelera el deterioro sistémico.', 'El reloj avanza; la deuda no se detiene.', 'El vivac forzado convierte un error en varios.', 'Refugio sin campamento sigue costando caro.', 'La noche fuera del apoyo es punitiva por diseño.'],
+  irreversible: ['Primer punto irreversible cruzado. El retiro sigue siendo válido, nunca barato.', 'Por encima de esta línea, cada reversa acumula costo compuesto.', 'La ruta cambió de expedición a compromiso.', 'Aún puedes descender, pero no de forma neutral.', 'La montaña marcó este umbral.', 'A partir de aquí, precio y altitud suben juntos.'],
+  window_open: ['Aparece una ventana limpia. Timing y preparación deben coincidir.', 'Las condiciones se relajan brevemente; la indecisión tiene costo.', 'El sistema es permisivo por un intervalo corto.', 'Esto no es seguridad, solo oportunidad.', 'La ruta ofrece menos resistencia ahora.', 'Una ventana es útil solo si se reconoce a tiempo.'],
+  window_close: ['La ventana se cierra y las penalizaciones vuelven con interés.', 'Lo que era factible un turno atrás ahora se degrada.', 'El movimiento tardío entra en otro régimen climático.', 'La ruta se ajustó de nuevo.', 'La oportunidad expiró, no se pausó.', 'La montaña retoma su severidad de base.'],
+  euphoria: ['Las señales parecen generosas; la sobreconfianza ahora es plausible.', 'Lecturas favorables pueden ocultar penalizaciones diferidas.', 'La claridad puede ser real o simplemente temporal.', 'Los buenos turnos pueden distorsionar la memoria de riesgo.', 'No confundas impulso con permiso.', 'El cuerpo se siente fuerte; el sistema sigue siendo indiferente.'],
+  dehydration: ['La deshidratación afecta ahora tanto el rendimiento como la interpretación.', 'Las señales son más difíciles de leer bajo deuda de hidratación.', 'La calidad de decisión empieza a caer con la pérdida de fluido.', 'No solo estás más débil; también eres más ruidoso.', 'El déficit de hidratación desestabiliza la disciplina.', 'El cuerpo pide agua antes de pedir ambición.'],
+  terrain_block: [
+    'El cuerpo y el terreno coinciden: no este turno. Forzar el paso cuesta más de lo que puedes asumir.',
+    'La ladera no cede. El cuerpo tampoco. La sabiduría es aceptar ambas respuestas a la vez.',
+    'Tres metros de ganancia, técnicamente posible. Fisiológicamente imprudente. La diferencia importa aquí.'
+  ],
+  white_wind_sign: ['Los signos lenticulares se acumulan; el aire cambió de intención.','El tono del viento se agudiza antes de que la visibilidad colapse.','Los precursores están presentes si aún los estás leyendo.','La montaña anuncia una fase más dura.','Presión y movimiento discrepan.','Esta señal es advertencia, no color narrativo.'],
+  white_wind_hit: ['Impacto de viento blanco: la orientación se degrada en segundos.','La visibilidad colapsa y la confianza en la ruta cae bruscamente.','El sistema pasa de lógica de progreso a control de daños.','La dirección permanece; la legibilidad, no.','El movimiento ahora carga incertidumbre amplificada.','Esto es la montaña reduciendo opciones en tiempo real.'],
+  observation_weather: ['La textura de las nubes clarifica la próxima fase del clima.','La dirección del viento es legible por los cristales que derivan.','El cielo da un pronóstico breve si te detienes a escucharlo.','La observación reduce la incertidumbre por un turno.','Confirmas la tendencia antes de comprometer movimiento.','Una lectura tranquila suele superar un empuje ruidoso.'],
+  poor_acclimatization: ['La penalización de altitud sube; la aclimatación está por debajo del umbral.','El cuerpo no se ha adaptado lo suficiente para esta etapa.','Subes más rápido de lo que permite la adaptación.','El campamento alto sin aclimatación multiplica la fatiga.','El día cumbre castiga severamente la baja aclimatación.','Es una discrepancia entre ambición y fisiología.']
+};
+&nbsp;
+// ────────────────────────────────────────────────
+// Narrative picker
+// ────────────────────────────────────────────────
+&nbsp;
+/**
+ * Select a random narrative from the bank for the given key,
+ * respecting current language and RNG source.
+ *
+ * @param {string} key - Narrative bank key (e.g. 'advance_good').
+ * @param {string} lang - Current language ('en' or 'es').
+ * @param {function} [rng] - Random number generator; defaults to Math.random.
+ * @returns {string}
+ */
+export function pickNarrative(key, lang, rng) {
+  const bank = lang === 'es' ? (NARRATIVES_ES[key] <span class="branch-0 cbranch-no" title="branch not covered" >|| NARRATIVES[key])</span> : NARRATIVES[key];
+  if (!bank) return '';
+  const rngFn = rng <span class="branch-0 cbranch-no" title="branch not covered" >|| Math.random;</span>
+  return bank[Math.floor(rngFn() * bank.length)];
+}
+&nbsp;
+// ────────────────────────────────────────────────
+// Narrative dispatcher
+// ────────────────────────────────────────────────
+&nbsp;
+/**
+ * Resolve the narrative text for a turn given the decision, flags, and state.
+ *
+ * This is a pure function that returns the chosen text without touching the DOM.
+ *
+ * @param {object} params
+ * @param {string|null} params.decision - The resolved action.
+ * @param {string[]} params.flags - Flags emitted by the turn resolver.
+ * @param {object} params.state - Body/position state snapshot.
+ * @param {string} params.lang - Current language.
+ * @param {function} [params.rng] - RNG source.
+ * @param {function} params.uiText - (en, es) =&gt; string bilingual helper.
+ * @param {function} params.getCurrentNode - (state) =&gt; node object.
+ * @returns {string}
+ */
+export function resolveNarrativeText({
+  decision,
+  flags = [],
+  state,
+  lang,
+  rng,
+  uiText,
+  getCurrentNode,
+}) {
+  const pick = (key) =&gt; pickNarrative(key, lang, rng);
+&nbsp;
+  // flag-triggered lines (highest priority)
+  if (flags.includes('summit-descent-only')) return uiText('There is no higher ground left to earn. The only meaningful move now is the descent.', 'Ya no queda terreno más alto por conquistar. El único movimiento con sentido ahora es el descenso.');
+  if (flags.includes('weather-window-open')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('window_open');</span>
+  if (flags.includes('weather-window-closed')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('window_close');</span>
+  if (flags.includes('critical-exposure')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('crit_exposure');</span>
+  if (flags.includes('critical-fatigue')) return pick('crit_fatigue');
+  if (flags.includes('water-depleted')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('water_gone');</span>
+  if (flags.includes('food-depleted')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('food_gone');</span>
+  if (flags.includes('forced-bivouac')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('bivouac');</span>
+  if (flags.includes('first-irreversible-point')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('irreversible');</span>
+  if (flags.includes('dehydration-compounding')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('dehydration');</span>
+  if (flags.includes('terrain-body-block')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('terrain_block');</span>
+  if (flags.includes('white-wind-hit')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('white_wind_hit');</span>
+  if (flags.includes('white-wind-precursor')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('white_wind_sign');</span>
+  if (flags.includes('high-altitude-entered')) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('first_high');</span>
+  if (flags.includes('char-francisco-limit-read')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Francisco feels the pull to keep pushing, then chooses to protect one margin.', 'Francisco siente el impulso de seguir, y luego decide proteger un margen.');</span>
+  if (flags.includes('char-laura-clock-discipline')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Laura reads the shrinking clock and keeps discipline over altitude impulse.', 'Laura lee el reloj que se achica y sostiene disciplina sobre el impulso de altura.');</span>
+  if (flags.includes('char-irina-noisy-read')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Irina trusts strength, but today the mountain answers with noisy signals.', 'Irina confía en su fuerza, pero hoy la montaña responde con señales ruidosas.');</span>
+  if (flags.includes('char-erik-ego-check')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Erik turns competence into restraint before ego narrows the corridor.', 'Erik convierte competencia en contención antes de que el ego cierre el corredor.');</span>
+  if (flags.includes('char-daniela-tradeoff')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Daniela sees the line clearly, while the body asks for stricter pacing.', 'Daniela ve la línea con claridad, mientras el cuerpo pide un ritmo más estricto.');</span>
+  if (flags.includes('char-blake-prep-gap')) <span class="branch-0 cbranch-no" title="branch not covered" >return uiText('Blake keeps determination, but preparation debt is now impossible to ignore.', 'Blake mantiene determinación, pero la deuda de preparación ya no se puede ignorar.');</span>
+&nbsp;
+  // action-based narratives
+  if (decision === 'advance' || decision === 'advance_slowly') {
+    if (decision === 'advance_slowly') <span class="branch-0 cbranch-no" title="branch not covered" >return pick('advance_slowly');</span>
+    if (state.weather_severity &gt;= 2) <span class="branch-0 cbranch-no" title="branch not covered" >return pick('advance_severe');</span>
+    return pick('advance_good');
+  }
+  if (decision === 'wait') {
+    const waitNode = getCurrentNode(state);
+    return (waitNode.altitudeBand &gt;= 2) ? pick('wait_high') <span class="branch-0 cbranch-no" title="branch not covered" >: pick('wait_low');</span>
+  }
+  if (decision === 'descend') return pick('descend');
+  if (decision === 'sleep') <span class="branch-0 cbranch-no" title="branch not covered" >return pick('slept');</span>
+  if (decision === 'shoot_photo') <span class="branch-0 cbranch-no" title="branch not covered" >return pick('shoot_photo');</span>
+&nbsp;
+  // pre-turn state narrative
+  if (state.fatigue &gt;= 65 &amp;&amp; state.fatigue &lt; 80) return pick('pre_collapse_fatigue');
+<span class="branch-0 cbranch-no" title="branch not covered" >  if (state.exposure &gt;= 60 &amp;&amp; state.exposure &lt; 75)</span> <span class="branch-0 cbranch-no" title="branch not covered" >return pick('pre_collapse_exposure');</span>
+<span class="cstat-no" title="statement not covered" >  return pick('advance_good');</span>
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-21T01:27:23.694Z
+            </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    

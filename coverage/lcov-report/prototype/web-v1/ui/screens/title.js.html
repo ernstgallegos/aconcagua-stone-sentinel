@@ -1,0 +1,499 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for prototype/web-v1/ui/screens/title.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">prototype/web-v1/ui/screens</a> title.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">30.43% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>42/138</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">60% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>6/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">16.66% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/6</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">30.43% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>42/138</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export <span class="fstat-no" title="function not covered" >function renderIntroContent({ t, updateSocialShareLinks }) {</span>
+<span class="cstat-no" title="statement not covered" >  const setText = (id, value) =&gt; { const el = document.getElementById(id); if (el) el.textContent = value; };</span>
+<span class="cstat-no" title="statement not covered" >  const infoTrigger = document.querySelector('.title-info-trigger');</span>
+<span class="cstat-no" title="statement not covered" >  if (infoTrigger) {</span>
+<span class="cstat-no" title="statement not covered" >    const label = t('ui.introInfoLabel');</span>
+<span class="cstat-no" title="statement not covered" >    infoTrigger.setAttribute('aria-label', label);</span>
+<span class="cstat-no" title="statement not covered" >    infoTrigger.setAttribute('title', label);</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-modal-title', t('ui.introTitle'));</span>
+<span class="cstat-no" title="statement not covered" >  const closeBtn = document.querySelector('#intro-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.introClose');</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-modal-summary', t('ui.introSummary'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-version-label', t('ui.introVersionLabel'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-version', t('ui.introVersionValue'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-format-label', t('ui.introFormatLabel'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-format', t('ui.introFormatValue'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-access-label', t('ui.introAccessLabel'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-chip-access', t('ui.introAccessValue'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-section-about-title', t('ui.introAboutTitle'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-section-about-body', t('ui.introAboutBody'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-section-credits-title', t('ui.introCreditsTitle'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-section-credits-body', t('ui.introCreditsBody'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-links-title', t('ui.introLinksTitle'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-links-body', t('ui.introLinksBody'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-support-body', t('ui.introSupportBody'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-share-x', t('ui.introShareX'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-share-facebook', t('ui.introShareFacebook'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-share-linkedin', t('ui.introShareLinkedIn'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-share-whatsapp', t('ui.introShareWhatsApp'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-share-copy', t('ui.introShareCopy'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-repo-link', t('ui.introRepoCta'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-instagram-link', t('ui.introInstagramCta'));</span>
+<span class="cstat-no" title="statement not covered" >  setText('intro-email-link', t('ui.introEmailCta'));</span>
+<span class="cstat-no" title="statement not covered" >  updateSocialShareLinks();</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+export <span class="fstat-no" title="function not covered" >function copyProjectShareLink({ getProjectShareUrl, t }) {</span>
+<span class="cstat-no" title="statement not covered" >  const shareUrl = getProjectShareUrl();</span>
+<span class="cstat-no" title="statement not covered" >  const copyBtn = document.getElementById('intro-share-copy');</span>
+<span class="cstat-no" title="statement not covered" >  const originalLabel = t('ui.introShareCopy');</span>
+<span class="cstat-no" title="statement not covered" >  if (copyBtn) copyBtn.textContent = originalLabel;</span>
+<span class="cstat-no" title="statement not covered" >  const onCopied = () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!copyBtn) return;</span>
+<span class="cstat-no" title="statement not covered" >    copyBtn.textContent = t('ui.introShareCopied');</span>
+<span class="cstat-no" title="statement not covered" >    window.setTimeout(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      copyBtn.textContent = originalLabel;</span>
+<span class="cstat-no" title="statement not covered" >    }, 1500);</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (navigator.clipboard?.writeText) {</span>
+<span class="cstat-no" title="statement not covered" >    navigator.clipboard.writeText(shareUrl).then(onCopied).catch(() =&gt; {});</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  const helper = document.createElement('textarea');</span>
+<span class="cstat-no" title="statement not covered" >  helper.value = shareUrl;</span>
+<span class="cstat-no" title="statement not covered" >  helper.setAttribute('readonly', '');</span>
+<span class="cstat-no" title="statement not covered" >  helper.style.position = 'absolute';</span>
+<span class="cstat-no" title="statement not covered" >  helper.style.left = '-9999px';</span>
+<span class="cstat-no" title="statement not covered" >  document.body.appendChild(helper);</span>
+<span class="cstat-no" title="statement not covered" >  helper.select();</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    document.execCommand('copy');</span>
+<span class="cstat-no" title="statement not covered" >    onCopied();</span>
+<span class="cstat-no" title="statement not covered" >  } catch {}</span>
+<span class="cstat-no" title="statement not covered" >  document.body.removeChild(helper);</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+export <span class="fstat-no" title="function not covered" >function renderTutorialContent({ CURRENT_LANGUAGE, TUTORIAL_CONTENT, t }) {</span>
+<span class="cstat-no" title="statement not covered" >  const copy = TUTORIAL_CONTENT[CURRENT_LANGUAGE] || TUTORIAL_CONTENT.en;</span>
+<span class="cstat-no" title="statement not covered" >  const setText = (id, value) =&gt; { const el = document.getElementById(id); if (el) el.textContent = value; };</span>
+<span class="cstat-no" title="statement not covered" >  const setList = (id, items) =&gt; { const el = document.getElementById(id); if (el) el.innerHTML = items.map((item) =&gt; `&lt;li&gt;${item}&lt;/li&gt;`).join(''); };</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-modal-title', t('ui.tutorialTitle'));</span>
+<span class="cstat-no" title="statement not covered" >  const closeBtn = document.querySelector('#tutorial-modal .btn-ghost'); if (closeBtn) closeBtn.textContent = t('ui.close');</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-intro', copy.intro);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-meta-loop', copy.metaLoop);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-meta-goal', copy.metaGoal);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-meta-difficulty', copy.metaDifficulty);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-section-structure-title', copy.structureTitle);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-section-systems-title', copy.systemsTitle);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-section-actions-title', copy.actionsTitle);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-section-difficulty-title', copy.difficultyTitle);</span>
+<span class="cstat-no" title="statement not covered" >  setText('tutorial-section-faq-title', copy.faqTitle);</span>
+<span class="cstat-no" title="statement not covered" >  setList('tutorial-section-structure', copy.structure);</span>
+<span class="cstat-no" title="statement not covered" >  setList('tutorial-section-systems', copy.systems);</span>
+<span class="cstat-no" title="statement not covered" >  setList('tutorial-section-actions', copy.actions);</span>
+<span class="cstat-no" title="statement not covered" >  setList('tutorial-section-difficulty', copy.difficulty);</span>
+<span class="cstat-no" title="statement not covered" >  const faq = document.getElementById('tutorial-faq-list');</span>
+<span class="cstat-no" title="statement not covered" >  if (faq) faq.innerHTML = copy.faq.map(([q, a]) =&gt; `&lt;div class="tutorial-faq-item"&gt;&lt;h4&gt;${q}&lt;/h4&gt;&lt;p&gt;${a}&lt;/p&gt;&lt;/div&gt;`).join('');</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+export function renderDifficultySelector({ DIFFICULTY_LEVELS, CURRENT_DIFFICULTY_ID, CURRENT_LANGUAGE, setDifficulty, t }) {
+  const grid = document.getElementById('title-difficulty-grid');
+  if (!grid) <span class="branch-0 cbranch-no" title="branch not covered" >return;</span>
+  grid.innerHTML = '';
+&nbsp;
+  const pillRow = document.createElement('div');
+  pillRow.className = 'difficulty-pill-row';
+  pillRow.setAttribute('role', 'radiogroup');
+  pillRow.setAttribute('aria-label', 'Difficulty selection');
+&nbsp;
+  DIFFICULTY_LEVELS.forEach((level) =&gt; {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `difficulty-pill${level.id === CURRENT_DIFFICULTY_ID ? ' selected' : ''}`;
+    button.id = `difficulty-choice-${level.id}`;
+    button.setAttribute('role', 'radio');
+    button.setAttribute('aria-checked', String(level.id === CURRENT_DIFFICULTY_ID));
+    button.textContent = level.label[CURRENT_LANGUAGE] <span class="branch-0 cbranch-no" title="branch not covered" >|| level.label.en;</span>
+    button.onclick = <span class="fstat-no" title="function not covered" >() =&gt; setDifficulty(level.id);</span>
+    pillRow.appendChild(button);
+  });
+&nbsp;
+  const descEl = document.createElement('p');
+  descEl.id = 'difficulty-pill-desc';
+  descEl.className = 'difficulty-pill-desc';
+  const currentLevel = DIFFICULTY_LEVELS.find(l =&gt; l.id === CURRENT_DIFFICULTY_ID);
+  descEl.textContent = currentLevel ? (currentLevel.blurb[CURRENT_LANGUAGE] <span class="branch-0 cbranch-no" title="branch not covered" >|| currentLevel.blurb.en)</span> <span class="branch-0 cbranch-no" title="branch not covered" >: '';</span>
+&nbsp;
+  grid.appendChild(pillRow);
+  grid.appendChild(descEl);
+&nbsp;
+  const note = document.getElementById('title-difficulty-note');
+  if (note) note.textContent = t('ui.difficultyNote');
+}
+&nbsp;
+export <span class="fstat-no" title="function not covered" >function initWelcomeScreen({ advanceFromTitle }) {</span>
+<span class="cstat-no" title="statement not covered" >  const titleScreen = document.getElementById('screen-title');</span>
+<span class="cstat-no" title="statement not covered" >  if (!titleScreen) return;</span>
+<span class="cstat-no" title="statement not covered" >  const splashImg = titleScreen.querySelector('.splash-image');</span>
+<span class="cstat-no" title="statement not covered" >  if (splashImg &amp;&amp; !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {</span>
+<span class="cstat-no" title="statement not covered" >    splashImg.classList.add('ken-burns-active');</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  titleScreen.addEventListener('click', (event) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!titleScreen.classList.contains('active')) return;</span>
+<span class="cstat-no" title="statement not covered" >    if (event.target.closest('button, select, option, a, .tutorial-dialog, .tutorial-backdrop')) return;</span>
+<span class="cstat-no" title="statement not covered" >    advanceFromTitle(event);</span>
+<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-21T01:27:23.694Z
+            </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    

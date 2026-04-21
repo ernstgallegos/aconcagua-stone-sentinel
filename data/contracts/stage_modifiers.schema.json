@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aconcaguastonesentinel.com/data/contracts/stage_modifiers.schema.json",
+  "title": "Stage Modifiers",
+  "description": "Object keyed by stage name (APPROACH, HIGH_CAMP, SUMMIT_DAY). Values are applied additively to EP and BT calculations by the turn-resolution pipeline.",
+  "type": "object",
+  "required": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"],
+  "additionalProperties": false,
+  "properties": {
+    "APPROACH":    { "$ref": "#/definitions/stageMod" },
+    "HIGH_CAMP":   { "$ref": "#/definitions/stageMod" },
+    "SUMMIT_DAY":  { "$ref": "#/definitions/stageMod" }
+  },
+  "definitions": {
+    "stageMod": {
+      "type": "object",
+      "required": ["fatigueMultiplier", "exposureMultiplier", "weatherSeverityBias", "confidencePenalty"],
+      "additionalProperties": false,
+      "properties": {
+        "fatigueMultiplier": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Stage-level multiplier applied to fatigue costs (stacks with action modifier)."
+        },
+        "exposureMultiplier": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Stage-level multiplier applied to exposure costs."
+        },
+        "weatherSeverityBias": {
+          "type": "number",
+          "description": "Additive offset to weatherSeverityBias in EP calculation."
+        },
+        "confidencePenalty": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Subtracted from perceived confidence at this stage."
+        }
+      }
+    }
+  }
+}

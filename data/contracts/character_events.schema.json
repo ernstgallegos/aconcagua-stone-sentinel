@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aconcaguastonesentinel.com/data/contracts/character_events.schema.json",
+  "title": "Character Events",
+  "description": "Array of per-character narrative events consumed by maybeApplyCharacterEvent() in events.js. Effects are additive body-state adjustments with bounded limits; no event may set a terminal outcome directly.",
+  "type": "array",
+  "minItems": 0,
+  "items": {
+    "type": "object",
+    "required": ["id", "category", "characterId", "trigger", "effects", "limits", "telemetryTag"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string", "minLength": 1 },
+      "category": {
+        "type": "string",
+        "enum": ["onset_context", "pressure_interpretation", "pacing_hesitation", "observation", "body_mind_drift"]
+      },
+      "characterId": {
+        "type": "string",
+        "description": "Must match an id in data/characters.json."
+      },
+      "scenarioId": { "type": "string" },
+      "stage": { "type": "string", "enum": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"] },
+      "trigger": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["advance", "advance_slowly", "wait", "descend", "sleep", "shoot_photo"] }
+          },
+          "stages": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["APPROACH", "HIGH_CAMP", "SUMMIT_DAY"] }
+          },
+          "minTurn": { "type": "integer", "minimum": 1 },
+          "minPersistenceTurns": { "type": "integer", "minimum": 0 },
+          "minWeatherSeverity": { "type": "integer", "minimum": 0, "maximum": 4 },
+          "minFunctionalCapacity": { "type": "number", "minimum": 0, "maximum": 100 },
+          "maxFunctionalCapacity": { "type": "number", "minimum": 0, "maximum": 100 },
+          "maxWater": { "type": "number", "minimum": 0 },
+          "maxFood": { "type": "number", "minimum": 0 }
+        }
+      },
+      "conditions": {
+        "type": "object",
+        "description": "Supplemental runtime guards; keys are validated in events.js, not here.",
+        "additionalProperties": true
+      },
+      "effects": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fatigueDelta": { "type": "number", "description": "Applied to state.fatigue (negative = recovery)." },
+          "exposureDelta": { "type": "number", "description": "Applied to state.exposure (negative = recovery)." },
+          "confidenceDelta": { "type": "number", "description": "Applied to perceived confidence." },
+          "pressureHintDelta": { "type": "number", "description": "Adds a hint bias to the perception signal." }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "required": ["cooldownTurns", "maxPerRun"],
+        "additionalProperties": false,
+        "properties": {
+          "oncePerRun": { "type": "boolean" },
+          "cooldownTurns": { "type": "integer", "minimum": 0 },
+          "maxPerRun": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "telemetryTag": { "type": "string", "minLength": 1 },
+      "visibleToPlayer": { "type": "boolean" },
+      "hiddenFromPlayer": { "type": "boolean" },
+      "narrative": { "type": "string" },
+      "notes": { "type": "string" }
+    }
+  }
+}

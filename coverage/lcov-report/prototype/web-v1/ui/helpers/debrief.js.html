@@ -1,0 +1,307 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for prototype/web-v1/ui/helpers/debrief.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">prototype/web-v1/ui/helpers</a> debrief.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>74/74</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">96.72% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>59/61</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>5/5</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>74/74</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * @typedef {'body'|'weather'|'time'|'resources'|'cognition'} DominantRiskAxis
+ */
+&nbsp;
+export function computeDecisionPattern(turnLog = []) {
+  const total = Math.max(1, turnLog.length);
+  const aggressive = turnLog.filter((entry) =&gt; ['advance', 'advance_slowly'].includes(entry.decision)).length / total;
+  const waits = turnLog.filter((entry) =&gt; entry.decision === 'wait').length / total;
+  const descents = turnLog.filter((entry) =&gt; entry.decision === 'descend').length / total;
+&nbsp;
+  if (descents &gt;= 0.34) return 'Defensive pacing with descent priority.';
+  if (aggressive &gt;= 0.58) return 'Aggressive push pattern under constrained margin.';
+  if (waits &gt;= 0.33) return 'Conservative rhythm with observation-heavy turns.';
+  return 'Mixed pacing with adaptive turn selection.';
+}
+&nbsp;
+export function computeDominantRiskAxis({ turnLog = [], finalOutcome = '', allFlags = [] } = {}) {
+  const counts = { body: 0, weather: 0, time: 0, resources: 0, cognition: 0 };
+  const bump = (axis, amount = 1) =&gt; { counts[axis] += amount; };
+&nbsp;
+  turnLog.forEach((entry) =&gt; {
+    const flags = entry.flags <span class="branch-0 cbranch-no" title="branch not covered" >|| [];</span>
+    if (flags.some((f) =&gt; f.includes('critical') || f.includes('collapse') || f.includes('fatality'))) bump('body', 2);
+    if (flags.some((f) =&gt; ['weather-window-closed', 'white-wind-hit', 'weather-event-active'].includes(f))) bump('weather', 2);
+    if (entry.decisionWindowExceeded || flags.includes('decision-window-exceeded')) bump('time', 1.5);
+    if (flags.some((f) =&gt; f.includes('water') || f.includes('food') || f.includes('resource'))) bump('resources', 2);
+    if (flags.some((f) =&gt; f.includes('late-signal') || f.includes('low-confidence') || f.includes('uncertain'))) bump('cognition', 1.5);
+  });
+&nbsp;
+  allFlags.forEach((flag) =&gt; {
+    if (flag.includes('late-signal')) bump('cognition', 1);
+    if (flag.includes('permit')) bump('time', 1);
+  });
+&nbsp;
+  if (finalOutcome.includes('Exposure')) bump('weather', 2);
+  if (finalOutcome.includes('Fatigue') || finalOutcome === 'Fatality') <span class="branch-0 cbranch-no" title="branch not covered" >bump('body', 2);</span>
+  if (finalOutcome === 'Resource Exhaustion') bump('resources', 2);
+  if (finalOutcome.includes('Window') || finalOutcome.includes('Permit')) bump('time', 2);
+&nbsp;
+  return /** @type {DominantRiskAxis} */ (Object.entries(counts).sort((a, b) =&gt; b[1] - a[1])[0][0]);
+}
+&nbsp;
+export function buildRunSignature({ characterName, scenarioName, seed, turns, highestNode, finalOutcome, dominantRiskAxis }) {
+  return [
+    `Character: ${characterName || '—'}`,
+    `Scenario: ${scenarioName || '—'}`,
+    `Seed: ${seed ?? '—'}`,
+    `Turns: ${turns ?? 0}`,
+    `Highest node: ${highestNode || '—'}`,
+    `Final outcome: ${finalOutcome || '—'}`,
+    `Dominant risk axis: ${dominantRiskAxis || '—'}`,
+  ].join('\n');
+}
+&nbsp;
+&nbsp;
+export function buildSignalInterpretationHint(entry = {}) {
+  const flags = entry.flags || [];
+  const trend = entry.trend || 'uncertain';
+  const uncertainty = entry.uncertainty || 'medium confidence';
+&nbsp;
+  if (flags.includes('decision-window-exceeded')) {
+    return 'Reading hint: late decisions degrade signal reliability even on stable-looking turns.';
+  }
+  if (trend === 'worsening fast' || trend === 'worsening') {
+    return 'Reading hint: worsening trend means body/time debt can outrun one favorable weather moment.';
+  }
+  if (uncertainty === 'low confidence' || flags.includes('late-signal-lock-in')) {
+    return 'Reading hint: low confidence is a warning to prefer resilient choices (wait/descend) over forced gains.';
+  }
+  if (entry.decision === 'wait' || entry.decision === 'descend') {
+    return 'Reading hint: conservative turns are valid when they preserve return margin and body stability.';
+  }
+  return 'Reading hint: one good turn helps, but trend plus body drift determines whether momentum is real.';
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-21T01:27:23.694Z
+            </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    
