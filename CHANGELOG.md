@@ -9,32 +9,6 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
-### Added
-- AI use manifesto section ("On AI use" / "Sobre el uso de IA") added to `meta/press-kit.md` and `meta/press-kit.es.md`, placed between Cultural Commitment and Current State sections; includes the full bilingual transparency statement about AI-assisted documents, programming, and concept art.
-- Brief AI transparency notes added to `README.md`, `README.es.md`, and `CONTRIBUTING.md` referencing the press kit manifesto section.
-
-### Changed
-- Press kit (EN + ES): concept art gallery reduced from 14 to 9 images (removed scenes 01, 02, 08, 10, 14); remaining 9 images presented as a clean 3×3 grid.
-- Press kit version bumped to 1.2 (EN + ES).
-- Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
-- Press kit (EN + ES): each character portrait now shows Part 1 and Part 2 images side-by-side in a two-column table.
-- Press kit (EN + ES): Concept art section replaced three sample images with a 3-column gallery grid of all 14 curated `/art/concept-art/curated/ig/` images.
-- Monte Carlo script and all simulation reports: renamed "Band violation warnings" section and all "target bands" references in violation blocks to "rollback thresholds"; renamed column header "Band" → "Rollback Threshold"; renamed console output and metadata key accordingly. Aligned `balance-calibration-notes.md` rollback criterion sentence to reference rollback thresholds (not target performance bands).
-
-
-### Added
-
-- Added press kit document (`meta/press-kit.md` / `meta/press-kit.es.md`) with project overview, character roster, key mechanics summary, and media contact information; wired into landing page waypoints section and `md-viewer.html` document allowlist.
-- Revised press kit to v1.1 (EN + ES): corrected all character profiles using canonical data (`data/characters.json`, `docs/en/characters_v_3_en.md`); added character portrait images; added interpersonal dynamics section; added scenarios section with all 5 scenario descriptions; added complete outcomes glossary (all 10 canonical outcomes with descriptions); added concept art and field-note sample images in visual assets section.
-- Added telemetry evaluation document (`docs/telemetry-evaluation.md`): architecture assessment and reference design for optional anonymous opt-in run-summary telemetry endpoint using the existing API and run_log.json infrastructure.
-- Ran Monte Carlo batch for v1.5.1 engine; report written to `docs/playtest-results/monte-carlo-v1.5.1.md`. No structural regression detected (summit > 0% for all characters). Resource Exhaustion increase from 0.9% to 11.0% attributable to `||→??` fix (see balance calibration notes).
-
-### Changed
-
-- Updated whitepaper to v0.2: added evidence base section documenting prototype state, character roster, systems architecture, and simulation results; updated scope section; kept v0.x-phase status indicator.
-- Corrected band labeling in `scripts/monte-carlo-web-v1.js` and generated reports: sections previously titled "Target bands comparison" now correctly labeled "Rollback trigger thresholds comparison" to distinguish from the tighter per-character performance target bands in `docs/balance-calibration-notes.md`.
-- Updated `docs/balance-calibration-notes.md` with v1.5.1 run evidence (2026-04-21), clarification of target bands vs. rollback thresholds, and analysis of the Resource Exhaustion shift.
-
 ## [1.5.1] — 2026-04
 
 ### Added
@@ -51,6 +25,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
 - Added regression test for zero `effectiveDelta` pressure factor path in `resolve-turn-pipeline.test.js` to prevent reintroduction of the `||` coercion bug.
 - Added API test for `Access-Control-Max-Age` header on OPTIONS preflight and `Access-Control-Expose-Headers` on data responses.
+- Added press kit document (`meta/press-kit.md` / `meta/press-kit.es.md`) with project overview, character roster, key mechanics summary, and media contact information; wired into landing page waypoints section and `md-viewer.html` document allowlist; character profiles use canonical data (`data/characters.json`, `docs/en/characters_v_3_en.md`); includes character portrait images, interpersonal dynamics, scenarios, outcomes glossary, and concept art gallery.
+- Added telemetry evaluation document (`docs/telemetry-evaluation.md`): architecture assessment and reference design for optional anonymous opt-in run-summary telemetry endpoint using the existing API and run_log.json infrastructure.
+- Ran Monte Carlo batch for v1.5.1 engine; report written to `docs/playtest-results/monte-carlo-v1.5.1.md`. No structural regression detected (summit > 0% for all characters). Resource Exhaustion increase from 0.9% to 11.0% attributable to `||→??` fix (see balance calibration notes).
+- Added AI use manifesto section ("On AI use" / "Sobre el uso de IA") to `meta/press-kit.md` and `meta/press-kit.es.md`, placed between Cultural Commitment and Current State; includes the full bilingual transparency statement about AI-assisted documents, programming, and concept art.
+- Added brief AI transparency notes to `README.md`, `README.es.md`, and `CONTRIBUTING.md` referencing the press kit manifesto section.
 
 ### Changed
 
@@ -70,6 +49,11 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
 - Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
 - Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
+- Updated whitepaper to v0.2: added evidence base section documenting prototype state, character roster, systems architecture, and simulation results; updated scope section; kept v0.x-phase status indicator.
+- Monte Carlo script and all simulation reports: renamed "Band violation warnings" section and all "target bands" references in violation blocks to "rollback thresholds"; renamed column header "Band" → "Rollback Threshold"; renamed console output and metadata key accordingly. Aligned `balance-calibration-notes.md` rollback criterion sentence to reference rollback thresholds (not target performance bands).
+- Updated `docs/balance-calibration-notes.md` with v1.5.1 run evidence (2026-04-21), clarification of target bands vs. rollback thresholds, and analysis of the Resource Exhaustion shift.
+- Press kit (EN + ES): each character portrait now shows Part 1 and Part 2 images side-by-side in a two-column table; concept art gallery curated to a 3×3 grid of 9 images; version bumped to 1.2.
+- Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
 
 ### Fixed
 
