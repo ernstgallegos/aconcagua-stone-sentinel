@@ -810,10 +810,10 @@ function buildReport(batchResult) {
     md += '\n';
   }
 
-  // Target bands
-  md += `## Target bands comparison\n\n`;
-  md += `Target bands from \`docs/balance-calibration-notes.md\`:\n\n`;
-  md += `| Outcome | Target Band |\n|---|---|\n`;
+  // Rollback thresholds (distinct from target performance bands — see docs/balance-calibration-notes.md)
+  md += `## Rollback trigger thresholds comparison\n\n`;
+  md += `Thresholds from \`docs/balance-calibration-notes.md\` (rollback criterion — looser than target performance bands):\n\n`;
+  md += `| Outcome | Rollback Threshold |\n|---|---|\n`;
   for (const [k, [lo, hi]] of Object.entries(TARGET_BANDS)) {
     md += `| ${k} | ${lo}%–${hi}% |\n`;
   }

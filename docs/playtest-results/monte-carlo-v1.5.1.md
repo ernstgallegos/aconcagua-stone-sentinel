@@ -96,11 +96,11 @@
 | Accumulated Fatigue Trap | 6.0% | 2.0% | 22.0% | 0.0% | 54.0% | 0.0% | 2.0% | 0.0% | 14.0% | 0.0% |
 | Weather Window | 0.0% | 2.0% | 16.0% | 0.0% | 56.0% | 0.0% | 2.0% | 0.0% | 24.0% | 0.0% |
 
-## Target bands comparison
+## Rollback trigger thresholds comparison
 
-Target bands from `docs/balance-calibration-notes.md`:
+Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — looser than target performance bands):
 
-| Outcome | Target Band |
+| Outcome | Rollback Threshold |
 |---|---|
 | Summit and Safe Return | 6%–24% |
 | Rescue | 3%–18% |

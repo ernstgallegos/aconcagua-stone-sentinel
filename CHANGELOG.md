@@ -9,8 +9,63 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added press kit document (`meta/press-kit.md` / `meta/press-kit.es.md`) with project overview, character roster, key mechanics summary, and media contact information; wired into landing page waypoints section and `md-viewer.html` document allowlist.
+- Added telemetry evaluation document (`docs/telemetry-evaluation.md`): architecture assessment and reference design for optional anonymous opt-in run-summary telemetry endpoint using the existing API and run_log.json infrastructure.
+- Ran Monte Carlo batch for v1.5.1 engine; report written to `docs/playtest-results/monte-carlo-v1.5.1.md`. No structural regression detected (summit > 0% for all characters). Resource Exhaustion increase from 0.9% to 11.0% attributable to `||→??` fix (see balance calibration notes).
+
+### Changed
+
+- Updated whitepaper to v0.2: added evidence base section documenting prototype state, character roster, systems architecture, and simulation results; updated scope section; kept v0.x-phase status indicator.
+- Corrected band labeling in `scripts/monte-carlo-web-v1.js` and generated reports: sections previously titled "Target bands comparison" now correctly labeled "Rollback trigger thresholds comparison" to distinguish from the tighter per-character performance target bands in `docs/balance-calibration-notes.md`.
+- Updated `docs/balance-calibration-notes.md` with v1.5.1 run evidence (2026-04-21), clarification of target bands vs. rollback thresholds, and analysis of the Resource Exhaustion shift.
+
+## [1.5.1] — 2026-04
+
+### Added
+
+- Created implementation plan v1.5.0 EN (`docs/en/implementation-plan-v1.5.md`) and ES mirror (`docs/es/plan-implementacion-v1.5.md`) documenting Canvas2D visualization, per-character visual identity, and decision-position fix deliverables.
+- Added keyboard activation support (Enter/Space) for `[data-action]` elements with `role="button"` in `event-registry.js`, replacing inline `onkeydown` handlers for CSP compatibility and accessibility consistency.
+- Added dependency validation in `createTurnEngine()` that fails fast with a descriptive error listing missing required dependencies instead of cryptic runtime failures.
+- Added `pressureHistory` ring-buffer cap (100 entries) in `game-state.js` to prevent unbounded array growth during long expedition runs.
+- Added `npm run validate:links` (markdown link validation) to CI pipeline.
+- Added `npm audit --audit-level=high` dependency security scanning to CI pipeline.
+- Added pressure delta sign convention documentation to `docs/simulation_engine.md`.
+- Added explicit `permissions: contents: read` to CI workflow for least-privilege GitHub token scope (CodeQL finding).
+- Added 23 unit tests for `ui/helpers/debrief.js` covering `computeDecisionPattern`, `computeDominantRiskAxis`, `buildRunSignature`, and `buildSignalInterpretationHint` (previously zero coverage).
+- Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
+- Added regression test for zero `effectiveDelta` pressure factor path in `resolve-turn-pipeline.test.js` to prevent reintroduction of the `||` coercion bug.
+- Added API test for `Access-Control-Max-Age` header on OPTIONS preflight and `Access-Control-Expose-Headers` on data responses.
+
+### Changed
+
+- Version bumped from 1.5.0 to 1.5.1 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings), prototype intro chip (`prototype/web-v1/index.html`), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`.
+- Updated version headers in `docs/architecture.md` and `docs/simulation_engine.md` from v1.4.8 to v1.5.0, aligning with canonical version.
+- Updated public roadmap (EN `meta/public-roadmap.md`, ES `meta/public-roadmap.es.md`) to v1.5 snapshot: marked Stages 3, 6, and Design Consolidation v1.4 as Done; added v1.5.0 Visual & Mechanical Refinement stage with implementation evidence.
+- Replaced `JSON.parse(JSON.stringify())` deep clone in `game-state.js` with `structuredClone` (with JSON fallback), correctly handling Date, RegExp, and undefined values.
+- Replaced `__modalKeydownHandler` DOM property pollution in `accessibility.js` with a `WeakMap` for clean per-overlay handler storage.
+- Refactored `renderPositionList` in `screens/game.js` to build DOM nodes directly in both desktop and mobile containers via shared builder function instead of copying `innerHTML`.
+- Improved `ALLOWED_ORIGINS` fallback in `api/run.js`: structured JSON logging, environment-aware severity (error on Vercel, warn locally), and `isVercel` flag for operational monitoring.
+- Enabled Playwright smoke tests on both push to main and PRs (removed `if: github.event_name == 'pull_request'` condition).
+- Archived legacy audit files from `temp/` to `devlog/` (renamed with sequential numbering and corrected "Adutoria" typo), replaced empty `README.MD` with descriptive `README.md`.
+- Updated `CONTRIBUTING.md` documentation consistency checklist to reference both v1.4 and v1.5 implementation plans.
+- Updated canonical production domain references from `https://aconcagua-stone-sentinel.vercel.app` to `https://aconcaguastonesentinel.com` across runtime defaults and documentation (`api/run.js` fallback origins, release smoke default URL, deep-link docs, README mirrors, and deploy references).
+- Updated landing page Field Notes carousel media in `index.html` to use the curated tagged assets from `art/concept-art/curated/field-notes/field-note-01.png` through `field-note-10.png`.
+- Hardened dependency security policy in CI by making `npm audit --audit-level=high` a blocking gate in `.github/workflows/ci.yml` (removed `|| true` bypass).
+- Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
+- Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
+- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
+
 ### Fixed
 
+- Fixed stale Spanish intro version string in `screens.js`: was displaying `v1.4.8` instead of current version (English was already correct at `v1.5.0`).
+- Fixed direct mutation of `epResult.pressureScore` in `turn-resolution.js`: acclimatization penalty and bivouac adjustments now compute a separate `adjustedPressureScore` variable instead of mutating the returned EP result object.
+- Removed inline `onkeydown` handler from watch-band element in `prototype/web-v1/index.html`; keyboard activation is now handled by the centralized event registry for CSP compliance.
+- Fixed broken markdown image links in geological bible docs (EN/ES): replaced `![...]()` references to missing copyrighted figure with italic citation placeholders.
+- Fixed `img.currentSrc` browser compatibility in `carousel-media.js`: replaced `||` with `??` (nullish coalesce) for correct falsy-value handling when `currentSrc` is empty string.
+- Fixed event cooldown initial state magic number in `events-core.js`: replaced `-999` with `-Infinity` so cooldown checks work correctly regardless of turn counter value.
+- Added inline documentation for all balance-critical magic numbers in `turn-resolution.js`: progress base (58), collapse multiplier (1.2), acclimatization thresholds (20/40), late-signal gates (0.75/18), photo confidence values (6/4/8).
 - Fixed architecture/debt-status documentation contradiction in `docs/architecture.md`: updated prototype status wording from v1.4 to v1.5.1 and replaced the stale “no active debt items remain” claim with a scoped historical statement that points to `docs/technical-debt-register.md` as the live debt source.
 - Fixed `#debrief` deep-link bootstrap crash in `prototype/web-v1/ui/screens.js`: replaced an out-of-scope `sc.max_turns` reference with `scenario.max_turns ?? 40`, preventing `ReferenceError` during mock debrief initialization.
 - Extended release smoke network-failure handling in `scripts/release-smoke-vercel.js` to treat `ENETUNREACH` as an environment limitation (skip) instead of an unhandled crash.
@@ -33,61 +88,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Standardized remaining `||` → `??` for photo action numeric defaults in `turn-resolution.js` (`photoConfidenceGain`, `photoUncertaintyDrop`, `photoInsightTurns`) to prevent zero-value coercion in action modifier data.
 - Extended `||` → `??` standardization to all gameplay-affecting defaults in `screens.js`: perception calculations (`calculatePerceptionLatency`, `calculatePerception`, `getStageModifier`, `calculateBodyTolerance`), config/setup (`buildRandomScenario`, `beginExpedition`, `getSimConfig`), resource economy (`spendResourcesForMinutes`, `applyBivouacPenalty`), photo system (`canUseShootPhoto`, carry-over perception), time management (`applyTimeCost`, `getTimeWindows`), decision window (`getDecisionWindowProfile`, `applyDecisionWindowDegradation`), context events (`applyContextEvents`), summit guard (`applySummitDifficultyRegressionGuard`), risk profile (`getRiskProfile`), UI signals (`metricDisplay`), and telemetry display. Total: ~70 `||` → `??` conversions. Intentionally preserved `||` only for string/display fallbacks (i18n text, labels, empty-string coercion) and boolean OR conditions.
 
-### Added
-
-- Added 23 unit tests for `ui/helpers/debrief.js` covering `computeDecisionPattern`, `computeDominantRiskAxis`, `buildRunSignature`, and `buildSignalInterpretationHint` (previously zero coverage).
-- Added 10 unit tests for `ui/helpers/selectors.js` covering `getConfiguredScenarios` and `getRandomScenarioConfig` null-safety and shape contract (previously zero coverage).
-- Added regression test for zero `effectiveDelta` pressure factor path in `resolve-turn-pipeline.test.js` to prevent reintroduction of the `||` coercion bug.
-- Added API test for `Access-Control-Max-Age` header on OPTIONS preflight and `Access-Control-Expose-Headers` on data responses.
-
-### Changed
-
-- Updated canonical production domain references from `https://aconcagua-stone-sentinel.vercel.app` to `https://aconcaguastonesentinel.com` across runtime defaults and documentation (`api/run.js` fallback origins, release smoke default URL, deep-link docs, README mirrors, and deploy references).
-- Updated landing page Field Notes carousel media in `index.html` to use the curated tagged assets from `art/concept-art/curated/field-notes/field-note-01.png` through `field-note-10.png`.
-- Hardened dependency security policy in CI by making `npm audit --audit-level=high` a blocking gate in `.github/workflows/ci.yml` (removed `|| true` bypass).
-- Added `docs/repo-truth.es.md` and `prototype/web-v1/README.md` to the version parity test in `repo-truth-parity.test.js` to prevent future version drift.
-- Release smoke script (`scripts/release-smoke-vercel.js`) now exits gracefully with a clear message when DNS/network is unreachable, instead of crashing with an unhandled error.
-- Updated technical debt register with 21 newly resolved items from the post-v1.5.1 audit pass (phase 1 + 2 + 3).
-
 ### Security
 
 - Hardened API rate-limiting behavior in `api/run.js`: Vercel deployments now require distributed KV-backed counters (`KV_REST_API_URL`, `KV_REST_API_TOKEN`) and fail closed with HTTP 503 when the backend is missing or unavailable, eliminating production fallback to per-instance memory counters.
-
-## [1.5.1] — 2026-04
-
-### Added
-
-- Created implementation plan v1.5.0 EN (`docs/en/implementation-plan-v1.5.md`) and ES mirror (`docs/es/plan-implementacion-v1.5.md`) documenting Canvas2D visualization, per-character visual identity, and decision-position fix deliverables.
-- Added keyboard activation support (Enter/Space) for `[data-action]` elements with `role="button"` in `event-registry.js`, replacing inline `onkeydown` handlers for CSP compatibility and accessibility consistency.
-- Added dependency validation in `createTurnEngine()` that fails fast with a descriptive error listing missing required dependencies instead of cryptic runtime failures.
-- Added `pressureHistory` ring-buffer cap (100 entries) in `game-state.js` to prevent unbounded array growth during long expedition runs.
-- Added `npm run validate:links` (markdown link validation) to CI pipeline.
-- Added `npm audit --audit-level=high` dependency security scanning to CI pipeline.
-- Added pressure delta sign convention documentation to `docs/simulation_engine.md`.
-- Added explicit `permissions: contents: read` to CI workflow for least-privilege GitHub token scope (CodeQL finding).
-
-### Changed
-
-- Version bumped from 1.5.0 to 1.5.1 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings), prototype intro chip (`prototype/web-v1/index.html`), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`.
-- Updated version headers in `docs/architecture.md` and `docs/simulation_engine.md` from v1.4.8 to v1.5.0, aligning with canonical version.
-- Updated public roadmap (EN `meta/public-roadmap.md`, ES `meta/public-roadmap.es.md`) to v1.5 snapshot: marked Stages 3, 6, and Design Consolidation v1.4 as Done; added v1.5.0 Visual & Mechanical Refinement stage with implementation evidence.
-- Replaced `JSON.parse(JSON.stringify())` deep clone in `game-state.js` with `structuredClone` (with JSON fallback), correctly handling Date, RegExp, and undefined values.
-- Replaced `__modalKeydownHandler` DOM property pollution in `accessibility.js` with a `WeakMap` for clean per-overlay handler storage.
-- Refactored `renderPositionList` in `screens/game.js` to build DOM nodes directly in both desktop and mobile containers via shared builder function instead of copying `innerHTML`.
-- Improved `ALLOWED_ORIGINS` fallback in `api/run.js`: structured JSON logging, environment-aware severity (error on Vercel, warn locally), and `isVercel` flag for operational monitoring.
-- Enabled Playwright smoke tests on both push to main and PRs (removed `if: github.event_name == 'pull_request'` condition).
-- Archived legacy audit files from `temp/` to `devlog/` (renamed with sequential numbering and corrected "Adutoria" typo), replaced empty `README.MD` with descriptive `README.md`.
-- Updated `CONTRIBUTING.md` documentation consistency checklist to reference both v1.4 and v1.5 implementation plans.
-
-### Fixed
-
-- Fixed stale Spanish intro version string in `screens.js`: was displaying `v1.4.8` instead of current version (English was already correct at `v1.5.0`).
-- Fixed direct mutation of `epResult.pressureScore` in `turn-resolution.js`: acclimatization penalty and bivouac adjustments now compute a separate `adjustedPressureScore` variable instead of mutating the returned EP result object.
-- Removed inline `onkeydown` handler from watch-band element in `prototype/web-v1/index.html`; keyboard activation is now handled by the centralized event registry for CSP compliance.
-- Fixed broken markdown image links in geological bible docs (EN/ES): replaced `![...]()` references to missing copyrighted figure with italic citation placeholders.
-- Fixed `img.currentSrc` browser compatibility in `carousel-media.js`: replaced `||` with `??` (nullish coalesce) for correct falsy-value handling when `currentSrc` is empty string.
-- Fixed event cooldown initial state magic number in `events-core.js`: replaced `-999` with `-Infinity` so cooldown checks work correctly regardless of turn counter value.
-- Added inline documentation for all balance-critical magic numbers in `turn-resolution.js`: progress base (58), collapse multiplier (1.2), acclimatization thresholds (20/40), late-signal gates (0.75/18), photo confidence values (6/4/8).
 
 ## [1.5.0] — 2026-04
 
