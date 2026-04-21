@@ -9,6 +9,24 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added `blake-daniela-0pct` calibration flag to `docs/balance-calibration-notes.md` documenting that the 0% summit/high-point result for Blake Harris and Daniela De Rossi under the headless AI policy is consistent with prior v1.4.5 behavior and does not represent a new structural regression.
+- Added explicit recalibration plan for Resource Exhaustion in `docs/balance-calibration-notes.md`: defines a two-consecutive-batch trigger condition and recommends reviewing `resourceBurnPerHour` before adjusting character `resourceEfficiency` values.
+
+### Changed
+
+- Completed `CHARACTER_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish role translations for `laura` (Médica de montaña y enfermera de expedición), `erik` (Guía alpino y especialista en alta montaña), `blake` (Ejecutivo financiero y alpinista competitivo), and `irina` (Científica alpina e investigadora de altitud). Previously only `francisco` and `daniela` had Spanish roles, causing the other four characters to display English role text in ES mode.
+- Completed `SCENARIO_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish names for `narrow-weather-window` (Ventana climática estrecha), `false-stability-terrain` (Terreno de falsa estabilidad), and `accumulated-fatigue-trap` (Trampa de fatiga acumulada). Previously these three scenarios displayed English names in ES mode.
+- Fixed stale Spanish tutorial text in `TUTORIAL_CONTENT.es.structure[0]` (`prototype/web-v1/ui/screens.js`): removed reference to the non-existent "modo visual" selector; updated to match EN copy ("elige idioma y continúa a la preparación de la expedición").
+- Fixed `setVisualMode()` in `prototype/web-v1/ui/screens.js` to accept and use its `mode` parameter (`mode = 'sunset'` default with `?? 'sunset'` guard); previously the function declared no parameter and silently ignored any argument passed to it.
+- Updated `docs/balance-calibration-notes.md` TL;DR section: corrected "Latest calibration evidence run date" from 2026-03-27 to 2026-04-21 and updated consolidation review date to reflect the current audit pass.
+- Corrected false "No 0% summit rates across any character" claim in `docs/balance-calibration-notes.md` v1.5.1 section: the statement contradicted the table immediately above it which shows Daniela and Blake at 0%. Replaced with accurate description referencing matching v1.4.5 behavior.
+
+### Fixed
+
+- Lowered `criticalExposure` threshold in `prototype/web-v1/engine/turn-resolution.js` from `>= 94` to `>= 78`, making `Collapse (Exposure)` and `Rescue` (exposure path) structurally reachable in gameplay. At the old threshold of 94, fatigue always reached 100 before exposure reached 94 (for all scenario initial states and standard action deltas), permanently suppressing this outcome. At 78, aggressive advance chains in high-exposure scenarios (e.g., Weather Window) and sustained `wait` loops without sleep produce Collapse (Exposure) before Collapse (Fatigue), matching documented game design intent. Updated the boundary test values in `prototype/web-v1/tests/engine/outcome-reachability.test.js` from `exposure: 96` to `exposure: 79` to clearly test at the new threshold.
+
 ## [1.5.1] — 2026-04
 
 ### Added

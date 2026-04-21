@@ -98,12 +98,14 @@ test('emits Resource Exhaustion when resources are depleted', () => {
 
 test('emits Collapse (Exposure) at camp under critical exposure', () => {
   const engine = createTurnEngine(makeDeps());
-  const turn = engine.resolveTurn(baseState({ exposure: 96 }), 'wait');
+  // Threshold is 78: test just above the boundary
+  const turn = engine.resolveTurn(baseState({ exposure: 79 }), 'wait');
   assert.equal(turn.outcome, 'Collapse (Exposure)');
 });
 
 test('emits Rescue outside camp under critical exposure', () => {
   const engine = createTurnEngine(makeDeps());
-  const turn = engine.resolveTurn(baseState({ position: 'summit', exposure: 96 }), 'wait');
+  // Threshold is 78: test just above the boundary outside camp
+  const turn = engine.resolveTurn(baseState({ position: 'summit', exposure: 79 }), 'wait');
   assert.equal(turn.outcome, 'Rescue');
 });

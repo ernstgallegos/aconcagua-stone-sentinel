@@ -144,7 +144,7 @@ Thresholds from `docs/balance-calibration-notes.md` (rollback criterion — loos
 | Irina Orlova | Collapse (Fatigue) | 55.2% | 4%–18% |
 | Irina Orlova | Permit Expired | 14.0% | 2%–14% |
 
-> **Note:** Rollback threshold violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
+> **Note:** Band violations in a headless AI simulation are expected. The `reasonablePolicy` agent is conservative and cannot adapt timing/risk as well as a human player. These results are best used for regression detection (0% summit = engine bug), not absolute calibration.
 
 ---
 

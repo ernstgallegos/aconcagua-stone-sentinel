@@ -385,7 +385,7 @@ export function createTurnEngine(deps) {
     let outcome = result.outcome;
     const outsideCamp = !isCampPosition(state.position);
     const resourcesDepleted = state.water <= 0 || state.food <= 0;
-    const criticalExposure = state.exposure >= 94;
+    const criticalExposure = state.exposure >= 78;
 
     if (state.functional_capacity <= 5 || (state.exposure >= 99 && state.fatigue >= 100)) {
       outcome = 'Fatality';
