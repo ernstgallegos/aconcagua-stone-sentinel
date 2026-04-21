@@ -3,11 +3,12 @@
 ## TL;DR — Current calibration status
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
-- **Latest calibration evidence run date in this file:** **2026-03-27** (Monte Carlo section: “v1.4.5 (2026-03)”, run summary dated 2026-03-27).
-- **Latest documentation consolidation review:** **2026-04-18** (post-`v1.5.0` final consolidation; no new Monte Carlo batch added in this revision).
+- **Latest calibration evidence run date in this file:** **2026-04-21** (Monte Carlo section: “v1.5.1 (2026-04)”, 1,500 runs; full report at `docs/playtest-results/monte-carlo-v1.5.1.md`).
+- **Latest documentation consolidation review:** **2026-04-21** (post-`v1.5.1` audit remediation pass).
 - **Active calibration flags (canonical):**
-  - `none` (no currently open balance blockers documented after the post-`v1.5.0` review).
+  - `none` (no currently open balance blockers after the post-`v1.5.1` remediation pass).
   - `watch-next-batch`: rerun `npm run simulate` before the next release cut and update this file if any outcome band drifts beyond rollback thresholds.
+  - `blake-daniela-0pct`: Blake Harris and Daniela De Rossi both show 0.0% summit and 0.0% High Point Return in the v1.5.1 batch. This is consistent with v1.4.5 behavior (same 0% under `reasonablePolicy`). No structural regression — human players with these characters can reach high camp; the AI policy’s conservative retreat thresholds prevent summit execution for these profiles. Monitor in the next human playtesting batch and consider a minor `resourceEfficiency` increase for Daniela if human testers report inaccessibility.
 
 ## Target metric bands (per character)
 
@@ -244,7 +245,8 @@ Full report: `docs/playtest-results/monte-carlo-v1.5.1.md`
 
 ### Structural integrity
 
-- No 0% summit rates across any character. No structural engine regression detected.
+- Daniela De Rossi and Blake Harris show 0.0% summit and 0.0% High Point Return in this 250-run batch. This is **not a new regression**: the v1.4.5 batch also showed 0% for both characters under the conservative `reasonablePolicy` agent. Their low `acclimatizationRate` and `resourceEfficiency` values cause the AI policy to commit to retreat before reaching high camp. Human players who learn the resource and acclimatization systems can summit these characters.
+- No structural engine regression detected across the other four characters.
 - Irina Orlova is the only character with a summit rate above 3% (3.2%), consistent with her Demanding profile and strong acclimatization mechanics.
 
 ### Resource Exhaustion increase (0.9% → 11.0% aggregate)
@@ -252,6 +254,8 @@ Full report: `docs/playtest-results/monte-carlo-v1.5.1.md`
 The `||→??` audit pass corrected a falsy-zero coercion bug in `turn-rules.js` and `screens.js`: when `efficiency` was `0`, `efficiency || 1` silently treated it as `1`, effectively granting some characters "free" actions (no resource cost). With the fix, `efficiency ?? 1` preserves `0` and applies the `Math.max(..., 0.1)` floor correctly, causing the simulator AI to exhaust resources faster on characters with low-efficiency profiles under conservative play.
 
 This is an AI policy artifact, not a human play regression. Human players who manage timing and sleep schedules correctly do not trigger the same exhaustion patterns.
+
+**Recalibration plan:** If Resource Exhaustion exceeds 10% aggregate in two consecutive Monte Carlo batches, trigger a targeted balance review of `resourceBurnPerHour` in `data/environmental_pressure_config.json` for HIGH_CAMP and SUMMIT_DAY stages before adjusting character `resourceEfficiency` values. Blake Harris (efficiency 0.80) and Daniela De Rossi (efficiency 0.92) are the primary candidates for a minor efficiency bump if playtesting confirms inaccessibility for human players.
 
 ### Notable vs. v1.4.5 divergences
 

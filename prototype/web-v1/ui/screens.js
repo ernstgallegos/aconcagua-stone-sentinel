@@ -668,12 +668,19 @@ const CHARACTER_I18N = {
   es: {
     francisco: { role: 'Profesor y corredor amateur' },
     daniela: { role: 'Fotógrafa de montaña' },
+    laura: { role: 'Médica de montaña y enfermera de expedición' },
+    erik: { role: 'Guía alpino y especialista en alta montaña' },
+    blake: { role: 'Ejecutivo financiero y alpinista competitivo' },
+    irina: { role: 'Científica alpina e investigadora de altitud' },
   },
 };
 
 const SCENARIO_I18N = {
   es: {
     'assisted-route': { name: 'Ruta asistida' },
+    'narrow-weather-window': { name: 'Ventana climática estrecha' },
+    'false-stability-terrain': { name: 'Terreno de falsa estabilidad' },
+    'accumulated-fatigue-trap': { name: 'Trampa de fatiga acumulada' },
     'weather-window': { name: 'Ventana climática' },
   },
 };
@@ -735,7 +742,7 @@ const TUTORIAL_CONTENT = {
     metaDifficulty: 'La dificultad cambia la presión, el consumo de recursos, el margen de recuperación, la holgura del permiso y el tiempo de decisión.',
     structureTitle: 'Cómo se estructura una partida',
     structure: [
-      'Título: elige idioma, modo visual y dificultad de la expedición.',
+      'Título: elige idioma y continúa a la preparación de la expedición (personaje + escenario).',
       'Personaje: cada perfil cambia resistencias, claridad de señales e identidad de acciones.',
       'Escenario: las semillas definen el clima inicial, la visibilidad, el terreno y el tempo de la ruta.',
       'Onboarding: lee el briefing del escenario y luego inicia la expedición.',
@@ -885,8 +892,8 @@ function initLanguage() {
   setLanguage(stored);
 }
 
-function setVisualMode() {
-  document.body.setAttribute('data-theme', 'sunset');
+function setVisualMode(mode = 'sunset') {
+  document.body.setAttribute('data-theme', mode ?? 'sunset');
 }
 
 function initVisualMode() {
