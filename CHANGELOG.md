@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Changed
+- Removed "Official Channels" waypoint card from the landing Waypoints section; section now contains four cards (Whitepaper, Public Roadmap, Repository, Press Kit). Removed unused `wp4` translation keys from both EN and ES `TRANSLATIONS` objects.
+
+
 ### Added
 
 - Added press kit document (`meta/press-kit.md` / `meta/press-kit.es.md`) with project overview, character roster, key mechanics summary, and media contact information; wired into landing page waypoints section and `md-viewer.html` document allowlist.
