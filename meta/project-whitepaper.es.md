@@ -1,4 +1,4 @@
-# Aconcagua: Stone Sentinel — Whitepaper público (ES)
+# Aconcagua: Stone Sentinel — Whitepaper público (v0.2 / ES)
 
 > Esta es la versión en español del whitepaper público.
 > Mantiene la misma intención editorial y de alcance que `meta/project-whitepaper.md`.
@@ -41,6 +41,26 @@ La cumbre es una posibilidad; el retorno seguro es una decisión de igual valor 
 - El flujo jugable actual es: `welcome/title → setup → onboarding → game → outcomes`.
 - Parte 2 continúa como puente narrativo gateado (no campaña completa pública).
 - La validación pública se apoya en tests de contrato/paridad, smoke de flujo y documentación sincronizada.
+
+## 6b) Base de evidencia (v0.2)
+
+Esta sección traduce las afirmaciones del whitepaper en evidencia de implementación verificable al momento de v0.2.
+
+**Prototipo:**
+- 6 personajes jugables con perfiles de motor diferenciados (percepción, eficiencia de recursos, aclimatización, postura de riesgo, capacidad funcional).
+- 5 escenarios predefinidos con condiciones iniciales y semillas canónicas.
+- 10 nodos de ruta en 3 etapas (Aproximación, Campo Alto, Día de Cumbre).
+- Outcomes plurales: Cumbre y Retorno Seguro, Retorno al Punto Alto, Retirada Estratégica, Rescate, Colapso (Fatiga), Colapso (Exposición), Agotamiento de Recursos, Ventana de Expedición Cerrada, Permiso Vencido, Fatalidad.
+- Sistema de permisos (hasta 20 días), ventana de decisión con degradación suave, visualización Canvas2D con identidad visual por personaje.
+
+**Resultados de simulación (Monte Carlo v1.5.1, 1.500 corridas):**
+- Ningún personaje produce 0% de cumbre → no hay regresión estructural en el motor.
+- Tasas humanas observadas de cumbre: 10–30% para jugadores que internalizan el modelo EP/BT.
+- Reporte completo: `docs/playtest-results/monte-carlo-v1.5.1.md`.
+
+**Arquitectura:**
+- 381 tests automatizados cubriendo motor, helpers de UI, API, paridad de contratos y pipelines de simulación.
+- Repositorio público: [github.com/ernstgallegos/aconcagua-stone-sentinel](https://github.com/ernstgallegos/aconcagua-stone-sentinel).
 
 ## 7) Compromisos de publicación
 

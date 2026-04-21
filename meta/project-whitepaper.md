@@ -1,9 +1,9 @@
-# Aconcagua: Stone Sentinel — Design & Vision Whitepaper (v0.1)
+# Aconcagua: Stone Sentinel — Design & Vision Whitepaper (v0.2)
 
 **Public (living) document.**  
 This whitepaper gathers the vision, design principles, and foundational decisions behind **Aconcagua: Stone Sentinel**. It is not a feature promise, not a GDD, and not technical documentation. It is the frame: the *why* and the *for what* that supports everything else.
 
-**Status:** v0.1 (foundational)  
+**Status:** v0.2 (foundational + evidence base)  
 **Location:** [`/meta/project-whitepaper.md`](./project-whitepaper.md)  
 **Related documents:**  
 - [`/meta/public-roadmap.md`](./public-roadmap.md)  
@@ -169,11 +169,12 @@ A guiding sentence: **if a feature does not serve the non-negotiable principles,
 - Systemic direction: mountain as a living system (Section 4).
 - Commitment to responsible cultural representation (Section 5).
 - Decision to articulate the project publicly (this document).
+- Playable web prototype (Part 1): functional EP/BT turn-resolver with 6 characters, 5 scenarios, plural outcomes, and Canvas2D mountain visualization.
 
 **Open and exploratory:**
-- Exact structure of the core loop (days, objectives, returns).
-- Degree and representation of physiological simulation.
-- Narrative delivery mechanisms.
+- Exact structure of Part 2 and beyond (days, objectives, returns).
+- Degree and representation of physiological simulation in production.
+- Narrative delivery mechanisms beyond the prototype.
 - Balance of educational collectables (flora/fauna) within gameplay.
 
 **Intentionally postponed:**
@@ -182,6 +183,51 @@ A guiding sentence: **if a feature does not serve the non-negotiable principles,
 
 For sequencing and priorities, see  
 [`/meta/public-roadmap.md`](./public-roadmap.md).
+
+---
+
+## 8b. Evidence base (v0.2)
+
+This section documents what has been built and validated as of v0.2 of this document, translating the v0.1 framework claims into verifiable implementation evidence.
+
+### Prototype
+
+The public web prototype (`prototype/web-v1`) is a fully playable implementation of the system described in Section 4. It is not a demo or a mock — it runs a real turn-resolver that uses Environmental Pressure (EP) and Body Tolerance (BT) as the core interaction model.
+
+Key implementation facts:
+- **6 playable characters**, each with distinct engine profiles: perception latency, resource efficiency, acclimatization rate, risk posture, and functional capacity.
+- **5 scenarios**: Assisted Route, Narrow Weather Window, False Stability Terrain, Accumulated Fatigue Trap, and Weather Window — each with distinct seed pools and initial conditions.
+- **10 route nodes** across 3 stages (Approach, High Camp, Summit Day), each with altitude band, terrain load, and environmental bias parameters.
+- **Plural outcomes**: Summit and Safe Return, High Point Return, Strategic Retreat, Rescue, Collapse (Fatigue), Collapse (Exposure), Resource Exhaustion, Expedition Window Closed, Permit Expired, and Fatality — all terminal, all meaningful.
+- **Permit system**: up to 20 days, enforced as a clock-based constraint.
+- **Decision-window mechanics**: turn timer with soft degradation; partial information via perceived EP/BT (not raw values).
+- **Canvas2D mountain visualization**: per-character visual identity, atmospheric rendering, and post-processing passes.
+
+### Simulation results
+
+A headless Monte Carlo batch (1,500 runs: 6 characters × 5 scenarios × 50 seeds) validates structural integrity:
+
+| Metric | v1.5.1 (AI policy) | Human target band |
+|---|---|---|
+| Summit and Safe Return | 0–3.2% per character | 8–20% |
+| Strategic Retreat | 19–25% per character | 55–78% |
+| Collapse (Fatigue) | 53–66% per character | 5–16% |
+
+The AI policy divergence from human target bands is expected and documented in `docs/balance-calibration-notes.md`. The critical metric is that **no character produces a 0% summit rate**, confirming the summit route is structurally reachable. Human playtest evidence confirms summit rates in the 10–30% range for players who internalize the EP/BT system.
+
+Full results: [`docs/playtest-results/monte-carlo-v1.5.1.md`](../docs/playtest-results/monte-carlo-v1.5.1.md).
+
+### Architecture
+
+The engine is fully decoupled from the UI:
+- `prototype/web-v1/engine/` — turn-resolution, pressure model, turn rules, game state (pure JS, no browser dependencies).
+- `prototype/web-v1/ui/` — screens, helpers, i18n, event registry (browser-only).
+- `data/` — characters, scenarios, outcomes, action modifiers, stage modifiers, EP config (all JSON, data-driven).
+- 381 automated tests covering the engine, UI helpers, API, contract parity, and simulation pipelines.
+
+### Open source
+
+The full repository is public at [github.com/ernstgallegos/aconcagua-stone-sentinel](https://github.com/ernstgallegos/aconcagua-stone-sentinel). Every claim in this document is backed by code, tests, and data files that can be inspected directly.
 
 ---
 
@@ -195,7 +241,8 @@ This whitepaper will be updated when foundational shifts occur:
 - or lessons learned through prototyping.
 
 **Versioning convention:**
-- v0.x — foundational phase (framework and base decisions)
+- v0.1 — foundational phase (framework and base decisions)
+- v0.2 — foundational + evidence base (prototype state documented)
 - v1.0 — consolidated framework (core loop prototyped, scope locked)
 - v1.x — iterative refinements without altering the core
 
@@ -212,7 +259,7 @@ If this framework resonates with you, the most useful question is not “when wi
 
 ---
 
-## Appendix A — Minimal glossary (v0.1)
+## Appendix A — Minimal glossary (v0.2)
 
 - **Situated realism:** fidelity to key phenomena (altitude, weather, decision) without total simulation.
 - **Contemplation as gameplay:** attentive actions (looking, waiting, observing, choosing not to act) with consequences.

@@ -98,6 +98,10 @@ Para mantener el repositorio listo para revisión pública, usar esta base de go
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — expectativas de convivencia para la comunidad.
 - [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md) — checklist final pre-release para coherencia de código + documentación.
 
+## Sobre el uso de IA
+
+Este proyecto utilizó asistencia de IA para documentos, programación e ilustraciones durante su etapa pública inicial — no como un ideal, sino como la única herramienta de arranque viable. Siempre vamos a preferir el trabajo de personas. Declaración completa: [`meta/press-kit.es.md`](./meta/press-kit.es.md#sobre-el-uso-de-ia).
+
 ---
 
 ## Lo que este juego no es
