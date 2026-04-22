@@ -359,6 +359,8 @@ The expedition is still a promise. Tomorrow it becomes a system.`,
     id: 'departure_road',
     eyebrow: 'Early morning',
     title: 'Road to Horcones',
+    illustrationSrc: '../../../art/concept-art/curated/concept-curated-14.png',
+    illustrationAlt: 'Expedition transfer on the road to Horcones with the Andes rising ahead.',
     body: `Morning is colder than expected. Movements turn automatic: load, check, lift. Conversation gets thinner.
 
 Through the window, Mendoza stays behind and the dry profile of the access corridor appears. Urban traffic gives way to wind and stone.
@@ -377,6 +379,8 @@ There is no epic in this section. Only transition. And with it, one silent decis
     id: 'future_cta',
     eyebrow: 'Development continues',
     title: 'The Expedition Ahead',
+    illustrationSrc: '../../../art/concept-art/curated/concept-curated-15.png',
+    illustrationAlt: 'Future-facing mountain scene that closes the current Part 2 bridge.',
     body: `What comes after this threshold is already under construction. The full expedition —team on the mountain, decisions with integral consequences— is still in development.
 
 If you got this far, you already did the hardest part: sustaining attention, not just impulse.
@@ -452,6 +456,7 @@ La expedición todavía es promesa. Mañana será sistema.`,
   departure_road: {
     eyebrow: 'Madrugada',
     title: 'Camino a Horcones',
+    illustrationAlt: 'Traslado de expedición por la ruta hacia Horcones con los Andes al frente.',
     body: `La mañana está más fría de lo esperado. Los movimientos se vuelven automáticos: cargar, revisar, levantar. La conversación se afina.
 
 Por la ventana, Mendoza queda atrás y aparece el perfil seco del corredor de acceso. El tránsito urbano cambia por viento y piedra.
@@ -461,6 +466,7 @@ No hay épica en este tramo. Solo transición. Y, con ella, una decisión silenc
   future_cta: {
     eyebrow: 'El desarrollo continúa',
     title: 'La expedición que sigue',
+    illustrationAlt: 'Escena de montaña orientada al futuro que cierra el puente actual de la Parte 2.',
     body: `Lo que viene después de este umbral ya está en construcción. La expedición completa —equipo pleno en montaña, decisiones con consecuencia integral— sigue en desarrollo.
 
 Si llegaste hasta acá, ya hiciste la parte más difícil: sostener atención, no solo impulso.
