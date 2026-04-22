@@ -38,13 +38,18 @@ npm run smoke:release
 - [ ] `SECURITY.md` and `CODE_OF_CONDUCT.md` links remain reachable from README.
 - [ ] `docs/data-contracts-guide.md` reflects any schema changes to `characters.json`, `character_events.json`, `context_events.json`, or `nodes.json`.
 - [ ] `docs/deep-links-summary.md` screen-ID table matches all `<section id="screen-…">` entries in `prototype/web-v1/index.html`.
+- [ ] `docs/en/accessibility-verification-checklist.md` reviewed for release-facing UI changes.
 
 ## 4) Front-end verification
 
 - [ ] For visible UI changes, include an updated screenshot artifact.
 - [ ] Smoke flow still reaches title → setup → onboarding → game → outcomes.
 
-## 5) Release hygiene
+## 5) Operations readiness
+
+- [ ] `docs/operations-support.md` reflects current startup/deep-link/overlay troubleshooting behavior.
+
+## 6) Release hygiene
 
 - [ ] No contradictory statements across README, architecture docs, and changelog.
 - [ ] No stale references to removed mechanics/features.

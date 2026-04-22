@@ -19,6 +19,7 @@ import { openTutorialStyleModal, closeTutorialStyleModal, bindBackdropClose } fr
 import { syncScreenHash, parseDeepLinkHash } from './helpers/routing.js';
 import { resolveNavigationTarget } from './helpers/screen-utils.js';
 import { safeSetStorage } from './helpers/storage.js';
+import { isKnownDeepLinkScreen, validateSelectionParams, validateDebriefParams } from './helpers/deep-link-validation.js';
 import { G, updateUIState, updateRunState } from '../state/game-state.js';
 import { setStartupState } from './helpers/startup-ui.js';
 
@@ -63,7 +64,6 @@ const SCREEN_EXIT_DURATION_MS = 150;
  * @param {Function}      hooks.deriveDifficultyFromScenario () => void — syncs difficulty from G.scenario.
  * @param {Function}      hooks.resolveCharacter           (param) => obj|null — from deep-link param.
  * @param {Function}      hooks.resolveScenario            (param) => obj|null — from deep-link param.
- * @param {Function}      hooks.resolveSeed                (param, seeds) => number.
  */
 export function initFlowController(hooks) {
   _hooks = hooks;
@@ -150,6 +150,12 @@ function _attachBottomSheetBackdrop() {
  *   (equivalent to setting _suppressHashSync before the call, but explicit).
  */
 export function showScreen(id, { suppressHash = false } = {}) {
+  const currentScreen = document.querySelector('.screen.active')?.id?.replace('screen-', '');
+  if (_hooks.shouldConfirmLeaveRun?.({ fromScreen: currentScreen, toScreen: id })) {
+    const shouldContinue = _hooks.confirmLeaveRun?.({ fromScreen: currentScreen, toScreen: id });
+    if (!shouldContinue) return;
+  }
+
   const part2Screens = new Set(['part2-character', ..._hooks.part2NarrativeIds]);
   id = resolveNavigationTarget(id, {
     finalOutcome: G.finalOutcome,
@@ -358,6 +364,11 @@ export function handleDeepLink() {
   if (!parsed) return;
 
   const { screenId, params } = parsed;
+  if (!isKnownDeepLinkScreen(screenId, [..._hooks.part2NarrativeIds])) {
+    _hooks.reportRuntimeIssue('Ignoring unknown deep-link screen', screenId);
+    showScreen('title', { suppressHash: true });
+    return;
+  }
 
   // Part 2 screens — bypass gating when &force=1 is present
   const PART2_SCREEN_IDS = new Set(['part2-character', ..._hooks.part2NarrativeIds]);
@@ -369,13 +380,21 @@ export function handleDeepLink() {
   }
 
   if (screenId === 'game') {
-    const char     = _hooks.resolveCharacter(params.character);
-    const scenario = _hooks.resolveScenario(params.scenario);
-    if (!char || !scenario) { return; } // stay on title
-    G.character = char;
-    G.scenario  = scenario;
-    const seeds = scenario.seeds || [];
-    G.seed = _hooks.resolveSeed(params.seed, seeds);
+    const validated = validateSelectionParams({
+      params,
+      resolveCharacter: _hooks.resolveCharacter,
+      resolveScenario: _hooks.resolveScenario,
+    });
+    if (!validated.ok) {
+      _hooks.reportRuntimeIssue(`Invalid game deep-link params: ${validated.reason}`, JSON.stringify(params));
+      showScreen('expedition-setup', { suppressHash: true });
+      return;
+    }
+    updateRunState(G, {
+      character: validated.character,
+      scenario: validated.scenario,
+      seed: validated.seed,
+    });
     _hooks.deriveDifficultyFromScenario();
     // startGame() calls showScreen('game') internally — suppress hash overwrite
     _suppressHashSync = true;
@@ -384,13 +403,21 @@ export function handleDeepLink() {
   }
 
   if (screenId === 'onboarding') {
-    const char     = _hooks.resolveCharacter(params.character);
-    const scenario = _hooks.resolveScenario(params.scenario);
-    if (!char || !scenario) { showScreen('expedition-setup'); return; }
-    G.character = char;
-    G.scenario  = scenario;
-    const seeds = scenario.seeds || [];
-    G.seed = _hooks.resolveSeed(params.seed, seeds);
+    const validated = validateSelectionParams({
+      params,
+      resolveCharacter: _hooks.resolveCharacter,
+      resolveScenario: _hooks.resolveScenario,
+    });
+    if (!validated.ok) {
+      _hooks.reportRuntimeIssue(`Invalid onboarding deep-link params: ${validated.reason}`, JSON.stringify(params));
+      showScreen('expedition-setup', { suppressHash: true });
+      return;
+    }
+    updateRunState(G, {
+      character: validated.character,
+      scenario: validated.scenario,
+      seed: validated.seed,
+    });
     _hooks.deriveDifficultyFromScenario();
     _suppressHashSync = true;
     _hooks.showOnboarding('predefined');
@@ -398,6 +425,17 @@ export function handleDeepLink() {
   }
 
   if (screenId === 'debrief') {
+    const validated = validateDebriefParams({
+      params,
+      resolveCharacter: _hooks.resolveCharacter,
+      resolveScenario: _hooks.resolveScenario,
+      validOutcomes: _hooks.getCanonicalOutcomes(),
+    });
+    if (!validated.ok) {
+      _hooks.reportRuntimeIssue(`Invalid debrief deep-link params: ${validated.reason}`, JSON.stringify(params));
+      showScreen('expedition-setup', { suppressHash: true });
+      return;
+    }
     _hooks.bootstrapMockDebrief(params);
     return;
   }

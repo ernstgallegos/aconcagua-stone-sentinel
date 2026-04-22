@@ -83,7 +83,9 @@ function makeHooks(overrides = {}) {
     deriveDifficultyFromScenario: () => {},
     resolveCharacter:             () => null,
     resolveScenario:              () => null,
-    resolveSeed:                  () => 1234,
+    shouldConfirmLeaveRun:        () => false,
+    confirmLeaveRun:              () => true,
+    getCanonicalOutcomes:         () => new Set(['Strategic Retreat', 'Summit and Safe Return']),
     ...overrides,
   };
 }
@@ -170,6 +172,26 @@ test('showScreen: non-Part2 screen passes through unchanged', () => {
 
   assert.ok(screens['game'].classList.contains('active'));
   assert.equal(entered[entered.length - 1], 'game');
+});
+
+test('showScreen: leave-run guard can block navigation when confirmation is rejected', () => {
+  const entered = [];
+  const { doc, screens } = makeDomStub(['game', 'title', 'debrief']);
+  doc.querySelector = (sel) => {
+    if (sel === '.screen.active') return screens.game;
+    return null;
+  };
+  screens.game.classList.add('active');
+  global.document = doc;
+
+  initFlowController(makeHooks({
+    shouldConfirmLeaveRun: ({ fromScreen, toScreen }) => fromScreen === 'game' && toScreen === 'title',
+    confirmLeaveRun: () => false,
+    onEnterScreen: (id) => entered.push(id),
+  }));
+
+  showScreen('title');
+  assert.equal(entered.includes('title'), false);
 });
 
 // ── showScreen: hash suppression ─────────────────────────────────────────────
@@ -273,6 +295,9 @@ test('handleDeepLink: debrief deep link delegates to bootstrapMockDebrief hook',
   global.window.location.hash = '#debrief&character=francisco&seed=42';
 
   initFlowController(makeHooks({
+    resolveCharacter: (value) => (value === 'francisco' ? { id: 'francisco' } : null),
+    resolveScenario: () => ({ id: 'normal-route', seeds: [42] }),
+    getCanonicalOutcomes: () => new Set(['Strategic Retreat', 'Summit and Safe Return']),
     bootstrapMockDebrief: (params) => { called = true; receivedParams = params; },
   }));
   handleDeepLink();
@@ -293,7 +318,6 @@ test('handleDeepLink: valid game deep link sets character/scenario/seed and star
   initFlowController(makeHooks({
     resolveCharacter: (value) => (value === 'francisco' ? character : null),
     resolveScenario: (value) => (value === 'normal-route' ? scenario : null),
-    resolveSeed: (seed) => Number(seed),
     deriveDifficultyFromScenario: () => { derivedDifficulty = true; },
     startGame: () => { started = true; },
   }));
@@ -307,12 +331,14 @@ test('handleDeepLink: valid game deep link sets character/scenario/seed and star
   assert.equal(started, true);
 });
 
-test('handleDeepLink: invalid game deep link params fail safely without startGame', () => {
-  global.document = makeDomStub(['title', 'game', 'debrief']).doc;
+test('handleDeepLink: invalid game deep link params fail safely to expedition-setup without startGame', () => {
+  const entered = [];
+  global.document = makeDomStub(['title', 'expedition-setup', 'game', 'debrief']).doc;
   global.window.location.hash = '#game&character=unknown&scenario=invalid';
   let started = false;
 
   initFlowController(makeHooks({
+    onEnterScreen: (id) => entered.push(id),
     resolveCharacter: () => null,
     resolveScenario: () => null,
     startGame: () => { started = true; },
@@ -320,6 +346,7 @@ test('handleDeepLink: invalid game deep link params fail safely without startGam
 
   handleDeepLink();
   assert.equal(started, false);
+  assert.ok(entered.includes('expedition-setup'));
 });
 
 test('handleDeepLink: valid onboarding deep link sets state and calls onboarding flow', () => {
@@ -332,7 +359,6 @@ test('handleDeepLink: valid onboarding deep link sets state and calls onboarding
   initFlowController(makeHooks({
     resolveCharacter: (value) => (value === 'laura' ? character : null),
     resolveScenario: (value) => (value === 'wind-window' ? scenario : null),
-    resolveSeed: (seed) => Number(seed),
     deriveDifficultyFromScenario: () => {},
     showOnboarding: (mode) => { onboardingMode = mode; },
   }));
@@ -403,18 +429,18 @@ test('handleDeepLink: Part2 force=1 sets localStorage and navigates to Part 2 sc
   assert.equal(global._lastHash, null, 'hash must be suppressed on Part2 force navigate');
 });
 
-test('handleDeepLink: unrecognised screen navigates without writing hash', () => {
+test('handleDeepLink: unknown deep-link screen returns to title without writing hash', () => {
   const entered = [];
-  const { doc } = makeDomStub(['summit-success', 'debrief']);
+  const { doc } = makeDomStub(['title', 'debrief']);
   global.document = doc;
-  global.window.location.hash = '#summit-success';
+  global.window.location.hash = '#unknown-screen-id';
   global._lastHash = null;
   global.history = { replaceState(_, __, url) { global._lastHash = url; } };
 
   initFlowController(makeHooks({ onEnterScreen: (id) => entered.push(id) }));
   handleDeepLink();
 
-  assert.ok(entered.includes('summit-success'), `Expected summit-success; got ${JSON.stringify(entered)}`);
+  assert.ok(entered.includes('title'), `Expected title; got ${JSON.stringify(entered)}`);
   assert.equal(global._lastHash, null, 'hash must be suppressed on direct deep-link navigate');
 });
 

@@ -78,3 +78,9 @@ El roadmap expresa una estrategia deliberada: avanzar con control sistémico, tr
 
 Para detalle operativo fase por fase en español, ver:
 `docs/es/plan-implementacion-v1.4.md` y `docs/es/plan-implementacion-v1.5.md`.
+
+
+## Artefacto de apoyo a decisiones para la Etapa 7
+
+- Documento de apoyo a decisiones para equipos no técnicos: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md).
+- Entrega de lanzamiento para marketing/diseño/estrategia: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md).

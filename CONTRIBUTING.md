@@ -99,16 +99,20 @@ npm run validate:links
 
 When touching files under `art/` or changing portrait/cover references in `prototype/web-v1`:
 
-1. Keep filenames stable when possible (runtime mapping depends on canonical IDs).
-2. If a filename must change, update the corresponding runtime mapping and tests in the same PR.
-3. Run:
+1. **Accepted formats:** use `.png` for transparent UI/character assets, `.jpg`/`.jpeg` for photographic or painted flats, and `.svg` only for icons/logos (avoid SVG for painted character art).
+2. **Naming contract:** keep lowercase kebab-case names and preserve canonical runtime IDs (for example `francisco-aguirre.png` and `art/characters/part-2/francisco-aguirre.png`).
+3. **Size/aspect expectations:**
+   - character portraits: maintain the existing portrait ratio used by current cards (do not switch to landscape crops),
+   - cover/scene artwork: keep source composition intact; avoid destructive 16:9 recrops unless explicitly requested by design.
+4. If a filename/path must change, update runtime mapping helpers and related tests in the same PR (`ui/helpers/carousel.js`, any relevant i18n/docs references, and contract tests).
+5. Run:
    ```bash
    npm test
    ```
    and verify `prototype/web-v1/tests/contracts/assets-contracts.test.js` passes.
-4. For visible UI changes, include an updated screenshot artifact in the PR/final report.
+6. For visible UI changes, include an updated screenshot artifact in the PR/final report.
 
-Do not ship visual-asset reference changes without matching contract-test evidence.
+Do not ship visual-asset reference changes without matching runtime mapping + asset-contract test evidence.
 
 ## Serverless API CORS configuration
 

@@ -311,3 +311,9 @@ Respondemos consultas de prensa, propuestas de colaboración y solicitudes de co
 ---
 
 *Kit de prensa versión 1.2 · Abril 2026 · aconcaguastonesentinel.com*
+
+
+## Referencias de coordinación del lanzamiento
+
+- Traspaso de lanzamiento: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md)
+- Soporte de decisión de la etapa 7: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md)

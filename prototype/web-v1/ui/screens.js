@@ -34,7 +34,7 @@ import { openTutorialStyleModal } from './helpers/modal-controller.js';
 import { buildEnvironmentEventPlan, applyTurnEvents, maybeApplyCharacterEvent, applyClockDelta } from './helpers/events.js';
 import { createDefaultDataConfig, loadDataConfigFiles, normalizeRouteData } from './helpers/data-config.js';
 import { getConfiguredScenarios as getConfiguredScenariosFromConfig, getRandomScenarioConfig as getRandomScenarioConfigFromConfig } from './helpers/selectors.js';
-import { setStartupState, renderBlockingError } from './helpers/startup-ui.js';
+import { setStartupState, renderBlockingError, setStartupProgress } from './helpers/startup-ui.js';
 import { reportRuntimeDiagnostic } from './helpers/runtime-diagnostics.js';
 import { bindUiEventRegistry } from './event-registry.js';
 import { safeGetStorage, safeSetStorage, safeRemoveStorage } from './helpers/storage.js';
@@ -124,6 +124,22 @@ function reportRuntimeIssue(message, detail = null) {
     },
     { context: 'ui', level: 'warn' }
   );
+}
+
+function shouldConfirmLeaveRun({ fromScreen, toScreen }) {
+  if (fromScreen !== 'game') return false;
+  if (toScreen === 'game' || toScreen === 'journal') return false;
+  const hasState = !!G.state?.position;
+  const hasTurns = Array.isArray(G.turnLog) && G.turnLog.length > 0;
+  const stillInProgress = hasState && hasTurns && !G.finalOutcome;
+  return stillInProgress;
+}
+
+function confirmLeaveRun() {
+  return window.confirm(uiText(
+    'Leave this in-progress expedition? Unsaved progress from this run will be lost.',
+    '¿Salir de esta expedición en curso? El progreso no guardado de esta partida se perderá.'
+  ));
 }
 
 function setModelLoadError(errorMessage) {
@@ -948,6 +964,10 @@ async function loadDataConfig() {
   const loaded = await loadDataConfigFiles({
     fetchImpl: fetch,
     onError: setModelLoadError,
+    onProgress: ({ loaded, total, path }) => {
+      const fileLabel = path ? path.split('/').pop() : '';
+      setStartupProgress({ loaded, total, label: fileLabel });
+    },
   });
   if (!loaded) return false;
   DATA_CONFIG = loaded;
@@ -3363,20 +3383,20 @@ document.addEventListener('keydown', (event) => {
 
 /**
  * Resolve a character param string to a DATA_CONFIG character object.
- * Falls back to the first available character.
+ * Returns null when charParam is provided but does not match any known character.
  */
 function _resolveCharacter(charParam) {
   const chars = DATA_CONFIG.characters || [];
-  return (charParam && chars.find(c => c.id === charParam)) || chars[0] || null;
+  return chars.find(c => c.id === charParam) || null;
 }
 
 /**
  * Resolve a scenario param string to a configured scenario object.
- * Falls back to the first predefined scenario.
+ * Returns null when scenParam is provided but does not match any known scenario.
  */
 function _resolveScenario(scenParam) {
   const scenarios = getConfiguredScenarios();
-  return (scenParam && scenarios.find(s => s.id === scenParam)) || scenarios[0] || null;
+  return scenarios.find(s => s.id === scenParam) || null;
 }
 
 function resolveSeed(seedParam, scenarioSeeds = []) {
@@ -3408,9 +3428,15 @@ initFlowController({
   startGame,
   showOnboarding,
   deriveDifficultyFromScenario,
+  shouldConfirmLeaveRun,
+  confirmLeaveRun,
+  getCanonicalOutcomes: () => CANONICAL_OUTCOMES.size ? CANONICAL_OUTCOMES : new Set([
+    'Summit and Safe Return', 'High Point Return', 'Strategic Retreat', 'Rescue',
+    'Collapse (Fatigue)', 'Collapse (Exposure)', 'Resource Exhaustion',
+    'Expedition Window Closed', 'Permit Expired', 'Fatality',
+  ]),
   resolveCharacter:  _resolveCharacter,
   resolveScenario:   _resolveScenario,
-  resolveSeed,
 });
 initVisualMode();
 initLanguage();
