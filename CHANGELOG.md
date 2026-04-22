@@ -19,6 +19,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Added curated Part 2 inline narrative illustrations for `departure_road` and `future_cta` in `prototype/web-v1/ui/screens.js`, wiring `concept-curated-14.png` and `concept-curated-15.png` as screen accompaniments with EN/ES alt text coverage.
 - Completed `CHARACTER_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish role translations for `laura` (Médica de montaña y enfermera de expedición), `erik` (Guía alpino y especialista en alta montaña), `blake` (Ejecutivo financiero y alpinista competitivo), and `irina` (Científica alpina e investigadora de altitud). Previously only `francisco` and `daniela` had Spanish roles, causing the other four characters to display English role text in ES mode.
 - Completed `SCENARIO_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish names for `narrow-weather-window` (Ventana climática estrecha), `false-stability-terrain` (Terreno de falsa estabilidad), and `accumulated-fatigue-trap` (Trampa de fatiga acumulada). Previously these three scenarios displayed English names in ES mode.
 - Fixed stale Spanish tutorial text in `TUTORIAL_CONTENT.es.structure[0]` (`prototype/web-v1/ui/screens.js`): removed reference to the non-existent "modo visual" selector; updated to match EN copy ("elige idioma y continúa a la preparación de la expedición").
