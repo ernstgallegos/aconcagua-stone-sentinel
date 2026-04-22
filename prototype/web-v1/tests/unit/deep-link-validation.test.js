@@ -14,6 +14,27 @@ test('parseSeedParam validates numeric membership when seeds are defined', () =>
   assert.equal(parseSeedParam('-1', [1, 42, 99]), null);
 });
 
+test('validateSelectionParams returns ok true when character and scenario are absent', () => {
+  const result = validateSelectionParams({
+    params: {},
+    resolveCharacter: () => null,
+    resolveScenario: () => null,
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.character, null);
+  assert.equal(result.scenario, null);
+});
+
+test('validateSelectionParams returns ok false when explicit character param is invalid', () => {
+  const result = validateSelectionParams({
+    params: { character: 'missing', scenario: 's1', seed: '1' },
+    resolveCharacter: () => null,
+    resolveScenario: () => ({ id: 's1', seeds: [1] }),
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'invalid character/scenario');
+});
+
 test('validateSelectionParams returns ok false for unknown character or scenario', () => {
   const result = validateSelectionParams({
     params: { character: 'missing', scenario: 's1', seed: '1' },
@@ -21,6 +42,16 @@ test('validateSelectionParams returns ok false for unknown character or scenario
     resolveScenario: () => ({ id: 's1', seeds: [1] }),
   });
   assert.equal(result.ok, false);
+});
+
+test('validateSelectionParams returns ok false for an explicit seed that is not in allowed list', () => {
+  const result = validateSelectionParams({
+    params: { character: 'francisco', scenario: 's1', seed: '999' },
+    resolveCharacter: () => ({ id: 'francisco' }),
+    resolveScenario: () => ({ id: 's1', seeds: [1, 2] }),
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, 'invalid seed');
 });
 
 test('validateSelectionParams resolves valid payload', () => {
@@ -35,6 +66,26 @@ test('validateSelectionParams resolves valid payload', () => {
   assert.equal(result.character, character);
   assert.equal(result.scenario, scenario);
   assert.equal(result.seed, 101);
+});
+
+test('validateDebriefParams returns ok true when only a valid outcome is provided', () => {
+  const result = validateDebriefParams({
+    params: { outcome: 'Strategic Retreat' },
+    resolveCharacter: () => null,
+    resolveScenario: () => null,
+    validOutcomes: new Set(['Strategic Retreat']),
+  });
+  assert.equal(result.ok, true);
+});
+
+test('validateDebriefParams returns ok true when no params are provided', () => {
+  const result = validateDebriefParams({
+    params: {},
+    resolveCharacter: () => null,
+    resolveScenario: () => null,
+    validOutcomes: new Set(['Strategic Retreat']),
+  });
+  assert.equal(result.ok, true);
 });
 
 test('validateDebriefParams rejects unknown outcome', () => {

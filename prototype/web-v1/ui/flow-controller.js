@@ -64,7 +64,6 @@ const SCREEN_EXIT_DURATION_MS = 150;
  * @param {Function}      hooks.deriveDifficultyFromScenario () => void — syncs difficulty from G.scenario.
  * @param {Function}      hooks.resolveCharacter           (param) => obj|null — from deep-link param.
  * @param {Function}      hooks.resolveScenario            (param) => obj|null — from deep-link param.
- * @param {Function}      hooks.resolveSeed                (param, seeds) => number.
  */
 export function initFlowController(hooks) {
   _hooks = hooks;

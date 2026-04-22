@@ -33,21 +33,27 @@ export function parseSeedParam(seedValue, allowedSeeds = []) {
 }
 
 export function validateSelectionParams({ params, resolveCharacter, resolveScenario }) {
-  const character = resolveCharacter?.(params.character);
-  const scenario = resolveScenario?.(params.scenario);
-  if (!character || !scenario) {
+  const hasCharacterParam = params.character != null && params.character !== '';
+  const hasScenarioParam = params.scenario != null && params.scenario !== '';
+
+  const character = hasCharacterParam ? resolveCharacter?.(params.character) ?? null : null;
+  const scenario = hasScenarioParam ? resolveScenario?.(params.scenario) ?? null : null;
+
+  if ((hasCharacterParam && !character) || (hasScenarioParam && !scenario)) {
     return { ok: false, reason: 'invalid character/scenario' };
   }
-  const seed = parseSeedParam(params.seed, scenario.seeds || []);
-  if (seed == null) return { ok: false, reason: 'invalid seed' };
+
+  const hasSeedParam = params.seed != null && params.seed !== '';
+  const seed = parseSeedParam(params.seed, scenario?.seeds || []);
+  if (hasSeedParam && seed == null) return { ok: false, reason: 'invalid seed' };
   return { ok: true, character, scenario, seed };
 }
 
 export function validateDebriefParams({ params, resolveCharacter, resolveScenario, validOutcomes }) {
-  const base = validateSelectionParams({ params, resolveCharacter, resolveScenario });
-  if (!base.ok) return base;
   if (params.outcome && !validOutcomes.has(params.outcome)) {
     return { ok: false, reason: 'invalid outcome' };
   }
-  return base;
+  const base = validateSelectionParams({ params, resolveCharacter, resolveScenario });
+  if (!base.ok) return base;
+  return { ok: true, character: base.character, scenario: base.scenario, seed: base.seed };
 }

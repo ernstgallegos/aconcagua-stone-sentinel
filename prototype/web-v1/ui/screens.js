@@ -131,7 +131,7 @@ function shouldConfirmLeaveRun({ fromScreen, toScreen }) {
   if (toScreen === 'game' || toScreen === 'journal') return false;
   const hasState = !!G.state?.position;
   const hasTurns = Array.isArray(G.turnLog) && G.turnLog.length > 0;
-  const stillInProgress = hasState && hasTurns && !G.state?.exitedPark && G.finalOutcome === 'Strategic Retreat';
+  const stillInProgress = hasState && hasTurns && !G.finalOutcome;
   return stillInProgress;
 }
 
@@ -3383,7 +3383,7 @@ document.addEventListener('keydown', (event) => {
 
 /**
  * Resolve a character param string to a DATA_CONFIG character object.
- * Falls back to the first available character.
+ * Returns null when charParam is provided but does not match any known character.
  */
 function _resolveCharacter(charParam) {
   const chars = DATA_CONFIG.characters || [];
@@ -3392,7 +3392,7 @@ function _resolveCharacter(charParam) {
 
 /**
  * Resolve a scenario param string to a configured scenario object.
- * Falls back to the first predefined scenario.
+ * Returns null when scenParam is provided but does not match any known scenario.
  */
 function _resolveScenario(scenParam) {
   const scenarios = getConfiguredScenarios();
@@ -3437,7 +3437,6 @@ initFlowController({
   ]),
   resolveCharacter:  _resolveCharacter,
   resolveScenario:   _resolveScenario,
-  resolveSeed,
 });
 initVisualMode();
 initLanguage();

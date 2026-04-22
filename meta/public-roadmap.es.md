@@ -80,7 +80,7 @@ Para detalle operativo fase por fase en español, ver:
 `docs/es/plan-implementacion-v1.4.md` y `docs/es/plan-implementacion-v1.5.md`.
 
 
-## Stage 7 decision-support artifact
+## Artefacto de apoyo a decisiones para la Etapa 7
 
-- Decision-support brief for non-code teams: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md).
-- Launch handoff for marketing/design/strategy: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md).
+- Documento de apoyo a decisiones para equipos no técnicos: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md).
+- Entrega de lanzamiento para marketing/diseño/estrategia: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md).

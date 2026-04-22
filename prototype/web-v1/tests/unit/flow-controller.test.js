@@ -83,7 +83,6 @@ function makeHooks(overrides = {}) {
     deriveDifficultyFromScenario: () => {},
     resolveCharacter:             () => null,
     resolveScenario:              () => null,
-    resolveSeed:                  () => 1234,
     shouldConfirmLeaveRun:        () => false,
     confirmLeaveRun:              () => true,
     getCanonicalOutcomes:         () => new Set(['Strategic Retreat', 'Summit and Safe Return']),

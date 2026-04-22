@@ -28,6 +28,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated flow-controller deep-link handling to reject unknown screens and invalid parameter combinations with predictable safe navigation fallback.
 - Expanded `CONTRIBUTING.md` visual-asset contribution guidance with explicit format, naming, aspect, and runtime-mapping/test expectations.
 - Updated release/readiness docs links from high-visibility surfaces (`README.md`, `README.es.md`, `meta/press-kit*.md`, `meta/public-roadmap*.md`, and `docs/en/public-readiness-checklist.md`) to keep launch messaging and review references aligned.
+- Loosened `validateSelectionParams()` in `ui/helpers/deep-link-validation.js`: absent `character`/`scenario`/`seed` params are now allowed (resolve to `null`); validation only fails when an explicit param is provided but cannot be resolved to a known value. This aligns deep-link defaults with the documented fallback intent and fixes `#debrief&outcome=…` links that omit character/scenario.
+- Refactored `validateDebriefParams()` to validate `outcome` independently before delegating to `validateSelectionParams()`; deep-link debrief no longer requires character/scenario/seed to be present, matching `bootstrapMockDebrief()` existing default behaviour.
+- Fixed `shouldConfirmLeaveRun()` in `ui/screens.js`: was incorrectly gated on `G.finalOutcome === 'Strategic Retreat'` (only set after a run ends) and a non-tracked `G.state.exitedPark` field; now correctly treats a run as in-progress when `hasState && hasTurns && !G.finalOutcome`.
+- Removed unused `resolveSeed` hook from `initFlowController()` JSDoc, `initFlowController()` call in `screens.js`, and test `makeHooks` fixture; seed parsing is handled via `parseSeedParam()` inside `deep-link-validation.js` since the deep-link refactor.
+- Updated `_resolveCharacter()` and `_resolveScenario()` JSDoc in `screens.js` to accurately reflect that both functions return `null` when an explicit param is provided but unresolvable (no fallback-to-first behaviour).
+- Translated English `## Stage 7 decision-support artifact` section heading and bullets in `meta/public-roadmap.es.md` to Spanish for consistency.
+- Translated English `## Launch coordination references` section heading and bullet labels in `meta/press-kit.es.md` to Spanish for consistency.
+- Translated English phrase "release reviewers" in `README.es.md` to Spanish ("revisión de lanzamiento").
 - Updated `docs/technical-debt-register.md` with explicit next-split plans for mountain visualization modularization and deep-link validation contract parity.
 
 ### Fixed
