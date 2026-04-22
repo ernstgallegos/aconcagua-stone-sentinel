@@ -13,6 +13,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 - Added `blake-daniela-0pct` calibration flag to `docs/balance-calibration-notes.md` documenting that the 0% summit/high-point result for Blake Harris and Daniela De Rossi under the headless AI policy is consistent with prior v1.4.5 behavior and does not represent a new structural regression.
 - Added explicit recalibration plan for Resource Exhaustion in `docs/balance-calibration-notes.md`: defines a two-consecutive-batch trigger condition and recommends reviewing `resourceBurnPerHour` before adjusting character `resourceEfficiency` values.
+- Added startup loading progress UI on `prototype/web-v1/index.html` (progress bar + phase/file-count text) backed by `setStartupProgress()` and loader progress callbacks in `ui/helpers/data-config.js`.
+- Added deep-link validation helper module `prototype/web-v1/ui/helpers/deep-link-validation.js` with unit coverage in `prototype/web-v1/tests/unit/deep-link-validation.test.js`.
+- Added launch/operations support artifacts: `docs/operations-support.md`, `docs/en/accessibility-verification-checklist.md`, `meta/launch-readiness-handoff.md`, and `meta/stage-7-decision-support.md`.
 
 ### Changed
 
@@ -22,10 +25,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Fixed `setVisualMode()` in `prototype/web-v1/ui/screens.js` to accept and use its `mode` parameter (`mode = 'sunset'` default with `?? 'sunset'` guard); previously the function declared no parameter and silently ignored any argument passed to it.
 - Updated `docs/balance-calibration-notes.md` TL;DR section: corrected "Latest calibration evidence run date" from 2026-03-27 to 2026-04-21 and updated consolidation review date to reflect the current audit pass.
 - Corrected false "No 0% summit rates across any character" claim in `docs/balance-calibration-notes.md` v1.5.1 section: the statement contradicted the table immediately above it which shows Daniela and Blake at 0%. Replaced with accurate description referencing matching v1.4.5 behavior.
+- Updated flow-controller deep-link handling to reject unknown screens and invalid parameter combinations with predictable safe navigation fallback.
+- Expanded `CONTRIBUTING.md` visual-asset contribution guidance with explicit format, naming, aspect, and runtime-mapping/test expectations.
+- Updated release/readiness docs links from high-visibility surfaces (`README.md`, `README.es.md`, `meta/press-kit*.md`, `meta/public-roadmap*.md`, and `docs/en/public-readiness-checklist.md`) to keep launch messaging and review references aligned.
+- Updated `docs/technical-debt-register.md` with explicit next-split plans for mountain visualization modularization and deep-link validation contract parity.
 
 ### Fixed
 
 - Lowered `criticalExposure` threshold in `prototype/web-v1/engine/turn-resolution.js` from `>= 94` to `>= 78`, making `Collapse (Exposure)` and `Rescue` (exposure path) structurally reachable in gameplay. At the old threshold of 94, fatigue always reached 100 before exposure reached 94 (for all scenario initial states and standard action deltas), permanently suppressing this outcome. At 78, aggressive advance chains in high-exposure scenarios (e.g., Weather Window) and sustained `wait` loops without sleep produce Collapse (Exposure) before Collapse (Fatigue), matching documented game design intent. Updated the boundary test values in `prototype/web-v1/tests/engine/outcome-reachability.test.js` from `exposure: 96` to `exposure: 79` to clearly test at the new threshold.
+- Added in-progress expedition leave guard for internal navigation: leaving gameplay toward non-run screens now requests confirmation and no longer drops active runs silently.
+- Removed duplicate `id="game-help-content"` in `prototype/web-v1/index.html` to restore unique-ID accessibility validity.
 
 ## [1.5.1] — 2026-04
 

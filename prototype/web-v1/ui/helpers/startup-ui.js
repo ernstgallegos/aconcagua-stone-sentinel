@@ -10,6 +10,21 @@ function startupText(en, es) {
   return getStartupLang() === 'es' ? es : en;
 }
 
+export function setStartupProgress({ loaded = 0, total = 0, label = '' } = {}) {
+  const bar = document.getElementById('startup-progress-fill');
+  const phase = document.getElementById('startup-progress-phase');
+  if (bar && total > 0) bar.style.width = `${Math.max(0, Math.min(100, Math.round((loaded / total) * 100)))}%`;
+  if (phase) {
+    if (total > 0) {
+      const en = `Loading data files (${loaded}/${total})`;
+      const es = `Cargando archivos de datos (${loaded}/${total})`;
+      phase.textContent = label ? startupText(`${en} · ${label}`, `${es} · ${label}`) : startupText(en, es);
+    } else {
+      phase.textContent = startupText('Loading data files…', 'Cargando archivos de datos…');
+    }
+  }
+}
+
 export function setStartupState(state, detail = '') {
   const statusEl = document.getElementById('startup-status-line');
   const beginBtn = document.querySelector('.title-screen-advance');
@@ -17,6 +32,7 @@ export function setStartupState(state, detail = '') {
 
   if (state === 'loading') {
     statusEl.textContent = startupText('Preparing mountain model…', 'Preparando modelo de montaña…');
+    setStartupProgress({ loaded: 0, total: 0 });
     statusEl.dataset.state = 'loading';
     if (beginBtn) {
       beginBtn.disabled = true;
@@ -27,6 +43,7 @@ export function setStartupState(state, detail = '') {
 
   if (state === 'ready') {
     statusEl.textContent = startupText('Model ready.', 'Modelo listo.');
+    setStartupProgress({ loaded: 1, total: 1, label: startupText('All required files loaded', 'Todos los archivos requeridos cargados') });
     statusEl.dataset.state = 'ready';
     if (beginBtn) {
       beginBtn.disabled = false;
@@ -36,6 +53,7 @@ export function setStartupState(state, detail = '') {
   }
 
   statusEl.textContent = detail || startupText('Model unavailable.', 'Modelo no disponible.');
+  setStartupProgress({ loaded: 0, total: 1, label: startupText('Loading interrupted', 'Carga interrumpida') });
   statusEl.dataset.state = 'error';
   if (beginBtn) {
     beginBtn.disabled = true;

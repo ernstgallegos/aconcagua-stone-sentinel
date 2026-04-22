@@ -163,3 +163,9 @@ Significant progress is already visible as running behavior in `prototype/web-v1
 The foundation is now strong enough to support integration, evaluation, and release-readiness decisions without losing coherence.
 
 *Aconcagua: Stone Sentinel* is not built to race forward, but to **advance with awareness**.
+
+
+## Stage 7 decision-support artifact
+
+- Decision-support brief for non-code teams: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md).
+- Launch handoff for marketing/design/strategy: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md).

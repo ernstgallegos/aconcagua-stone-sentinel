@@ -70,6 +70,8 @@ See [`prototype/web-v1/README.md`](./prototype/web-v1/README.md) for full instru
 - [`SECURITY.md`](./SECURITY.md) — vulnerability reporting
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — community behavior expectations
 - [`docs/en/public-readiness-checklist.md`](./docs/en/public-readiness-checklist.md) — pre-release checklist
+- [`docs/operations-support.md`](./docs/operations-support.md) — runtime/deep-link/overlay troubleshooting and release command quick-reference
+- [`docs/en/accessibility-verification-checklist.md`](./docs/en/accessibility-verification-checklist.md) — focused accessibility verification checklist for public flows
 
 ---
 

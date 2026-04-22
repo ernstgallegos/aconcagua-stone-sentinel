@@ -311,3 +311,9 @@ We respond to press inquiries, collaboration proposals, and coverage requests. R
 ---
 
 *Press kit version 1.2 · April 2026 · aconcaguastonesentinel.com*
+
+
+## Launch coordination references
+
+- Launch handoff: [`meta/launch-readiness-handoff.md`](./launch-readiness-handoff.md)
+- Stage 7 decision support: [`meta/stage-7-decision-support.md`](./stage-7-decision-support.md)

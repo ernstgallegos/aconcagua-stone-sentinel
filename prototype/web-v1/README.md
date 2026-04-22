@@ -108,3 +108,6 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Expanded help overlay content with confidence semantics, retreat framing, and “How to read this game” guidance while preserving partial-information constraints.
 - Accessibility improvements include stronger focus-visible styles, keyboard-safe modal focus trapping/return behavior, and reduced-motion support hardening.
 - Stabilized startup reliability with explicit blocking-error categories (missing file, HTTP failure, invalid shape, post-load validation) and a restrained loading status line that keeps model readiness visible before entering expedition setup.
+- Added startup progress feedback (file-load progress + phase text) and reduced-motion-safe visual behavior on the title loading state.
+- Hardened deep-link validation for `character`, `scenario`, `seed`, and `outcome` to prevent silent invalid-state bootstraps.
+- Added in-progress run leave confirmation when navigating out of gameplay to non-run screens.

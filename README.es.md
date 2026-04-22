@@ -97,6 +97,9 @@ Para mantener el repositorio listo para revisión pública, usar esta base de go
 - [`SECURITY.md`](./SECURITY.md) — reporte privado de vulnerabilidades y tiempos de respuesta.
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — expectativas de convivencia para la comunidad.
 - [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md) — checklist final pre-release para coherencia de código + documentación.
+- [`docs/operations-support.md`](./docs/operations-support.md) — troubleshooting operativo (carga de datos, deep-links, overlays y comandos de readiness).
+- [`docs/en/accessibility-verification-checklist.md`](./docs/en/accessibility-verification-checklist.md) — checklist breve de verificación de accesibilidad para release reviewers.
+
 
 ## Sobre el uso de IA
 
@@ -207,7 +210,7 @@ Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prot
 Guía corta recomendada para observación: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
-## Prototype Web v1.4 — Environmental Pressure Engine (estado público actual)
+## Prototype Web v1.5.1 — Environmental Pressure Engine (estado público actual)
 
 El prototipo web ahora sigue un modelo sistémico dominado por el entorno:
 
@@ -240,7 +243,7 @@ La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo ant
 
 La selección de personaje ahora incluye una opción `Random Character` que elige automáticamente uno de los seis perfiles disponibles al confirmar la expedición.
 
-Estado de Parte 2 (v1.4):
+Estado de Parte 2 (v1.5.1):
 
 `part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 

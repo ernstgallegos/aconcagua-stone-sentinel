@@ -134,10 +134,12 @@ export function createDefaultDataConfig() {
   return structuredClone(DEFAULT_CONFIG);
 }
 
-export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
+export async function loadDataConfigFiles({ fetchImpl = fetch, onError, onProgress }) {
   const files = Object.entries(FILE_PATH_BY_KEY);
 
   const config = createDefaultDataConfig();
+  let loadedCount = 0;
+  onProgress?.({ loaded: loadedCount, total: files.length, key: null, path: null });
   for (const [key, path] of files) {
     try {
       const response = await fetchImpl(path, { cache: 'no-store' });
@@ -153,6 +155,8 @@ export async function loadDataConfigFiles({ fetchImpl = fetch, onError }) {
       }
       validateDataConfigShape(key, data);
       config[key] = data;
+      loadedCount += 1;
+      onProgress?.({ loaded: loadedCount, total: files.length, key, path });
     } catch (error) {
       if (REQUIRED_CONFIG_FILES.has(key)) {
         const category = classifyDataLoadError(error);

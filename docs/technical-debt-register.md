@@ -17,6 +17,8 @@ For every release PR:
 | `screens.js` monolith (3658 lines) | UI layer | Medium — maintainability risk, merge conflict surface | Difficulty navigating/reviewing; multiple responsibilities in one file | `screens.js` reduced to < 500 lines of pure wiring/init; remaining logic extracted to dedicated modules with independent tests |
 | `mountain-visualization.js` size (2991 lines) | UI layer | Low — isolated module with stable API | Single large rendering file with mixed concerns (terrain, climber, atmosphere, HUD, post-processing) | Subsystems extracted to at least 3 focused modules; each independently importable |
 | No test coverage metrics | Quality | Low — tests exist but coverage visibility is zero | Cannot identify untested paths without manual review | Coverage reporting via `c8` or equivalent integrated into `npm test` output |
+| Mountain visualization internal split plan still pending | UI layer | Low — stable but large module slows targeted review | `mountain-visualization.js` mixes terrain draw, weather overlays, climber render, and HUD helpers in one file | Extract into `mountain-viz/{terrain,atmosphere,climber}.js` with characterization tests for each renderer helper |
+| Deep-link policy centralization still partial | UI layer | Low — validation now extracted but startup/docs coupling remains manual | New deep-link rules can drift unless docs/tests are updated together | Keep `ui/helpers/deep-link-validation.js` as single validation authority and parity-test `docs/deep-links.web-v1.md` against helper contracts |
 
 ## Resolved debt items
 
