@@ -9,6 +9,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+## [1.5.2] — 2026-04
+
 ### Added
 
 - Added `blake-daniela-0pct` calibration flag to `docs/balance-calibration-notes.md` documenting that the 0% summit/high-point result for Blake Harris and Daniela De Rossi under the headless AI policy is consistent with prior v1.4.5 behavior and does not represent a new structural regression.
@@ -16,6 +18,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Added startup loading progress UI on `prototype/web-v1/index.html` (progress bar + phase/file-count text) backed by `setStartupProgress()` and loader progress callbacks in `ui/helpers/data-config.js`.
 - Added deep-link validation helper module `prototype/web-v1/ui/helpers/deep-link-validation.js` with unit coverage in `prototype/web-v1/tests/unit/deep-link-validation.test.js`.
 - Added launch/operations support artifacts: `docs/operations-support.md`, `docs/en/accessibility-verification-checklist.md`, `meta/launch-readiness-handoff.md`, and `meta/stage-7-decision-support.md`.
+- Added Open Graph and Twitter Card meta tags to `index.html` (landing page): `og:type`, `og:url`, `og:title`, `og:description`, `og:image` (1536×1024 hero art), `og:image:alt`, `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`, and `twitter:image:alt`. Social share previews (Instagram, WhatsApp, Twitter/X, Discord) now render the correct image and description instead of plain-text-only links.
 
 ### Changed
 
@@ -38,6 +41,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Translated English `## Launch coordination references` section heading and bullet labels in `meta/press-kit.es.md` to Spanish for consistency.
 - Translated English phrase "release reviewers" in `README.es.md` to Spanish ("revisión de lanzamiento").
 - Updated `docs/technical-debt-register.md` with explicit next-split plans for mountain visualization modularization and deep-link validation contract parity.
+- Added `target="_blank" rel="noopener noreferrer"` to the Waypoints Repository card GitHub link in `index.html`; this link previously navigated away from the landing, losing user context on a primary public surface.
+- Version bumped from 1.5.1 to 1.5.2 across all public surfaces: `package.json`, `package-lock.json`, landing page (`index.html` — 9 EN/ES i18n strings + 2 static fallback spans), prototype intro chip (`prototype/web-v1/index.html`), `prototype/web-v1/ui/screens.js` (EN + ES version strings), `README.md`, `README.es.md`, `docs/repo-truth.md`, `docs/architecture.md`, `docs/simulation_engine.md`.
 
 ### Fixed
 

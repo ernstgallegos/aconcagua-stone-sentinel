@@ -1,9 +1,9 @@
 # Simulation Engine — Prototype Web v1.5 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.1]`](../CHANGELOG.md#151--2026-04).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.2]`](../CHANGELOG.md#152--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`). v1.5.0 delivery documented in [`docs/en/implementation-plan-v1.5.md`](./en/implementation-plan-v1.5.md).
-> - Current public build is **v1.5.1**.
+> - Current public build is **v1.5.2**.
 > - Legacy v1.3 compatibility that is intentionally still active is limited to additive run-log aliases and test fixtures in `prototype/mra-v0`; canonical web-v1 authority and outcome taxonomy are v1.5.0 contracts.
 
 
