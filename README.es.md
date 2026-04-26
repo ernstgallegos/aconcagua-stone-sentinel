@@ -210,7 +210,7 @@ Para sesiones cualitativas, usar [`prototype/mra-v0/debrief-template.md`](./prot
 Guía corta recomendada para observación: [`docs/es/guia-observacion-playtest.md`](./docs/es/guia-observacion-playtest.md).
 
 
-## Prototype Web v1.5.1 — Environmental Pressure Engine (estado público actual)
+## Prototype Web v1.5.2 — Environmental Pressure Engine (estado público actual)
 
 El prototipo web ahora sigue un modelo sistémico dominado por el entorno:
 
@@ -243,7 +243,7 @@ La pantalla de onboarding ahora incluye un acceso a un tutorial/FAQ completo ant
 
 La selección de personaje ahora incluye una opción `Random Character` que elige automáticamente uno de los seis perfiles disponibles al confirmar la expedición.
 
-Estado de Parte 2 (v1.5.1):
+Estado de Parte 2 (v1.5.2):
 
 `part2-character → mendoza_room → team_presentation → after_circle → guides → briefing_night → departure_road → future_cta`
 
@@ -315,16 +315,16 @@ aconcaguastonesentinel@gmail.com
 *Aconcagua: Stone Sentinel explora la idea de que avanzar no siempre significa progresar, y que reconocer los límites —externos e internos— puede ser una forma de éxito.*
 
 
-## Estado canónico del prototipo (v1.5.1 estado público)
+## Estado canónico del prototipo (v1.5.2 estado público)
 
 > **Estado canónico (anclado al código):**
-> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[1.5.1]`](./CHANGELOG.md).
+> - El estado de implementación se rastrea en `CHANGELOG.md` bajo [`[1.5.2]`](./CHANGELOG.md).
 > - El progreso por fase se rastrea en [`docs/es/plan-implementacion-v1.4.md`](./docs/es/plan-implementacion-v1.4.md) (versión en inglés: `docs/en/implementation-plan-v1.4.md`).
-> - La versión pública actual es **v1.5.1**.
+> - La versión pública actual es **v1.5.2**.
 
-El prototipo activo canónico es **`prototype/web-v1` (v1.5.1 estado público)**.
+El prototipo activo canónico es **`prototype/web-v1` (v1.5.2 estado público)**.
 
-- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.5.1 modulares en despliegue público.
+- `prototype/web-v1/`: prototipo sistémico activo, ruta nodo a nodo, engine EP/BT/delta, y mecánicas v1.5.2 modulares en despliegue público.
   - Los contratos de arranque son estrictos: los archivos de modelo requeridos deben cargar y validar antes de jugar; los fallos bloqueantes muestran archivo/categoría de diagnóstico.
   - La orquestación de turnos es responsabilidad de `ui/game-loop.js` (factory `createGameLoop(deps)`) con callbacks de renderizado inyectados.
   - El flujo de pantallas y modales es responsabilidad de `ui/flow-controller.js` (`initFlowController(hooks)`).

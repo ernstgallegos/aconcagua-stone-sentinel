@@ -2,7 +2,7 @@
 
 **Documento público · Abril 2026**  
 **Versión:** 1.2  
-**Estado:** Prototipo web público v1.5.1  
+**Estado:** Prototipo web público v1.5.2  
 **Versión en inglés:** [`meta/press-kit.md`](./press-kit.md)
 
 ---
@@ -27,7 +27,7 @@
 | **Desarrollador** | Independiente / individual (Argentina) |
 | **Plataforma** | Web (prototipo público); plataformas definitivas por determinar |
 | **Género** | Narrativo contemplativo / orientado a sistemas |
-| **Release actual** | v1.5.1 — prototipo web público (Parte 1) |
+| **Release actual** | v1.5.2 — prototipo web público (Parte 1) |
 | **Prototipo jugable** | [aconcaguastonesentinel.com](https://aconcaguastonesentinel.com) |
 | **Repositorio** | [github.com/ernstgallegos/aconcagua-stone-sentinel](https://github.com/ernstgallegos/aconcagua-stone-sentinel) |
 | **Contacto de prensa** | aconcaguastonesentinel@gmail.com |
@@ -62,7 +62,7 @@ Esperar, descansar, observar y elegir no actuar son acciones reales con consecue
 
 ---
 
-## Los personajes (v1.5.1)
+## Los personajes (v1.5.2)
 
 Seis roles jugables: cada uno es una forma distinta de estar en la montaña y, en consecuencia, de equivocarse en ella. Cada personaje tiene un perfil de motor único que moldea cómo percibe señales, gestiona recursos y responde a la presión.
 
@@ -187,7 +187,7 @@ Todos los parámetros son data-driven (archivos JSON) y todos los claims son ver
 
 ---
 
-## Los escenarios (v1.5.1)
+## Los escenarios (v1.5.2)
 
 Cinco escenarios distintos definen condiciones de partida, sesgo de presión y qué eje de peligro domina cada corrida:
 
@@ -265,7 +265,7 @@ Ojalá ahora nos ayude a encontrarnos con gente real.
 
 | Etapa | Estado |
 |---|---|
-| Parte 1 — Prototipo web (v1.5.1) | ✅ Público, jugable |
+| Parte 1 — Prototipo web (v1.5.2) | ✅ Público, jugable |
 | Parte 2 — Puente narrativo | Preview accesible tras retorno seguro; Parte 2 completa en desarrollo |
 | Etapa 7 — Evaluación de dirección | Planificada (próxima fase) |
 | Plataformas de producción | Por determinar tras cierre de dirección |

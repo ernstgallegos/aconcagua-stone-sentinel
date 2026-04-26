@@ -10,7 +10,7 @@ _Last updated: April 2026._
 - **Frozen compatibility artifact:** `prototype/mra-v0` (no feature evolution; compatibility/test touch only).
 
 ## Public canonical version
-- **Public canonical version after this sprint:** `v1.5.1`.
+- **Public canonical version after this sprint:** `v1.5.2`.
 - Source-of-version truth: `package.json` + `package-lock.json`, mirrored in UI/docs/changelog.
 
 ## Roster truth

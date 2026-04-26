@@ -1,9 +1,9 @@
 # Architecture — Prototype Web v1.5 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.1]`](../CHANGELOG.md#151--2026-04).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.2]`](../CHANGELOG.md#152--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](./en/implementation-plan-v1.4.md) (and Spanish mirror: `docs/es/plan-implementacion-v1.4.md`). v1.5.0 delivery documented in [`docs/en/implementation-plan-v1.5.md`](./en/implementation-plan-v1.5.md).
-> - Current public build is **v1.5.1** with phased rollout contracts preserved.
+> - Current public build is **v1.5.2** with phased rollout contracts preserved.
 
 Prototype Web v1.5 (public branch state) is the canonical active prototype in this repository, building on completed v1.4 phase plan items with v1.5.0 additions (Canvas2D visualization, character visual identity, decision-position fix).
 
@@ -63,7 +63,7 @@ No other module should duplicate either the file-path list or the normalization 
 
 ## Repository prototype status
 
-- `prototype/web-v1/`: **active canonical prototype** (v1.5.1 public state, phased progress).
+- `prototype/web-v1/`: **active canonical prototype** (v1.5.2 public state, phased progress).
 - `prototype/mra-v0/`: **frozen historical validation artifact**.
 - `index.html` at repo root: canonical public landing page with primary CTA to `prototype/web-v1/index.html`.
 

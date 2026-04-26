@@ -2,7 +2,7 @@
 
 **Public document · April 2026**  
 **Version:** 1.2  
-**Status:** Public web prototype v1.5.1  
+**Status:** Public web prototype v1.5.2  
 **Spanish version:** [`meta/press-kit.es.md`](./press-kit.es.md)
 
 ---
@@ -27,7 +27,7 @@
 | **Developer** | Independent / solo (Argentina) |
 | **Platform** | Web (public prototype); target platforms TBD |
 | **Genre** | Contemplative narrative / systems-driven |
-| **Current release** | v1.5.1 — public web prototype (Part 1) |
+| **Current release** | v1.5.2 — public web prototype (Part 1) |
 | **Playable prototype** | [aconcaguastonesentinel.com](https://aconcaguastonesentinel.com) |
 | **Repository** | [github.com/ernstgallegos/aconcagua-stone-sentinel](https://github.com/ernstgallegos/aconcagua-stone-sentinel) |
 | **Press contact** | aconcaguastonesentinel@gmail.com |
@@ -62,7 +62,7 @@ Waiting, resting, observing, and choosing not to act are real actions with real 
 
 ---
 
-## The characters (v1.5.1)
+## The characters (v1.5.2)
 
 Six playable roles, each a distinct way of being in the mountains — and a distinct way of misreading it. Every character has a unique engine profile that shapes how they perceive signals, manage resources, and respond to pressure.
 
@@ -187,7 +187,7 @@ All parameters are data-driven (JSON files) and all claims are testable. The eng
 
 ---
 
-## The scenarios (v1.5.1)
+## The scenarios (v1.5.2)
 
 Five distinct scenarios shape starting conditions, pressure bias, and which danger axis dominates each run:
 
@@ -265,7 +265,7 @@ Hopefully now it helps us meet real people.
 
 | Stage | Status |
 |---|---|
-| Part 1 — Web prototype (v1.5.1) | ✅ Public, playable |
+| Part 1 — Web prototype (v1.5.2) | ✅ Public, playable |
 | Part 2 — Narrative bridge | Preview unlocked after safe return; full Part 2 in development |
 | Stage 7 — Direction evaluation | Planned (next phase) |
 | Production platform(s) | TBD after direction lock |

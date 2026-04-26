@@ -1,9 +1,9 @@
-# Prototype Web v1.5.1 (public state)
+# Prototype Web v1.5.2 (public state)
 
 > **Canonical status (source-anchored):**
-> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.1]`](../../CHANGELOG.md#151--2026-04).
+> - Live implementation status is tracked in `CHANGELOG.md` under [`[1.5.2]`](../../CHANGELOG.md#152--2026-04).
 > - Phase progress snapshot is tracked in [`docs/en/implementation-plan-v1.4.md`](../../docs/en/implementation-plan-v1.4.md) (Spanish mirror: `docs/es/plan-implementacion-v1.4.md`).
-> - Current public build is **v1.5.1 (public phased rollout)** with shipped phase slices and stabilized release documentation.
+> - Current public build is **v1.5.2 (public phased rollout)** with shipped phase slices and stabilized release documentation.
 
 > **Public repository scope:**
 > - Public prototype code is available in this repository (this `prototype/web-v1` implementation and the frozen `prototype/mra-v0` reference artifact).
@@ -99,7 +99,7 @@ A runtime help overlay is available from the game screen (`Pressure & Trend Help
 - Engine formula tests: `prototype/web-v1/tests/engine/*.test.js`
 - Run all web-v1 tests: `npm test`
 
-## Sprint upgrades (v1.5.1)
+## Sprint upgrades (v1.5.2)
 
 - Added deterministic golden regression coverage and outcome-derivation tests for canonical terminal outcomes, permit/window behavior, and run-log export shape.
 - Added lightweight dynamic environment events (calm opening, rising wind, visibility drop, temporary clearing, summit-window tightening), all seed-driven through the existing resolver pipeline.
