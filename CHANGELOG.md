@@ -12,6 +12,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Fixed
 
 - Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
+- Fixed `md-viewer.html` inline link renderer to rewrite internal allowlisted `.md` hrefs through `md-viewer.html?file=…`; previously clicking any relative `.md` link from within a viewed document opened the raw markdown file instead of the styled viewer.
 
 ## [1.5.2] — 2026-04
 

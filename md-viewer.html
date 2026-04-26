@@ -204,7 +204,10 @@
             const resolved = resolveMarkdownUrl(url);
             const external = /^(https?:|mailto:|tel:)/i.test(resolved);
             const rel = external ? ' rel="noreferrer noopener" target="_blank"' : '';
-            return `<a href="${escapeHtml(resolved)}"${rel}>${text}</a>`;
+            const href = (!external && allowed.has(resolved))
+              ? `/md-viewer.html?file=${encodeURIComponent(resolved)}`
+              : resolved;
+            return `<a href="${escapeHtml(href)}"${rel}>${text}</a>`;
           });
       }
 
