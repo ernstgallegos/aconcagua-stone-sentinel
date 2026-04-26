@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Fixed
+
+- Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
+
 ## [1.5.2] — 2026-04
 
 ### Added
