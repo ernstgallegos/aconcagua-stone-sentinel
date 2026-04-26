@@ -22,6 +22,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- Synchronized version references in `meta/press-kit.md` and `meta/press-kit.es.md` from v1.5.1 to v1.5.2: updated header `Status`, Key Facts table `Current release` row, character section heading, scenario section heading, and current-state roadmap table row. Both press-kit files are linked directly from the landing page and now consistently reflect the current canonical release.
+- Added `<link rel="canonical" href="https://aconcaguastonesentinel.com/" />` to `index.html` (landing) after social meta tags, improving search-engine indexing signal for the canonical public URL.
 - Added curated Part 2 inline narrative illustrations for `departure_road` and `future_cta` in `prototype/web-v1/ui/screens.js`, wiring `concept-curated-14.png` and `concept-curated-15.png` as screen accompaniments with EN/ES alt text coverage.
 - Completed `CHARACTER_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish role translations for `laura` (Médica de montaña y enfermera de expedición), `erik` (Guía alpino y especialista en alta montaña), `blake` (Ejecutivo financiero y alpinista competitivo), and `irina` (Científica alpina e investigadora de altitud). Previously only `francisco` and `daniela` had Spanish roles, causing the other four characters to display English role text in ES mode.
 - Completed `SCENARIO_I18N.es` in `prototype/web-v1/ui/screens.js`: added missing Spanish names for `narrow-weather-window` (Ventana climática estrecha), `false-stability-terrain` (Terreno de falsa estabilidad), and `accumulated-fatigue-trap` (Trampa de fatiga acumulada). Previously these three scenarios displayed English names in ES mode.
