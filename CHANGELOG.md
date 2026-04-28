@@ -9,6 +9,10 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added `meta/reddit-softlaunch-strategy.md`: complete Reddit soft-launch plan with full post texts for 8 subreddits (r/Mountaineering, r/gamedev, r/indiegaming, r/WebGames, r/Aconcagua, r/argentina, r/truegaming, r/indiegamedev), a week-by-week posting schedule, and operational notes on flair, reply timing, and self-promotion rules.
+
 ### Fixed
 
 - Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
