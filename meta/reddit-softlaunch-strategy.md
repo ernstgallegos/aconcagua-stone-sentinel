@@ -63,7 +63,7 @@ Happy to answer any questions about the design decisions or the real expedition.
 
 *Audience: ~900k+ subscribers. Devlog/postmortem posts perform very well. The community values honesty about process.*
 
-**Title:** `I spent 3 months building an indie game about Aconcagua after a real summit expedition. Here's the architecture, what I got wrong, and why I made the AI use public.`
+**Title:** `I spent 3 months building a web prototype about Aconcagua after a real summit expedition. Here's the architecture, what I got wrong, and why I made the AI use public.`
 
 **Post body:**
 
@@ -265,7 +265,7 @@ Curious whether others have played games where not-reaching-the-goal felt genuin
 
 *Smaller than r/gamedev (~70k subscribers) but more intimate. Similar post to r/gamedev but more conversational.*
 
-**Title:** `Solo dev post-mortem: built a mountaineering game after climbing Aconcagua. Here's the one engine bug that took longest to find and the design decision I'm most unsure about.`
+**Title:** `Solo dev post-mortem: built a mountaineering web prototype after climbing Aconcagua. Here's the one engine bug that took longest to find and the design decision I'm most unsure about.`
 
 **Post body:**
 
