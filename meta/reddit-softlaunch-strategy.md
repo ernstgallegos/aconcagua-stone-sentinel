@@ -27,13 +27,15 @@
 
 *Audience: ~200k+ subscribers. Technical, experiential community, low tolerance for marketing. Maximum authenticity required.*
 
-**Title:** `I summited Aconcagua via the 360 Route (Polish Traverse) in January 2026. Then I spent months building a game about it. Here's what I learned about translating a mountain into a system.`
+**Title:** `I summited Aconcagua via the 360 Route (Polish Traverse) in January 2026. Then I spent 3 months building a game about it. Here's what I learned about translating a mountain into a system.`
 
 **Post body:**
 
 Last January I was on the 360 Route to the summit of Aconcagua. Standing at the base of the Polish Traverse, exhausted and running decisions on very little sleep, I kept thinking: what makes this hard is not the physical act. It's reading. Reading the weather, reading your body, reading the gap between what you think is happening and what's actually happening.
 
-I came back and spent the following months trying to build something that captured that. Not a climbing simulator, not a survival game — something closer to what it actually feels like to be inside a multi-day expedition: partial information, accumulated decisions, and the uncomfortable question of whether this is the day you turn back.
+I came back and spent the following 3 months trying to build something that captured that. Not a climbing simulator, not a survival game — something closer to what it actually feels like to be inside a multi-day expedition: partial information, accumulated decisions, and the uncomfortable question of whether this is the day you turn back.
+
+One thing worth saying up front: I work in strategic science, technology and innovation management for development — not in software. I had never been part of a software development project before this one. The entire thing was built with AI assistance, from scratch, by someone learning as they went.
 
 The result is **Aconcagua: Stone Sentinel** — a web-based game built on an Environmental Pressure / Body Tolerance model. You pick one of six expedition characters (each with a distinct engine profile: perception accuracy, acclimatization rate, risk tolerance, resource efficiency), choose a scenario, and play through a turn-based structure where the mountain generates real systemic pressure rather than scripted difficulty.
 
@@ -61,7 +63,7 @@ Happy to answer any questions about the design decisions or the real expedition.
 
 *Audience: ~900k+ subscribers. Devlog/postmortem posts perform very well. The community values honesty about process.*
 
-**Title:** `I spent 6 months building an indie game about Aconcagua after a real summit expedition. Here's the architecture, what I got wrong, and why I made the AI use public.`
+**Title:** `I spent 3 months building an indie game about Aconcagua after a real summit expedition. Here's the architecture, what I got wrong, and why I made the AI use public.`
 
 **Post body:**
 
@@ -96,7 +98,7 @@ The answer I arrived at: you build a real model, make the data transparent, and 
 
 **On AI use:**
 
-I used AI for document drafting, programming assistance, and the current concept art. I've published this explicitly in the press kit and in the README — not as a badge, but as an honest account of how a solo dev with no budget got this started. I'd rather say it clearly than pretend otherwise.
+I work in strategic science, technology and innovation management for development — not in software. I had never been part of a software development project before this one. I used AI for document drafting, programming assistance, and the current concept art. I've published this explicitly in the press kit and in the README — not as a badge, but as an honest account of how someone with no prior dev background and no budget actually built something like this. I'd rather say it clearly than pretend otherwise.
 
 The goal is to replace the AI-generated art with work from real artists as the project grows.
 
@@ -121,7 +123,7 @@ Happy to go deep on any of the technical decisions.
 
 **Post body:**
 
-Earlier this year I summited Aconcagua (the highest peak in the Western Hemisphere, in Argentina). When I came back, I spent months building a game about it.
+Earlier this year I summited Aconcagua (the highest peak in the Western Hemisphere, in Argentina). When I came back, I spent the last 3 months building a game about it. I work in strategic science, technology and innovation management — not in software — and this was my first software development project ever.
 
 Not a power fantasy. Not a survival game where you die constantly. Something closer to what the experience actually feels like: reading signals, managing uncertainty, and making decisions that don't rewind.
 
@@ -177,7 +179,7 @@ Feedback very welcome — especially on whether the partial information model is
 
 **Post body:**
 
-Went up via the 360 Route / Polish Traverse in January 2026. Made it to the summit. Came back and spent the months after trying to build something that captured what the experience actually teaches — not the heroic version, but the real one.
+Went up via the 360 Route / Polish Traverse in January 2026. Made it to the summit. Came back and spent the 3 months after trying to build something that captured what the experience actually teaches — not the heroic version, but the real one.
 
 The core idea I kept returning to: Aconcagua is a reading problem. Not a strength problem, not even primarily a fitness problem. A constant problem of interpreting partial signals under fatigue and deciding whether what you're seeing is real or wishful.
 
@@ -194,7 +196,7 @@ What I most want from people who've been on the mountain:
 
 The game is at: **aconcaguastonesentinel.com**
 
-I'm from Argentina, built this solo, and I'd genuinely love to talk with anyone who has time in the area or has done a serious route there. Happy to answer questions about the design or about the January expedition.
+I'm from Argentina, work in strategic science, technology and innovation management for development, and built this solo — with AI assistance — over the last 3 months. It was the first software project I'd ever been part of. I'd genuinely love to talk with anyone who has time in the area or has done a serious route there. Happy to answer questions about the design or about the January expedition.
 
 ---
 
@@ -214,7 +216,7 @@ Construí **Aconcagua: Stone Sentinel** — un juego web gratuito, en inglés y 
 
 Hay 10 desenlaces posibles. La cumbre es el más raro. El "Retiro Estratégico" — dar vuelta deliberadamente antes de que las condiciones se pongan críticas — está diseñado explícitamente para sentirse como una decisión correcta, no como perder.
 
-Lo construí solo, con cero presupuesto, desde Argentina. Usé IA para documentos, parte del código y el arte conceptual — lo digo abiertamente porque prefiero ser honesto que parecer lo que no soy. El objetivo es que eventualmente tenga arte de artistas reales.
+Lo construí solo, con cero presupuesto, desde Argentina, en los últimos 3 meses. Trabajo en gestión estratégica de ciencia, tecnología e innovación para el desarrollo — no en software — y este fue el primer proyecto de desarrollo de software en el que participé en mi vida. Usé IA para documentos, parte del código y el arte conceptual — lo digo abiertamente porque prefiero ser honesto que parecer lo que no soy. El objetivo es que eventualmente tenga arte de artistas reales.
 
 El juego es gratuito y corre en el navegador, sin instalación:  
 **aconcaguastonesentinel.com**
@@ -267,7 +269,7 @@ Curious whether others have played games where not-reaching-the-goal felt genuin
 
 **Post body:**
 
-**The context:** Summited Aconcagua (the highest peak outside Asia) via the 360 Route in January 2026. Spent the months after turning that experience into a game. Now v1.5.2 is publicly playable as a free web prototype.
+**The context:** Summited Aconcagua (the highest peak outside Asia) via the 360 Route in January 2026. Spent the last 3 months turning that experience into a game. Now v1.5.2 is publicly playable as a free web prototype. For context: I work in strategic science, technology and innovation management for development — not in software. This was the first software development project I had ever been part of.
 
 **The engine bug that cost me the most time:**
 

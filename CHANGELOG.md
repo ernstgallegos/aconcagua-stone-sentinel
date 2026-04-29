@@ -12,6 +12,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 ### Added
 
 - Added `meta/reddit-softlaunch-strategy.md`: complete Reddit soft-launch plan with full post texts for 8 subreddits (r/Mountaineering, r/gamedev, r/indiegaming, r/WebGames, r/Aconcagua, r/argentina, r/truegaming, r/indiegamedev), a week-by-week posting schedule, and operational notes on flair, reply timing, and self-promotion rules.
+- Updated `meta/reddit-softlaunch-strategy.md`: corrected project duration to 3 months throughout all post texts; added author profession (strategic science, technology and innovation management for development) to personal introduction paragraphs; added disclosure that this was the author's first software development project to relevant posts (r/Mountaineering, r/gamedev, r/indiegaming, r/Aconcagua, r/argentina, r/indiegamedev).
 
 ### Fixed
 
