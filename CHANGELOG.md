@@ -9,6 +9,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ## [Unreleased]
 
+### Added
+
+- Added `docs/NAVIGATION.md` as a quick decision tree for finding documentation by role or topic, organizing all repository documentation with clear navigation paths for contributors, designers, engineers, AI agents, playtesters, and researchers.
+
+### Changed
+
+- Expanded "Repository structure" section in `README.md` and `README.es.md` with detailed internal structure breakdown of `prototype/web-v1/` (showing `engine/`, `ui/`, `state/`, `tests/` subdirectories) and enhanced descriptions for all major directories (`data/`, `docs/`, `art/`, `scripts/`, `src/`, `api/`).
+- Reorganized "Key documentation" section in `README.md` into three subsections (Core documents, Design & implementation, Technical reference) with prominent link to new `NAVIGATION.md` guide at the top.
+- Added "Documentación clave" section to `README.es.md` mirroring the English structure with Spanish translations and links to canonical bilingual documentation.
+
 ### Fixed
 
 - Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
