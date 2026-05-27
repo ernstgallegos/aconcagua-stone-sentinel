@@ -46,10 +46,11 @@ Quick decision tree for finding the right documentation in this repository.
 - **Concept art catalog**: [`docs/concept-art-catalog.md`](./concept-art-catalog.md) (13 curated scenes with usage notes)
 - **Character portraits**: [`art/characters/`](../art/characters/)
 - **Cover art**: [`art/cover/`](../art/cover/)
-- **Design system & typography**: [`docs/design-system.md`](./design-system.md)
+- **Design system & typography**: [`docs/design-system.md`](./design-system.md) (visual tokens, color palette, type scale)
 
 ### **Testing & validation**
 - **Running tests**: See `npm test` and related commands in [`CONTRIBUTING.md`](../CONTRIBUTING.md)
+- **Scripts documentation**: [`scripts/README.md`](../scripts/README.md) (all utility scripts explained)
 - **Monte Carlo simulation**: `npm run simulate` (see [`scripts/monte-carlo-web-v1.js`](../scripts/monte-carlo-web-v1.js))
 - **Acceptance tests**: [`prototype/web-v1/tests/engine/systemic-acceptance.test.js`](../prototype/web-v1/tests/engine/systemic-acceptance.test.js)
 - **Contract tests**: [`prototype/web-v1/tests/parity/dual-prototype-contract.test.js`](../prototype/web-v1/tests/parity/dual-prototype-contract.test.js)

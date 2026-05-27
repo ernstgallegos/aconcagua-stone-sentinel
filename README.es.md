@@ -120,7 +120,7 @@ Para mantener el repositorio listo para revisión pública, usar esta base de go
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — expectativas de convivencia para la comunidad.
 - [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md) — checklist final pre-release para coherencia de código + documentación.
 - [`docs/operations-support.md`](./docs/operations-support.md) — troubleshooting operativo (carga de datos, deep-links, overlays y comandos de readiness).
-- [`docs/en/accessibility-verification-checklist.md`](./docs/en/accessibility-verification-checklist.md) — checklist breve de verificación de accesibilidad para revisión de lanzamiento.
+- [`docs/es/checklist-verificacion-accesibilidad.md`](./docs/es/checklist-verificacion-accesibilidad.md) — checklist breve de verificación de accesibilidad para revisión de lanzamiento ([EN](./docs/en/accessibility-verification-checklist.md)).
 
 
 ## Sobre el uso de IA
