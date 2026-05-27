@@ -3,12 +3,13 @@
 ## TL;DR — Current calibration status
 
 - **Current target win-rate bands:** Summit and Safe Return **8%–20%**, Rescue **4%–16%**, Strategic Retreat **55%–78%**, Collapse (Fatigue/Exposure) **5%–16%**, Permit Expired **3%–12%**.
-- **Latest calibration evidence run date in this file:** **2026-04-21** (Monte Carlo section: “v1.5.1 (2026-04)”, 1,500 runs; full report at `docs/playtest-results/monte-carlo-v1.5.1.md`).
+- **Latest calibration evidence run date in this file:** **2026-04-21** (Monte Carlo section: "v1.5.1 (2026-04)", 1,500 runs; full report at `docs/playtest-results/monte-carlo-v1.5.1.md`).
+- **v1.5.2 calibration status:** v1.5.2 is a patch release that does not modify balance parameters, character stats, environmental pressure config, or any game mechanics. All v1.5.1 calibration data remains valid for v1.5.2.
 - **Latest documentation consolidation review:** **2026-04-21** (post-`v1.5.1` audit remediation pass).
 - **Active calibration flags (canonical):**
   - `none` (no currently open balance blockers after the post-`v1.5.1` remediation pass).
   - `watch-next-batch`: rerun `npm run simulate` before the next release cut and update this file if any outcome band drifts beyond rollback thresholds.
-  - `blake-daniela-0pct`: Blake Harris and Daniela De Rossi both show 0.0% summit and 0.0% High Point Return in the v1.5.1 batch. This is consistent with v1.4.5 behavior (same 0% under `reasonablePolicy`). No structural regression — human players with these characters can reach high camp; the AI policy’s conservative retreat thresholds prevent summit execution for these profiles. Monitor in the next human playtesting batch and consider a minor `resourceEfficiency` increase for Daniela if human testers report inaccessibility.
+  - `blake-daniela-0pct`: Blake Harris and Daniela De Rossi both show 0.0% summit and 0.0% High Point Return in the v1.5.1 batch. This is consistent with v1.4.5 behavior (same 0% under `reasonablePolicy`). No structural regression — human players with these characters can reach high camp; the AI policy's conservative retreat thresholds prevent summit execution for these profiles. Monitor in the next human playtesting batch and consider a minor `resourceEfficiency` increase for Daniela if human testers report inaccessibility.
 
 ## Target metric bands (per character)
 

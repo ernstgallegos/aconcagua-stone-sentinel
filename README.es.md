@@ -88,6 +88,28 @@ La observación, las pausas y la lectura del entorno son mecánicas, no interrup
 
 ---
 
+## Documentación clave
+
+**Guía de navegación rápida**: [`docs/NAVIGATION.md`](./docs/NAVIGATION.md) — árbol de decisión para encontrar cualquier documento por rol o tema
+
+### Documentos principales
+- **[Whitepaper](meta/project-whitepaper.md)** — visión y fundamentos de diseño
+- **[Arquitectura](docs/architecture.md)** — flujo del motor y mapa de fuentes de datos
+- **[Motor de simulación](docs/simulation_engine.md)** — referencia completa de mecánicas EP/BT
+- **[Verdad del repositorio](docs/repo-truth.es.md)** — contrato canónico de versión/roster/estado
+
+### Diseño e implementación
+- **[Diseño consolidado v1.4](docs/es/diseno-consolidado-v1.4.md)** — diseño + plan de implementación ([EN](docs/en/consolidated-design-v1.4.md))
+- **[Pilares de diseño](docs/es/pilares-de-diseno.md)** — 4 principios de diseño fundamentales ([EN](docs/en/design-pillars.md))
+- **[Calibración de balance](docs/balance-calibration-notes.md)** — fundamentos de balanceo y bandas objetivo
+
+### Referencia técnica
+- **[Guía de contratos de datos](docs/data-contracts-guide.md)** — esquemas JSON y validación
+- **[Deep links](docs/deep-links.web-v1.md)** — todas las pantallas del prototipo vía URL hash
+- **[Deploy y ruteo](docs/deploy-routing.md)** — Vercel, servidor local, referencia CORS
+
+---
+
 ## Preparación pública y gobernanza
 
 Para mantener el repositorio listo para revisión pública, usar esta base de gobernanza antes de abrir PRs orientados a release:
@@ -98,7 +120,7 @@ Para mantener el repositorio listo para revisión pública, usar esta base de go
 - [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) — expectativas de convivencia para la comunidad.
 - [`docs/es/checklist-preparacion-publica.md`](./docs/es/checklist-preparacion-publica.md) — checklist final pre-release para coherencia de código + documentación.
 - [`docs/operations-support.md`](./docs/operations-support.md) — troubleshooting operativo (carga de datos, deep-links, overlays y comandos de readiness).
-- [`docs/en/accessibility-verification-checklist.md`](./docs/en/accessibility-verification-checklist.md) — checklist breve de verificación de accesibilidad para revisión de lanzamiento.
+- [`docs/es/checklist-verificacion-accesibilidad.md`](./docs/es/checklist-verificacion-accesibilidad.md) — checklist breve de verificación de accesibilidad para revisión de lanzamiento ([EN](./docs/en/accessibility-verification-checklist.md)).
 
 
 ## Sobre el uso de IA
@@ -272,11 +294,26 @@ Ejemplos:
 Tabla completa con todas las pantallas activas, referencia de parámetros, IDs de personajes/escenarios/outcomes y links listos para copiar: [`docs/deep-links.web-v1.md`](./docs/deep-links.web-v1.md).
 
 ## Estructura del repositorio
- 
- - [`/docs`](./docs) — Documentos conceptuales, pilares de diseño, visión de sistemas (inglés y español) y propuesta de artefacto mínimo reproducible (solo en inglés).
- - [`/art`](./art) — Concept art curado y referencias visuales
- - [`/devlog`](./devlog) — Intención de diseño, decisiones de alcance y reflexiones
- - [`/meta`](./meta) — Roadmap público, whitepaper y notas de visibilidad
+
+| Ruta | Descripción |
+|------|-------------|
+| `prototype/web-v1/` | **Prototipo activo** (v1.5.2) — cliente web interactivo con motor de simulación EP/BT completo |
+| ↳ `engine/` | Resolución de turnos (`resolveTurn`), modelo de presión (EP/BT), sistema de eventos, reglas de juego |
+| ↳ `ui/` | Renderizado de pantallas (`screens.js`), loop de juego, controlador de flujo, helpers (carrusel, narrativa, modales) |
+| ↳ `state/` | Gestión del estado global y contratos de estado |
+| ↳ `tests/` | Tests unitarios del motor, tests de aceptación, tests de paridad, guardrails |
+| `prototype/mra-v0/` | Simulador Python congelado (validación de hipótesis temprana, referencia histórica) |
+| `data/` | **Fuente de verdad de datos de simulación** — nodos, personajes, escenarios, resultados, config de presión, eventos |
+| `docs/` | Arquitectura, motor de simulación, sistema de diseño, notas de calibración de balance, guías técnicas |
+| ↳ `en/` | Documentación de diseño en inglés (pilares, diseño consolidado, referencia geológica) |
+| ↳ `es/` | Documentación de diseño en español (diseño consolidado, biblia geológica, personajes) |
+| ↳ `ai/` | Hub de operaciones de agentes IA y manifiesto |
+| `art/` | Catálogo de concept art (13 escenas curadas), retratos de personajes, assets de marca, iconos |
+| `scripts/` | Simulador Monte Carlo, ejecutores de tests, utilidades de validación |
+| `meta/` | Whitepaper del proyecto, roadmap público, press kit |
+| `src/` | Definiciones de tipos TypeScript (adopción gradual, solo type-checking, sin output de build) |
+| `api/` | Funciones serverless API (deploy en Vercel) |
+| `devlog/` | Decisiones de diseño y reflexiones de desarrollo |
  
  ---
  

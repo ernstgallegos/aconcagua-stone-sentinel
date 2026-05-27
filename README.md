@@ -33,23 +33,43 @@ See [`prototype/web-v1/README.md`](./prototype/web-v1/README.md) for full instru
 
 | Path | Description |
 |------|-------------|
-| `prototype/web-v1/` | **Active prototype** — interactive web client, EP/BT engine, 15 route nodes, multilingual UI |
-| `prototype/mra-v0/` | Frozen Python simulator (early hypothesis validation) |
-| `data/` | Canonical simulation data (nodes, characters, outcomes, pressure config) |
-| `docs/` | Design pillars, architecture, simulation engine, balance notes, roadmap |
-| `art/` | Concept art, character portraits, brand assets |
-| `meta/` | Project whitepaper and public roadmap |
-| `devlog/` | Design decisions and reflections |
+| `prototype/web-v1/` | **Active prototype** (v1.5.2) — interactive web client with full EP/BT simulation engine |
+| ↳ `engine/` | Turn resolution (`resolveTurn`), pressure model (EP/BT), events system, game rules |
+| ↳ `ui/` | Screen rendering (`screens.js`), game loop, flow controller, helpers (carousel, narrative, modals) |
+| ↳ `state/` | Global game state management and state contracts |
+| ↳ `tests/` | Engine unit tests, acceptance tests, parity tests, guardrails |
+| `prototype/mra-v0/` | Frozen Python simulator (early hypothesis validation, historical reference) |
+| `data/` | **Simulation data source of truth** — nodes, characters, scenarios, outcomes, pressure config, events |
+| `docs/` | Architecture, simulation engine, design system, balance calibration, technical guides |
+| ↳ `en/` | English design documentation (pillars, consolidated design, geological reference) |
+| ↳ `es/` | Spanish design documentation (diseño consolidado, biblia geológica, personajes) |
+| ↳ `ai/` | AI agent operations hub and manifest |
+| `art/` | Concept art catalog (13 curated scenes), character portraits, brand assets, icons |
+| `scripts/` | Monte Carlo simulator, test runners, validation utilities |
+| `meta/` | Project whitepaper, public roadmap, press kit |
+| `src/` | TypeScript type definitions (gradual adoption, type-checking only, no build output) |
+| `api/` | Serverless API functions (Vercel deployment) |
+| `devlog/` | Design decisions and development reflections |
 
 ---
 
 ## Key documentation
 
+**Quick navigation guide**: [`docs/NAVIGATION.md`](./docs/NAVIGATION.md) — decision tree for finding any documentation by role or topic
+
+### Core documents
 - **[Whitepaper](meta/project-whitepaper.md)** — vision and design rationale
 - **[Architecture](docs/architecture.md)** — engine flow and data source map
 - **[Simulation engine](docs/simulation_engine.md)** — full EP/BT mechanics reference
 - **[Repo truth](docs/repo-truth.md)** — canonical version/roster/status contract
+
+### Design & implementation
 - **[Consolidated design v1.4](docs/en/consolidated-design-v1.4.md)** — design + implementation plan ([ES](docs/es/diseno-consolidado-v1.4.md))
+- **[Design pillars](docs/en/design-pillars.md)** — 4 core design principles ([ES](docs/es/pilares-de-diseno.md))
+- **[Balance calibration](docs/balance-calibration-notes.md)** — tuning rationale and target bands
+
+### Technical reference
+- **[Data contracts guide](docs/data-contracts-guide.md)** — JSON schemas and validation
 - **[Deep links](docs/deep-links.web-v1.md)** — every prototype screen via hash URL
 - **[Deploy & routing](docs/deploy-routing.md)** — Vercel, local server, CORS reference
 
