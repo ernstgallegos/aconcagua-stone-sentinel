@@ -11,6 +11,16 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- **`prototype/web-v2/`**: Complete from-scratch rebuild of the playable prototype using only project documentation as input (no v1 code reuse). Implements full game flow: title → expedition setup → gameplay → debrief → Part 2 gate.
+  - `engine/pressure-model.js`: Environmental Pressure (EP) and Body Tolerance (BT) calculation with all altitude bands, terrain load, weather severity, time-of-day risk, exposure persistence, and bivouac penalties.
+  - `engine/turn-resolution.js`: Canonical turn resolution pipeline (normalize → consume → weather → pressure → evaluate → update → classify → emit) with seeded PRNG, collapse mechanics, and character event system.
+  - `engine/perception.js`: Perception model producing confidence, noise, trend, and pressure labels filtered through character bias and guardrails.
+  - `engine/outcomes.js`: All 10 terminal outcomes with precedence-ordered classification and Part 2 unlock logic.
+  - `state/game-state.js`: State factory, action availability, permit tracking, and localStorage Part 2 persistence.
+  - `ui/app.js`: Application controller managing screen transitions, character/scenario selection, game loop, and debrief rendering.
+  - `ui/data-loader.js`: Async data loader for all `/data/*.json` files with normalization (nodes, EP config flattening).
+  - `css/`: Complete design system (tokens, reset, layout, components, responsive) with cold mineral palette, Playfair Display / Montserrat / IBM Plex Mono typography, and mobile-first responsive layout.
+  - `index.html`: Single-page application with 5 screens (title, setup, game, debrief, Part 2 bridge).
 - Added `docs/NAVIGATION.md` as a quick decision tree for finding documentation by role or topic, organizing all repository documentation with clear navigation paths for contributors, designers, engineers, AI agents, playtesters, and researchers.
 - Added `scripts/README.md` documenting all utility scripts with usage, purpose, exit codes, and examples for validation (`validate-json.js`, `check-lock-version.js`, `check-markdown-links.js`), testing (`run-webv1-tests.js`), simulation (`monte-carlo-web-v1.js`), and deployment (`release-smoke-vercel.js`).
 - Added Spanish translation of accessibility verification checklist: `docs/es/checklist-verificacion-accesibilidad.md` (mirrors English version with full parity).
