@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aconcagua: Stone Sentinel — v2.0 Prototype</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- ==================== TITLE SCREEN ==================== -->
+  <div id="screen-title" class="screen active">
+    <div class="title-content">
+      <h1 class="title-brand">Aconcagua</h1>
+      <p class="title-subtitle">Stone Sentinel</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--space-md);">
+        A mountaineering decision game. The mountain governs.
+      </p>
+    </div>
+    <button class="btn-primary" onclick="window.app.startGame()">Begin Expedition</button>
+    <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">
+      Prototype v2.0
+    </p>
+  </div>
+
+  <!-- ==================== SETUP SCREEN ==================== -->
+  <div id="screen-setup" class="screen">
+    <div class="setup-section">
+      <h2>Select Your Climber</h2>
+      <div id="character-grid" class="selection-grid"></div>
+    </div>
+
+    <div class="setup-section">
+      <h2>Select Scenario</h2>
+      <div id="scenario-grid" class="selection-grid"></div>
+    </div>
+
+    <div style="text-align: center; padding-top: var(--space-lg);">
+      <button id="btn-start-expedition" class="btn-primary" disabled onclick="window.app.startExpedition()">
+        Start Expedition
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== GAME SCREEN ==================== -->
+  <div id="screen-game" class="screen">
+
+    <!-- Left Panel: Body State + Resources -->
+    <div class="game-left">
+      <div class="watch-section">
+        <h3>Body State</h3>
+        <div class="body-stat">
+          <span class="body-stat-label">Capacity</span>
+          <span class="body-stat-value" id="body-capacity">90</span>
+        </div>
+        <div class="body-stat">
+          <span class="body-stat-label">Fatigue</span>
+          <span class="body-stat-value" id="body-fatigue">10</span>
+        </div>
+        <div class="body-stat">
+          <span class="body-stat-label">Exposure</span>
+          <span class="body-stat-value" id="body-exposure">5</span>
+        </div>
+      </div>
+
+      <div class="watch-section">
+        <h3>Resources</h3>
+        <div class="body-stat">
+          <span class="body-stat-label">💧 Water</span>
+          <span class="body-stat-value" id="res-water">24</span>
+        </div>
+        <div class="body-stat">
+          <span class="body-stat-label">🍞 Food</span>
+          <span class="body-stat-value" id="res-food">20</span>
+        </div>
+      </div>
+
+      <div class="watch-section">
+        <h3>Signals</h3>
+        <div class="signal-row">
+          <span class="signal-label">Pressure</span>
+          <span class="signal-value" id="signal-pressure">—</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-label">Trend</span>
+          <span class="signal-value" id="signal-trend">—</span>
+        </div>
+        <div class="signal-row">
+          <span class="signal-label">Confidence</span>
+          <span class="signal-value" id="signal-confidence">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Panel: Actions + Narrative + Viz -->
+    <div class="game-center">
+      <div id="mountain-viz"></div>
+
+      <div>
+        <h3 style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-sm);">
+          Choose Action
+        </h3>
+        <div id="action-panel"></div>
+      </div>
+
+      <div id="narrative-log"></div>
+    </div>
+
+    <!-- Right Panel: Watch (Time, Location, Permit) -->
+    <div class="game-right">
+      <div class="watch-section">
+        <h3>Time</h3>
+        <div class="watch-value" id="watch-time">06:00</div>
+        <div class="watch-label" id="watch-day">Day 1</div>
+      </div>
+
+      <div class="watch-section">
+        <h3>Position</h3>
+        <div class="watch-value" id="watch-altitude">2950m</div>
+        <div class="watch-label" id="watch-location">Horcones</div>
+        <div class="watch-label" id="watch-stage">APPROACH</div>
+      </div>
+
+      <div class="watch-section">
+        <h3>Permit</h3>
+        <div class="watch-value" id="watch-permit">1/20</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DEBRIEF SCREEN ==================== -->
+  <div id="screen-debrief" class="screen">
+    <div id="debrief-outcome"></div>
+    <div id="debrief-stats"></div>
+    <div id="debrief-narrative"></div>
+  </div>
+
+  <!-- ==================== PART 2 BRIDGE ==================== -->
+  <div id="screen-part2" class="screen">
+    <div style="max-width: 500px;">
+      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: var(--space-md);">
+        Part 2 — The Threshold
+      </h2>
+      <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+        The summit was only the beginning. The mountain revealed something about you that cannot be
+        undone. When the group reconvenes in Mendoza, the relationships have shifted.
+      </p>
+      <p style="color: var(--text-muted); font-style: italic; margin-bottom: var(--space-xl);">
+        Part 2 continues the story with deeper routes, harder choices, and consequences that carry forward.
+        Coming soon.
+      </p>
+      <button class="btn-secondary" onclick="window.app.restart()">← Return to Expedition Setup</button>
+    </div>
+  </div>
+
+  <!-- ==================== App Bootstrap ==================== -->
+  <script type="module">
+    import { init } from './ui/app.js';
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+
+</body>
+</html>

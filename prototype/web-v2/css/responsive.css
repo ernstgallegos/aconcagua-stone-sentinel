@@ -1,0 +1,65 @@
+/* ===========================
+   Responsive — Mobile adaptations
+   =========================== */
+
+@media (max-width: 900px) {
+  #screen-game.active {
+    flex-direction: column;
+  }
+
+  .game-left,
+  .game-right {
+    width: 100%;
+    border: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+
+  .game-left {
+    order: 2;
+  }
+
+  .game-center {
+    order: 1;
+    padding: var(--space-md);
+  }
+
+  .game-right {
+    order: 3;
+  }
+
+  .watch-section {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  #mountain-viz {
+    height: 60px;
+  }
+
+  .selection-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .selection-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .game-left,
+  .game-right {
+    flex-direction: column;
+  }
+
+  #action-panel {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
