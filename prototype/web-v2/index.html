@@ -1,174 +1,906 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aconcagua: Stone Sentinel — v2.0 Prototype</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aconcagua — Stone Sentinel</title>
+<link rel="icon" type="image/jpeg" href="../../art/brand/favicon-aconcagua.jpg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/responsive.css">
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ec;
+  --paper-warm: #ede8e0;
+  --stone: #8a8278;
+  --slate: #5c574f;
+  --altitude: #2c4a6e;
+  --danger: #8b3a3a;
+  --frost: #4a7a8a;
+  --gold: #9a7b3c;
+  --font-narrative: 'EB Garamond', 'Georgia', serif;
+  --font-data: 'JetBrains Mono', monospace;
+  --font-ui: 'Inter', system-ui, sans-serif;
+}
+
+html { font-size: 16px; }
+body {
+  font-family: var(--font-narrative);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ——— Views ——— */
+.view { display: none; min-height: 100vh; }
+.view.active { display: flex; flex-direction: column; }
+
+/* ——— COVER ——— */
+#cover {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+#cover h1 {
+  font-family: var(--font-narrative);
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3em;
+}
+#cover .subtitle {
+  font-family: var(--font-data);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 3rem;
+}
+#cover .epigraph {
+  font-style: italic;
+  font-size: 1.1rem;
+  max-width: 28em;
+  color: #b8b0a4;
+  margin-bottom: 4rem;
+  line-height: 1.7;
+}
+#cover button {
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid var(--stone);
+  padding: 0.9em 2.5em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#cover button:hover { background: var(--paper); color: var(--ink); }
+
+/* ——— EXPEDITION SELECTION ——— */
+#expedition-select {
+  padding: 3rem 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+#expedition-select h2 {
+  font-family: var(--font-narrative);
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+.section-rule {
+  width: 3rem;
+  border: none;
+  border-top: 1px solid var(--stone);
+  margin: 0.8rem 0 2rem;
+}
+.roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.roster-card {
+  border: 1px solid #d4cfc8;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+.roster-card:hover { border-color: var(--slate); }
+.roster-card.chosen { border-color: var(--ink); background: var(--paper-warm); }
+.roster-card .name {
+  font-family: var(--font-narrative);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.roster-card .meta {
+  font-family: var(--font-data);
+  font-size: 0.65rem;
+  color: var(--slate);
+  letter-spacing: 0.05em;
+}
+.roster-card .brief {
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-top: 0.6rem;
+  line-height: 1.5;
+}
+.scenarios { margin-bottom: 3rem; }
+.scenario-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #d4cfc8;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.6rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-narrative);
+  font-size: 1rem;
+}
+.scenario-option:hover { border-color: var(--slate); }
+.scenario-option.chosen { border-color: var(--ink); background: var(--paper-warm); }
+.scenario-option .scenario-name { font-weight: 500; }
+.scenario-option .scenario-desc {
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-top: 0.3rem;
+}
+.begin-btn {
+  display: block;
+  width: 100%;
+  font-family: var(--font-data);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 1.1em;
+  cursor: pointer;
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.begin-btn.ready { opacity: 1; pointer-events: auto; }
+.begin-btn.ready:hover { background: var(--slate); }
+
+/* ——— MOUNTAIN (GAMEPLAY) ——— */
+#mountain {
+  padding: 0;
+  flex: 1;
+}
+.mountain-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+/* Instrument strip (top) */
+.instrument-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  border-bottom: 1px solid #d4cfc8;
+  background: white;
+  font-family: var(--font-data);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+.instrument { text-align: center; }
+.instrument .reading {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  display: block;
+}
+.instrument .label {
+  color: var(--stone);
+  text-transform: uppercase;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  margin-top: 0.15rem;
+}
+
+/* Narrative area (center) */
+.narrative-field {
+  padding: 2rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  overflow-y: auto;
+}
+.turn-entry {
+  margin-bottom: 1.8rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ebe7e0;
+}
+.turn-entry:last-child { border-bottom: none; }
+.turn-entry .turn-text {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.turn-entry .turn-data {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  color: var(--stone);
+  margin-top: 0.6rem;
+  letter-spacing: 0.03em;
+}
+.event-text {
+  font-style: italic;
+  color: var(--slate);
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Decision area (bottom) */
+.decision-dock {
+  border-top: 1px solid #d4cfc8;
+  background: white;
+  padding: 1rem 1.5rem;
+}
+.decision-prompt {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  color: var(--stone);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.7rem;
+}
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.action-btn {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 400;
+  padding: 0.6em 1.2em;
+  border: 1px solid #d4cfc8;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.action-btn:hover { border-color: var(--ink); background: var(--paper-warm); }
+.action-btn[data-action="descend"] { color: var(--frost); }
+.action-btn[data-action="sleep"] { color: var(--gold); }
+
+/* ——— DEBRIEF ——— */
+#debrief {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+#debrief .outcome-title {
+  font-family: var(--font-narrative);
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+#debrief .outcome-desc {
+  font-size: 1rem;
+  color: var(--slate);
+  max-width: 30em;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+.debrief-stats {
+  font-family: var(--font-data);
+  font-size: 0.7rem;
+  color: var(--stone);
+  margin-bottom: 3rem;
+  letter-spacing: 0.03em;
+}
+.debrief-stats span { margin: 0 1rem; }
+#debrief button {
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--stone);
+  padding: 0.8em 2em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#debrief button:hover { background: var(--ink); color: var(--paper); }
+
+/* ——— Responsive ——— */
+@media (max-width: 600px) {
+  .instrument-strip { padding: 0.6rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .narrative-field { padding: 1.5rem 1rem; }
+  .roster { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ==================== TITLE SCREEN ==================== -->
-  <div id="screen-title" class="screen active">
-    <div class="title-content">
-      <h1 class="title-brand">Aconcagua</h1>
-      <p class="title-subtitle">Stone Sentinel</p>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--space-md);">
-        A mountaineering decision game. The mountain governs.
-      </p>
+<!-- COVER -->
+<div id="cover" class="view active">
+  <h1>Aconcagua</h1>
+  <div class="subtitle">Stone Sentinel</div>
+  <p class="epigraph">La montaña no se conquista. Se lee, se interpreta, y si hay suerte y criterio, se regresa.</p>
+  <button id="btn-enter">Ingresar</button>
+</div>
+
+<!-- EXPEDITION SELECT -->
+<div id="expedition-select" class="view">
+  <h2>Expedición</h2>
+  <hr class="section-rule">
+  <div id="climber-roster" class="roster"></div>
+  <h2>Escenario</h2>
+  <hr class="section-rule">
+  <div id="scenario-list" class="scenarios"></div>
+  <button id="btn-begin" class="begin-btn">Iniciar expedición</button>
+</div>
+
+<!-- MOUNTAIN (GAMEPLAY) -->
+<div id="mountain" class="view">
+  <div class="mountain-layout">
+    <div class="instrument-strip">
+      <div class="instrument"><span class="reading" id="ins-time">06:00</span><span class="label">Hora</span></div>
+      <div class="instrument"><span class="reading" id="ins-day">Día 1</span><span class="label">Jornada</span></div>
+      <div class="instrument"><span class="reading" id="ins-alt">2950m</span><span class="label">Altitud</span></div>
+      <div class="instrument"><span class="reading" id="ins-body">90</span><span class="label">Capacidad</span></div>
+      <div class="instrument"><span class="reading" id="ins-water">24</span><span class="label">Agua</span></div>
+      <div class="instrument"><span class="reading" id="ins-food">20</span><span class="label">Comida</span></div>
+      <div class="instrument"><span class="reading" id="ins-signal">—</span><span class="label">Señal</span></div>
     </div>
-    <button class="btn-primary" onclick="window.app.startGame()">Begin Expedition</button>
-    <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">
-      Prototype v2.0
-    </p>
-  </div>
-
-  <!-- ==================== SETUP SCREEN ==================== -->
-  <div id="screen-setup" class="screen">
-    <div class="setup-section">
-      <h2>Select Your Climber</h2>
-      <div id="character-grid" class="selection-grid"></div>
-    </div>
-
-    <div class="setup-section">
-      <h2>Select Scenario</h2>
-      <div id="scenario-grid" class="selection-grid"></div>
-    </div>
-
-    <div style="text-align: center; padding-top: var(--space-lg);">
-      <button id="btn-start-expedition" class="btn-primary" disabled onclick="window.app.startExpedition()">
-        Start Expedition
-      </button>
-    </div>
-  </div>
-
-  <!-- ==================== GAME SCREEN ==================== -->
-  <div id="screen-game" class="screen">
-
-    <!-- Left Panel: Body State + Resources -->
-    <div class="game-left">
-      <div class="watch-section">
-        <h3>Body State</h3>
-        <div class="body-stat">
-          <span class="body-stat-label">Capacity</span>
-          <span class="body-stat-value" id="body-capacity">90</span>
-        </div>
-        <div class="body-stat">
-          <span class="body-stat-label">Fatigue</span>
-          <span class="body-stat-value" id="body-fatigue">10</span>
-        </div>
-        <div class="body-stat">
-          <span class="body-stat-label">Exposure</span>
-          <span class="body-stat-value" id="body-exposure">5</span>
-        </div>
-      </div>
-
-      <div class="watch-section">
-        <h3>Resources</h3>
-        <div class="body-stat">
-          <span class="body-stat-label">💧 Water</span>
-          <span class="body-stat-value" id="res-water">24</span>
-        </div>
-        <div class="body-stat">
-          <span class="body-stat-label">🍞 Food</span>
-          <span class="body-stat-value" id="res-food">20</span>
-        </div>
-      </div>
-
-      <div class="watch-section">
-        <h3>Signals</h3>
-        <div class="signal-row">
-          <span class="signal-label">Pressure</span>
-          <span class="signal-value" id="signal-pressure">—</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-label">Trend</span>
-          <span class="signal-value" id="signal-trend">—</span>
-        </div>
-        <div class="signal-row">
-          <span class="signal-label">Confidence</span>
-          <span class="signal-value" id="signal-confidence">—</span>
-        </div>
+    <div class="narrative-field" id="narrative-field">
+      <div class="turn-entry">
+        <p class="turn-text" id="initial-narrative"></p>
       </div>
     </div>
-
-    <!-- Center Panel: Actions + Narrative + Viz -->
-    <div class="game-center">
-      <div id="mountain-viz"></div>
-
-      <div>
-        <h3 style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-sm);">
-          Choose Action
-        </h3>
-        <div id="action-panel"></div>
-      </div>
-
-      <div id="narrative-log"></div>
-    </div>
-
-    <!-- Right Panel: Watch (Time, Location, Permit) -->
-    <div class="game-right">
-      <div class="watch-section">
-        <h3>Time</h3>
-        <div class="watch-value" id="watch-time">06:00</div>
-        <div class="watch-label" id="watch-day">Day 1</div>
-      </div>
-
-      <div class="watch-section">
-        <h3>Position</h3>
-        <div class="watch-value" id="watch-altitude">2950m</div>
-        <div class="watch-label" id="watch-location">Horcones</div>
-        <div class="watch-label" id="watch-stage">APPROACH</div>
-      </div>
-
-      <div class="watch-section">
-        <h3>Permit</h3>
-        <div class="watch-value" id="watch-permit">1/20</div>
-      </div>
+    <div class="decision-dock">
+      <div class="decision-prompt">¿Qué hacés?</div>
+      <div class="action-row" id="action-row"></div>
     </div>
   </div>
+</div>
 
-  <!-- ==================== DEBRIEF SCREEN ==================== -->
-  <div id="screen-debrief" class="screen">
-    <div id="debrief-outcome"></div>
-    <div id="debrief-stats"></div>
-    <div id="debrief-narrative"></div>
-  </div>
+<!-- DEBRIEF -->
+<div id="debrief" class="view">
+  <h2 class="outcome-title" id="outcome-title"></h2>
+  <p class="outcome-desc" id="outcome-desc"></p>
+  <div class="debrief-stats" id="debrief-stats"></div>
+  <button id="btn-replay">Otra expedición</button>
+</div>
 
-  <!-- ==================== PART 2 BRIDGE ==================== -->
-  <div id="screen-part2" class="screen">
-    <div style="max-width: 500px;">
-      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: var(--space-md);">
-        Part 2 — The Threshold
-      </h2>
-      <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
-        The summit was only the beginning. The mountain revealed something about you that cannot be
-        undone. When the group reconvenes in Mendoza, the relationships have shifted.
-      </p>
-      <p style="color: var(--text-muted); font-style: italic; margin-bottom: var(--space-xl);">
-        Part 2 continues the story with deeper routes, harder choices, and consequences that carry forward.
-        Coming soon.
-      </p>
-      <button class="btn-secondary" onclick="window.app.restart()">← Return to Expedition Setup</button>
-    </div>
-  </div>
+<script type="module">
+// ═══════════════════════════════════════════════════════════
+// ACONCAGUA: STONE SENTINEL — v2 PROTOTYPE
+// Complete rebuild. No code from web-v1.
+// Architecture: Reactive state machine + narrative renderer.
+// ═══════════════════════════════════════════════════════════
 
-  <!-- ==================== App Bootstrap ==================== -->
-  <script type="module">
-    import { init } from './ui/app.js';
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+const DATA_ROOT = '../../data';
 
+// ——— Data Loading ———
+async function fetchJSON(file) {
+  const r = await fetch(`${DATA_ROOT}/${file}`);
+  if (!r.ok) throw new Error(`No se pudo cargar ${file}`);
+  return r.json();
+}
+
+async function loadData() {
+  const [chars, nodesRaw, scenarios, actions, stages, epRaw, outcomes, ctx, charEv] = await Promise.all([
+    fetchJSON('characters.json'),
+    fetchJSON('nodes.json'),
+    fetchJSON('scenarios.web-v1.json'),
+    fetchJSON('action_modifiers.json'),
+    fetchJSON('stage_modifiers.json'),
+    fetchJSON('environmental_pressure_config.json'),
+    fetchJSON('outcomes.json'),
+    fetchJSON('context_events.json'),
+    fetchJSON('character_events.json'),
+  ]);
+  const nodes = nodesRaw.map((n, i) => ({
+    id: n.nodeId || n.id,
+    name: n.nodeName,
+    alt: n.altitudeMeters,
+    stage: n.stageHint || n.stage || 'APPROACH',
+    camp: !!n.isCamp,
+    idx: n.routeIndex ?? i,
+  }));
+  const sim = epRaw.simulation || {};
+  const ep = {
+    altBands: epRaw.altitudePressureByBand || [],
+    terrain: epRaw.terrainLoadScale || [],
+    weather: epRaw.weatherSeverityScale || [],
+    time: epRaw.timeOfDayRiskScale || [],
+    persist: epRaw.exposurePersistenceScale || [],
+    burn: sim.resourceBurnPerHour || {},
+    costs: sim.baseCosts || { fatigue: 10, exposure: 8 },
+    bivouac: sim.bivouacPenalty || { fatigue: 26, exposure: 28, persistenceTurns: 10 },
+    windows: sim.timeWindows || {},
+  };
+  const sc = scenarios.predefinedScenarios || scenarios;
+  return { chars, nodes, scenarios: Array.isArray(sc) ? sc : [], actions, stages, ep, outcomes, ctx, charEv };
+}
+
+// ——— PRNG (xorshift32) ———
+function rng(seed) {
+  let s = seed | 0 || 1;
+  return () => { s ^= s << 13; s ^= s >> 17; s ^= s << 5; return (s >>> 0) / 4294967296; };
+}
+
+// ——— Game Engine ———
+function createRun(character, scenario, data) {
+  const seeds = scenario.seeds || [Date.now()];
+  const seed = seeds[Math.floor(Math.random() * seeds.length)];
+  const diff = scenario.difficultyModifiers || {};
+  const ini = scenario.initial || {};
+  return {
+    char: character,
+    scenario,
+    seed,
+    rand: rng(seed),
+    turn: 0,
+    day: 1,
+    time: 360,
+    pos: 0,
+    peak: 0,
+    summited: false,
+    body: {
+      cap: (ini.functional_capacity || 90) + (diff.initialCapacityBonus || 0),
+      fat: ini.fatigue || 10,
+      exp: ini.exposure || 5,
+      accl: 5,
+      persist: 0,
+    },
+    res: {
+      water: (ini.water || 24) + (diff.initialWaterBonus || 0),
+      food: (ini.food || 20) + (diff.initialFoodBonus || 0),
+    },
+    weather: { wind: ini.weather_severity || 1, vis: ini.visibility || 3 },
+    permit: { day: 1, max: 20 + (diff.permitDaysBonus || 0) },
+    firedCtx: [],
+    firedChar: {},
+    charCD: {},
+    log: [],
+  };
+}
+
+function resolveAction(run, actionId, data) {
+  const { nodes, actions, stages, ep } = data;
+  const node = nodes[run.pos];
+  const stage = stages[node.stage] || stages.APPROACH || {};
+  const act = actions[actionId] || actions.wait || {};
+  const r = run.rand;
+
+  // Normalize
+  let action = actionId;
+  if (node.idx >= 14 && (action === 'advance' || action === 'advance_slowly')) action = 'wait';
+  if (action === 'sleep' && !node.camp) action = 'wait';
+  if (action === 'descend' && run.pos <= 0) action = 'wait';
+
+  // Time
+  let elapsed;
+  if (action === 'sleep') {
+    elapsed = (1440 - run.time) + 360;
+  } else {
+    elapsed = act.timeCost || 60;
+  }
+
+  // Resources burn
+  const burnKey = node.stage;
+  const burnRates = ep.burn[burnKey] || ep.burn.APPROACH || { water: 0.8, food: 0.5 };
+  const hours = elapsed / 60;
+  const eff = run.char.engine.resourceEfficiency || 1;
+  const wCost = burnRates.water * hours / eff;
+  const fCost = burnRates.food * hours / eff;
+
+  // Weather drift from context events
+  applyContextEvents(run, data);
+
+  // Environmental pressure (simplified — altitude band + weather + time)
+  const band = Math.min((ep.altBands || []).length - 1, Math.floor(node.idx / 3));
+  const altP = (ep.altBands[band] || 0);
+  const windP = (ep.weather || [])[Math.min(run.weather.wind, 4)] || 0;
+  const timeIdx = run.time >= 1080 ? 4 : run.time >= 900 ? 3 : run.time >= 720 ? 2 : run.time >= 480 ? 1 : 0;
+  const timeP = (ep.time || [])[timeIdx] || 0;
+  const persistP = Math.min((ep.persist || []).length - 1, run.body.persist);
+  const persistVal = (ep.persist || [])[persistP] || 0;
+  const envPressure = altP + windP + timeP + persistVal + (stage.weatherSeverityBias || 0);
+
+  // Body tolerance
+  const fatRes = run.char.engine.fatigueResistance || 1;
+  const expRes = run.char.engine.exposureResistance || 1;
+  const bodyTol = 50 + run.body.accl * 0.5 - (run.body.fat / fatRes) * 0.3 - (run.body.exp / expRes) * 0.2
+    + (run.char.engine.functionalCapacityBonus || 0) * 0.5
+    + (run.res.water > 0 ? 5 : -10) + (run.res.food > 0 ? 3 : -8);
+
+  const delta = envPressure - bodyTol;
+
+  // Movement resolution
+  let moveResult = 'hold';
+  let posChange = 0;
+
+  if (action === 'sleep') {
+    moveResult = 'rest';
+  } else if (action === 'descend') {
+    moveResult = 'descend';
+    posChange = -1;
+  } else if (action === 'wait' || action === 'shoot_photo') {
+    moveResult = 'hold';
+  } else {
+    // advance / advance_slowly
+    const prog = act.progress || 20;
+    const collapseP = Math.min(90, Math.max(0, delta * 1.2 + (100 - run.body.cap) * 0.1));
+    if (r() * 100 < collapseP) {
+      moveResult = 'collapse';
+    } else {
+      const advP = Math.max(8, Math.min(92, 60 + prog - delta * 0.8));
+      moveResult = r() * 100 < advP ? 'advance' : 'hold';
+      if (moveResult === 'advance') posChange = 1;
+    }
+  }
+
+  // Apply state changes
+  run.turn++;
+  if (action === 'sleep') {
+    run.time = 360;
+    run.day++;
+    run.body.persist = 0;
+    const fatRec = act.fatigueRecovery || 22;
+    const expRec = act.exposureRecovery || 14;
+    run.body.fat = Math.max(0, run.body.fat - fatRec);
+    run.body.exp = Math.max(0, run.body.exp - expRec);
+    run.body.accl = Math.min(100, run.body.accl + (run.char.engine.acclimatizationRate || 1) * 4);
+  } else {
+    run.time += elapsed;
+    if (run.time >= 1440) { run.time -= 1440; run.day++; }
+    run.body.persist++;
+
+    const fm = (act.fatigueMultiplier || 1) * (stage.fatigueMultiplier || 1);
+    const em = (act.exposureMultiplier || 1) * (stage.exposureMultiplier || 1);
+
+    if (action === 'descend') {
+      run.body.fat = Math.max(0, run.body.fat - (act.fatigueRecovery || 4));
+      run.body.exp = Math.max(0, run.body.exp - (act.exposureRecovery || 4));
+    } else if (action === 'wait') {
+      run.body.fat = Math.max(0, run.body.fat + ep.costs.fatigue * 0.55 * fm - 2);
+      run.body.exp = Math.max(0, run.body.exp + ep.costs.exposure * 0.85 * em - 1);
+      run.body.accl = Math.min(100, run.body.accl + (run.char.engine.acclimatizationRate || 1) * 0.3 * (act.acclimatizationGain || 6));
+    } else {
+      run.body.fat += ep.costs.fatigue * fm;
+      run.body.exp += ep.costs.exposure * em;
+      run.body.accl = Math.min(100, run.body.accl + (run.char.engine.acclimatizationRate || 1) * 0.5);
+    }
+  }
+
+  // Position
+  run.pos = Math.max(0, Math.min(nodes.length - 1, run.pos + posChange));
+  if (run.pos > run.peak) run.peak = run.pos;
+  if (run.pos >= 14) run.summited = true;
+
+  // Resources
+  run.res.water = Math.max(0, run.res.water - wCost);
+  run.res.food = Math.max(0, run.res.food - fCost);
+
+  // Bivouac penalty
+  if (run.time >= 1320 && !node.camp && action !== 'sleep') {
+    run.body.fat += ep.bivouac.fatigue;
+    run.body.exp += ep.bivouac.exposure;
+    run.body.persist += ep.bivouac.persistenceTurns || 10;
+  }
+
+  // Collapse penalty
+  if (moveResult === 'collapse') {
+    run.body.fat += 15;
+    run.body.exp += 10;
+  }
+
+  // Functional capacity recalc
+  run.body.cap = Math.max(0, Math.min(100,
+    100 + (run.char.engine.functionalCapacityBonus || 0)
+    - (run.body.fat / fatRes) * 0.6
+    - (run.body.exp / expRes) * 0.4
+  ));
+
+  // Permit
+  run.permit.day = run.day;
+
+  // Character events
+  applyCharEvents(run, action, node, data);
+
+  // Terminal check
+  const terminal = checkTerminal(run, nodes, data);
+
+  // Perception signal
+  const signal = computeSignal(run, delta);
+
+  // Narrative
+  const narr = writeNarrative(action, moveResult, node, nodes[run.pos], run, signal);
+
+  run.log.push({ turn: run.turn, action, moveResult, node: node.name, delta: Math.round(delta) });
+
+  return { moveResult, terminal, narrative: narr, signal };
+}
+
+function applyContextEvents(run, data) {
+  if (!data.ctx) return;
+  for (const ev of data.ctx) {
+    if (ev.trigger && ev.trigger.turns && ev.trigger.turns.includes(run.turn) && !run.firedCtx.includes(ev.id)) {
+      if (ev.effects.weatherDelta) run.weather.wind = Math.max(0, Math.min(4, run.weather.wind + ev.effects.weatherDelta));
+      if (ev.effects.visibilityDelta) run.weather.vis = Math.max(0, Math.min(4, run.weather.vis + ev.effects.visibilityDelta));
+      run.firedCtx.push(ev.id);
+    }
+  }
+}
+
+function applyCharEvents(run, action, node, data) {
+  if (!data.charEv) return;
+  const events = data.charEv.filter(e => e.characterId === run.char.id);
+  for (const ev of events) {
+    if ((run.firedChar[ev.id] || 0) >= (ev.limits?.maxPerRun || 3)) continue;
+    if ((run.charCD[ev.id] || 0) > 0) continue;
+    const t = ev.trigger || {};
+    if (t.actions && !t.actions.includes(action)) continue;
+    if (t.stages && !t.stages.includes(node.stage)) continue;
+    if (t.minTurn && run.turn < t.minTurn) continue;
+    if (ev.effects.fatigueDelta) run.body.fat = Math.max(0, run.body.fat + ev.effects.fatigueDelta);
+    if (ev.effects.exposureDelta) run.body.exp = Math.max(0, run.body.exp + ev.effects.exposureDelta);
+    run.firedChar[ev.id] = (run.firedChar[ev.id] || 0) + 1;
+    run.charCD[ev.id] = ev.limits?.cooldownTurns || 3;
+    break;
+  }
+  for (const k of Object.keys(run.charCD)) { if (run.charCD[k] > 0) run.charCD[k]--; }
+}
+
+function checkTerminal(run, nodes, data) {
+  // Collapse / Fatality
+  if (run.body.cap <= 0) return 'collapse';
+  // Resources exhausted at high altitude
+  if (run.res.water <= 0 && run.res.food <= 0 && run.body.cap < 30) return 'rescue';
+  // Permit expired
+  if (run.day > run.permit.max) return 'permit_expired';
+  // Park exit (returned to Horcones after summiting)
+  if (run.pos === 0 && run.turn > 0 && run.summited) return 'summit_safe_return';
+  // Park exit (retreat)
+  if (run.pos === 0 && run.turn > 0) return 'strategic_retreat';
+  // Expedition window (too many turns)
+  if (run.turn >= (run.scenario.max_turns || run.scenario.maxTurns || 50)) return 'window_closed';
+  return null;
+}
+
+function computeSignal(run, delta) {
+  const bias = run.char.engine.perceptionBias || 0;
+  const noise = (run.rand() - 0.5) * bias * 2;
+  const perceived = delta + noise;
+  if (perceived < -5) return 'Calma';
+  if (perceived < 8) return 'Presión leve';
+  if (perceived < 20) return 'Tensión';
+  return 'Peligro';
+}
+
+function writeNarrative(action, result, fromNode, toNode, run, signal) {
+  const lines = [];
+  const hour = `${String(Math.floor(run.time / 60)).padStart(2, '0')}:${String(run.time % 60).padStart(2, '0')}`;
+
+  if (result === 'advance') {
+    lines.push(`Avanzás desde ${fromNode.name}. ${toNode.name}, ${toNode.alt}m.`);
+  } else if (result === 'descend') {
+    lines.push(`Descendés. ${toNode.name}, ${toNode.alt}m. El cuerpo agradece.`);
+  } else if (result === 'rest') {
+    lines.push(`Dormís en ${fromNode.name}. El cuerpo se repara, lento.`);
+  } else if (result === 'collapse') {
+    lines.push(`El cuerpo falla. Te desplomás en ${fromNode.name}. Algo está mal.`);
+  } else if (result === 'hold' && action === 'wait') {
+    lines.push(`Esperás en ${fromNode.name}. Leés el viento, el cielo, las señales.`);
+  } else {
+    lines.push(`La montaña resiste. Seguís en ${fromNode.name}.`);
+  }
+
+  if (run.weather.wind >= 3) lines.push('El viento golpea sin tregua.');
+  if (run.body.cap < 40) lines.push('Sentís el peso en cada paso.');
+  if (run.res.water < 5) lines.push('Queda poca agua.');
+
+  return lines.join(' ');
+}
+
+// ——— UI Controller ———
+let DATA, RUN;
+
+function show(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(viewId).classList.add('active');
+}
+
+function fmtTime(mins) {
+  return `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+}
+
+function buildSelection() {
+  const roster = document.getElementById('climber-roster');
+  roster.innerHTML = '';
+  for (const c of DATA.chars) {
+    const div = document.createElement('div');
+    div.className = 'roster-card';
+    div.dataset.id = c.id;
+    div.innerHTML = `
+      <div class="name">${c.flag || ''} ${c.name}</div>
+      <div class="meta">${c.role} · ${c.difficultyLabel || 'Standard'}</div>
+      <div class="brief">${c.traits ? c.traits[0] : ''}</div>
+    `;
+    div.addEventListener('click', () => pickChar(c));
+    roster.appendChild(div);
+  }
+
+  const list = document.getElementById('scenario-list');
+  list.innerHTML = '';
+  for (const s of DATA.scenarios) {
+    const btn = document.createElement('button');
+    btn.className = 'scenario-option';
+    btn.dataset.id = s.id;
+    btn.innerHTML = `<div class="scenario-name">${s.name || s.id}</div><div class="scenario-desc">${s.desc || ''}</div>`;
+    btn.addEventListener('click', () => pickScenario(s));
+    list.appendChild(btn);
+  }
+}
+
+let pickedChar = null, pickedScenario = null;
+
+function pickChar(c) {
+  pickedChar = c;
+  document.querySelectorAll('.roster-card').forEach(el => el.classList.toggle('chosen', el.dataset.id === c.id));
+  checkReady();
+}
+
+function pickScenario(s) {
+  pickedScenario = s;
+  document.querySelectorAll('.scenario-option').forEach(el => el.classList.toggle('chosen', el.dataset.id === s.id));
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('btn-begin').classList.toggle('ready', !!(pickedChar && pickedScenario));
+}
+
+function startRun() {
+  if (!pickedChar || !pickedScenario) return;
+  RUN = createRun(pickedChar, pickedScenario, DATA);
+  show('mountain');
+  const node = DATA.nodes[RUN.pos];
+  document.getElementById('initial-narrative').textContent =
+    `${fmtTime(RUN.time)} — ${node.name}, ${node.alt}m. El parque se abre. La ruta comienza.`;
+  refreshInstruments();
+  renderActions();
+}
+
+function refreshInstruments() {
+  const node = DATA.nodes[RUN.pos];
+  document.getElementById('ins-time').textContent = fmtTime(RUN.time);
+  document.getElementById('ins-day').textContent = `Día ${RUN.day}`;
+  document.getElementById('ins-alt').textContent = `${node.alt}m`;
+  document.getElementById('ins-body').textContent = Math.round(RUN.body.cap);
+  document.getElementById('ins-water').textContent = Math.ceil(RUN.res.water);
+  document.getElementById('ins-food').textContent = Math.ceil(RUN.res.food);
+}
+
+function renderActions() {
+  const node = DATA.nodes[RUN.pos];
+  const row = document.getElementById('action-row');
+  row.innerHTML = '';
+
+  const available = [];
+  if (node.idx < 14) {
+    available.push(['advance', 'Avanzar']);
+    available.push(['advance_slowly', 'Avanzar despacio']);
+  }
+  available.push(['wait', 'Esperar']);
+  if (RUN.pos > 0) available.push(['descend', 'Descender']);
+  if (node.camp) available.push(['sleep', 'Dormir']);
+  if (RUN.char.id === 'daniela') available.push(['shoot_photo', 'Fotografiar']);
+
+  for (const [id, label] of available) {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn';
+    btn.dataset.action = id;
+    btn.textContent = label;
+    btn.addEventListener('click', () => doAction(id));
+    row.appendChild(btn);
+  }
+}
+
+function doAction(actionId) {
+  const result = resolveAction(RUN, actionId, DATA);
+
+  // Update instruments
+  refreshInstruments();
+  document.getElementById('ins-signal').textContent = result.signal;
+
+  // Append narrative
+  const field = document.getElementById('narrative-field');
+  const entry = document.createElement('div');
+  entry.className = 'turn-entry';
+  entry.innerHTML = `
+    <p class="turn-text">${result.narrative}</p>
+    <p class="turn-data">turno ${RUN.turn} · ${fmtTime(RUN.time)} · día ${RUN.day} · señal: ${result.signal}</p>
+  `;
+  field.prepend(entry);
+
+  // Terminal?
+  if (result.terminal) {
+    endRun(result.terminal);
+    return;
+  }
+
+  renderActions();
+}
+
+function endRun(outcome) {
+  const titles = {
+    summit_safe_return: 'Cumbre y retorno seguro',
+    strategic_retreat: 'Retirada estratégica',
+    collapse: 'Colapso',
+    rescue: 'Rescate',
+    permit_expired: 'Permiso vencido',
+    window_closed: 'Ventana cerrada',
+  };
+  const descs = {
+    summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar y te dejó regresar.',
+    strategic_retreat: 'Reconociste el límite. Bajaste con vida. Eso es una victoria.',
+    collapse: 'El cuerpo dijo basta. La montaña no negocia.',
+    rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
+    permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
+    window_closed: 'La expedición se alargó más de lo posible.',
+  };
+
+  document.getElementById('outcome-title').textContent = titles[outcome] || outcome;
+  document.getElementById('outcome-desc').textContent = descs[outcome] || '';
+  const peakNode = DATA.nodes[RUN.peak];
+  document.getElementById('debrief-stats').innerHTML =
+    `<span>${RUN.turn} turnos</span><span>${RUN.day} días</span><span>Punto alto: ${peakNode.name} (${peakNode.alt}m)</span>`;
+
+  // Part 2 unlock
+  if (outcome === 'summit_safe_return') {
+    try { localStorage.setItem('aconcagua_summit_v2', 'true'); } catch {}
+  }
+
+  show('debrief');
+}
+
+// ——— Init ———
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    DATA = await loadData();
+  } catch (e) {
+    document.body.innerHTML = `<div style="padding:3rem;font-family:monospace;color:#8b3a3a"><p>Error cargando datos: ${e.message}</p></div>`;
+    return;
+  }
+
+  buildSelection();
+
+  document.getElementById('btn-enter').addEventListener('click', () => show('expedition-select'));
+  document.getElementById('btn-begin').addEventListener('click', startRun);
+  document.getElementById('btn-replay').addEventListener('click', () => {
+    pickedChar = null;
+    pickedScenario = null;
+    RUN = null;
+    document.getElementById('narrative-field').innerHTML = '<div class="turn-entry"><p class="turn-text" id="initial-narrative"></p></div>';
+    buildSelection();
+    show('expedition-select');
+  });
+});
+</script>
 </body>
 </html>
