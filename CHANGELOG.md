@@ -11,17 +11,28 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
-- **`prototype/web-v2/`**: Complete ground-up rebuild of the playable prototype — single self-contained `index.html` with zero v1 code reuse.
-  - New visual identity: warm paper/ink editorial aesthetic (EB Garamond + JetBrains Mono + Inter), light-background with instrument-strip readouts — completely different from v1's dark mineral palette.
+- **`prototype/web-v2/`**: Complete ground-up rebuild incorporating all v1.5 feedback (legibility, causality, temporality, narrative feedback). Single self-contained `index.html` with zero v1 code reuse.
+  - **P0-01**: No real-time pressure. All pressure is diegetic (time of day, permit, weather, fatigue). Player can remain indefinitely on any decision.
+  - **P0-02**: Action preview system — every action shows estimated duration, altitude effect, and energy cost before confirmation (tooltip on hover, inline on mobile).
+  - **P0-03**: Visible clock transitions — each turn displays `HH:MM → HH:MM (duration)` with highlighted day changes.
+  - **P0-04**: Concrete pressure manifestations — pressure strip always shows 2-3 named causes (Altitud, Viento, Hora avanzada, Terreno técnico, Exposición prolongada, Fatiga acumulada, Deshidratación) instead of abstract numbers.
+  - **P0-05**: Three-layer post-action narrative — (1) sensory/literary line, (2) concrete observed changes with deltas, (3) uncertain character interpretation colored by perception bias.
+  - **P0-06**: Wait vs sleep clearly differentiated — distinct icons, explicit duration display ("~1h" vs "hasta las 06:00"), different cost labels, sleep only available at camps.
+  - **P0-07**: Complete Spanish localization — zero mixed-language strings in any session (UI, tooltips, narratives, outcomes, tutorial, debrief, stats).
+  - **P0-08**: Tutorial system with Alejandro Molina's voice — 5 progressive messages during first run explaining time cost, pressure causes, wait/sleep difference, partial information, and descent as valid choice.
+  - **P0-09**: First-time entry recommendation — visible hint suggesting Francisco + Escenario 01 for new players, auto-hidden after first completed run.
+  - **P0-10**: Route progress bar — horizontal bar with camp markers, animated position dot, pulse highlight on position change.
+  - **P1-01**: Procedural micro-scenes per turn — contextual narrative combining location, altitude, time, weather, body state, and character identity.
+  - **P1-02**: Character-specific body signals — per-character fatigue/exposure/capacity narrative lines (6 characters × 5 thresholds).
+  - **P1-03**: Environmental signals — wind, visibility, time-of-day, and terrain descriptions drawn from current conditions.
+  - **P1-04**: Causal debrief — end-run screen explains chain of causes, not just outcome label.
+  - **P1-05**: Strategic retreat celebration — retreat debrief shows what signals were read correctly, what risk was avoided, and what would have happened.
+  - **P1-06**: Tension curve — narrative intensity and signal severity scale with stage progression (approach → high camp → summit day).
+  - **P1-07**: Between-run learning stats — localStorage history tracks altitude records, turn averages, and outcome distribution across sessions without XP or leveling.
   - New architecture: reactive state machine in one module, no multi-file pipeline. Engine, UI, and state colocated in a single `<script type="module">` block for prototype speed.
-  - New UX flow: cover → expedition selection (grid + list) → immersive narrative gameplay → debrief. Text-forward, narrative-first design centered on turn prose instead of dashboard panels.
-  - Instrument strip (top): compact telemetry (time, day, altitude, capacity, water, food, signal).
-  - Narrative field (center): scrolling turn entries as literary text with micro-data annotations.
-  - Decision dock (bottom): flat action buttons in Spanish.
-  - All outcomes and terminal conditions from design docs (summit safe return, strategic retreat, collapse, rescue, permit expired, window closed).
-  - Perception signal system with character bias noise.
+  - New visual identity: warm paper/ink editorial aesthetic (EB Garamond + JetBrains Mono + Inter).
+  - All outcomes and terminal conditions from design docs.
   - Full context events and character events integration.
-  - Spanish-first UI language matching project origin.
 - Added `docs/NAVIGATION.md` as a quick decision tree for finding documentation by role or topic, organizing all repository documentation with clear navigation paths for contributors, designers, engineers, AI agents, playtesters, and researchers.
 - Added `scripts/README.md` documenting all utility scripts with usage, purpose, exit codes, and examples for validation (`validate-json.js`, `check-lock-version.js`, `check-markdown-links.js`), testing (`run-webv1-tests.js`), simulation (`monte-carlo-web-v1.js`), and deployment (`release-smoke-vercel.js`).
 - Added Spanish translation of accessibility verification checklist: `docs/es/checklist-verificacion-accesibilidad.md` (mirrors English version with full parity).

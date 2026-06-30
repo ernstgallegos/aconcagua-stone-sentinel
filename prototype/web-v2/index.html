@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aconcagua — Stone Sentinel</title>
+<title>Aconcagua — Stone Sentinel v2</title>
 <link rel="icon" type="image/jpeg" href="../../art/brand/favicon-aconcagua.jpg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
@@ -20,6 +20,7 @@
   --danger: #8b3a3a;
   --frost: #4a7a8a;
   --gold: #9a7b3c;
+  --green: #3a6b4a;
   --font-narrative: 'EB Garamond', 'Georgia', serif;
   --font-data: 'JetBrains Mono', monospace;
   --font-ui: 'Inter', system-ui, sans-serif;
@@ -104,6 +105,16 @@ body {
   border-top: 1px solid var(--stone);
   margin: 0.8rem 0 2rem;
 }
+.first-time-hint {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--green);
+  background: #eef6f0;
+  border: 1px solid #c4ddc9;
+  padding: 0.7em 1em;
+  margin-bottom: 1.5rem;
+  border-radius: 3px;
+}
 .roster {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -116,9 +127,20 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   background: white;
+  position: relative;
 }
 .roster-card:hover { border-color: var(--slate); }
 .roster-card.chosen { border-color: var(--ink); background: var(--paper-warm); }
+.roster-card.recommended::after {
+  content: '★ Recomendado';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--font-data);
+  font-size: 0.55rem;
+  color: var(--green);
+  letter-spacing: 0.05em;
+}
 .roster-card .name {
   font-family: var(--font-narrative);
   font-size: 1.1rem;
@@ -179,13 +201,10 @@ body {
 .begin-btn.ready:hover { background: var(--slate); }
 
 /* ——— MOUNTAIN (GAMEPLAY) ——— */
-#mountain {
-  padding: 0;
-  flex: 1;
-}
+#mountain { padding: 0; flex: 1; }
 .mountain-layout {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
   min-height: 100vh;
 }
 
@@ -216,36 +235,164 @@ body {
   margin-top: 0.15rem;
 }
 
+/* Route progress bar */
+.route-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.5rem;
+  background: white;
+  border-bottom: 1px solid #ebe7e0;
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+}
+.route-bar {
+  flex: 1;
+  height: 6px;
+  background: #e8e4de;
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+}
+.route-fill {
+  height: 100%;
+  background: var(--altitude);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.route-marker {
+  position: absolute;
+  top: -3px;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+  border-radius: 50%;
+  transition: left 0.6s ease;
+  transform: translateX(-50%);
+}
+.route-bar .camp-mark {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 10px;
+  background: var(--stone);
+  opacity: 0.5;
+}
+.route-label-start, .route-label-end {
+  color: var(--stone);
+  white-space: nowrap;
+}
+.route-highlight {
+  animation: pulse-route 1.5s ease-in-out 2;
+}
+@keyframes pulse-route {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 8px rgba(44, 74, 110, 0.5); }
+}
+
+/* Pressure causes strip */
+.pressure-strip {
+  padding: 0.4rem 1.5rem;
+  background: #faf8f5;
+  border-bottom: 1px solid #ebe7e0;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 28px;
+}
+.pressure-strip .pressure-label {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--stone);
+}
+.pressure-cause {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.pressure-cause::before {
+  content: '·';
+  color: var(--stone);
+}
+.pressure-cause:first-of-type::before { content: ''; }
+.pressure-cause.danger { color: var(--danger); font-weight: 500; }
+
 /* Narrative area (center) */
 .narrative-field {
   padding: 2rem 1.5rem;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
   width: 100%;
   overflow-y: auto;
 }
 .turn-entry {
-  margin-bottom: 1.8rem;
+  margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #ebe7e0;
 }
 .turn-entry:last-child { border-bottom: none; }
-.turn-entry .turn-text {
+.turn-entry .turn-sensory {
   font-size: 1.05rem;
   line-height: 1.75;
+  margin-bottom: 0.5rem;
 }
-.turn-entry .turn-data {
+.turn-entry .turn-changes {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  color: var(--slate);
+  line-height: 1.6;
+  margin-bottom: 0.4rem;
+}
+.turn-entry .turn-interpretation {
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--frost);
+  line-height: 1.6;
+}
+.turn-entry .turn-meta {
   font-family: var(--font-data);
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: var(--stone);
   margin-top: 0.6rem;
   letter-spacing: 0.03em;
 }
-.event-text {
-  font-style: italic;
-  color: var(--slate);
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
+.turn-entry .clock-transition {
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  color: var(--altitude);
+  margin-bottom: 0.5rem;
+  padding: 0.3em 0;
+  border-left: 2px solid var(--altitude);
+  padding-left: 0.7em;
+}
+.turn-entry .clock-transition.new-day {
+  color: var(--gold);
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+/* Tutorial overlay */
+.tutorial-entry {
+  background: #f0f7fa;
+  border: 1px solid #c8dce4;
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.tutorial-entry .tutor-name {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  color: var(--frost);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
 }
 
 /* Decision area (bottom) */
@@ -253,6 +400,8 @@ body {
   border-top: 1px solid #d4cfc8;
   background: white;
   padding: 1rem 1.5rem;
+  position: sticky;
+  bottom: 0;
 }
 .decision-prompt {
   font-family: var(--font-data);
@@ -276,39 +425,151 @@ body {
   background: white;
   cursor: pointer;
   transition: all 0.15s;
+  position: relative;
 }
 .action-btn:hover { border-color: var(--ink); background: var(--paper-warm); }
 .action-btn[data-action="descend"] { color: var(--frost); }
 .action-btn[data-action="sleep"] { color: var(--gold); }
+.action-btn[data-action="advance"] { color: var(--altitude); }
+.action-btn .action-cost {
+  display: block;
+  font-family: var(--font-data);
+  font-size: 0.55rem;
+  color: var(--stone);
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* Action preview tooltip */
+.action-preview {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.7em 1em;
+  border-radius: 4px;
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+}
+.action-btn:hover .action-preview { display: block; }
+.action-preview::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
 
 /* ——— DEBRIEF ——— */
 #debrief {
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
   padding: 3rem 1.5rem;
+  text-align: left;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
 }
 #debrief .outcome-title {
   font-family: var(--font-narrative);
   font-size: clamp(1.8rem, 5vw, 2.8rem);
   font-weight: 400;
   margin-bottom: 0.5rem;
+  text-align: center;
+  width: 100%;
 }
 #debrief .outcome-desc {
   font-size: 1rem;
   color: var(--slate);
   max-width: 30em;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 2rem;
   line-height: 1.7;
+  text-align: center;
+}
+.debrief-section {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.debrief-section h3 {
+  font-family: var(--font-data);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--stone);
+  margin-bottom: 0.8rem;
+}
+.debrief-causal {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--slate);
+}
+.debrief-causal li {
+  margin-bottom: 0.5rem;
+  list-style: none;
+  padding-left: 1.2em;
+  position: relative;
+}
+.debrief-causal li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--stone);
 }
 .debrief-stats {
   font-family: var(--font-data);
   font-size: 0.7rem;
   color: var(--stone);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   letter-spacing: 0.03em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
-.debrief-stats span { margin: 0 1rem; }
+.debrief-stats .stat-item {
+  background: white;
+  border: 1px solid #e8e4de;
+  padding: 0.6em 1em;
+  text-align: center;
+}
+.debrief-stats .stat-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  display: block;
+}
+.debrief-learning {
+  background: #f0f7fa;
+  border: 1px solid #c8dce4;
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--slate);
+  margin-bottom: 2rem;
+}
+.debrief-learning h4 {
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--frost);
+  margin-bottom: 0.5rem;
+}
+.debrief-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+}
 #debrief button {
   font-family: var(--font-data);
   font-size: 0.72rem;
@@ -328,6 +589,10 @@ body {
   .instrument-strip { padding: 0.6rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
   .narrative-field { padding: 1.5rem 1rem; }
   .roster { grid-template-columns: 1fr; }
+  .route-progress { padding: 0.4rem 1rem; }
+  .pressure-strip { padding: 0.4rem 1rem; flex-wrap: wrap; }
+  .action-preview { display: none !important; }
+  .action-btn .action-cost { display: block; }
 }
 </style>
 </head>
@@ -345,6 +610,9 @@ body {
 <div id="expedition-select" class="view">
   <h2>Expedición</h2>
   <hr class="section-rule">
+  <div class="first-time-hint" id="first-time-hint">
+    ¿Primera expedición? Empezá con <strong>Francisco Aguirre</strong> y <strong>Escenario 01</strong>. Sin bloqueos — solo una sugerencia.
+  </div>
   <div id="climber-roster" class="roster"></div>
   <h2>Escenario</h2>
   <hr class="section-rule">
@@ -362,13 +630,20 @@ body {
       <div class="instrument"><span class="reading" id="ins-body">90</span><span class="label">Capacidad</span></div>
       <div class="instrument"><span class="reading" id="ins-water">24</span><span class="label">Agua</span></div>
       <div class="instrument"><span class="reading" id="ins-food">20</span><span class="label">Comida</span></div>
-      <div class="instrument"><span class="reading" id="ins-signal">—</span><span class="label">Señal</span></div>
     </div>
-    <div class="narrative-field" id="narrative-field">
-      <div class="turn-entry">
-        <p class="turn-text" id="initial-narrative"></p>
+    <div class="route-progress" id="route-progress">
+      <span class="route-label-start">Horcones</span>
+      <div class="route-bar" id="route-bar">
+        <div class="route-fill" id="route-fill"></div>
+        <div class="route-marker" id="route-marker"></div>
       </div>
+      <span class="route-label-end">Cumbre</span>
     </div>
+    <div class="pressure-strip" id="pressure-strip">
+      <span class="pressure-label">Presión:</span>
+      <span id="pressure-causes">—</span>
+    </div>
+    <div class="narrative-field" id="narrative-field"></div>
     <div class="decision-dock">
       <div class="decision-prompt">¿Qué hacés?</div>
       <div class="action-row" id="action-row"></div>
@@ -381,14 +656,19 @@ body {
   <h2 class="outcome-title" id="outcome-title"></h2>
   <p class="outcome-desc" id="outcome-desc"></p>
   <div class="debrief-stats" id="debrief-stats"></div>
-  <button id="btn-replay">Otra expedición</button>
+  <div class="debrief-section" id="debrief-causal-section"></div>
+  <div class="debrief-learning" id="debrief-learning" style="display:none"></div>
+  <div class="debrief-actions">
+    <button id="btn-replay">Otra expedición</button>
+  </div>
 </div>
 
 <script type="module">
 // ═══════════════════════════════════════════════════════════
 // ACONCAGUA: STONE SENTINEL — v2 PROTOTYPE
-// Complete rebuild. No code from web-v1.
-// Architecture: Reactive state machine + narrative renderer.
+// Complete rebuild from scratch. Incorporates all v1.5 feedback.
+// Focus: Legibility, Causality, Temporality, Narrative Feedback.
+// P0-01: No real-time pressure. All pressure is diegetic.
 // ═══════════════════════════════════════════════════════════
 
 const DATA_ROOT = '../../data';
@@ -416,17 +696,21 @@ async function loadData() {
     id: n.nodeId || n.id,
     name: n.nodeName,
     alt: n.altitudeMeters,
-    stage: n.stageHint || n.stage || 'APPROACH',
+    band: n.altitudeBand,
+    terrain: n.terrainLoad,
+    weatherBias: n.weatherBias,
+    stage: n.stageHint || 'APPROACH',
     camp: !!n.isCamp,
     idx: n.routeIndex ?? i,
   }));
   const sim = epRaw.simulation || {};
   const ep = {
-    altBands: epRaw.altitudePressureByBand || [],
-    terrain: epRaw.terrainLoadScale || [],
-    weather: epRaw.weatherSeverityScale || [],
-    time: epRaw.timeOfDayRiskScale || [],
-    persist: epRaw.exposurePersistenceScale || [],
+    altBands: epRaw.altitudePressureByBand || {},
+    terrain: epRaw.terrainLoadScale || {},
+    weather: epRaw.weatherSeverityScale || {},
+    visibility: epRaw.visibilityRiskScale || {},
+    time: epRaw.timeOfDayRiskScale || {},
+    persist: epRaw.exposurePersistenceScale || {},
     burn: sim.resourceBurnPerHour || {},
     costs: sim.baseCosts || { fatigue: 10, exposure: 8 },
     bivouac: sim.bivouacPenalty || { fatigue: 26, exposure: 28, persistenceTurns: 10 },
@@ -440,6 +724,256 @@ async function loadData() {
 function rng(seed) {
   let s = seed | 0 || 1;
   return () => { s ^= s << 13; s ^= s >> 17; s ^= s << 5; return (s >>> 0) / 4294967296; };
+}
+
+// ——— Narrative Engine (P0-05, P1-01, P1-02, P1-03) ———
+const BODY_SIGNALS = {
+  francisco: {
+    fatHigh: 'Las piernas de Francisco responden, pero el pecho se niega a llenar.',
+    fatMed: 'Un dolor sordo en los cuádriceps. Francisco sabe que es acumulado.',
+    expHigh: 'El frío se instaló en las extremidades. Los dedos tardan en obedecer.',
+    expMed: 'La piel de la cara arde — el viento dejó marca.',
+    capLow: 'Cada paso cuesta el doble. El cuerpo se está apagando.',
+  },
+  laura: {
+    fatHigh: 'Laura reconoce los signos: el temblor fino en las manos no es frío.',
+    fatMed: 'Fatiga muscular localizada. Laura la cataloga sin detenerse.',
+    expHigh: 'Hipotermia periférica incipiente. Lo sabe antes de sentirlo.',
+    expMed: 'El viento penetra más de lo razonable. Las capas no alcanzan.',
+    capLow: 'Los signos vitales se deterioran. Laura sabe qué significan.',
+  },
+  erik: {
+    fatHigh: 'Erik niega la fatiga. Pero sus tiempos de reacción lo delatan.',
+    fatMed: 'El cuerpo pesa más que ayer. Erik lo atribuye al equipo.',
+    expHigh: 'Las manos se tornan azuladas. Erik flexiona los dedos con fuerza.',
+    expMed: 'El viento cala a través de la Gore-Tex. Algo cambió.',
+    capLow: 'La técnica no compensa lo que el cuerpo ya no ofrece.',
+  },
+  daniela: {
+    fatHigh: 'Los hombros de Daniela se hunden bajo la mochila. Cada paso es negociación.',
+    fatMed: 'La cámara pesa más que esta mañana. Los músculos hablan.',
+    expHigh: 'Los labios partidos, las mejillas ardiendo. El frío es violento.',
+    expMed: 'El frío encuentra rendijas. Daniela se ajusta el buff, otra vez.',
+    capLow: 'Las manos tiemblan demasiado para encuadrar. Eso dice algo.',
+  },
+  priya: {
+    fatHigh: 'El cuerpo de Priya ejecuta en automático. La mente ya no participa.',
+    fatMed: 'Un cansancio familiar. Priya lo registra sin drama.',
+    expHigh: 'El frío alcanzó los huesos. Las articulaciones crujen al moverse.',
+    expMed: 'La exposición acumulada se nota: los movimientos se tornan rígidos.',
+    capLow: 'Las probabilidades de llegar se acercan a cero. Priya lo sabe.',
+  },
+  tomás: {
+    fatHigh: 'Tomás jadea. Sabe que a esta altitud es esperado, pero la intensidad sorprende.',
+    fatMed: 'Los gemelos avisan. Tomás estira brevemente sin detenerse.',
+    expHigh: 'El viento corta. Tomás cierra los ojos y cuenta. Diez segundos.',
+    expMed: 'La nariz gotea sin parar. Es el frío, no la altitud. Todavía.',
+    capLow: 'La montaña pide más de lo que Tomás puede dar hoy.',
+  },
+};
+
+const ENV_SIGNALS = {
+  wind: [
+    'Brisa suave desde el valle.',
+    'El viento trae polvo del pedregal.',
+    'Ráfagas que obligan a bajar la cabeza.',
+    'Viento constante que roba calor y equilibrio.',
+    'Vendaval. Caminar recto es imposible.',
+  ],
+  vis: [
+    'Visibilidad total. La ruta se lee con claridad.',
+    'Neblina ligera en el fondo del valle.',
+    'Las nubes envuelven el collado superior.',
+    'La huella se pierde en la nieve nueva.',
+    'Visibilidad nula. Solo se ve un paso adelante.',
+  ],
+  time: [
+    'La primera luz ilumina las paredes del este.',
+    'Sol pleno. La montaña se muestra entera.',
+    'La luz se vuelve rasante. Queda poco día.',
+    'Crepúsculo. Las sombras se tragan la ruta.',
+    'Noche cerrada. Solo el frontal corta la oscuridad.',
+  ],
+  terrain: [
+    'Sendero marcado, paso firme.',
+    'Terreno pedregoso pero legible.',
+    'Pedregal inestable. Cada pisada es decisión.',
+    'Terreno técnico. Manos y pies trabajan juntos.',
+  ],
+};
+
+function getBodySignal(run) {
+  const char = run.char.id;
+  const sigs = BODY_SIGNALS[char] || BODY_SIGNALS.francisco;
+  if (run.body.cap < 30) return sigs.capLow;
+  if (run.body.fat > 60) return sigs.fatHigh;
+  if (run.body.fat > 35) return sigs.fatMed;
+  if (run.body.exp > 50) return sigs.expHigh;
+  if (run.body.exp > 30) return sigs.expMed;
+  return null;
+}
+
+function getEnvSignal(run, node) {
+  const signals = [];
+  const w = Math.min(4, run.weather.wind);
+  if (w >= 1) signals.push(ENV_SIGNALS.wind[w]);
+  const v = Math.min(4, Math.max(0, 4 - run.weather.vis));
+  if (v >= 1) signals.push(ENV_SIGNALS.vis[v]);
+  const timeIdx = run.time >= 1080 ? 4 : run.time >= 900 ? 3 : run.time >= 720 ? 2 : run.time >= 480 ? 1 : 0;
+  if (timeIdx >= 2) signals.push(ENV_SIGNALS.time[timeIdx]);
+  const t = Math.min(3, (node.terrain || 1) - 1);
+  if (t >= 2) signals.push(ENV_SIGNALS.terrain[t]);
+  return signals.length > 0 ? signals[Math.floor(run.rand() * signals.length)] : null;
+}
+
+// P0-05: Post-action narrative (sensory + changes + uncertain interpretation)
+function buildNarrative(action, result, fromNode, toNode, run, delta, prevState) {
+  const sensory = buildSensoryLine(action, result, fromNode, toNode, run);
+  const changes = buildChangesLine(run, prevState, action);
+  const interpretation = buildInterpretation(run, delta, result);
+  return { sensory, changes, interpretation };
+}
+
+function buildSensoryLine(action, result, fromNode, toNode, run) {
+  const bodySignal = getBodySignal(run);
+  const envSignal = getEnvSignal(run, fromNode);
+
+  let base = '';
+  if (result === 'advance') {
+    base = `Avanzás desde ${fromNode.name}. Llegás a ${toNode.name}, ${toNode.alt}m.`;
+  } else if (result === 'descend') {
+    base = `Descendés hacia ${toNode.name}, ${toNode.alt}m. El aire se vuelve más denso.`;
+  } else if (result === 'rest') {
+    base = `Dormís en ${fromNode.name}. El cuerpo se entrega al descanso.`;
+  } else if (result === 'collapse') {
+    base = `El esfuerzo supera al cuerpo. Te desplomás en ${fromNode.name}.`;
+  } else if (result === 'hold' && action === 'wait') {
+    base = `Esperás en ${fromNode.name}. Observás. Leés las señales.`;
+  } else {
+    base = `La montaña resiste el avance. Seguís en ${fromNode.name}.`;
+  }
+
+  // Attach one body or env signal
+  const extra = bodySignal || envSignal || '';
+  return extra ? `${base} ${extra}` : base;
+}
+
+function buildChangesLine(run, prev, action) {
+  const parts = [];
+  const fatDiff = Math.round(run.body.fat - prev.fat);
+  const expDiff = Math.round(run.body.exp - prev.exp);
+  const capDiff = Math.round(run.body.cap - prev.cap);
+
+  if (action === 'sleep') {
+    if (fatDiff < -5) parts.push(`Fatiga: −${Math.abs(fatDiff)}`);
+    if (expDiff < -3) parts.push(`Exposición: −${Math.abs(expDiff)}`);
+    parts.push(`Amanece: día ${run.day}`);
+  } else {
+    if (fatDiff > 3) parts.push(`Fatiga +${fatDiff}`);
+    if (expDiff > 3) parts.push(`Exposición +${expDiff}`);
+    if (capDiff < -5) parts.push(`Capacidad ${capDiff}`);
+  }
+
+  const waterDiff = Math.round((prev.water - run.res.water) * 10) / 10;
+  if (waterDiff > 0.5) parts.push(`Agua −${waterDiff.toFixed(1)}`);
+
+  return parts.length > 0 ? parts.join(' · ') : 'Sin cambios notables.';
+}
+
+function buildInterpretation(run, delta, result) {
+  const bias = run.char.engine.perceptionBias || 0;
+  const noise = (run.rand() - 0.5) * Math.abs(bias) * 1.5;
+  const perceived = delta + noise;
+
+  if (result === 'collapse') return 'El cuerpo alcanzó un límite real. Esto no fue gradual.';
+
+  if (perceived > 25) return 'Algo no cierra. La presión crece más rápido que tu capacidad de adaptación.';
+  if (perceived > 15) return 'La montaña se está endureciendo. Las señales son ambiguas pero la tendencia no.';
+  if (perceived > 5) return 'Todavía manejable. Pero la tendencia pide atención.';
+  if (perceived > -5) return 'Equilibrio frágil. Ni avance cómodo ni alarma clara.';
+  return 'El cuerpo responde. Las condiciones acompañan, por ahora.';
+}
+
+// P0-04: Concrete pressure causes
+function computePressureCauses(run, node, ep) {
+  const causes = [];
+  const band = node.band ?? Math.floor(node.idx / 3);
+  const altP = Number(ep.altBands[band]) || 0;
+  const windP = Number(ep.weather[Math.min(run.weather.wind, 4)]) || 0;
+  const timeIdx = run.time >= 1080 ? 'night' : run.time >= 900 ? 'dusk' : run.time >= 720 ? 'late' : run.time >= 480 ? 'optimal' : 'early';
+  const timeP = Number(ep.time[timeIdx]) || 0;
+  const terrP = Number(ep.terrain[node.terrain]) || 0;
+  const persIdx = run.body.persist >= 16 ? 'critical' : run.body.persist >= 9 ? 'severe' : run.body.persist >= 4 ? 'cumulative' : run.body.persist >= 2 ? 'sustained' : 'fresh';
+  const persP = Number(ep.persist[persIdx]) || 0;
+
+  // Pick top 2-3 active contributors
+  const factors = [
+    { label: 'Altitud', value: altP, danger: altP > 15 },
+    { label: 'Viento', value: windP, danger: windP > 30 },
+    { label: 'Hora avanzada', value: timeP, danger: timeP > 12 },
+    { label: 'Terreno técnico', value: terrP, danger: terrP > 15 },
+    { label: 'Exposición prolongada', value: persP, danger: persP > 12 },
+  ];
+
+  if (run.body.fat > 45) factors.push({ label: 'Fatiga acumulada', value: 15, danger: run.body.fat > 60 });
+  if (run.res.water < 5) factors.push({ label: 'Deshidratación', value: 12, danger: true });
+
+  // Sort by value and take top 3 with value > 0
+  factors.sort((a, b) => b.value - a.value);
+  for (const f of factors) {
+    if (f.value > 0 && causes.length < 3) causes.push(f);
+  }
+
+  const totalPressure = altP + windP + timeP + terrP + persP;
+  return { causes, totalPressure };
+}
+
+// P0-02: Action cost preview
+function getActionPreview(actionId, run, data) {
+  const { nodes, actions, ep } = data;
+  const node = nodes[run.pos];
+  const act = actions[actionId] || {};
+
+  let durLabel = '';
+  let effectLabel = '';
+  let costLabel = '';
+
+  switch (actionId) {
+    case 'advance':
+      durLabel = '~2h';
+      effectLabel = '+1 tramo (si la montaña lo permite)';
+      costLabel = 'Fatiga alta · Exposición alta';
+      break;
+    case 'advance_slowly':
+      durLabel = '~3h';
+      effectLabel = '+1 tramo (más probable, menos desgaste)';
+      costLabel = 'Fatiga moderada · Exposición moderada';
+      break;
+    case 'wait':
+      durLabel = '~1h';
+      effectLabel = 'Sin movimiento · Aclimatación leve';
+      costLabel = 'Fatiga mínima · Exposición leve';
+      break;
+    case 'descend':
+      durLabel = '~1h';
+      effectLabel = '−1 tramo · Recuperación parcial';
+      costLabel = 'Fatiga: se reduce · Exposición: se reduce';
+      break;
+    case 'sleep':
+      durLabel = 'Hasta las 06:00 del día siguiente';
+      effectLabel = 'Recuperación profunda (solo en campamento)';
+      costLabel = 'Fatiga −22 · Exposición −14 · Aclimatación ++';
+      break;
+    case 'shoot_photo':
+      durLabel = '~30min';
+      effectLabel = 'Sin movimiento · Registro visual';
+      costLabel = 'Fatiga mínima';
+      break;
+    default:
+      durLabel = '?';
+  }
+
+  return { durLabel, effectLabel, costLabel };
 }
 
 // ——— Game Engine ———
@@ -470,12 +1004,13 @@ function createRun(character, scenario, data) {
       water: (ini.water || 24) + (diff.initialWaterBonus || 0),
       food: (ini.food || 20) + (diff.initialFoodBonus || 0),
     },
-    weather: { wind: ini.weather_severity || 1, vis: ini.visibility || 3 },
+    weather: { wind: ini.weather_severity || 1, vis: ini.visibility ?? 3 },
     permit: { day: 1, max: 20 + (diff.permitDaysBonus || 0) },
     firedCtx: [],
     firedChar: {},
     charCD: {},
     log: [],
+    signals: [], // Track detected signals for debrief
   };
 }
 
@@ -486,13 +1021,25 @@ function resolveAction(run, actionId, data) {
   const act = actions[actionId] || actions.wait || {};
   const r = run.rand;
 
-  // Normalize
+  // Snapshot previous state for change reporting
+  const prevState = {
+    fat: run.body.fat,
+    exp: run.body.exp,
+    cap: run.body.cap,
+    water: run.res.water,
+    food: run.res.food,
+    pos: run.pos,
+    time: run.time,
+    day: run.day,
+  };
+
+  // Normalize action
   let action = actionId;
   if (node.idx >= 14 && (action === 'advance' || action === 'advance_slowly')) action = 'wait';
   if (action === 'sleep' && !node.camp) action = 'wait';
   if (action === 'descend' && run.pos <= 0) action = 'wait';
 
-  // Time
+  // Time calculation
   let elapsed;
   if (action === 'sleep') {
     elapsed = (1440 - run.time) + 360;
@@ -502,24 +1049,25 @@ function resolveAction(run, actionId, data) {
 
   // Resources burn
   const burnKey = node.stage;
-  const burnRates = ep.burn[burnKey] || ep.burn.APPROACH || { water: 0.8, food: 0.5 };
+  const burnRates = ep.burn[burnKey] || ep.burn.APPROACH || { water: 0.14, food: 0.1 };
   const hours = elapsed / 60;
   const eff = run.char.engine.resourceEfficiency || 1;
   const wCost = burnRates.water * hours / eff;
   const fCost = burnRates.food * hours / eff;
 
-  // Weather drift from context events
+  // Context events (weather drift)
   applyContextEvents(run, data);
 
-  // Environmental pressure (simplified — altitude band + weather + time)
-  const band = Math.min((ep.altBands || []).length - 1, Math.floor(node.idx / 3));
-  const altP = (ep.altBands[band] || 0);
-  const windP = (ep.weather || [])[Math.min(run.weather.wind, 4)] || 0;
-  const timeIdx = run.time >= 1080 ? 4 : run.time >= 900 ? 3 : run.time >= 720 ? 2 : run.time >= 480 ? 1 : 0;
-  const timeP = (ep.time || [])[timeIdx] || 0;
-  const persistP = Math.min((ep.persist || []).length - 1, run.body.persist);
-  const persistVal = (ep.persist || [])[persistP] || 0;
-  const envPressure = altP + windP + timeP + persistVal + (stage.weatherSeverityBias || 0);
+  // Environmental pressure
+  const band = node.band ?? Math.floor(node.idx / 3);
+  const altP = Number(ep.altBands[band]) || 0;
+  const windP = Number(ep.weather[Math.min(run.weather.wind, 4)]) || 0;
+  const timeIdx = run.time >= 1080 ? 'night' : run.time >= 900 ? 'dusk' : run.time >= 720 ? 'late' : run.time >= 480 ? 'optimal' : 'early';
+  const timeP = Number(ep.time[timeIdx]) || 0;
+  const terrP = Number(ep.terrain[node.terrain]) || 0;
+  const persIdx = run.body.persist >= 16 ? 'critical' : run.body.persist >= 9 ? 'severe' : run.body.persist >= 4 ? 'cumulative' : run.body.persist >= 2 ? 'sustained' : 'fresh';
+  const persP = Number(ep.persist[persIdx]) || 0;
+  const envPressure = altP + windP + timeP + terrP + persP + (stage.weatherSeverityBias || 0);
 
   // Body tolerance
   const fatRes = run.char.engine.fatigueResistance || 1;
@@ -542,7 +1090,6 @@ function resolveAction(run, actionId, data) {
   } else if (action === 'wait' || action === 'shoot_photo') {
     moveResult = 'hold';
   } else {
-    // advance / advance_slowly
     const prog = act.progress || 20;
     const collapseP = Math.min(90, Math.max(0, delta * 1.2 + (100 - run.body.cap) * 0.1));
     if (r() * 100 < collapseP) {
@@ -625,15 +1172,26 @@ function resolveAction(run, actionId, data) {
   // Terminal check
   const terminal = checkTerminal(run, nodes, data);
 
-  // Perception signal
-  const signal = computeSignal(run, delta);
+  // Pressure causes (P0-04)
+  const { causes, totalPressure } = computePressureCauses(run, nodes[run.pos], ep);
 
-  // Narrative
-  const narr = writeNarrative(action, moveResult, node, nodes[run.pos], run, signal);
+  // Narrative (P0-05, P1-01)
+  const narrative = buildNarrative(action, moveResult, node, nodes[run.pos], run, delta, prevState);
 
-  run.log.push({ turn: run.turn, action, moveResult, node: node.name, delta: Math.round(delta) });
+  // Log
+  run.log.push({
+    turn: run.turn,
+    action,
+    moveResult,
+    node: node.name,
+    toNode: nodes[run.pos].name,
+    delta: Math.round(delta),
+    causes: causes.map(c => c.label),
+    prevTime: prevState.time,
+    prevDay: prevState.day,
+  });
 
-  return { moveResult, terminal, narrative: narr, signal };
+  return { moveResult, terminal, narrative, causes, delta, elapsed, prevState };
 }
 
 function applyContextEvents(run, data) {
@@ -667,58 +1225,177 @@ function applyCharEvents(run, action, node, data) {
 }
 
 function checkTerminal(run, nodes, data) {
-  // Collapse / Fatality
   if (run.body.cap <= 0) return 'collapse';
-  // Resources exhausted at high altitude
   if (run.res.water <= 0 && run.res.food <= 0 && run.body.cap < 30) return 'rescue';
-  // Permit expired
   if (run.day > run.permit.max) return 'permit_expired';
-  // Park exit (returned to Horcones after summiting)
   if (run.pos === 0 && run.turn > 0 && run.summited) return 'summit_safe_return';
-  // Park exit (retreat)
   if (run.pos === 0 && run.turn > 0) return 'strategic_retreat';
-  // Expedition window (too many turns)
   if (run.turn >= (run.scenario.max_turns || run.scenario.maxTurns || 50)) return 'window_closed';
   return null;
 }
 
-function computeSignal(run, delta) {
-  const bias = run.char.engine.perceptionBias || 0;
-  const noise = (run.rand() - 0.5) * bias * 2;
-  const perceived = delta + noise;
-  if (perceived < -5) return 'Calma';
-  if (perceived < 8) return 'Presión leve';
-  if (perceived < 20) return 'Tensión';
-  return 'Peligro';
+// ——— Tutorial System (P0-08) ———
+const TUTORIAL_MESSAGES = [
+  { turn: 0, text: 'Soy Alejandro. Te acompaño en esta primera etapa. Cada acción tiene un costo en tiempo y energía — fijate en la previsualización antes de elegir.' },
+  { turn: 1, text: 'Fijate en la barra de presión. Esos factores concretos te dicen qué te está costando estar acá: altitud, viento, hora del día. No es un número mágico — son condiciones reales.' },
+  { turn: 2, text: '«Esperar» consume una hora y poca energía. «Dormir» resetea al día siguiente con recuperación profunda — pero solo en campamentos. Son cosas muy distintas.' },
+  { turn: 3, text: 'La información que ves es parcial. La montaña no muestra todo. Tu personaje interpreta lo que percibe — a veces con error. Aprendé a leer la tendencia, no el valor exacto.' },
+  { turn: 4, text: 'Descender no es fracasar. Muchas veces es la mejor lectura posible. La montaña va a seguir ahí. Desde acá, seguís solo.' },
+];
+
+function getTutorialMessage(turn, isTutorial) {
+  if (!isTutorial) return null;
+  return TUTORIAL_MESSAGES.find(t => t.turn === turn) || null;
 }
 
-function writeNarrative(action, result, fromNode, toNode, run, signal) {
-  const lines = [];
-  const hour = `${String(Math.floor(run.time / 60)).padStart(2, '0')}:${String(run.time % 60).padStart(2, '0')}`;
+// ——— Debrief System (P1-04, P1-05, P1-07) ———
+function buildDebrief(run, outcome, data) {
+  const titles = {
+    summit_safe_return: 'Cumbre y retorno seguro',
+    strategic_retreat: 'Retirada estratégica',
+    collapse: 'Colapso',
+    rescue: 'Rescate',
+    permit_expired: 'Permiso vencido',
+    window_closed: 'Ventana cerrada',
+  };
+  const descs = {
+    summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar — y te dejó regresar. Eso es leerla bien.',
+    strategic_retreat: 'Reconociste el límite. Bajaste con vida y con criterio. Esa decisión es una forma de comprensión.',
+    collapse: 'El cuerpo alcanzó su límite antes de que pudieras reaccionar. La montaña no negocia.',
+    rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
+    permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
+    window_closed: 'La expedición se alargó más de lo posible.',
+  };
 
-  if (result === 'advance') {
-    lines.push(`Avanzás desde ${fromNode.name}. ${toNode.name}, ${toNode.alt}m.`);
-  } else if (result === 'descend') {
-    lines.push(`Descendés. ${toNode.name}, ${toNode.alt}m. El cuerpo agradece.`);
-  } else if (result === 'rest') {
-    lines.push(`Dormís en ${fromNode.name}. El cuerpo se repara, lento.`);
-  } else if (result === 'collapse') {
-    lines.push(`El cuerpo falla. Te desplomás en ${fromNode.name}. Algo está mal.`);
-  } else if (result === 'hold' && action === 'wait') {
-    lines.push(`Esperás en ${fromNode.name}. Leés el viento, el cielo, las señales.`);
-  } else {
-    lines.push(`La montaña resiste. Seguís en ${fromNode.name}.`);
+  // P1-04: Causal chain
+  const causalChain = buildCausalChain(run, outcome);
+
+  // P1-05: Strategic retreat celebration
+  let retreatCelebration = null;
+  if (outcome === 'strategic_retreat') {
+    retreatCelebration = buildRetreatCelebration(run, data);
   }
 
-  if (run.weather.wind >= 3) lines.push('El viento golpea sin tregua.');
-  if (run.body.cap < 40) lines.push('Sentís el peso en cada paso.');
-  if (run.res.water < 5) lines.push('Queda poca agua.');
+  // P1-07: Learning stats
+  const learning = buildLearningComparison(run, outcome);
 
-  return lines.join(' ');
+  return {
+    title: titles[outcome] || outcome,
+    desc: descs[outcome] || '',
+    causalChain,
+    retreatCelebration,
+    learning,
+  };
+}
+
+function buildCausalChain(run, outcome) {
+  const chain = [];
+  const log = run.log;
+
+  if (outcome === 'collapse' || outcome === 'rescue') {
+    // Find the critical turns
+    const criticalTurns = log.filter(l => l.delta > 15);
+    if (criticalTurns.length > 0) {
+      const last = criticalTurns[criticalTurns.length - 1];
+      chain.push(`Presión acumulada desde ${last.node} (turno ${last.turn}): ${last.causes.join(', ')}`);
+    }
+    const advances = log.filter(l => l.action === 'advance' || l.action === 'advance_slowly');
+    if (advances.length > 3) {
+      chain.push(`${advances.length} avances consecutivos sin descanso profundo aceleraron el desgaste`);
+    }
+    chain.push(`Capacidad final: ${Math.round(run.body.cap)}. El margen se agotó.`);
+  } else if (outcome === 'strategic_retreat') {
+    const peakEntry = log.find(l => l.toNode === DATA.nodes[run.peak]?.name);
+    if (peakEntry) chain.push(`Punto alto alcanzado en turno ${peakEntry.turn}: ${DATA.nodes[run.peak]?.name}`);
+    const descents = log.filter(l => l.action === 'descend');
+    chain.push(`${descents.length} tramos de descenso. Decisión tomada con capacidad ${Math.round(run.body.cap)}.`);
+  } else if (outcome === 'summit_safe_return') {
+    chain.push(`Cumbre alcanzada en turno ${log.find(l => l.moveResult === 'advance' && l.toNode === 'Summit')?.turn || '?'}`);
+    chain.push(`Expedición total: ${run.turn} turnos, ${run.day} días`);
+    chain.push(`Capacidad al retorno: ${Math.round(run.body.cap)}. Gestión exitosa.`);
+  }
+
+  return chain;
+}
+
+function buildRetreatCelebration(run, data) {
+  const lines = [];
+  const peakNode = data.nodes[run.peak];
+
+  // What signals did the player read correctly?
+  const highPressureTurns = run.log.filter(l => l.delta > 12);
+  if (highPressureTurns.length > 0) {
+    const lastHigh = highPressureTurns[highPressureTurns.length - 1];
+    lines.push(`Detectaste presión elevada en ${lastHigh.node}: ${lastHigh.causes.join(', ')}.`);
+  }
+
+  // What risk was avoided?
+  if (run.body.cap < 50) {
+    lines.push(`Con capacidad al ${Math.round(run.body.cap)}%, continuar habría significado riesgo de colapso.`);
+  }
+  if (run.res.water < 5) {
+    lines.push('Los recursos se agotaban. Seguir habría forzado un rescate.');
+  }
+
+  lines.push(`Punto alto: ${peakNode.name} (${peakNode.alt}m). La montaña sigue ahí para otra expedición.`);
+
+  return lines;
+}
+
+function buildLearningComparison(run, outcome) {
+  const STORAGE_KEY = 'aconcagua_v2_history';
+  let history = [];
+  try {
+    history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch {}
+
+  const current = {
+    date: new Date().toISOString(),
+    char: run.char.id,
+    scenario: run.scenario.id,
+    outcome,
+    turns: run.turn,
+    days: run.day,
+    peakIdx: run.peak,
+    peakAlt: DATA.nodes[run.peak]?.alt || 0,
+    cap: Math.round(run.body.cap),
+  };
+
+  // Save to history
+  history.push(current);
+  if (history.length > 50) history = history.slice(-50);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch {}
+
+  // Compare
+  const prevRuns = history.slice(0, -1);
+  if (prevRuns.length === 0) return { lines: ['Primera expedición registrada. Cada intento es aprendizaje.'], isFirst: true };
+
+  const lines = [];
+  const maxPrevAlt = Math.max(...prevRuns.map(r => r.peakAlt));
+  if (current.peakAlt > maxPrevAlt) {
+    lines.push(`Nuevo récord de altitud: ${current.peakAlt}m (anterior: ${maxPrevAlt}m).`);
+  }
+
+  const sameSc = prevRuns.filter(r => r.scenario === current.scenario);
+  if (sameSc.length > 0) {
+    const avgTurns = Math.round(sameSc.reduce((s, r) => s + r.turns, 0) / sameSc.length);
+    lines.push(`Promedio en este escenario: ${avgTurns} turnos. Esta vez: ${current.turns}.`);
+  }
+
+  const summits = prevRuns.filter(r => r.outcome === 'summit_safe_return').length;
+  const retreats = prevRuns.filter(r => r.outcome === 'strategic_retreat').length;
+  if (prevRuns.length >= 3) {
+    lines.push(`Historial: ${summits} cumbres, ${retreats} retiradas, ${prevRuns.length - summits - retreats} otros.`);
+  }
+
+  if (lines.length === 0) lines.push('Cada expedición refina tu lectura de la montaña.');
+
+  return { lines, isFirst: false };
 }
 
 // ——— UI Controller ———
 let DATA, RUN;
+let isTutorialMode = false;
 
 function show(viewId) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -730,11 +1407,19 @@ function fmtTime(mins) {
 }
 
 function buildSelection() {
+  // P0-09: First-time hint
+  const hint = document.getElementById('first-time-hint');
+  try {
+    const history = JSON.parse(localStorage.getItem('aconcagua_v2_history') || '[]');
+    if (history.length > 0) hint.style.display = 'none';
+  } catch {}
+
   const roster = document.getElementById('climber-roster');
   roster.innerHTML = '';
   for (const c of DATA.chars) {
     const div = document.createElement('div');
     div.className = 'roster-card';
+    if (c.id === 'francisco') div.className += ' recommended';
     div.dataset.id = c.id;
     div.innerHTML = `
       <div class="name">${c.flag || ''} ${c.name}</div>
@@ -751,7 +1436,7 @@ function buildSelection() {
     const btn = document.createElement('button');
     btn.className = 'scenario-option';
     btn.dataset.id = s.id;
-    btn.innerHTML = `<div class="scenario-name">${s.name || s.id}</div><div class="scenario-desc">${s.desc || ''}</div>`;
+    btn.innerHTML = `<div class="scenario-name">${s.num ? `${s.num} — ` : ''}${s.name || s.id}</div><div class="scenario-desc">${s.desc || ''}</div>`;
     btn.addEventListener('click', () => pickScenario(s));
     list.appendChild(btn);
   }
@@ -778,11 +1463,42 @@ function checkReady() {
 function startRun() {
   if (!pickedChar || !pickedScenario) return;
   RUN = createRun(pickedChar, pickedScenario, DATA);
+
+  // Check if tutorial mode (first run or first scenario)
+  try {
+    const history = JSON.parse(localStorage.getItem('aconcagua_v2_history') || '[]');
+    isTutorialMode = history.length === 0;
+  } catch { isTutorialMode = true; }
+
   show('mountain');
   const node = DATA.nodes[RUN.pos];
-  document.getElementById('initial-narrative').textContent =
-    `${fmtTime(RUN.time)} — ${node.name}, ${node.alt}m. El parque se abre. La ruta comienza.`;
+
+  // Clear narrative
+  const field = document.getElementById('narrative-field');
+  field.innerHTML = '';
+
+  // Initial entry
+  const entry = document.createElement('div');
+  entry.className = 'turn-entry';
+  entry.innerHTML = `
+    <p class="turn-sensory">${fmtTime(RUN.time)} — ${node.name}, ${node.alt}m. El parque se abre. La ruta comienza.</p>
+  `;
+  field.appendChild(entry);
+
+  // Tutorial message for turn 0
+  if (isTutorialMode) {
+    const tut = getTutorialMessage(0, true);
+    if (tut) {
+      const tutEl = document.createElement('div');
+      tutEl.className = 'tutorial-entry';
+      tutEl.innerHTML = `<div class="tutor-name">Alejandro Molina — Guía</div><p>${tut.text}</p>`;
+      field.appendChild(tutEl);
+    }
+  }
+
   refreshInstruments();
+  updateRouteProgress();
+  updatePressureStrip();
   renderActions();
 }
 
@@ -796,6 +1512,49 @@ function refreshInstruments() {
   document.getElementById('ins-food').textContent = Math.ceil(RUN.res.food);
 }
 
+// P0-10: Route progress bar
+function updateRouteProgress() {
+  const maxIdx = DATA.nodes.length - 1;
+  const pct = (RUN.pos / maxIdx) * 100;
+  document.getElementById('route-fill').style.width = `${pct}%`;
+  document.getElementById('route-marker').style.left = `${pct}%`;
+
+  // Highlight on new position
+  const marker = document.getElementById('route-marker');
+  marker.classList.remove('route-highlight');
+  void marker.offsetWidth; // force reflow
+  marker.classList.add('route-highlight');
+
+  // Place camp marks
+  const bar = document.getElementById('route-bar');
+  bar.querySelectorAll('.camp-mark').forEach(el => el.remove());
+  for (const n of DATA.nodes) {
+    if (n.camp) {
+      const mark = document.createElement('div');
+      mark.className = 'camp-mark';
+      mark.style.left = `${(n.idx / maxIdx) * 100}%`;
+      mark.title = n.name;
+      bar.appendChild(mark);
+    }
+  }
+}
+
+// P0-04: Pressure strip
+function updatePressureStrip() {
+  const node = DATA.nodes[RUN.pos];
+  const { causes } = computePressureCauses(RUN, node, DATA.ep);
+  const container = document.getElementById('pressure-causes');
+
+  if (causes.length === 0) {
+    container.innerHTML = '<span style="color:var(--green)">Condiciones favorables</span>';
+  } else {
+    container.innerHTML = causes.map(c =>
+      `<span class="pressure-cause${c.danger ? ' danger' : ''}">${c.label}</span>`
+    ).join('');
+  }
+}
+
+// P0-02: Render actions with cost preview
 function renderActions() {
   const node = DATA.nodes[RUN.pos];
   const row = document.getElementById('action-row');
@@ -812,10 +1571,18 @@ function renderActions() {
   if (RUN.char.id === 'daniela') available.push(['shoot_photo', 'Fotografiar']);
 
   for (const [id, label] of available) {
+    const preview = getActionPreview(id, RUN, DATA);
     const btn = document.createElement('button');
     btn.className = 'action-btn';
     btn.dataset.action = id;
-    btn.textContent = label;
+    btn.innerHTML = `
+      ${label}
+      <span class="action-cost">${preview.durLabel}</span>
+      <div class="action-preview">
+        <div>${preview.durLabel} · ${preview.effectLabel}</div>
+        <div>${preview.costLabel}</div>
+      </div>
+    `;
     btn.addEventListener('click', () => doAction(id));
     row.appendChild(btn);
   }
@@ -826,17 +1593,37 @@ function doAction(actionId) {
 
   // Update instruments
   refreshInstruments();
-  document.getElementById('ins-signal').textContent = result.signal;
+  updateRouteProgress();
+  updatePressureStrip();
 
-  // Append narrative
+  // P0-03: Clock transition display
+  const clockText = buildClockTransition(result.prevState, RUN, result.elapsed);
+
+  // Build turn entry with 3-layer narrative
   const field = document.getElementById('narrative-field');
   const entry = document.createElement('div');
   entry.className = 'turn-entry';
   entry.innerHTML = `
-    <p class="turn-text">${result.narrative}</p>
-    <p class="turn-data">turno ${RUN.turn} · ${fmtTime(RUN.time)} · día ${RUN.day} · señal: ${result.signal}</p>
+    <div class="clock-transition${RUN.day > result.prevState.day ? ' new-day' : ''}">${clockText}</div>
+    <p class="turn-sensory">${result.narrative.sensory}</p>
+    <p class="turn-changes">${result.narrative.changes}</p>
+    <p class="turn-interpretation">${result.narrative.interpretation}</p>
+    <p class="turn-meta">Turno ${RUN.turn} · ${DATA.nodes[RUN.pos].name} · ${DATA.nodes[RUN.pos].alt}m</p>
   `;
+
+  // Prepend (newest first)
   field.prepend(entry);
+
+  // Tutorial (P0-08)
+  if (isTutorialMode) {
+    const tut = getTutorialMessage(RUN.turn, true);
+    if (tut) {
+      const tutEl = document.createElement('div');
+      tutEl.className = 'tutorial-entry';
+      tutEl.innerHTML = `<div class="tutor-name">Alejandro Molina — Guía</div><p>${tut.text}</p>`;
+      field.prepend(tutEl);
+    }
+  }
 
   // Terminal?
   if (result.terminal) {
@@ -847,29 +1634,59 @@ function doAction(actionId) {
   renderActions();
 }
 
-function endRun(outcome) {
-  const titles = {
-    summit_safe_return: 'Cumbre y retorno seguro',
-    strategic_retreat: 'Retirada estratégica',
-    collapse: 'Colapso',
-    rescue: 'Rescate',
-    permit_expired: 'Permiso vencido',
-    window_closed: 'Ventana cerrada',
-  };
-  const descs = {
-    summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar y te dejó regresar.',
-    strategic_retreat: 'Reconociste el límite. Bajaste con vida. Eso es una victoria.',
-    collapse: 'El cuerpo dijo basta. La montaña no negocia.',
-    rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
-    permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
-    window_closed: 'La expedición se alargó más de lo posible.',
-  };
+// P0-03: Visible clock advance
+function buildClockTransition(prev, run, elapsed) {
+  if (run.day > prev.day) {
+    return `${fmtTime(prev.time)} → amanecer día ${run.day} · ${fmtTime(run.time)}`;
+  }
+  const hrs = Math.floor(elapsed / 60);
+  const mins = elapsed % 60;
+  const durStr = hrs > 0 ? (mins > 0 ? `${hrs}h ${mins}min` : `${hrs}h`) : `${mins}min`;
+  return `${fmtTime(prev.time)} → ${fmtTime(run.time)} (${durStr})`;
+}
 
-  document.getElementById('outcome-title').textContent = titles[outcome] || outcome;
-  document.getElementById('outcome-desc').textContent = descs[outcome] || '';
+function endRun(outcome) {
+  const debrief = buildDebrief(RUN, outcome, DATA);
+
+  // Title + desc
+  document.getElementById('outcome-title').textContent = debrief.title;
+  document.getElementById('outcome-desc').textContent = debrief.desc;
+
+  // Stats
   const peakNode = DATA.nodes[RUN.peak];
-  document.getElementById('debrief-stats').innerHTML =
-    `<span>${RUN.turn} turnos</span><span>${RUN.day} días</span><span>Punto alto: ${peakNode.name} (${peakNode.alt}m)</span>`;
+  document.getElementById('debrief-stats').innerHTML = `
+    <div class="stat-item"><span class="stat-value">${RUN.turn}</span>turnos</div>
+    <div class="stat-item"><span class="stat-value">${RUN.day}</span>días</div>
+    <div class="stat-item"><span class="stat-value">${peakNode.alt}m</span>punto alto</div>
+    <div class="stat-item"><span class="stat-value">${Math.round(RUN.body.cap)}</span>capacidad final</div>
+  `;
+
+  // P1-04 / P1-05: Causal section
+  const causalSection = document.getElementById('debrief-causal-section');
+  let causalHTML = '<h3>Cadena causal</h3><ul class="debrief-causal">';
+  for (const line of debrief.causalChain) {
+    causalHTML += `<li>${line}</li>`;
+  }
+  causalHTML += '</ul>';
+
+  if (debrief.retreatCelebration) {
+    causalHTML += '<h3 style="margin-top:1.5rem">Lo que leíste bien</h3><ul class="debrief-causal">';
+    for (const line of debrief.retreatCelebration) {
+      causalHTML += `<li>${line}</li>`;
+    }
+    causalHTML += '</ul>';
+  }
+  causalSection.innerHTML = causalHTML;
+
+  // P1-07: Learning comparison
+  const learningEl = document.getElementById('debrief-learning');
+  if (debrief.learning) {
+    learningEl.style.display = 'block';
+    learningEl.innerHTML = `
+      <h4>Progreso de lectura</h4>
+      ${debrief.learning.lines.map(l => `<p>${l}</p>`).join('')}
+    `;
+  }
 
   // Part 2 unlock
   if (outcome === 'summit_safe_return') {
@@ -896,7 +1713,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     pickedChar = null;
     pickedScenario = null;
     RUN = null;
-    document.getElementById('narrative-field').innerHTML = '<div class="turn-entry"><p class="turn-text" id="initial-narrative"></p></div>';
+    isTutorialMode = false;
     buildSelection();
     show('expedition-select');
   });
