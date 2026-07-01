@@ -584,6 +584,25 @@ body {
 }
 #debrief button:hover { background: var(--ink); color: var(--paper); }
 
+/* ——— Language toggle ——— */
+#lang-toggle {
+  position: fixed;
+  top: 0.85rem;
+  right: 1rem;
+  font-family: var(--font-data);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--stone);
+  border: 1px solid var(--stone);
+  padding: 0.25em 0.65em;
+  cursor: pointer;
+  z-index: 200;
+  transition: color 0.2s, background 0.2s;
+}
+#lang-toggle:hover { color: var(--paper); background: var(--stone); }
+
 /* ——— Responsive ——— */
 @media (max-width: 600px) {
   .instrument-strip { padding: 0.6rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
@@ -597,6 +616,7 @@ body {
 </style>
 </head>
 <body>
+<button id="lang-toggle" aria-label="Switch language">EN</button>
 
 <!-- COVER -->
 <div id="cover" class="view active">
@@ -673,6 +693,310 @@ body {
 
 const DATA_ROOT = '../../data';
 
+// ——— i18n ———
+const LANG_KEY = 'aconcagua_language_v1';
+let LANG = 'es';
+try { const _ls = localStorage.getItem(LANG_KEY); if (_ls === 'en' || _ls === 'es') LANG = _ls; } catch {}
+
+function t(key, ...args) {
+  const bucket = TRANSLATIONS[LANG] || TRANSLATIONS.es;
+  const val = (key in bucket) ? bucket[key] : TRANSLATIONS.es[key];
+  if (typeof val === 'function') return val(...args);
+  return val !== undefined ? val : key;
+}
+
+// Returns translated node display name
+function getNodeName(node) {
+  if (!node) return '';
+  const key = `node_${node.id}`;
+  const val = t(key);
+  return val !== key ? val : node.name;
+}
+
+// Data-driven translation helpers
+function tCharRole(c) {
+  const k = `char_role_${c.id}`, v = t(k); return v !== k ? v : (c.role || '');
+}
+function tDiffLabel(label) {
+  if (!label) return '';
+  const k = `diff_${label.replace(/\s+/g, '_')}`, v = t(k); return v !== k ? v : label;
+}
+function tCharTrait(c, idx) {
+  const k = `char_trait${idx}_${c.id}`, v = t(k);
+  return v !== k ? v : (c.traits ? (c.traits[idx] || '') : '');
+}
+function tScName(s) {
+  const k = `sc_name_${s.id}`, v = t(k); return v !== k ? v : (s.name || s.id);
+}
+function tScDesc(s) {
+  const k = `sc_desc_${s.id}`, v = t(k); return v !== k ? v : (s.desc || '');
+}
+
+function setLang(code) {
+  LANG = code;
+  try { localStorage.setItem(LANG_KEY, code); } catch {}
+  applyTranslations();
+  if (DATA) buildSelection();
+}
+
+function applyTranslations() {
+  // Cover
+  const epigraph = document.querySelector('#cover .epigraph');
+  if (epigraph) epigraph.textContent = t('cover_epigraph');
+  const btnEnter = document.getElementById('btn-enter');
+  if (btnEnter) btnEnter.textContent = t('btn_enter');
+  // Expedition select
+  const hElems = document.querySelectorAll('#expedition-select h2');
+  if (hElems[0]) hElems[0].textContent = t('heading_expedition');
+  if (hElems[1]) hElems[1].textContent = t('heading_scenario');
+  const hint = document.getElementById('first-time-hint');
+  if (hint) hint.innerHTML = t('first_time_hint');
+  const btnBegin = document.getElementById('btn-begin');
+  if (btnBegin) btnBegin.textContent = t('btn_begin');
+  // Instrument labels
+  const iLabels = document.querySelectorAll('.instrument .label');
+  const lKeys = ['label_time', 'label_day', 'label_alt', 'label_cap', 'label_water', 'label_food'];
+  iLabels.forEach((el, i) => { if (lKeys[i]) el.textContent = t(lKeys[i]); });
+  // Route labels
+  const rStart = document.querySelector('.route-label-start');
+  if (rStart) rStart.textContent = t('route_start');
+  const rEnd = document.querySelector('.route-label-end');
+  if (rEnd) rEnd.textContent = t('route_end');
+  // Pressure label
+  const pLabel = document.querySelector('.pressure-label');
+  if (pLabel) pLabel.textContent = t('pressure_label');
+  // Decision prompt
+  const dPrompt = document.querySelector('.decision-prompt');
+  if (dPrompt) dPrompt.textContent = t('decision_prompt');
+  // Debrief replay
+  const btnReplay = document.getElementById('btn-replay');
+  if (btnReplay) btnReplay.textContent = t('btn_replay');
+  // Lang toggle label
+  const lToggle = document.getElementById('lang-toggle');
+  if (lToggle) lToggle.textContent = LANG === 'es' ? 'EN' : 'ES';
+  // HTML lang attribute
+  document.documentElement.lang = LANG;
+}
+
+const TRANSLATIONS = {
+  es: {
+    cover_epigraph: 'La montaña no se conquista. Se lee, se interpreta, y si hay suerte y criterio, se regresa.',
+    btn_enter: 'Ingresar',
+    heading_expedition: 'Expedición',
+    first_time_hint: '¿Primera expedición? Empezá con <strong>Francisco Aguirre</strong> y <strong>Escenario 01</strong>. Sin bloqueos — solo una sugerencia.',
+    heading_scenario: 'Escenario',
+    btn_begin: 'Iniciar expedición',
+    label_time: 'Hora', label_day: 'Jornada', label_alt: 'Altitud',
+    label_cap: 'Capacidad', label_water: 'Agua', label_food: 'Comida',
+    route_start: 'Horcones', route_end: 'Cumbre',
+    pressure_label: 'Presión:',
+    pressure_favorable: 'Condiciones favorables',
+    decision_prompt: '¿Qué hacés?',
+    btn_replay: 'Otra expedición',
+    stat_turns: 'turnos', stat_days: 'días', stat_peak: 'punto alto', stat_cap: 'capacidad final',
+    debrief_causal_title: 'Cadena causal',
+    debrief_retreat_title: 'Lo que leíste bien',
+    debrief_learning_title: 'Progreso de lectura',
+    action_advance: 'Avanzar', action_advance_slowly: 'Avanzar despacio',
+    action_wait: 'Esperar', action_descend: 'Descender', action_sleep: 'Dormir', action_photo: 'Fotografiar',
+    preview_advance_dur: '~2h', preview_advance_effect: '+1 tramo (si la montaña lo permite)', preview_advance_cost: 'Fatiga alta · Exposición alta',
+    preview_advance_slowly_dur: '~3h', preview_advance_slowly_effect: '+1 tramo (más probable, menos desgaste)', preview_advance_slowly_cost: 'Fatiga moderada · Exposición moderada',
+    preview_wait_dur: '~1h', preview_wait_effect: 'Sin movimiento · Aclimatación leve', preview_wait_cost: 'Fatiga mínima · Exposición leve',
+    preview_descend_dur: '~1h', preview_descend_effect: '−1 tramo · Recuperación parcial', preview_descend_cost: 'Fatiga: se reduce · Exposición: se reduce',
+    preview_sleep_dur: 'Hasta las 06:00 del día siguiente', preview_sleep_effect: 'Recuperación profunda (solo en campamento)', preview_sleep_cost: 'Fatiga −22 · Exposición −14 · Aclimatación ++',
+    preview_photo_dur: '~30min', preview_photo_effect: 'Sin movimiento · Registro visual', preview_photo_cost: 'Fatiga mínima',
+    ins_day: (day) => `Día ${day}`,
+    run_start_text: 'El parque se abre. La ruta comienza.',
+    clock_dawn: (day, time) => `amanecer día ${day} · ${time}`,
+    change_fatigue_up: 'Fatiga', change_exposure_up: 'Exposición', change_cap_down: 'Capacidad', change_water_down: 'Agua',
+    change_fatigue_rec: 'Fatiga:', change_exposure_rec: 'Exposición:', change_dawn: 'Amanece: día', change_none: 'Sin cambios notables.',
+    turn_meta: (turn, name, alt) => `Turno ${turn} · ${name} · ${alt}m`,
+    cause_altitude: 'Altitud', cause_wind: 'Viento', cause_late: 'Hora avanzada',
+    cause_terrain: 'Terreno técnico', cause_persistence: 'Exposición prolongada',
+    cause_fatigue: 'Fatiga acumulada', cause_dehydration: 'Deshidratación',
+    outcome_summit_safe_return: 'Cumbre y retorno seguro', outcome_strategic_retreat: 'Retirada estratégica',
+    outcome_high_point_return: 'Retorno desde punto alto', outcome_collapse: 'Colapso',
+    outcome_rescue: 'Rescate', outcome_resource_exhaustion: 'Agotamiento de recursos',
+    outcome_permit_expired: 'Permiso vencido', outcome_window_closed: 'Ventana cerrada',
+    desc_summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar — y te dejó regresar. Eso es leerla bien.',
+    desc_strategic_retreat: 'Reconociste el límite. Bajaste con vida y con criterio. Esa decisión es una forma de comprensión.',
+    desc_high_point_return: 'Llegaste alto. No a la cumbre, pero más lejos de lo que muchos llegan. Volviste por tu propia voluntad.',
+    desc_collapse: 'El cuerpo alcanzó su límite antes de que pudieras reaccionar. La montaña no negocia.',
+    desc_rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
+    desc_resource_exhaustion: 'El agua o la comida se agotaron. Sin reservas, la expedición no puede continuar.',
+    desc_permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
+    desc_window_closed: 'La expedición se alargó más de lo posible.',
+    causal_pressure: (node, turn, causes) => `Presión acumulada desde ${node} (turno ${turn}): ${causes}`,
+    causal_advances: (n) => `${n} avances consecutivos sin descanso profundo aceleraron el desgaste`,
+    causal_cap_final: (cap) => `Capacidad final: ${cap}. El margen se agotó.`,
+    causal_peak_turn: (turn, name) => `Punto alto alcanzado en turno ${turn}: ${name}`,
+    causal_descents: (n, cap) => `${n} tramos de descenso. Decisión tomada con capacidad ${cap}.`,
+    causal_summit_turn: (turn) => `Cumbre alcanzada en turno ${turn}`,
+    causal_expedition: (turns, days) => `Expedición total: ${turns} turnos, ${days} días`,
+    causal_cap_return: (cap) => `Capacidad al retorno: ${cap}. Gestión exitosa.`,
+    retreat_pressure: (node, causes) => `Detectaste presión elevada en ${node}: ${causes}.`,
+    retreat_cap: (cap) => `Con capacidad al ${cap}%, continuar habría significado riesgo de colapso.`,
+    retreat_resources: 'Los recursos se agotaban. Seguir habría forzado un rescate.',
+    retreat_peak: (name, alt) => `Punto alto: ${name} (${alt}m). La montaña sigue ahí para otra expedición.`,
+    learning_first: 'Primera expedición registrada. Cada intento es aprendizaje.',
+    learning_altitude: (cur, prev) => `Nuevo récord de altitud: ${cur}m (anterior: ${prev}m).`,
+    learning_avg: (avg, cur) => `Promedio en este escenario: ${avg} turnos. Esta vez: ${cur}.`,
+    learning_history: (s, r, o) => `Historial: ${s} cumbres, ${r} retiradas, ${o} otros.`,
+    learning_general: 'Cada expedición refina tu lectura de la montaña.',
+    interp_collapse: 'El cuerpo alcanzó un límite real. Esto no fue gradual.',
+    interp_high: 'Algo no cierra. La presión crece más rápido que tu capacidad de adaptación.',
+    interp_med: 'La montaña se está endureciendo. Las señales son ambiguas pero la tendencia no.',
+    interp_low: 'Todavía manejable. Pero la tendencia pide atención.',
+    interp_balanced: 'Equilibrio frágil. Ni avance cómodo ni alarma clara.',
+    interp_good: 'El cuerpo responde. Las condiciones acompañan, por ahora.',
+    sensory_advance: (from, to, alt) => `Avanzás desde ${from}. Llegás a ${to}, ${alt}m.`,
+    sensory_descend: (to, alt) => `Descendés hacia ${to}, ${alt}m. El aire se vuelve más denso.`,
+    sensory_rest: (loc) => `Dormís en ${loc}. El cuerpo se entrega al descanso.`,
+    sensory_collapse: (loc) => `El esfuerzo supera al cuerpo. Te desplomás en ${loc}.`,
+    sensory_wait: (loc) => `Esperás en ${loc}. Observás. Leés las señales.`,
+    sensory_hold: (loc) => `La montaña resiste el avance. Seguís en ${loc}.`,
+    tutor_name: 'Alejandro Molina — Guía',
+    // Character data translations
+    char_role_francisco: 'Maestro y Corredor de Resistencia', char_role_laura: 'Médica de Urgencias',
+    char_role_erik: 'Ingeniero Offshore', char_role_daniela: 'Fotógrafa y Periodista',
+    char_role_blake: 'Ejecutivo', char_role_irina: 'Ex Montañista Profesional',
+    diff_Standard: 'Estándar', diff_Favorable: 'Favorable', diff_Demanding: 'Exigente', diff_Very_Demanding: 'Muy Exigente',
+    char_trait0_francisco: 'Resistencia sostenida excepcional en esfuerzos prolongados, incluso cuando los demás reducen el ritmo.',
+    char_trait0_laura: 'Máxima claridad diagnóstica para señales corporales y del grupo bajo estrés.',
+    char_trait0_erik: 'Ejecución técnica confiable en terreno, ritmo y manejo del equipo.',
+    char_trait0_daniela: 'Mejor lectora temprana de cambios ambientales y del grupo sutiles.',
+    char_trait0_blake: 'Fuerte impulso psicológico y negativa a rendirse bajo presión.',
+    char_trait0_irina: 'Mayor competencia alpina base y economía de movimiento eficiente.',
+    // Scenario data translations
+    'sc_name_assisted-route': 'Ruta Asistida',
+    'sc_name_narrow-weather-window': 'Ventana Climática Estrecha',
+    'sc_name_false-stability-terrain': 'Falsa Estabilidad del Terreno',
+    'sc_name_accumulated-fatigue-trap': 'Trampa de Fatiga Acumulada',
+    'sc_name_weather-window': 'Ventana de Tiempo',
+    'sc_desc_assisted-route': 'Tu primer intento. Hay apoyo disponible. Los sistemas son tolerantes — por ahora.',
+    'sc_desc_narrow-weather-window': 'Saliste al amanecer. El cielo es legible, pero la montaña tiene su propio horario.',
+    'sc_desc_false-stability-terrain': 'Cielos despejados. Buena visibilidad. El terreno tiene otros planes.',
+    'sc_desc_accumulated-fatigue-trap': 'Todo parece manejable. Ese es el problema.',
+    'sc_desc_weather-window': 'El tiempo está mejorando. Por cuánto tiempo — eso es lo que tenés que descubrir.',
+    // Node name translations
+    node_horcones: 'Horcones', node_horcones_lagoon: 'Laguna de Horcones',
+    node_approach_confluencia: 'Campamento Confluencia', node_cuesta_brava: 'Cuesta Brava',
+    node_base_plaza_mulas: 'Campamento Base — Plaza de Mulas', node_piedras_conway: 'Piedras Conway',
+    node_camp_canada: 'Campamento 1 — Canadá', node_cambio_pendiente: 'Cambio de Pendiente (5300m)',
+    node_camp_nido_condores: 'Campamento 2 — Nido de Cóndores', node_balcon_amarillo: 'El Balcón Amarillo (5800m)',
+    node_camp_colera: 'Campamento 3 — Cólera', node_portezuelo_viento: 'Portezuelo del Viento',
+    node_travesia: 'La Travesía', node_canaleta: 'La Canaleta', node_summit: 'Cumbre',
+  },
+  en: {
+    cover_epigraph: 'The mountain is not conquered. It is read, interpreted, and if there is luck and judgment, you return.',
+    btn_enter: 'Enter',
+    heading_expedition: 'Expedition',
+    first_time_hint: 'First expedition? Start with <strong>Francisco Aguirre</strong> and <strong>Scenario 01</strong>. No locks — just a suggestion.',
+    heading_scenario: 'Scenario',
+    btn_begin: 'Start expedition',
+    label_time: 'Time', label_day: 'Day', label_alt: 'Altitude',
+    label_cap: 'Capacity', label_water: 'Water', label_food: 'Food',
+    route_start: 'Horcones', route_end: 'Summit',
+    pressure_label: 'Pressure:',
+    pressure_favorable: 'Favorable conditions',
+    decision_prompt: 'What do you do?',
+    btn_replay: 'Another expedition',
+    stat_turns: 'turns', stat_days: 'days', stat_peak: 'high point', stat_cap: 'final capacity',
+    debrief_causal_title: 'Causal chain',
+    debrief_retreat_title: 'What you read correctly',
+    debrief_learning_title: 'Reading progress',
+    action_advance: 'Advance', action_advance_slowly: 'Advance slowly',
+    action_wait: 'Wait', action_descend: 'Descend', action_sleep: 'Sleep', action_photo: 'Photograph',
+    preview_advance_dur: '~2h', preview_advance_effect: '+1 section (if the mountain allows)', preview_advance_cost: 'High fatigue · High exposure',
+    preview_advance_slowly_dur: '~3h', preview_advance_slowly_effect: '+1 section (more likely, less wear)', preview_advance_slowly_cost: 'Moderate fatigue · Moderate exposure',
+    preview_wait_dur: '~1h', preview_wait_effect: 'No movement · Mild acclimatization', preview_wait_cost: 'Minimal fatigue · Light exposure',
+    preview_descend_dur: '~1h', preview_descend_effect: '−1 section · Partial recovery', preview_descend_cost: 'Fatigue: reduces · Exposure: reduces',
+    preview_sleep_dur: 'Until 06:00 next day', preview_sleep_effect: 'Deep recovery (camps only)', preview_sleep_cost: 'Fatigue −22 · Exposure −14 · Acclimatization ++',
+    preview_photo_dur: '~30min', preview_photo_effect: 'No movement · Visual record', preview_photo_cost: 'Minimal fatigue',
+    ins_day: (day) => `Day ${day}`,
+    run_start_text: 'The park opens. The route begins.',
+    clock_dawn: (day, time) => `dawn day ${day} · ${time}`,
+    change_fatigue_up: 'Fatigue', change_exposure_up: 'Exposure', change_cap_down: 'Capacity', change_water_down: 'Water',
+    change_fatigue_rec: 'Fatigue:', change_exposure_rec: 'Exposure:', change_dawn: 'Dawn: day', change_none: 'No notable changes.',
+    turn_meta: (turn, name, alt) => `Turn ${turn} · ${name} · ${alt}m`,
+    cause_altitude: 'Altitude', cause_wind: 'Wind', cause_late: 'Late hour',
+    cause_terrain: 'Technical terrain', cause_persistence: 'Prolonged exposure',
+    cause_fatigue: 'Accumulated fatigue', cause_dehydration: 'Dehydration',
+    outcome_summit_safe_return: 'Summit and safe return', outcome_strategic_retreat: 'Strategic retreat',
+    outcome_high_point_return: 'Return from high point', outcome_collapse: 'Collapse',
+    outcome_rescue: 'Rescue', outcome_resource_exhaustion: 'Resource exhaustion',
+    outcome_permit_expired: 'Permit expired', outcome_window_closed: 'Window closed',
+    desc_summit_safe_return: 'You reached the summit and returned. The mountain let you through — and let you come back. That is reading it well.',
+    desc_strategic_retreat: 'You recognized the limit. You descended with your life and your judgment. That decision is a form of understanding.',
+    desc_high_point_return: 'You went high. Not to the summit, but further than most. You returned on your own terms.',
+    desc_collapse: 'The body reached its limit before you could react. The mountain does not negotiate.',
+    desc_rescue: 'No resources, no margin. Someone had to come and find you.',
+    desc_resource_exhaustion: 'Water or food ran out. Without reserves, the expedition cannot continue.',
+    desc_permit_expired: 'Time ran out. The park closes its gates.',
+    desc_window_closed: 'The expedition stretched beyond what was possible.',
+    causal_pressure: (node, turn, causes) => `Accumulated pressure from ${node} (turn ${turn}): ${causes}`,
+    causal_advances: (n) => `${n} consecutive advances without deep rest accelerated the wear`,
+    causal_cap_final: (cap) => `Final capacity: ${cap}. The margin ran out.`,
+    causal_peak_turn: (turn, name) => `High point reached at turn ${turn}: ${name}`,
+    causal_descents: (n, cap) => `${n} descent sections. Decision made at capacity ${cap}.`,
+    causal_summit_turn: (turn) => `Summit reached at turn ${turn}`,
+    causal_expedition: (turns, days) => `Total expedition: ${turns} turns, ${days} days`,
+    causal_cap_return: (cap) => `Return capacity: ${cap}. Successful management.`,
+    retreat_pressure: (node, causes) => `You detected high pressure at ${node}: ${causes}.`,
+    retreat_cap: (cap) => `At ${cap}% capacity, continuing would have risked collapse.`,
+    retreat_resources: 'Resources were running out. Continuing would have forced a rescue.',
+    retreat_peak: (name, alt) => `High point: ${name} (${alt}m). The mountain will still be there for another expedition.`,
+    learning_first: 'First expedition recorded. Every attempt is learning.',
+    learning_altitude: (cur, prev) => `New altitude record: ${cur}m (previous: ${prev}m).`,
+    learning_avg: (avg, cur) => `Average for this scenario: ${avg} turns. This time: ${cur}.`,
+    learning_history: (s, r, o) => `History: ${s} summits, ${r} retreats, ${o} other.`,
+    learning_general: 'Every expedition refines your reading of the mountain.',
+    interp_collapse: 'The body reached a real limit. This was not gradual.',
+    interp_high: 'Something does not add up. Pressure grows faster than your capacity to adapt.',
+    interp_med: 'The mountain is hardening. The signals are ambiguous but the trend is not.',
+    interp_low: 'Still manageable. But the trend demands attention.',
+    interp_balanced: 'Fragile balance. Neither comfortable advance nor clear alarm.',
+    interp_good: 'The body responds. Conditions are cooperating, for now.',
+    sensory_advance: (from, to, alt) => `You advance from ${from}. You reach ${to}, ${alt}m.`,
+    sensory_descend: (to, alt) => `You descend to ${to}, ${alt}m. The air grows denser.`,
+    sensory_rest: (loc) => `You sleep at ${loc}. The body surrenders to rest.`,
+    sensory_collapse: (loc) => `The effort overcomes the body. You collapse at ${loc}.`,
+    sensory_wait: (loc) => `You wait at ${loc}. You observe. You read the signals.`,
+    sensory_hold: (loc) => `The mountain resists progress. You stay at ${loc}.`,
+    tutor_name: 'Alejandro Molina — Guide',
+    // Character data (already English in data files)
+    char_role_francisco: 'Teacher & Amateur Runner', char_role_laura: 'Emergency Physician',
+    char_role_erik: 'Offshore Engineer', char_role_daniela: 'Photographer & Journalist',
+    char_role_blake: 'Executive', char_role_irina: 'Former Pro Climber',
+    diff_Standard: 'Standard', diff_Favorable: 'Favorable', diff_Demanding: 'Demanding', diff_Very_Demanding: 'Very Demanding',
+    char_trait0_francisco: 'Exceptional sustained endurance under long effort, even when others slow down.',
+    char_trait0_laura: 'Highest diagnostic clarity for body and group cues under stress.',
+    char_trait0_erik: 'Reliable technical execution on terrain, pacing, and gear management.',
+    char_trait0_daniela: 'Best early reader of subtle environmental and group changes.',
+    char_trait0_blake: 'Strong psychological drive and refusal to quit under stress.',
+    char_trait0_irina: 'Highest baseline alpine competence and efficient movement economy.',
+    // Scenario data (already English in data files)
+    'sc_name_assisted-route': 'Assisted Route',
+    'sc_name_narrow-weather-window': 'Narrow Weather Window',
+    'sc_name_false-stability-terrain': 'False Stability Terrain',
+    'sc_name_accumulated-fatigue-trap': 'Accumulated Fatigue Trap',
+    'sc_name_weather-window': 'Weather Window',
+    'sc_desc_assisted-route': 'Your first attempt. Support is available. The systems are forgiving — for now.',
+    'sc_desc_narrow-weather-window': 'You left at dawn. The sky is readable, but the mountain has its own schedule.',
+    'sc_desc_false-stability-terrain': 'Clear skies. Good visibility. The terrain has other plans.',
+    'sc_desc_accumulated-fatigue-trap': 'Everything seems manageable. That is the problem.',
+    'sc_desc_weather-window': 'The weather is breaking. For how long — that is what you have to figure out.',
+    // Node names (English — same as data file values)
+    node_horcones: 'Horcones', node_horcones_lagoon: 'Horcones Lagoon',
+    node_approach_confluencia: 'Approach Camp — Confluencia', node_cuesta_brava: 'Cuesta Brava',
+    node_base_plaza_mulas: 'Base Camp — Plaza de Mulas', node_piedras_conway: 'Piedras Conway',
+    node_camp_canada: 'Camp 1 — Canadá', node_cambio_pendiente: 'Cambio de Pendiente (5300m)',
+    node_camp_nido_condores: 'Camp 2 — Nido de Cóndores', node_balcon_amarillo: 'El Balcón Amarillo (5800m)',
+    node_camp_colera: 'Camp 3 — Cólera', node_portezuelo_viento: 'Portezuelo del Viento',
+    node_travesia: 'La Travesía', node_canaleta: 'La Canaleta', node_summit: 'Summit',
+  },
+};
+
 // ——— Data Loading ———
 async function fetchJSON(file) {
   const r = await fetch(`${DATA_ROOT}/${file}`);
@@ -727,84 +1051,162 @@ function rng(seed) {
 }
 
 // ——— Narrative Engine (P0-05, P1-01, P1-02, P1-03) ———
-const BODY_SIGNALS = {
-  francisco: {
-    fatHigh: 'Las piernas de Francisco responden, pero el pecho se niega a llenar.',
-    fatMed: 'Un dolor sordo en los cuádriceps. Francisco sabe que es acumulado.',
-    expHigh: 'El frío se instaló en las extremidades. Los dedos tardan en obedecer.',
-    expMed: 'La piel de la cara arde — el viento dejó marca.',
-    capLow: 'Cada paso cuesta el doble. El cuerpo se está apagando.',
+const BODY_SIGNALS_DATA = {
+  es: {
+    francisco: {
+      fatHigh: 'Las piernas de Francisco responden, pero el pecho se niega a llenar.',
+      fatMed: 'Un dolor sordo en los cuádriceps. Francisco sabe que es acumulado.',
+      expHigh: 'El frío se instaló en las extremidades. Los dedos tardan en obedecer.',
+      expMed: 'La piel de la cara arde — el viento dejó marca.',
+      capLow: 'Cada paso cuesta el doble. El cuerpo se está apagando.',
+    },
+    laura: {
+      fatHigh: 'Laura reconoce los signos: el temblor fino en las manos no es frío.',
+      fatMed: 'Fatiga muscular localizada. Laura la cataloga sin detenerse.',
+      expHigh: 'Hipotermia periférica incipiente. Lo sabe antes de sentirlo.',
+      expMed: 'El viento penetra más de lo razonable. Las capas no alcanzan.',
+      capLow: 'Los signos vitales se deterioran. Laura sabe qué significan.',
+    },
+    erik: {
+      fatHigh: 'Erik niega la fatiga. Pero sus tiempos de reacción lo delatan.',
+      fatMed: 'El cuerpo pesa más que ayer. Erik lo atribuye al equipo.',
+      expHigh: 'Las manos se tornan azuladas. Erik flexiona los dedos con fuerza.',
+      expMed: 'El viento cala a través de la Gore-Tex. Algo cambió.',
+      capLow: 'La técnica no compensa lo que el cuerpo ya no ofrece.',
+    },
+    daniela: {
+      fatHigh: 'Los hombros de Daniela se hunden bajo la mochila. Cada paso es negociación.',
+      fatMed: 'La cámara pesa más que esta mañana. Los músculos hablan.',
+      expHigh: 'Los labios partidos, las mejillas ardiendo. El frío es violento.',
+      expMed: 'El frío encuentra rendijas. Daniela se ajusta el buff, otra vez.',
+      capLow: 'Las manos tiemblan demasiado para encuadrar. Eso dice algo.',
+    },
+    blake: {
+      fatHigh: 'El cuerpo de Blake funciona en modo sobreimpulso. Pero la voluntad tiene un techo.',
+      fatMed: 'Piernas más pesadas. Blake lo anota como esperado y sigue.',
+      expHigh: 'El frío alcanza el núcleo. Blake cuenta respiraciones en vez de pasos.',
+      expMed: 'El viento se pone serio. Blake recalibra sin detenerse.',
+      capLow: 'La lógica de planillas no funciona acá. El cuerpo tiene su propia aritmética.',
+    },
+    irina: {
+      fatHigh: 'Irina lee la fatiga como un mapa conocido. Sabe exactamente adónde lleva esto.',
+      fatMed: 'Ardor familiar en las pantorrillas. Irina ajusta su paso sin pausa.',
+      expHigh: 'El frío llegó al tejido profundo. Irina ya estuvo acá antes.',
+      expMed: 'La exposición acumula más rápido de lo que debería. Irina registra la discrepancia.',
+      capLow: 'El cuerpo está cerca de su límite técnico. Ni Irina puede superar esto a pura técnica.',
+    },
   },
-  laura: {
-    fatHigh: 'Laura reconoce los signos: el temblor fino en las manos no es frío.',
-    fatMed: 'Fatiga muscular localizada. Laura la cataloga sin detenerse.',
-    expHigh: 'Hipotermia periférica incipiente. Lo sabe antes de sentirlo.',
-    expMed: 'El viento penetra más de lo razonable. Las capas no alcanzan.',
-    capLow: 'Los signos vitales se deterioran. Laura sabe qué significan.',
-  },
-  erik: {
-    fatHigh: 'Erik niega la fatiga. Pero sus tiempos de reacción lo delatan.',
-    fatMed: 'El cuerpo pesa más que ayer. Erik lo atribuye al equipo.',
-    expHigh: 'Las manos se tornan azuladas. Erik flexiona los dedos con fuerza.',
-    expMed: 'El viento cala a través de la Gore-Tex. Algo cambió.',
-    capLow: 'La técnica no compensa lo que el cuerpo ya no ofrece.',
-  },
-  daniela: {
-    fatHigh: 'Los hombros de Daniela se hunden bajo la mochila. Cada paso es negociación.',
-    fatMed: 'La cámara pesa más que esta mañana. Los músculos hablan.',
-    expHigh: 'Los labios partidos, las mejillas ardiendo. El frío es violento.',
-    expMed: 'El frío encuentra rendijas. Daniela se ajusta el buff, otra vez.',
-    capLow: 'Las manos tiemblan demasiado para encuadrar. Eso dice algo.',
-  },
-  priya: {
-    fatHigh: 'El cuerpo de Priya ejecuta en automático. La mente ya no participa.',
-    fatMed: 'Un cansancio familiar. Priya lo registra sin drama.',
-    expHigh: 'El frío alcanzó los huesos. Las articulaciones crujen al moverse.',
-    expMed: 'La exposición acumulada se nota: los movimientos se tornan rígidos.',
-    capLow: 'Las probabilidades de llegar se acercan a cero. Priya lo sabe.',
-  },
-  tomás: {
-    fatHigh: 'Tomás jadea. Sabe que a esta altitud es esperado, pero la intensidad sorprende.',
-    fatMed: 'Los gemelos avisan. Tomás estira brevemente sin detenerse.',
-    expHigh: 'El viento corta. Tomás cierra los ojos y cuenta. Diez segundos.',
-    expMed: 'La nariz gotea sin parar. Es el frío, no la altitud. Todavía.',
-    capLow: 'La montaña pide más de lo que Tomás puede dar hoy.',
+  en: {
+    francisco: {
+      fatHigh: "Francisco's legs respond, but his chest refuses to fill.",
+      fatMed: "A dull ache in the quadriceps. Francisco knows it's accumulated.",
+      expHigh: "The cold has settled into the extremities. Fingers slow to obey.",
+      expMed: "Skin on his face burns — the wind left its mark.",
+      capLow: "Every step costs double. The body is shutting down.",
+    },
+    laura: {
+      fatHigh: "Laura recognizes the signs: the fine tremor in her hands is not the cold.",
+      fatMed: "Localized muscle fatigue. Laura catalogs it without stopping.",
+      expHigh: "Incipient peripheral hypothermia. She knows before she feels it.",
+      expMed: "The wind penetrates more than it should. The layers are not enough.",
+      capLow: "Vital signs deteriorating. Laura knows what they mean.",
+    },
+    erik: {
+      fatHigh: "Erik denies the fatigue. But his reaction times betray him.",
+      fatMed: "The body weighs more than yesterday. Erik attributes it to the gear.",
+      expHigh: "Hands turning blue. Erik flexes his fingers with force.",
+      expMed: "The wind cuts through the Gore-Tex. Something changed.",
+      capLow: "Technique cannot compensate for what the body no longer offers.",
+    },
+    daniela: {
+      fatHigh: "Daniela's shoulders sink under the pack. Every step is negotiation.",
+      fatMed: "The camera weighs more than this morning. The muscles are talking.",
+      expHigh: "Cracked lips, burning cheeks. The cold is violent.",
+      expMed: "Cold finds the gaps. Daniela adjusts her buff, again.",
+      capLow: "Hands shake too much to frame a shot. That says something.",
+    },
+    blake: {
+      fatHigh: "Blake's body runs on override. But willpower has a ceiling.",
+      fatMed: "Heavier legs. Blake logs it as expected and keeps moving.",
+      expHigh: "Cold reaches the core. Blake counts breaths instead of steps.",
+      expMed: "The wind is serious now. Blake reassesses without slowing.",
+      capLow: "The spreadsheet logic breaks down here. The body has its own math.",
+    },
+    irina: {
+      fatHigh: "Irina reads the fatigue like an old map. She knows exactly where this leads.",
+      fatMed: "Familiar burn in the calves. Irina adjusts her stride without pause.",
+      expHigh: "The cold reached the deep tissue. Irina has been here before.",
+      expMed: "Exposure accumulating faster than it should. Irina notes the discrepancy.",
+      capLow: "The body is near its technical limit. Even Irina cannot outclimb this.",
+    },
   },
 };
 
-const ENV_SIGNALS = {
-  wind: [
-    'Brisa suave desde el valle.',
-    'El viento trae polvo del pedregal.',
-    'Ráfagas que obligan a bajar la cabeza.',
-    'Viento constante que roba calor y equilibrio.',
-    'Vendaval. Caminar recto es imposible.',
-  ],
-  vis: [
-    'Visibilidad total. La ruta se lee con claridad.',
-    'Neblina ligera en el fondo del valle.',
-    'Las nubes envuelven el collado superior.',
-    'La huella se pierde en la nieve nueva.',
-    'Visibilidad nula. Solo se ve un paso adelante.',
-  ],
-  time: [
-    'La primera luz ilumina las paredes del este.',
-    'Sol pleno. La montaña se muestra entera.',
-    'La luz se vuelve rasante. Queda poco día.',
-    'Crepúsculo. Las sombras se tragan la ruta.',
-    'Noche cerrada. Solo el frontal corta la oscuridad.',
-  ],
-  terrain: [
-    'Sendero marcado, paso firme.',
-    'Terreno pedregoso pero legible.',
-    'Pedregal inestable. Cada pisada es decisión.',
-    'Terreno técnico. Manos y pies trabajan juntos.',
-  ],
+const ENV_SIGNALS_DATA = {
+  es: {
+    wind: [
+      'Brisa suave desde el valle.',
+      'El viento trae polvo del pedregal.',
+      'Ráfagas que obligan a bajar la cabeza.',
+      'Viento constante que roba calor y equilibrio.',
+      'Vendaval. Caminar recto es imposible.',
+    ],
+    vis: [
+      'Visibilidad total. La ruta se lee con claridad.',
+      'Neblina ligera en el fondo del valle.',
+      'Las nubes envuelven el collado superior.',
+      'La huella se pierde en la nieve nueva.',
+      'Visibilidad nula. Solo se ve un paso adelante.',
+    ],
+    time: [
+      'La primera luz ilumina las paredes del este.',
+      'Sol pleno. La montaña se muestra entera.',
+      'La luz se vuelve rasante. Queda poco día.',
+      'Crepúsculo. Las sombras se tragan la ruta.',
+      'Noche cerrada. Solo el frontal corta la oscuridad.',
+    ],
+    terrain: [
+      'Sendero marcado, paso firme.',
+      'Terreno pedregoso pero legible.',
+      'Pedregal inestable. Cada pisada es decisión.',
+      'Terreno técnico. Manos y pies trabajan juntos.',
+    ],
+  },
+  en: {
+    wind: [
+      'Soft breeze from the valley.',
+      'The wind carries dust from the scree.',
+      'Gusts force heads down.',
+      'Steady wind stealing heat and balance.',
+      'Gale. Walking straight is impossible.',
+    ],
+    vis: [
+      'Full visibility. The route reads clearly.',
+      'Light mist in the valley below.',
+      'Clouds wrap the upper col.',
+      'The trail disappears in fresh snow.',
+      'Zero visibility. Only one step ahead.',
+    ],
+    time: [
+      'First light illuminates the eastern walls.',
+      'Full sun. The mountain shows itself entirely.',
+      'The light becomes raking. Little day remains.',
+      'Dusk. Shadows swallow the route.',
+      'Full night. Only the headlamp cuts the darkness.',
+    ],
+    terrain: [
+      'Marked trail, firm step.',
+      'Rocky terrain but readable.',
+      'Unstable scree. Every footfall is a decision.',
+      'Technical terrain. Hands and feet work together.',
+    ],
+  },
 };
 
 function getBodySignal(run) {
   const char = run.char.id;
-  const sigs = BODY_SIGNALS[char] || BODY_SIGNALS.francisco;
+  const langData = BODY_SIGNALS_DATA[LANG] || BODY_SIGNALS_DATA.es;
+  const sigs = langData[char] || langData.francisco;
   if (run.body.cap < 30) return sigs.capLow;
   if (run.body.fat > 60) return sigs.fatHigh;
   if (run.body.fat > 35) return sigs.fatMed;
@@ -814,15 +1216,16 @@ function getBodySignal(run) {
 }
 
 function getEnvSignal(run, node) {
+  const env = ENV_SIGNALS_DATA[LANG] || ENV_SIGNALS_DATA.es;
   const signals = [];
   const w = Math.min(4, run.weather.wind);
-  if (w >= 1) signals.push(ENV_SIGNALS.wind[w]);
+  if (w >= 1) signals.push(env.wind[w]);
   const v = Math.min(4, Math.max(0, 4 - run.weather.vis));
-  if (v >= 1) signals.push(ENV_SIGNALS.vis[v]);
+  if (v >= 1) signals.push(env.vis[v]);
   const timeIdx = run.time >= 1080 ? 4 : run.time >= 900 ? 3 : run.time >= 720 ? 2 : run.time >= 480 ? 1 : 0;
-  if (timeIdx >= 2) signals.push(ENV_SIGNALS.time[timeIdx]);
-  const t = Math.min(3, (node.terrain || 1) - 1);
-  if (t >= 2) signals.push(ENV_SIGNALS.terrain[t]);
+  if (timeIdx >= 2) signals.push(env.time[timeIdx]);
+  const terr = Math.min(3, (node.terrain || 1) - 1);
+  if (terr >= 2) signals.push(env.terrain[terr]);
   return signals.length > 0 ? signals[Math.floor(run.rand() * signals.length)] : null;
 }
 
@@ -837,20 +1240,22 @@ function buildNarrative(action, result, fromNode, toNode, run, delta, prevState)
 function buildSensoryLine(action, result, fromNode, toNode, run) {
   const bodySignal = getBodySignal(run);
   const envSignal = getEnvSignal(run, fromNode);
+  const fromName = getNodeName(fromNode);
+  const toName = getNodeName(toNode);
 
   let base = '';
   if (result === 'advance') {
-    base = `Avanzás desde ${fromNode.name}. Llegás a ${toNode.name}, ${toNode.alt}m.`;
+    base = t('sensory_advance', fromName, toName, toNode.alt);
   } else if (result === 'descend') {
-    base = `Descendés hacia ${toNode.name}, ${toNode.alt}m. El aire se vuelve más denso.`;
+    base = t('sensory_descend', toName, toNode.alt);
   } else if (result === 'rest') {
-    base = `Dormís en ${fromNode.name}. El cuerpo se entrega al descanso.`;
+    base = t('sensory_rest', fromName);
   } else if (result === 'collapse') {
-    base = `El esfuerzo supera al cuerpo. Te desplomás en ${fromNode.name}.`;
+    base = t('sensory_collapse', fromName);
   } else if (result === 'hold' && action === 'wait') {
-    base = `Esperás en ${fromNode.name}. Observás. Leés las señales.`;
+    base = t('sensory_wait', fromName);
   } else {
-    base = `La montaña resiste el avance. Seguís en ${fromNode.name}.`;
+    base = t('sensory_hold', fromName);
   }
 
   // Attach one body or env signal
@@ -865,19 +1270,19 @@ function buildChangesLine(run, prev, action) {
   const capDiff = Math.round(run.body.cap - prev.cap);
 
   if (action === 'sleep') {
-    if (fatDiff < -5) parts.push(`Fatiga: −${Math.abs(fatDiff)}`);
-    if (expDiff < -3) parts.push(`Exposición: −${Math.abs(expDiff)}`);
-    parts.push(`Amanece: día ${run.day}`);
+    if (fatDiff < -5) parts.push(`${t('change_fatigue_rec')} −${Math.abs(fatDiff)}`);
+    if (expDiff < -3) parts.push(`${t('change_exposure_rec')} −${Math.abs(expDiff)}`);
+    parts.push(`${t('change_dawn')} ${run.day}`);
   } else {
-    if (fatDiff > 3) parts.push(`Fatiga +${fatDiff}`);
-    if (expDiff > 3) parts.push(`Exposición +${expDiff}`);
-    if (capDiff < -5) parts.push(`Capacidad ${capDiff}`);
+    if (fatDiff > 3) parts.push(`${t('change_fatigue_up')} +${fatDiff}`);
+    if (expDiff > 3) parts.push(`${t('change_exposure_up')} +${expDiff}`);
+    if (capDiff < -5) parts.push(`${t('change_cap_down')} ${capDiff}`);
   }
 
   const waterDiff = Math.round((prev.water - run.res.water) * 10) / 10;
-  if (waterDiff > 0.5) parts.push(`Agua −${waterDiff.toFixed(1)}`);
+  if (waterDiff > 0.5) parts.push(`${t('change_water_down')} −${waterDiff.toFixed(1)}`);
 
-  return parts.length > 0 ? parts.join(' · ') : 'Sin cambios notables.';
+  return parts.length > 0 ? parts.join(' · ') : t('change_none');
 }
 
 function buildInterpretation(run, delta, result) {
@@ -885,13 +1290,13 @@ function buildInterpretation(run, delta, result) {
   const noise = (run.rand() - 0.5) * Math.abs(bias) * 1.5;
   const perceived = delta + noise;
 
-  if (result === 'collapse') return 'El cuerpo alcanzó un límite real. Esto no fue gradual.';
+  if (result === 'collapse') return t('interp_collapse');
 
-  if (perceived > 25) return 'Algo no cierra. La presión crece más rápido que tu capacidad de adaptación.';
-  if (perceived > 15) return 'La montaña se está endureciendo. Las señales son ambiguas pero la tendencia no.';
-  if (perceived > 5) return 'Todavía manejable. Pero la tendencia pide atención.';
-  if (perceived > -5) return 'Equilibrio frágil. Ni avance cómodo ni alarma clara.';
-  return 'El cuerpo responde. Las condiciones acompañan, por ahora.';
+  if (perceived > 25) return t('interp_high');
+  if (perceived > 15) return t('interp_med');
+  if (perceived > 5) return t('interp_low');
+  if (perceived > -5) return t('interp_balanced');
+  return t('interp_good');
 }
 
 // P0-04: Concrete pressure causes
@@ -908,15 +1313,15 @@ function computePressureCauses(run, node, ep) {
 
   // Pick top 2-3 active contributors
   const factors = [
-    { label: 'Altitud', value: altP, danger: altP > 15 },
-    { label: 'Viento', value: windP, danger: windP > 30 },
-    { label: 'Hora avanzada', value: timeP, danger: timeP > 12 },
-    { label: 'Terreno técnico', value: terrP, danger: terrP > 15 },
-    { label: 'Exposición prolongada', value: persP, danger: persP > 12 },
+    { label: t('cause_altitude'), value: altP, danger: altP > 15 },
+    { label: t('cause_wind'), value: windP, danger: windP > 30 },
+    { label: t('cause_late'), value: timeP, danger: timeP > 12 },
+    { label: t('cause_terrain'), value: terrP, danger: terrP > 15 },
+    { label: t('cause_persistence'), value: persP, danger: persP > 12 },
   ];
 
-  if (run.body.fat > 45) factors.push({ label: 'Fatiga acumulada', value: 15, danger: run.body.fat > 60 });
-  if (run.res.water < 5) factors.push({ label: 'Deshidratación', value: 12, danger: true });
+  if (run.body.fat > 45) factors.push({ label: t('cause_fatigue'), value: 15, danger: run.body.fat > 60 });
+  if (run.res.water < 5) factors.push({ label: t('cause_dehydration'), value: 12, danger: true });
 
   // Sort by value and take top 3 with value > 0
   factors.sort((a, b) => b.value - a.value);
@@ -940,34 +1345,34 @@ function getActionPreview(actionId, run, data) {
 
   switch (actionId) {
     case 'advance':
-      durLabel = '~2h';
-      effectLabel = '+1 tramo (si la montaña lo permite)';
-      costLabel = 'Fatiga alta · Exposición alta';
+      durLabel = t('preview_advance_dur');
+      effectLabel = t('preview_advance_effect');
+      costLabel = t('preview_advance_cost');
       break;
     case 'advance_slowly':
-      durLabel = '~3h';
-      effectLabel = '+1 tramo (más probable, menos desgaste)';
-      costLabel = 'Fatiga moderada · Exposición moderada';
+      durLabel = t('preview_advance_slowly_dur');
+      effectLabel = t('preview_advance_slowly_effect');
+      costLabel = t('preview_advance_slowly_cost');
       break;
     case 'wait':
-      durLabel = '~1h';
-      effectLabel = 'Sin movimiento · Aclimatación leve';
-      costLabel = 'Fatiga mínima · Exposición leve';
+      durLabel = t('preview_wait_dur');
+      effectLabel = t('preview_wait_effect');
+      costLabel = t('preview_wait_cost');
       break;
     case 'descend':
-      durLabel = '~1h';
-      effectLabel = '−1 tramo · Recuperación parcial';
-      costLabel = 'Fatiga: se reduce · Exposición: se reduce';
+      durLabel = t('preview_descend_dur');
+      effectLabel = t('preview_descend_effect');
+      costLabel = t('preview_descend_cost');
       break;
     case 'sleep':
-      durLabel = 'Hasta las 06:00 del día siguiente';
-      effectLabel = 'Recuperación profunda (solo en campamento)';
-      costLabel = 'Fatiga −22 · Exposición −14 · Aclimatación ++';
+      durLabel = t('preview_sleep_dur');
+      effectLabel = t('preview_sleep_effect');
+      costLabel = t('preview_sleep_cost');
       break;
     case 'shoot_photo':
-      durLabel = '~30min';
-      effectLabel = 'Sin movimiento · Registro visual';
-      costLabel = 'Fatiga mínima';
+      durLabel = t('preview_photo_dur');
+      effectLabel = t('preview_photo_effect');
+      costLabel = t('preview_photo_cost');
       break;
     default:
       durLabel = '?';
@@ -1226,14 +1631,14 @@ function applyCharEvents(run, action, node, data) {
   for (const ev of events) {
     if ((run.firedChar[ev.id] || 0) >= (ev.limits?.maxPerRun || 3)) continue;
     if ((run.charCD[ev.id] || 0) > 0) continue;
-    const t = ev.trigger || {};
-    if (t.actions && !t.actions.includes(action)) continue;
-    if (t.stages && !t.stages.includes(node.stage)) continue;
-    if (t.minTurn && run.turn < t.minTurn) continue;
-    if (t.minPersistenceTurns && run.body.persist < t.minPersistenceTurns) continue;
-    if (t.minWeatherSeverity && run.weather.wind < t.minWeatherSeverity) continue;
-    if (t.maxFunctionalCapacity && run.body.cap > t.maxFunctionalCapacity) continue;
-    if (t.maxWater && run.res.water > t.maxWater) continue;
+    const trigger = ev.trigger || {};
+    if (trigger.actions && !trigger.actions.includes(action)) continue;
+    if (trigger.stages && !trigger.stages.includes(node.stage)) continue;
+    if (trigger.minTurn && run.turn < trigger.minTurn) continue;
+    if (trigger.minPersistenceTurns && run.body.persist < trigger.minPersistenceTurns) continue;
+    if (trigger.minWeatherSeverity && run.weather.wind < trigger.minWeatherSeverity) continue;
+    if (trigger.maxFunctionalCapacity && run.body.cap > trigger.maxFunctionalCapacity) continue;
+    if (trigger.maxWater && run.res.water > trigger.maxWater) continue;
     if (ev.effects.fatigueDelta) run.body.fat = Math.max(0, run.body.fat + ev.effects.fatigueDelta);
     if (ev.effects.exposureDelta) run.body.exp = Math.max(0, run.body.exp + ev.effects.exposureDelta);
     // Recompute functional capacity after body-state mutations
@@ -1263,42 +1668,31 @@ function checkTerminal(run, nodes, data) {
 }
 
 // ——— Tutorial System (P0-08) ———
-const TUTORIAL_MESSAGES = [
-  { turn: 0, text: 'Soy Alejandro. Te acompaño en esta primera etapa. Cada acción tiene un costo en tiempo y energía — fijate en la previsualización antes de elegir.' },
-  { turn: 1, text: 'Fijate en la barra de presión. Esos factores concretos te dicen qué te está costando estar acá: altitud, viento, hora del día. No es un número mágico — son condiciones reales.' },
-  { turn: 2, text: '«Esperar» consume una hora y poca energía. «Dormir» resetea al día siguiente con recuperación profunda — pero solo en campamentos. Son cosas muy distintas.' },
-  { turn: 3, text: 'La información que ves es parcial. La montaña no muestra todo. Tu personaje interpreta lo que percibe — a veces con error. Aprendé a leer la tendencia, no el valor exacto.' },
-  { turn: 4, text: 'Descender no es fracasar. Muchas veces es la mejor lectura posible. La montaña va a seguir ahí. Desde acá, seguís solo.' },
-];
+const TUTORIAL_MESSAGES_DATA = {
+  es: [
+    { turn: 0, text: 'Soy Alejandro. Te acompaño en esta primera etapa. Cada acción tiene un costo en tiempo y energía — fijate en la previsualización antes de elegir.' },
+    { turn: 1, text: 'Fijate en la barra de presión. Esos factores concretos te dicen qué te está costando estar acá: altitud, viento, hora del día. No es un número mágico — son condiciones reales.' },
+    { turn: 2, text: '«Esperar» consume una hora y poca energía. «Dormir» resetea al día siguiente con recuperación profunda — pero solo en campamentos. Son cosas muy distintas.' },
+    { turn: 3, text: 'La información que ves es parcial. La montaña no muestra todo. Tu personaje interpreta lo que percibe — a veces con error. Aprendé a leer la tendencia, no el valor exacto.' },
+    { turn: 4, text: 'Descender no es fracasar. Muchas veces es la mejor lectura posible. La montaña va a seguir ahí. Desde acá, seguís solo.' },
+  ],
+  en: [
+    { turn: 0, text: "I'm Alejandro. I'll be with you in this first stage. Every action has a time and energy cost — check the preview before choosing." },
+    { turn: 1, text: "Watch the pressure bar. These concrete factors tell you what it costs to be here: altitude, wind, time of day. It's not a magic number — these are real conditions." },
+    { turn: 2, text: '"Wait" uses one hour and little energy. "Sleep" resets to the next day with deep recovery — but only at camps. These are very different things.' },
+    { turn: 3, text: "The information you see is partial. The mountain doesn't show everything. Your character interprets what they perceive — sometimes with error. Learn to read the trend, not the exact value." },
+    { turn: 4, text: "Descending is not failure. Often it is the best possible reading. The mountain will still be there. From here, you're on your own." },
+  ],
+};
 
 function getTutorialMessage(turn, isTutorial) {
   if (!isTutorial) return null;
-  return TUTORIAL_MESSAGES.find(t => t.turn === turn) || null;
+  const msgs = TUTORIAL_MESSAGES_DATA[LANG] || TUTORIAL_MESSAGES_DATA.es;
+  return msgs.find(m => m.turn === turn) || null;
 }
 
 // ——— Debrief System (P1-04, P1-05, P1-07) ———
 function buildDebrief(run, outcome, data) {
-  const titles = {
-    summit_safe_return: 'Cumbre y retorno seguro',
-    strategic_retreat: 'Retirada estratégica',
-    high_point_return: 'Retorno desde punto alto',
-    collapse: 'Colapso',
-    rescue: 'Rescate',
-    resource_exhaustion: 'Agotamiento de recursos',
-    permit_expired: 'Permiso vencido',
-    window_closed: 'Ventana cerrada',
-  };
-  const descs = {
-    summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar — y te dejó regresar. Eso es leerla bien.',
-    strategic_retreat: 'Reconociste el límite. Bajaste con vida y con criterio. Esa decisión es una forma de comprensión.',
-    high_point_return: 'Llegaste alto. No a la cumbre, pero más lejos de lo que muchos llegan. Volviste por tu propia voluntad.',
-    collapse: 'El cuerpo alcanzó su límite antes de que pudieras reaccionar. La montaña no negocia.',
-    rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
-    resource_exhaustion: 'El agua o la comida se agotaron. Sin reservas, la expedición no puede continuar.',
-    permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
-    window_closed: 'La expedición se alargó más de lo posible.',
-  };
-
   // P1-04: Causal chain
   const causalChain = buildCausalChain(run, outcome);
 
@@ -1312,8 +1706,8 @@ function buildDebrief(run, outcome, data) {
   const learning = buildLearningComparison(run, outcome);
 
   return {
-    title: titles[outcome] || outcome,
-    desc: descs[outcome] || '',
+    title: t(`outcome_${outcome}`) || outcome,
+    desc: t(`desc_${outcome}`) || '',
     causalChain,
     retreatCelebration,
     learning,
@@ -1329,22 +1723,26 @@ function buildCausalChain(run, outcome) {
     const criticalTurns = log.filter(l => l.delta > 15);
     if (criticalTurns.length > 0) {
       const last = criticalTurns[criticalTurns.length - 1];
-      chain.push(`Presión acumulada desde ${last.node} (turno ${last.turn}): ${last.causes.join(', ')}`);
+      chain.push(t('causal_pressure', getNodeName(DATA.nodes.find(n => n.name === last.node) || { id: '', name: last.node }), last.turn, last.causes.join(', ')));
     }
     const advances = log.filter(l => l.action === 'advance' || l.action === 'advance_slowly');
     if (advances.length > 3) {
-      chain.push(`${advances.length} avances consecutivos sin descanso profundo aceleraron el desgaste`);
+      chain.push(t('causal_advances', advances.length));
     }
-    chain.push(`Capacidad final: ${Math.round(run.body.cap)}. El margen se agotó.`);
+    chain.push(t('causal_cap_final', Math.round(run.body.cap)));
   } else if (outcome === 'strategic_retreat') {
-    const peakEntry = log.find(l => l.toNode === DATA.nodes[run.peak]?.name);
-    if (peakEntry) chain.push(`Punto alto alcanzado en turno ${peakEntry.turn}: ${DATA.nodes[run.peak]?.name}`);
+    const peakNode = DATA.nodes[run.peak];
+    const peakName = getNodeName(peakNode);
+    const peakEntry = log.find(l => l.toNode === peakNode?.name);
+    if (peakEntry) chain.push(t('causal_peak_turn', peakEntry.turn, peakName));
     const descents = log.filter(l => l.action === 'descend');
-    chain.push(`${descents.length} tramos de descenso. Decisión tomada con capacidad ${Math.round(run.body.cap)}.`);
+    chain.push(t('causal_descents', descents.length, Math.round(run.body.cap)));
   } else if (outcome === 'summit_safe_return') {
-    chain.push(`Cumbre alcanzada en turno ${log.find(l => l.moveResult === 'advance' && l.toNode === 'Summit')?.turn || '?'}`);
-    chain.push(`Expedición total: ${run.turn} turnos, ${run.day} días`);
-    chain.push(`Capacidad al retorno: ${Math.round(run.body.cap)}. Gestión exitosa.`);
+    const summitNode = DATA.nodes.find(n => n.id === 'summit');
+    const summitTurn = log.find(l => l.moveResult === 'advance' && l.toNode === summitNode?.name)?.turn || '?';
+    chain.push(t('causal_summit_turn', summitTurn));
+    chain.push(t('causal_expedition', run.turn, run.day));
+    chain.push(t('causal_cap_return', Math.round(run.body.cap)));
   }
 
   return chain;
@@ -1353,23 +1751,24 @@ function buildCausalChain(run, outcome) {
 function buildRetreatCelebration(run, data) {
   const lines = [];
   const peakNode = data.nodes[run.peak];
+  const peakName = getNodeName(peakNode);
 
   // What signals did the player read correctly?
   const highPressureTurns = run.log.filter(l => l.delta > 12);
   if (highPressureTurns.length > 0) {
     const lastHigh = highPressureTurns[highPressureTurns.length - 1];
-    lines.push(`Detectaste presión elevada en ${lastHigh.node}: ${lastHigh.causes.join(', ')}.`);
+    lines.push(t('retreat_pressure', getNodeName(DATA.nodes.find(n => n.name === lastHigh.node) || { id: '', name: lastHigh.node }), lastHigh.causes.join(', ')));
   }
 
   // What risk was avoided?
   if (run.body.cap < 50) {
-    lines.push(`Con capacidad al ${Math.round(run.body.cap)}%, continuar habría significado riesgo de colapso.`);
+    lines.push(t('retreat_cap', Math.round(run.body.cap)));
   }
   if (run.res.water < 5) {
-    lines.push('Los recursos se agotaban. Seguir habría forzado un rescate.');
+    lines.push(t('retreat_resources'));
   }
 
-  lines.push(`Punto alto: ${peakNode.name} (${peakNode.alt}m). La montaña sigue ahí para otra expedición.`);
+  lines.push(t('retreat_peak', peakName, peakNode.alt));
 
   return lines;
 }
@@ -1400,27 +1799,27 @@ function buildLearningComparison(run, outcome) {
 
   // Compare
   const prevRuns = history.slice(0, -1);
-  if (prevRuns.length === 0) return { lines: ['Primera expedición registrada. Cada intento es aprendizaje.'], isFirst: true };
+  if (prevRuns.length === 0) return { lines: [t('learning_first')], isFirst: true };
 
   const lines = [];
   const maxPrevAlt = Math.max(...prevRuns.map(r => r.peakAlt));
   if (current.peakAlt > maxPrevAlt) {
-    lines.push(`Nuevo récord de altitud: ${current.peakAlt}m (anterior: ${maxPrevAlt}m).`);
+    lines.push(t('learning_altitude', current.peakAlt, maxPrevAlt));
   }
 
   const sameSc = prevRuns.filter(r => r.scenario === current.scenario);
   if (sameSc.length > 0) {
     const avgTurns = Math.round(sameSc.reduce((s, r) => s + r.turns, 0) / sameSc.length);
-    lines.push(`Promedio en este escenario: ${avgTurns} turnos. Esta vez: ${current.turns}.`);
+    lines.push(t('learning_avg', avgTurns, current.turns));
   }
 
   const summits = prevRuns.filter(r => r.outcome === 'summit_safe_return').length;
   const retreats = prevRuns.filter(r => r.outcome === 'strategic_retreat').length;
   if (prevRuns.length >= 3) {
-    lines.push(`Historial: ${summits} cumbres, ${retreats} retiradas, ${prevRuns.length - summits - retreats} otros.`);
+    lines.push(t('learning_history', summits, retreats, prevRuns.length - summits - retreats));
   }
 
-  if (lines.length === 0) lines.push('Cada expedición refina tu lectura de la montaña.');
+  if (lines.length === 0) lines.push(t('learning_general'));
 
   return { lines, isFirst: false };
 }
@@ -1455,8 +1854,8 @@ function buildSelection() {
     div.dataset.id = c.id;
     div.innerHTML = `
       <div class="name">${c.flag || ''} ${c.name}</div>
-      <div class="meta">${c.role} · ${c.difficultyLabel || 'Standard'}</div>
-      <div class="brief">${c.traits ? c.traits[0] : ''}</div>
+      <div class="meta">${tCharRole(c)} · ${tDiffLabel(c.difficultyLabel || 'Standard')}</div>
+      <div class="brief">${tCharTrait(c, 0)}</div>
     `;
     div.addEventListener('click', () => pickChar(c));
     roster.appendChild(div);
@@ -1468,7 +1867,7 @@ function buildSelection() {
     const btn = document.createElement('button');
     btn.className = 'scenario-option';
     btn.dataset.id = s.id;
-    btn.innerHTML = `<div class="scenario-name">${s.num ? `${s.num} — ` : ''}${s.name || s.id}</div><div class="scenario-desc">${s.desc || ''}</div>`;
+    btn.innerHTML = `<div class="scenario-name">${s.num ? `${s.num} — ` : ''}${tScName(s)}</div><div class="scenario-desc">${tScDesc(s)}</div>`;
     btn.addEventListener('click', () => pickScenario(s));
     list.appendChild(btn);
   }
@@ -1513,7 +1912,7 @@ function startRun() {
   const entry = document.createElement('div');
   entry.className = 'turn-entry';
   entry.innerHTML = `
-    <p class="turn-sensory">${fmtTime(RUN.time)} — ${node.name}, ${node.alt}m. El parque se abre. La ruta comienza.</p>
+    <p class="turn-sensory">${fmtTime(RUN.time)} — ${getNodeName(node)}, ${node.alt}m. ${t('run_start_text')}</p>
   `;
   field.appendChild(entry);
 
@@ -1537,7 +1936,7 @@ function startRun() {
 function refreshInstruments() {
   const node = DATA.nodes[RUN.pos];
   document.getElementById('ins-time').textContent = fmtTime(RUN.time);
-  document.getElementById('ins-day').textContent = `Día ${RUN.day}`;
+  document.getElementById('ins-day').textContent = t('ins_day', RUN.day);
   document.getElementById('ins-alt').textContent = `${node.alt}m`;
   document.getElementById('ins-body').textContent = Math.round(RUN.body.cap);
   document.getElementById('ins-water').textContent = Math.ceil(RUN.res.water);
@@ -1578,7 +1977,7 @@ function updatePressureStrip() {
   const container = document.getElementById('pressure-causes');
 
   if (causes.length === 0) {
-    container.innerHTML = '<span style="color:var(--green)">Condiciones favorables</span>';
+    container.innerHTML = `<span style="color:var(--green)">${t('pressure_favorable')}</span>`;
   } else {
     container.innerHTML = causes.map(c =>
       `<span class="pressure-cause${c.danger ? ' danger' : ''}">${c.label}</span>`
@@ -1594,19 +1993,19 @@ function renderActions() {
 
   const available = [];
   if (node.idx < 14) {
-    available.push(['advance', 'Avanzar']);
-    available.push(['advance_slowly', 'Avanzar despacio']);
+    available.push(['advance', t('action_advance')]);
+    available.push(['advance_slowly', t('action_advance_slowly')]);
   }
-  available.push(['wait', 'Esperar']);
-  if (RUN.pos > 0) available.push(['descend', 'Descender']);
-  if (node.camp) available.push(['sleep', 'Dormir']);
+  available.push(['wait', t('action_wait')]);
+  if (RUN.pos > 0) available.push(['descend', t('action_descend')]);
+  if (node.camp) available.push(['sleep', t('action_sleep')]);
   if (RUN.char.id === 'daniela') {
     const photoAct = DATA.actions['shoot_photo'] || {};
     const cap = photoAct.photoSessionCap || 4;
     const photoCount = RUN.photoCount || 0;
     const photoCooldown = RUN.photoCooldown || 0;
     if (photoCount < cap && photoCooldown <= 0 && RUN.res.water > 0 && RUN.res.food > 0) {
-      available.push(['shoot_photo', 'Fotografiar']);
+      available.push(['shoot_photo', t('action_photo')]);
     }
   }
 
@@ -1648,7 +2047,7 @@ function doAction(actionId) {
     <p class="turn-sensory">${result.narrative.sensory}</p>
     <p class="turn-changes">${result.narrative.changes}</p>
     <p class="turn-interpretation">${result.narrative.interpretation}</p>
-    <p class="turn-meta">Turno ${RUN.turn} · ${DATA.nodes[RUN.pos].name} · ${DATA.nodes[RUN.pos].alt}m</p>
+    <p class="turn-meta">${t('turn_meta', RUN.turn, getNodeName(DATA.nodes[RUN.pos]), DATA.nodes[RUN.pos].alt)}</p>
   `;
 
   // Prepend (newest first)
@@ -1677,7 +2076,7 @@ function doAction(actionId) {
 // P0-03: Visible clock advance
 function buildClockTransition(prev, run, elapsed) {
   if (run.day > prev.day) {
-    return `${fmtTime(prev.time)} → amanecer día ${run.day} · ${fmtTime(run.time)}`;
+    return t('clock_dawn', run.day, fmtTime(run.time));
   }
   const hrs = Math.floor(elapsed / 60);
   const mins = elapsed % 60;
@@ -1695,22 +2094,22 @@ function endRun(outcome) {
   // Stats
   const peakNode = DATA.nodes[RUN.peak];
   document.getElementById('debrief-stats').innerHTML = `
-    <div class="stat-item"><span class="stat-value">${RUN.turn}</span>turnos</div>
-    <div class="stat-item"><span class="stat-value">${RUN.day}</span>días</div>
-    <div class="stat-item"><span class="stat-value">${peakNode.alt}m</span>punto alto</div>
-    <div class="stat-item"><span class="stat-value">${Math.round(RUN.body.cap)}</span>capacidad final</div>
+    <div class="stat-item"><span class="stat-value">${RUN.turn}</span>${t('stat_turns')}</div>
+    <div class="stat-item"><span class="stat-value">${RUN.day}</span>${t('stat_days')}</div>
+    <div class="stat-item"><span class="stat-value">${peakNode.alt}m</span>${t('stat_peak')}</div>
+    <div class="stat-item"><span class="stat-value">${Math.round(RUN.body.cap)}</span>${t('stat_cap')}</div>
   `;
 
   // P1-04 / P1-05: Causal section
   const causalSection = document.getElementById('debrief-causal-section');
-  let causalHTML = '<h3>Cadena causal</h3><ul class="debrief-causal">';
+  let causalHTML = `<h3>${t('debrief_causal_title')}</h3><ul class="debrief-causal">`;
   for (const line of debrief.causalChain) {
     causalHTML += `<li>${line}</li>`;
   }
   causalHTML += '</ul>';
 
   if (debrief.retreatCelebration) {
-    causalHTML += '<h3 style="margin-top:1.5rem">Lo que leíste bien</h3><ul class="debrief-causal">';
+    causalHTML += `<h3 style="margin-top:1.5rem">${t('debrief_retreat_title')}</h3><ul class="debrief-causal">`;
     for (const line of debrief.retreatCelebration) {
       causalHTML += `<li>${line}</li>`;
     }
@@ -1723,7 +2122,7 @@ function endRun(outcome) {
   if (debrief.learning) {
     learningEl.style.display = 'block';
     learningEl.innerHTML = `
-      <h4>Progreso de lectura</h4>
+      <h4>${t('debrief_learning_title')}</h4>
       ${debrief.learning.lines.map(l => `<p>${l}</p>`).join('')}
     `;
   }
@@ -1752,6 +2151,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   buildSelection();
+  applyTranslations();
+
+  // Lang toggle
+  document.getElementById('lang-toggle').addEventListener('click', () => setLang(LANG === 'es' ? 'en' : 'es'));
 
   document.getElementById('btn-enter').addEventListener('click', () => show('expedition-select'));
   document.getElementById('btn-begin').addEventListener('click', startRun);

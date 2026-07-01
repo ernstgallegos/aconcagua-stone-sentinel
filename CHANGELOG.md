@@ -48,7 +48,14 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
-- Fixed `prototype/web-v2/index.html`: strategic retreat now requires `run.peak > 0` so waiting at the starting node does not terminate the run prematurely.
+- Fixed `prototype/web-v2/index.html`: added full EN/ES bilingual support with a fixed-position language toggle button (EN/ES). All user-visible strings — cover, expedition selection, instrument labels, action buttons, narrative, debrief, stats, tutorial, and causal chain — are now routed through a centralized `TRANSLATIONS` object with `t()` helper, eliminating all language mixing in the UI.
+- Fixed `prototype/web-v2/index.html`: character card data (role, difficulty label, traits) and scenario card data (name, description) were rendering in English from `data/characters.json` and `data/scenarios.web-v1.json` inside a Spanish UI shell. Now translated JS-side via `tCharRole()`, `tDiffLabel()`, `tCharTrait()`, `tScName()`, `tScDesc()` helpers without modifying shared data files.
+- Fixed `prototype/web-v2/index.html`: `BODY_SIGNALS` object used wrong character keys `priya` and `tomás` (which do not exist in `data/characters.json`). Replaced with correct keys `blake` and `irina` and full bilingual body signal text in new `BODY_SIGNALS_DATA` structure.
+- Fixed `prototype/web-v2/index.html`: Tutorial system `TUTORIAL_MESSAGES` was monolingual Spanish. Replaced with `TUTORIAL_MESSAGES_DATA` object keyed by language.
+- Fixed `prototype/web-v2/index.html`: `applyCharEvents` had a local `const t = ev.trigger` that would have shadowed the module-level `t()` i18n helper. Renamed to `const trigger`.
+- Fixed `prototype/web-v2/index.html`: language preference persists via `localStorage` using shared key `aconcagua_language_v1` (same as web-v1), so language choice carries across both prototypes.
+
+
 - Fixed `prototype/web-v2/index.html`: added `High Point Return` outcome (canonical `high_point_return`) when the player reaches HIGH_CAMP stage (position ≥ 5) and returns to Horcones without summiting.
 - Fixed `prototype/web-v2/index.html`: `Resource Exhaustion` outcome is now reachable — run ends immediately when water or food reaches zero, before the combined-depletion rescue threshold.
 - Fixed `prototype/web-v2/index.html`: scenario `difficultyModifiers.fatigueMultiplier` and `exposureMultiplier` are now applied to per-turn body costs, making easy/hard scenarios mechanically distinct during play.
