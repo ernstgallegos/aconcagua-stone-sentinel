@@ -11,6 +11,28 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- **`prototype/web-v2/`**: Complete ground-up rebuild incorporating all v1.5 feedback (legibility, causality, temporality, narrative feedback). Single self-contained `index.html` with zero v1 code reuse.
+  - **P0-01**: No real-time pressure. All pressure is diegetic (time of day, permit, weather, fatigue). Player can remain indefinitely on any decision.
+  - **P0-02**: Action preview system — every action shows estimated duration, altitude effect, and energy cost before confirmation (tooltip on hover, inline on mobile).
+  - **P0-03**: Visible clock transitions — each turn displays `HH:MM → HH:MM (duration)` with highlighted day changes.
+  - **P0-04**: Concrete pressure manifestations — pressure strip always shows 2-3 named causes (Altitud, Viento, Hora avanzada, Terreno técnico, Exposición prolongada, Fatiga acumulada, Deshidratación) instead of abstract numbers.
+  - **P0-05**: Three-layer post-action narrative — (1) sensory/literary line, (2) concrete observed changes with deltas, (3) uncertain character interpretation colored by perception bias.
+  - **P0-06**: Wait vs sleep clearly differentiated — distinct icons, explicit duration display ("~1h" vs "hasta las 06:00"), different cost labels, sleep only available at camps.
+  - **P0-07**: Complete Spanish localization — zero mixed-language strings in any session (UI, tooltips, narratives, outcomes, tutorial, debrief, stats).
+  - **P0-08**: Tutorial system with Alejandro Molina's voice — 5 progressive messages during first run explaining time cost, pressure causes, wait/sleep difference, partial information, and descent as valid choice.
+  - **P0-09**: First-time entry recommendation — visible hint suggesting Francisco + Escenario 01 for new players, auto-hidden after first completed run.
+  - **P0-10**: Route progress bar — horizontal bar with camp markers, animated position dot, pulse highlight on position change.
+  - **P1-01**: Procedural micro-scenes per turn — contextual narrative combining location, altitude, time, weather, body state, and character identity.
+  - **P1-02**: Character-specific body signals — per-character fatigue/exposure/capacity narrative lines (6 characters × 5 thresholds).
+  - **P1-03**: Environmental signals — wind, visibility, time-of-day, and terrain descriptions drawn from current conditions.
+  - **P1-04**: Causal debrief — end-run screen explains chain of causes, not just outcome label.
+  - **P1-05**: Strategic retreat celebration — retreat debrief shows what signals were read correctly, what risk was avoided, and what would have happened.
+  - **P1-06**: Tension curve — narrative intensity and signal severity scale with stage progression (approach → high camp → summit day).
+  - **P1-07**: Between-run learning stats — localStorage history tracks altitude records, turn averages, and outcome distribution across sessions without XP or leveling.
+  - New architecture: reactive state machine in one module, no multi-file pipeline. Engine, UI, and state colocated in a single `<script type="module">` block for prototype speed.
+  - New visual identity: warm paper/ink editorial aesthetic (EB Garamond + JetBrains Mono + Inter).
+  - All outcomes and terminal conditions from design docs.
+  - Full context events and character events integration.
 - Added `docs/NAVIGATION.md` as a quick decision tree for finding documentation by role or topic, organizing all repository documentation with clear navigation paths for contributors, designers, engineers, AI agents, playtesters, and researchers.
 - Added `scripts/README.md` documenting all utility scripts with usage, purpose, exit codes, and examples for validation (`validate-json.js`, `check-lock-version.js`, `check-markdown-links.js`), testing (`run-webv1-tests.js`), simulation (`monte-carlo-web-v1.js`), and deployment (`release-smoke-vercel.js`).
 - Added Spanish translation of accessibility verification checklist: `docs/es/checklist-verificacion-accesibilidad.md` (mirrors English version with full parity).
@@ -25,6 +47,25 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 - Updated `README.es.md` governance section to reference the new Spanish accessibility checklist with bidirectional EN/ES links.
 
 ### Fixed
+
+- Fixed `prototype/web-v2/index.html`: added full EN/ES bilingual support with a fixed-position language toggle button (EN/ES). All user-visible strings — cover, expedition selection, instrument labels, action buttons, narrative, debrief, stats, tutorial, and causal chain — are now routed through a centralized `TRANSLATIONS` object with `t()` helper, eliminating all language mixing in the UI.
+- Fixed `prototype/web-v2/index.html`: character card data (role, difficulty label, traits) and scenario card data (name, description) were rendering in English from `data/characters.json` and `data/scenarios.web-v1.json` inside a Spanish UI shell. Now translated JS-side via `tCharRole()`, `tDiffLabel()`, `tCharTrait()`, `tScName()`, `tScDesc()` helpers without modifying shared data files.
+- Fixed `prototype/web-v2/index.html`: `BODY_SIGNALS` object used wrong character keys `priya` and `tomás` (which do not exist in `data/characters.json`). Replaced with correct keys `blake` and `irina` and full bilingual body signal text in new `BODY_SIGNALS_DATA` structure.
+- Fixed `prototype/web-v2/index.html`: Tutorial system `TUTORIAL_MESSAGES` was monolingual Spanish. Replaced with `TUTORIAL_MESSAGES_DATA` object keyed by language.
+- Fixed `prototype/web-v2/index.html`: `applyCharEvents` had a local `const t = ev.trigger` that would have shadowed the module-level `t()` i18n helper. Renamed to `const trigger`.
+- Fixed `prototype/web-v2/index.html`: language preference persists via `localStorage` using shared key `aconcagua_language_v1` (same as web-v1), so language choice carries across both prototypes.
+
+
+- Fixed `prototype/web-v2/index.html`: added `High Point Return` outcome (canonical `high_point_return`) when the player reaches HIGH_CAMP stage (position ≥ 5) and returns to Horcones without summiting.
+- Fixed `prototype/web-v2/index.html`: `Resource Exhaustion` outcome is now reachable — run ends immediately when water or food reaches zero, before the combined-depletion rescue threshold.
+- Fixed `prototype/web-v2/index.html`: scenario `difficultyModifiers.fatigueMultiplier` and `exposureMultiplier` are now applied to per-turn body costs, making easy/hard scenarios mechanically distinct during play.
+- Fixed `prototype/web-v2/index.html`: `applyCharEvents` now enforces all configured trigger conditions (`minPersistenceTurns`, `minWeatherSeverity`, `maxFunctionalCapacity`, `maxWater`), preventing character events from firing under unintended circumstances.
+- Fixed `prototype/web-v2/index.html`: `applyContextEvents` now checks `ev.trigger.stages` so stage-gated events (e.g. `summit-window-tightening` limited to `SUMMIT_DAY`) no longer fire on approach/high-camp turns; also applies `ev.effects.timePenalty` to run time.
+- Fixed `prototype/web-v2/index.html`: bivouac penalty now evaluates the post-action node (`nodes[run.pos]`), not the pre-action departure node, so late arrivals at camp avoid the penalty and late departures from camp are correctly penalized.
+- Fixed `prototype/web-v2/index.html`: Daniela's `Fotografiar` action is now gated by `photoSessionCap` and `photoCooldownTurns` from `data/action_modifiers.json`, plus non-zero food and water; photographic action can no longer be spammed.
+- Fixed `prototype/web-v2/index.html`: XSS vulnerability in startup error display — `e.message` is now set via `textContent` instead of being injected into `innerHTML`.
+
+### Added
 
 - Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
 - Fixed `md-viewer.html` inline link renderer to rewrite internal allowlisted `.md` hrefs through `md-viewer.html?file=…`; previously clicking any relative `.md` link from within a viewed document opened the raw markdown file instead of the styled viewer.
