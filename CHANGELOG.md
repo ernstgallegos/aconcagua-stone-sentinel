@@ -48,6 +48,18 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- Fixed `prototype/web-v2/index.html`: strategic retreat now requires `run.peak > 0` so waiting at the starting node does not terminate the run prematurely.
+- Fixed `prototype/web-v2/index.html`: added `High Point Return` outcome (canonical `high_point_return`) when the player reaches HIGH_CAMP stage (position ≥ 5) and returns to Horcones without summiting.
+- Fixed `prototype/web-v2/index.html`: `Resource Exhaustion` outcome is now reachable — run ends immediately when water or food reaches zero, before the combined-depletion rescue threshold.
+- Fixed `prototype/web-v2/index.html`: scenario `difficultyModifiers.fatigueMultiplier` and `exposureMultiplier` are now applied to per-turn body costs, making easy/hard scenarios mechanically distinct during play.
+- Fixed `prototype/web-v2/index.html`: `applyCharEvents` now enforces all configured trigger conditions (`minPersistenceTurns`, `minWeatherSeverity`, `maxFunctionalCapacity`, `maxWater`), preventing character events from firing under unintended circumstances.
+- Fixed `prototype/web-v2/index.html`: `applyContextEvents` now checks `ev.trigger.stages` so stage-gated events (e.g. `summit-window-tightening` limited to `SUMMIT_DAY`) no longer fire on approach/high-camp turns; also applies `ev.effects.timePenalty` to run time.
+- Fixed `prototype/web-v2/index.html`: bivouac penalty now evaluates the post-action node (`nodes[run.pos]`), not the pre-action departure node, so late arrivals at camp avoid the penalty and late departures from camp are correctly penalized.
+- Fixed `prototype/web-v2/index.html`: Daniela's `Fotografiar` action is now gated by `photoSessionCap` and `photoCooldownTurns` from `data/action_modifiers.json`, plus non-zero food and water; photographic action can no longer be spammed.
+- Fixed `prototype/web-v2/index.html`: XSS vulnerability in startup error display — `e.message` is now set via `textContent` instead of being injected into `innerHTML`.
+
+### Added
+
 - Added `meta/launch-readiness-handoff.md` and `meta/stage-7-decision-support.md` to the `DOCUMENTS` allowlist in `md-viewer.html` so links from `press-kit.md` open correctly in the styled document viewer instead of showing "Unsupported document".
 - Fixed `md-viewer.html` inline link renderer to rewrite internal allowlisted `.md` hrefs through `md-viewer.html?file=…`; previously clicking any relative `.md` link from within a viewed document opened the raw markdown file instead of the styled viewer.
 

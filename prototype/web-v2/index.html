@@ -1009,6 +1009,8 @@ function createRun(character, scenario, data) {
     firedCtx: [],
     firedChar: {},
     charCD: {},
+    photoCount: 0,
+    photoCooldown: 0,
     log: [],
     signals: [], // Track detected signals for debrief
   };
@@ -1117,8 +1119,9 @@ function resolveAction(run, actionId, data) {
     if (run.time >= 1440) { run.time -= 1440; run.day++; }
     run.body.persist++;
 
-    const fm = (act.fatigueMultiplier || 1) * (stage.fatigueMultiplier || 1);
-    const em = (act.exposureMultiplier || 1) * (stage.exposureMultiplier || 1);
+    const scDiff = run.scenario.difficultyModifiers || {};
+    const fm = (act.fatigueMultiplier || 1) * (stage.fatigueMultiplier || 1) * (scDiff.fatigueMultiplier || 1);
+    const em = (act.exposureMultiplier || 1) * (stage.exposureMultiplier || 1) * (scDiff.exposureMultiplier || 1);
 
     if (action === 'descend') {
       run.body.fat = Math.max(0, run.body.fat - (act.fatigueRecovery || 4));
@@ -1143,8 +1146,9 @@ function resolveAction(run, actionId, data) {
   run.res.water = Math.max(0, run.res.water - wCost);
   run.res.food = Math.max(0, run.res.food - fCost);
 
-  // Bivouac penalty
-  if (run.time >= 1320 && !node.camp && action !== 'sleep') {
+  // Bivouac penalty — evaluate against post-action location
+  const postNode = nodes[run.pos];
+  if (run.time >= 1320 && !postNode.camp && action !== 'sleep') {
     run.body.fat += ep.bivouac.fatigue;
     run.body.exp += ep.bivouac.exposure;
     run.body.persist += ep.bivouac.persistenceTurns || 10;
@@ -1162,6 +1166,14 @@ function resolveAction(run, actionId, data) {
     - (run.body.fat / fatRes) * 0.6
     - (run.body.exp / expRes) * 0.4
   ));
+
+  // Photo tracking for Daniela
+  if (action === 'shoot_photo') {
+    run.photoCount = (run.photoCount || 0) + 1;
+    run.photoCooldown = (data.actions['shoot_photo']?.photoCooldownTurns) ?? 2;
+  } else if (run.photoCooldown > 0) {
+    run.photoCooldown--;
+  }
 
   // Permit
   run.permit.day = run.day;
@@ -1196,10 +1208,13 @@ function resolveAction(run, actionId, data) {
 
 function applyContextEvents(run, data) {
   if (!data.ctx) return;
+  const node = data.nodes[run.pos];
   for (const ev of data.ctx) {
     if (ev.trigger && ev.trigger.turns && ev.trigger.turns.includes(run.turn) && !run.firedCtx.includes(ev.id)) {
+      if (ev.trigger.stages && !ev.trigger.stages.includes(node.stage)) continue;
       if (ev.effects.weatherDelta) run.weather.wind = Math.max(0, Math.min(4, run.weather.wind + ev.effects.weatherDelta));
       if (ev.effects.visibilityDelta) run.weather.vis = Math.max(0, Math.min(4, run.weather.vis + ev.effects.visibilityDelta));
+      if (ev.effects.timePenalty) run.time += ev.effects.timePenalty;
       run.firedCtx.push(ev.id);
     }
   }
@@ -1215,8 +1230,20 @@ function applyCharEvents(run, action, node, data) {
     if (t.actions && !t.actions.includes(action)) continue;
     if (t.stages && !t.stages.includes(node.stage)) continue;
     if (t.minTurn && run.turn < t.minTurn) continue;
+    if (t.minPersistenceTurns && run.body.persist < t.minPersistenceTurns) continue;
+    if (t.minWeatherSeverity && run.weather.wind < t.minWeatherSeverity) continue;
+    if (t.maxFunctionalCapacity && run.body.cap > t.maxFunctionalCapacity) continue;
+    if (t.maxWater && run.res.water > t.maxWater) continue;
     if (ev.effects.fatigueDelta) run.body.fat = Math.max(0, run.body.fat + ev.effects.fatigueDelta);
     if (ev.effects.exposureDelta) run.body.exp = Math.max(0, run.body.exp + ev.effects.exposureDelta);
+    // Recompute functional capacity after body-state mutations
+    const fatRes = run.char.engine.fatigueResistance || 1;
+    const expRes = run.char.engine.exposureResistance || 1;
+    run.body.cap = Math.max(0, Math.min(100,
+      100 + (run.char.engine.functionalCapacityBonus || 0)
+      - (run.body.fat / fatRes) * 0.6
+      - (run.body.exp / expRes) * 0.4
+    ));
     run.firedChar[ev.id] = (run.firedChar[ev.id] || 0) + 1;
     run.charCD[ev.id] = ev.limits?.cooldownTurns || 3;
     break;
@@ -1226,10 +1253,11 @@ function applyCharEvents(run, action, node, data) {
 
 function checkTerminal(run, nodes, data) {
   if (run.body.cap <= 0) return 'collapse';
+  if (run.res.water <= 0 || run.res.food <= 0) return 'resource_exhaustion';
   if (run.res.water <= 0 && run.res.food <= 0 && run.body.cap < 30) return 'rescue';
   if (run.day > run.permit.max) return 'permit_expired';
   if (run.pos === 0 && run.turn > 0 && run.summited) return 'summit_safe_return';
-  if (run.pos === 0 && run.turn > 0) return 'strategic_retreat';
+  if (run.pos === 0 && run.peak > 0) return run.peak >= 5 ? 'high_point_return' : 'strategic_retreat';
   if (run.turn >= (run.scenario.max_turns || run.scenario.maxTurns || 50)) return 'window_closed';
   return null;
 }
@@ -1253,16 +1281,20 @@ function buildDebrief(run, outcome, data) {
   const titles = {
     summit_safe_return: 'Cumbre y retorno seguro',
     strategic_retreat: 'Retirada estratégica',
+    high_point_return: 'Retorno desde punto alto',
     collapse: 'Colapso',
     rescue: 'Rescate',
+    resource_exhaustion: 'Agotamiento de recursos',
     permit_expired: 'Permiso vencido',
     window_closed: 'Ventana cerrada',
   };
   const descs = {
     summit_safe_return: 'Llegaste a la cumbre y volviste. La montaña te dejó pasar — y te dejó regresar. Eso es leerla bien.',
     strategic_retreat: 'Reconociste el límite. Bajaste con vida y con criterio. Esa decisión es una forma de comprensión.',
+    high_point_return: 'Llegaste alto. No a la cumbre, pero más lejos de lo que muchos llegan. Volviste por tu propia voluntad.',
     collapse: 'El cuerpo alcanzó su límite antes de que pudieras reaccionar. La montaña no negocia.',
     rescue: 'Sin recursos, sin margen. Alguien tuvo que venir a buscarte.',
+    resource_exhaustion: 'El agua o la comida se agotaron. Sin reservas, la expedición no puede continuar.',
     permit_expired: 'El tiempo se acabó. El parque cierra sus puertas.',
     window_closed: 'La expedición se alargó más de lo posible.',
   };
@@ -1272,7 +1304,7 @@ function buildDebrief(run, outcome, data) {
 
   // P1-05: Strategic retreat celebration
   let retreatCelebration = null;
-  if (outcome === 'strategic_retreat') {
+  if (outcome === 'strategic_retreat' || outcome === 'high_point_return') {
     retreatCelebration = buildRetreatCelebration(run, data);
   }
 
@@ -1568,7 +1600,15 @@ function renderActions() {
   available.push(['wait', 'Esperar']);
   if (RUN.pos > 0) available.push(['descend', 'Descender']);
   if (node.camp) available.push(['sleep', 'Dormir']);
-  if (RUN.char.id === 'daniela') available.push(['shoot_photo', 'Fotografiar']);
+  if (RUN.char.id === 'daniela') {
+    const photoAct = DATA.actions['shoot_photo'] || {};
+    const cap = photoAct.photoSessionCap || 4;
+    const photoCount = RUN.photoCount || 0;
+    const photoCooldown = RUN.photoCooldown || 0;
+    if (photoCount < cap && photoCooldown <= 0 && RUN.res.water > 0 && RUN.res.food > 0) {
+      available.push(['shoot_photo', 'Fotografiar']);
+    }
+  }
 
   for (const [id, label] of available) {
     const preview = getActionPreview(id, RUN, DATA);
@@ -1701,7 +1741,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     DATA = await loadData();
   } catch (e) {
-    document.body.innerHTML = `<div style="padding:3rem;font-family:monospace;color:#8b3a3a"><p>Error cargando datos: ${e.message}</p></div>`;
+    const errEl = document.createElement('div');
+    errEl.style.cssText = 'padding:3rem;font-family:monospace;color:#8b3a3a';
+    const p = document.createElement('p');
+    p.textContent = `Error cargando datos: ${e.message}`;
+    errEl.appendChild(p);
+    document.body.innerHTML = '';
+    document.body.appendChild(errEl);
     return;
   }
 
