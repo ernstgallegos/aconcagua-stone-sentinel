@@ -11,6 +11,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- **Bilingual glossary**: Added `docs/en/glossary.md` and `docs/es/glosario.md` — comprehensive glossaries defining key project-specific terms (EP/BT model, variable confidence, cosmetic feedback, engine, Canvas2D visualization, flow smoke tests, contract/parity tests, and 15+ additional entries) with cross-references to canonical source modules. Both files added to `md-viewer.html` DOCUMENTS allowlist.
+
 - **`prototype/web-v2/`**: Complete ground-up rebuild incorporating all v1.5 feedback (legibility, causality, temporality, narrative feedback). Single self-contained `index.html` with zero v1 code reuse.
   - **P0-01**: No real-time pressure. All pressure is diegetic (time of day, permit, weather, fatigue). Player can remain indefinitely on any decision.
   - **P0-02**: Action preview system — every action shows estimated duration, altitude effect, and energy cost before confirmation (tooltip on hover, inline on mobile).
