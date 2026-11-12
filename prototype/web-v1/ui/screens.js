@@ -2025,6 +2025,9 @@ function scaleSignedDelta(delta, multiplier = 1) {
   return delta * multiplier;
 }
 
+// KNOWN DEBT: `sleep` has no timeCost in data/action_modifiers.json, so the `timeCost: 60` default below
+// shadows the 480-minute fallback in applyTimeCost() and a night burns only one hour of water/food.
+// See docs/technical-debt-register.md → "Detail: sleep time cost" before changing it (balance impact).
 function getActionModifier(action) {
   const baseByAction = {
     advance: { fatigueDelta: 6, exposureDelta: 5, capacityDelta: -3 },

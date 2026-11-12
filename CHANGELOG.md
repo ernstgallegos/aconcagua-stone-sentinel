@@ -11,6 +11,15 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- **`prototype/web-3d/` (unlisted work in progress)**: Third-person 3D vertical slice of the Normal Route built on three.js r187 (vendored, no build step). Reuses the canonical web-v1 engine, state module, narrative bank and `data/*.json` through a headless adapter (`src/sim.js`); no mountain rules are duplicated.
+  - Actions are walked: crossing a marked threshold near the top of each stretch resolves one engine turn (`advance` / `advance_slowly` by pace, `descend` going down); rest maps to `wait`, the camp tent to `sleep`, the Horcones gate to park exit.
+  - Procedural terrain for all 15 route nodes, camps, signposts, NPC dialogue (EN/ES), time-of-day sky, visibility-driven fog, wind-blown snow, procedural audio, diegetic watch HUD, route profile, field log, debrief, keyboard/mouse and touch controls.
+  - Served only through the unlisted `/3D-prototype` redirect in `vercel.json`, with `noindex` meta and `X-Robots-Tag` header; not linked from the landing page, the READMEs or the public routing guide.
+  - Access word gate on the title screen (`src/gate.js`): only a salted SHA-256 hash is stored; unlock is remembered locally and can be passed as `?key=`. This is a courtesy lock for an unlisted static page, not access control.
+  - Part 2 narrative plates after `Summit and Safe Return` (or a previous summit in web-v1, via the shared `aconcagua_summit_achieved_v1` key): the canonical Part 2 bridge copy is generated into `src/part2-data.js` by `tools/sync-part2.mjs` and parity-tested against `web-v1/ui/screens.js`.
+  - Painterly art pass toward the cover and curated concept art: ochre/terracotta/violet strata palette, tiling watercolour wash on the terrain, paper-grain overlay, lavender bounce light, clumped grasses with yellow flowers, a distant snow massif that dominates the approach, and concept-art cards for night, debrief and plates.
+  - Added `npm run test:web3d` (route/threshold geometry, terrain mapping, adapter determinism and outcome wiring, EN/ES parity, privacy guards) and chained it into `npm test`.
+
 - **Bilingual glossary**: Added `docs/en/glossary.md` and `docs/es/glosario.md` — comprehensive glossaries defining key project-specific terms (EP/BT model, variable confidence, cosmetic feedback, engine, Canvas2D visualization, flow smoke tests, contract/parity tests, and 15+ additional entries) with cross-references to canonical source modules. Both files added to `md-viewer.html` DOCUMENTS allowlist.
 
 - **`prototype/web-v2/`**: Complete ground-up rebuild incorporating all v1.5 feedback (legibility, causality, temporality, narrative feedback). Single self-contained `index.html` with zero v1 code reuse.
@@ -42,6 +51,8 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- **Technical debt register**: Documented the open `sleep` time-cost defect (a night burns one hour of resources because the `timeCost: 60` default shadows the 480-minute fallback; the Monte Carlo harness burns 480 and the shipped UI burns 60) with root cause, size, files, fix options and a re-validation checklist in `docs/technical-debt-register.md`, and added pointer comments in `ui/screens.js` and `prototype/web-3d/src/sim.js`. No behaviour change.
+- **Engine (`prototype/web-v1/engine/turn-resolution.js`)**: Weather now keeps moving while the climber sleeps. A `sleep` turn applies `OVERNIGHT_WEATHER_STEPS` (3) unbiased ±1 steps to `weather_severity` and re-derives `visibility`; previously weather was frozen during sleep, so a storm could outlast any number of nights. Affects web-v1, the 3D prototype and the Monte Carlo harness; the RNG stream after a sleep turn differs from earlier builds for the same seed.
 - Expanded "Repository structure" section in `README.md` and `README.es.md` with detailed internal structure breakdown of `prototype/web-v1/` (showing `engine/`, `ui/`, `state/`, `tests/` subdirectories) and enhanced descriptions for all major directories (`data/`, `docs/`, `art/`, `scripts/`, `src/`, `api/`).
 - Reorganized "Key documentation" section in `README.md` into three subsections (Core documents, Design & implementation, Technical reference) with prominent link to new `NAVIGATION.md` guide at the top.
 - Added "Documentación clave" section to `README.es.md` mirroring the English structure with Spanish translations and links to canonical bilingual documentation.
@@ -50,6 +61,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- **CI**: Added `typescript` as a dev dependency so `npm run typecheck` no longer fails with `tsc: not found` (which also skipped every later JS gate), and pinned the Playwright smoke job to `ubuntu-24.04` because Playwright 1.53 has no browser builds for the `ubuntu-latest` (26.04) runner.
 - Fixed `prototype/web-v2/index.html`: added full EN/ES bilingual support with a fixed-position language toggle button (EN/ES). All user-visible strings — cover, expedition selection, instrument labels, action buttons, narrative, debrief, stats, tutorial, and causal chain — are now routed through a centralized `TRANSLATIONS` object with `t()` helper, eliminating all language mixing in the UI.
 - Fixed `prototype/web-v2/index.html`: character card data (role, difficulty label, traits) and scenario card data (name, description) were rendering in English from `data/characters.json` and `data/scenarios.web-v1.json` inside a Spanish UI shell. Now translated JS-side via `tCharRole()`, `tDiffLabel()`, `tCharTrait()`, `tScName()`, `tScDesc()` helpers without modifying shared data files.
 - Fixed `prototype/web-v2/index.html`: `BODY_SIGNALS` object used wrong character keys `priya` and `tomás` (which do not exist in `data/characters.json`). Replaced with correct keys `blake` and `irina` and full bilingual body signal text in new `BODY_SIGNALS_DATA` structure.

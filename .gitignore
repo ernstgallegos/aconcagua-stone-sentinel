@@ -9,3 +9,6 @@ prototype/mra-v0/runs/generated/
 # Local environment files
 .env
 .env.local
+
+# Node dependencies (installed locally / in CI)
+node_modules/

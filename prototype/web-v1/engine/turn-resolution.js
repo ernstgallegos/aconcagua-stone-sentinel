@@ -33,6 +33,9 @@ export const RESOLVE_TURN_PIPELINE = Object.freeze([
   'emit-signals-and-narrative',
 ]);
 
+/** Unbiased weather random-walk steps applied during one night of sleep. */
+export const OVERNIGHT_WEATHER_STEPS = 3;
+
 export function createTurnEngine(deps) {
   // Validate required dependencies at initialization to fail fast instead of
   // surfacing cryptic errors deep in turn resolution.
@@ -233,6 +236,14 @@ export function createTurnEngine(deps) {
     markStage(trace, 'apply-weather-and-persistence');
     if (resolvedAction !== 'sleep') {
       state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
+      state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
+    } else {
+      // A night is long: the weather keeps moving while the climber sleeps, so a
+      // storm can pass (or arrive) overnight instead of freezing until the next
+      // waking turn. Same unbiased walk as a waking turn, taken several times.
+      for (let step = 0; step < OVERNIGHT_WEATHER_STEPS; step++) {
+        state.weather_severity = clamp(state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 4);
+      }
       state.visibility = clamp(3 - state.weather_severity + rngChoice(G.rng, [-1, 0, 1]), 0, 3);
     }
 
