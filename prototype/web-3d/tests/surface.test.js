@@ -50,7 +50,7 @@ test('private build: page is unindexed, routed only by its unlisted link, and no
   assert.ok(header?.headers.some((h) => h.key === 'X-Robots-Tag' && /noindex/.test(h.value)), 'missing X-Robots-Tag header');
 
   // Public entry points must not link to the private prototype.
-  for (const file of ['index.html', 'md-viewer.html', 'README.md', 'README.es.md', 'prototype/web-v1/index.html']) {
+  for (const file of ['index.html', 'md-viewer.html', 'README.md', 'README.es.md', 'prototype/web-v1/index.html', 'docs/deploy-routing.md']) {
     const text = readText(file);
     assert.doesNotMatch(text, /web-3d|3D-prototype/i, `${file} must not reference the private 3D prototype`);
   }

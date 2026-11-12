@@ -11,10 +11,6 @@ This document is the single source of truth for public entry routes, local previ
 - `/prototype/web-v1` → normalized to `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → archived legacy viewer, normalized to `/prototype/mra-v0/viewer/index.html`.
 
-### Unlisted routes
-
-- `/3D-prototype` → temporary redirect to `/prototype/web-3d/index.html` (private 3D work in progress). Served with `X-Robots-Tag: noindex` and intentionally not linked from any public page. See `prototype/web-3d/README.md`.
-
 ### Local static preview
 
 From repository root:
@@ -66,10 +62,6 @@ ALLOWED_ORIGINS=https://example.com,https://www.example.com
 - `/` → landing pública canónica, con CTA principal a `/prototype/web-v1/index.html`.
 - `/prototype/web-v1` → normalizada a `/prototype/web-v1/index.html`.
 - `/prototype/mra-v0/viewer` → visor histórico archivado, normalizado a `/prototype/mra-v0/viewer/index.html`.
-
-### Rutas no listadas
-
-- `/3D-prototype` → redirección temporal a `/prototype/web-3d/index.html` (prototipo 3D privado en desarrollo). Se sirve con `X-Robots-Tag: noindex` y deliberadamente no está enlazada desde ninguna página pública. Ver `prototype/web-3d/README.md`.
 
 ### Preview estático local
 
