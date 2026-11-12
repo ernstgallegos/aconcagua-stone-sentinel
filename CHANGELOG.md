@@ -60,6 +60,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Fixed
 
+- **CI**: Added `typescript` as a dev dependency so `npm run typecheck` no longer fails with `tsc: not found` (which also skipped every later JS gate), and pinned the Playwright smoke job to `ubuntu-24.04` because Playwright 1.53 has no browser builds for the `ubuntu-latest` (26.04) runner.
 - Fixed `prototype/web-v2/index.html`: added full EN/ES bilingual support with a fixed-position language toggle button (EN/ES). All user-visible strings — cover, expedition selection, instrument labels, action buttons, narrative, debrief, stats, tutorial, and causal chain — are now routed through a centralized `TRANSLATIONS` object with `t()` helper, eliminating all language mixing in the UI.
 - Fixed `prototype/web-v2/index.html`: character card data (role, difficulty label, traits) and scenario card data (name, description) were rendering in English from `data/characters.json` and `data/scenarios.web-v1.json` inside a Spanish UI shell. Now translated JS-side via `tCharRole()`, `tDiffLabel()`, `tCharTrait()`, `tScName()`, `tScDesc()` helpers without modifying shared data files.
 - Fixed `prototype/web-v2/index.html`: `BODY_SIGNALS` object used wrong character keys `priya` and `tomás` (which do not exist in `data/characters.json`). Replaced with correct keys `blake` and `irina` and full bilingual body signal text in new `BODY_SIGNALS_DATA` structure.
