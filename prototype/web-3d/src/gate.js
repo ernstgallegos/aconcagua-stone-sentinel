@@ -63,12 +63,18 @@ export function checkWord(word) {
   return sha256(SALT + normalizeWord(word)) === ACCESS_HASH;
 }
 
+// Kept in memory too, so a correct word still opens the session when storage is
+// unavailable or full (private mode, blocked site data).
+let unlockedThisSession = false;
+
 export function isUnlocked() {
+  if (unlockedThisSession) return true;
   try { return localStorage.getItem(ACCESS_KEY) === ACCESS_HASH; } catch (_) { return false; }
 }
 
 export function tryUnlock(word) {
   if (!checkWord(word)) return false;
+  unlockedThisSession = true;
   try { localStorage.setItem(ACCESS_KEY, ACCESS_HASH); } catch (_) { /* session-only unlock */ }
   return true;
 }

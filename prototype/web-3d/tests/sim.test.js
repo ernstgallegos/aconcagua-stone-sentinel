@@ -96,17 +96,24 @@ test('every run ends in a canonical outcome and continuing turns use the engine 
 });
 
 test('reaching the summit is remembered and the walk out decides the outcome', () => {
-  // Drive the state directly to the last stretch: this test is about outcome wiring, not balance.
-  const x = make({ seed: 20 });
-  x.state.position = 'canaleta';
-  x.G.highestPosIdx = x.POSITIONS.indexOf('canaleta');
-  x.G.acclimatization = 100;
-  let guard = 0;
-  while (!x.G.hasSummited && !x.ended && guard++ < 40) x.act('advance');
-  if (x.ended) return; // the mountain said no on this seed; nothing more to assert
+  // Drive the state to the last stretch: this test is about outcome wiring, not balance.
+  // The mountain may refuse on a given seed, so take the first seed that lets the climber through.
+  let x = null;
+  for (let seed = 1; seed <= 60 && !x; seed++) {
+    const candidate = make({ seed });
+    candidate.state.position = 'canaleta';
+    candidate.G.highestPosIdx = candidate.POSITIONS.indexOf('canaleta');
+    candidate.G.acclimatization = 100;
+    for (let guard = 0; guard < 6 && !candidate.G.hasSummited && !candidate.ended; guard++) candidate.act('advance');
+    if (candidate.G.hasSummited && !candidate.ended) x = candidate;
+  }
+  assert.ok(x, 'at least one seed must reach the summit with the run still active');
+  assert.equal(x.ended, false, 'arriving at the summit must not end the run');
   assert.equal(x.state.position, 'summit');
   const stay = x.act('advance');
   assert.ok(stay.flags.includes('summit-descent-only'));
+  assert.equal(x.state.position, 'summit');
+  assert.equal(x.ended, false, 'pushing on from the summit must not end the run');
   x.state.position = 'horcones';
   const out = x.act('descend');
   assert.equal(out.ended, true);

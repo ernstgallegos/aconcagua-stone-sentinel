@@ -331,12 +331,12 @@ export const DIALOGUE = {
       en: [
         'Confluencia. Sleep here, even if the legs say they could go on. The legs lie down low.',
         'Above here the wind decides. Watch the spindrift on the ridges before you watch your watch.',
-        'A storm does not pass while you sleep. If the sky is closed, sit and watch it: it only changes while you wait.',
+        'A storm can pass in a night, or arrive in one. Read the sky again when you leave the tent, not the one you fell asleep under.',
       ],
       es: [
         'Confluencia. Dormí acá aunque las piernas digan que pueden seguir. Abajo, las piernas mienten.',
         'De acá para arriba decide el viento. Mirá la nieve que vuela en los filos antes de mirar el reloj.',
-        'La tormenta no pasa mientras dormís. Si el cielo está cerrado, sentate a mirarlo: solo cambia mientras esperás.',
+        'Una tormenta puede pasar en una noche, o llegar en una. Leé el cielo de nuevo al salir de la carpa, no el que dejaste al dormirte.',
       ],
     },
   },

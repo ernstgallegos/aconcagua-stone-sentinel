@@ -98,3 +98,29 @@ test('Part 2 plates are an exact copy of the canonical web-v1 narrative', () => 
     assert.ok(fs.existsSync(path.join(ROOT, 'art', rel.slice(1, -1))), `missing art ${rel}`);
   }
 });
+
+test('access gate still opens for the session when storage is unavailable', async () => {
+  const saved = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
+  Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    value: { getItem() { throw new Error('blocked'); }, setItem() { throw new Error('blocked'); } },
+  });
+  try {
+    const gate = await import(`../src/gate.js?storage-blocked=${Date.now()}`);
+    assert.equal(gate.isUnlocked(), false);
+    assert.equal(gate.tryUnlock('not-the-word'), false);
+    assert.equal(gate.isUnlocked(), false);
+    // The word is not stored in this prototype; the public landing copy happens to contain it.
+    const word = (readText('index.html').toLowerCase().match(/[a-zñáéíóú]{4,24}/g) || []).find((w) => checkWord(w));
+    assert.ok(word, 'fixture word not found');
+    assert.equal(gate.tryUnlock(word), true);
+    assert.equal(gate.isUnlocked(), true);
+  } finally {
+    if (saved) Object.defineProperty(globalThis, 'localStorage', saved); else delete globalThis.localStorage;
+  }
+});
+
+test('reading screens stay zoomable', () => {
+  const html = readText('prototype/web-3d/index.html');
+  assert.doesNotMatch(html, /user-scalable=no|maximum-scale/);
+});
