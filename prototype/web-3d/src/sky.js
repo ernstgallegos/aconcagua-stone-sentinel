@@ -39,6 +39,10 @@ export function createSky({ scene, renderer }) {
     sunGlow: { value: 1 },
     haze: { value: 0 },
     hazeColor: { value: new THREE.Color() },
+    uCoverage: { value: 0.3 },
+    uCloudOffset: { value: new THREE.Vector2() },
+    uCloudLit: { value: new THREE.Color('#ffffff') },
+    uCloudShade: { value: new THREE.Color('#8f93a8') },
   };
   const dome = new THREE.Mesh(
     new THREE.SphereGeometry(9000, 32, 16),
@@ -56,15 +60,45 @@ export function createSky({ scene, renderer }) {
       fragmentShader: `
         uniform vec3 topColor; uniform vec3 horizonColor; uniform vec3 sunDir; uniform vec3 sunColor;
         uniform float sunGlow; uniform float haze; uniform vec3 hazeColor;
+        uniform float uCoverage; uniform vec2 uCloudOffset; uniform vec3 uCloudLit; uniform vec3 uCloudShade;
         varying vec3 vDir;
+        float hash21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+        float vnoise(vec2 p) {
+          vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y);
+        }
+        float cfbm(vec2 p) {
+          float a = 0.5; float s = 0.0;
+          for (int i = 0; i < 5; i++) { s += a * vnoise(p); p = p * 2.03 + vec2(17.3, 9.1); a *= 0.5; }
+          return s;
+        }
         void main() {
-          float h = clamp(vDir.y, -0.2, 1.0);
+          vec3 dir = normalize(vDir);
+          float h = clamp(dir.y, -0.2, 1.0);
           float t = pow(smoothstep(-0.08, 0.75, h), 0.6);
           vec3 col = mix(horizonColor, topColor, t);
-          float sd = max(dot(normalize(vDir), normalize(sunDir)), 0.0);
-          col += sunColor * (pow(sd, 380.0) * 2.2 + pow(sd, 18.0) * 0.22 + pow(sd, 4.0) * 0.08) * sunGlow;
+          vec3 sd = normalize(sunDir);
+          float sdot = max(dot(dir, sd), 0.0);
+          col += sunColor * (pow(sdot, 420.0) * 2.4 + pow(sdot, 22.0) * 0.24 + pow(sdot, 4.0) * 0.08) * sunGlow;
+
+          // Cloud deck: a noise field on a plane overhead, lit from the sun side.
+          if (dir.y > 0.01) {
+            vec2 uv = dir.xz / (dir.y + 0.14) * 1.15 + uCloudOffset;
+            float warp = cfbm(uv * 0.55 + 4.7);
+            float d = cfbm(uv + warp * 0.9);
+            float edge0 = mix(0.66, 0.22, uCoverage);
+            float c = smoothstep(edge0 - 0.07, edge0 + 0.16, d);
+            float toward = cfbm(uv + sd.xz * 0.22 + warp * 0.9);
+            float lit = clamp(0.62 + (d - toward) * 2.6 + sdot * 0.25, 0.0, 1.0);
+            vec3 cloud = mix(uCloudShade, uCloudLit, lit);
+            cloud += sunColor * pow(sdot, 8.0) * 0.25 * sunGlow;   // silver lining near the sun
+            float fadeOut = smoothstep(0.01, 0.2, dir.y);
+            col = mix(col, cloud, c * fadeOut);
+          }
+
           col = mix(col, hazeColor, haze * (1.0 - 0.35 * smoothstep(0.1, 0.9, h)));
           gl_FragColor = vec4(col, 1.0);
+          #include <tonemapping_fragment>
           #include <colorspace_fragment>
         }`,
     }),
@@ -97,13 +131,14 @@ export function createSky({ scene, renderer }) {
   scene.add(hemi);
   const sun = new THREE.DirectionalLight('#ffffff', 2);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.set(4096, 4096);
   sun.shadow.camera.near = 1;
   sun.shadow.camera.far = 420;
-  const SH = 70;
+  const SH = 58;
   Object.assign(sun.shadow.camera, { left: -SH, right: SH, top: SH, bottom: -SH });
-  sun.shadow.bias = -0.0006;
-  sun.shadow.normalBias = 0.6;
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.35;
+  sun.shadow.radius = 2.2;
   scene.add(sun, sun.target);
 
   scene.fog = new THREE.Fog('#cfe0ee', 200, 5000);
@@ -176,6 +211,8 @@ export function createSky({ scene, renderer }) {
   const cHor = new THREE.Color();
   const cSun = new THREE.Color();
   const sunVec = new THREE.Vector3();
+  const cloudLit = new THREE.Color();
+  const cloudShade = new THREE.Color();
   let gust = 0;
   let clock = 0;
 
@@ -201,6 +238,12 @@ export function createSky({ scene, renderer }) {
     /** 0..1: how far the air lets you see (1 = clear to the horizon). */
     get clearness() { return smoothstep(900, 4200, cur.fogFar); },
     get horizonColor() { return cHor; },
+    get zenithColor() { return cTop; },
+    get sunDirection() { return sunVec; },
+    get sunColor() { return sun.color; },
+    get sunStrength() { return sun.intensity; },
+    /** Shadow map texels are expensive on weak GPUs. */
+    setShadowQuality(size) { sun.shadow.mapSize.set(size, size); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } },
     /** Tell the sky what the engine now says. `snap` skips the time-lapse. */
     setConditions({ minutesAbsolute, weather, visibility }, snap = false) {
       target.minutes = minutesAbsolute;
@@ -255,6 +298,14 @@ export function createSky({ scene, renderer }) {
       uniforms.sunGlow.value = (1 - overcast * 0.9) * (night ? 0.25 : 1);
       uniforms.haze.value = 1 - smoothstep(300, 2600, cur.fogFar);
       uniforms.hazeColor.value.copy(cHor);
+      // Clouds: fair-weather scraps on a clear day, a closed lid in a storm; they drift with the wind.
+      uniforms.uCoverage.value = clamp(0.2 + overcast * 0.85, 0, 1);
+      uniforms.uCloudOffset.value.x += windDir.x * dt * (0.004 + cur.wind * 0.02);
+      uniforms.uCloudOffset.value.y += windDir.z * dt * (0.004 + cur.wind * 0.02);
+      cloudLit.set('#ffffff').lerp(cSun, night ? 0 : 0.45).multiplyScalar(night ? 0.16 : clamp(0.55 + sunIntensity * 0.3, 0, 1.25) * (1 - overcast * 0.35));
+      cloudShade.copy(cHor).lerp(cTop, 0.55).multiplyScalar(night ? 0.5 : 0.82 - overcast * 0.22);
+      uniforms.uCloudLit.value.copy(cloudLit);
+      uniforms.uCloudShade.value.copy(cloudShade);
       dome.position.copy(camera.position);
       stars.position.copy(camera.position);
       stars.material.opacity = clamp((night ? 1 : 1 - sunIntensity * 2.5), 0, 1) * (1 - overcast) * (1 - uniforms.haze.value);
@@ -266,7 +317,7 @@ export function createSky({ scene, renderer }) {
       sun.target.position.copy(playerPos);
       hemi.intensity = ambient * (1 - overcast * 0.25) + overcast * 0.12;
       hemi.color.copy(cTop).lerp(new THREE.Color('#ffffff'), 0.45);
-      hemi.groundColor.set('#8b7aa6').lerp(cHor, 0.35); // lavender bounce: shadows read violet, as in the paintings
+      hemi.groundColor.set('#8f8196').lerp(cHor, 0.35); // lavender bounce: shadows read violet, as in the paintings
       renderer.toneMappingExposure = night ? 1.05 : 1.12 - overcast * 0.12;
 
       // Wind: stronger with weather and altitude, with slow gusts.

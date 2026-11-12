@@ -14,6 +14,7 @@ import { buildWorld } from './world.js';
 import { createSky } from './sky.js';
 import { buildCharacter, CHARACTER_LOOKS } from './character.js';
 import { createAudio } from './audio.js';
+import { createPost } from './post.js';
 import { clamp, lerp } from './noise.js';
 import {
   t, label, initLanguage, setLanguage, getLanguage, localizeCharacter, localizeScenario, DIALOGUE,
@@ -87,6 +88,8 @@ const app = {
   run: null,
   paused: false,
   touch: false,
+  quality: 'high',
+  post: null,
   timeScale: 1, // debug/test only: simulation sub-steps per rendered frame
 };
 
@@ -310,13 +313,16 @@ function initThree() {
     fatal(t('error.webgl'));
     throw err;
   }
-  const lowFx = params.get('lowfx') === '1';
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowFx ? 1 : 2));
+  // Quality: high = AO + bloom + grade + 4K shadows; medium drops AO; low renders direct.
+  const asked = params.get('quality') || (params.get('lowfx') === '1' ? 'low' : null);
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  app.quality = ['low', 'medium', 'high'].includes(asked) ? asked : (coarse ? 'medium' : 'high');
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, app.quality === 'high' ? 2 : app.quality === 'medium' ? 1.5 : 1));
   renderer.setSize(window.innerWidth, window.innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.shadowMap.enabled = !lowFx;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.3, 12000);
   app.renderer = renderer; app.scene = scene; app.camera = camera;
@@ -324,7 +330,26 @@ function initThree() {
     renderer.setSize(window.innerWidth, window.innerHeight, false);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    app.post?.setSize(window.innerWidth, window.innerHeight, renderer.getPixelRatio());
   });
+}
+
+function setQuality(level) {
+  app.quality = level;
+  app.post?.dispose();
+  app.post = null;
+  app.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, level === 'high' ? 2 : level === 'medium' ? 1.5 : 1));
+  app.renderer.setSize(window.innerWidth, window.innerHeight, false);
+  app.sky.setShadowQuality(level === 'high' ? 4096 : level === 'medium' ? 2048 : 1024);
+  if (level !== 'low') {
+    try {
+      app.post = createPost({ renderer: app.renderer, scene: app.scene, camera: app.camera, quality: level });
+    } catch (err) {
+      console.warn('post-processing unavailable, rendering direct', err);
+      app.post = null;
+    }
+  }
+  document.body.dataset.quality = level;
 }
 
 async function boot() {
@@ -338,11 +363,18 @@ async function boot() {
     return;
   }
   initThree();
+  let dem = null;
+  try {
+    const { DEM_META } = await import('./dem-meta.js');
+    const res = await fetch(new URL('../assets/aconcagua-dem.bin', import.meta.url));
+    if (res.ok) dem = { meta: DEM_META, data: new Uint16Array(await res.arrayBuffer()) };
+  } catch (_) { /* scenery only: the game runs without the backdrop */ }
   const nodes = normalizeNodes(app.data.nodes);
   app.route = buildRoute(nodes);
   app.terrain = createTerrain(app.route);
-  app.world = buildWorld({ scene: app.scene, route: app.route, terrain: app.terrain });
+  app.world = buildWorld({ scene: app.scene, route: app.route, terrain: app.terrain, renderer: app.renderer, dem });
   app.sky = createSky({ scene: app.scene, renderer: app.renderer });
+  setQuality(app.quality);
   app.world.npcAnchors.forEach((anchor) => {
     const npc = buildCharacter(anchor.id, { withPole: anchor.id === 'guide' || anchor.id === 'climber' });
     npc.root.position.copy(anchor.position);
@@ -816,7 +848,7 @@ function updateHud(force = false) {
   }
 
   const strain = Math.max((st.fatigue - 55) / 40, (st.exposure - 50) / 40, (55 - st.functional_capacity) / 40);
-  $('vignette').style.opacity = String(clamp(strain, 0, 0.95));
+  if (app.post) { app.post.setStrain(clamp(strain, 0, 1)); $('vignette').style.opacity = '0'; } else $('vignette').style.opacity = String(clamp(strain, 0, 0.95));
   drawProfile();
 
   if (DEBUG) {
@@ -1246,6 +1278,7 @@ function frame(now) {
   const band = r.exp.nodes[r.exp.positionIndex].altitudeBand;
   app.sky.update(app.paused ? 0 : dt, app.camera, r.pos, band);
   app.audio.update(app.sky.wind, app.sky.gust);
+  app.world.update(now / 1000, app.sky);
   app.world.massif.update(r.s, app.sky.clearness, app.sky.horizonColor);
   for (const n of app.npcs) {
     const dist = Math.hypot(n.position.x - r.pos.x, n.position.z - r.pos.z);
@@ -1259,14 +1292,12 @@ function frame(now) {
     }
     n.npc.animate(dt, { speed: 0, fatigue: 0.1, wind: app.sky.wind * 0.5 });
   }
-  app.renderer.render(app.scene, app.camera);
+  if (app.post) app.post.render(dt); else app.renderer.render(app.scene, app.camera);
 
-  // Adaptive quality: drop shadows and resolution if the device cannot keep up.
-  if (rawDt > 0.045) slowFrames++; else slowFrames = Math.max(0, slowFrames - 1);
-  if (slowFrames > 90 && app.renderer.shadowMap.enabled) {
-    app.renderer.shadowMap.enabled = false;
-    app.renderer.setPixelRatio(1);
-    app.scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; });
+  // Adaptive quality: step down one level if the device cannot keep up.
+  if (rawDt > 0.05) slowFrames++; else slowFrames = Math.max(0, slowFrames - 2);
+  if (slowFrames > 120 && app.quality !== 'low' && !params.get('quality')) {
+    setQuality(app.quality === 'high' ? 'medium' : 'low');
     slowFrames = 0;
   }
 }

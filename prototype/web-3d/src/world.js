@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { V_SCALE } from './route.js';
 import { fbm, noise2, seededRandom, smoothstep, clamp, lerp } from './noise.js';
+import { createSurfaceTextures, createGroundMaterial, addWindSway } from './materials.js';
 
 // Palette sampled from the project's cover and curated concept art:
 // warm ochre ground, terracotta and violet strata, lavender shadow rock, rose-white snow.
@@ -27,7 +28,7 @@ const COL = {
 const TENT_COLORS = ['#e2742c', '#e9b23a', '#3f7fb5', '#c8463a', '#5b9a6a', '#d9d4cc', '#7a5ea8'];
 
 function lateralColumns() {
-  const side = [1.5, 3.2, 5.5, 8.5, 12, 16, 21, 27, 34, 42, 52, 64, 78, 95, 115, 140, 170, 205, 250, 305, 370, 450, 550, 670, 820, 1000, 1220, 1500, 1850, 2300];
+  const side = [0.8, 1.6, 2.4, 3.4, 4.6, 6, 7.6, 9.5, 12, 15, 18.5, 22.5, 27, 32, 38, 45, 53, 62, 72, 84, 98, 115, 135, 160, 190, 225, 270, 325, 390, 470, 570, 690, 840, 1020, 1240, 1500, 1850, 2300];
   return [...side.map((v) => -v).reverse(), 0, ...side];
 }
 
@@ -60,44 +61,7 @@ function makeLabelTexture(title, subtitle) {
   return tex;
 }
 
-/** Tiling watercolour wash: soft blotches + fine grain, multiplied over the vertex colours. */
-function makeWashTexture() {
-  const size = 512;
-  const canvas = document.createElement('canvas');
-  canvas.width = size; canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#e9e6e2';
-  ctx.fillRect(0, 0, size, size);
-  const rnd = seededRandom(2718);
-  for (let i = 0; i < 520; i++) {
-    const x = rnd() * size;
-    const y = rnd() * size;
-    const r = 10 + rnd() * 46;
-    const light = rnd() < 0.5;
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, light ? 'rgba(255,250,244,0.2)' : 'rgba(96,74,104,0.14)');
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g;
-    // draw wrapped so the texture tiles without seams
-    for (const ox of [-size, 0, size]) for (const oy of [-size, 0, size]) {
-      ctx.save(); ctx.translate(x + ox, y + oy); ctx.rotate(rnd() * 3.14); ctx.scale(1, 0.45 + rnd() * 0.5);
-      ctx.translate(-x, -y); ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
-    }
-  }
-  const img = ctx.getImageData(0, 0, size, size);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const n = (rnd() - 0.5) * 22;
-    img.data[i] += n; img.data[i + 1] += n; img.data[i + 2] += n;
-  }
-  ctx.putImageData(img, 0, 0);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  return tex;
-}
-
-export function buildWorld({ scene, route, terrain }) {
+export function buildWorld({ scene, route, terrain, renderer, dem = null }) {
   const group = new THREE.Group();
   scene.add(group);
   const rand = seededRandom(6962);
@@ -108,15 +72,18 @@ export function buildWorld({ scene, route, terrain }) {
     return new THREE.Vector3(tmp.x, terrain.heightRoute(s, d, tmp.x, tmp.z), tmp.z);
   };
   const altOf = (h) => route.baseAlt + h / V_SCALE;
+  const timeUniform = { value: 0 };
+  const textures = createSurfaceTextures(renderer);
+  const groundOpts = { textures, baseAlt: route.baseAlt, vScale: V_SCALE };
 
   // ── terrain ribbon ───────────────────────────────────────────────────────
   const cols = lateralColumns();
-  const ROW_STEP = 4;
+  const ROW_STEP = 2.5;
   const rows = Math.floor((terrain.sMax - terrain.sMin) / ROW_STEP) + 1;
   const nCols = cols.length;
   const positions = new Float32Array(rows * nCols * 3);
   const meta = new Float32Array(rows * nCols * 2); // s, d
-  const uvs = new Float32Array(rows * nCols * 2);
+  const trail = new Float32Array(rows * nCols);
   for (let r = 0; r < rows; r++) {
     const s = terrain.sMin + r * ROW_STEP;
     for (let c = 0; c < nCols; c++) {
@@ -127,7 +94,7 @@ export function buildWorld({ scene, route, terrain }) {
       positions[i * 3 + 1] = terrain.heightRoute(s, d, tmp.x, tmp.z);
       positions[i * 3 + 2] = tmp.z;
       meta[i * 2] = s; meta[i * 2 + 1] = d;
-      uvs[i * 2] = tmp.x / 46; uvs[i * 2 + 1] = tmp.z / 46;
+      trail[i] = (1 - smoothstep(0.9, 3.4, Math.abs(d))) * (s > -40 && s < route.total + 6 ? 1 : 0);
     }
   }
   const indices = new Uint32Array((rows - 1) * (nCols - 1) * 6);
@@ -146,7 +113,7 @@ export function buildWorld({ scene, route, terrain }) {
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  geo.setAttribute('aTrail', new THREE.BufferAttribute(trail, 1));
   geo.setIndex(new THREE.BufferAttribute(indices, 1));
   geo.computeVertexNormals();
   {
@@ -163,12 +130,10 @@ export function buildWorld({ scene, route, terrain }) {
   const normals = geo.attributes.normal;
   const colors = new Float32Array(rows * nCols * 3);
   const c1 = new THREE.Color();
-  const c2 = new THREE.Color();
   for (let i = 0; i < rows * nCols; i++) {
     const x = positions[i * 3];
     const y = positions[i * 3 + 1];
     const z = positions[i * 3 + 2];
-    const s = meta[i * 2];
     const a = Math.abs(meta[i * 2 + 1]);
     const alt = altOf(y);
     const ny = normals.getY(i);
@@ -189,26 +154,12 @@ export function buildWorld({ scene, route, terrain }) {
     // Sparse high-desert grass low in the valley.
     const grass = (1 - smoothstep(3250, 3750, alt)) * (1 - steep) * clamp(0.35 + nB * 0.6, 0, 0.7);
     c1.lerp(COL.grass, grass);
-    // Snow line (lower on the distant ranges' shaded sides via noise).
-    // Patchy cover: wind-scoured rock shows through until well above 6000 m.
-    const cover = smoothstep(4550, 5750, alt + nA * 380);
-    const patch = noise2(x * 0.045 + 11, z * 0.045 - 7) * 0.5 + nB * 0.25;
-    const snow = smoothstep(0.34, 0.6, cover * 1.25 + patch * (1 - cover * 0.6) * smoothstep(0.02, 0.3, cover) - steep * 0.35);
-    c2.copy(COL.snow).lerp(COL.snowShade, clamp(0.3 + nB * 0.4 + steep * 0.4, 0, 1));
-    c1.lerp(c2, clamp(snow, 0, 1));
-    // Worn trail.
-    const onTrail = (1 - smoothstep(1.0, 3.6, a)) * (s > -40 && s < route.total + 6 ? 1 : 0);
-    if (onTrail > 0) {
-      c2.copy(COL.trailLow).lerp(COL.trailHigh, smoothstep(4700, 5600, alt));
-      c1.lerp(c2, onTrail * 0.62);
-    }
     const jitter = 1 + nB * 0.05;
     colors[i * 3] = c1.r * jitter; colors[i * 3 + 1] = c1.g * jitter; colors[i * 3 + 2] = c1.b * jitter;
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const terrainMesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-    vertexColors: true, flatShading: false, roughness: 1, metalness: 0, map: makeWashTexture(),
-  }));
+  // Macro tint lives in vertex colours; rock, scree, trail and snow are resolved per pixel.
+  const terrainMesh = new THREE.Mesh(geo, createGroundMaterial({ ...groundOpts, trail: true, vertexColors: true }));
   terrainMesh.receiveShadow = true;
   terrainMesh.frustumCulled = false;
   group.add(terrainMesh);
@@ -239,26 +190,75 @@ export function buildWorld({ scene, route, terrain }) {
   const flat = (color = 0xffffff) => new THREE.MeshStandardMaterial({ color, flatShading: true, roughness: 0.95 });
   const nearLagoon = (p) => Math.hypot(p.x - terrain.lagoon.x, p.z - terrain.lagoon.z) < terrain.lagoon.radius + 3;
 
-  // Rocks and boulders.
+  // Rocks and boulders share the ground material, so they pick up the same rock detail and snow caps.
+  function boulderGeometry(detail, seed) {
+    const g = new THREE.IcosahedronGeometry(1, detail);
+    const pos = g.attributes.position;
+    const v = new THREE.Vector3();
+    for (let n = 0; n < pos.count; n++) {
+      v.fromBufferAttribute(pos, n);
+      const k = 1 + fbm(v.x * 1.3 + seed, v.y * 1.3 - seed + v.z * 0.7, 3) * 0.42 + noise2(v.z * 3.1 + seed, v.x * 3.1) * 0.08;
+      v.multiplyScalar(k);
+      v.y *= 0.82;
+      pos.setXYZ(n, v.x, v.y, v.z);
+    }
+    // Icosahedron vertices are duplicated per face; merge by position so normals come out smooth.
+    const merged = new Map();
+    const normal = new Float32Array(pos.count * 3);
+    g.computeVertexNormals();
+    const nrm = g.attributes.normal;
+    for (let n = 0; n < pos.count; n++) {
+      const key = `${pos.getX(n).toFixed(3)},${pos.getY(n).toFixed(3)},${pos.getZ(n).toFixed(3)}`;
+      const acc = merged.get(key) || [0, 0, 0];
+      acc[0] += nrm.getX(n); acc[1] += nrm.getY(n); acc[2] += nrm.getZ(n);
+      merged.set(key, acc);
+    }
+    for (let n = 0; n < pos.count; n++) {
+      const acc = merged.get(`${pos.getX(n).toFixed(3)},${pos.getY(n).toFixed(3)},${pos.getZ(n).toFixed(3)}`);
+      const len = Math.hypot(acc[0], acc[1], acc[2]) || 1;
+      // Keep a hint of facets: blend smooth and face normals.
+      normal[n * 3] = acc[0] / len * 0.7 + nrm.getX(n) * 0.3;
+      normal[n * 3 + 1] = acc[1] / len * 0.7 + nrm.getY(n) * 0.3;
+      normal[n * 3 + 2] = acc[2] / len * 0.7 + nrm.getZ(n) * 0.3;
+    }
+    g.setAttribute('normal', new THREE.BufferAttribute(normal, 3));
+    return g;
+  }
+  const rockMaterial = createGroundMaterial({ ...groundOpts, bump: 0.1, detailScale: 2.0, snowShift: -150 });
+  const rockTint = (c, alt) => {
+    c.copy(COL.rockLow).lerp(COL.rockMid, smoothstep(3500, 4700, alt)).lerp(COL.rockHigh, smoothstep(4900, 6000, alt)).multiplyScalar(0.78 + rand() * 0.36);
+  };
   scatter({
-    geometry: new THREE.DodecahedronGeometry(1, 0),
-    material: flat(),
-    count: 2600,
+    geometry: boulderGeometry(1, 3.1),
+    material: rockMaterial,
+    count: 3000,
     place(o, c) {
       const s = lerp(-70, route.total + 30, rand());
-      const side = rand() < 0.5 ? -1 : 1;
-      const d = side * (4.5 + Math.pow(rand(), 1.7) * 150);
+      const d = (rand() < 0.5 ? -1 : 1) * (3.6 + Math.pow(rand(), 1.8) * 150);
       const p = groundAt(s, d);
       if (nearLagoon(p)) return false;
-      const big = rand() < 0.07;
-      const sc = big ? 1.6 + rand() * 2.6 : 0.25 + rand() * 0.9;
-      if (big && Math.abs(d) < 9) return false;
-      o.position.set(p.x, p.y + sc * 0.25, p.z);
+      const sc = 0.16 + Math.pow(rand(), 2.2) * 1.0;
+      o.position.set(p.x, p.y + sc * 0.22, p.z);
       o.rotation.set(rand() * 6.3, rand() * 6.3, rand() * 6.3);
-      o.scale.set(sc * (0.8 + rand() * 0.6), sc * (0.55 + rand() * 0.5), sc * (0.8 + rand() * 0.6));
-      const alt = altOf(p.y);
-      c.copy(COL.rockLow).lerp(COL.rockHigh, smoothstep(3600, 5600, alt)).multiplyScalar(0.72 + rand() * 0.4);
-      if (alt > 5300 && rand() < 0.4) c.lerp(COL.snow, 0.55);
+      o.scale.set(sc * (0.8 + rand() * 0.7), sc * (0.6 + rand() * 0.5), sc * (0.8 + rand() * 0.7));
+      rockTint(c, altOf(p.y));
+      return true;
+    },
+  });
+  scatter({
+    geometry: boulderGeometry(3, 11.7),
+    material: rockMaterial,
+    count: 260,
+    place(o, c) {
+      const s = lerp(-70, route.total + 30, rand());
+      const d = (rand() < 0.5 ? -1 : 1) * (10 + Math.pow(rand(), 1.3) * 150);
+      const p = groundAt(s, d);
+      if (nearLagoon(p)) return false;
+      const sc = 1.5 + Math.pow(rand(), 1.6) * 3.4;
+      o.position.set(p.x, p.y + sc * 0.18, p.z);
+      o.rotation.set((rand() - 0.5) * 0.7, rand() * 6.3, (rand() - 0.5) * 0.7);
+      o.scale.set(sc * (0.85 + rand() * 0.6), sc * (0.6 + rand() * 0.45), sc * (0.85 + rand() * 0.6));
+      rockTint(c, altOf(p.y));
       return true;
     },
   });
@@ -266,27 +266,27 @@ export function buildWorld({ scene, route, terrain }) {
   // High-desert grasses in loose clumps, with the yellow flowers of the approach.
   const tuftCentres = [];
   scatter({
-    geometry: new THREE.ConeGeometry(0.2, 1, 4),
-    material: flat(),
-    count: 3600,
+    geometry: new THREE.ConeGeometry(0.07, 1, 3),
+    material: addWindSway(new THREE.MeshStandardMaterial({ roughness: 0.9 }), timeUniform),
+    count: 9000,
     castShadow: false,
     place(o, c, i) {
-      const cluster = Math.floor(i / 5);
+      const cluster = Math.floor(i / 9);
       const cr = seededRandom(cluster * 6151 + 5);
       const cs = lerp(-70, S[3] + 60, cr());
       const cd = (cr() < 0.5 ? -1 : 1) * (3.2 + Math.pow(cr(), 1.5) * 105);
-      const s = cs + (rand() - 0.5) * 1.4;
-      const d = cd + (rand() - 0.5) * 1.4;
+      const s = cs + (rand() - 0.5) * 1.1;
+      const d = cd + (rand() - 0.5) * 1.1;
       if (Math.abs(d) < 2.6) return false;
       const p = groundAt(s, d);
       if (altOf(p.y) > 3950 || nearLagoon(p)) return false;
-      const sc = 0.45 + rand() * 0.75;
-      o.position.set(p.x, p.y + 0.4 * sc, p.z);
-      o.rotation.set((rand() - 0.5) * 0.5, rand() * 6.3, (rand() - 0.5) * 0.5);
+      const sc = 0.4 + rand() * 0.7;
+      o.position.set(p.x, p.y + 0.42 * sc, p.z);
+      o.rotation.set((rand() - 0.5) * 0.7, rand() * 6.3, (rand() - 0.5) * 0.7);
       o.scale.set(sc, sc, sc);
       const tone = cr();
-      c.set(tone < 0.3 ? '#8f9550' : tone < 0.7 ? '#b9ab5e' : '#d0b871').multiplyScalar(0.82 + rand() * 0.3);
-      if (i % 5 === 0 && tone > 0.55) tuftCentres.push(new THREE.Vector3(p.x, p.y + 0.85 * sc, p.z));
+      c.set(tone < 0.3 ? '#a3a65c' : tone < 0.7 ? '#c9b866' : '#e0c97c').multiplyScalar(0.82 + rand() * 0.3);
+      if (i % 9 === 0 && tone > 0.55) tuftCentres.push(new THREE.Vector3(p.x, p.y + 0.85 * sc, p.z));
       return true;
     },
   });
@@ -387,9 +387,61 @@ export function buildWorld({ scene, route, terrain }) {
   });
 
   // ── lagoon ───────────────────────────────────────────────────────────────
+  // Fresnel water: reflects the sky colour at grazing angles, shows depth looking down,
+  // with two scrolling ripple layers and a sun glint.
+  const waterUniforms = {
+    uTime: timeUniform,
+    tNoise: { value: textures.gravel },
+    uSky: { value: new THREE.Color('#9fc0e6') },
+    uHorizon: { value: new THREE.Color('#d6e6f3') },
+    uDeep: { value: new THREE.Color('#1f4a55') },
+    uSunDir: { value: new THREE.Vector3(0.3, 0.8, 0.4) },
+    uSunColor: { value: new THREE.Color('#fff3da') },
+    fogColor: { value: new THREE.Color() },
+    fogNear: { value: 1 },
+    fogFar: { value: 1000 },
+  };
   const water = new THREE.Mesh(
-    new THREE.CircleGeometry(terrain.lagoon.radius + 6, 40),
-    new THREE.MeshStandardMaterial({ color: '#4a7f94', roughness: 0.12, metalness: 0.35, transparent: true, opacity: 0.9 }),
+    new THREE.CircleGeometry(terrain.lagoon.radius + 6, 48),
+    new THREE.ShaderMaterial({
+      uniforms: waterUniforms,
+      transparent: true,
+      vertexShader: `
+        varying vec3 vW;
+        void main() {
+          vec4 w = modelMatrix * vec4(position, 1.0);
+          vW = w.xyz;
+          gl_Position = projectionMatrix * viewMatrix * w;
+        }`,
+      fragmentShader: `
+        uniform float uTime; uniform sampler2D tNoise;
+        uniform vec3 uSky; uniform vec3 uHorizon; uniform vec3 uDeep; uniform vec3 uSunDir; uniform vec3 uSunColor;
+        uniform vec3 fogColor; uniform float fogNear; uniform float fogFar;
+        varying vec3 vW;
+        void main() {
+          vec2 p = vW.xz;
+          float h1 = texture2D(tNoise, p * 0.035 + vec2(uTime * 0.012, uTime * 0.007)).g;
+          float h2 = texture2D(tNoise, p * 0.09 - vec2(uTime * 0.02, -uTime * 0.013)).b;
+          float e = 0.6;
+          float hx = texture2D(tNoise, (p + vec2(e, 0.0)) * 0.035 + vec2(uTime * 0.012, uTime * 0.007)).g
+                   + 0.5 * texture2D(tNoise, (p + vec2(e, 0.0)) * 0.09 - vec2(uTime * 0.02, -uTime * 0.013)).b;
+          float hz = texture2D(tNoise, (p + vec2(0.0, e)) * 0.035 + vec2(uTime * 0.012, uTime * 0.007)).g
+                   + 0.5 * texture2D(tNoise, (p + vec2(0.0, e)) * 0.09 - vec2(uTime * 0.02, -uTime * 0.013)).b;
+          float h0 = h1 + 0.5 * h2;
+          vec3 n = normalize(vec3((h0 - hx) * 0.9, 1.0, (h0 - hz) * 0.9));
+          vec3 v = normalize(cameraPosition - vW);
+          float fres = pow(1.0 - max(dot(n, v), 0.0), 4.0);
+          vec3 r = reflect(-v, n);
+          vec3 sky = mix(uHorizon, uSky, clamp(r.y * 1.6, 0.0, 1.0));
+          vec3 col = mix(uDeep, sky, 0.18 + 0.82 * fres);
+          col += uSunColor * pow(max(dot(r, normalize(uSunDir)), 0.0), 220.0) * 1.6;
+          float dist = length(cameraPosition - vW);
+          col = mix(col, fogColor, smoothstep(fogNear, fogFar, dist));
+          gl_FragColor = vec4(col, 0.93);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+    }),
   );
   water.rotation.x = -Math.PI / 2;
   water.position.set(terrain.lagoon.x, terrain.lagoon.y - 0.7, terrain.lagoon.z);
@@ -433,12 +485,49 @@ export function buildWorld({ scene, route, terrain }) {
   });
 
   // ── camps ────────────────────────────────────────────────────────────────
-  const tentGeo = new THREE.ConeGeometry(1.75, 1.7, 4, 1);
-  tentGeo.rotateY(Math.PI / 4);
-  const domeGeo = new THREE.SphereGeometry(3.2, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2);
+  const fabric = (color) => new THREE.MeshStandardMaterial({ color, roughness: 0.78, metalness: 0 });
+  const poleMat = new THREE.MeshStandardMaterial({ color: '#2b2d33', roughness: 0.5, metalness: 0.4 });
+  const domeGeo = new THREE.SphereGeometry(1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2);
+  const ribGeo = new THREE.TorusGeometry(1, 0.018, 5, 20, Math.PI);
+  const guyGeo = new THREE.CylinderGeometry(0.008, 0.008, 1, 4);
+  /** Expedition dome tent: shell, vestibule, crossing poles, door and guy lines. */
+  function makeTent(color, scale = 1) {
+    const tent = new THREE.Group();
+    const shell = new THREE.Mesh(domeGeo, fabric(color));
+    shell.scale.set(1.5 * scale, 1.12 * scale, 1.15 * scale);
+    const fly = new THREE.Color(color).multiplyScalar(0.72);
+    const vestibule = new THREE.Mesh(domeGeo, fabric(fly));
+    vestibule.scale.set(0.8 * scale, 0.78 * scale, 0.78 * scale);
+    vestibule.position.x = 1.25 * scale;
+    const door = new THREE.Mesh(new THREE.CircleGeometry(0.42 * scale, 12, 0, Math.PI), fabric('#1c1d22'));
+    door.position.set(1.93 * scale, 0.02, 0);
+    door.rotation.y = Math.PI / 2;
+    door.scale.y = 1.25;
+    tent.add(shell, vestibule, door);
+    for (const ang of [0.62, -0.62]) {
+      const rib = new THREE.Mesh(ribGeo, poleMat);
+      rib.scale.set(1.52 * scale, 1.14 * scale, 1.17 * scale);
+      rib.rotation.y = ang;
+      tent.add(rib);
+    }
+    for (const [gx, gz] of [[-1.6, 1.25], [-1.6, -1.25], [1.1, 1.3], [1.1, -1.3]]) {
+      const guy = new THREE.Mesh(guyGeo, poleMat);
+      const from = new THREE.Vector3(gx * 0.55 * scale, 0.75 * scale, gz * 0.55 * scale);
+      const to = new THREE.Vector3(gx * scale * 1.15, 0, gz * scale * 1.15);
+      guy.position.copy(from).add(to).multiplyScalar(0.5);
+      guy.scale.y = from.distanceTo(to);
+      guy.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+      tent.add(guy);
+    }
+    tent.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
+    tent.userData.shell = shell;
+    tent.userData.vestibule = vestibule;
+    return tent;
+  }
   const campPlan = { approach_confluencia: 8, base_plaza_mulas: 17, camp_canada: 4, camp_nido_condores: 6, camp_colera: 3 };
   const interactables = [];
   const playerTents = [];
+  const gearSpots = [];
   route.nodes.forEach((node, i) => {
     if (!node.isCamp) return;
     const n = campPlan[node.id] ?? 4;
@@ -446,36 +535,62 @@ export function buildWorld({ scene, route, terrain }) {
     for (let t = 0, guard = 0; t < n && guard < 400; guard++) {
       const s = S[i] + lerp(-24, 20, rand());
       const d = (rand() < 0.35 ? -1 : 1) * lerp(12, 48, rand());
-      if (placed.some((q) => Math.hypot(q.s - s, q.d - d) < 6.5)) continue;
+      if (placed.some((q) => Math.hypot(q.s - s, q.d - d) < 7.5)) continue;
       placed.push({ s, d });
       const p = groundAt(s, d);
       const big = node.id === 'base_plaza_mulas' && t < 2;
-      const mesh = new THREE.Mesh(big ? domeGeo : tentGeo, flat(big ? '#d9d4cc' : TENT_COLORS[Math.floor(rand() * TENT_COLORS.length)]));
-      mesh.position.set(p.x, p.y + (big ? -0.2 : 0.8), p.z);
-      mesh.rotation.y = rand() * 6.3;
-      if (!big) mesh.scale.set(1.25, 1, 0.95 + rand() * 0.3);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      group.add(mesh);
+      const tent = makeTent(big ? '#e9e3da' : TENT_COLORS[Math.floor(rand() * TENT_COLORS.length)], big ? 2.6 : 0.95 + rand() * 0.25);
+      tent.position.set(p.x, p.y - 0.06, p.z);
+      tent.rotation.y = rand() * 6.3;
+      group.add(tent);
+      if (rand() < 0.7) gearSpots.push({ s: s + (rand() - 0.5) * 3, d: d + (rand() < 0.5 ? 2.6 : -2.6) });
       t++;
     }
     // The player's own tent, right beside the trail.
     const tp = groundAt(S[i] + 10, 7.4);
-    const tent = new THREE.Group();
-    const body = new THREE.Mesh(tentGeo, flat('#e2742c'));
-    body.position.y = 0.82;
-    body.scale.set(1.3, 1, 1.05);
-    body.castShadow = true;
-    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 5), flat('#3b3632'));
-    pole.position.set(1.9, 1.3, 0);
-    const pennant = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.32, 0.03), flat('#f2c14e'));
-    pennant.position.set(2.22, 2.4, 0);
-    tent.add(body, pole, pennant);
-    tent.position.copy(tp);
+    const tent = makeTent('#e2742c', 1.05);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.6, 5), poleMat);
+    pole.position.set(-1.9, 1.3, 0.6);
+    const pennant = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.32, 0.03), fabric('#f2c14e'));
+    pennant.position.set(-1.58, 2.4, 0.6);
+    tent.add(pole, pennant);
+    tent.position.set(tp.x, tp.y - 0.06, tp.z);
     tent.rotation.y = rand() * 6.3;
     group.add(tent);
-    playerTents.push(body);
+    playerTents.push(tent);
+    gearSpots.push({ s: S[i] + 12.5, d: 9.6 });
     interactables.push({ type: 'tent', nodeIndex: i, position: tp.clone(), radius: 5 });
+  });
+  // Expedition gear beside the tents: supply barrels and duffels.
+  scatter({
+    geometry: new THREE.CylinderGeometry(0.3, 0.3, 0.85, 12),
+    material: new THREE.MeshStandardMaterial({ roughness: 0.55 }),
+    count: gearSpots.length,
+    place(o, c, i) {
+      const g = gearSpots[i];
+      if (!g) return false;
+      const p = groundAt(g.s, g.d);
+      o.position.set(p.x, p.y + 0.4, p.z);
+      o.rotation.set(0, rand() * 6.3, 0);
+      o.scale.set(1, 1, 1);
+      c.set(rand() < 0.7 ? '#2d5f9a' : '#c94f2e');
+      return true;
+    },
+  });
+  scatter({
+    geometry: new THREE.CapsuleGeometry(0.24, 0.7, 3, 8),
+    material: new THREE.MeshStandardMaterial({ roughness: 0.85 }),
+    count: gearSpots.length,
+    place(o, c, i) {
+      const g = gearSpots[i];
+      if (!g) return false;
+      const p = groundAt(g.s + 0.9, g.d + 0.5);
+      o.position.set(p.x, p.y + 0.22, p.z);
+      o.rotation.set(Math.PI / 2, 0, rand() * 6.3);
+      o.scale.set(1, 1, 1);
+      c.set(['#d8a531', '#2f3a3f', '#a33a2c', '#3f6f52'][Math.floor(rand() * 4)]);
+      return true;
+    },
   });
 
   // ── Horcones: ranger hut and park gate ───────────────────────────────────
@@ -579,71 +694,89 @@ export function buildWorld({ scene, route, terrain }) {
     });
   }
 
-  // ── the sentinel: distant massif that dominates the approach ─────────────
-  // Purely scenic. It stands far beyond the route and dissolves into haze as the
-  // climber gets onto the mountain itself, so the walked summit stays the top.
+  // ── the sentinel: the real Aconcagua massif as backdrop ──────────────────
+  // Geometry comes from open elevation data (assets/aconcagua-dem.bin), enlarged so it
+  // dominates the approach the way the paintings show it. It is scenery only: it
+  // dissolves into haze as the climber gets onto the mountain, so the walked summit
+  // stays the highest ground.
   const massif = (() => {
-    const centre = terrain.pointAt(route.total + 2500, -260, {});
-    const RX = 3300;
-    const RZ = 2300;
-    const HEIGHT = 1180;
-    const rings = 26;
-    const segs = 64;
-    const pos = [];
-    const colr = [];
-    const idx = [];
-    const cc = new THREE.Color();
-    for (let r = 0; r <= rings; r++) {
-      const u = r / rings;
-      for (let g = 0; g < segs; g++) {
-        const ang = (g / segs) * Math.PI * 2;
-        const x = Math.cos(ang) * u * RX;
-        const z = Math.sin(ang) * u * RZ;
-        const crest = 0.72 + 0.5 * fbm(x * 0.0011 + 9, z * 0.0011 - 4, 4);
-        // Broad twin-shouldered crown rather than a single cone.
-        const shoulder = 1 + 0.16 * Math.cos(ang * 2 + 0.6);
-        // Wide summit plateau with steep faces, like the real south-west profile.
-        const dome = Math.pow(1 - smoothstep(0.06, 1, u), 1.15);
-        const y = HEIGHT * dome * (0.55 + 0.45 * Math.min(1.25, crest * shoulder)) + noise2(x * 0.004, z * 0.004) * 70 * u * (1 - u);
-        pos.push(x, y - 40, z);
-        const alt = y / HEIGHT;
-        const rockiness = noise2(x * 0.006 + 3, z * 0.006) * 0.5 + noise2(x * 0.02, z * 0.02) * 0.25;
-        cc.set('#5d476e').lerp(COL.strataViolet, clamp(alt * 1.4, 0, 1)).lerp(COL.strataRed, clamp(rockiness, 0, 0.4) * (1 - alt));
-        const snowy = smoothstep(0.34, 0.5, alt + rockiness * 0.5);
-        cc.lerp(COL.snow, snowy).lerp(COL.snowShade, snowy * clamp(0.5 - rockiness, 0, 0.6));
-        colr.push(cc.r, cc.g, cc.b);
-      }
-    }
-    for (let r = 0; r < rings; r++) {
-      for (let g = 0; g < segs; g++) {
-        const a = r * segs + g;
-        const b = r * segs + ((g + 1) % segs);
-        const c = a + segs;
-        const d = b + segs;
-        idx.push(a, b, c, b, d, c);
-      }
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(colr, 3));
-    g.setIndex(idx);
-    g.computeVertexNormals();
-    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1, fog: false, transparent: true, opacity: 1 });
-    const mesh = new THREE.Mesh(g, mat);
-    mesh.position.set(centre.x, 0, centre.z);
-    mesh.frustumCulled = false;
-    mesh.renderOrder = -5;
-    group.add(mesh);
+    // The axis is only modelled a short way past the summit; extend it in a straight line.
+    // (Use the axis heading, not the trail direction: the trail meanders.)
+    const edge = terrain.axisAt(route.total + 600, {});
+    const centre = { x: edge.x + Math.sin(edge.heading) * 2350, z: edge.z + Math.cos(edge.heading) * 2350 };
     const base = new THREE.Color('#ffffff');
+    const mat = createGroundMaterial({
+      ...groundOpts, vertexColors: true, fog: false, transparent: true, bump: 0.5, detailScale: 0.12, snowShift: -1500,
+    });
+    let mesh = null;
+    if (dem) {
+      const N = dem.meta.size;
+      const STEP = 2;                       // 128×128 quads is plenty at this distance
+      const G = Math.floor((N - 1) / STEP) + 1;
+      const SCALE = V_SCALE * 4.2;          // world units per metre, uniform: true proportions, enlarged
+      const cell = (dem.meta.extentMetres / (N - 1)) * SCALE;
+      const [sx, sy] = dem.meta.summitCell;
+      // Keep only the main massif (about 5.5 km around the summit): neighbouring ranges,
+      // once enlarged, would stand in front of it.
+      const RADIUS = 2770;
+      const FLOOR_M = 3900;
+      // Seen from 18 km the real summit stands only ~12° above the horizon. Relief is
+      // exaggerated so it reads the way it feels on the approach (and in the paintings).
+      const RELIEF = 1.65;
+      const pos = new Float32Array(G * G * 3);
+      const colr = new Float32Array(G * G * 3);
+      const cc = new THREE.Color();
+      for (let gy = 0; gy < G; gy++) {
+        for (let gx = 0; gx < G; gx++) {
+          const ix = Math.min(N - 1, gx * STEP);
+          const iy = Math.min(N - 1, gy * STEP);
+          const metres = dem.data[iy * N + ix];
+          // East is to the climber's right (-X); north is ahead (+Z).
+          const x = -(ix - sx) * cell;
+          const z = -(iy - sy) * cell;
+          const r = Math.hypot(x, z) / RADIUS;
+          const skirt = 1 - smoothstep(0.55, 1, r);
+          const y = (Math.max(0, metres - FLOOR_M) * SCALE * RELIEF) * skirt - (1 - skirt) * 260 - 30;
+          const k = (gy * G + gx) * 3;
+          pos[k] = x; pos[k + 1] = y; pos[k + 2] = z;
+          const t = clamp((metres - FLOOR_M) / 3000, 0, 1);
+          const n = fbm(x * 0.0016, z * 0.0016, 3);
+          cc.copy(COL.rockLow).lerp(COL.rockMid, clamp(t * 1.5 + n * 0.3, 0, 1)).lerp(COL.strataRed, clamp(0.2 + n, 0, 0.4) * (1 - t)).lerp(COL.rockHigh, smoothstep(0.55, 0.9, t) * 0.6);
+          colr[k] = cc.r; colr[k + 1] = cc.g; colr[k + 2] = cc.b;
+        }
+      }
+      const idx = [];
+      for (let gy = 0; gy < G - 1; gy++) {
+        for (let gx = 0; gx < G - 1; gx++) {
+          const a = gy * G + gx;
+          idx.push(a, a + 1, a + G, a + 1, a + G + 1, a + G);
+        }
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      g.setAttribute('color', new THREE.BufferAttribute(colr, 3));
+      g.setIndex(idx);
+      g.computeVertexNormals();
+      if (g.attributes.normal.getY(Math.floor(G * G / 2)) < 0) { g.index.array.reverse(); g.computeVertexNormals(); }
+      // The snow test in the shader reads altitude from world y; map it back to real metres.
+      mat.userData.uniforms.uBaseAlt.value = FLOOR_M + (30 / (SCALE * RELIEF));
+      mat.userData.uniforms.uInvVScale.value = 1 / (SCALE * RELIEF);
+      mesh = new THREE.Mesh(g, mat);
+      mesh.position.set(centre.x, 0, centre.z);
+      mesh.frustumCulled = false;
+      mesh.renderOrder = -5;
+      group.add(mesh);
+    }
     return {
       /** @param {number} s climber progress  @param {number} clear 0..1 how far the air lets you see  @param {THREE.Color} haze */
       update(s, clear, haze) {
+        if (!mesh) return;
         const onMountain = smoothstep(route.nodeS[4] - 60, route.nodeS[7], s);
         const opacity = clamp(clear, 0, 1) * (1 - onMountain);
         mesh.visible = opacity > 0.01;
         mat.opacity = opacity;
         // Aerial perspective: distant rock takes on the colour of the air.
-        mat.color.copy(base).lerp(haze, 0.26);
+        mat.color.copy(base).lerp(haze, 0.46).multiplyScalar(1.25);
       },
     };
   })();
@@ -664,6 +797,24 @@ export function buildWorld({ scene, route, terrain }) {
     npcAnchors,
     groundAt,
     massif,
-    setPlayerTentColor(hex) { playerTents.forEach((m) => m.material.color.set(hex)); },
+    /** @param {number} time seconds  @param {object} [sky] live sky state for water reflections */
+    update(time, sky = null) {
+      timeUniform.value = time;
+      if (sky) {
+        waterUniforms.uSky.value.copy(sky.zenithColor);
+        waterUniforms.uHorizon.value.copy(sky.horizonColor);
+        waterUniforms.uSunDir.value.copy(sky.sunDirection);
+        waterUniforms.uSunColor.value.copy(sky.sunColor).multiplyScalar(sky.sunStrength);
+        waterUniforms.fogColor.value.copy(scene.fog.color);
+        waterUniforms.fogNear.value = scene.fog.near;
+        waterUniforms.fogFar.value = scene.fog.far;
+      }
+    },
+    setPlayerTentColor(hex) {
+      playerTents.forEach((tent) => {
+        tent.userData.shell.material.color.set(hex);
+        tent.userData.vestibule.material.color.set(hex).multiplyScalar(0.72);
+      });
+    },
   };
 }

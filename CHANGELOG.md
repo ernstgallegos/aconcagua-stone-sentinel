@@ -51,6 +51,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- **`prototype/web-3d` rendering overhaul** toward a realistic look that keeps the project's painted palette:
+  - Layered ground material (`src/materials.js`): bedrock, scree, worn trail and snow blended per pixel by slope, altitude and noise, with triplanar detail and bump from procedurally generated textures (no texture files shipped); boulders share it and collect snow caps. Terrain mesh resolution raised near the trail.
+  - Backdrop massif now built from real open elevation data of Aconcagua (`assets/aconcagua-dem.bin`, baked by `tools/bake-dem.mjs`, attribution in `assets/DEM-ATTRIBUTION.md`), enlarged with exaggerated relief; scenery only.
+  - Procedural cloud deck tied to weather severity, 4K shadow map, Fresnel water on the lagoon.
+  - Post-processing chain (`src/post.js`, vendored three.js add-ons): ambient occlusion, bloom, colour grade, tone mapping; three quality levels (`?quality=low|medium|high`) with automatic step-down on slow devices.
+  - Articulated procedural climber (two-segment limbs, down jacket, pack, pole), dome tents with poles and guy lines, expedition gear at camps, denser wind-swayed grass.
 - **Technical debt register**: Documented the open `sleep` time-cost defect (a night burns one hour of resources because the `timeCost: 60` default shadows the 480-minute fallback; the Monte Carlo harness burns 480 and the shipped UI burns 60) with root cause, size, files, fix options and a re-validation checklist in `docs/technical-debt-register.md`, and added pointer comments in `ui/screens.js` and `prototype/web-3d/src/sim.js`. No behaviour change.
 - **Engine (`prototype/web-v1/engine/turn-resolution.js`)**: Weather now keeps moving while the climber sleeps. A `sleep` turn applies `OVERNIGHT_WEATHER_STEPS` (3) unbiased ±1 steps to `weather_severity` and re-derives `visibility`; previously weather was frozen during sleep, so a storm could outlast any number of nights. Affects web-v1, the 3D prototype and the Monte Carlo harness; the RNG stream after a sleep turn differs from earlier builds for the same seed.
 - Expanded "Repository structure" section in `README.md` and `README.es.md` with detailed internal structure breakdown of `prototype/web-v1/` (showing `engine/`, `ui/`, `state/`, `tests/` subdirectories) and enhanced descriptions for all major directories (`data/`, `docs/`, `art/`, `scripts/`, `src/`, `api/`).
