@@ -4,6 +4,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { stringKeys, DIALOGUE, CHARACTER_ES, SCENARIO_ES } from '../src/i18n.js';
 import { ROOT, readText, readJson, loadData } from './helpers.js';
+import crypto from 'node:crypto';
+import { sha256, checkWord, normalizeWord, ACCESS_HASH } from '../src/gate.js';
+import { PART2_PLATES } from '../src/part2-data.js';
+import { readCanonicalPlates } from '../tools/sync-part2.mjs';
 
 test('EN/ES interface copy stays in parity', () => {
   const { en, es } = stringKeys();
@@ -61,4 +65,36 @@ test('all local module imports resolve to files in the repository', () => {
     }
   }
   assert.ok(fs.existsSync(path.join(ROOT, 'prototype/web-3d/vendor/three.module.min.js')));
+});
+
+test('access gate: hashing is correct and only the salted hash is stored', () => {
+  for (const sample of ['', 'abc', 'montaña', 'x'.repeat(300)]) {
+    assert.equal(sha256(sample), crypto.createHash('sha256').update(sample).digest('hex'));
+  }
+  assert.match(ACCESS_HASH, /^[0-9a-f]{64}$/);
+  assert.equal(normalizeWord('  MoNtAñA '), 'montana');
+  assert.equal(checkWord(''), false);
+  assert.equal(checkWord('aconcagua'), false);
+  // The word itself must never be committed in the prototype sources or docs.
+  const dir = path.join(ROOT, 'prototype/web-3d');
+  const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? (e.name === 'vendor' ? [] : walk(path.join(d, e.name))) : [path.join(d, e.name)]));
+  const words = walk(dir).filter((f) => /\.(js|mjs|html|css|md)$/.test(f)).flatMap((f) => fs.readFileSync(f, 'utf8').toLowerCase().match(/[a-zñáéíóú]{4,24}/g) || []);
+  const leaked = [...new Set(words)].filter((w) => checkWord(w));
+  assert.deepEqual(leaked, [], 'the access word appears in plain text');
+  const html = readText('prototype/web-3d/index.html');
+  assert.match(html, /id="gate"/);
+  assert.match(readText('prototype/web-3d/src/main.js'), /isUnlocked\(\)/);
+});
+
+test('Part 2 plates are an exact copy of the canonical web-v1 narrative', () => {
+  assert.deepEqual(PART2_PLATES, readCanonicalPlates());
+  assert.ok(PART2_PLATES.length >= 5);
+  PART2_PLATES.forEach((plate) => {
+    assert.ok(plate.body.length > 40 && plate.es.body.length > 40, `plate ${plate.id} needs EN and ES copy`);
+    if (plate.art) assert.ok(fs.existsSync(path.join(ROOT, 'art', plate.art)), `missing art for ${plate.id}`);
+  });
+  const main = readText('prototype/web-3d/src/main.js');
+  for (const rel of main.match(/'concept-art\/[^']+'/g) || []) {
+    assert.ok(fs.existsSync(path.join(ROOT, 'art', rel.slice(1, -1))), `missing art ${rel}`);
+  }
 });

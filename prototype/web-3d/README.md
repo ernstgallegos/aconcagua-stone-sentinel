@@ -9,6 +9,8 @@ Third-person 3D vertical slice of the Normal Route. Same story, climbers, scenar
 - Deployed: `https://aconcaguastonesentinel.com/3D-prototype` (redirects to `/prototype/web-3d/index.html`)
 - Local: from the repository root run `python3 -m http.server 4173`, then open `http://localhost:4173/prototype/web-3d/`
 
+The title screen asks for an access word (shared privately; only its salted hash is in the source). It can also be passed once as `?key=<word>`; the unlock is remembered in the browser.
+
 No build step. `three.js` r187 is vendored in `vendor/` (MIT, see `vendor/THREE-LICENSE.txt`).
 
 ## How it plays
@@ -38,9 +40,10 @@ There is no XP, levelling or loot. That decision is deliberately deferred.
 - `src/terrain.js` — pure height field and route ⇄ world mapping.
 - `src/world.js`, `src/sky.js`, `src/character.js`, `src/audio.js` — three.js scene, weather, procedural climber, procedural wind.
 - `src/main.js` — flow (title → setup → briefing → walk → debrief), input, camera, HUD.
-- Data comes from `/data/*.json`; nothing is duplicated.
+- `src/gate.js` — access word gate. `src/part2-data.js` — Part 2 plates, generated from web-v1 by `tools/sync-part2.mjs` (parity-tested; never edit by hand).
+- Data comes from `/data/*.json`; nothing else is duplicated.
 
-Known differences from web-v1: no real-time decision window (pace and direction are the decision), no Part 2 bridge, no journal persistence or run-log export, and narrative lines use their own RNG stream so the engine stream depends only on seed and actions.
+Known differences from web-v1: no real-time decision window (pace and direction are the decision), Part 2 is shown as narrative plates only (no character/route selection step), no journal persistence or run-log export, and narrative lines use their own RNG stream so the engine stream depends only on seed and actions.
 
 ## Tests
 
@@ -48,6 +51,6 @@ Known differences from web-v1: no real-time decision window (pace and direction 
 npm run test:web3d
 ```
 
-Covers route/threshold geometry, terrain mapping, engine adapter determinism and outcome wiring, EN/ES parity, and the privacy guards (noindex, unlisted redirect, no links from public entry points).
+Covers route/threshold geometry, terrain mapping, engine adapter determinism and outcome wiring, EN/ES parity, Part 2 parity with web-v1, the access gate, and the privacy guards (noindex, unlisted redirect, no links from public entry points).
 
-Useful URL parameters for testing: `?autostart=1&char=francisco&scenario=assisted-route&seed=10&lang=es&debug=1&lowfx=1`.
+Useful URL parameters for testing: `?key=<word>&autostart=1&char=francisco&scenario=assisted-route&seed=10&lang=es&debug=1&lowfx=1`.

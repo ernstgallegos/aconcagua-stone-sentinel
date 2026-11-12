@@ -198,6 +198,9 @@ export function createSky({ scene, renderer }) {
     get gust() { return gust; },
     get minutes() { return cur.minutes; },
     get fogFar() { return cur.fogFar; },
+    /** 0..1: how far the air lets you see (1 = clear to the horizon). */
+    get clearness() { return smoothstep(900, 4200, cur.fogFar); },
+    get horizonColor() { return cHor; },
     /** Tell the sky what the engine now says. `snap` skips the time-lapse. */
     setConditions({ minutesAbsolute, weather, visibility }, snap = false) {
       target.minutes = minutesAbsolute;
@@ -263,8 +266,8 @@ export function createSky({ scene, renderer }) {
       sun.target.position.copy(playerPos);
       hemi.intensity = ambient * (1 - overcast * 0.25) + overcast * 0.12;
       hemi.color.copy(cTop).lerp(new THREE.Color('#ffffff'), 0.45);
-      hemi.groundColor.set('#6b5a52').lerp(cHor, 0.4);
-      renderer.toneMappingExposure = night ? 1.0 : 1.0 - overcast * 0.1;
+      hemi.groundColor.set('#8b7aa6').lerp(cHor, 0.35); // lavender bounce: shadows read violet, as in the paintings
+      renderer.toneMappingExposure = night ? 1.05 : 1.12 - overcast * 0.12;
 
       // Wind: stronger with weather and altitude, with slow gusts.
       const baseWind = 0.12 + cur.weather * 0.22 + altitudeBand * 0.05;

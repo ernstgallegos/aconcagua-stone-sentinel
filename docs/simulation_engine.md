@@ -157,6 +157,8 @@ Legacy references are intentionally narrow and documented:
 ## Engine mechanics post-v1.3
 
 ### Sleep position rule
+Weather keeps moving overnight: a `sleep` turn applies `OVERNIGHT_WEATHER_STEPS` (3) unbiased ±1 steps to `weather_severity` and then re-derives `visibility`, so a storm can pass or arrive while the climber sleeps. (Before this change weather was frozen during sleep and only moved on waking turns.)
+
 `sleep` never changes the player's position. `evaluateOutcome` forces `outcome = 'Hold'` 
 for sleep actions even if the probabilistic outcome would have been `'Advance'`.
 

@@ -7,17 +7,21 @@ import * as THREE from 'three';
 import { V_SCALE } from './route.js';
 import { fbm, noise2, seededRandom, smoothstep, clamp, lerp } from './noise.js';
 
+// Palette sampled from the project's cover and curated concept art:
+// warm ochre ground, terracotta and violet strata, lavender shadow rock, rose-white snow.
 const COL = {
-  rockLow: new THREE.Color('#9a6b56'),
-  rockOchre: new THREE.Color('#b0855f'),
-  rockMid: new THREE.Color('#84707a'),
-  rockHigh: new THREE.Color('#665e6e'),
-  rockDark: new THREE.Color('#4a4354'),
-  snow: new THREE.Color('#f3eef4'),
-  snowShade: new THREE.Color('#cfd3e8'),
-  grass: new THREE.Color('#8f8a55'),
-  trailLow: new THREE.Color('#cdb08e'),
-  trailHigh: new THREE.Color('#b9b3c4'),
+  rockLow: new THREE.Color('#c08a5e'),
+  rockOchre: new THREE.Color('#d9ae72'),
+  rockMid: new THREE.Color('#a4828c'),
+  rockHigh: new THREE.Color('#837796'),
+  rockDark: new THREE.Color('#5c4b6b'),
+  strataRed: new THREE.Color('#b9624a'),
+  strataViolet: new THREE.Color('#7f5c8c'),
+  snow: new THREE.Color('#fbf1f1'),
+  snowShade: new THREE.Color('#d8cfe8'),
+  grass: new THREE.Color('#aaa25c'),
+  trailLow: new THREE.Color('#ead2ab'),
+  trailHigh: new THREE.Color('#cdc4d6'),
 };
 
 const TENT_COLORS = ['#e2742c', '#e9b23a', '#3f7fb5', '#c8463a', '#5b9a6a', '#d9d4cc', '#7a5ea8'];
@@ -56,6 +60,43 @@ function makeLabelTexture(title, subtitle) {
   return tex;
 }
 
+/** Tiling watercolour wash: soft blotches + fine grain, multiplied over the vertex colours. */
+function makeWashTexture() {
+  const size = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#e9e6e2';
+  ctx.fillRect(0, 0, size, size);
+  const rnd = seededRandom(2718);
+  for (let i = 0; i < 520; i++) {
+    const x = rnd() * size;
+    const y = rnd() * size;
+    const r = 10 + rnd() * 46;
+    const light = rnd() < 0.5;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, light ? 'rgba(255,250,244,0.2)' : 'rgba(96,74,104,0.14)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    // draw wrapped so the texture tiles without seams
+    for (const ox of [-size, 0, size]) for (const oy of [-size, 0, size]) {
+      ctx.save(); ctx.translate(x + ox, y + oy); ctx.rotate(rnd() * 3.14); ctx.scale(1, 0.45 + rnd() * 0.5);
+      ctx.translate(-x, -y); ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
+    }
+  }
+  const img = ctx.getImageData(0, 0, size, size);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = (rnd() - 0.5) * 22;
+    img.data[i] += n; img.data[i + 1] += n; img.data[i + 2] += n;
+  }
+  ctx.putImageData(img, 0, 0);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
 export function buildWorld({ scene, route, terrain }) {
   const group = new THREE.Group();
   scene.add(group);
@@ -75,6 +116,7 @@ export function buildWorld({ scene, route, terrain }) {
   const nCols = cols.length;
   const positions = new Float32Array(rows * nCols * 3);
   const meta = new Float32Array(rows * nCols * 2); // s, d
+  const uvs = new Float32Array(rows * nCols * 2);
   for (let r = 0; r < rows; r++) {
     const s = terrain.sMin + r * ROW_STEP;
     for (let c = 0; c < nCols; c++) {
@@ -85,6 +127,7 @@ export function buildWorld({ scene, route, terrain }) {
       positions[i * 3 + 1] = terrain.heightRoute(s, d, tmp.x, tmp.z);
       positions[i * 3 + 2] = tmp.z;
       meta[i * 2] = s; meta[i * 2 + 1] = d;
+      uvs[i * 2] = tmp.x / 46; uvs[i * 2 + 1] = tmp.z / 46;
     }
   }
   const indices = new Uint32Array((rows - 1) * (nCols - 1) * 6);
@@ -103,6 +146,7 @@ export function buildWorld({ scene, route, terrain }) {
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
   geo.setIndex(new THREE.BufferAttribute(indices, 1));
   geo.computeVertexNormals();
   {
@@ -136,13 +180,18 @@ export function buildWorld({ scene, route, terrain }) {
     c1.copy(COL.rockLow).lerp(COL.rockOchre, clamp(0.5 + nA * 0.9, 0, 1));
     c1.lerp(COL.rockMid, smoothstep(3700, 4700, alt + nA * 300));
     c1.lerp(COL.rockHigh, smoothstep(5000, 6100, alt + nA * 300));
-    c1.lerp(COL.rockDark, steep * 0.45);
+    // Sedimentary strata: tilted terracotta and violet bands on open slopes.
+    const band = Math.sin(alt * 0.019 + x * 0.004 + nA * 2.6);
+    const strata = smoothstep(26, 180, a) * (0.25 + steep * 0.6);
+    if (band > 0.35) c1.lerp(COL.strataRed, strata * smoothstep(0.35, 0.8, band) * (1 - smoothstep(4300, 5200, alt)));
+    else if (band < -0.45) c1.lerp(COL.strataViolet, strata * smoothstep(0.45, 0.9, -band));
+    c1.lerp(COL.rockDark, steep * 0.5);
     // Sparse high-desert grass low in the valley.
     const grass = (1 - smoothstep(3250, 3750, alt)) * (1 - steep) * clamp(0.35 + nB * 0.6, 0, 0.7);
     c1.lerp(COL.grass, grass);
     // Snow line (lower on the distant ranges' shaded sides via noise).
     // Patchy cover: wind-scoured rock shows through until well above 6000 m.
-    const cover = smoothstep(4700, 6300, alt + nA * 380);
+    const cover = smoothstep(4550, 5750, alt + nA * 380);
     const patch = noise2(x * 0.045 + 11, z * 0.045 - 7) * 0.5 + nB * 0.25;
     const snow = smoothstep(0.34, 0.6, cover * 1.25 + patch * (1 - cover * 0.6) * smoothstep(0.02, 0.3, cover) - steep * 0.35);
     c2.copy(COL.snow).lerp(COL.snowShade, clamp(0.3 + nB * 0.4 + steep * 0.4, 0, 1));
@@ -158,7 +207,7 @@ export function buildWorld({ scene, route, terrain }) {
   }
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   const terrainMesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-    vertexColors: true, flatShading: true, roughness: 0.96, metalness: 0,
+    vertexColors: true, flatShading: false, roughness: 1, metalness: 0, map: makeWashTexture(),
   }));
   terrainMesh.receiveShadow = true;
   terrainMesh.frustumCulled = false;
@@ -214,22 +263,45 @@ export function buildWorld({ scene, route, terrain }) {
     },
   });
 
-  // High-desert grass tufts and low shrubs (approach only).
+  // High-desert grasses in loose clumps, with the yellow flowers of the approach.
+  const tuftCentres = [];
   scatter({
-    geometry: new THREE.ConeGeometry(0.42, 0.55, 5),
+    geometry: new THREE.ConeGeometry(0.2, 1, 4),
     material: flat(),
-    count: 1500,
+    count: 3600,
     castShadow: false,
-    place(o, c) {
-      const s = lerp(-70, S[3] + 40, rand());
-      const d = (rand() < 0.5 ? -1 : 1) * (3.5 + Math.pow(rand(), 1.4) * 95);
+    place(o, c, i) {
+      const cluster = Math.floor(i / 5);
+      const cr = seededRandom(cluster * 6151 + 5);
+      const cs = lerp(-70, S[3] + 60, cr());
+      const cd = (cr() < 0.5 ? -1 : 1) * (3.2 + Math.pow(cr(), 1.5) * 105);
+      const s = cs + (rand() - 0.5) * 1.4;
+      const d = cd + (rand() - 0.5) * 1.4;
+      if (Math.abs(d) < 2.6) return false;
       const p = groundAt(s, d);
-      if (altOf(p.y) > 3850 || nearLagoon(p)) return false;
-      const sc = 0.35 + rand() * 0.6;
-      o.position.set(p.x, p.y + 0.2 * sc, p.z);
-      o.rotation.set(0, rand() * 6.3, 0);
-      o.scale.set(sc * 1.1, sc * 1.5, sc * 1.1);
-      c.set(rand() < 0.3 ? '#6f7445' : '#958c52').multiplyScalar(0.8 + rand() * 0.35);
+      if (altOf(p.y) > 3950 || nearLagoon(p)) return false;
+      const sc = 0.45 + rand() * 0.75;
+      o.position.set(p.x, p.y + 0.4 * sc, p.z);
+      o.rotation.set((rand() - 0.5) * 0.5, rand() * 6.3, (rand() - 0.5) * 0.5);
+      o.scale.set(sc, sc, sc);
+      const tone = cr();
+      c.set(tone < 0.3 ? '#8f9550' : tone < 0.7 ? '#b9ab5e' : '#d0b871').multiplyScalar(0.82 + rand() * 0.3);
+      if (i % 5 === 0 && tone > 0.55) tuftCentres.push(new THREE.Vector3(p.x, p.y + 0.85 * sc, p.z));
+      return true;
+    },
+  });
+  scatter({
+    geometry: new THREE.IcosahedronGeometry(0.11, 0),
+    material: new THREE.MeshStandardMaterial({ flatShading: true, roughness: 0.8, emissive: new THREE.Color('#6b5200'), emissiveIntensity: 0.5 }),
+    count: Math.min(900, tuftCentres.length * 3),
+    castShadow: false,
+    place(o, c, i) {
+      const centre = tuftCentres[Math.floor(i / 3)];
+      if (!centre) return false;
+      o.position.set(centre.x + (rand() - 0.5) * 0.7, centre.y + (rand() - 0.5) * 0.3, centre.z + (rand() - 0.5) * 0.7);
+      o.rotation.set(0, 0, 0);
+      o.scale.set(1, 1, 1);
+      c.set(rand() < 0.8 ? '#f2cf4a' : '#f6e7a0');
       return true;
     },
   });
@@ -507,6 +579,75 @@ export function buildWorld({ scene, route, terrain }) {
     });
   }
 
+  // ── the sentinel: distant massif that dominates the approach ─────────────
+  // Purely scenic. It stands far beyond the route and dissolves into haze as the
+  // climber gets onto the mountain itself, so the walked summit stays the top.
+  const massif = (() => {
+    const centre = terrain.pointAt(route.total + 2500, -260, {});
+    const RX = 3300;
+    const RZ = 2300;
+    const HEIGHT = 1180;
+    const rings = 26;
+    const segs = 64;
+    const pos = [];
+    const colr = [];
+    const idx = [];
+    const cc = new THREE.Color();
+    for (let r = 0; r <= rings; r++) {
+      const u = r / rings;
+      for (let g = 0; g < segs; g++) {
+        const ang = (g / segs) * Math.PI * 2;
+        const x = Math.cos(ang) * u * RX;
+        const z = Math.sin(ang) * u * RZ;
+        const crest = 0.72 + 0.5 * fbm(x * 0.0011 + 9, z * 0.0011 - 4, 4);
+        // Broad twin-shouldered crown rather than a single cone.
+        const shoulder = 1 + 0.16 * Math.cos(ang * 2 + 0.6);
+        // Wide summit plateau with steep faces, like the real south-west profile.
+        const dome = Math.pow(1 - smoothstep(0.06, 1, u), 1.15);
+        const y = HEIGHT * dome * (0.55 + 0.45 * Math.min(1.25, crest * shoulder)) + noise2(x * 0.004, z * 0.004) * 70 * u * (1 - u);
+        pos.push(x, y - 40, z);
+        const alt = y / HEIGHT;
+        const rockiness = noise2(x * 0.006 + 3, z * 0.006) * 0.5 + noise2(x * 0.02, z * 0.02) * 0.25;
+        cc.set('#5d476e').lerp(COL.strataViolet, clamp(alt * 1.4, 0, 1)).lerp(COL.strataRed, clamp(rockiness, 0, 0.4) * (1 - alt));
+        const snowy = smoothstep(0.34, 0.5, alt + rockiness * 0.5);
+        cc.lerp(COL.snow, snowy).lerp(COL.snowShade, snowy * clamp(0.5 - rockiness, 0, 0.6));
+        colr.push(cc.r, cc.g, cc.b);
+      }
+    }
+    for (let r = 0; r < rings; r++) {
+      for (let g = 0; g < segs; g++) {
+        const a = r * segs + g;
+        const b = r * segs + ((g + 1) % segs);
+        const c = a + segs;
+        const d = b + segs;
+        idx.push(a, b, c, b, d, c);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(colr, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1, fog: false, transparent: true, opacity: 1 });
+    const mesh = new THREE.Mesh(g, mat);
+    mesh.position.set(centre.x, 0, centre.z);
+    mesh.frustumCulled = false;
+    mesh.renderOrder = -5;
+    group.add(mesh);
+    const base = new THREE.Color('#ffffff');
+    return {
+      /** @param {number} s climber progress  @param {number} clear 0..1 how far the air lets you see  @param {THREE.Color} haze */
+      update(s, clear, haze) {
+        const onMountain = smoothstep(route.nodeS[4] - 60, route.nodeS[7], s);
+        const opacity = clamp(clear, 0, 1) * (1 - onMountain);
+        mesh.visible = opacity > 0.01;
+        mat.opacity = opacity;
+        // Aerial perspective: distant rock takes on the colour of the air.
+        mat.color.copy(base).lerp(haze, 0.26);
+      },
+    };
+  })();
+
   // ── NPC anchors ──────────────────────────────────────────────────────────
   const npcAnchors = [
     { id: 'ranger', nodeIndex: 0, position: groundAt(5, -5.2) },
@@ -522,6 +663,7 @@ export function buildWorld({ scene, route, terrain }) {
     interactables,
     npcAnchors,
     groundAt,
+    massif,
     setPlayerTentColor(hex) { playerTents.forEach((m) => m.material.color.set(hex)); },
   };
 }

@@ -18,6 +18,8 @@ import { clamp, lerp } from './noise.js';
 import {
   t, label, initLanguage, setLanguage, getLanguage, localizeCharacter, localizeScenario, DIALOGUE,
 } from './i18n.js';
+import { isUnlocked, tryUnlock } from './gate.js';
+import { PART2_PLATES } from './part2-data.js';
 import { formatMinutes, bodyValueClass } from '../../web-v1/ui/helpers/screen-utils.js';
 import { findPrimaryCause, findTurningPoint, buildReflectionPrompts } from '../../web-v1/ui/screens/debrief.js';
 
@@ -43,6 +45,25 @@ const PORTRAITS = {
   daniela: 'daniela-de-rossi', blake: 'blake-harris', irina: 'irina-orlova',
 };
 const portraitUrl = (id) => new URL(`../../../art/characters/${PORTRAITS[id] || 'random'}.png`, import.meta.url).href;
+
+const artUrl = (rel) => new URL(`../../../art/${rel}`, import.meta.url).href;
+// Shared with web-v1: a summit there (or here) opens the Part 2 plates on both.
+const SUMMIT_ACHIEVED_KEY = 'aconcagua_summit_achieved_v1';
+const hasSummitedBefore = () => { try { return localStorage.getItem(SUMMIT_ACHIEVED_KEY) === '1'; } catch (_) { return false; } };
+// Plates that ship without their own illustration borrow a curated scene.
+const PLATE_FALLBACK_ART = {
+  team_presentation: 'concept-art/curated/ig/17.png',
+  after_circle: 'concept-art/curated/ig/5.png',
+  guides: 'concept-art/curated/ig/23.png',
+  briefing_night: 'concept-art/curated/ig/25.png',
+};
+const OUTCOME_ART = {
+  'Summit and Safe Return': 'concept-art/curated/ig/1.png',
+  'High Point Return': 'concept-art/curated/ig/11.png',
+  'Strategic Retreat': 'concept-art/curated/ig/21.png',
+};
+const DEFAULT_OUTCOME_ART = 'concept-art/curated/ig/9.png';
+const NIGHT_ART = 'concept-art/curated/ig/7.png';
 
 const SPEED = { steady: 5.6, careful: 3.7 };
 const CORRIDOR = 92;
@@ -123,6 +144,7 @@ function applyI18n() {
   if (app.data) renderSetup();
   if (app.run) { app.run.exp.setLanguage(getLanguage()); updateHud(true); }
   if (app.screen === 'debrief' && app.run) renderDebrief();
+  if (app.screen === 'part2') renderPlate();
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -130,7 +152,7 @@ function applyI18n() {
 // ───────────────────────────────────────────────────────────────────────────
 function showScreen(name) {
   app.screen = name;
-  for (const id of ['title', 'setup', 'brief', 'debrief']) $(`screen-${id}`).classList.toggle('active', id === name);
+  for (const id of ['title', 'setup', 'brief', 'debrief', 'part2']) $(`screen-${id}`).classList.toggle('active', id === name);
   const playing = name === 'play';
   $('hud').hidden = !playing;
   document.body.classList.toggle('playing', playing);
@@ -210,6 +232,60 @@ function renderSetup() {
 // ───────────────────────────────────────────────────────────────────────────
 // Boot
 // ───────────────────────────────────────────────────────────────────────────
+function refreshGate() {
+  const open = isUnlocked();
+  $('gate').hidden = open;
+  $('btn-begin').hidden = !open;
+  $('btn-title-part2').hidden = !(open && hasSummitedBefore());
+}
+
+// ── Part 2: narrative plates ───────────────────────────────────────────────
+const plate = { index: 0, from: 'title' };
+function openPart2(from) {
+  plate.index = 0;
+  plate.from = from;
+  showScreen('part2');
+  renderPlate();
+}
+function renderPlate() {
+  const raw = PART2_PLATES[plate.index];
+  const es = getLanguage() === 'es' ? raw.es : {};
+  const last = plate.index === PART2_PLATES.length - 1;
+  $('plate-count').textContent = `${t('part2.kicker')} · ${plate.index + 1}/${PART2_PLATES.length}`;
+  $('plate-kicker').textContent = es.eyebrow ?? raw.eyebrow ?? '';
+  const title = es.title ?? raw.title ?? '';
+  $('plate-title').textContent = title;
+  $('plate-title').hidden = !title;
+  const box = $('plate-text');
+  box.replaceChildren();
+  String(es.body ?? raw.body).split(/\n\n+/).map((p) => p.trim()).filter(Boolean).forEach((text, i) => {
+    const p = document.createElement('p');
+    p.textContent = text;
+    p.style.animationDelay = `${0.25 + i * 0.35}s`;
+    box.appendChild(p);
+  });
+  const art = $('plate-art');
+  const rel = raw.art || PLATE_FALLBACK_ART[raw.id];
+  art.style.backgroundImage = rel ? `url("${artUrl(rel)}")` : 'none';
+  art.setAttribute('aria-label', es.illustrationAlt ?? raw.alt ?? '');
+  // Restart the cross-fade.
+  const screen = $('screen-part2');
+  screen.classList.remove('enter');
+  void screen.offsetWidth;
+  screen.classList.add('enter');
+  screen.scrollTop = 0;
+  $('btn-plate-back').hidden = plate.index === 0;
+  $('btn-plate-mail').hidden = !last;
+  $('btn-plate-ig').hidden = !last;
+  $('btn-plate-next').textContent = last ? t('part2.finish') : t('part2.next');
+}
+function plateStep(delta) {
+  const next = plate.index + delta;
+  if (next >= PART2_PLATES.length) { showScreen('setup'); return; }
+  plate.index = Math.max(0, next);
+  renderPlate();
+}
+
 async function loadData() {
   const entries = await Promise.all(Object.entries(DATA_FILES).map(async ([key, file]) => {
     const res = await fetch(new URL(`../../../data/${file}`, import.meta.url));
@@ -285,9 +361,11 @@ async function boot() {
   bindUi();
   $('btn-begin').disabled = false;
   $('load-status').hidden = true;
+  if (params.get('key')) tryUnlock(params.get('key'));
+  refreshGate();
   $('debug').hidden = !DEBUG;
   requestAnimationFrame(frame);
-  if (params.get('autostart') === '1') { startRun(); enterPlay(); }
+  if (params.get('autostart') === '1' && isUnlocked()) { startRun(); enterPlay(); }
   window.__A3D = debugApi();
 }
 
@@ -334,7 +412,7 @@ function startRun({ sameSeed = false } = {}) {
   $('log-entries').replaceChildren();
   $('chips').replaceChildren();
   $('vignette').style.opacity = '0';
-  $('fade').classList.remove('on', 'slow');
+  $('fade').classList.remove('on', 'slow', 'art');
   $('fade-text').textContent = '';
   hideToast(); hideBanner();
   updateHud(true);
@@ -453,13 +531,14 @@ async function sleep() {
   r.busy = { type: 'sleep', t: 0, dur: 99 };
   const fade = $('fade');
   $('fade-text').textContent = t('toast.slept');
-  fade.classList.add('on');
-  await wait(1100);
+  $('fade-art').style.backgroundImage = `url("${artUrl(NIGHT_ART)}")`;
+  fade.classList.add('on', 'art');
+  await wait(1300);
   const res = resolve('sleep', { kicker: t('toast.slept'), snap: true });
   if (res?.ended) return;
   $('fade-text').textContent = `${t('hud.day')} ${r.exp.G.day} · ${formatMinutes(r.exp.G.minutesOfDay)}`;
-  await wait(1500);
-  fade.classList.remove('on');
+  await wait(1700);
+  fade.classList.remove('on', 'art');
   r.busy = null;
 }
 
@@ -480,9 +559,11 @@ function endRun(res) {
   r.ended = true;
   r.auto = 0;
   const down = DOWN_OUTCOMES.has(res.outcome);
+  if (res.outcome === 'Summit and Safe Return') { try { localStorage.setItem(SUMMIT_ACHIEVED_KEY, '1'); } catch (_) { /* ignore */ } }
   r.busy = { type: 'end', t: 0, dur: 99, pose: down ? 'down' : 'walk' };
   const fade = $('fade');
   $('fade-text').textContent = label(res.outcome);
+  fade.classList.remove('art');
   fade.classList.toggle('slow', down);
   setTimeout(() => fade.classList.add('on'), down ? 900 : 300);
   setTimeout(() => {
@@ -499,6 +580,8 @@ function renderDebrief() {
   const h = $('debrief-outcome');
   h.textContent = label(outcome);
   h.className = GOOD_OUTCOMES.has(outcome) ? 'good' : NEUTRAL_OUTCOMES.has(outcome) ? 'neutral' : 'bad';
+  $('debrief-art').style.backgroundImage = `url("${artUrl(OUTCOME_ART[outcome] || DEFAULT_OUTCOME_ART)}")`;
+  $('btn-part2').hidden = !(outcome === 'Summit and Safe Return' || hasSummitedBefore());
   const highest = exp.nodes[exp.G.highestPosIdx] || exp.nodes[0];
   const stats = [
     [t('debrief.character'), localizeCharacter(r.characterData).name],
@@ -874,7 +957,19 @@ const look = { id: null, x: 0, y: 0 };
 function bindUi() {
   $('lang-toggle').addEventListener('click', () => { setLanguage(getLanguage() === 'es' ? 'en' : 'es'); applyI18n(); });
   $('btn-begin').addEventListener('click', () => { app.audio.start(); showScreen('setup'); });
-  $('btn-setup-back').addEventListener('click', () => showScreen('title'));
+  $('gate').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (tryUnlock($('gate-word').value)) { $('gate-error').textContent = ''; refreshGate(); $('btn-begin').focus(); } else {
+      $('gate-error').textContent = t('gate.wrong');
+      $('gate-word').select();
+    }
+  });
+  $('btn-title-part2').addEventListener('click', () => openPart2('title'));
+  $('btn-part2').addEventListener('click', () => openPart2('debrief'));
+  $('btn-plate-exit').addEventListener('click', () => showScreen(plate.from === 'debrief' && app.run ? 'debrief' : 'title'));
+  $('btn-plate-back').addEventListener('click', () => plateStep(-1));
+  $('btn-plate-next').addEventListener('click', () => plateStep(1));
+  $('btn-setup-back').addEventListener('click', () => { refreshGate(); showScreen('title'); });
   $('btn-setup-start').addEventListener('click', () => { startRun(); showScreen('brief'); });
   $('btn-brief-go').addEventListener('click', enterPlay);
   $('btn-resume').addEventListener('click', () => setPaused(false));
@@ -1151,6 +1246,7 @@ function frame(now) {
   const band = r.exp.nodes[r.exp.positionIndex].altitudeBand;
   app.sky.update(app.paused ? 0 : dt, app.camera, r.pos, band);
   app.audio.update(app.sky.wind, app.sky.gust);
+  app.world.massif.update(r.s, app.sky.clearness, app.sky.horizonColor);
   for (const n of app.npcs) {
     const dist = Math.hypot(n.position.x - r.pos.x, n.position.z - r.pos.z);
     if (dist > 160) continue;
@@ -1190,6 +1286,7 @@ function debugApi() {
       enterPlay();
     },
     teleport(s, d = 0) { placePlayer(s, d); },
+    openPart2,
     setTimeScale(n) { app.timeScale = Math.max(1, Math.min(40, Math.round(n))); },
     setClock(minutes, weather = null, visibility = null) {
       const { exp } = app.run;

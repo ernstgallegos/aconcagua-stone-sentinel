@@ -120,3 +120,22 @@ test('narrative follows the selected language', () => {
   assert.ok(typeof r.narrative === 'string' && r.narrative.length > 10);
   assert.doesNotMatch(r.narrative, /\b(the|and|You)\b/);
 });
+
+test('weather keeps moving overnight: a storm can pass while the climber sleeps', () => {
+  let changedAfterOneNight = 0;
+  let cleared = 0;
+  for (let seed = 1; seed <= 40; seed++) {
+    const x = make({ seed });
+    x.state.position = 'approach_confluencia';
+    x.state.weather_severity = 4;
+    x.state.visibility = 0;
+    x.act('sleep');
+    assert.ok(x.state.weather_severity >= 0 && x.state.weather_severity <= 4);
+    assert.ok(x.state.visibility >= 0 && x.state.visibility <= 3);
+    if (x.state.weather_severity !== 4) changedAfterOneNight++;
+    for (let night = 0; night < 5 && !x.ended; night++) x.act('sleep');
+    if (x.state.weather_severity <= 2) cleared++;
+  }
+  assert.ok(changedAfterOneNight >= 15, `storm should often ease after one night (${changedAfterOneNight}/40)`);
+  assert.ok(cleared >= 20, `storm should usually break within a week (${cleared}/40)`);
+});

@@ -258,3 +258,43 @@ p { line-height: 1.6; margin: 0 0 0.8rem; }
   #center-stack { bottom: calc(250px + var(--safe-b)); }
   #dialog { bottom: calc(312px + var(--safe-b)); }
 }
+
+/* ── access gate ───────────────────────────────────────── */
+.gate { display: grid; gap: 0.55rem; justify-items: center; margin: 0.4rem 0 0.2rem; }
+.gate label { font-size: 0.86rem; color: var(--white); text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8); }
+.gate-row { display: flex; gap: 0.5rem; width: min(360px, 100%); }
+.gate input {
+  flex: 1; min-width: 0; font: 500 1rem var(--mono); letter-spacing: 0.12em; color: var(--white); text-align: center;
+  background: rgba(8, 12, 18, 0.72); border: 1px solid var(--border); border-radius: 999px; padding: 0.75rem 1rem;
+  user-select: text; -webkit-user-select: text;
+}
+.gate input:focus { outline: none; border-color: var(--ochre); }
+.gate-error { min-height: 1.1rem; margin: 0; font-size: 0.8rem; color: #ffb3a8; }
+#btn-title-part2 { display: block; margin: 0.7rem auto 0; background: rgba(8, 12, 18, 0.55); }
+
+/* ── painterly surface: watercolour paper grain over everything rendered ── */
+#grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 5; opacity: 0.34; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.9 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");
+}
+body:not(.playing) #grain { opacity: 0.2; }
+
+/* art used on cards */
+.hero-art { height: clamp(120px, 22vh, 210px); margin: calc(-1 * clamp(1.1rem, 3vw, 2rem)); margin-bottom: 1.1rem; border-radius: 18px 18px 0 0; background: center 38% / cover no-repeat var(--surface2); -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent); mask-image: linear-gradient(180deg, #000 55%, transparent); }
+#fade-art { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; transition: opacity 1s ease 0.3s; }
+#fade.art.on #fade-art { opacity: 0.5; }
+#fade-text { position: relative; text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9); }
+
+/* ── Part 2 plates ─────────────────────────────────────── */
+.screen.plate { padding: 0; background: #07090f; }
+.screen.plate.active { align-items: stretch; }
+.plate-art { position: fixed; inset: 0; background: center 30% / cover no-repeat; opacity: 0; }
+.plate-shade { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(7, 9, 15, 0.25) 0%, rgba(7, 9, 15, 0.78) 45%, rgba(7, 9, 15, 0.96) 100%); }
+.plate-body { position: relative; margin: auto auto 0; width: min(720px, 100%); padding: 38vh 1.3rem calc(2rem + var(--safe-b)); user-select: text; -webkit-user-select: text; }
+.plate-body h2 { font-size: clamp(1.8rem, 5vw, 2.8rem); text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7); }
+.plate-text p { font: 500 clamp(1rem, 2.3vw, 1.14rem)/1.65 var(--brand); color: var(--white); opacity: 0; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85); }
+.plate.enter .plate-art { animation: plateArt 1.6s ease forwards; }
+.plate.enter .plate-text p { animation: plateLine 0.9s ease forwards; }
+.plate .actions a.btn { text-decoration: none; display: inline-block; }
+@keyframes plateArt { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
+@keyframes plateLine { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

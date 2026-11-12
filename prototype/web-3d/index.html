@@ -18,7 +18,7 @@
 <canvas id="view" aria-label="Aconcagua 3D view"></canvas>
 <div id="vignette" aria-hidden="true"></div>
 <div id="flash" aria-hidden="true"></div>
-<div id="fade" aria-hidden="true"><div id="fade-text"></div></div>
+<div id="fade" aria-hidden="true"><div id="fade-art"></div><div id="fade-text"></div></div>
 
 <button id="lang-toggle" class="chip-button" type="button" aria-label="Language">ES</button>
 
@@ -30,7 +30,16 @@
     <h1 id="title-name" class="sr-only">Aconcagua: Stone Sentinel</h1>
     <p class="tag" data-i18n="title.tag"></p>
     <p class="title-sub" data-i18n="title.sub"></p>
-    <button id="btn-begin" class="btn primary" type="button" data-i18n="title.begin" disabled></button>
+    <form id="gate" class="gate" hidden autocomplete="off">
+      <label for="gate-word" data-i18n="gate.label"></label>
+      <div class="gate-row">
+        <input id="gate-word" type="password" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="40"/>
+        <button class="btn primary" type="submit" data-i18n="gate.enter"></button>
+      </div>
+      <p id="gate-error" class="gate-error" role="alert"></p>
+    </form>
+    <button id="btn-begin" class="btn primary" type="button" data-i18n="title.begin" disabled hidden></button>
+    <button id="btn-title-part2" class="btn ghost" type="button" data-i18n="part2.open" hidden></button>
     <p class="fineprint" data-i18n="title.note"></p>
     <p id="load-status" class="fineprint" role="status" data-i18n="loading"></p>
   </div>
@@ -165,6 +174,7 @@
 <!-- ── Debrief ───────────────────────────────────────────── -->
 <section id="screen-debrief" class="screen" aria-labelledby="debrief-outcome">
   <div class="panel wide">
+    <div id="debrief-art" class="hero-art" role="img"></div>
     <p class="tag" data-i18n="debrief.heading"></p>
     <h2 id="debrief-outcome"></h2>
     <dl id="debrief-stats" class="stats"></dl>
@@ -176,12 +186,33 @@
     <ul id="debrief-reflect" class="brief-list"></ul>
     <p class="closing" data-i18n="debrief.closing"></p>
     <div class="actions">
+      <button id="btn-part2" class="btn ghost" type="button" data-i18n="part2.open" hidden></button>
       <button id="btn-again" class="btn ghost" type="button" data-i18n="debrief.again"></button>
       <button id="btn-new" class="btn primary" type="button" data-i18n="debrief.new"></button>
     </div>
   </div>
 </section>
 
+<!-- ── Part 2: narrative plates ──────────────────────────── -->
+<section id="screen-part2" class="screen plate" aria-labelledby="plate-title">
+  <div id="plate-art" class="plate-art" role="img"></div>
+  <div class="plate-shade"></div>
+  <div class="plate-body">
+    <p id="plate-count" class="tag"></p>
+    <p id="plate-kicker" class="tag"></p>
+    <h2 id="plate-title"></h2>
+    <div id="plate-text" class="plate-text"></div>
+    <div class="actions">
+      <button id="btn-plate-exit" class="btn ghost" type="button" data-i18n="part2.exit"></button>
+      <button id="btn-plate-back" class="btn ghost" type="button" data-i18n="part2.back"></button>
+      <a id="btn-plate-mail" class="btn ghost" href="mailto:aconcaguastonesentinel@gmail.com" data-i18n="part2.contact" hidden></a>
+      <a id="btn-plate-ig" class="btn ghost" href="https://www.instagram.com/aconcaguastonesentinel/" target="_blank" rel="noopener noreferrer" data-i18n="part2.instagram" hidden></a>
+      <button id="btn-plate-next" class="btn primary" type="button" data-i18n="part2.next"></button>
+    </div>
+  </div>
+</section>
+
+<div id="grain" aria-hidden="true"></div>
 <div id="fatal" hidden role="alert"></div>
 <script type="module" src="./src/main.js"></script>
 </body>

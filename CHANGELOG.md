@@ -15,6 +15,9 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
   - Actions are walked: crossing a marked threshold near the top of each stretch resolves one engine turn (`advance` / `advance_slowly` by pace, `descend` going down); rest maps to `wait`, the camp tent to `sleep`, the Horcones gate to park exit.
   - Procedural terrain for all 15 route nodes, camps, signposts, NPC dialogue (EN/ES), time-of-day sky, visibility-driven fog, wind-blown snow, procedural audio, diegetic watch HUD, route profile, field log, debrief, keyboard/mouse and touch controls.
   - Served only through the unlisted `/3D-prototype` redirect in `vercel.json`, with `noindex` meta and `X-Robots-Tag` header; not linked from the landing page or READMEs.
+  - Access word gate on the title screen (`src/gate.js`): only a salted SHA-256 hash is stored; unlock is remembered locally and can be passed as `?key=`. This is a courtesy lock for an unlisted static page, not access control.
+  - Part 2 narrative plates after `Summit and Safe Return` (or a previous summit in web-v1, via the shared `aconcagua_summit_achieved_v1` key): the canonical Part 2 bridge copy is generated into `src/part2-data.js` by `tools/sync-part2.mjs` and parity-tested against `web-v1/ui/screens.js`.
+  - Painterly art pass toward the cover and curated concept art: ochre/terracotta/violet strata palette, tiling watercolour wash on the terrain, paper-grain overlay, lavender bounce light, clumped grasses with yellow flowers, a distant snow massif that dominates the approach, and concept-art cards for night, debrief and plates.
   - Added `npm run test:web3d` (route/threshold geometry, terrain mapping, adapter determinism and outcome wiring, EN/ES parity, privacy guards) and chained it into `npm test`.
 
 - **Bilingual glossary**: Added `docs/en/glossary.md` and `docs/es/glosario.md` — comprehensive glossaries defining key project-specific terms (EP/BT model, variable confidence, cosmetic feedback, engine, Canvas2D visualization, flow smoke tests, contract/parity tests, and 15+ additional entries) with cross-references to canonical source modules. Both files added to `md-viewer.html` DOCUMENTS allowlist.
@@ -48,6 +51,7 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Changed
 
+- **Engine (`prototype/web-v1/engine/turn-resolution.js`)**: Weather now keeps moving while the climber sleeps. A `sleep` turn applies `OVERNIGHT_WEATHER_STEPS` (3) unbiased ±1 steps to `weather_severity` and re-derives `visibility`; previously weather was frozen during sleep, so a storm could outlast any number of nights. Affects web-v1, the 3D prototype and the Monte Carlo harness; the RNG stream after a sleep turn differs from earlier builds for the same seed.
 - Expanded "Repository structure" section in `README.md` and `README.es.md` with detailed internal structure breakdown of `prototype/web-v1/` (showing `engine/`, `ui/`, `state/`, `tests/` subdirectories) and enhanced descriptions for all major directories (`data/`, `docs/`, `art/`, `scripts/`, `src/`, `api/`).
 - Reorganized "Key documentation" section in `README.md` into three subsections (Core documents, Design & implementation, Technical reference) with prominent link to new `NAVIGATION.md` guide at the top.
 - Added "Documentación clave" section to `README.es.md` mirroring the English structure with Spanish translations and links to canonical bilingual documentation.
