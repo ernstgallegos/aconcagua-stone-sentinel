@@ -139,6 +139,9 @@ export function createExpedition({ data, character, scenario, seed, lang = 'en' 
     return delta * multiplier;
   }
 
+  // KNOWN DEBT (mirrors web-v1 on purpose): `sleep` has no `timeCost` in the data, so the default of 60
+  // below shadows the 480-minute fallback in applyTimeCost and a night burns one hour of resources.
+  // Do not fix it here alone. See docs/technical-debt-register.md → "Detail: sleep time cost".
   function getActionModifier(action) {
     const baseByAction = {
       advance: { fatigueDelta: 6, exposureDelta: 5, capacityDelta: -3 },

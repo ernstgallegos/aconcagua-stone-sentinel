@@ -43,6 +43,8 @@ There is no XP, levelling or loot. That decision is deliberately deferred.
 - `src/gate.js` — access word gate. `src/part2-data.js` — Part 2 plates, generated from web-v1 by `tools/sync-part2.mjs` (parity-tested; never edit by hand).
 - Data comes from `/data/*.json`; nothing else is duplicated.
 
+Known shared debt: a `sleep` turn burns one hour of water and food instead of a night (inherited from web-v1; see `docs/technical-debt-register.md`, "Detail: sleep time cost").
+
 Known differences from web-v1: no real-time decision window (pace and direction are the decision), Part 2 is shown as narrative plates only (no character/route selection step), no journal persistence or run-log export, and narrative lines use their own RNG stream so the engine stream depends only on seed and actions.
 
 ## Tests

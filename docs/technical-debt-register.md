@@ -19,6 +19,7 @@ For every release PR:
 | No test coverage metrics | Quality | Low — tests exist but coverage visibility is zero | Cannot identify untested paths without manual review | Coverage reporting via `c8` or equivalent integrated into `npm test` output |
 | Mountain visualization internal split plan still pending | UI layer | Low — stable but large module slows targeted review | `mountain-visualization.js` mixes terrain draw, weather overlays, climber render, and HUD helpers in one file | Extract into `mountain-viz/{terrain,atmosphere,climber}.js` with characterization tests for each renderer helper |
 | Deep-link policy centralization still partial | UI layer | Low — validation now extracted but startup/docs coupling remains manual | New deep-link rules can drift unless docs/tests are updated together | Keep `ui/helpers/deep-link-validation.js` as single validation authority and parity-test `docs/deep-links.web-v1.md` against helper contracts |
+| Sleep burns 1 h of resources instead of a night (`timeCost` default shadows the 480-min fallback) | Engine / balance | **High** — silently understates resource pressure on every multi-day run; web-v1 and the Monte Carlo harness disagree | See "Detail: sleep time cost" below | Sleep consumes resources for its full duration in web-v1, `web-3d` and the harness; scenario start pools and burn rates re-validated; new regression test pins it |
 
 ## Resolved debt items
 
@@ -75,3 +76,79 @@ For every release PR:
 
 - Minimum cadence: every release PR.
 - Optional cadence: during any balancing or architecture refactor PR that touches debt-related files.
+
+
+## Detail: sleep time cost
+
+> Written for the next AI agent or contributor who picks this up. Read it fully before touching any balance data. Origin: open review thread on PR #294 (Codex finding on `prototype/web-3d/src/sim.js`), confirmed by reading the code on 2026-11-12. **Not fixed in PR #294 on purpose** (see "Why it was left alone").
+
+### The problem
+
+A `sleep` turn is meant to last a night (`applyTimeCost` falls back to **480 minutes** and resets the clock to 06:00 the next day), but the resources it burns are computed from **60 minutes**.
+
+Chain of cause, all in `prototype/web-v1`:
+
+1. `data/action_modifiers.json` has **no `timeCost` for `sleep`** (it is `campOnly`, `persistenceReset`, `timeReset: "06:00"`).
+2. `getActionModifier()` in `ui/screens.js` (~line 2028) starts from `{ progress: 0, fatigueMultiplier: 1, exposureMultiplier: 1, timeCost: 60, ...configured }`, so `sleep` ends up with `timeCost: 60`.
+3. `applyTimeCost()` (~line 2893) does `return actionMod.timeCost ?? 480`. Because `timeCost` is already `60`, the `?? 480` fallback is dead code for sleep. It returns **60**.
+4. `resolveTurn()` (`engine/turn-resolution.js`) calls `spendResourcesForMinutes(Math.max(actionMinutes, 30), flags)` with that return value, so a whole night costs **one hour** of water and food.
+
+The clock and day counter still advance correctly (the `sleep` branch in `applyTimeCost` sets the next day and 06:00 independently of the returned minutes). Only resource burn is wrong.
+
+### Size of the effect
+
+Burn rates are in `data/environmental_pressure_config.json` → `simulation.resourceBurnPerHour` (per hour, before `resourceEfficiency`):
+
+| Stage | water/h | food/h | One hour (today) | Eight hours (intended) |
+|---|---|---|---|---|
+| APPROACH | 0.14 | 0.10 | 0.14 / 0.10 | 1.12 / 0.80 |
+| HIGH_CAMP | 0.22 | 0.16 | 0.22 / 0.16 | 1.76 / 1.28 |
+| SUMMIT_DAY | 0.34 | 0.24 | 0.34 / 0.24 | 2.72 / 1.92 |
+
+Scenario start pools are ~20–26 water and ~18–24 food, so every night spent at a high camp is under-charged by roughly 1.5 water and 1.1 food. Over a typical 6–10 night expedition that is a large share of the whole pool. `Resource Exhaustion` is therefore reached later than designed, and the "sleep more to acclimatize" strategy is cheaper than the design intends.
+
+### Surfaces that disagree (important)
+
+- **web-v1 UI** (`ui/screens.js`): burns **60 min** per sleep. This is the shipped behaviour.
+- **`prototype/web-3d`** (`src/sim.js`): mirrors web-v1 on purpose, so it also burns 60 min.
+- **Monte Carlo harness** (`scripts/monte-carlo-web-v1.js`, its own `applyTimeCost` ~line 309): `return mod.timeCost || 480`. It reads the raw JSON (no default 60), so it burns **480 min**. The harness therefore models the *intended* economy, not the shipped one. Any win-rate or exhaustion number in `docs/playtest-results/` does not describe what players experience after sleeping.
+- **Unit tests** (`prototype/web-v1/tests/turn-behavior.test.js` ~lines 316 and 356) stub `getActionModifier` with `timeCost: 480` for sleep, so no test exercises the real default. That is why this was never caught.
+
+### Why it was left alone in PR #294
+
+- Fixing it only in `web-3d` would make the two surfaces diverge, breaking the rule that `web-3d` adds no rules of its own (`docs/prototype-ownership-matrix.md`).
+- Fixing it in the shared code changes resource balance for **every** run in web-v1. `AGENTS.md` requires re-validating resource economy against `spendResourcesForMinutes` rounding floors and the EP/BT summit viability after any such change. That is a balance PR, not a prototype PR.
+- PR #294 already changed shared behaviour once (weather now moves overnight). Stacking a second balance change would have made regressions impossible to attribute.
+
+### Suggested fix (verify before adopting)
+
+Smallest change: give `sleep` an explicit duration in data, so no default can shadow it.
+
+```jsonc
+// data/action_modifiers.json
+"sleep": { "campOnly": true, "persistenceReset": true, "timeCost": 480, ... }
+```
+
+Check the knock-on effects before merging:
+
+- `getActionModifier()` (web-v1) and `makeGetActionModifier()` (harness) and `createExpedition()` (`web-3d`) all special-case `sleep` for time scaling (`if (action !== 'sleep') ... / efficiency`). Keep sleep exempt from `resourceEfficiency` time scaling, as today.
+- `applyTimeCost` should keep returning the configured value; remove the now-misleading `?? 480` dead fallback or make it authoritative.
+- `spendResourcesForMinutes` is called with `Math.max(actionMinutes, 30)`; 480 is unaffected.
+- Resource burn for a night also applies to the `forced-bivouac` and `Resource Exhaustion` checks that run later in the same turn. Confirm no scenario now fails on its first camp night.
+
+### Re-validation checklist
+
+1. Add the regression test first: with the **real** `data/action_modifiers.json` (not a stub), one `sleep` turn at a HIGH_CAMP node must reduce `water` by `0.22 * 8 / resourceEfficiency` (± rounding) and advance the clock to 06:00 the next day. Run it against current code to watch it fail.
+2. Re-check scenario viability: for each scenario in `data/scenarios.web-v1.json`, a plausible plan (sleep at each camp, summit attempt on day N) must not be mathematically blocked by resources alone. See the AGENTS.md learning "Resource-economy tuning must be validated against `spendResourcesForMinutes` rounding floors".
+3. Run `npm run simulate` and compare against `docs/playtest-results/monte-carlo-v1.5.2.md`. The harness already burns 480 min, so **its numbers should barely move**; a large shift means something else changed. Note the overnight weather change from PR #294 also moves these numbers: attribute them separately.
+4. If starting pools or burn rates need retuning, update `docs/balance-calibration-notes.md`, `docs/es/diseno-consolidado-v1.4.md` §6 and the scenario `difficultyModifiers` in the same commit (AGENTS.md: documentation sync after every calibration pass).
+5. Mirror the change in `prototype/web-3d/src/sim.js` (it should need none if the fix is data-only) and run `npm run test:web3d`.
+6. Run the full gate list in `docs/en/public-readiness-checklist.md` and add a `### Fixed` (and, if balance moved, `### Changed`) entry to `CHANGELOG.md` explaining the player-visible effect: nights now cost a night of water and food.
+
+### Exit criterion for this debt item
+
+Sleep consumes resources for its full duration in web-v1, `web-3d` and the Monte Carlo harness; the three agree (add a parity test that compares their sleep resource deltas); scenario viability has been re-validated; the item is moved to "Resolved debt items" with the PR link.
+
+### Related and already handled
+
+- Weather now moves during sleep (`OVERNIGHT_WEATHER_STEPS = 3` in `engine/turn-resolution.js`, PR #294). Do not undo it while fixing this.
