@@ -9,6 +9,7 @@ This matrix prevents drift between the active web prototype and the frozen legac
 | Surface | Status | Purpose | Change policy | Required contract gate |
 |---|---|---|---|---|
 | `prototype/web-v1` | Active canonical gameplay authority | Public playable experience and deterministic resolver authority (`resolveTurn`) | Feature development allowed; must preserve canonical outcomes and contracts | `npm run test:contracts` and `npm test` must pass |
+| `prototype/web-3d` | Unlisted experimental presentation layer | Third-person 3D vertical slice; consumes the web-v1 engine and `data/*.json` unchanged | Presentation-only changes; must not fork or override resolver rules | `npm run test:web3d` must pass |
 | `prototype/mra-v0` | Frozen compatibility artifact | Historical simulator baseline for regression reference and schema contract checks | No new mechanics; compatibility/test-only updates | `pytest prototype/mra-v0/test_simulator.py -v` must pass |
 | `data/contracts/model-contract.json` | Cross-surface canonical bridge | Declares shared metrics, intentional divergences, and taxonomy contracts | Update in same commit as any cross-surface semantic change | `prototype/web-v1/tests/model-contract.test.js` + parity suite |
 

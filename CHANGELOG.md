@@ -11,6 +11,12 @@ SemVer versioning is enforced from `1.3.0` onward. Earlier milestones are docume
 
 ### Added
 
+- **`prototype/web-3d/` (unlisted work in progress)**: Third-person 3D vertical slice of the Normal Route built on three.js r187 (vendored, no build step). Reuses the canonical web-v1 engine, state module, narrative bank and `data/*.json` through a headless adapter (`src/sim.js`); no mountain rules are duplicated.
+  - Actions are walked: crossing a marked threshold near the top of each stretch resolves one engine turn (`advance` / `advance_slowly` by pace, `descend` going down); rest maps to `wait`, the camp tent to `sleep`, the Horcones gate to park exit.
+  - Procedural terrain for all 15 route nodes, camps, signposts, NPC dialogue (EN/ES), time-of-day sky, visibility-driven fog, wind-blown snow, procedural audio, diegetic watch HUD, route profile, field log, debrief, keyboard/mouse and touch controls.
+  - Served only through the unlisted `/3D-prototype` redirect in `vercel.json`, with `noindex` meta and `X-Robots-Tag` header; not linked from the landing page or READMEs.
+  - Added `npm run test:web3d` (route/threshold geometry, terrain mapping, adapter determinism and outcome wiring, EN/ES parity, privacy guards) and chained it into `npm test`.
+
 - **Bilingual glossary**: Added `docs/en/glossary.md` and `docs/es/glosario.md` — comprehensive glossaries defining key project-specific terms (EP/BT model, variable confidence, cosmetic feedback, engine, Canvas2D visualization, flow smoke tests, contract/parity tests, and 15+ additional entries) with cross-references to canonical source modules. Both files added to `md-viewer.html` DOCUMENTS allowlist.
 
 - **`prototype/web-v2/`**: Complete ground-up rebuild incorporating all v1.5 feedback (legibility, causality, temporality, narrative feedback). Single self-contained `index.html` with zero v1 code reuse.

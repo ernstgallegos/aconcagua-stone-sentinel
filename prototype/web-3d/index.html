@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<!-- Private work in progress: keep this page out of search indexes and link previews. -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"/>
+<meta name="referrer" content="no-referrer"/>
+<title>Aconcagua: Stone Sentinel — 3D prototype</title>
+<link rel="icon" type="image/jpeg" href="../../art/brand/favicon-aconcagua.jpg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/style.css"/>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+</head>
+<body>
+<canvas id="view" aria-label="Aconcagua 3D view"></canvas>
+<div id="vignette" aria-hidden="true"></div>
+<div id="flash" aria-hidden="true"></div>
+<div id="fade" aria-hidden="true"><div id="fade-text"></div></div>
+
+<button id="lang-toggle" class="chip-button" type="button" aria-label="Language">ES</button>
+
+<!-- ── Title ─────────────────────────────────────────────── -->
+<section id="screen-title" class="screen active" aria-labelledby="title-name">
+  <div class="title-art" role="img" aria-label="A climber in an orange jacket faces Aconcagua at dusk"></div>
+  <div class="title-shade"></div>
+  <div class="title-body">
+    <h1 id="title-name" class="sr-only">Aconcagua: Stone Sentinel</h1>
+    <p class="tag" data-i18n="title.tag"></p>
+    <p class="title-sub" data-i18n="title.sub"></p>
+    <button id="btn-begin" class="btn primary" type="button" data-i18n="title.begin" disabled></button>
+    <p class="fineprint" data-i18n="title.note"></p>
+    <p id="load-status" class="fineprint" role="status" data-i18n="loading"></p>
+  </div>
+</section>
+
+<!-- ── Setup ─────────────────────────────────────────────── -->
+<section id="screen-setup" class="screen" aria-labelledby="setup-heading">
+  <div class="panel wide">
+    <h2 id="setup-heading" data-i18n="setup.heading"></h2>
+    <div class="setup-grid">
+      <div>
+        <h3 data-i18n="setup.character"></h3>
+        <div id="character-list" class="card-list" role="radiogroup"></div>
+      </div>
+      <div>
+        <div id="character-detail" class="detail"></div>
+        <h3 data-i18n="setup.scenario"></h3>
+        <div id="scenario-list" class="card-list compact" role="radiogroup"></div>
+        <div id="scenario-detail" class="detail small"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btn-setup-back" class="btn ghost" type="button" data-i18n="setup.back"></button>
+      <button id="btn-setup-start" class="btn primary" type="button" data-i18n="setup.start"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Briefing ──────────────────────────────────────────── -->
+<section id="screen-brief" class="screen see-through" aria-labelledby="brief-heading">
+  <div class="panel">
+    <h2 id="brief-heading" data-i18n="brief.heading"></h2>
+    <p class="lead" data-i18n="brief.p1"></p>
+    <ul class="brief-list">
+      <li data-i18n="brief.up"></li>
+      <li data-i18n="brief.pace"></li>
+      <li data-i18n="brief.rest"></li>
+      <li data-i18n="brief.down"></li>
+      <li data-i18n="brief.watch"></li>
+    </ul>
+    <h3 data-i18n="controls.heading"></h3>
+    <dl class="controls" id="controls-list"></dl>
+    <div class="actions">
+      <button id="btn-brief-go" class="btn primary" type="button" data-i18n="brief.go"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── In-game HUD ───────────────────────────────────────── -->
+<div id="hud" hidden>
+  <div id="hud-location" class="hud-card">
+    <div id="loc-name" class="loc-name"></div>
+    <div class="loc-meta"><span id="loc-alt"></span><span id="loc-stage"></span></div>
+    <div id="loc-next" class="loc-next"></div>
+  </div>
+
+  <div id="hud-profile" class="hud-card"><canvas id="profile" width="460" height="150"></canvas></div>
+
+  <div id="hud-watch" class="hud-card watch" aria-live="off">
+    <div class="watch-top">
+      <div id="w-time" class="w-time">06:00</div>
+      <div class="w-day"><span id="w-day"></span><span id="w-permit"></span></div>
+    </div>
+    <div class="w-rows">
+      <div class="row"><span data-i18n="hud.mountain"></span><b id="w-pressure"></b></div>
+      <div class="row"><span data-i18n="hud.trend"></span><b id="w-trend"></b></div>
+      <div class="row"><span data-i18n="hud.reading"></span><b id="w-reading"></b></div>
+      <div class="row"><span data-i18n="hud.weather"></span><span id="w-sky" class="dots"></span></div>
+      <div class="row"><span data-i18n="hud.visibility"></span><span id="w-sight" class="dots"></span></div>
+    </div>
+  </div>
+
+  <div id="hud-body" class="hud-card">
+    <div class="row"><span data-i18n="hud.body"></span><b id="b-capacity"></b></div>
+    <div class="row"><span data-i18n="hud.fatigue"></span><b id="b-fatigue"></b></div>
+    <div class="row"><span data-i18n="hud.exposure"></span><b id="b-exposure"></b></div>
+    <div class="row"><span data-i18n="hud.acclim"></span><span id="b-acclim" class="meter"><i></i></span></div>
+    <div class="row split"><span><span data-i18n="hud.water"></span> <b id="b-water"></b></span><span><span data-i18n="hud.food"></span> <b id="b-food"></b></span></div>
+    <div class="row chips-row"><span id="pace-chip" class="chip"></span><span id="auto-chip" class="chip" hidden></span></div>
+  </div>
+
+  <div id="chips" aria-live="polite"></div>
+  <div id="banner" role="status"><div id="banner-kicker"></div><div id="banner-title"></div><div id="banner-sub"></div></div>
+  <div id="center-stack">
+    <div id="prompt" hidden><kbd id="prompt-key">E</kbd><span id="prompt-text"></span></div>
+    <div id="toast" role="status" aria-live="polite"><div id="toast-kicker"></div><div id="toast-text"></div></div>
+  </div>
+
+  <div id="dialog" hidden role="dialog" aria-live="polite">
+    <div id="dialog-name"></div>
+    <p id="dialog-text"></p>
+    <div class="dialog-hint"><kbd>E</kbd> ▸</div>
+  </div>
+
+  <div id="debug" hidden></div>
+
+  <div id="touch" hidden>
+    <div id="stick-zone"><div id="stick-base"><div id="stick-knob"></div></div></div>
+    <div id="touch-buttons">
+      <button type="button" id="t-auto" data-i18n="touch.auto"></button>
+      <button type="button" id="t-pace" data-i18n="touch.pace"></button>
+      <button type="button" id="t-rest" data-i18n="touch.rest"></button>
+      <button type="button" id="t-act" class="strong" data-i18n="touch.act"></button>
+    </div>
+    <div id="touch-top">
+      <button type="button" id="t-log" aria-label="Log">≡</button>
+      <button type="button" id="t-pause" aria-label="Pause">Ⅱ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Overlays ──────────────────────────────────────────── -->
+<div id="log-panel" class="overlay" hidden role="dialog" aria-labelledby="log-heading">
+  <div class="panel">
+    <h2 id="log-heading" data-i18n="log.heading"></h2>
+    <ol id="log-entries" class="log"></ol>
+    <div class="actions"><button id="btn-log-close" class="btn ghost" type="button" data-i18n="pause.resume"></button></div>
+  </div>
+</div>
+
+<div id="pause-panel" class="overlay" hidden role="dialog" aria-labelledby="pause-heading">
+  <div class="panel">
+    <h2 id="pause-heading" data-i18n="pause.heading"></h2>
+    <dl class="controls" id="controls-list-pause"></dl>
+    <div class="actions">
+      <button id="btn-restart" class="btn ghost" type="button" data-i18n="pause.restart"></button>
+      <button id="btn-resume" class="btn primary" type="button" data-i18n="pause.resume"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Debrief ───────────────────────────────────────────── -->
+<section id="screen-debrief" class="screen" aria-labelledby="debrief-outcome">
+  <div class="panel wide">
+    <p class="tag" data-i18n="debrief.heading"></p>
+    <h2 id="debrief-outcome"></h2>
+    <dl id="debrief-stats" class="stats"></dl>
+    <h3 data-i18n="debrief.cause"></h3>
+    <p id="debrief-cause"></p>
+    <h3 data-i18n="debrief.turning"></h3>
+    <p id="debrief-turning"></p>
+    <h3 data-i18n="debrief.reflect"></h3>
+    <ul id="debrief-reflect" class="brief-list"></ul>
+    <p class="closing" data-i18n="debrief.closing"></p>
+    <div class="actions">
+      <button id="btn-again" class="btn ghost" type="button" data-i18n="debrief.again"></button>
+      <button id="btn-new" class="btn primary" type="button" data-i18n="debrief.new"></button>
+    </div>
+  </div>
+</section>
+
+<div id="fatal" hidden role="alert"></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -10,6 +10,32 @@
       "source": "/prototype/mra-v0/viewer",
       "destination": "/prototype/mra-v0/viewer/index.html",
       "permanent": true
+    },
+    {
+      "source": "/3D-prototype",
+      "destination": "/prototype/web-3d/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/3d-prototype",
+      "destination": "/prototype/web-3d/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/prototype/web-3d",
+      "destination": "/prototype/web-3d/index.html",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/prototype/web-3d/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
     }
   ]
 }
