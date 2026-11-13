@@ -124,3 +124,36 @@ test('reading screens stay zoomable', () => {
   const html = readText('prototype/web-3d/index.html');
   assert.doesNotMatch(html, /user-scalable=no|maximum-scale/);
 });
+
+test('rendering assets: vendored add-ons, baked elevation model and its attribution are present', async () => {
+  const dir = path.join(ROOT, 'prototype/web-3d');
+  assert.ok(fs.existsSync(path.join(dir, 'vendor/three-addons.min.js')));
+  assert.match(readText('prototype/web-3d/index.html'), /"three-addons": "\.\/vendor\/three-addons\.min\.js"/);
+  const { DEM_META } = await import('../src/dem-meta.js');
+  const bytes = fs.statSync(path.join(dir, 'assets/aconcagua-dem.bin')).size;
+  assert.equal(bytes, DEM_META.size * DEM_META.size * 2, 'DEM must be SIZE×SIZE Uint16');
+  assert.ok(DEM_META.maxMetres > 6800 && DEM_META.maxMetres < 7000, 'the baked summit should be Aconcagua');
+  assert.match(readText('prototype/web-3d/assets/DEM-ATTRIBUTION.md'), /Terrain Tiles/);
+  // Bare specifiers used by the sources must be mapped in the page.
+  const html = readText('prototype/web-3d/index.html');
+  for (const file of fs.readdirSync(path.join(dir, 'src')).filter((f) => f.endsWith('.js'))) {
+    const text = fs.readFileSync(path.join(dir, 'src', file), 'utf8');
+    for (const m of text.matchAll(/from '([^.'][^']*)'/g)) {
+      assert.ok(html.includes(`"${m[1]}":`), `${file} imports unmapped module ${m[1]}`);
+    }
+  }
+});
+
+test('post-processing sizes passes once and frees them on quality changes', () => {
+  const post = readText('prototype/web-3d/src/post.js');
+  const sized = post.indexOf('composer.setSize(logical.x, logical.y)');
+  assert.ok(sized > 0 && sized < post.indexOf('composer.addPass('), 'logical size must be set before any pass is added');
+  assert.match(post, /for \(const pass of composer\.passes\) pass\.dispose\?\.\(\)/);
+});
+
+test('optional rendering extras cannot block or burden startup', () => {
+  const main = fs.readFileSync(path.join(ROOT, 'prototype/web-3d/src/main.js'), 'utf8');
+  assert.match(main, /shadowMap\.enabled = params\.get\('lowfx'\) !== '1'/, 'lowfx=1 must disable shadows');
+  assert.match(main, /setTimeout\(\(\) => abort\.abort\(\), DEM_TIMEOUT_MS\)/, 'DEM fetch needs a timeout');
+  assert.match(main, /aconcagua-dem\.bin', import\.meta\.url\), \{ signal: abort\.signal \}/);
+});
