@@ -150,3 +150,10 @@ test('post-processing sizes passes once and frees them on quality changes', () =
   assert.ok(sized > 0 && sized < post.indexOf('composer.addPass('), 'logical size must be set before any pass is added');
   assert.match(post, /for \(const pass of composer\.passes\) pass\.dispose\?\.\(\)/);
 });
+
+test('optional rendering extras cannot block or burden startup', () => {
+  const main = fs.readFileSync(path.join(ROOT, 'prototype/web-3d/src/main.js'), 'utf8');
+  assert.match(main, /shadowMap\.enabled = params\.get\('lowfx'\) !== '1'/, 'lowfx=1 must disable shadows');
+  assert.match(main, /setTimeout\(\(\) => abort\.abort\(\), DEM_TIMEOUT_MS\)/, 'DEM fetch needs a timeout');
+  assert.match(main, /aconcagua-dem\.bin', import\.meta\.url\), \{ signal: abort\.signal \}/);
+});

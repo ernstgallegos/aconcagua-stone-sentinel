@@ -321,7 +321,8 @@ function initThree() {
   renderer.setSize(window.innerWidth, window.innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.shadowMap.enabled = true;
+  // `lowfx=1` is the escape hatch for weak devices: it also drops the shadow pass.
+  renderer.shadowMap.enabled = params.get('lowfx') !== '1';
   renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.3, 12000);
@@ -352,6 +353,8 @@ function setQuality(level) {
   document.body.dataset.quality = level;
 }
 
+const DEM_TIMEOUT_MS = 6000;
+
 async function boot() {
   initLanguage(params.get('lang'));
   applyI18n();
@@ -366,8 +369,15 @@ async function boot() {
   let dem = null;
   try {
     const { DEM_META } = await import('./dem-meta.js');
-    const res = await fetch(new URL('../assets/aconcagua-dem.bin', import.meta.url));
-    if (res.ok) dem = { meta: DEM_META, data: new Uint16Array(await res.arrayBuffer()) };
+    // Optional scenery must never hold the start button hostage: give up after a few seconds.
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), DEM_TIMEOUT_MS);
+    try {
+      const res = await fetch(new URL('../assets/aconcagua-dem.bin', import.meta.url), { signal: abort.signal });
+      if (res.ok) dem = { meta: DEM_META, data: new Uint16Array(await res.arrayBuffer()) };
+    } finally {
+      clearTimeout(timer);
+    }
   } catch (_) { /* scenery only: the game runs without the backdrop */ }
   const nodes = normalizeNodes(app.data.nodes);
   app.route = buildRoute(nodes);
