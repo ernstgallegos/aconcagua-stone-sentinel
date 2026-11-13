@@ -48,6 +48,10 @@ export function createPost({ renderer, scene, camera, quality }) {
   const size = renderer.getDrawingBufferSize(new THREE.Vector2());
   const target = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: quality === 'low' ? 0 : 4 });
   const composer = new EffectComposer(renderer, target);
+  // Given its own target, the composer takes that target's pixel size as its logical size and
+  // would multiply by the pixel ratio again for every pass. Tell it the logical size up front.
+  const logical = renderer.getSize(new THREE.Vector2());
+  composer.setSize(logical.x, logical.y);
   composer.addPass(new RenderPass(scene, camera));
 
   let gtao = null;
@@ -72,6 +76,10 @@ export function createPost({ renderer, scene, camera, quality }) {
     },
     /** 0..1 — the body's distress drains colour and closes the frame in. */
     setStrain(v) { grade.uniforms.uStrain.value = v; },
-    dispose() { composer.dispose(); target.dispose(); },
+    /** Frees every pass too: the composer only disposes its own targets and copy pass. */
+    dispose() {
+      for (const pass of composer.passes) pass.dispose?.();
+      composer.dispose();
+    },
   };
 }

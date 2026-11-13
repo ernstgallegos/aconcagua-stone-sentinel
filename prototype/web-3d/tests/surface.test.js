@@ -143,3 +143,10 @@ test('rendering assets: vendored add-ons, baked elevation model and its attribut
     }
   }
 });
+
+test('post-processing sizes passes once and frees them on quality changes', () => {
+  const post = readText('prototype/web-3d/src/post.js');
+  const sized = post.indexOf('composer.setSize(logical.x, logical.y)');
+  assert.ok(sized > 0 && sized < post.indexOf('composer.addPass('), 'logical size must be set before any pass is added');
+  assert.match(post, /for \(const pass of composer\.passes\) pass\.dispose\?\.\(\)/);
+});
